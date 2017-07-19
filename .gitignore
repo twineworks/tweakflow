@@ -1,0 +1,24 @@
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs
+hs_err_pid*
+
+# intelliJ
+/.idea
+*.iml
+
+# maven target dir
+target
+
+# build artefacts
+dependency-reduced-pom.xml
+
+# temporary ignores
+/docs
+/bin
+

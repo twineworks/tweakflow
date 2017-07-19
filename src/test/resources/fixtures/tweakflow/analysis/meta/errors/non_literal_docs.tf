@@ -1,0 +1,3 @@
+doc () -> "foo"
+
+module
