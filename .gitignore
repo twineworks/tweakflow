@@ -19,6 +19,6 @@ target
 dependency-reduced-pom.xml
 
 # temporary ignores
-/docs
+/doc_site
 /bin
 
