@@ -83,18 +83,6 @@ public class TweakFlowRuntime {
     return loadPathLocation.resolve(path);
   }
 
-  public boolean varExists(String path, String lib, String var){
-    return false;
-  }
-
-  public boolean libraryExists(String path, String lib){
-    return false;
-  }
-
-  public boolean moduleExists(String path){
-    return false;
-  }
-
   public VarHandle createVarHandle(String path, String lib, String var){
 
     String resolvedPath = modulePath(path);
