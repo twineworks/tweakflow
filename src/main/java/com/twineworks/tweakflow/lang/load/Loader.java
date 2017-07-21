@@ -46,7 +46,6 @@ import java.util.Map;
 
 public class Loader {
 
-//  private final AnalysisSet analysisSet = new AnalysisSet();
   private final LoadPath loadPath;
 
   private AnalysisUnit load(String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
