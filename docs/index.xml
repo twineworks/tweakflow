@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tweakflow: an embeddable expression language for the JVM on Tweakflow: embeddable expression language for Java</title>
+    <link>https://twineworks.github.io/tweakflow/</link>
+    <description>Recent content in tweakflow: an embeddable expression language for the JVM on Tweakflow: embeddable expression language for Java</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://twineworks.github.io/tweakflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://twineworks.github.io/tweakflow/modules/std/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/modules/std/</guid>
+      <description>module std.tf The standard module contains basic functions for general computing tasks.
+library core The core library contains utility functions to process values at a basic level.
+id (any x) -&amp;gt; any
+Identity function. Returns x.
+&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
+Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
+    </item>
+    
+    <item>
+      <title>Embedding</title>
+      <link>https://twineworks.github.io/tweakflow/embedding/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/embedding/</guid>
+      <description>Embedding Guide Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</description>
+    </item>
+    
+    <item>
+      <title>Getting started</title>
+      <link>https://twineworks.github.io/tweakflow/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/getting-started/</guid>
+      <description>Getting started Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</description>
+    </item>
+    
+    <item>
+      <title>Legal notice</title>
+      <link>https://twineworks.github.io/tweakflow/legal_notice/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/legal_notice/</guid>
+      <description>Legal Notice This website&amp;rsquo;s content is managed by Twineworks GmbH
+Helmholtzstr. 28
+10587 Berlin
+Germany
+email: hi@twineworks.com
+phone: +49 30 398 879 22
+Represented by Slawomir Chodnicki
+Registry Amtsgericht Berlin-Charlottenburg
+HRB: 155466 B
+International VAT ID No. as specified in § 27a of the German VAT Law DE293085796
+Person responsible for content in accordance with § 55 Abs. 2 RStV Twineworks GmbH
+Slawomir Chodnicki
+Helmholtzstr. 28
+10587 Berlin
+Germany</description>
+    </item>
+    
+    <item>
+      <title>The tweakflow data processing language</title>
+      <link>https://twineworks.github.io/tweakflow/reference/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/reference/</guid>
+      <description>Language characteristics Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.
+Tweakflow is dynamically typed. It supports ad-hoc construction, nesting, and manipulation of data structures. This ability supports processing of unstructured data where structure is dynamically determined by the process, as well as data-driven processes in which data is self-describing or structure is provided at runtime through other means, like a metadata repository.</description>
+    </item>
+    
+  </channel>
+</rss>

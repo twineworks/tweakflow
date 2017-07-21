@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Modules on Tweakflow: embeddable expression language for Java</title>
+    <link>https://twineworks.github.io/tweakflow/modules/</link>
+    <description>Recent content in Modules on Tweakflow: embeddable expression language for Java</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://twineworks.github.io/tweakflow/modules/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://twineworks.github.io/tweakflow/modules/std/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/modules/std/</guid>
+      <description>module std.tf The standard module contains basic functions for general computing tasks.
+library core The core library contains utility functions to process values at a basic level.
+id (any x) -&amp;gt; any
+Identity function. Returns x.
+&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
+Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
+    </item>
+    
+  </channel>
+</rss>
