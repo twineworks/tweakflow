@@ -1,0 +1,9 @@
+{{ $baseurl := .Site.BaseURL }}
+<ul class="post__meta__taxonomies">
+    {{ range .Params.tags }}
+    <li class="tags"><a href="{{ $baseurl }}tags/{{ . | urlize }}">{{ . }} </a></li>
+    {{ end }}
+    {{ range .Params.categories }}
+    <li class="categories"><a href="{{ $baseurl }}categories/{{ . | urlize }}">{{ . }} </a></li>
+    {{ end }}
+</ul>

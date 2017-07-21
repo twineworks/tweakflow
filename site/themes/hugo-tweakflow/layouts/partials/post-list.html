@@ -1,0 +1,14 @@
+{{ $paginator := .Paginate (where .Data.Pages.ByDate.Reverse "Type" "post") }}
+{{ range $paginator.Pages }}
+<article class="post post--preview">
+    <header>
+        <h2 class="post__title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+    </header>
+    <footer class="post__meta">
+        <ul class="post__meta__infos">
+            <li class="post-meta__date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 January 2006" }}</time></li>
+        </ul>
+        {{ partial "post-taxonomies" . }}
+    </footer>
+</article>
+{{ end }}

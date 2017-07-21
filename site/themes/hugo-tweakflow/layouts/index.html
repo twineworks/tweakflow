@@ -1,0 +1,15 @@
+<!doctype html>
+<html class="no-js" lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+
+{{ partial "head" . }}
+
+<body>
+    {{ partial "header" . }}
+    <main class="homepage content" role="main">
+        {{ .Content }}
+    </main>
+    {{ partial "footer" . }}
+    {{ partial "js" . }}
+</body>
+
+</html>

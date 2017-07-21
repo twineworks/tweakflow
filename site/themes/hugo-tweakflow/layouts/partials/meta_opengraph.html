@@ -1,0 +1,19 @@
+<!-- Opengraph -->
+<meta property="og:locale" content="{{ .Site.LanguageCode }}">
+<meta property="og:title" content="{{ .Title }}" />
+<meta property="og:description" content="{{ if .IsHome}}{{ .Site.Params.description }}{{ else }}{{ .Description }}{{ end }}" />
+<meta property="og:site_name" content="{{ .Site.Title }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+
+{{ if .IsHome }}
+<meta property="og:type" content="website" />
+<meta property="og:image" content="{{ .Site.BaseURL }}/media/facebook-og.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+{{ end }}
+
+{{ if .IsPage }}
+<meta property="og:type" content="article" />
+<meta property="article:section" content="{{ .Section }}" />
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02" }}" />
+<meta property="article:modified_time" content="{{ .Date.Format "2006-01-02" }}" />
+{{ end }}

@@ -1,0 +1,12 @@
+<head>
+    <meta charset="utf-8">
+    <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    {{ partial "meta.html" . }}
+    {{ partial "meta_opengraph.html" . }}
+    {{ partial "meta_twittercard.html" . }}
+    <base href="{{ .Site.BaseURL }}">
+    {{ .Hugo.Generator }}
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{ if .RSSLink }}<link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Title }}" />{{ end }}
+    {{ partial "head_includes.html" . }}
+</head>

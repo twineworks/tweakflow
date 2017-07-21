@@ -1,0 +1,31 @@
+baseURL: "https://twineworks.github.io/tweakflow/"
+languageCode: "en-us"
+title: "Tweakflow: embeddable expression language for Java"
+theme: "hugo-tweakflow"
+# relativeURLs: true
+menu:
+  main:
+    # - Name: "Getting started"
+    #   URL: "/getting-started"
+    #   Weight: -600
+    #
+    # - Name: "Reference"
+    #   URL: "/reference"
+    #   Weight: -500
+    #
+    # - Name: "Standard library"
+    #   URL: "/modules/std"
+    #   Weight: -400
+    #
+    # - Name: "Embedding guide"
+    #   URL: "/embedding"
+    #   Weight: -300
+
+    - Name: "Source code"
+      URL: "https://github.com/twineworks/tweakflow"
+      Weight: -100
+
+
+
+params:
+  indexHeadLine: "index headline parameter"

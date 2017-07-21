@@ -1,0 +1,8 @@
+<ul class="post__meta__infos">
+    {{ with .Site.Params.author }}<li class="post__meta__author" itemprop="author">{{ . }}</li>{{ end }}
+    <li class="post__meta__date"><time datetime="{{ .Date.Format "2006-01-02" }}" itemprop="datePublished">{{ .Date.Format "02 January 2006" }}</time></li>
+</ul>
+{{ partial "post-taxonomies" . }}
+<meta itemprop="url" content="{{ .Permalink }}">
+<meta itemprop="wordCount" content="{{ .WordCount }}" />
+<meta itemprop="timeRequired" content="{{ .ReadingTime }} Min" />

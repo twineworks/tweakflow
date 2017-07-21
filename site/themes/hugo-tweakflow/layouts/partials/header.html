@@ -1,0 +1,27 @@
+<header>
+    <div class="menu">
+
+      <!-- logo -->
+      <div class="menu__logo-wrapper">
+          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg" width="320" height="80"></a>
+      </div>
+      <!-- navigation -->
+      <nav role="navigation" class="menu__items-wrapper">
+        <ul class="menu__items">
+            {{ if .Site.Menus.main }}
+            {{ range .Site.Menus.main }}
+            <li class="menu__item"><a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a></li>
+            {{ end }}
+            {{ end }}
+        </ul>
+      </nav>
+    </div>
+
+    {{ if .IsHome }}
+    <div class="homepage-head">
+      <div class="homepage-head__phrase">Tweakflow is an expression language for the JVM that makes it easy to bring user-defined calculations to your application.
+      </div>
+    </div>
+    {{ end }}
+
+</header>
