@@ -4846,7 +4846,7 @@ doc
 (
   string pattern='0.##',
   dict decimal_symbols=nil,
-  string rounding_mode="up",
+  string rounding_mode="half_up",
   boolean always_show_decimal_separator=false
 ) -> function
 ```
@@ -4873,7 +4873,7 @@ function
 "100"
 
 > f(100.233)
-"100.24"
+"100.23"
 
 > f: math.formatter('0.00', locale.decimal_symbols('fr'), 'half_even')
 function
@@ -4894,7 +4894,7 @@ std.tf> f(648722)
 "६४८,७२२"
 ```
 ~~~
-  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="up", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"}
+  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="half_up", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"}
 
 
 doc
