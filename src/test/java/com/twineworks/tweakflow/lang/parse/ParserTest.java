@@ -833,6 +833,13 @@ public class ParserTest {
         ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneOffset.ofHours(2))
     );
 
+    // e38: 2017-03-17T                          # local date, implied UTC, implied time midnight
+    ExpressionNode e38 = varDefMap.get("e38").getValueExpression();
+    assertThat(e38).isInstanceOf(DateTimeNode.class);
+    DateTimeNode e38_value = (DateTimeNode) e38;
+    assertThat(e38_value.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(2017, 3, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+    );
   }
 
   @Test

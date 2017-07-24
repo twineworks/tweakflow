@@ -47,4 +47,5 @@ Here ~~~ String
   e35: 2017-03-17T16:04:02.123+01:00@`Europe/Berlin` # local date in Berlin, milli-second precision
   e36: 2017-03-17T16:04:02Z                 # UTC time, second precision
   e37: 2017-03-17T16:04:02+02:00            # UTC+2 time, implied time zone
+  e38: 2017-03-17T                          # local date, implied UTC, implied time midnight
 }

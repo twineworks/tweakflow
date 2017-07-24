@@ -118,7 +118,7 @@ LOCAL_REF: 'local::';
 
 
 DT
-  : DATE'T'TIME(OFFSET|(OFFSET TZ))?
+  : DATE'T'(TIME(OFFSET|(OFFSET TZ))?)?
   ;
 
 fragment DATE: [0-9][0-9][0-9][0-9]'-'[0-9][0-9]'-'[0-9][0-9];

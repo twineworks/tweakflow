@@ -158,13 +158,19 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     // date part are first 10 digits
     String date = str.substring(0,10);
     // hh:mm:ss
-    String clockTime = str.substring(11, 19);
+    String clockTime = "00:00:00";
     String fractionalSeconds = "0";
     String offset = "Z";
     String tz = "UTC";
 
     int len = str.length();
+
+
     // optional parts
+    if (len > 11) {
+      clockTime = str.substring(11, 19);
+    }
+
     if (len > 20) {
 
       // fractional seconds
