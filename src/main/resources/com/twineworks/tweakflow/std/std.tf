@@ -253,7 +253,7 @@ doc
 ~~~
 `(string x, long from=0, long to=nil) -> string`
 
-Returns a substring of `x` beginning at index `from` (inclusive) up to index `to` (exclusive). \r
+Returns a substring of `x` beginning at index `from` (inclusive) up to index `to` (exclusive).
 If `to` is `nil`, the substring extends to the end of `x`.
 
 Returns an empty string if `to <= from`.

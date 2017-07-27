@@ -1,3 +1,7 @@
+---
+title: std.tf
+---
+
 # module std.tf
 
 The standard module contains basic functions for general computing tasks.
@@ -195,7 +199,7 @@ Returns `nil` if `x` is `nil`.
 
 `(string x, long from=0, long to=nil) -> string`
 
-Returns a substring of `x` beginning at index `from` (inclusive) up to index `to` (exclusive). \r
+Returns a substring of `x` beginning at index `from` (inclusive) up to index `to` (exclusive).
 If `to` is `nil`, the substring extends to the end of `x`.
 
 Returns an empty string if `to <= from`.
@@ -2699,7 +2703,7 @@ The time library provides functions for processing datetime values.
 
 ### epoch
 
-The instant of time at 1970-01-01T00:00:00Z
+The instant of time at `1970-01-01T00:00:00Z`
 
 ### seconds_between
 
@@ -2796,13 +2800,13 @@ Returns `nil` if any argument is `nil`.
 > time.days_between(time.epoch, time.epoch)
 0
 
-> time.days_between(1970-01-01T00:00:00, 1970-01-02T00:00:00)
+> time.days_between(1970-01-01T, 1970-01-02T)
 1
 
-> time.days_between(1970-01-02T00:00:00, 1970-01-01T00:00:00)
+> time.days_between(1970-01-02T, 1970-01-01T)
 -1
 
-> time.days_between(time.epoch, 2018-01-01T00:00:00)
+> time.days_between(time.epoch, 2018-01-01T)
 17532
 
 > time.days_between(nil, nil)
@@ -2823,13 +2827,13 @@ Returns `nil` if any argument is `nil`.
 > time.months_between(time.epoch, time.epoch)
 0
 
-> time.months_between(1970-01-01T00:00:00, 1970-02-01T00:00:00)
+> time.months_between(1970-01-01T, 1970-02-01T)
 1
 
-> time.months_between(1970-02-01T00:00:00, 1970-01-01T00:00:00)
+> time.months_between(1970-02-01T, 1970-01-01T)
 -1
 
-> time.months_between(time.epoch, 2018-01-01T00:00:00)
+> time.months_between(time.epoch, 2018-01-01T)
 576
 
 > time.months_between(nil, nil)
@@ -2850,13 +2854,13 @@ Returns `nil` if any argument is `nil`.
 > time.years_between(time.epoch, time.epoch)
 0
 
-> time.years_between(1970-01-01T00:00:00, 1971-01-01T00:00:00)
+> time.years_between(1970-01-01T, 1971-01-01T)
 1
 
-> time.years_between(1971-01-01T00:00:00, 1970-01-01T00:00:00)
+> time.years_between(1971-01-01T, 1970-01-01T)
 -1
 
-> time.years_between(time.epoch, 2018-01-01T00:00:00)
+> time.years_between(time.epoch, 2018-01-01T)
 48
 
 > time.years_between(nil, nil)
@@ -2959,7 +2963,7 @@ Returns `nil` if any argument is `nil`.
 > time.add_period(time.epoch, 0, 0, -1)
 1969-12-31T00:00:00Z@`UTC`
 
-> time.add_period(2017-05-24T00:00:00Z, 1, 2, 3)
+> time.add_period(2017-05-24T, 1, 2, 3)
 2018-07-27T00:00:00Z@`UTC`
 
 > time.add_period(time.epoch, 2, 23, -98)
@@ -3009,7 +3013,7 @@ Returns `nil` if `x` is `nil`.
 > time.year(time.epoch)
 1970
 
-> time.year(2017-02-21T00:00:00)
+> time.year(2017-02-21T)
 2017
 
 > time.year(nil)
@@ -3028,7 +3032,7 @@ Returns `nil` if `x` is `nil`.
 > time.month(time.epoch)
 1
 
-> time.month(2017-02-21T00:00:00)
+> time.month(2017-02-21T)
 2
 
 > time.month(nil)
@@ -3047,7 +3051,7 @@ Returns `nil` if `x` is `nil`.
 > time.day_of_month(time.epoch)
 1
 
-> time.day_of_month(2017-02-21T00:00:00)
+> time.day_of_month(2017-02-21T)
 21
 
 > time.day_of_month(nil)
@@ -3066,7 +3070,7 @@ Returns `nil` if `x` is `nil`.
 > time.day_of_year(time.epoch)
 1
 
-> time.day_of_year(2017-02-21T00:00:00)
+> time.day_of_year(2017-02-21T)
 52
 
 > time.day_of_year(nil)
@@ -3097,7 +3101,7 @@ Returns `nil` if `x` is `nil`.
 > time.day_of_week(time.epoch)
 4
 
-> time.day_of_week(2017-05-24T00:00:00)
+> time.day_of_week(2017-05-24T)
 3
 
 > time.day_of_week(nil)
@@ -3195,19 +3199,19 @@ Returns `nil` if `x` is `nil`.
 > time.week_of_year(time.epoch)
 1
 
-> time.week_of_year(2010-01-01T00:00:00.00)
+> time.week_of_year(2010-01-01T)
 53
 
-> time.week_of_year(2011-01-01T00:00:00.00)
+> time.week_of_year(2011-01-01T)
 52
 
-> time.week_of_year(2012-01-01T00:00:00.00)
+> time.week_of_year(2012-01-01T)
 52
 
-> time.week_of_year(2013-01-01T00:00:00.00)
+> time.week_of_year(2013-01-01T)
 1
 
-> time.week_of_year(2017-02-21T00:00:00.00)
+> time.week_of_year(2017-02-21T)
 8
 
 > time.week_of_year(nil)
@@ -3576,10 +3580,10 @@ Assumes `nil` to precede any non-nil datetime.
 > time.compare(time.epoch, time.epoch)
 0
 
-> time.compare(time.epoch, 2017-05-24T00:00:00)
+> time.compare(time.epoch, 2017-05-24T)
 -1
 
-> time.compare(2017-05-24T00:00:00, time.epoch)
+> time.compare(2017-05-24T, time.epoch)
 1
 
 > time.compare(2017-05-24T00:00:00, 2017-05-24T02:00:00+02:00)
@@ -4283,14 +4287,14 @@ nil
 (
   string pattern='0.##',
   dict decimal_symbols=nil,
-  string rounding_mode="up",
+  string rounding_mode="half_up",
   boolean always_show_decimal_separator=false
 ) -> function
 ```
 
 Returns a function `f` that accepts a single `long` or `double` parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html),
-[decimal_symbols](#decimal-symbols)
+[decimal_symbols](#decimal-symbols),
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
 [always_show_decimal_separator](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-) flag.
 
@@ -4310,7 +4314,7 @@ function
 "100"
 
 > f(100.233)
-"100.24"
+"100.23"
 
 > f: math.formatter('0.00', locale.decimal_symbols('fr'), 'half_even')
 function
