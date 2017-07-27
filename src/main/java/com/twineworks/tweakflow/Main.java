@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow;
 
+import com.twineworks.tweakflow.doc.DocMain;
 import com.twineworks.tweakflow.repl.Repl;
 import com.twineworks.tweakflow.run.Run;
 
@@ -31,8 +32,8 @@ import java.util.Arrays;
 
 public class Main {
 
-  public static void printUsage(){
-    System.out.println("usage: tweakflow [itf | tf] [args]");
+  private static void printUsage(){
+    System.out.println("usage: tweakflow [itf | tf | tfdoc] [args]");
   }
 
   public static void main(String[] args){
@@ -46,6 +47,9 @@ public class Main {
     }
     else if (args[0].equals("tf")){
       Run.main(Arrays.copyOfRange(args, 1, args.length));
+    }
+    else if (args[0].equals("tfdoc")){
+      DocMain.main(Arrays.copyOfRange(args, 1, args.length));
     }
     else{
       // unknown args -> print usage
