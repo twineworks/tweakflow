@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+cd $(dirname "$0")/..
+
+echo "* generating documentation for std"
+bin/tfdoc -t doc/markdown_transformer -oe md -o site/content/modules std
+echo "* done"
+echo "* generating documentation site in /docs"
+cd site
+../../hugo/hugo -d ../docs
+echo "* done"
