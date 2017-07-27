@@ -1,5 +1,6 @@
 ---
 title: "Legal notice"
+toc: false
 ---
 
 # Legal Notice
