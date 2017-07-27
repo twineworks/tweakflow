@@ -36,11 +36,11 @@ library transform {
       default   -> core.inspect(x)
 
   module_to_markdown: (dict x) -> string
-#    "---\n"
-#    .."title: "..x[:file].."\n"
-#    .."---\n\n"
+    "---\n"
+    .."title: "..x[:file].."\n"
+    .."---\n\n"
 
-    '# module '..x[:file].."\n\n"
+    ..'# module '..x[:file].."\n\n"
     ..doc_fragment(x)
     ..meta_fragment(x)
     ..join(map(x[:components], transform)).."\n"
