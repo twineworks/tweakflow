@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Modules on Tweakflow: embeddable expression language for Java</title>
-    <link>https://twineworks.github.io/tweakflow/modules/</link>
-    <description>Recent content in Modules on Tweakflow: embeddable expression language for Java</description>
+    <title>Modules on tweakflow - an embeddable expression language for the JVM</title>
+    <link>https://twineworks.github.io/tweakflow/modules.html</link>
+    <description>Recent content in Modules on tweakflow - an embeddable expression language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
@@ -11,11 +11,11 @@
     
     
     <item>
-      <title></title>
-      <link>https://twineworks.github.io/tweakflow/modules/std/</link>
+      <title>std.tf</title>
+      <link>https://twineworks.github.io/tweakflow/modules/std.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/modules/std/</guid>
+      <guid>https://twineworks.github.io/tweakflow/modules/std.html</guid>
       <description>module std.tf The standard module contains basic functions for general computing tasks.
 library core The core library contains utility functions to process values at a basic level.
 id (any x) -&amp;gt; any

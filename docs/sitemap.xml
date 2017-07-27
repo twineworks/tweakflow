@@ -3,38 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/modules/std/</loc>
-  </url>
-  
-  <url>
-    <loc>https://twineworks.github.io/tweakflow/categories/</loc>
+    <loc>https://twineworks.github.io/tweakflow/categories.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/embedding/</loc>
+    <loc>https://twineworks.github.io/tweakflow/embedding.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/getting-started/</loc>
+    <loc>https://twineworks.github.io/tweakflow/getting-started.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/legal_notice/</loc>
+    <loc>https://twineworks.github.io/tweakflow/legal_notice.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/modules/</loc>
+    <loc>https://twineworks.github.io/tweakflow/modules.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/tags/</loc>
+    <loc>https://twineworks.github.io/tweakflow/tags.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/reference/</loc>
+    <loc>https://twineworks.github.io/tweakflow/reference.html</loc>
+  </url>
+  
+  <url>
+    <loc>https://twineworks.github.io/tweakflow/reference_.html</loc>
+  </url>
+  
+  <url>
+    <loc>https://twineworks.github.io/tweakflow/modules/std.html</loc>
   </url>
   
   <url>

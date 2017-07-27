@@ -1,0 +1,1446 @@
+<!doctype html>
+<html class="no-js" lang="en-us" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <meta charset="utf-8">
+    <title>The tweakflow data processing language | tweakflow - an embeddable expression language for the JVM</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
+    <link rel="stylesheet" href="/tweakflow/css/normalize.css">
+    <link rel="stylesheet" href="/tweakflow/css/style.css">
+
+    <link rel="stylesheet" href="/tweakflow/js/highlight/styles/atom-one-light.css">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
+    <link rel="manifest" href="/tweakflow/img/manifest.json">
+    <link rel="mask-icon" href="/tweakflow/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/tweakflow/img/favicon.ico">
+    <meta name="msapplication-config" content="/tweakflow/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
+    <meta name="application-name" content="tweakflow - an embeddable expression language for the JVM">
+
+</head>
+
+
+<body>
+    <header>
+    <div class="menu">
+
+      
+      <div class="menu__logo-wrapper">
+          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg"></a>
+      </div>
+      
+      <nav role="navigation" class="menu__items-wrapper">
+        <ul class="menu__items">
+            
+            
+            
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/getting-started.html">Getting started</a>
+            </li>
+            
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/modules/std.html">Standard library</a>
+            </li>
+            
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source code</a>
+            </li>
+            
+            
+        </ul>
+      </nav>
+    </div>
+
+    
+
+</header>
+
+    <div class="content-wrapper">
+       
+      <aside class="toc">
+        <div class="toc-wrapper">
+          <div class="scrollable-parent">
+            <div class="scrollable-content">
+              <nav id="TableOfContents">
+<ul>
+<li><a href="#modules-structure-solutions">Modules structure solutions</a>
+<ul>
+<li><a href="#imports-bring-other-modules-into-scope">Imports bring other modules into scope</a></li>
+<li><a href="#named-modules">Named modules</a></li>
+<li><a href="#the-standard-library-is-a-named-module">The standard library is a named module</a></li>
+<li><a href="#aliases-create-convenient-local-names">Aliases create convenient local names</a></li>
+<li><a href="#exports-make-parts-of-a-module-public">Exports make parts of a module public</a></li>
+</ul></li>
+<li><a href="#docs-and-metadata-are-annotations">Docs and metadata are annotations</a></li>
+<li><a href="#runtime-implementation-notation">Runtime implementation notation</a></li>
+<li><a href="#libraries-are-collections-of-values">Libraries are collections of values</a></li>
+<li><a href="#variables-are-named-values">Variables are named values</a>
+<ul>
+<li><a href="#variable-declarations-assert-existence">Variable declarations assert existence</a></li>
+<li><a href="#variable-definitions-specify-values">Variable definitions specify values</a></li>
+</ul></li>
+<li><a href="#data-types">Data types</a>
+<ul>
+<li><a href="#boolean">Boolean</a></li>
+<li><a href="#string">String</a></li>
+<li><a href="#long">Long</a></li>
+<li><a href="#double">Double</a></li>
+<li><a href="#dict">Dict</a></li>
+<li><a href="#list">List</a></li>
+<li><a href="#function">Function</a></li>
+<li><a href="#any">Any</a></li>
+</ul></li>
+<li><a href="#expressions">Expressions</a>
+<ul>
+<li><a href="#nil">Nil</a></li>
+<li><a href="#string-interpolation">String interpolation</a></li>
+<li><a href="#dict-literals">Dict literals</a></li>
+<li><a href="#list-literals">List literals</a></li>
+<li><a href="#functions">Functions</a></li>
+<li><a href="#function-calls">Function calls</a>
+<ul>
+<li><a href="#positional-arguments">Positional arguments</a></li>
+<li><a href="#named-arguments">Named arguments</a></li>
+<li><a href="#mixed-positional-and-named-arguments">Mixed positional and named arguments</a></li>
+</ul></li>
+<li><a href="#container-access">Container access</a></li>
+<li><a href="#conditionals">Conditionals</a>
+<ul>
+<li><a href="#the-if-conditional">The if conditional</a></li>
+<li><a href="#ternary-expression-conditional">Ternary expression conditional</a></li>
+<li><a href="#emphasizing-the-then-branch">Emphasizing the then branch</a></li>
+<li><a href="#emphasizing-the-else-branch">Emphasizing the else branch</a></li>
+</ul></li>
+<li><a href="#errors">Errors</a>
+<ul>
+<li><a href="#throwing-errors">Throwing errors</a></li>
+<li><a href="#catching-errors">Catching errors</a></li>
+</ul></li>
+<li><a href="#type-checks">Type checks</a></li>
+<li><a href="#type-casts">Type casts</a>
+<ul>
+<li><a href="#available-type-casts">Available type casts</a></li>
+</ul></li>
+<li><a href="#local-variables">Local variables</a></li>
+<li><a href="#references">References</a>
+<ul>
+<li><a href="#library-scope">Library scope</a></li>
+<li><a href="#global-names">Global names</a></li>
+<li><a href="#module-names">Module names</a></li>
+<li><a href="#step-state-variables">Step state variables</a></li>
+</ul></li>
+<li><a href="#operators">Operators</a></li>
+</ul></li>
+<li><a href="#lexical-tokens">Lexical tokens</a>
+<ul>
+<li><a href="#keywords">Keywords</a></li>
+<li><a href="#boolean-literals">Boolean literals</a></li>
+<li><a href="#the-nil-literal">The nil literal</a></li>
+<li><a href="#string-literals">String literals</a></li>
+<li><a href="#symbols">Symbols</a></li>
+<li><a href="#identifiers">Identifiers</a></li>
+<li><a href="#integer-literals">Integer literals</a></li>
+<li><a href="#floating-point-number-literals">Floating point number literals</a></li>
+<li><a href="#end-of-statement-markers">End of statement markers</a></li>
+<li><a href="#comments">Comments</a>
+<ul>
+<li><a href="#line-comments">Line comments</a></li>
+<li><a href="#span-comments">Span comments</a></li>
+<li><a href="#block-comments">Block comments</a></li>
+</ul></li>
+<li><a href="#other-tokens">Other tokens</a></li>
+</ul></li>
+</ul>
+</nav>
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <main class="single-content" role="main">
+        
+
+<p>This document</p>
+
+<h1 id="modules-structure-solutions">Modules structure solutions</h1>
+
+<p>A tweakflow solution consists of a set of organizational units called modules. A module is   represented by a file. A module defines zero or more libraries.</p>
+
+<p>A module file must be encoded in UTF-8 and have the file extension <code>tf</code>.</p>
+
+<p>A module has the following formal structure.</p>
+
+<pre><code>module
+  : endOfStatement* moduleHead moduleComponent* EOF
+  ;
+
+moduleHead
+  : metaDef nameDec? importDef* aliasDef* exportDef*
+  ;
+
+moduleComponent
+  : library           
+  | dataStep
+  | controlStep       
+  | dataFlow          
+  | controlFlow       
+  | endOfStatement    
+  ;
+</code></pre>
+
+<h2 id="imports-bring-other-modules-into-scope">Imports bring other modules into scope</h2>
+
+<p>Import statements bring entities exported from other modules into the current module. The syntax allows importing individual entities, or all entities into current scope. If imported individually, entities may be bound to local names that are different from the names in the source module.</p>
+
+<p>It is an error to import an entity that is not explicitly exported in its source module.</p>
+
+<p>Imported names are placed in module scope. Names in module scope can be unambiguously referenced using the <code>::</code> prefix.</p>
+
+<p>TODO: load path and dot relative paths and extensions vs. just names</p>
+
+<p><strong>Syntax</strong></p>
+
+<pre><code class="language-text">importDef
+  : 'import' importMember+ 'from' modulePath endOfStatement?
+  ;
+
+importMember
+  : moduleImport
+  | componentImport
+  ;
+
+moduleImport
+  : '*' 'as' importModuleName ','?
+  ;
+
+componentImport
+  : exportComponentName ('as' importComponentName)? ','?
+  ;
+</code></pre>
+
+<p><strong>Examples</strong></p>
+
+<p>Module <code>&quot;./util/strings.tf&quot;</code> is imported as a whole below. Any exported name <code>x</code> is available as <code>strings.x</code> locally.</p>
+
+<pre><code class="language-javascript">import * as strings from &quot;./util/strings.tf&quot;
+</code></pre>
+
+<p>Specific entities are imported individually below. The import statement references two libraries from module <code>&quot;./util/strings.tf&quot;</code>, making them available under new names <code>str</code> and <code>conv</code>.</p>
+
+<pre><code class="language-javascript">import string_lib as str, conversion_lib as conv from &quot;./util/strings.tf&quot;
+</code></pre>
+
+<h2 id="named-modules">Named modules</h2>
+
+<p>Modules can declare themselves visible under a specific unique name in global scope. It is an error to load two modules both claiming the same name.</p>
+
+<p>Named modules are designed to facilitate project-wide configuration environments and global libraries of which there must be exactly one in scope. The idea is that individual modules remain in control of their functional dependencies through imports, while their configuration dependencies are controlled from the outside.</p>
+
+<p>Modules are only loaded if they are imported by other modules or included on the command line. Switching between configuration environments is accomplished by passing the different configuration modules on the command line.</p>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">/* file environments/local.tf */
+module env
+
+export library conf {
+  string data_path: &quot;/home/me/my_project/data/&quot;
+  ...
+}
+
+/* file environments/production.tf */
+module env
+
+export library conf {
+  string data_path: &quot;/var/incoming/data/&quot;
+  ...
+}
+
+/* file main.tf referncing the active env module */
+library my_lib {
+  file_location: (string iso_date) -&gt; $env.conf.data_path .. iso_date .. &quot;_data.csv&quot;
+}
+
+</code></pre>
+
+<p>TODO: more complete examples how to use two different environments from the command line</p>
+
+<h2 id="the-standard-library-is-a-named-module">The standard library is a named module</h2>
+
+<p>The tweakflow runtime always loads the standard library module named <code>std</code>.</p>
+
+<pre><code class="language-javascript">library my_util {
+  foocat: (x, y) -&gt; $std.strings.concat([x, y])
+}
+</code></pre>
+
+<h2 id="aliases-create-convenient-local-names">Aliases create convenient local names</h2>
+
+<p>Tweakflow allows local aliases to shorten names, and allow convenient swapping of libraries.</p>
+
+<pre><code class="language-javascript">/* s can be used as shortcut to $std.strings */
+alias $std.strings as s
+
+/* potentially swap out s with another implementation */
+/* import awesome_strings as s from &quot;./awesome_strings_lib.tf&quot; */
+
+library my_util {
+  /* s alias used here */
+  foocat: (x, y) -&gt; s.concat([x, y])
+}
+</code></pre>
+
+<h2 id="exports-make-parts-of-a-module-public">Exports make parts of a module public</h2>
+
+<p>A module defines its public interface using exports. Items can be exported inline when defined, or explicitly in an export statement. An export statement refers to a name and makes it available for other modules to import, potentially under a new name. Re-exporting an imported name is allowed.</p>
+
+<pre><code class="language-text">exportDef
+  : 'export' reference ('as' exportName)? endOfStatement?
+  ;
+
+exportName
+  : IDENTIFIER
+  ;
+</code></pre>
+
+<p>Below example exports the strings standard library under the name <code>strings</code>, and a local library <code>common</code> under the name <code>util</code> .</p>
+
+<pre><code class="language-javascript">/* file lib.tf */
+export $std.strings as strings
+export common as util
+
+library common {
+  ...
+}
+
+/* file main.tf */
+import util, strings from &quot;./lib.tf&quot;
+</code></pre>
+
+<h1 id="docs-and-metadata-are-annotations">Docs and metadata are annotations</h1>
+
+<p>Modules and all named entities like flows, steps, libraries, and variables support optional documentation annotations and metadata. Documentation annotations and metadata are values that language processing tools can extract for the purpose of generating project documentation. Tweakflow does not impose any restrictions on these expressions, not even on their types. The doc and meta expressions can only consist of literals.</p>
+
+<p>Below is an example of a library with metadata and a docstring.</p>
+
+<pre><code class="language-javascript">library lib
+
+  meta {
+    :version &quot;1.0.0&quot;
+  }
+
+  doc &quot;lib doc string&quot;
+
+{
+  /* library variables */
+  ...
+}  
+</code></pre>
+
+<h1 id="runtime-implementation-notation">Runtime implementation notation</h1>
+
+<p>In cases where an implementation of a step or function is provided by the runtime, the  declaration includes a <code>via</code> expression. The <code>via</code> expression is typically a dict literal containing runtime-specific keys. Its purpose is to inform the runtime which feature is being declared, and how to go about executing it. It is therefore similar to a <code>native</code> or <code>builtin</code> declaration in other languages.</p>
+
+<p><strong>Example for runtime-implemented function</strong></p>
+
+<pre><code class="language-javascript">export library strings {
+  function concat: (list xs) -&gt; string via {:impl &quot;runtime-specific information&quot;}
+}
+</code></pre>
+
+<h1 id="libraries-are-collections-of-values">Libraries are collections of values</h1>
+
+<p>A tweakflow library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Since library contents do not change, all library variables are implicitly declared constant. Libraries can be marked as exports as part of their definition, in which case they are exported using their given name.</p>
+
+<p><strong>Syntax</strong></p>
+
+<pre><code class="language-text">library
+  : 'export'? 'library' identifier metaDef '{' varDef* '}'
+  ;
+
+varDef
+  : dataType? identifier metaDef ':' expression endOfStatement?
+  ;
+</code></pre>
+
+<p><strong>Examples</strong></p>
+
+<p>Below is an exported library holding functions implemented via runtime.</p>
+
+<pre><code class="language-javascript">export library data {
+  function get_in: (x, list keys) -&gt; via {...}
+  function concat: (list lists) -&gt; via {...}
+  function merge: (list maps) -&gt; via {...}
+}
+</code></pre>
+
+<p>Below is a private library that holds constants <code>a</code>, <code>b</code> and function <code>f</code>.</p>
+
+<pre><code class="language-javascript">library lib {
+  a: 1
+  b: 2
+  f: (x) -&gt; x
+}  
+</code></pre>
+
+<h1 id="variables-are-named-values">Variables are named values</h1>
+
+<p>A variable is a named entity that holds a value. If the value of a variable cannot change during the lifetime of its scope, it is called a constant. Depending on the scope in which a variable is declared, constness may be either implied or optional. The documentation of each scope in which variables are declared states the effects of declaring a variable as constant.</p>
+
+<h2 id="variable-declarations-assert-existence">Variable declarations assert existence</h2>
+
+<p>Variable declarations are assertions that a variable exists, but they do not specify any values. This is commonly needed in cases where values are provided by the runtime. Most notably values for variables exposed by steps.</p>
+
+<p>Variable declarations consist of an optional <code>const</code> modifier, an optional data type, and a name identifier. If the data type is omitted the <code>any</code> type is used, indicating that any data type is acceptable. If a data type is declared, the provider of the value is responsible for ensuring that variable values match the declared type.</p>
+
+<p><strong>Syntax</strong></p>
+
+<pre><code class="language-text">varDec
+  : 'const'? dataType? identifier metaDef endOfStatement?
+  ;
+</code></pre>
+
+<h2 id="variable-definitions-specify-values">Variable definitions specify values</h2>
+
+<p>Variable definitions specify the value of the variable as an expression that evaluates in the variable&rsquo;s scope.</p>
+
+<p>Each variable has a data type. If no data type is specified, the <code>any</code> type is used, indicating that a value of any type is acceptable. Variables specifying a type have their values implicitly <a href="#type-casts">cast</a> to the declared data type.</p>
+
+<pre><code class="language-text">varDef
+  : 'const'? dataType? identifier metaDef ':' expression endOfStatement?
+  ;
+</code></pre>
+
+<h1 id="data-types">Data types</h1>
+
+<p>All data types are immutable. Any manipulation of a value generates a new value. This simplifies equality comparisons, and prevents race conditions and bugs that would otherwise arise from steps holding on to instances of records that are then manipulated downstream.</p>
+
+<h2 id="boolean">Boolean</h2>
+
+<p>The <code>boolean</code> type holds the values <code>true</code> and <code>false</code>.</p>
+
+<h2 id="string">String</h2>
+
+<p>The <code>string</code> type holds text information. Strings are immutable. Whenever tweakflow expects a string, it is legal to supply a symbol instead. Tweakflow converts the symbol to a string automatically. Strings are most commonly notated as constant <a href="#string-literals">literals</a>, or as part of <a href="#string-interpolation">string interpolation</a>.</p>
+
+<h2 id="long">Long</h2>
+
+<p>The <code>long</code> type holds 64-bit signed integers. Integers are notated using <a href="#integer-literals">integer literals</a>.</p>
+
+<h2 id="double">Double</h2>
+
+<p>The <code>double</code> type holds 64-bit double-precision IEEE 754 floating point numbers. Literal floating point numbers are notated using <a href="#floating-point-number-literals">floating point number literals</a>.</p>
+
+<h2 id="dict">Dict</h2>
+
+<p>The <code>dict</code> type is an associative dictionary structure where string keys are mapped to arbitrary values. Symbols can be used interchangably with strings for keys as a notational convenience.</p>
+
+<p>Maps can be written using <a href="#map-literals">map literals</a>.</p>
+
+<h2 id="list">List</h2>
+
+<p>The <code>list</code> type holds a finite sequence of values in a defined order. It is equivalent to array types in other languages.</p>
+
+<p>Lists can be written using <a href="#list-literals">list literals</a>.</p>
+
+<h2 id="function">Function</h2>
+
+<p>The <code>function</code> type holds callable functions. Functions with different arguments and return types share the same type. There are no distinct types for different function signatures.</p>
+
+<p>Functions are defined using <a href="#function-literals">function literals</a>.</p>
+
+<h2 id="any">Any</h2>
+
+<p>The <code>any</code> type is not a concrete type of its own, but a type designation that indicates the possibility of any concrete type to be present.</p>
+
+<h1 id="expressions">Expressions</h1>
+
+<p>Expressions evaluate to values. Tweakflow uses strict evaluation. All variable expressions are guaranteed to evaluate at the time their scope evaluates. Output variables always evaluate when a row is passing through an output, for example, regardless of whether said variable is used.</p>
+
+<h2 id="nil">Nil</h2>
+
+<p>The <code>nil</code> value represents the absence of information. It is equivalent to <code>NULL</code> in SQL databases and <code>null</code>, <code>nil</code>, <code>None</code> or <code>Nothing</code> in many programming languages. The <code>nil</code> value is a valid value for any data type.</p>
+
+<h2 id="string-interpolation">String interpolation</h2>
+
+<p>Strings are often constructed from constant pieces and variable contents. String interpolation is used to facilitate such string construction in a compact way.</p>
+
+<p>TODO: implement and document</p>
+
+<h2 id="dict-literals">Dict literals</h2>
+
+<p>Maps are notated as a sequence of key value pairs inside curly braces. Commas separating entries are optional. The key element is an expression that is cast to a string implicitly. The empty dict is notated as <code>{}</code>.</p>
+
+<p>A splat expression can be used to merge maps left to right as it desugars to calls to <code>$std.data.merge</code>.
+For example <code>{:a &quot;a&quot;, ...s}</code> desugars to <code>$std.data.merge([{:a &quot;a&quot;} s])</code></p>
+
+<pre><code class="language-text">mapLiteral
+   : '{' (((key expression)|(splat)) ','? )*  '}'
+   ;
+
+splat
+  : '...' expression
+  ;     
+</code></pre>
+
+<p>Examples of equivalent maps:</p>
+
+<pre><code class="language-javascript">{
+  :year 1887
+  :title &quot;A Study in Scarlet&quot;
+  :author &quot;Sir Arthur Conan Doyle&quot;
+}
+
+{
+  &quot;year&quot; 1887,
+  &quot;title&quot; &quot;A Study in Scarlet&quot;,
+  &quot;author&quot; &quot;Sir Arthur Conan Doyle&quot;
+}
+
+{
+  :year 1887
+  :title &quot;replaced&quot;
+  ...{:title &quot;A Study in Scarlet&quot;, :author &quot;Sir Arthur Conan Doyle&quot;}
+}
+</code></pre>
+
+<h2 id="list-literals">List literals</h2>
+
+<p>Lists are notated as a sequence of values inside square brackets. Commas separating entries are optional. The empty list is notated as <code>[]</code>.</p>
+
+<p>A splat expression can be used to concatenate lists left to right. The splat desugars to calls to <code>$std.data.concat</code>.
+For example <code>[&quot;a&quot;, ...s]</code> desugars to <code>$std.data.concat([[&quot;a&quot;], s])</code>.</p>
+
+<pre><code class="language-text">listLiteral
+  : '[' ((expression|splat) ','? )*  ']'
+  ;
+splat
+  : '...' expression
+  ;    
+</code></pre>
+
+<p>Examples of equivalent lists:</p>
+
+<pre><code class="language-javascript">[1 2 3]
+[1, 2, 3]
+[1 ...[2 3]]
+</code></pre>
+
+<h2 id="functions">Functions</h2>
+
+<p>Functions are notated as a parameter list followed by an optional return type and a return expression.</p>
+
+<p>The return expression may be replaced with a <code>via</code> declaration signifying that the implementation is provided by the runtime. This is equivalent to a <code>native</code> or <code>builtin</code> declaration in other languages.</p>
+
+<pre><code class="language-text">functionLiteral
+  : functionHead (expression|viaDec)
+  ;
+
+functionHead
+  : '(' paramsList ')' '-&gt;' dataType?
+  ;
+
+paramsList
+  : (paramDef ','?) *
+  ;
+
+paramDef
+  : dataType? identifier ('=' expression)?
+  ;
+
+viaDec
+  : 'via' expression
+  ;  
+</code></pre>
+
+<p>If the data type of a parameter is not specified, <code>any</code> is used. Parameters can declare default values. Default values are supplied for missing arguments in a function call. Default values can only consist of literals. If no default value is specified <code>null</code> is used.</p>
+
+<p>If the return data type is not spacified, <code>any</code> is used. If both a return data type and a return expression are specified, the return value is implicitly cast to the return data type. If a function is implemented by the runtime, the implementation must ensure the return type matches the declaration.</p>
+
+<p>Examples of functions:</p>
+
+<pre><code class="language-javascript">/* a constant function returning true */
+() -&gt; true      
+
+/* a function returning its argument incremented by 1 */
+(long x) -&gt; x+1
+
+/* a function returning the integer with the smallest magnitude */
+(long x, long y) -&gt; long
+  if math.abs(x) &lt; math.abs(y)
+    x
+  else
+    y
+
+/*
+  A function combining two input strings to a single output string in some way.
+  Implemented via runtime.
+*/
+(string a, string b) -&gt; string via {...}
+</code></pre>
+
+<h2 id="function-calls">Function calls</h2>
+
+<p>Function calls are notated as round brackets following an expression that evaluates to a function. For the purposes of illustration, the following function should be known as <code>f</code>.</p>
+
+<pre><code class="language-javascript">f: (long id = 0, string name = &quot;n/a&quot;) -&gt; id .. &quot;-&quot; .. name
+</code></pre>
+
+<p>Functions give their parameters names and list them in sequence. Above function has parameters <code>id</code> of type long and <code>name</code> of type string. Both have default values. Unless a parameter type has the <code>any</code> type, arguments given in function calls are automatically cast to the declared parameter type.</p>
+
+<p>When calling a function it is possible to specify parameter values using position, name, or a mix of both.</p>
+
+<h3 id="positional-arguments">Positional arguments</h3>
+
+<p>Arguments given by position just list the values in parameter order and are seperated by comma. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code> as <code>name</code>.</p>
+
+<pre><code class="language-javascript">f(42, &quot;test&quot;)
+</code></pre>
+
+<p>Passing more than the declared number of positional arguments is an error. Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters.</p>
+
+<h3 id="named-arguments">Named arguments</h3>
+
+<p>Arguments given by name are listed in pairs of names and values. They are separated by commas. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code>  as <code>name</code> again, but uses named arguments this time. The order of named arguments does not matter.</p>
+
+<pre><code class="language-javascript">f(:id 42, :name &quot;test&quot;)
+</code></pre>
+
+<p>Named arguments can be supplied via a splat expression. This offers a notational convenience for cases where all arguments have been collected into a dict. Below example supplies the same <code>id</code> and <code>name</code> arguments again. This time using a dict, instead of specifying each parameter individually.</p>
+
+<pre><code class="language-ja">person: {
+	:id 42
+	:name &quot;test&quot;
+}
+result: f(...person)
+</code></pre>
+
+<p>Named arguments can be interspersed with splats. The resulting arguments dict is then merged left to right, with rightmost keys taking precedence in case of duplicates. Below example again effectively passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code> as name.</p>
+
+<pre><code class="language-javascript">p: {
+  :id 0
+  :name &quot;test&quot;
+}
+result: f(...p, :id 42)
+</code></pre>
+
+<p>Passing undeclared named arguments to a function is an error. Omitting arguments results in the missing arguments being supplied through default values of the missing parameters.</p>
+
+<h3 id="mixed-positional-and-named-arguments">Mixed positional and named arguments</h3>
+
+<p>Position and named arguments can be mixed in a single call. Positional arguments are listed first. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code>  as <code>name</code>. It mixes positional and named arguments.</p>
+
+<pre><code class="language-javascript">f(42, :name &quot;test&quot;)
+</code></pre>
+
+<p>Mixed style arguments are a useful idiom when a function exposes a set of leading arguments that have intuitive order, but allows for a set of less common option-style parameters to configure details.</p>
+
+<h2 id="container-access">Container access</h2>
+
+<p>Lists, dict, and string contents are accessed using square brackets.</p>
+
+<p>Lists are indexed with 0-based long values. Indexes supplied for a list are automatically cast to long values.  If the given index does not exist in the list, the value of the access expression is <code>nil</code>.</p>
+
+<pre><code class="language-javascript">library data {
+  list items: [&quot;a&quot; &quot;b&quot; &quot;c&quot;]
+  ...
+  item_0: items[0]        /* &quot;a&quot; */
+  item_1: items[1]        /* &quot;b&quot; */
+  item_2: items[2]        /* &quot;c&quot; */
+  item_missing: items[-1] /* nil */  
+}
+</code></pre>
+
+<p>Maps are indexed with strings. All values given as keys are automatically cast to strings. Symbols are also converted to strings automatically. If a given key does not exist, the value of the access expression is <code>nil</code>.</p>
+
+<pre><code class="language-javascript">library data {
+  map bag: {
+    :a &quot;a&quot;
+    :b &quot;b&quot;
+    :c &quot;c&quot;
+  }
+  ...
+  bag_a: bag[:a]   /* &quot;a&quot;  */
+  bag_b: bag[:b]   /* &quot;b&quot;  */
+  bag_c: bag[&quot;c&quot;]  /* &quot;c&quot; */
+  bag_missing: bag[:missing]  /* nil */
+}
+</code></pre>
+
+<p>Strings are indexed with 0-based long values to access individual characters. All values given as keys are automatically cast to longs. If a given index does not exist, the value of the access expression is <code>nil</code>.</p>
+
+<pre><code class="language-javascript">library data {
+  string greeting: &quot;hello&quot;
+  ...
+  hello_0: greeting[0]   /* &quot;h&quot;  */
+  hello_1: greeting[1]   /* &quot;e&quot; */
+  hello_x: greeting[10]  /* nil */
+}
+</code></pre>
+
+<p>If the container that the access is peformed on is not a dict, list, or string, or if the container is <code>nil</code>, the access value is <code>nil</code>.</p>
+
+<pre><code class="language-javascript">library data {
+  map missing: nil
+  item: missing[:a] /* nil */
+  long non_container: 1
+  access: non_container[0] /* nil */
+}
+</code></pre>
+
+<p>If a given key is <code>nil</code>, the access value is null.</p>
+
+<pre><code class="language-javascript">library data {
+  ...
+  item_n: bag[nil]   /* nil */
+  item_m: items[nil] /* nill */
+}
+</code></pre>
+
+<p>Container access expressions can be chained to access nested data.</p>
+
+<pre><code class="language-javascript">library data {
+  map story: {
+    :name &quot;A Study in Scarlet&quot;
+    :adaptations [
+      {:year 1914 :media &quot;silent film&quot;}
+      {:year 1968 :media &quot;television series&quot;}
+	  ...
+    ]
+  }
+  item: story[:adaptations][0] /* {:year 1914 :media &quot;silent film&quot;} */
+}
+</code></pre>
+
+<p>The chained keys can be placed inside a single set of square brackets.</p>
+
+<pre><code class="language-javascript">story[:adaptations][0] /* {:year 1914 :media &quot;silent film&quot;} */
+story[:adaptations 0]  /* {:year 1914 :media &quot;silent film&quot;} */
+</code></pre>
+
+<p>The list of keys can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in <a href="#list-literals">list literals</a>.</p>
+
+<pre><code class="language-javascript">library data {
+  ...
+  list path: [:adaptations 0]
+  item: story[...path] /* {:year 1914 :media &quot;silent film&quot;} */
+}
+</code></pre>
+
+<p>TODO: how to distinguish between an index not existing and an index having a null value via something like <code>$std.data.key_exists?(container, [:foo :bar :baz 0 :goo])</code></p>
+
+<h2 id="conditionals">Conditionals</h2>
+
+<h3 id="the-if-conditional">The if conditional</h3>
+
+<p>The standard conditional consists of the <code>if</code> keyword, a condition, an optional <code>then</code> keyword followed by a  then_expression, the optional <code>else</code> keyword, and an else_expression. The whole conditional is an expression, and evaluates to either the then_expression, or the else_expression.</p>
+
+<pre><code class="language-text">'if' condition 'then'? then_expression 'else'? else_expression
+</code></pre>
+
+<p>The conditional evaluates the condition and casts it to a boolean value. If the condition evaluates to true, the then_expression is evaluated and becomes the value of the conditional. If the condition evaluates to false, the else_expression is evaluated and becomes the value of the conditional.</p>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">library data {
+  function nvl: (x, value_if_null) -&gt;
+    if x == null
+	  value_if_null
+    else
+      x
+}
+</code></pre>
+
+<h3 id="ternary-expression-conditional">Ternary expression conditional</h3>
+
+<p>The c-style ternary expression syntax is also supported. This syntax emphasizes compactness.</p>
+
+<pre><code class="language-text">condition '?' then_expression ':' else_expression
+</code></pre>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">library data {
+  function num_flags: (x) -&gt; {
+    :positive       x &gt; 0 ? 1 : 0
+    :non_negative   x &gt;=0 ? 1 : 0
+    :negative       x &lt; 0 ? 1 : 0
+  }
+}
+</code></pre>
+
+<h3 id="emphasizing-the-then-branch">Emphasizing the then branch</h3>
+
+<p>This syntax emphasizes the outcome when the condition is true. It puts the expression in the then branch in front of the expression.</p>
+
+<pre><code class="language-text">then_expression 'if' condition 'else' else_expression
+</code></pre>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">library data {
+  function rating: (item) -&gt;
+	item[:upvotes]/item[:votes_total] if item[:votes_total] &gt; 100 else -1
+}
+</code></pre>
+
+<h3 id="emphasizing-the-else-branch">Emphasizing the else branch</h3>
+
+<p>This syntax emphasizes the output when the condition is false. The <code>unless</code> keyword replaces the <code>if</code> keyword, and the condition evaluation logic is reversed accordingly. If the condition evaluates to true, the else_expression is evaluated. If the condition evaluates to false, the then expression is evaluated. The else expression is optional here, and is substituted with <code>null</code> if missing.</p>
+
+<pre><code class="language-text">then_expression 'unless' condition 'else'? else_expression?
+</code></pre>
+
+<p><strong>Examples</strong></p>
+
+<p>The following function is logically equivalent to the example above.</p>
+
+<pre><code class="language-javascript">library data {
+  function rating: (item) -&gt;
+	item[:upvotes]/item[:votes_total] unless item[:votes_total] &lt; 100 else -1
+}
+</code></pre>
+
+<p>This form is particularly useful for guard expressions which conditionally throw when given unexpected data. Below validation function either throws or returns true. The notation takes advantage of the fact that the <code>else</code> keyword is optional to increase readability.</p>
+
+<pre><code class="language-javascript">library data {
+  function ensure_valid: (num) -&gt;
+	throw {:code 0 :message &quot;num cannot be null&quot;}      unless num != null
+    throw {:code 1 :message &quot;num must be positive&quot;}    unless num &gt; 0
+    throw {:code 2 :message &quot;num must not exceed 100&quot;} unless num &lt;= 100  
+    true
+}
+</code></pre>
+
+<h2 id="errors">Errors</h2>
+
+<p>Tweakflow expressions can throw errors, which can be caught in a parent expression. If an error is not caught by a parent expression, it propagates up to the parent step or flow which can then <a href="#flows-process-errors">handle the error</a>.</p>
+
+<h3 id="throwing-errors">Throwing errors</h3>
+
+<p>Errors are values in tweakflow. Consequently, the <code>throw</code> statement takes an expression that it evaluates as the error value.</p>
+
+<pre><code class="language-text">'throw' expression
+</code></pre>
+
+<p>The thrown expression can be any value at all, but a dict with a set of keys like <code>:code</code>, <code>:message</code> and others detailing the cause of the error helps building robust error handling.</p>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">library data {
+
+  /* add two longs, throw if binary overflow or underflow happens */
+  function add: (long x=0, long y=0, throw_on_overflow=true) -&gt;
+    let {
+      long sum: x + y
+    }
+    if throw_on_overflow
+	  if x &gt; 0 and y &gt; 0 and sum &lt;= 0 then throw {:code &quot;overflow&quot;, :x x, :y y}
+      if x &lt; 0 and y &lt; 0 and sum &gt;= 0 then throw {:code &quot;underflow&quot;, :x x, :y y}
+      sum
+    else
+      sum
+}
+</code></pre>
+
+<h3 id="catching-errors">Catching errors</h3>
+
+<p>Errors can be caught by a parent expression if they are enclosed in a <code>try</code> and <code>catch</code> expression. If the error value is of interest, it can be bound to an identifier in the <code>catch</code> block.</p>
+
+<pre><code>'try' try_expression 'catch' identifier? catch_expression
+</code></pre>
+
+<p>The whole try-catch block is an expression. It evaluates the try_expression, and if that does not throw, the result of the try-catch expression is the result of the try_expression. If the evaluation of the try_expression throws, then the error value is bound to the identifier, if one is supplied, and the catch_expression is evaluated. The result of the catch_expression then becomes the result of the try-catch expression. If the evaluation of the catch_expression throws, the error is propagated up as usual.</p>
+
+<p><strong>Examples</strong></p>
+
+<pre><code class="language-javascript">library data {
+   /* add two longs, revert to fallback_value if overflow or underflow happens */
+   function add_safe: (long x=0, long y=0, fallback_value=0){
+     try
+       add(x, y)
+     catch error
+       if (error[:code] == &quot;overflow&quot;) or (error[:code] == &quot;underflow&quot;)
+         fallback_value
+       else
+         throw error             
+   }
+}
+</code></pre>
+
+<h2 id="type-checks">Type checks</h2>
+
+<p>Tweakflow allows checking the type of a value using the <code>is</code> keyword.</p>
+
+<pre><code>expression 'is' (dataType|'null')
+</code></pre>
+
+<p>The is check evaluates to <code>true</code> or <code>false</code> depending on whether the given expression evaluates to a non-null member of the given data type.</p>
+
+<p>If <code>any</code> is given as data type, the result is true only if the expression evaluates to a non-null value, making it logically identical with <code>expression != null</code>.</p>
+
+<p>If <code>null</code> is given instead of a data type, the expression evaluates to true only if the expression evalutes to <code>null</code>, and is therefore logically identical with <code>expression == null</code>.</p>
+
+<p><strong>Examples</strong></p>
+
+<pre><code class="language-javascript">&quot;&quot;     is string      /* true  */
+null   is string      /* false */
+42     is string      /* false */
+{}     is list        /* false */
+[]     is list        /* true  */
+{}     is map         /* true  */
+null   is map         /* false */
+[1,2]  is map         /* false */
+&quot;hi&quot;   is null        /* false */
+null   is null        /* true  */
+&quot;foo&quot;  is any         /* true  */
+null   is any         /* false */
+</code></pre>
+
+<p>Below utility function checks if the given argument is empty, comparing with empty strings, lists and maps, based on the type of the argument.</p>
+
+<pre><code class="language-javascript">library data {  
+   function is_empty: (any x=null){
+     if x is null    then true
+     if x is string  then x == &quot;&quot;
+     if x is map     then x == {}
+     if x is list    then x == []
+     false
+   }
+}
+</code></pre>
+
+<h2 id="type-casts">Type casts</h2>
+
+<p>Variables, parameters, settings and return values have declared types. Whenever a value is supplied or returned, it is implicitly cast to the declared type automatically.</p>
+
+<p>The <code>as</code> keyword also allows to explicitly cast a value expression to a given type.</p>
+
+<pre><code class="language-text">expression 'as' dataType
+</code></pre>
+
+<p>Type casts may throw errors if the types are incompatible or the values are not convertible. In general, type casts only succeed if there is either no information loss, or the amount of information loss is no greater than to be expected from the types involved. Types that do not support type casts are converted using standard library functions.</p>
+
+<p>Any errors thrown during type casts are maps of the form:</p>
+
+<pre><code class="language-javascript">{
+  :code &quot;cast_error&quot;
+  :message &quot;descriptive string ...&quot;
+  :details {... /* sub-map with more detailed information about the error */ }
+
+}
+</code></pre>
+
+<h3 id="available-type-casts">Available type casts</h3>
+
+<p><strong>Boolean to Long</strong></p>
+
+<p>Boolean <code>true</code> is converted to <code>1</code> and boolean <code>false</code> is converted to <code>0</code>.</p>
+
+<p><strong>Boolean to Double</strong></p>
+
+<p>Boolean <code>true</code> is converted to <code>1.0</code> and boolean <code>false</code> is converted to <code>0.0</code>.</p>
+
+<p><strong>Boolean to String</strong></p>
+
+<p>Boolean <code>true</code> is converted to <code>&quot;true&quot;</code> and boolean <code>false</code> is converted to <code>&quot;false&quot;</code>.</p>
+
+<p><strong>String to Boolean</strong></p>
+
+<p>The empty string <code>&quot;&quot;</code> is cast to <code>false</code>. Any other string value is cast to <code>true</code>.</p>
+
+<p><strong>String to Long</strong></p>
+
+<p>The string is first trimmed of whitespace on both sides. Then it is interpreted as a decimal number with an optional leading <code>+</code> or <code>-</code> sign, any leading zeros, and digits <code>0-9</code>. The trimmed string must conform to the regular expression:</p>
+
+<pre><code class="language-text">[+-]?[0-9]+
+</code></pre>
+
+<p>If the resulting number does not fit in a 64-bit signed integer, an error is thrown.</p>
+
+<p><strong>String to Double</strong></p>
+
+<p>Strings cast to Doubles successfully if they pass the following regular expression:</p>
+
+<pre><code class="language-text">[\x00-\x20]*                                 # optional leading whitespace
+[+-]?                                        # optional sign
+(NaN)|                                       # Not a Number
+(Infinity)|                                  # Infinity
+([0-9]+(\.)?([0-9]+)([eE][+-]?[0-9]+)?)|     # Digits optionally followed by decimal dot
+                                             # fractional digits, and exponent                                              
+\.[0-9]+([eE][+-]?[0-9]+)?)                  # decimal dot followed by fractional digits
+                                             # and exponent
+[\x00-\x20]*                                 # optional trailing whitespace
+</code></pre>
+
+<p><strong>String to List</strong></p>
+
+<p>A string is converted to a list of character strings. So <code>&quot;hello&quot;</code> is converted to <code>[&quot;h&quot; &quot;e&quot; &quot;l&quot; &quot;l&quot; &quot;o&quot;]</code>. The empty string <code>&quot;&quot;</code> converted to an empty list <code>[]</code>.</p>
+
+<p><strong>Long to Boolean</strong></p>
+
+<p>The long <code>0</code> is converted to <code>false</code>. Any other long value is converted to <code>true</code>.</p>
+
+<p><strong>Long to Double</strong></p>
+
+<p>The long number is converted to to closest double value possible.</p>
+
+<p><strong>Long to String</strong></p>
+
+<p>The long is converted to a decimal number with a potential leading minus sign.</p>
+
+<p><strong>Double to Boolean</strong></p>
+
+<p>The double values <code>0.0</code>,  <code>-0.0</code>, and <code>NaN</code> are converted to <code>false</code>. Any other values are converted to <code>true</code>.</p>
+
+<p><strong>Double to Long</strong></p>
+
+<p>The double value is truncated at the decimal point and converted to the closest long value.</p>
+
+<p><strong>Double to String</strong></p>
+
+<ul>
+<li>If the double value is <code>NaN</code>, the string is <code>&quot;NaN&quot;</code>.</li>
+<li>If the double value is positive infinity, the string is <code>&quot;Infinity&quot;</code>.</li>
+<li>if the double value is negative infinity, the string is <code>&quot;-Infinity&quot;</code>.</li>
+<li>if the double value is 0.0, the string is <code>&quot;0.0&quot;</code></li>
+<li>if the double value is -0.0, the string is <code>&quot;-0.0&quot;</code></li>
+</ul>
+
+<p>For any other double value, the exact string representation is runtime-defined. The default runtime uses the conventions of the Java language:</p>
+
+<p><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#toString(double">https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#toString(double</a>)</p>
+
+<p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers functions to to convert a double value to a string in a defined output format.</p>
+
+<p><strong>List to Boolean</strong></p>
+
+<p>An empty list converts to <code>false</code>. Any other list value converts to <code>true</code>.</p>
+
+<p><strong>List to Dict</strong></p>
+
+<p>Lists are converted as sequences of key-value pairs. <code>[&quot;a&quot; 1 &quot;b&quot; 2]</code> is converted to <code>{:a 1 :b 2}</code>. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If one of the keys is <code>null</code> or cannot be cast to a string, an error is thrown.</p>
+
+<pre><code class="language-javascript">[&quot;a&quot; 1 &quot;b&quot; 2 &quot;c&quot; 3] as map    /* {:a 1 :b 2 :c 3} */
+[1 2 3 4] as map              /* {&quot;1&quot; 2 &quot;3&quot; 4} */
+[] as map                     /* {} */
+[&quot;a&quot; &quot;b&quot; &quot;a&quot; &quot;d&quot;]             /* {:a &quot;d&quot;} */
+[1 2 3] as map                /* error: odd number of items in list */
+[&quot;a&quot; null &quot;b&quot; 1]              /* {:a null :b 1} */
+[&quot;a&quot; &quot;b&quot; null &quot;d&quot;]            /* error: null value in key position */
+</code></pre>
+
+<p><strong>Dict to Boolean</strong></p>
+
+<p>An empty dict converts to <code>false</code>. Any other dict value converts to <code>true</code>.</p>
+
+<p><strong>Dict to List</strong></p>
+
+<p>Maps are converted to lists as a sequence of key-value pairs. An empty dict gives an empty list. All keys are strings. Keys and values appear in pairs, but the order of the pairs is not defined.</p>
+
+<pre><code class="language-javascript">{} as list                /* [] */
+{:a &quot;foo&quot; :b &quot;bar&quot;}       /* [&quot;a&quot; &quot;foo&quot; &quot;b&quot; &quot;bar&quot;] */
+{:a 1 :b 2}               /* [&quot;b&quot; 2 &quot;a&quot; 1] */
+</code></pre>
+
+<p><strong>Nil casts</strong></p>
+
+<p>Casting a <code>nil</code> value to a boolean results in <code>false</code>. Casting to any other type results in <code>nil</code>.</p>
+
+<h2 id="local-variables">Local variables</h2>
+
+<p>Tweakflow allows defining local variables for holding on to temporary results. The let expression defines a set of variables that are bound in its scope, shadowing any existing local variables of the same name.</p>
+
+<pre><code>'let' '{' varDef* '}' expression
+</code></pre>
+
+<p><strong>Example</strong></p>
+
+<pre><code class="language-javascript">library data {
+  function rating: (item) -&gt;
+    let {      
+      enough_votes: item[:votes_total] &gt; 100
+    }
+	if enough_votes
+      item[:upvotes]/item[:votes_total]
+    else
+      -1
+}
+</code></pre>
+
+<h2 id="references">References</h2>
+
+<p>Expressions can reference variables available in scope. There are four levels of scope in general: global, module, state and local. If a variable is referenced via its name, it is searched in the current scope and if not found, the search propagates upwards the scope chain. Global scope contains named modules only. Global names are visible from everywhere, but references must be prefixed with <code>$</code> to explicitly reference a name in global scope.</p>
+
+<h3 id="library-scope">Library scope</h3>
+
+<p>Libraries define a set of variables in library local scope. The module and global scopes are visible as well.</p>
+
+<pre><code class="language-mermaid">graph LR
+	a((local&lt;br&gt;library))--&gt;b((module))
+	b--&gt;c((global))
+
+</code></pre>
+
+<h3 id="global-names">Global names</h3>
+
+<p>Global scope only holds module names. To resolve a reference in global scope, the reference must be prepended with <code>$</code>. This is unambiguously referencing the global symbol name.</p>
+
+<pre><code class="language-javascript">/* a global module m is included */
+
+library lib_a {
+  m: 1
+  local_ref: m 					/* references the local variable */
+  global_ref: $m.lib.foo    	/* references the global name */
+}
+</code></pre>
+
+<h3 id="module-names">Module names</h3>
+
+<p>As with global scope, module scope does not contain variables directly. It can contain anything that is declared as part of the module, such as libraries, flows and steps. Therefore there are no module variables. There are module names.</p>
+
+<p>To skip the search chain and start resolving a reference in module scope, the reference can be prepended with <code>::</code>. This helps unambiguously referencing a namel in module scope, regardless of whether a name in a closer scope is shadowing it.</p>
+
+<pre><code class="language-javascript">import * as m from &quot;./util_module.tf&quot;
+
+library lib_a {
+  m: 1
+  local_ref: m 					/* references the local variable */
+  module_ref: ::m.lib.foo    	/* references name in module scope */
+}
+
+library lib_b {
+  module_ref: m.lib.foo         /* references name in module scope */
+}
+</code></pre>
+
+<h3 id="step-state-variables">Step state variables</h3>
+
+<p>Steps can declare variables in their state scope, which is accesible from step input and output scopes.</p>
+
+<p>To skip the search chain and start resolving a reference in state scope, the reference can be prepended with <code>@</code>. This helps unambiguously referncing the state variable, regardless of whether a local variable is shadowing it.</p>
+
+<p>In below example the <code>GetCustomer</code> step declares a <code>hash</code> variable containing a function. The step configuration calls the function using the prefix notation.</p>
+
+<pre><code class="language-javascript">data_flow my_flow {
+  ...
+  steps {
+	/* GetCustomer declares a hash state variable containing a function */
+    GetCustomer get_customer {
+	  ...      
+      output out {
+        /* GetCustomer out scope declares a customer variable */
+        set {
+          string hash: @hash(customer)
+        }
+      }
+    }
+  }
+  ...
+}
+</code></pre>
+
+<h2 id="operators">Operators</h2>
+
+<p>Tweakflow features the following operators in precedence order.</p>
+
+<p>All binary operators are left-associative.  Taking addition as an example <code>a + b + c</code> is evaluated as <code>(a + b) + c</code>.</p>
+
+<p>Operators desugar to standard library calls. There are no special operator semantics, thus operator behavior is completely defined by the behaviour of standard library functions.</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Operator</th>
+<th align="left">Role</th>
+<th align="left">Semantics</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><code>-a</code></td>
+<td align="left">Negation</td>
+<td align="left"><code>$std.math.negate(a)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>!a</code></td>
+<td align="left">Boolean not</td>
+<td align="left"><code>$std.core.'not'(a)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>not a</code></td>
+<td align="left">Boolean not</td>
+<td align="left"><code>$std.core.'not'(a)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a ** b</code></td>
+<td align="left">Exponentiation</td>
+<td align="left"><code>$std.math.power(a, b)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a * b</code></td>
+<td align="left">Multiplication</td>
+<td align="left"><code>$std.math.product([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a / b</code></td>
+<td align="left">Division</td>
+<td align="left"><code>$std.math.divide(a, b)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a % b</code></td>
+<td align="left">Modulo</td>
+<td align="left"><code>$std.math.modulo(a, b)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a + b</code></td>
+<td align="left">Addition</td>
+<td align="left"><code>$std.math.sum([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a - b</code></td>
+<td align="left">Subtraction</td>
+<td align="left"><code>$std.math.subtract(a, b)</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a .. b</code></td>
+<td align="left">String concatenation</td>
+<td align="left"><code>$std.strings.concat([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a &lt; b</code></td>
+<td align="left">Less than</td>
+<td align="left"><code>$std.math.'&lt;'([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a &lt;= b</code></td>
+<td align="left">Less than or equal</td>
+<td align="left"><code>$std.math.'&lt;='([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a &gt; b</code></td>
+<td align="left">Greater than</td>
+<td align="left"><code>$std.math.'&gt;'([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a &gt;= b</code></td>
+<td align="left">Greater than or equal</td>
+<td align="left"><code>$std.math.'&gt;='([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a == b</code></td>
+<td align="left">Equality</td>
+<td align="left"><code>$std.core.'=='([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a != b</code></td>
+<td align="left">Negated equality</td>
+<td align="left"><code>$std.core.'not'($std.core.'=='([a, b]))</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a &amp;&amp; b</code></td>
+<td align="left">Boolean and</td>
+<td align="left"><code>$std.core.'and'([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left"><code>a and b</code></td>
+<td align="left">Boolean and</td>
+<td align="left"><code>$std.core.'and'([a, b])</code></td>
+</tr>
+
+<tr>
+<td align="left">`a</td>
+<td align="left"></td>
+<td align="left">b`</td>
+</tr>
+
+<tr>
+<td align="left"><code>a or b</code></td>
+<td align="left">Boolean or</td>
+<td align="left"><code>$std.core.'or'([a, b])</code></td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="lexical-tokens">Lexical tokens</h1>
+
+<h2 id="keywords">Keywords</h2>
+
+<p><code>global</code>, <code>import</code>, <code>export</code>, <code>as</code>, <code>from</code>, <code>meta</code>, <code>doc</code>, <code>null</code> &hellip;</p>
+
+<p>TODO: final list of keywords from lexer</p>
+
+<h2 id="boolean-literals">Boolean literals</h2>
+
+<p>The literals <code>true</code> and <code>false</code> are boolean literals.</p>
+
+<h2 id="the-nil-literal">The nil literal</h2>
+
+<p>The <code>nil</code> literal represents the singleton <a href="#nil">nil value</a>.</p>
+
+<h2 id="string-literals">String literals</h2>
+
+<p>TODO: fix interpolation to be proper expression interpolation and adopt ruby or javascript syntax %{}</p>
+
+<h2 id="symbols">Symbols</h2>
+
+<p>Tweakflow uses symbol literals for named parameters and dict keys. Symbols begin with a colon followed by a non-numeric character, and can only contain alphanumeric characters as well as <code>_</code> as subsequent characters. Symbols can be escaped by single quotes after the colon, in which case the above limitations do not apply. Escaped symbols can consist of any unicode character except for the single quote character itself. If a symbol is used in an expression, it evaluates to a string with its name as the string value.</p>
+
+<p>TODO: allow escaping the escape character for arbitrary keys via \&rsquo;</p>
+
+<p>TODO: test <code>.</code> in symbols</p>
+
+<pre><code class="language-text">:valid_key
+:invalid-key
+:'escaped-valid-key'
+</code></pre>
+
+<h2 id="identifiers">Identifiers</h2>
+
+<p>Identifiers begin with a non-numeric character, and can only contain alphanumeric characters as well as <code>_</code> as subsequent characters. Identifiers can be escaped by single quotes, in which case the above limitations do not apply. Escaped identifiers can consist of any unicode character except for the single quote character itself.</p>
+
+<p>TODO: allow escaping the escape character for arbitrary identifiers via \&rsquo;</p>
+
+<p>TODO: test <code>.</code> in identifiers</p>
+
+<pre><code class="language-text">valid_identifier
+invalid-identifier
+'escaped-valid-identifier'
+</code></pre>
+
+<h2 id="integer-literals">Integer literals</h2>
+
+<p>Decimal integers are read as 64-bit signed integers of type <code>long</code>.</p>
+
+<p>Examples:</p>
+
+<pre><code class="language-javascript">42
+-2
+</code></pre>
+
+<h2 id="floating-point-number-literals">Floating point number literals</h2>
+
+<p>Floating point numbers are read as 64 bit double precision literals of type <code>double</code> based on the IEEE 754 specification.</p>
+
+<p>There are several ways to notate a double literal:</p>
+
+<ul>
+<li>As integer followed by decimal dot, followed by fraction digits and optional exponent notation</li>
+<li>As decimal dot, followed by fraction digits and optional exponent notation</li>
+<li>As integer followed by exponent notation</li>
+</ul>
+
+<pre><code class="language-javascript">/* below notations all represent the decimal number 3.1315 */
+3.1315
+0.31315e1
+.31315e1
+31315e-4
+</code></pre>
+
+<h2 id="end-of-statement-markers">End of statement markers</h2>
+
+<p>Tweakflow allows to explicitly mark the end of a statement with a semicolon or whitespace. The language is structured to not be ambiguous, and as such any end of statement markers are entirely optional. End of statement markers can be used to improve readability. They are parsed as whitespace. Consecutive end of statement markers are read as one.</p>
+
+<p>Below is a small library with variable definitions separated by end of statement markers.</p>
+
+<pre><code>library my_lib {
+  a: 1;
+  b: 2;
+}
+</code></pre>
+
+<p>Equivalent, but arguably less human-readable library notation with variable definitions lacking end of statement separation.</p>
+
+<pre><code class="language-text">library my_lib {
+  a: 1 b: 2
+}
+</code></pre>
+
+<h2 id="comments">Comments</h2>
+
+<h3 id="line-comments">Line comments</h3>
+
+<p>The <code>#</code> token signifies a line comment. The <code>#</code> character and all subsequent characters to the next newline are ignored.</p>
+
+<pre><code class="language-text"># This is a comment
+</code></pre>
+
+<h3 id="span-comments">Span comments</h3>
+
+<p>The comment markers <code>/*</code> and <code>*/</code> enclose a comment that can span multiple lines. Span comments can be nested.</p>
+
+<pre><code class="language-text">/* This is a comment */
+</code></pre>
+
+<h3 id="block-comments">Block comments</h3>
+
+<p>The marker <code>###</code> starts a comment section that lasts until a line beings with <code>###</code>. The comment text is enclosed between the two markers.</p>
+
+<pre><code class="language-text">###
+This is a comment section.
+It spans multiple lines.
+###
+</code></pre>
+
+<h2 id="other-tokens">Other tokens</h2>
+
+<p>The following character sequences are lexical tokens representing operators and other syntax features:</p>
+
+<p><code>.</code>, <code>..</code>, <code>...</code>, <code>-</code>, <code>!</code>, <code>**</code>, <code>*</code>, <code>+</code>, <code>/</code>, <code>%</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>=</code>, <code>==</code>, <code>!=</code>, <code>&amp;&amp;</code>, <code>||</code>, <code>?</code>, <code>:</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>, <code>(</code>, <code>)</code></p>
+
+      </main>
+    </div>
+    
+<footer>
+  <div class="footer__copyright">
+    © Twineworks 2017
+  </div>
+  <div class="footer__social"></div>
+  <div class="footer__links">
+    <a href="/tweakflow/legal_notice">Legal notice</a>
+  </div>
+</footer>
+
+    <script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
+<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
+
+<script language="javascript">window.noZensmooth = true;</script>
+<script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
+
+<script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
+
+<script type="text/javascript" src="/tweakflow/js/toc.js"></script>
+
+</body>
+
+</html>

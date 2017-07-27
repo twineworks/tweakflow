@@ -3,37 +3,28 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Getting started | Tweakflow: embeddable expression language for Java</title>
+    <title>Getting started | tweakflow - an embeddable expression language for the JVM</title>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="description" content="" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     
-<meta property="og:locale" content="en-us">
-<meta property="og:title" content="Getting started" />
-<meta property="og:description" content="" />
-<meta property="og:site_name" content="Tweakflow: embeddable expression language for Java" />
-<meta property="og:url" content="https://twineworks.github.io/tweakflow/getting-started/" />
+    <meta name="description" content="" />
 
-
-
-
-<meta property="og:type" content="article" />
-<meta property="article:section" content="" />
-<meta property="article:published_time" content="0001-01-01" />
-<meta property="article:modified_time" content="0001-01-01" />
-
-    
-    <base href="https://twineworks.github.io/tweakflow/">
-    <meta name="generator" content="Hugo 0.25.1" />
-    <link rel="canonical" href="https://twineworks.github.io/tweakflow/getting-started/">
-    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
-<link rel="stylesheet" href="/tweakflow/css/normalize.css">
-<link rel="stylesheet" href="/tweakflow/css/style.css">
+    <link rel="stylesheet" href="/tweakflow/css/normalize.css">
+    <link rel="stylesheet" href="/tweakflow/css/style.css">
 
+    <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
+    <link rel="manifest" href="/tweakflow/img/manifest.json">
+    <link rel="mask-icon" href="/tweakflow/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/tweakflow/img/favicon.ico">
+    <meta name="msapplication-config" content="/tweakflow/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
+    <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
+    <meta name="application-name" content="tweakflow - an embeddable expression language for the JVM">
 
 </head>
 
@@ -44,14 +35,18 @@
 
       
       <div class="menu__logo-wrapper">
-          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg" width="320" height="80"></a>
+          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg"></a>
       </div>
       
       <nav role="navigation" class="menu__items-wrapper">
         <ul class="menu__items">
             
             
-            <li class="menu__item"><a class="menu__item-link" href="https://github.com/twineworks/tweakflow">Source code</a></li>
+            <li class="menu__item"><a class="menu__item-link" href="/tweakflow/getting-started/">Getting started</a></li>
+            
+            <li class="menu__item"><a class="menu__item-link" href="/tweakflow/modules/std/">Standard library</a></li>
+            
+            <li class="menu__item"><a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source code</a></li>
             
             
         </ul>
@@ -62,14 +57,596 @@
 
 </header>
 
-    <main class="single-content" role="main">
+    <div class="content-wrapper">
+       
+      <aside class="toc">
+        <div class="toc-wrapper">
+          <div class="scrollable-parent">
+            <div class="scrollable-content">
+              <nav id="TableOfContents">
+<ul>
+<li><a href="#getting-started-with-tweakflow">Getting started with tweakflow</a>
+<ul>
+<li><a href="#starting-a-tweakflow-repl">Starting a tweakflow REPL</a></li>
+<li><a href="#evaluating-expressions">Evaluating expressions</a></li>
+<li><a href="#expression-scoped-variables">Expression-scoped variables</a></li>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#variable-interpolation-in-strings">Variable interpolation in strings</a></li>
+<li><a href="#functions">Functions</a></li>
+<li><a href="#conditionals">Conditionals</a></li>
+<li><a href="#list-comprehensions">List comprehensions</a></li>
+<li><a href="#pattern-matching">Pattern matching</a></li>
+<li><a href="#throwing-and-catching-errors">Throwing and catching errors</a></li>
+<li><a href="#debugging">Debugging</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul></li>
+</ul>
+</nav>
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <main class="single-content" role="main">
         
 
-<h1 id="getting-started">Getting started</h1>
+<h1 id="getting-started-with-tweakflow">Getting started with tweakflow</h1>
 
-<p>Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</p>
+<p>This document is an interactive step by step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow. It takes approximately <strong>x</strong> minutes to complete.</p>
 
-    </main>
+<h2 id="starting-a-tweakflow-repl">Starting a tweakflow REPL</h2>
+
+<p><a href="link/to/releases">Download</a> a recent release jar. And launch it using:</p>
+
+<p><code>java -jar tweakflow-version.jar itf</code></p>
+
+<p>The <code>itf</code> argument tells tweakflow that you would like to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.</p>
+
+<p>You should see a prompt similar to this:</p>
+
+<pre><code>$ java -jar tweakflow-0.0.1-SNAPSHOT.jar itf
+tweakflow interactive shell    \? for help, \q to quit
+std.tf&gt;
+</code></pre>
+
+<p>The prompt tells you which module context you are in. In our case it is the <a href="/tweakflow/modules/std/">std.tf</a> module which is the standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering <code>\q</code>.</p>
+
+<h2 id="evaluating-expressions">Evaluating expressions</h2>
+
+<p>You can now type in expressions, and the REPL will evaluate them, and print the results.</p>
+
+<p>Evaluate some number expressions using conventional operators:</p>
+
+<pre><code>tweakflow interactive shell    \? for help, \q to quit
+&gt; 1+3
+4
+&gt; 2*8
+16
+</code></pre>
+
+<p>Evaluate boolean expressions:</p>
+
+<pre><code>&gt; 1 &lt; 5
+true
+&gt; 2*3 == 6
+true
+&gt; 2*3 &lt; 3
+false
+</code></pre>
+
+<p>Evaluate strings and use the string concatenation operator:</p>
+
+<pre><code>&gt; &quot;Hello World!&quot;
+&quot;Hello World!&quot;
+&gt; &quot;Hello &quot; .. &quot;World!&quot;
+&quot;Hello World!&quot;
+</code></pre>
+
+<p>Create some lists, and nest them too:</p>
+
+<pre><code>&gt; [1, 2, &quot;hello&quot;]
+[1, 2, &quot;hello&quot;]
+&gt; [[1, 2], [&quot;one&quot;, &quot;two&quot;]]
+[[1, 2], [&quot;one&quot;, &quot;two&quot;]]
+</code></pre>
+
+<p>Create a dictionary:</p>
+
+<pre><code>&gt; {:one 1, :two 2}
+{
+  :one 1,
+  :two 2
+}
+</code></pre>
+
+<p>Create a datetime value. You don&rsquo;t need to supply the time if you only need precision of days.</p>
+
+<pre><code>&gt; 2017-01-23T
+2017-01-23T00:00:00Z@`UTC`
+</code></pre>
+
+<p>You can include the time, but omit the time zone, implying UTC time, which is fine for most applications that only use local time, and don&rsquo;t care about time zone differences.</p>
+
+<pre><code>&gt; 2017-01-23T18:23:11
+2017-01-23T18:23:11Z@`UTC`
+</code></pre>
+
+<p>You can also go fully granular and create a fully zoned datetime value, complete with date, time, timezone offset and political timezone:</p>
+
+<pre><code>&gt; 2017-01-23T18:23:11+01:00@`Europe/Berlin`
+2017-01-23T18:23:11+01:00@`Europe/Berlin`
+</code></pre>
+
+<p>Let&rsquo;s call some functions from the standard library. We&rsquo;re using positional arguments, since these functions only take one argument.</p>
+
+<pre><code>&gt; strings.length(&quot;foo&quot;)
+3
+&gt; data.unique([1,1,2,3,3,2,1,2,3])
+[1, 2, 3]
+</code></pre>
+
+<p>Now add 100 days to a date, and see where you end up. The function <a href="link to add/period">add_period</a> takes multiple arguments, and it&rsquo;s convenient to just supply the days using named arguments, and leave the rest at default 0.</p>
+
+<pre><code>&gt; time.add_period(2017-01-01T, days: 100)
+2017-04-11T00:00:00Z@`UTC`
+</code></pre>
+
+<p>You can easily define a function yourself, and even call it immediately inline:</p>
+
+<pre><code>&gt; (x) -&gt; x*x
+function
+&gt; ((x) -&gt; x*x)(5)
+25
+</code></pre>
+
+<h2 id="expression-scoped-variables">Expression-scoped variables</h2>
+
+<p>You can define helper variables scoped to an expression using <a href="/tweakflow/reference/#let">let</a>:</p>
+
+<pre><code>&gt; let {sq: (x) -&gt; x*x; five: 5} sq(five)
+25
+</code></pre>
+
+<p>The REPL interprets hitting enter as a request to evaluate the expression. If you want to format your expression using multiple lines, you can enter multi-line edit mode using <code>\e</code> and the REPL will accept multiple lines as part of a single expression until you enter <code>\e</code> again. The REPL indicates you are in multi-line mode by placing a <code>*</code> in the prompt.</p>
+
+<pre><code>&gt; \e
+* let {
+*   sq: (x) -&gt; x*x
+*   five: 5
+* }
+* sq(five)
+* \e
+25
+</code></pre>
+
+<h2 id="variables">Variables</h2>
+
+<p>The REPL allows you to define ad-hoc variables visible to all expressions in the session. Let&rsquo;s use that ability to assign a name to a function.</p>
+
+<pre><code>&gt; square: (x) -&gt; x*x
+function
+&gt; square(5)
+25
+</code></pre>
+
+<p>You can assign any expression to a variable, and the tweakflow REPL will re-evaluate the expression value each time you type in a new definition.</p>
+
+<pre><code>&gt; x: 10
+10
+&gt; y: 2
+2
+&gt; z: x*y
+20
+&gt; y: 4
+4
+&gt; z
+40
+</code></pre>
+
+<p>You can check your session variable definitions using <code>\v</code>.</p>
+
+<pre><code>&gt; \v
+4 interactive variables defined
+square: (x) -&gt; x*x
+x: 10
+y: 4
+z: x*y
+&gt;
+</code></pre>
+
+<p>You can inspect what your session variable values are using <code>\i</code>.</p>
+
+<pre><code>&gt; \i
+# interactive section
+  square: function
+  `$`: 40
+  x: 10
+  y: 4
+  z: 40
+</code></pre>
+
+<p>The REPL defines a special variable <code>$</code> that it maintains. It is defined as the most recently entered expression.</p>
+
+<h2 id="variable-interpolation-in-strings">Variable interpolation in strings</h2>
+
+<p>You can include the values of variables in double quoted strings using the <code>#{varname}</code> escape sequence.</p>
+
+<pre><code>&gt; name: &quot;Joe&quot;
+&quot;Joe&quot;
+&gt; &quot;Hello #{name}&quot;
+&quot;Hello Joe&quot;
+</code></pre>
+
+<p>Single quoted strings do not support escape sequences, and variable interpolation does not happen.</p>
+
+<pre><code>&gt; 'Hello #{name}'
+&quot;Hello \#{name}&quot;
+</code></pre>
+
+<h2 id="functions">Functions</h2>
+
+<p>Functions are values. You can assign them to variables and pass them around. In fact, many standard library functions accept functions as parameters, or return them as a result.</p>
+
+<p>Functions are notated as <code>(parameter list) -&gt; return value</code>. Let&rsquo;s define and call a simple function.</p>
+
+<pre><code>&gt; next: (x) -&gt; x+1
+function
+&gt; next(2)
+3
+</code></pre>
+
+<p>The <a href="link/to/map">data.map</a> function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.</p>
+
+<pre><code>&gt; data.map([1, 0, 3, -2], next)
+[2, 1, 4, -1]
+</code></pre>
+
+<p>You can write functions inline without naming them. They are just values, like strings and numbers.</p>
+
+<pre><code>&gt; data.map([1, 0, 3, -2], (x) -&gt; x*x)
+[1, 0, 9, 4]
+</code></pre>
+
+<p>You can create functions that remember values you supply at the time they are defined. Such functions are called closures, because they &lsquo;close over&rsquo; values. The function <code>make_adder</code> creates and returns a function that accepts an argument and adds a given constant <code>a</code>.</p>
+
+<pre><code>&gt; make_adder: (a) -&gt; ((x) -&gt; x+a)
+function
+&gt; add_1: make_adder(1)
+function
+&gt; add_1(0)
+1
+&gt; add_1(1)
+2
+&gt; add_2: make_adder(2)
+function
+&gt; add_2(0)
+2
+&gt; add_2(1)
+3
+</code></pre>
+
+<p>In a similar fashion the standard library makes functions for you that are parameterized to your specifications. The next example asks the standard library to give you a <a href="link/to/formatter">formatter</a> function to convert numbers to strings.</p>
+
+<pre><code>&gt; f: math.formatter('0.00', rounding_mode: 'half_up')
+function
+&gt; f(2)
+&quot;2.00&quot;
+&gt; f(2.123)
+&quot;2.12&quot;
+&gt; f: math.formatter('0.00', rounding_mode: 'up')
+function
+&gt; f(2.123)
+&quot;2.13&quot;
+</code></pre>
+
+<h2 id="conditionals">Conditionals</h2>
+
+<p>Tweakflow supports a standard <code>if</code> construct to perform conditional calculations. It&rsquo;s formal syntax is: <code>if expression then? then_expression else? else_expression</code></p>
+
+<pre><code>&gt; parity: (x) -&gt; if x % 2 == 0 then &quot;even&quot; else &quot;odd&quot;
+function
+&gt; parity(3)
+&quot;odd&quot;
+&gt; parity(2)
+&quot;even&quot;
+&gt;
+</code></pre>
+
+<p>Both the <code>then_expression</code> and the <code>else_expression</code> are mandatory, but the <code>then</code> and <code>else</code> keywords are optional, allowing you to write nested conditions that look like a sequence of tests.</p>
+
+<p>Define a function that returns the sign of a number as -1, 0, or 1 if the number is negative, zero, or positive:</p>
+
+<pre><code>&gt; \e
+sgn: (x) -&gt;
+  if x &gt; 0 then 1
+  if x &lt; 0 then -1
+  else 0
+\e
+function
+&gt; sgn(0)
+0
+&gt; sgn(-2.3)
+-1
+&gt; sgn(9.2)
+1
+</code></pre>
+
+<h2 id="list-comprehensions">List comprehensions</h2>
+
+<p>Tweakflow supports list comprehensions allowing you to generate, transform, combine and filter lists succinctly. A list comprehension uses generators to define variables that loop over a list expression. They nest if more than one generator is present. Generators have the following syntax: <code>identifier '&lt;-' expression</code>.</p>
+
+<p>Variable definitions create helper variables. They are in scope for all subsequent expressions in the list comprehension.</p>
+
+<p>Expressions act as filters. If they cast to boolean true, the current entry is part of the result list, if they cast to boolean false, the current element is omitted.</p>
+
+<p>The closing expression describes the individual item to include in the result list.</p>
+
+<p>Let&rsquo;s look at some examples.</p>
+
+<p>Create a list of coordinates for a chess board:</p>
+
+<pre><code>&gt; \e
+for
+  x &lt;- [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;],
+  y &lt;- [1, 2, 3, 4, 5, 6, 7, 8],
+  x .. y
+\e
+[&quot;a1&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;a4&quot;, &quot;a5&quot;, &quot;a6&quot;, &quot;a7&quot;, &quot;a8&quot;, &quot;b1&quot;, &quot;b2&quot;, &quot;b3&quot;, &quot;b4&quot;, &quot;b5&quot;, &quot;b6&quot;, &quot;b7&quot;, &quot;b8&quot;, &quot;c1&quot;, &quot;c2&quot;, &quot;c3&quot;, &quot;c4&quot;, &quot;c5&quot;, &quot;c6&quot;, &quot;c7&quot;, &quot;c8&quot;, &quot;d1&quot;, &quot;d2&quot;, &quot;d3&quot;, &quot;d4&quot;, &quot;d5&quot;, &quot;d6&quot;, &quot;d7&quot;, &quot;d8&quot;, &quot;e1&quot;, &quot;e2&quot;, &quot;e3&quot;, &quot;e4&quot;, &quot;e5&quot;, &quot;e6&quot;, &quot;e7&quot;, &quot;e8&quot;, &quot;f1&quot;, &quot;f2&quot;, &quot;f3&quot;, &quot;f4&quot;, &quot;f5&quot;, &quot;f6&quot;, &quot;f7&quot;, &quot;f8&quot;, &quot;g1&quot;, &quot;g2&quot;, &quot;g3&quot;, &quot;g4&quot;, &quot;g5&quot;, &quot;g6&quot;, &quot;g7&quot;, &quot;g8&quot;, &quot;h1&quot;, &quot;h2&quot;, &quot;h3&quot;, &quot;h4&quot;, &quot;h5&quot;, &quot;h6&quot;, &quot;h7&quot;, &quot;h8&quot;]
+</code></pre>
+
+<p>Create a list of <a href="https://en.wikipedia.org/wiki/Pythagorean_triple">pythagorean triples</a> trying sides up to the size of 15.</p>
+
+<pre><code>&gt; \e
+for
+  a &lt;- data.range(1, 15),
+  b &lt;- data.range(a, 15),
+  c: math.sqrt(a*a + b*b),  
+  (c as long) == c,         
+  [a, b, c as long]
+\e
+[[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15]]
+</code></pre>
+
+<p>Above example loops over <code>a</code> going from 1 to 15, and <code>b</code> going from <code>a</code> to <code>15</code>, calculates <code>c</code>, and filters out any non-integer <code>c</code> values. If <code>c</code> happens to be an integer, the triple <code>[a, b, c]</code> is included in the result list.</p>
+
+<h2 id="pattern-matching">Pattern matching</h2>
+
+<p>Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. The <code>@</code> sign followed by a variable name is used to indicate a captured match scoped to the expression associated with a pattern.</p>
+
+<p>Let&rsquo;s look at some examples.</p>
+
+<p>This example matches on value. The function <code>vowel?</code> returns true if called with a string holding a single latin vowel, false otherwise.</p>
+
+<pre><code>&gt; \e
+vowel?: (x) -&gt;
+  match x
+    &quot;a&quot;     -&gt; true
+    &quot;e&quot;     -&gt; true
+    &quot;i&quot;     -&gt; true
+    &quot;o&quot;     -&gt; true
+    &quot;u&quot;     -&gt; true
+    default -&gt; false
+\e
+function
+&gt; vowel?(&quot;a&quot;)
+true
+&gt; vowel?(&quot;b&quot;)
+false
+&gt; vowel?(&quot;e&quot;)
+true
+</code></pre>
+
+<p>The next example matches on type. The function <code>numeric?</code> returns true if called with an argument of a numeric type, false otherwise.</p>
+
+<pre><code>&gt; \e
+numeric?: (x) -&gt;
+  match x
+    long    -&gt; true
+    double  -&gt; true
+    default -&gt; false
+\e
+function
+&gt; numeric?(1.3)
+true
+&gt; numeric?(4)
+true
+&gt; numeric?(&quot;foo&quot;)
+false
+</code></pre>
+
+<p>The next example matches on structure. The function <code>magnitude</code> accepts a vector of two dimensions and returns its length. The vector may be a list with two numbers, or a dict that has only keys <code>:x</code> and <code>:y</code> with numeric values. The function returns <code>nil</code> if no valid vector was given. It uses the <code>numeric?</code> function from the previous example in guard expressions, so unexpected inputs are not processed.</p>
+
+<pre><code>&gt; \e
+magnitude: (vec) -&gt;
+  match vec
+    [@x, @y],       numeric?(x) &amp;&amp; numeric?(y) -&gt; math.sqrt(x*x + y*y)
+    {:x @x, :y @y}, numeric?(x) &amp;&amp; numeric?(y) -&gt; math.sqrt(x*x + y*y)
+    default -&gt; nil
+\e
+function
+&gt; magnitude([0,0])
+0.0
+&gt; magnitude([3, 4])
+5.0
+&gt; magnitude([&quot;foo&quot;, 4])
+nil
+&gt; magnitude([3, 4, 5])
+nil
+&gt; magnitude({:x 3, :y 4})
+5.0
+&gt; magnitude({:x 3, :y 4, :z 4})
+nil
+</code></pre>
+
+<p>The next example matches on partial structure. The function <code>pairs</code> transforms a list of the form <code>[a, b, c, d, …]</code> into a list of pairs <code>[[a, b], [c, d], ...]</code>. If the list has an odd number of items, the last item is discarded. If the argument is not a list, the function returns <code>nil</code>.</p>
+
+<pre><code>&gt; \e
+pairs: (xs) -&gt;
+  match xs
+    [@a, @b, @...tail]  -&gt; [[a, b], ...pairs(tail)]
+    [@]                 -&gt; []
+    []                  -&gt; []
+    default             -&gt; nil
+\e
+function
+&gt; pairs([1, 2, 3, 4])
+[[1, 2], [3, 4]]
+&gt; pairs([1, 2, 3])
+[[1, 2]]
+&gt; pairs([1])
+[]
+&gt; pairs(&quot;foo&quot;)
+nil
+&gt;
+</code></pre>
+
+<h2 id="throwing-and-catching-errors">Throwing and catching errors</h2>
+
+<p>Tweakflow supports throwing and catching errors within expressions. You can <code>throw</code> any value you like to represent an error, and if that happens within a <code>try</code> -<code>catch</code> block, the block evaluates to the <code>catch</code> expression.</p>
+
+<p>The function <code>ensure_weekend</code> accepts a date time value <code>x</code>, and returns <code>x</code> if it falls within a Saturday or Sunday. It throws an error otherwise. The REPL logs that an error has been thrown and mentions the thrown error as <code>value</code>.</p>
+
+<pre><code>&gt; \e
+ensure_weekend: (datetime x) -&gt;
+  if time.day_of_week(x) &gt;= 6
+    x
+  else
+	let {
+      day: time.formatter('cccc')(x)
+    }
+    throw {
+      :message &quot;x must be a weekend day, but is: #{day}&quot;
+      :day_of_week day
+    }
+\e
+function
+
+&gt; ensure_weekend(2016-12-30T)
+ERROR: {
+  ... snip ...
+  :value {
+    :message &quot;x must be a weekend day, but is: Friday&quot;,
+    :day_of_week &quot;Friday&quot;
+  }
+  ... snip ...  
+}
+
+&gt; ensure_weekend(2016-12-31T)
+2016-12-31T00:00:00Z@`UTC`
+
+&gt; ensure_weekend(2017-01-01T)
+2017-01-01T00:00:00Z@`UTC`
+</code></pre>
+
+<p>The function <code>analyze_dates</code> accepts a list of datetimes, and returns a list where each  datetime that falls on a weekend is retained, and non-weekends are replaced with a custom error message constructed from the error details <code>ensure_weekend</code> provides.</p>
+
+<pre><code>&gt; \e
+analyze_dates: (xs) -&gt;
+  let {
+    f: (datetime d) -&gt;
+      try
+        ensure_weekend(d)
+      catch error
+        &quot;Bad &quot;..error[:day_of_week]
+  }
+  data.map(xs, f)
+\e
+function
+
+&gt; analyze_dates([2016-12-30T, 2016-12-31T, 2017-01-01T, 2017-01-02T, 2017-01-03T])
+[&quot;Bad Friday&quot;, 2016-12-31T00:00:00Z@`UTC`, 2017-01-01T00:00:00Z@`UTC`, &quot;Bad Monday&quot;, &quot;Bad Tuesday&quot;]
+</code></pre>
+
+<h2 id="debugging">Debugging</h2>
+
+<p>Sometimes users need help debugging an unexpected result. Tweakflow users can use the <a href="link to ref">debug</a> construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen.</p>
+
+<p>Debug itself is an expression that evaluates to the value being debugged. Let&rsquo;s write a function that given a filename, returns the file&rsquo;s extension including the dot. It debugs the value of a temporary variable.</p>
+
+<pre><code>&gt; \e
+extension: (name) -&gt;
+  let {
+    dot_position: debug strings.last_index_of(name, '.')    
+  }
+  strings.substring(name, dot_position)
+\e
+function
+
+&gt; extension(&quot;file.txt&quot;)
+4
+&quot;.txt&quot;
+
+&gt; extension(&quot;file&quot;)
+-1
+ERROR: {
+  :message &quot;from must not be negative: -1&quot;,
+  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
+  ...
+}
+</code></pre>
+
+<p>You can also define an unused expression-local variable that generates a more speaking output.</p>
+
+<pre><code>&gt; \e
+extension: (name) -&gt;
+  let {
+    dot_position: strings.last_index_of(name, '.')
+    _debug: debug &quot;DEBUG: last position of dot in #{name}: &quot;..dot_position
+  }
+  strings.substring(name, dot_position)
+\e
+function
+
+&gt; extension(&quot;file.txt&quot;)
+&quot;DEBUG: last position of dot in file.txt: 4&quot;
+&quot;.txt&quot;
+
+&gt; extension(&quot;file&quot;)
+&quot;DEBUG: last position of dot in file: -1&quot;
+ERROR: {
+  :message &quot;from must not be negative: -1&quot;,
+  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
+  ...
+}
+</code></pre>
+
+<p>Above debug output should help sorting out the function to account for the fact that the argument might not contain a dot.</p>
+
+<p>If two expressions are supplied to debug, separated by comma, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.</p>
+
+<p>As an example, let&rsquo;s debug a function with some conditional branches, logging which branches are taken.</p>
+
+<pre><code>&gt; \e
+sgn: (x) -&gt;
+  debug &quot;DEBUG: calculating sign of x: #{x}&quot;,
+  if x &gt; 0 then debug &quot;DEBUG: x is positive&quot;, 1
+  if x &lt; 0 then debug &quot;DEBUG: x is negative&quot;, -1
+  else debug &quot;DEBUG: x is zero or nil&quot;, 0
+\e
+function
+
+&gt; sgn(10)
+&quot;DEBUG: calculating sign of x: 10&quot;
+&quot;DEBUG: x is positive&quot;
+1
+
+&gt; sgn(-10)
+&quot;DEBUG: calculating sign of x: -10&quot;
+&quot;DEBUG: x is negative&quot;
+-1
+
+&gt; sgn(0)
+&quot;DEBUG: calculating sign of x: 0&quot;
+&quot;DEBUG: x is zero or nil&quot;
+0
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Above tutorial is designed to give a feel for the nature of tweakflow expressions. Check out the <a href="ref link">reference</a> for more information about the language itself. The [embedding]() guide explains how to include tweakflow in your application.</p>
+
+      </main>
+    </div>
     
 <footer>
   <div class="footer__copyright">
@@ -81,8 +658,11 @@
   </div>
 </footer>
 
-    
-
+    <script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
+<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
+<script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
+<script type="text/javascript" src="/tweakflow/js/toc.js"></script>
 
 </body>
 

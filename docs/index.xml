@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tweakflow: an embeddable expression language for the JVM on Tweakflow: embeddable expression language for Java</title>
+    <title>tweakflow: an embeddable expression language for the JVM on tweakflow - an embeddable expression language for the JVM</title>
     <link>https://twineworks.github.io/tweakflow/</link>
-    <description>Recent content in tweakflow: an embeddable expression language for the JVM on Tweakflow: embeddable expression language for Java</description>
+    <description>Recent content in tweakflow: an embeddable expression language for the JVM on tweakflow - an embeddable expression language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
@@ -11,43 +11,33 @@
     
     
     <item>
-      <title></title>
-      <link>https://twineworks.github.io/tweakflow/modules/std/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://twineworks.github.io/tweakflow/modules/std/</guid>
-      <description>module std.tf The standard module contains basic functions for general computing tasks.
-library core The core library contains utility functions to process values at a basic level.
-id (any x) -&amp;gt; any
-Identity function. Returns x.
-&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
-Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
-    </item>
-    
-    <item>
       <title>Embedding</title>
-      <link>https://twineworks.github.io/tweakflow/embedding/</link>
+      <link>https://twineworks.github.io/tweakflow/embedding.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/embedding/</guid>
+      <guid>https://twineworks.github.io/tweakflow/embedding.html</guid>
       <description>Embedding Guide Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</description>
     </item>
     
     <item>
       <title>Getting started</title>
-      <link>https://twineworks.github.io/tweakflow/getting-started/</link>
+      <link>https://twineworks.github.io/tweakflow/getting-started.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/getting-started/</guid>
-      <description>Getting started Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</description>
+      <guid>https://twineworks.github.io/tweakflow/getting-started.html</guid>
+      <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
+Starting a tweakflow REPL Download the latest release jar. And launch it using:
+java -jar tweakflow-version.jar itf
+The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
+You should see a prompt similar to this:</description>
     </item>
     
     <item>
       <title>Legal notice</title>
-      <link>https://twineworks.github.io/tweakflow/legal_notice/</link>
+      <link>https://twineworks.github.io/tweakflow/legal_notice.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/legal_notice/</guid>
+      <guid>https://twineworks.github.io/tweakflow/legal_notice.html</guid>
       <description>Legal Notice This website&amp;rsquo;s content is managed by Twineworks GmbH
 Helmholtzstr. 28
 10587 Berlin
@@ -67,12 +57,39 @@ Germany</description>
     
     <item>
       <title>The tweakflow data processing language</title>
-      <link>https://twineworks.github.io/tweakflow/reference/</link>
+      <link>https://twineworks.github.io/tweakflow/reference.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/reference/</guid>
+      <guid>https://twineworks.github.io/tweakflow/reference.html</guid>
+      <description>This document
+Modules structure solutions A tweakflow solution consists of a set of organizational units called modules. A module is represented by a file. A module defines zero or more libraries.
+A module file must be encoded in UTF-8 and have the file extension tf.
+A module has the following formal structure.
+module : endOfStatement* moduleHead moduleComponent* EOF ; moduleHead : metaDef nameDec? importDef* aliasDef* exportDef* ; moduleComponent : library | dataStep | controlStep | dataFlow | controlFlow | endOfStatement ;  Imports bring other modules into scope Import statements bring entities exported from other modules into the current module.</description>
+    </item>
+    
+    <item>
+      <title>The tweakflow data processing language</title>
+      <link>https://twineworks.github.io/tweakflow/reference_.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/reference_.html</guid>
       <description>Language characteristics Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.
 Tweakflow is dynamically typed. It supports ad-hoc construction, nesting, and manipulation of data structures. This ability supports processing of unstructured data where structure is dynamically determined by the process, as well as data-driven processes in which data is self-describing or structure is provided at runtime through other means, like a metadata repository.</description>
+    </item>
+    
+    <item>
+      <title>std.tf</title>
+      <link>https://twineworks.github.io/tweakflow/modules/std.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/modules/std.html</guid>
+      <description>module std.tf The standard module contains basic functions for general computing tasks.
+library core The core library contains utility functions to process values at a basic level.
+id (any x) -&amp;gt; any
+Identity function. Returns x.
+&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
+Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
     </item>
     
   </channel>
