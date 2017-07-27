@@ -24,7 +24,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html {
   font-family: 'Lato', 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   line-height: normal;
-  color: #20201D;
+  /*color: #20201D;*/
+  color: #3e3e3e;
+  /*color: rgba(26,26,26,.7);*/
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
   font-size: 22px;
@@ -47,14 +49,14 @@ a {
   padding-left: 10px;
   padding-right: 10px;
   max-width: 100%;
-  width: 1200px;
+  width: 1100px;
   font-size: 1.0em;
   line-height: normal;
-  padding-bottom: 1em;
   padding-top: 1em;
   font-family: 'Lato';
   font-weight: 400;
   position: relative;
+  border-bottom: 1px solid #e7f0f0;
 }
 
 .menu__logo-wrapper {
@@ -65,9 +67,20 @@ a {
   margin-right: 1em;
 }
 
+.menu__logo-wrapper a {
+  display: block;
+  height: 60px;
+}
+
+.menu__logo-wrapper img {
+  width: 240px;
+  height: 60px;
+}
+
 .menu__items-wrapper {
   float: right;
   display: block;
+  margin-top: 13px;
 }
 
 .menu__items-list {
@@ -77,11 +90,22 @@ a {
 
 .menu__item {
   display: inline-block;
-  margin: 1.3em 0.3em 0em 0.3em;
+  margin: 0em 0.3em 0em 0.3em;
+}
+
+.menu__item.active {
+  /*color: #1603f8;*/
+  /*color: #fdcd27;*/
+  color: #19b6f9;
+  /*color: #fc3430;*/
+  /*color: #c8cea9;*/
+  /*color: #23c559;*/
+  /*color: #13902e;*/
+  /*color: green;*/
 }
 
 .menu__item a:hover {
-  border-bottom: 3px solid #356fc0;
+  border-bottom: 3px solid #19b6f9;;
 }
 
 .menu__item-link {
@@ -96,7 +120,7 @@ a {
   padding-left: 10px;
   padding-right: 10px;
   max-width: 100%;
-  width: 700px;
+  width: 740px;
   line-height: normal;
   padding 1em 10px;
   font-family: 'Lato';
@@ -113,38 +137,276 @@ a {
   /*color: #fc3430;*/
 }
 
+.content-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  width: 1100px;
+  font-size: 1.0em;
+  line-height: normal;
+  padding-bottom: 1em;
+  font-family: 'Lato';
+  font-weight: 400;
+  position: relative;
+  display: flex;
+  flex-flow: row;
+}
+
+.content-wrapper aside {
+  flex: 0 0 360px;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.content-wrapper aside .toc-wrapper {
+  position: absolute;
+  width: 360px;
+  top: 0;
+  bottom: 0;
+}
+
+.content-wrapper aside .toc-wrapper.stuck {
+  position: fixed;
+  top: 0;
+  left: auto;
+  height: 100%;
+
+}
+
+.content-wrapper aside .scrollable-parent {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content-wrapper aside .scrollable-content {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+aside nav {
+  padding-top: 2em;
+  padding-bottom: 1em;
+}
+aside nav ul li {
+  display: block;
+}
+
+aside nav ul li a {
+  display: block;
+  text-decoration: none;
+  padding: 0.3em 1em;
+  margin-right: 0.3em;
+  border-radius: 3px;
+  color: #888;
+}
+
+aside ul li {
+  list-style-type: none;
+  font-size: initial;
+  margin-top: 2px;
+}
+
+aside nav ul {
+  padding:0;
+  margin:0;
+  list-style: none;
+  /*margin-bottom: 20px;*/
+}
+
+aside nav > ul > li > a {
+  /*margin-top: 20px;*/
+  font-size: 1.45em;
+}
+
+aside nav > ul > li > ul > li > a {
+  /*margin-top: 30px;*/
+  font-size: 1.45em;
+  /*background-color: whitesmoke;*/
+  /*background-color: #C1D6FF;*/
+  /*background-color: #f0f0f0;*/
+   /*color: #e04e50;*/
+  /*color: #2863bf;*/
+  /*color: #FAAC1D;*/
+  /*color: #1C5BED;*/
+}
+
+aside nav > ul > li > ul > li > ul > li > a {
+  font-size: 1.3em;
+  padding-left: 3em;
+}
+
+aside nav > ul > li > ul > li > ul > li:last-child {
+  padding-bottom: 2em;
+}
+
+aside nav ul li a:hover, aside nav ul li a.active {
+  /*background-color: #eee;*/
+  /*color: #666;*/
+  /*background-color: #337ab7;*/
+  /*background-color: #5188b7;*/
+  /*color: white;*/
+  /*background-color: #79A5FF;*/
+  /*background-color: #afd1f7;*/
+  /*background-color: #92B0F6;*/
+  /*background-color: #9B59B6;*/
+  /*background-color: #C6EFFE;*/
+  /*background-color: #1C94FB;*/
+  /*background-color: #f4edff;*/
+  /*color: #1603f8;*/
+  /*color: #fdcd27;*/
+  /*color: #19b6f9;*/
+  /*color: #fc3430;*/
+  /*color: #c8cea9;*/
+  /*color: #23c559;*/
+  /*color: #13902e;*/
+  color: white;
+  /*background-color: whitesmoke;*/
+  /*background-color: #1603f8;*/
+  /*background-color: #fdcd27;*/
+  background-color: #19b6f9;
+  /*background-color: #fc3430;*/
+  /*background-color: #c8cea9;*/
+  /*background-color: #23c559;*/
+  /*background-color: #13902e;*/
+
+}
+
 main {
 
-  margin: 1.0rem auto;
-  padding-left: 10px;
-  padding-right: 10px;
-  max-width: 100%;
-  width: 700px;
-  color: #4e4e4e;
+  margin: 0 auto 1.0rem auto;
+  padding-top: 2em;
+  padding-left: 1em;
+  /*padding-right: 1em;*/
+  flex: 0 1 740px;
+  /* https://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text */
+  min-width: 0;
 }
 
 main h1 {
   font-size: 1.7em;
-  margin: 1.9rem auto;
-  color: #3e3e3e;
+  padding-top: 1.9rem;
+  margin-bottom: 1.9rem;
+}
+
+main h1:first-child {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 main h2 {
-  font-size: 1.3em;
-  font-weight: bold;
-  margin: 1.0rem auto;
+  font-size: 1.4em;
+  /*font-weight: bold;*/
+  padding-top: 1.0rem;
+  margin-bottom: 1.0rem;
 }
 
 main h3 {
-  font-size: 1.0em;
-  font-weight: bold;
-  margin: 1.0rem auto;
+  font-size: 1.2em;
+  /*font-weight: bold;*/
+  padding-top: 1.0rem;
+  margin-bottom: 1.0rem;
 }
 
 main p {
   margin: 1.0rem auto;
   line-height: 1.4em;
   text-align: justify;
+}
+
+main code, main pre {
+  font-family: Inconsolata, "Ubuntu Mono", Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, Consolas, "Courier New", monospace;
+}
+
+main code {
+  background: #f8f8f8;
+  padding: 0.2em;
+}
+
+main pre code {
+  line-height: 1.3em;
+  font-size: 0.9em;
+  padding:8px 15px;
+  /*background: #f8f8f8;  */
+  border-radius:8px;
+  border:1px solid #c5c5c5;
+  overflow-x: auto;
+  margin: 1.0rem auto;
+  display: block;
+}
+
+
+
+main table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    border: 1px solid #cbcbcb;
+}
+
+main table caption {
+    color: #000;
+    font: italic 85%/1 arial, sans-serif;
+    padding: 1em 0;
+    text-align: center;
+}
+
+main table td,
+main table th {
+    border-left: 1px solid #cbcbcb;
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    margin: 0;
+    overflow: visible;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid #cbcbcb;
+}
+
+main table tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+
+main table td:first-child,
+main table th:first-child {
+    border-left-width: 0;
+}
+
+main table thead {
+    background-color: #e0e0e0;
+    color: #000;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+main table td {
+    background-color: transparent;
+}
+main table.odd td {
+    background-color: #f2f2f2;
+}
+
+main table.striped tr:nth-child(2n-1) td {
+    background-color: #f2f2f2;
+}
+
+
+
+/* HORIZONTAL BORDERED TABLES */
+
+main table.horizontal td,
+main table.horizontal th {
+    border-width: 0 0 1px 0;
+    border-bottom: 1px solid #cbcbcb;
+}
+main table.horizontal tbody > tr:last-child > td {
+    border-bottom-width: 0;
 }
 
 footer {
@@ -157,7 +419,7 @@ footer {
 
   margin-left: auto;
   margin-right: auto;
-  width: 1200px;
+  width: 1100px;
   max-width: 100%;
 }
 

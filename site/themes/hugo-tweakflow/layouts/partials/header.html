@@ -3,14 +3,17 @@
 
       <!-- logo -->
       <div class="menu__logo-wrapper">
-          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg" width="320" height="80"></a>
+          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg"></a>
       </div>
       <!-- navigation -->
       <nav role="navigation" class="menu__items-wrapper">
         <ul class="menu__items">
             {{ if .Site.Menus.main }}
+            {{ $currentPage := . }}
             {{ range .Site.Menus.main }}
-            <li class="menu__item"><a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a></li>
+            <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}" >              
+              <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
+            </li>
             {{ end }}
             {{ end }}
         </ul>

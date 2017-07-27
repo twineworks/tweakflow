@@ -5,9 +5,22 @@
 
 <body>
     {{ partial "header" . }}
-    <main class="single-content" role="main">
+    <div class="content-wrapper">
+      {{ if not (eq .Params.toc false) }} 
+      <aside class="toc">
+        <div class="toc-wrapper">
+          <div class="scrollable-parent">
+            <div class="scrollable-content">
+              {{ .TableOfContents }}
+            </div>
+          </div>
+        </div>
+      </aside>
+      {{ end }}
+      <main class="single-content" role="main">
         {{ .Content }}
-    </main>
+      </main>
+    </div>
     {{ partial "footer" . }}
     {{ partial "js" . }}
 </body>

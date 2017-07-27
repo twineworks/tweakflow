@@ -5,9 +5,11 @@
 
 <body>
     {{ partial "header" . }}
-    <main class="homepage content" role="main">
-        {{ .Content }}
-    </main>
+    <div class="content-wrapper">
+      <main class="homepage content" role="main">
+          {{ .Content }}
+        </main>
+    </div>
     {{ partial "footer" . }}
     {{ partial "js" . }}
 </body>
