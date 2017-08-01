@@ -24,6 +24,8 @@
 
 package com.twineworks.tweakflow.lang.values;
 
+import com.twineworks.tweakflow.util.LangUtil;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -36,15 +38,14 @@ public class DateTimeValue {
   private final OffsetDateTime offset;
   private final ZonedDateTime zoned;
 
-  private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+  private static final DateTimeFormatter leadFormatter = new DateTimeFormatterBuilder()
         .append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        .optionalStart()
-        .appendLiteral('@')
-        .appendLiteral('`')
-        .parseCaseSensitive()
-        .appendZoneRegionId()
-        .appendLiteral('`')
         .toFormatter();
+
+  private static final DateTimeFormatter regionIdFormatter = new DateTimeFormatterBuilder()
+      .parseCaseSensitive()
+      .appendZoneRegionId()
+      .toFormatter();
 
   public DateTimeValue(Instant instant) {
     this.instant = instant;
@@ -105,6 +106,8 @@ public class DateTimeValue {
 
   @Override
   public String toString() {
-    return formatter.format(zoned);
+    String lead = leadFormatter.format(zoned);
+    String zone = regionIdFormatter.format(zoned);
+    return lead+"@"+LangUtil.escapeIdentifier(zone);
   }
 }
