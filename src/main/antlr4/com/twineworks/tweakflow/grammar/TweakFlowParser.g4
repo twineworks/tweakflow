@@ -58,7 +58,7 @@ nameDec
 // import definition
 
 importDef 
-  : 'import' importMember+ 'from' modulePath endOfStatement?
+  : 'import' importMember (','? importMember)* 'from' modulePath endOfStatement?
   ;
 
 importMember
@@ -67,11 +67,11 @@ importMember
   ; 
 
 moduleImport
-  : '*' 'as' importModuleName ','?
+  : '*' 'as' importModuleName
   ;
 
 componentImport
-  : exportComponentName ('as' importComponentName)? ','?
+  : exportComponentName ('as' importComponentName)?
   ;
 
 importModuleName
