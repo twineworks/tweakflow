@@ -127,7 +127,7 @@ final public class BooleanType implements Type {
   @Override
   public Value castFrom(Value x) {
 
-    if (x == Values.NIL) return Values.FALSE;
+    if (x == Values.NIL) return Values.NIL;
 
     Type srcType = x.type();
 

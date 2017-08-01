@@ -47,10 +47,10 @@ final public class AndOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     Value left = leftOp.eval(stack, context).castTo(Types.BOOLEAN);
-    if (left == Values.FALSE) return Values.FALSE;
+    if (left == Values.FALSE || left == Values.NIL) return Values.FALSE;
 
     Value right = rightOp.eval(stack, context).castTo(Types.BOOLEAN);
-    if (right == Values.FALSE) return Values.FALSE;
+    if (right == Values.FALSE || right == Values.NIL) return Values.FALSE;
 
     return Values.TRUE;
   }

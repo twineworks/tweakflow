@@ -1045,7 +1045,7 @@ public class InterpreterTest {
 
     // nil_to_boolean: nil as boolean
     Cell nil_to_boolean = vars.gets("nil_to_boolean");
-    assertThat(nil_to_boolean.getValue()).isSameAs(Values.FALSE);
+    assertThat(nil_to_boolean.getValue()).isSameAs(Values.NIL);
 
     // function_to_boolean: (() -> nil) as boolean
     Cell function_to_boolean = vars.gets("function_to_boolean");

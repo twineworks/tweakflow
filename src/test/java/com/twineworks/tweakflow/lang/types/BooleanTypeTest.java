@@ -46,7 +46,7 @@ public class BooleanTypeTest {
   @Test
   public void casts_from_void() throws Exception {
     assertThat(Types.BOOLEAN.canAttemptCastFrom(Types.VOID)).isTrue();
-    assertThat(Types.BOOLEAN.castFrom(Values.NIL)).isSameAs(Values.FALSE);
+    assertThat(Types.BOOLEAN.castFrom(Values.NIL)).isSameAs(Values.NIL);
   }
 
   @Test

@@ -44,7 +44,7 @@ final public class NotOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
     Value value = expOp.eval(stack, context).castTo(Types.BOOLEAN);
-    return (value == Values.FALSE) ? Values.TRUE : Values.FALSE;
+    return (value == Values.FALSE || value == Values.NIL) ? Values.TRUE : Values.FALSE;
   }
 
   @Override

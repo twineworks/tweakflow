@@ -30,6 +30,7 @@ import com.twineworks.tweakflow.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.IfNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 final public class IfOp implements ExpressionOp {
 
@@ -47,7 +48,8 @@ final public class IfOp implements ExpressionOp {
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
-    if (conditionOp.eval(stack, context).bool()){
+    Value conditionValue = conditionOp.eval(stack, context);
+    if (conditionValue != Values.NIL && conditionValue.bool()){
       return thenOp.eval(stack, context);
     }
     else{
@@ -60,7 +62,7 @@ final public class IfOp implements ExpressionOp {
     if (conditionOp.isConstant()){
       try {
         Value cond = Evaluator.evaluateInEmptyScope(node.getCondition());
-        if (cond.bool()){
+        if (cond != Values.NIL && cond.bool()){
           return thenOp.isConstant();
         }
         else {
