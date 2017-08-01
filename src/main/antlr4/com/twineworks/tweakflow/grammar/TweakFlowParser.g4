@@ -132,7 +132,7 @@ literal
   | longLiteral                                             # longLiteralExp
   | doubleLiteral                                           # doubleLiteralExp
   | listLiteral                                             # listLiteralExp
-  | mapLiteral                                              # mapLiteralExp
+  | dictLiteral                                             # dictLiteralExp
   | functionLiteral                                         # functionLiteralExp
   ;
 
@@ -287,7 +287,7 @@ listLiteral
    : '[' ((expression|splat) ','? )*  ']'
    ;
 
-mapLiteral
+dictLiteral
    : '{' (((keyLiteral expression)|(expression expression)|(splat)) ','? )*  '}'
    ;
 

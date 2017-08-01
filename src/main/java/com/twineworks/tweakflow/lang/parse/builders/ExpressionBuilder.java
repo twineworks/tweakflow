@@ -657,7 +657,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   }
 
   @Override
-  public ExpressionNode visitMapLiteral(TweakFlowParser.MapLiteralContext ctx) {
+  public ExpressionNode visitDictLiteral(TweakFlowParser.DictLiteralContext ctx) {
 
     // phase 1: collect subMaps
     // {:a a,:b b, ...c, :d d} -> [{:a a,:b b}, c, {:d d}]
