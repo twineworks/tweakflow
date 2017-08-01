@@ -248,7 +248,7 @@ STRING_ESCAPE_SEQUENCE
   ;
 
 STRING_REFERENCE_INTERPOLATION
-  : '#{'('$'|'@'|'::'|'~')?IDENTIFIER('.' IDENTIFIER)*'}'
+  : '#{'('local::'|'$'|'global::'|'module::'|'::'|'library::')?IDENTIFIER('.' IDENTIFIER)*'}'
   ;
 
 STRING_END
