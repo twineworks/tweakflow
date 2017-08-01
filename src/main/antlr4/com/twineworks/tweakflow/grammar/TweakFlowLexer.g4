@@ -226,10 +226,6 @@ INLINE_COMMENT
   : '/*' (INLINE_COMMENT|.)*? '*/' -> channel(COMMENTS)
   ;
 
-MULTILINE_COMMENT
-  : '###' .*? NEWLINE '###' -> channel(COMMENTS)
-  ;
-
 LINE_COMMENT
   : '#' .*? (NEWLINE|EOF) -> channel(COMMENTS)
   ;
