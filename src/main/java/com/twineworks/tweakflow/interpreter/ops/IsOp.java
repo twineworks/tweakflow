@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.interpreter.ops;
 import com.twineworks.tweakflow.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.IsNode;
+import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
@@ -44,6 +45,9 @@ final public class IsOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
     Value value = op.eval(stack, context);
     if (value.type() == node.getCompareType()){
+      return Values.TRUE;
+    }
+    else if (!value.isNil() && node.getCompareType() == Types.ANY){
       return Values.TRUE;
     }
     else{
