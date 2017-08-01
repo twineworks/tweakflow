@@ -24,7 +24,9 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
+import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.ast.structure.EmptyNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
@@ -56,8 +58,18 @@ public class InteractiveInputCommand {
       String varName = varDefNode.getSymbolName();
       return new VarDefCommand().perform(varName, input, terminal, state, measure);
     }
+    // nothing but a comment and whitespace entered?
+    else if (parseResult.getNode() instanceof EmptyNode){
+      return state;
+    }
     else {
-      terminal.println("unexpected input result: "+parseResult.getNode().getClass().getName());
+      Node node = parseResult.getNode();
+      if (node != null){
+        terminal.println("unexpected input result: "+parseResult.getNode().getClass().getName());
+      }
+      else{
+        terminal.println("unexpected input result: null");
+      }
       return state;
     }
 

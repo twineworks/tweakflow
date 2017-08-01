@@ -29,6 +29,7 @@ import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseListener;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.ast.structure.EmptyNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
@@ -37,7 +38,12 @@ import com.twineworks.tweakflow.lang.parse.builders.UnitBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.VarDefBuilder;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.parse.util.ParserErrorListener;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+
+import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
 final public class Parser extends TweakFlowParserBaseListener {
 
@@ -151,7 +157,7 @@ final public class Parser extends TweakFlowParserBaseListener {
       // build AST nodes
       if (parseTree.expression() != null){
         try {
-          ExpressionNode result = new ExpressionBuilder(parseUnit).visit(parseTree);
+          ExpressionNode result = new ExpressionBuilder(parseUnit).visit(parseTree.expression());
           long buildEnd = System.currentTimeMillis();
           return ParseResult.ok(result, parseEnd-parseStart, buildEnd-buildStart);
         }
@@ -180,6 +186,12 @@ final public class Parser extends TweakFlowParserBaseListener {
           long buildEnd = System.currentTimeMillis();
           return ParseResult.error(LangException.wrap(e, LangError.PARSE_ERROR), parseEnd-parseStart, buildEnd-buildStart);
         }
+      }
+
+      else if (parseTree.empty() != null){
+        long buildEnd = System.currentTimeMillis();
+        EmptyNode result = new EmptyNode().setSourceInfo(srcOf(parseUnit, parseTree.empty()));
+        return ParseResult.ok(result, parseEnd-parseStart, buildEnd-buildStart);
       }
 
       else {

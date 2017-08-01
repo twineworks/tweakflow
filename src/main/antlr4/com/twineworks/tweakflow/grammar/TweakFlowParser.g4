@@ -20,8 +20,13 @@ interactiveSection
   ;
 
 interactiveInput
-  : varDef
-  | expression
+  : varDef EOF
+  | expression EOF
+  | empty
+  ;
+
+empty
+  : EOF
   ;
 
 // module
