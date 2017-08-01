@@ -85,12 +85,12 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitStringHereDoc(TweakFlowParser.StringHereDocContext ctx) {
     String text = ctx.HEREDOC_STRING().getText();
     // empty heredoc?
-    if (text.matches("\r?\n~~~\r?\n~~~\r?\n")){
+    if (text.matches("~~~\r?\n~~~")){
       text = "";
     }
     else{
-      text = text.replaceFirst("\\A\r?\n~~~\r?\n", "");
-      text = text.replaceFirst("\r?\n~~~\r?\n\\z", "");
+      text = text.replaceFirst("\\A~~~\r?\n", "");
+      text = text.replaceFirst("\r?\n~~~\\z", "");
     }
 
     return new StringNode(text).setSourceInfo(srcOf(parseUnit, ctx));
@@ -403,7 +403,6 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         nodes.add(new StringNode(convertEscapeSequence(escapeSequence)).setSourceInfo(srcOf(parseUnit, child)));
       }
       else if (child instanceof TweakFlowParser.StringReferenceInterpolationContext){
-//        throw new AssertionError("references not supported yet");
         nodes.add(visit(child));
       }
       else {

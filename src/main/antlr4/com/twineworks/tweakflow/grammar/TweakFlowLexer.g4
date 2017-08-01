@@ -188,9 +188,10 @@ fragment ID_ESCAPED: '`'.+?'`';
 // heredoc string
 
 HEREDOC_STRING
-  : NEWLINE '~~~' NEWLINE '~~~' NEWLINE
-  | NEWLINE '~~~' NEWLINE .*? NEWLINE '~~~' NEWLINE
+  : '~~~' NEWLINE '~~~'
+  | '~~~' NEWLINE .*? NEWLINE '~~~'
   ;
+
 
 // verbatim string
 // no interpolation
