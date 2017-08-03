@@ -124,10 +124,9 @@ final public class ListValue implements Iterable<Value> {
   }
 
   public ListValue padTo(long length, Value withValue) {
-    if (length >= Integer.MAX_VALUE) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot pad to length "+length);
+    if (length > Integer.MAX_VALUE) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot pad to length "+length);
     return new ListValue(vec.padTo((int)length, withValue));
   }
-
   
   public ListValue insert(long idx, Value value) {
     if (idx >= Integer.MAX_VALUE) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot insert at index "+idx);
