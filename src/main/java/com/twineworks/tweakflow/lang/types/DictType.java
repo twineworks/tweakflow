@@ -26,8 +26,8 @@ package com.twineworks.tweakflow.lang.types;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.values.ListValue;
 import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.values.ListValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
@@ -167,11 +167,14 @@ final public class DictType implements Type {
     else if (srcType == Types.LIST){
       ListValue list = x.list();
       if ((list.size() & 1) == 1){
-        throw new LangException(LangError.CAST_ERROR, "Cannot cast list with odd number of items to map");
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast list with odd number of items to dict");
       }
       HashMap<String, Value> map = new HashMap<>();
       for (int i = 0, listSize = list.size(); i < listSize; i+=2) {
         String key = Types.STRING.castFrom(list.get(i)).string();
+        if (key == null){
+          throw new LangException(LangError.CAST_ERROR, "Cannot cast list to dict with nil key at index: "+i);
+        }
         Value value = list.get(i+1);
         map.put(key, value);
       }
