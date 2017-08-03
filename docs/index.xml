@@ -16,7 +16,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://twineworks.github.io/tweakflow/embedding.html</guid>
-      <description>Embedding Guide Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.</description>
+      <description>Embedding Guide TODO</description>
     </item>
     
     <item>
@@ -61,11 +61,9 @@ Germany</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://twineworks.github.io/tweakflow/reference.html</guid>
-      <description>This document
-Modules structure solutions A tweakflow solution consists of a set of organizational units called modules. A module is represented by a file. A module defines zero or more libraries.
-A module file must be encoded in UTF-8 and have the file extension tf.
-A module has the following formal structure.
-module : endOfStatement* moduleHead moduleComponent* EOF ; moduleHead : metaDef nameDec? importDef* aliasDef* exportDef* ; moduleComponent : library | dataStep | controlStep | dataFlow | controlFlow | endOfStatement ;  Imports bring other modules into scope Import statements bring entities exported from other modules into the current module.</description>
+      <description>Motivation Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users.
+Requirements Tweakflow runs on the JVM. Java 8 or later is required.
+Design principles The following sections outline fundamental principles which inform the design of tweakflow.</description>
     </item>
     
     <item>
@@ -76,6 +74,17 @@ module : endOfStatement* moduleHead moduleComponent* EOF ; moduleHead : metaDef 
       <guid>https://twineworks.github.io/tweakflow/reference_.html</guid>
       <description>Language characteristics Tweakflow is a dynamically typed, domain-specific language for stream and batch processing. Typical applications include ETL for business intelligence, real time reporting on data streams, and data migrations.
 Tweakflow is dynamically typed. It supports ad-hoc construction, nesting, and manipulation of data structures. This ability supports processing of unstructured data where structure is dynamically determined by the process, as well as data-driven processes in which data is self-describing or structure is provided at runtime through other means, like a metadata repository.</description>
+    </item>
+    
+    <item>
+      <title>The tweakflow data processing language</title>
+      <link>https://twineworks.github.io/tweakflow/reference_copy.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://twineworks.github.io/tweakflow/reference_copy.html</guid>
+      <description>Motivation Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users.
+Requirements Tweakflow runs on the JVM. Java 8 or later is required.
+Design principles The following sections outline fundamental principles which inform the design of tweakflow.</description>
     </item>
     
     <item>

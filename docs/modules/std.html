@@ -15,7 +15,13 @@
     <link rel="stylesheet" href="/tweakflow/css/style.css">
 
     <link rel="stylesheet" href="/tweakflow/js/highlight/styles/atom-one-light.css">
-    
+
+    <script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript">
+      hljs.configure({languages: []});
+      hljs.initHighlightingOnLoad();
+    </script>
+
     <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
@@ -49,8 +55,16 @@
               <a class="menu__item-link" href="/tweakflow/getting-started.html">Getting started</a>
             </li>
             
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/reference.html">Reference</a>
+            </li>
+            
             <li class="menu__item active" >              
               <a class="menu__item-link" href="/tweakflow/modules/std.html">Standard library</a>
+            </li>
+            
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/embedding.html">Embedding guide</a>
             </li>
             
             <li class="menu__item" >              
@@ -3127,16 +3141,16 @@ nil
 
 <pre><code class="language-ruby">
 &gt; time.add_period(time.epoch, 0, 0, 1)
-1970-01-02T00:00:00Z@`UTC`
+1970-01-02T00:00:00Z@UTC
 
 &gt; time.add_period(time.epoch, 0, 0, -1)
-1969-12-31T00:00:00Z@`UTC`
+1969-12-31T00:00:00Z@UTC
 
 &gt; time.add_period(2017-05-24T, 1, 2, 3)
-2018-07-27T00:00:00Z@`UTC`
+2018-07-27T00:00:00Z@UTC
 
 &gt; time.add_period(time.epoch, 2, 23, -98)
-1973-08-25T00:00:00Z@`UTC`
+1973-08-25T00:00:00Z@UTC
 
 &gt; time.add_period(nil, nil, nil, nil)
 nil
@@ -3154,16 +3168,16 @@ nil
 
 <pre><code class="language-ruby">
 &gt; time.add_duration(time.epoch, 0, 1)
-1970-01-01T00:00:00.000000001Z@`UTC`
+1970-01-01T00:00:00.000000001Z@UTC
 
 &gt; time.add_duration(time.epoch, 0, -1)
-1969-12-31T23:59:59.999999999Z@`UTC`
+1969-12-31T23:59:59.999999999Z@UTC
 
 &gt; time.add_duration(2017-05-24T00:00:00Z, 3600)
-2017-05-24T01:00:00Z@`UTC`
+2017-05-24T01:00:00Z@UTC
 
 &gt; time.add_duration(2017-05-24T00:00:00Z, -3600)
-2017-05-23T23:00:00Z@`UTC`
+2017-05-23T23:00:00Z@UTC
 
 &gt; time.add_duration(nil, nil, nil)
 nil
@@ -3465,7 +3479,7 @@ nil
 <p>Throws an error if no datetime can be constructed with given year.</p>
 
 <pre><code class="language-ruby">&gt; time.with_year(time.epoch, 2007)
-2007-01-01T00:00:00Z@`UTC`
+2007-01-01T00:00:00Z@UTC
 
 &gt; time.with_year(time.epoch, nil)
 nil
@@ -3492,7 +3506,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given month.</p>
 
 <pre><code class="language-ruby">&gt; time.with_month(time.epoch, 6)
-1970-06-01T00:00:00Z@`UTC`
+1970-06-01T00:00:00Z@UTC
 
 &gt; time.with_month(time.epoch, nil)
 nil
@@ -3520,7 +3534,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given <code>day_of_month</code>.</p>
 
 <pre><code class="language-ruby">&gt; time.with_day_of_month(time.epoch, 23)
-1970-01-23T00:00:00Z@`UTC`
+1970-01-23T00:00:00Z@UTC
 
 &gt; time.with_day_of_month(time.epoch, nil)
 nil
@@ -3547,7 +3561,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given <code>hour</code>.</p>
 
 <pre><code class="language-ruby">&gt; time.with_hour(time.epoch, 4)
-1970-01-01T04:00:00Z@`UTC`
+1970-01-01T04:00:00Z@UTC
 
 &gt; time.with_hour(time.epoch, nil)
 nil
@@ -3574,7 +3588,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given <code>minute</code>.</p>
 
 <pre><code class="language-ruby">&gt; time.with_minute(time.epoch, 42)
-1970-01-01T00:42:00Z@`UTC`
+1970-01-01T00:42:00Z@UTC
 
 &gt; time.with_minute(time.epoch, nil)
 nil
@@ -3601,7 +3615,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given <code>second</code>.</p>
 
 <pre><code class="language-ruby">&gt; time.with_second(time.epoch, 42)
-1970-01-01T00:00:42Z@`UTC`
+1970-01-01T00:00:42Z@UTC
 
 &gt; time.with_second(time.epoch, nil)
 nil
@@ -3628,7 +3642,7 @@ ERROR: {
 <p>Throws an error if no datetime can be constructed with given <code>nano_of_second</code>.</p>
 
 <pre><code class="language-ruby">&gt; time.with_nano_of_second(time.epoch, 123456789)
-1970-01-01T00:00:00.123456789Z@`UTC`
+1970-01-01T00:00:00.123456789Z@UTC
 
 &gt; time.with_nano_of_second(time.epoch, nil)
 nil
@@ -3718,13 +3732,13 @@ ERROR: {
 
 <pre><code class="language-ruby">
 &gt; time.unix_timestamp(0)
-1970-01-01T00:00:00Z@`UTC`
+1970-01-01T00:00:00Z@UTC
 
 &gt; time.unix_timestamp(1496933995)
-2017-06-08T14:59:55Z@`UTC`
+2017-06-08T14:59:55Z@UTC
 
 &gt; time.unix_timestamp(-1496933995)
-1922-07-26T09:00:05Z@`UTC`
+1922-07-26T09:00:05Z@UTC
 </code></pre>
 
 <h3 id="unix-timestamp-ms">unix_timestamp_ms</h3>
@@ -3737,13 +3751,13 @@ ERROR: {
 
 <pre><code class="language-ruby">
 &gt; time.unix_timestamp_ms(0)
-1970-01-01T00:00:00Z@`UTC`
+1970-01-01T00:00:00Z@UTC
 
 &gt; time.unix_timestamp_ms(1496933995763)
-2017-06-08T14:59:55.763Z@`UTC`
+2017-06-08T14:59:55.763Z@UTC
 
 &gt; time.unix_timestamp_ms(-1496933995763)
-1922-07-26T09:00:04.237Z@`UTC`
+1922-07-26T09:00:04.237Z@UTC
 </code></pre>
 
 <h3 id="compare">compare</h3>
@@ -3770,7 +3784,7 @@ Assumes <code>nil</code> to precede any non-nil datetime.</p>
 0
 
 &gt; data.sort([2017-05-24T00:00:00, 2017-05-25T00:00:00, nil, 2017-05-24T00:01:00, 2017-05-24T02:00:00], time.compare)
-[nil, 2017-05-24T00:00:00Z@`UTC`, 2017-05-24T00:01:00Z@`UTC`, 2017-05-24T02:00:00Z@`UTC`, 2017-05-25T00:00:00Z@`UTC`]
+[nil, 2017-05-24T00:00:00Z@UTC, 2017-05-24T00:01:00Z@UTC, 2017-05-24T02:00:00Z@UTC, 2017-05-25T00:00:00Z@UTC]
 </code></pre>
 
 <h3 id="formatter">formatter</h3>
@@ -3839,7 +3853,7 @@ function
 nil
 
 &gt; f(&quot;2017-04-23T21:43:11&quot;)
-2017-04-23T21:43:11Z@`UTC`
+2017-04-23T21:43:11Z@UTC
 
 &gt; f(&quot;2017-04-23T21:43:11@`Europe/Berlin`&quot;)
 2017-04-23T21:43:11+02:00@`Europe/Berlin`
@@ -3870,7 +3884,7 @@ function
 
 # lenient parser interprets march 32nd as april 1st
 &gt; f(&quot;2015-03-32&quot;)
-2015-04-01T00:00:00Z@`UTC`
+2015-04-01T00:00:00Z@UTC
 
 # parses local times setting the default time zone
 &gt; f: time.parser('uuuu-MM-dd[ HH:mm:ss]', default_tz: 'America/Chicago')
@@ -5006,15 +5020,13 @@ The human readable names are given in the language tag passed as the locale para
   </div>
 </footer>
 
-    <script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+    
+<script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
 <script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script language="javascript">window.noZensmooth = true;</script>
+<script type="text/javascript">window.noZensmooth = true;</script>
 <script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
-
-<script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
-
 <script type="text/javascript" src="/tweakflow/js/toc.js"></script>
 
 </body>

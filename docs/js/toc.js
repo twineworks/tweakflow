@@ -26,7 +26,7 @@ $('aside nav a').each(function(i) {
 var active_nav_link = null;
 var waypoints_enabled = true;
 
-var waypoints = $('h1, h2, h3').waypoint({
+var waypoints = $('h1, h2, h3, h4, h5, h6').waypoint({
 
   handler: function(direction) {
     if (nav_links["#" + this.element.id]) {
@@ -98,7 +98,6 @@ var init = function(){
 // initializing twice helps with issues that can occur when visiting a url with
 // a #fragment in them
 init();
-hljs.initHighlightingOnLoad();
 
 $(function(){
   init();

@@ -15,7 +15,13 @@
     <link rel="stylesheet" href="/tweakflow/css/style.css">
 
     <link rel="stylesheet" href="/tweakflow/js/highlight/styles/atom-one-light.css">
-    
+
+    <script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript">
+      hljs.configure({languages: []});
+      hljs.initHighlightingOnLoad();
+    </script>
+
     <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
@@ -50,7 +56,15 @@
             </li>
             
             <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/reference.html">Reference</a>
+            </li>
+            
+            <li class="menu__item" >              
               <a class="menu__item-link" href="/tweakflow/modules/std.html">Standard library</a>
+            </li>
+            
+            <li class="menu__item" >              
+              <a class="menu__item-link" href="/tweakflow/embedding.html">Embedding guide</a>
             </li>
             
             <li class="menu__item" >              
@@ -2712,15 +2726,13 @@ control_flow my_flow {
   </div>
 </footer>
 
-    <script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+    
+<script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
 <script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script language="javascript">window.noZensmooth = true;</script>
+<script type="text/javascript">window.noZensmooth = true;</script>
 <script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
-
-<script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
-
 <script type="text/javascript" src="/tweakflow/js/toc.js"></script>
 
 </body>

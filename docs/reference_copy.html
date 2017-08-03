@@ -55,7 +55,7 @@
               <a class="menu__item-link" href="/tweakflow/getting-started.html">Getting started</a>
             </li>
             
-            <li class="menu__item active" >              
+            <li class="menu__item" >              
               <a class="menu__item-link" href="/tweakflow/reference.html">Reference</a>
             </li>
             
@@ -100,6 +100,7 @@
 </ul></li>
 <li><a href="#lexical-structure">Lexical structure</a>
 <ul>
+<li><a href="#keywords">Keywords</a></li>
 <li><a href="#boolean-literals">Boolean literals</a></li>
 <li><a href="#the-nil-literal">The nil literal</a></li>
 <li><a href="#long-literals">Long literals</a></li>
@@ -275,6 +276,16 @@
 <p>Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what the user expressions can call or have access to.</p>
 
 <h2 id="lexical-structure">Lexical structure</h2>
+
+<h3 id="keywords">Keywords</h3>
+
+<p>Tweakflow recognizes the following keywords during lexical analysis. These tokens carry meaning as syntactic or semantic elements and cannot be used as identifiers unless noted otherwise in the identifiers section.</p>
+
+<p><code>alias</code>, <code>and</code>, <code>any</code>, <code>as</code>, <code>boolean</code>, <code>catch</code>, <code>datetime</code>, <code>debug</code>, <code>default</code>, <code>dict</code>, <code>doc</code>, <code>double</code>, <code>else</code>, <code>export</code>, <code>false</code>, <code>for</code>, <code>from</code>, <code>function</code>, <code>global</code>, <code>global::</code>, <code>if</code>, <code>import</code>, <code>in_scope</code>, <code>interactive</code>, <code>is</code>, <code>let</code>, <code>library</code>, <code>library::</code>, <code>list</code>, <code>local::</code>, <code>long</code>, <code>match</code>, <code>meta</code>, <code>module</code>, <code>module::</code>, <code>nil</code>, <code>not</code>, <code>or</code>, <code>provided</code>, <code>string</code>, <code>then</code>, <code>throw</code>, <code>true</code>, <code>try</code>, <code>typeof</code>, <code>via</code>, <code>void</code></p>
+
+<p>The following tokens are recognized as operators, and cannot be used in identifiers.</p>
+
+<p><code>(</code>, <code>)</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>&lt;-</code>, <code>-&gt;&gt;</code>, <code>&gt;&gt;&gt;</code>, <code>&gt;&gt;</code>, <code>&lt;&lt;</code>, <code>,</code>, <code>===</code>, <code>==</code>, <code>=</code>, <code>:</code>, <code>!</code>, <code>+</code>, <code>-</code>, <code>&lt;=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&gt;</code>, <code>//</code>, <code>/</code>, <code>%</code>, <code>!==</code>, <code>!=</code>, <code>**</code>, <code>*</code>, <code>&amp;&amp;</code>, <code>&amp;</code>, <code>||</code>, <code>|</code>, <code>^</code>, <code>-&gt;</code>, <code>...</code>, <code>..</code>, <code>.</code>, <code>'</code>, <code>\\</code>, <code>~</code>, <code>$</code>, <code>::</code>, <code>@</code></p>
 
 <h3 id="boolean-literals">Boolean literals</h3>
 
@@ -642,8 +653,6 @@ let {
 3
 </code></pre>
 
-<p>TODO: include endOfStatement Markers in their respective syntaxes</p>
-
 <h3 id="comments">Comments</h3>
 
 <p>Tweakflow supports line comments and span comments. Each form catering to different uses of comments in code.</p>
@@ -660,7 +669,7 @@ let {
 
 <p>The comment markers <code>/*</code> and <code>*/</code> enclose a comment that can span multiple lines. Span comments can be nested.</p>
 
-<pre><code class="language-ruby">&gt; 3 /* This is a comment */
+<pre><code class="language-text">&gt; 3 /* This is a comment */
 3
 
 &gt; /* this is a /* nested */ comment */ 3
@@ -1463,7 +1472,7 @@ exportName
 
 <p>Below example exports the strings standard library under the name <code>str</code>, and a local library <code>common</code> under the name <code>util</code> .</p>
 
-<pre><code class="language-text"># lib.tf
+<pre><code class="language-ruby"># lib.tf
 import * as std from &quot;std&quot;
 
 export std.strings as str
@@ -1504,8 +1513,8 @@ import util, str from &quot;./lib.tf&quot;
 <p>A variable is a named entity that holds a value. Variables are placed in <a href="#libraries">libraries</a>. Variables have a name, a  <a href="#data-types">type</a>, and a value. They can also be annotated by <a href="#annotations">docs and metadata</a>.</p>
 
 <pre><code>varDef
-  : metaDef dataType? identifier ':' expression endOfStatement?
-  | metaDef 'provided' dataType? identifier endOfStatement?
+  : metaDef dataType? identifier ':' expression 
+  | metaDef 'provided' dataType? identifier
   ;
 </code></pre>
 
@@ -2151,20 +2160,14 @@ function
 
 <h4 id="local-variables">Local variables</h4>
 
-<p>Tweakflow allows defining local variables for temporary results. The <code>let</code> expression defines a set of variables that are bound in its scope, shadowing any existing local variables of the same name.</p>
+<p>Tweakflow allows defining local variables for holding temporary results. The <code>let</code> expression defines a set of variables that are bound in its scope, shadowing any existing local variables of the same name.</p>
 
 <p>The formal syntax is as follows:</p>
 
-<pre><code class="language-text">let
-  :'let' '{' varDef* '}' expression
-  ;
-
-varDef
-  : dataType? identifier ':' expression endOfStatement?
-  ;
+<pre><code>'let' '{' varDef* '}' expression
 </code></pre>
 
-<p>TODO: limit provided and meta data for local variables. They are inaccessible, and should be rejected in analysis.</p>
+<p>All variables must be given values. Provided variables are only supported at the level of libraries.</p>
 
 <p>Examples:</p>
 
@@ -2177,17 +2180,16 @@ varDef
       age: time.years_between(born, at)
       is_eighteen: age &gt;= 18
     }
-    is_eighteen
+	is_eighteen
 \e
 function
 
-&gt; can_vote(born: 1981-08-16T, at: 1998-11-02T)
-false
-&gt; can_vote(born: 1981-08-16T, at: 1999-11-02T)
-true
 &gt; can_vote(born: 1981-08-16T, at: 2016-11-02T)
 true
-
+&gt; can_vote(born: 1981-08-16T, at: 1999-11-02T)
+true
+&gt; can_vote(born: 1981-08-16T, at: 1998-11-02T)
+false
 </code></pre>
 
 <h4 id="conditional-evaluation">Conditional evaluation</h4>
