@@ -79,7 +79,7 @@ public class DictTypeTest {
         "day_of_week", 4,
         "week_of_year", 1,
         "offset_seconds", 0,
-        "zone", "Z"
+        "zone", "UTC"
     ));
   }
 
