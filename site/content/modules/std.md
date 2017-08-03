@@ -2958,16 +2958,16 @@ Returns `nil` if any argument is `nil`.
 ```ruby
 
 > time.add_period(time.epoch, 0, 0, 1)
-1970-01-02T00:00:00Z@`UTC`
+1970-01-02T00:00:00Z@UTC
 
 > time.add_period(time.epoch, 0, 0, -1)
-1969-12-31T00:00:00Z@`UTC`
+1969-12-31T00:00:00Z@UTC
 
 > time.add_period(2017-05-24T, 1, 2, 3)
-2018-07-27T00:00:00Z@`UTC`
+2018-07-27T00:00:00Z@UTC
 
 > time.add_period(time.epoch, 2, 23, -98)
-1973-08-25T00:00:00Z@`UTC`
+1973-08-25T00:00:00Z@UTC
 
 > time.add_period(nil, nil, nil, nil)
 nil
@@ -2986,16 +2986,16 @@ Returns `nil` if any argument is `nil`.
 ```ruby
 
 > time.add_duration(time.epoch, 0, 1)
-1970-01-01T00:00:00.000000001Z@`UTC`
+1970-01-01T00:00:00.000000001Z@UTC
 
 > time.add_duration(time.epoch, 0, -1)
-1969-12-31T23:59:59.999999999Z@`UTC`
+1969-12-31T23:59:59.999999999Z@UTC
 
 > time.add_duration(2017-05-24T00:00:00Z, 3600)
-2017-05-24T01:00:00Z@`UTC`
+2017-05-24T01:00:00Z@UTC
 
 > time.add_duration(2017-05-24T00:00:00Z, -3600)
-2017-05-23T23:00:00Z@`UTC`
+2017-05-23T23:00:00Z@UTC
 
 > time.add_duration(nil, nil, nil)
 nil
@@ -3274,7 +3274,7 @@ Throws an error if no datetime can be constructed with given year.
 
 ```ruby
 > time.with_year(time.epoch, 2007)
-2007-01-01T00:00:00Z@`UTC`
+2007-01-01T00:00:00Z@UTC
 
 > time.with_year(time.epoch, nil)
 nil
@@ -3302,7 +3302,7 @@ Throws an error if no datetime can be constructed with given month.
 
 ```ruby
 > time.with_month(time.epoch, 6)
-1970-06-01T00:00:00Z@`UTC`
+1970-06-01T00:00:00Z@UTC
 
 > time.with_month(time.epoch, nil)
 nil
@@ -3331,7 +3331,7 @@ Throws an error if no datetime can be constructed with given `day_of_month`.
 
 ```ruby
 > time.with_day_of_month(time.epoch, 23)
-1970-01-23T00:00:00Z@`UTC`
+1970-01-23T00:00:00Z@UTC
 
 > time.with_day_of_month(time.epoch, nil)
 nil
@@ -3359,7 +3359,7 @@ Throws an error if no datetime can be constructed with given `hour`.
 
 ```ruby
 > time.with_hour(time.epoch, 4)
-1970-01-01T04:00:00Z@`UTC`
+1970-01-01T04:00:00Z@UTC
 
 > time.with_hour(time.epoch, nil)
 nil
@@ -3387,7 +3387,7 @@ Throws an error if no datetime can be constructed with given `minute`.
 
 ```ruby
 > time.with_minute(time.epoch, 42)
-1970-01-01T00:42:00Z@`UTC`
+1970-01-01T00:42:00Z@UTC
 
 > time.with_minute(time.epoch, nil)
 nil
@@ -3415,7 +3415,7 @@ Throws an error if no datetime can be constructed with given `second`.
 
 ```ruby
 > time.with_second(time.epoch, 42)
-1970-01-01T00:00:42Z@`UTC`
+1970-01-01T00:00:42Z@UTC
 
 > time.with_second(time.epoch, nil)
 nil
@@ -3443,7 +3443,7 @@ Throws an error if no datetime can be constructed with given `nano_of_second`.
 
 ```ruby
 > time.with_nano_of_second(time.epoch, 123456789)
-1970-01-01T00:00:00.123456789Z@`UTC`
+1970-01-01T00:00:00.123456789Z@UTC
 
 > time.with_nano_of_second(time.epoch, nil)
 nil
@@ -3536,13 +3536,13 @@ Returns `nil` if `s` is `nil`.
 ```ruby
 
 > time.unix_timestamp(0)
-1970-01-01T00:00:00Z@`UTC`
+1970-01-01T00:00:00Z@UTC
 
 > time.unix_timestamp(1496933995)
-2017-06-08T14:59:55Z@`UTC`
+2017-06-08T14:59:55Z@UTC
 
 > time.unix_timestamp(-1496933995)
-1922-07-26T09:00:05Z@`UTC`
+1922-07-26T09:00:05Z@UTC
 ```
 
 ### unix_timestamp_ms
@@ -3556,13 +3556,13 @@ Returns `nil` if `s` is `nil`.
 ```ruby
 
 > time.unix_timestamp_ms(0)
-1970-01-01T00:00:00Z@`UTC`
+1970-01-01T00:00:00Z@UTC
 
 > time.unix_timestamp_ms(1496933995763)
-2017-06-08T14:59:55.763Z@`UTC`
+2017-06-08T14:59:55.763Z@UTC
 
 > time.unix_timestamp_ms(-1496933995763)
-1922-07-26T09:00:04.237Z@`UTC`
+1922-07-26T09:00:04.237Z@UTC
 ```
 
 ### compare
@@ -3590,7 +3590,7 @@ Assumes `nil` to precede any non-nil datetime.
 0
 
 > data.sort([2017-05-24T00:00:00, 2017-05-25T00:00:00, nil, 2017-05-24T00:01:00, 2017-05-24T02:00:00], time.compare)
-[nil, 2017-05-24T00:00:00Z@`UTC`, 2017-05-24T00:01:00Z@`UTC`, 2017-05-24T02:00:00Z@`UTC`, 2017-05-25T00:00:00Z@`UTC`]
+[nil, 2017-05-24T00:00:00Z@UTC, 2017-05-24T00:01:00Z@UTC, 2017-05-24T02:00:00Z@UTC, 2017-05-25T00:00:00Z@UTC]
 ```
 
 ### formatter
@@ -3663,7 +3663,7 @@ function
 nil
 
 > f("2017-04-23T21:43:11")
-2017-04-23T21:43:11Z@`UTC`
+2017-04-23T21:43:11Z@UTC
 
 > f("2017-04-23T21:43:11@`Europe/Berlin`")
 2017-04-23T21:43:11+02:00@`Europe/Berlin`
@@ -3694,7 +3694,7 @@ function
 
 # lenient parser interprets march 32nd as april 1st
 > f("2015-03-32")
-2015-04-01T00:00:00Z@`UTC`
+2015-04-01T00:00:00Z@UTC
 
 # parses local times setting the default time zone
 > f: time.parser('uuuu-MM-dd[ HH:mm:ss]', default_tz: 'America/Chicago')
