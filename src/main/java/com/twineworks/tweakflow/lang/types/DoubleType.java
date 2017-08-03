@@ -38,7 +38,7 @@ final public class DoubleType implements Type {
       "[+-]?" +                                     // optional sign
       "(NaN)|" +                                    // NaN
       "(Infinity)|" +                               // Infinity
-      "([0-9]+(\\.)?([0-9]+)([eE][+-]?[0-9]+)?)|" + // digits.digits(E+-exponent)?
+      "([0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?)|" +   // digits.digits(E+-exponent)?
       "(\\.[0-9]+([eE][+-]?[0-9]+)?)" +             // .digits(E+-exponent)?
       "[\\x00-\\x20]*";                             // optional trailing whitespace
 
