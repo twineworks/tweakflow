@@ -98,7 +98,6 @@ var init = function(){
 // initializing twice helps with issues that can occur when visiting a url with
 // a #fragment in them
 init();
-hljs.initHighlightingOnLoad();
 
 $(function(){
   init();
