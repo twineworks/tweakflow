@@ -128,7 +128,8 @@ final public class StringType implements Type {
         || type == Types.VOID
         || type == Types.BOOLEAN
         || type == Types.LONG
-        || type == Types.DOUBLE;
+        || type == Types.DOUBLE
+        || type == Types.DATETIME;
 
   }
 
@@ -149,6 +150,10 @@ final public class StringType implements Type {
 
     if (srcType == Types.DOUBLE){
       return Values.make(x.doubleNum().toString());
+    }
+
+    if (srcType == Types.DATETIME){
+      return Values.make(x.dateTime().toString());
     }
 
     throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
