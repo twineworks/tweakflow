@@ -69,7 +69,7 @@ public class BooleanTypeTest {
   }
 
   @Test
-  public void casts_from_map() throws Exception {
+  public void casts_from_dict() throws Exception {
     assertThat(Types.BOOLEAN.canAttemptCastFrom(Types.DICT)).isTrue();
     assertThat(Types.BOOLEAN.castFrom(Values.makeDict())).isSameAs(Values.FALSE);
     assertThat(Types.BOOLEAN.castFrom(Values.makeDict("key", 1L))).isSameAs(Values.TRUE);

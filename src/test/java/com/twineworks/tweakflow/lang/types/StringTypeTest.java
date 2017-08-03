@@ -79,7 +79,7 @@ public class StringTypeTest {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_cast_from_map() throws Exception {
+  public void cannot_cast_from_dict() throws Exception {
     assertThat(Types.STRING.canAttemptCastFrom(Types.DICT)).isFalse();
     Types.STRING.castFrom(Values.makeDict());
   }

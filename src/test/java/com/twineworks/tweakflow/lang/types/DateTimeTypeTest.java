@@ -76,7 +76,7 @@ public class DateTimeTypeTest {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_cast_from_map() throws Exception {
+  public void cannot_cast_from_dict() throws Exception {
     assertThat(Types.DATETIME.canAttemptCastFrom(Types.DICT)).isFalse();
     Types.DATETIME.castFrom(Values.makeDict());
   }

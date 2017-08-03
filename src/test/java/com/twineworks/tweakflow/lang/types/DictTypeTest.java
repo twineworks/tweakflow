@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DictTypeTest {
 
   @Test
-  public void casts_from_map() throws Exception {
+  public void casts_from_dict() throws Exception {
     Value map = Values.makeDict("a", 1L, "b", 2L);
     assertThat(Types.DICT.canAttemptCastFrom(Types.DICT)).isTrue();
     assertThat(Types.DICT.castFrom(map)).isSameAs(map);

@@ -77,7 +77,7 @@ public class FunctionTypeTest {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_cast_from_map() throws Exception {
+  public void cannot_cast_from_dict() throws Exception {
     assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DICT)).isFalse();
     Types.FUNCTION.castFrom(Values.makeDict());
   }

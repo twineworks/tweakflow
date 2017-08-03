@@ -85,7 +85,7 @@ public class DoubleTypeTest {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_cast_from_map() throws Exception {
+  public void cannot_cast_from_dict() throws Exception {
     assertThat(Types.DOUBLE.canAttemptCastFrom(Types.DICT)).isFalse();
     Types.DOUBLE.castFrom(Values.makeDict());
   }

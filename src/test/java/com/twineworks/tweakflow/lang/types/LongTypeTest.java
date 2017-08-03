@@ -79,7 +79,7 @@ public class LongTypeTest {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_cast_from_map() throws Exception {
+  public void cannot_cast_from_dict() throws Exception {
     assertThat(Types.LONG.canAttemptCastFrom(Types.DICT)).isFalse();
     Types.LONG.castFrom(Values.makeDict());
   }
