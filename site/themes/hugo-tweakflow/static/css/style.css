@@ -239,7 +239,17 @@ aside nav > ul > li > ul > li > a {
 
 aside nav > ul > li > ul > li > ul > li > a {
   font-size: 1.3em;
-  padding-left: 3em;
+  padding-left: 2.0em;
+}
+
+aside nav > ul > li > ul > li > ul > li > ul > li > a{
+  font-size: 1.1em;
+  padding-left: 3.5em;
+}
+
+aside nav > ul > li > ul > li > ul > li > ul > li > ul > li a {
+  font-size: 1.1em;
+  padding-left: 4.5em;
 }
 
 aside nav > ul > li > ul > li > ul > li:last-child {
@@ -314,9 +324,16 @@ main h3 {
   margin-bottom: 1.0rem;
 }
 
+main h4, main h5, main h6 {
+  font-size: 1.0em;
+  /*font-weight: bold;*/
+  padding-top: 1.0rem;
+  margin-bottom: 1.0rem;
+}
+
 main p {
   margin: 1.0rem auto;
-  line-height: 1.4em;
+  line-height: 1.5em;
   text-align: justify;
 }
 
@@ -327,6 +344,7 @@ main code, main pre {
 main code {
   background: #f8f8f8;
   padding: 0.2em;
+  white-space: pre;
 }
 
 main pre code {
@@ -341,7 +359,9 @@ main pre code {
   display: block;
 }
 
-
+main ul {
+  padding-left: 2em;
+}
 
 main table {
     border-collapse: collapse;
@@ -352,7 +372,6 @@ main table {
 
 main table caption {
     color: #000;
-    font: italic 85%/1 arial, sans-serif;
     padding: 1em 0;
     text-align: center;
 }
@@ -388,6 +407,7 @@ main table thead {
 main table td {
     background-color: transparent;
 }
+
 main table.odd td {
     background-color: #f2f2f2;
 }
