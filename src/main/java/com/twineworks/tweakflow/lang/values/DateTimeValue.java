@@ -44,19 +44,19 @@ public class DateTimeValue {
 
   private static final DateTimeFormatter regionIdFormatter = new DateTimeFormatterBuilder()
       .parseCaseSensitive()
-      .appendZoneRegionId()
+      .appendZoneId()
       .toFormatter();
 
   public DateTimeValue(Instant instant) {
     this.instant = instant;
-    zoned = instant.atZone(ZoneOffset.UTC);
+    zoned = instant.atZone(ZoneId.of("UTC"));
     offset = zoned.toOffsetDateTime();
     local = zoned.toLocalDateTime();
   }
 
   public DateTimeValue(LocalDateTime local) {
     this.local = local;
-    this.zoned = local.atZone(ZoneOffset.UTC);
+    this.zoned = local.atZone(ZoneId.of("UTC"));
     this.instant = zoned.toInstant();
     this.offset = zoned.toOffsetDateTime();
   }
