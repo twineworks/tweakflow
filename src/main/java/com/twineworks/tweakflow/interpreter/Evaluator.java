@@ -404,7 +404,7 @@ public class Evaluator {
         if (processedNamed){
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Positional argument cannot follow after named arguments.",
+              "Positional argument cannot follow named arguments.",
               argumentNode.getSourceInfo()
           );
         }
@@ -467,7 +467,7 @@ public class Evaluator {
           if (processedNamed){
             throw new LangException(
                 LangError.UNEXPECTED_ARGUMENT,
-                "List splat provides positional arguments and cannot follow after named arguments.",
+                "List splat provides positional arguments and cannot follow named arguments.",
                 null,
                 splatArgumentNode.getSourceInfo()
             );
@@ -563,7 +563,7 @@ public class Evaluator {
         if (processedNamed){
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Positional argument cannot follow after named arguments.",
+              "Positional argument cannot follow named arguments.",
               argumentNode.getSourceInfo()
           );
         }
@@ -626,7 +626,7 @@ public class Evaluator {
           if (processedNamed){
             throw new LangException(
                 LangError.UNEXPECTED_ARGUMENT,
-                "List splat provides positional arguments and cannot follow after named arguments.",
+                "List splat provides positional arguments and cannot follow named arguments.",
                 null,
                 splatArgumentNode.getSourceInfo()
             );
