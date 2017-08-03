@@ -84,10 +84,9 @@ public class StringTypeTest {
     Types.STRING.castFrom(Values.makeDict());
   }
 
-  @Test(expected = LangException.class)
-  public void cannot_cast_from_datetime() throws Exception {
-    assertThat(Types.STRING.canAttemptCastFrom(Types.DATETIME)).isFalse();
-    Types.STRING.castFrom(Values.EPOCH);
+  public void casts_from_datetime() throws Exception {
+    assertThat(Types.STRING.canAttemptCastFrom(Types.DATETIME)).isTrue();
+    assertThat(Types.STRING.castFrom(Values.EPOCH)).isEqualTo(Values.make("1970-01-01T00:00:00Z@UTC"));
   }
 
   @Test
