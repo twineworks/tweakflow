@@ -208,8 +208,7 @@ splatCapture
   ;
 
 matchPattern
-  : expression  varCapture?                     # expPattern
-  | varCapture                                  # capturePattern
+  : varCapture                                  # capturePattern
   | dataType    varCapture?                     # dataTypePattern
   | '[' (matchPattern ',') * splatCapture ']' varCapture?  # headTailListPattern
   | '[' splatCapture ',' (matchPattern ',') * matchPattern ']' varCapture?                      # initLastListPattern
@@ -217,6 +216,7 @@ matchPattern
   | '[' (matchPattern ',') * matchPattern ']' varCapture?                                       # listPattern
   | '{' ((keyLiteral matchPattern) ',' )* (keyLiteral matchPattern) '}' varCapture?                               # dictPattern
   | '{' (((keyLiteral matchPattern)|splatCapture) ',' )* ((keyLiteral matchPattern)|splatCapture) '}' varCapture? # openDictPattern
+  | expression  varCapture?                     # expPattern
   ;
 
 threadArg
