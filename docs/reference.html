@@ -183,13 +183,14 @@
 </ul></li>
 <li><a href="#libraries">Libraries</a></li>
 <li><a href="#variables">Variables</a></li>
+<li><a href="#scopes">Scopes</a></li>
 <li><a href="#annotations">Annotations</a></li>
-<li><a href="#scope">Scope</a></li>
 <li><a href="#expressions">Expressions</a>
 <ul>
 <li><a href="#nil">Nil</a></li>
 <li><a href="#value-literals">Value literals</a></li>
 <li><a href="#type-inspection">Type inspection</a></li>
+<li><a href="#type-name">Type name</a></li>
 <li><a href="#type-casts">Type casts</a></li>
 <li><a href="#container-access">Container access</a>
 <ul>
@@ -206,10 +207,25 @@
 <li><a href="#argument-casting">Argument casting</a></li>
 <li><a href="#return-value-casting">Return value casting</a></li>
 </ul></li>
+<li><a href="#call-chaining">Call chaining</a></li>
 <li><a href="#local-variables">Local variables</a></li>
 <li><a href="#conditional-evaluation">Conditional evaluation</a></li>
+<li><a href="#default-values">Default values</a></li>
 <li><a href="#list-comprehensions">List comprehensions</a></li>
-<li><a href="#pattern-matching">Pattern Matching</a></li>
+<li><a href="#pattern-matching">Pattern Matching</a>
+<ul>
+<li><a href="#existence-and-capturing-patterns">Existence and capturing patterns</a></li>
+<li><a href="#value-patterns">Value patterns</a></li>
+<li><a href="#predicate-patterns">Predicate patterns</a></li>
+<li><a href="#type-patterns">Type patterns</a></li>
+<li><a href="#full-list-patterns">Full list patterns</a></li>
+<li><a href="#head-list-patterns">Head list patterns</a></li>
+<li><a href="#tail-list-patterns">Tail list patterns</a></li>
+<li><a href="#head-and-tail-list-patterns">Head-and-tail list patterns</a></li>
+<li><a href="#full-dict-patterns">Full dict patterns</a></li>
+<li><a href="#partial-dict-patterns">Partial dict patterns</a></li>
+<li><a href="#nesting-patterns">Nesting patterns</a></li>
+</ul></li>
 <li><a href="#errors">Errors</a>
 <ul>
 <li><a href="#throwing-errors">Throwing errors</a></li>
@@ -221,10 +237,14 @@
 <li><a href="#library-scope-references">Library scope references</a></li>
 <li><a href="#module-scope-references">Module scope references</a></li>
 <li><a href="#global-scope-references">Global scope references</a></li>
-<li><a href="#module-names">Module names</a></li>
+<li><a href="#referencing-values">Referencing values</a></li>
+<li><a href="#referencing-non-value-entities">Referencing non-value entities</a></li>
+<li><a href="#circular-references">Circular references</a></li>
+<li><a href="#closures">Closures</a></li>
 </ul></li>
 <li><a href="#operators">Operators</a></li>
 <li><a href="#evaluation-precedence">Evaluation precedence</a></li>
+<li><a href="#debugging">Debugging</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#language-tools">Language tools</a>
@@ -776,13 +796,15 @@ spans multiple lines
 <p>Strings cast to doubles successfully if they pass the following regular expression:</p>
 
 <pre><code class="language-text">[\x00-\x20]*                                 # optional leading whitespace
-[+-]?                                        # optional sign
+[-+]?                                        # optional sign
+(
 (NaN)|                                       # Not a Number
 (Infinity)|                                  # Infinity
-([0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?)|       # Digits optionally followed by decimal dot
+([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
                                              # fractional digits, and exponent                                              
-\.[0-9]+([eE][+-]?[0-9]+)?)                  # decimal dot followed by fractional digits
+\.[0-9]+([eE][-+]?[0-9]+)?)                  # decimal dot followed by fractional digits
                                              # and exponent
+)                                             
 [\x00-\x20]*                                 # optional trailing whitespace
 </code></pre>
 
@@ -1118,9 +1140,9 @@ splat
 
 <p>The <code>function</code> type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures.</p>
 
-<p>Function notation has two parts: function head, and body. The head holds the function signature: paramter list and return type. The body is either an expression that evaluates to the function&rsquo;s return value, or a structure specifying the Java class that is implementing the function.</p>
+<p>Function notation has two parts: function head, and body. The head holds the function signature: parameter list and return type. The body is either an expression that evaluates to the function&rsquo;s return value, or a structure specifying the Java class that is implementing the function.</p>
 
-<p>Formally function syntax is as follows:</p>
+<p>Formally the syntax is as follows:</p>
 
 <pre><code class="language-text">functionLiteral
   : functionHead (expression|viaDec)
@@ -1356,7 +1378,7 @@ library my_lib {
 
 <p>It is an error to import a name that is not explicitly exported.</p>
 
-<p>Imported names are placed in <a href="#references">module scope</a>.</p>
+<p>Imported names are placed in <a href="#scope">module scope</a>.</p>
 
 <p>Imports have the following syntax:</p>
 
@@ -1396,6 +1418,8 @@ modulePath
 
 <p>The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using <a href="#language-tools">language tools</a> or by the host application when embedding.</p>
 
+<p>Two modules may import each other&rsquo;s exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.</p>
+
 <p><strong>Examples</strong></p>
 
 <p>Module <code>&quot;./util/strings.tf&quot;</code> is imported as a whole below. Any exported name <code>x</code> is available as <code>utils.x</code> locally.</p>
@@ -1415,7 +1439,7 @@ modulePath
 
 <h4 id="aliases">Aliases</h4>
 
-<p>Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in <a href="#module-scope">module scope</a>.</p>
+<p>Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in <a href="#module-scope">module scope</a>. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.</p>
 
 <p>Aliases have the following syntax:</p>
 
@@ -1482,7 +1506,7 @@ import util, str from &quot;./lib.tf&quot;
 
 <h3 id="libraries">Libraries</h3>
 
-<p>A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name.</p>
+<p>A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in <a href="#scopes">library scope</a>.</p>
 
 <p><strong>Syntax</strong></p>
 
@@ -1530,6 +1554,27 @@ false
 <p>Variable values are either given directly as <a href="#expressions">expressions</a>, or the variables are marked as <code>provided</code>. The host application is required to set the values of <code>provided</code> variables through the embedding API. Initially, all provided variables have the value <code>nil</code>.</p>
 
 <p>Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p>All named entities like variables, libraries, aliases, and exports are placed in a scope in which each name must be unique. Tweakflow has four different kinds of scope ordered into a hierarchy:</p>
+
+<ul>
+<li>global scope</li>
+<li>module scope</li>
+<li>library scope</li>
+<li>local scope</li>
+</ul>
+
+<p>There is exactly one global scope per tweakflow program. It contains the names of <a href="#global-modules">global modules</a>, if any are loaded.</p>
+
+<p>There is a distinct module scope per loaded module. It contains the names of the module&rsquo;s imports, aliases, and libraries.</p>
+
+<p>There is a distinct library scope per library in a module. It contains the names of all library variables.</p>
+
+<p>There is a local scope per variable in a module. Nested local scopes are created as part of expressions that introduce identifiers, like <a href="#local-variables">local variables</a> for example.</p>
+
+<p>Name resolution for references generally starts in the scope the reference appears in. If the name is not found the search propagates one level up until it stops after searching module scope. Global scope is not searched as part of the algorithm. Any references to global names must be explicitly marked as global references. See <a href="#references">references</a> for syntax details.</p>
 
 <h3 id="annotations">Annotations</h3>
 
@@ -1615,12 +1660,6 @@ foo.tf&gt; \meta bar.baz
 }
 </code></pre>
 
-<h3 id="scope">Scope</h3>
-
-<p>TODO</p>
-
-<p>TODO: You can&rsquo;t replace things in scope, importing, aliasing etc. cannot alter existing impor</p>
-
 <h3 id="expressions">Expressions</h3>
 
 <p>Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.</p>
@@ -1675,6 +1714,35 @@ true
 
 &gt; nil is any
 false
+</code></pre>
+
+<h4 id="type-name">Type name</h4>
+
+<p>The <code>typeof</code> keyword returns the name of a value&rsquo;s type.</p>
+
+<pre><code class="language-text">'typeof' expression
+</code></pre>
+
+<p>The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>void</code>.</p>
+
+<pre><code class="language-ruby">&gt; typeof &quot;foo&quot;
+&quot;string&quot;
+&gt; typeof (x) -&gt; x+1
+&quot;function&quot;
+&gt; typeof 1
+&quot;long&quot;
+&gt; typeof 1.0
+&quot;double&quot;
+&gt; typeof false
+&quot;boolean&quot;
+&gt; typeof {}
+&quot;dict&quot;
+&gt; typeof []
+&quot;list&quot;
+&gt; typeof 2017-03-12T
+&quot;datetime&quot;
+&gt; typeof nil
+&quot;void&quot;
 </code></pre>
 
 <h4 id="type-casts">Type casts</h4>
@@ -2149,9 +2217,13 @@ function
 &quot;foo&quot;
 </code></pre>
 
+<h4 id="call-chaining">Call chaining</h4>
+
+<p>TODO</p>
+
 <h4 id="local-variables">Local variables</h4>
 
-<p>Tweakflow allows defining local variables for temporary results. The <code>let</code> expression defines a set of variables that are bound in its scope, shadowing any existing local variables of the same name.</p>
+<p>Local variables are useful as named temporary results. The <code>let</code> expression defines a set of variables that are bound in its local scope, shadowing any existing local variables of the same name in parent scopes.</p>
 
 <p>The formal syntax is as follows:</p>
 
@@ -2163,8 +2235,6 @@ varDef
   : dataType? identifier ':' expression endOfStatement?
   ;
 </code></pre>
-
-<p>TODO: limit provided and meta data for local variables. They are inaccessible, and should be rejected in analysis.</p>
 
 <p>Examples:</p>
 
@@ -2190,41 +2260,700 @@ true
 
 </code></pre>
 
+<p>Local variables shadow any existing variables:</p>
+
+<pre><code class="language-ruby">&gt; \e
+let {
+  x: &quot;foo&quot;
+  y: let {
+       x: &quot;bar&quot;
+     }
+     x # &quot;bar&quot;
+} 
+x .. y # &quot;foo&quot;..&quot;bar&quot;
+\e
+&quot;foobar&quot;
+</code></pre>
+
 <h4 id="conditional-evaluation">Conditional evaluation</h4>
 
-<p>TODO</p>
+<p>Conditional evaluation is done using a traditional <code>if</code> construct.</p>
+
+<pre><code class="language-text">'if' condition 'then'? then_expression 'else'? else_expression 
+</code></pre>
+
+<p>The <code>condition</code> expression is evaluated and cast to boolean. If the condition evalautes to <code>true</code>, the <code>then_expression</code> is evaluated and is the result of the expression. If the condition evaluates to <code>false</code> or <code>nil</code>, the <code>else_expression</code> is evaluated and is the result of the expression.  The <code>then</code> and <code>else</code> keywords are optional.</p>
+
+<p>Some examples:</p>
+
+<pre><code class="language-ruby">&gt; if true then 1 else 2
+1
+
+&gt; f: (string x) -&gt; if strings.length(x) &gt; 2 then &quot;long&quot; else &quot;short&quot;
+function
+&gt; f(&quot;hello&quot;)
+&quot;long&quot;
+&gt; f(&quot;hi&quot;)
+&quot;short&quot;
+  
+&gt; \e
+greeting: (string language) -&gt; 
+  if language == &quot;en&quot; then &quot;Good afternoon&quot;
+  if language == &quot;de&quot; then &quot;Guten Tag&quot;
+  if language == &quot;es&quot; then &quot;Hola&quot;
+  if language == &quot;zh&quot; then &quot;你好&quot;
+  if language == &quot;hi&quot; then &quot;नमस्ते&quot;
+  else &quot;Hello&quot;
+\e
+function
+&gt; greeting(&quot;de&quot;)
+&quot;Guten Tag&quot;
+&gt; greeting(&quot;es&quot;)
+&quot;Hola&quot;
+&gt; greeting()
+&quot;Hello&quot;
+</code></pre>
+
+<h4 id="default-values">Default values</h4>
+
+<p>Default values notation is a shorthand for replacing <code>nil</code> values with non-nil defaults.</p>
+
+<pre><code class="language-text">expression 'default' default_expression
+</code></pre>
+
+<p>It is semantically identical to:</p>
+
+<pre><code class="language-text">if expression != nil then expression else default_expression
+</code></pre>
+
+<p>Given customer records, the following function creates a greeting line:</p>
+
+<pre><code class="language-ruby">&gt; greeting: (dict customer) -&gt; &quot;Dear &quot;..(customer[:name] default &quot;customer&quot;)
+function
+&gt; greeting({:id 723, :name &quot;Jane Doe&quot;, :type &quot;user&quot;})
+&quot;Dear Jane Doe&quot;
+&gt; greeting({:id 0, :type &quot;admin&quot;})
+&quot;Dear customer&quot;
+</code></pre>
 
 <h4 id="list-comprehensions">List comprehensions</h4>
 
-<p>TODO</p>
+<p>Tweakflow supports list comprehensions allowing to generate, transform, combine and filter lists.</p>
+
+<pre><code class="language-text">listComprehension
+  : 'for' forHead ',' expression
+  ;
+
+forHead
+  : generator (',' (generator | varDef | filter))*
+  ;
+  
+generator
+  : dataType? identifier '&lt;-' expression
+  ;
+  
+varDef
+  : metadef dataType? identifier ':' expression
+  ;  
+  
+filter
+  : expression
+  ;
+</code></pre>
+
+<p>A list comprehension uses generators to define variables that loop over list items. They nest in order if more than one generator is present.</p>
+
+<p>Create a list of coordinates from given axes:</p>
+
+<pre><code class="language-ruby">&gt; \e
+for
+  x &lt;- [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
+  y &lt;- [1, 2, 3, 4, 5, 6],
+  x .. y
+\e
+[&quot;a1&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;a4&quot;, &quot;a5&quot;, &quot;a6&quot;, &quot;b1&quot;, &quot;b2&quot;, &quot;b3&quot;, &quot;b4&quot;, &quot;b5&quot;, &quot;b6&quot;, &quot;c1&quot;, &quot;c2&quot;, &quot;c3&quot;, &quot;c4&quot;, &quot;c5&quot;, &quot;c6&quot;]
+</code></pre>
+
+<p>Variable definitions in list comprehensions create helper variables. They are in scope for all subsequent expressions in the list comprehension.</p>
+
+<pre><code class="language-ruby">&gt; \e
+for
+  x  &lt;- data.range(1, 3),
+  y  &lt;- data.range(x, 3),
+  p: x*y,
+  &quot;#{x} * #{y} = #{p}&quot;
+\e
+[&quot;1 * 1 = 1&quot;, &quot;1 * 2 = 2&quot;, &quot;1 * 3 = 3&quot;, &quot;2 * 2 = 4&quot;, &quot;2 * 3 = 6&quot;, &quot;3 * 3 = 9&quot;]
+</code></pre>
+
+<p>Free-standing expressions act as filters. They are evaluated and cast to boolean. If they evaluate to <code>true</code>, the current entry is part of the result list, if they evaluate to <code>false</code> or <code>nil</code>, the current element is omitted.</p>
+
+<p>Create a list of <a href="https://en.wikipedia.org/wiki/Pythagorean_triple">pythagorean triples</a> trying sides up to the size of 15.</p>
+
+<pre><code class="language-ruby">&gt; \e
+for
+  a &lt;- data.range(1, 15),
+  b &lt;- data.range(a, 15),
+  c: math.sqrt(a*a + b*b),  
+  (c as long) == c, # filter: only pass if is c an integer         
+  [a, b, c as long]
+\e
+[[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15]]
+</code></pre>
+
+<p>Above example loops over <code>a</code> going from 1 to 15, and <code>b</code> going from <code>a</code> to <code>15</code>, calculates <code>c</code>, and filters out any non-integer <code>c</code> values. If <code>c</code> happens to be an integer, the triple <code>[a, b, c]</code> is included in the result list.</p>
 
 <h4 id="pattern-matching">Pattern Matching</h4>
 
-<p>TODO</p>
+<p>Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted.</p>
+
+<p>The formal syntax is as follows:</p>
+
+<pre><code class="language-text">match:
+  'match' expression matchBody
+  ;
+
+matchBody
+  : matchLine+
+  ;
+
+matchLine
+  : matchPattern (',' matchGuard)? '-&gt;' expression
+  | 'default' '-&gt;'  expression
+  ;
+
+matchGuard
+  : expression
+  ;
+</code></pre>
+
+<p>A match expression consists of the <code>match</code> keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the <code>default</code> line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.</p>
+
+<p>The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to <code>true</code> the match evalutes to the line&rsquo;s result expression. If the guard expression evaluates to <code>false</code> or <code>nil</code>,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a <code>default</code> line, the match evaluates to the default value. If there is no <code>default</code> line, the match evaluates to <code>nil</code>.</p>
+
+<p>The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches.</p>
+
+<h5 id="existence-and-capturing-patterns">Existence and capturing patterns</h5>
+
+<p>Existence matches are the simplest form of match. They match any value including <code>nil</code>. An existence match is indicated by the <code>@</code> operator. If that operator is followed by an identifier, it becomes a capturing match, binding the identifier to the matched value in the guard and result expressions of the line. Formally the syntax is as follows:</p>
+
+<pre><code>matchPattern
+  : '@' identifier?
+  ;
+</code></pre>
+
+<p>An example:</p>
+
+<pre><code class="language-ruby">&gt; \e
+f: (long x) -&gt; 
+  match x
+    @ -&gt; true # always matches
+\e
+function
+&gt; f(0)
+true
+&gt; f(1)
+true
+&gt; f(nil)
+true
+</code></pre>
+
+<p>Existence matches are not very useful for matching simple values, but they are useful when nested in list or dict patterns to assert element existence and extract element values from these structures.</p>
+
+<pre><code class="language-ruby">&gt; \e
+pair?: (list xs) -&gt;
+  match xs
+    [@, @]  -&gt; true
+    default -&gt; false
+\e
+function
+&gt; pair?([1, 2])
+true
+&gt; pair?([1, 2, 3])
+false
+&gt; pair?(nil)
+false
+
+&gt; \e
+sequence_pair?: (list xs) -&gt;
+  match xs
+#   capture   guard       result
+    [@a, @b], a+1 == b -&gt; true    
+    default -&gt; false
+\e
+function
+&gt; sequence_pair?([1, 2])
+true
+&gt; sequence_pair?([2, 4])
+false
+</code></pre>
+
+<h5 id="value-patterns">Value patterns</h5>
+
+<p>A value pattern compares against a concrete value. The comparison is done using the <code>==</code> operator. The syntax is:</p>
+
+<pre><code class="language-text">matchPattern
+  : expression  capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+</code></pre>
+
+<p>An optional capture pattern is allowed after the expression, to capture the matched value. If the capture does not specify an identifier, it has no effect.</p>
+
+<pre><code class="language-ruby">&gt; \e
+low_prime?: (long x) -&gt;
+  match x
+    2 -&gt; true
+    3 -&gt; true
+    5 -&gt; true
+    7 -&gt; true
+    default -&gt; false
+\e
+function
+&gt; low_prime?(1)
+false
+&gt; low_prime?(2)
+true
+&gt; low_prime?(3)
+true
+&gt; low_prime?(4)
+false
+&gt; low_prime?(5)
+true
+&gt; low_prime?(nil)
+false
+</code></pre>
+
+<p>Value patterns have a special case: functions. Functions never compare as equal. Therefore a value pattern that compares against a function would never match. Instead, tweakflow uses function values in patterns as predicates.</p>
+
+<h5 id="predicate-patterns">Predicate patterns</h5>
+
+<p>Predicate patterns are syntactically identical to value patterns, as they are merely a special case of the match expression evaluating to a function.</p>
+
+<pre><code class="language-text">matchPattern
+  : expression  capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+</code></pre>
+
+<p>If the pattern expression evaluates to a function, it is treated as a predicate: the function is called with the matched value as first argument, and the result is cast to boolean. If it evaluates to <code>true</code>, the pattern matches, if it evaluates to <code>false</code> or <code>nil</code>, the pattern does not match.</p>
+
+<pre><code class="language-ruby">&gt; div_by_4?: (long x) -&gt; x % 4 == 0
+function
+
+&gt; div_by_400?: (long x) -&gt; x % 400 == 0
+function
+
+&gt; div_by_100?: (long x) -&gt; x % 100 == 0
+function
+
+&gt; \e
+leap_year?: (long x) -&gt;
+  match x
+	div_by_400? -&gt; true
+	div_by_100? -&gt; false
+    div_by_4?   -&gt; true
+    default     -&gt; false
+\e
+function
+
+&gt; leap_year?(1900)
+false
+&gt; leap_year?(1904)
+true
+&gt; leap_year?(2000)
+true
+&gt; leap_year?(2004)
+true
+&gt; leap_year?(2016)
+true
+&gt; leap_year?(2017)
+false
+</code></pre>
+
+<h5 id="type-patterns">Type patterns</h5>
+
+<p>Type patterns match on the data type of the matched value. Their syntax is as follows:</p>
+
+<pre><code class="language-text">matchPattern
+  : dataType capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+</code></pre>
+
+<p>The pattern matches only if the matched value is of the given type. The <code>nil</code> value only matches the <code>void</code> data type. Any non-nil value matches the <code>any</code> type.</p>
+
+<p>As an example, consider the <code>int?</code> function, which returns true if the argument is a whole number given as long, double, or as a string.</p>
+
+<pre><code class="language-ruby">&gt; \e
+int?: (x) -&gt;
+  match x
+    long                      -&gt; true
+    double, (x as long) == x  -&gt; true
+    string                    -&gt; try int?(x as double) catch false
+    default                   -&gt; false
+\e
+function
+&gt; int?(1)
+true
+&gt; int?(1.0)
+true
+&gt; int?(1.5)
+false
+&gt; int?(&quot;2&quot;)
+true
+&gt; int?(&quot;2e3&quot;)  # 2000
+true
+&gt; int?(&quot;-2e3&quot;) # -2000
+true
+&gt; int?(&quot;2e-3&quot;) # 0.002
+false
+&gt; int?(&quot;2m&quot;)   # does not parse as double
+false
+&gt; int?(nil)
+false
+</code></pre>
+
+<h5 id="full-list-patterns">Full list patterns</h5>
+
+<p>Full list patterns match a list in its entirety. It is a sequence of patterns corresponding to list items. The syntax for full list patterns is a non-empty list of match patterns of any kind, separated by comma:</p>
+
+<pre><code class="language-text">matchPattern
+  : '[' (matchPattern ',') * matchPattern ']' capture?                                     
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.</p>
+
+<pre><code class="language-ruby">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.nan?(x) &amp;&amp; math.abs(x) != Infinity)
+function
+&gt; \e
+vector2d?: (list xs) -&gt;
+  match xs
+    # match 2-element list, use num? as predicate for each item
+    [num?, num?] -&gt; true 
+    default -&gt; false
+\e
+function
+&gt; vector2d?([1, 2])
+true
+&gt; vector2d?([&quot;a&quot;, &quot;b&quot;])
+false
+&gt; vector2d?([8, 2, 2.0])
+false
+&gt; vector2d?([8.0, 2.0])
+true
+&gt; vector2d?([nil, nil])
+false
+&gt; vector2d?(nil)
+false
+</code></pre>
+
+<h5 id="head-list-patterns">Head list patterns</h5>
+
+<p>A head list pattern matches the beginning of a list with item patterns, optionally also capturing the tail.</p>
+
+<p>The syntax for head list patterns is a list beginning with match patterns of any kind, separated by comma, then followed by a splat expression representing the tail:</p>
+
+<pre><code class="language-text">matchPattern
+  : '[' (matchPattern ',') * splatCapture ']' capture? 
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>Each pattern in the pattern list must match the items of the matched value in order, after which follows a tail of zero or more items. The tail can be captured into a variable. The optional final capture contains the entire matched list.</p>
+
+<p>The following function recursively checks whether the argument is a list of pairs of keys and values. All key positions must contain strings beginning with the letter <code>&quot;a&quot;</code>.</p>
+
+<pre><code class="language-ruby">&gt; \e
+valid_list?: (list xs) -&gt;
+  match xs
+    [] -&gt; true
+    [string @key, @, @...tail], strings.starts_with?(key, &quot;a&quot;) -&gt; key_value_list?(tail)
+    default -&gt; false
+\e
+function
+&gt; valid_list?([&quot;adam&quot;, 2, &quot;abner&quot;, 7])
+true
+&gt; valid_list?([&quot;adam&quot;, 2, &quot;eve&quot;, 7])
+false
+&gt; valid_list?([1, &quot;a&quot;])
+false
+&gt; valid_list?([&quot;a1&quot;, nil, &quot;a2&quot;, nil, &quot;a3&quot;, &quot;hello&quot;])
+true
+&gt; valid_list?(nil)
+false
+</code></pre>
+
+<h5 id="tail-list-patterns">Tail list patterns</h5>
+
+<p>A tail list pattern matches the end of a list with item patterns, optionally also capturing the initial part of the list.</p>
+
+<p>The syntax for tail list patterns is a list beginning with a splat expression representing the initial list, followed by a sequence of match patterns of any kind, separated by comma:</p>
+
+<pre><code class="language-text">matchPattern
+  : '[' splatCapture ',' (matchPattern ',') * matchPattern ']' capture?                    
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>The initial splat capture matches zero or more items, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The ends of the pattern list and the checked value must coincide. The initial part of the list can be captured into a variable. The optional final capture contains the entire matched list.</p>
+
+<p>The following function checks whether a lists last element is a non-nil datetime.</p>
+
+<pre><code class="language-ruby">&gt; \e
+ends_in_datetime?: (list xs) -&gt;
+  match xs
+    [@..., datetime] -&gt; true
+    default -&gt; false
+\e
+&gt; ends_in_datetime?([&quot;a&quot;, &quot;b&quot;])
+false
+&gt; ends_in_datetime?([])
+false
+&gt; ends_in_datetime?([2017-02-24T, 2017-02-25T])
+true
+&gt; ends_in_datetime?(nil)
+false
+&gt; ends_in_datetime?([1, nil])
+false
+</code></pre>
+
+<h5 id="head-and-tail-list-patterns">Head-and-tail list patterns</h5>
+
+<p>A head-and-tail list pattern matches the beginning and end of a list with item patterns, optionally also capturing the middle part of the list.</p>
+
+<p>The syntax for head-and-tail list pattern is a list beginning with a sequence of patterns of any kind,  a splat expression representing the middle of the list, followed again by a sequence of match patterns of any kind, separated by comma:</p>
+
+<pre><code class="language-text">matchPattern
+  : '[' (matchPattern ',') + splatCapture ',' (matchPattern ',')* matchPattern ']' capture?
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>The initial patterns must match the initial items in the list, the splat capture matches zero or more items following that, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The middle part of the list can be captured into a variable. The optional final capture contains the entire matched list.</p>
+
+<p>The following function checks that a list starts with a non-nil string and ends with a non-nil datetime, with zero or more non-nil longs in between, which must all be between 0 and 100 inclusively.</p>
+
+<pre><code class="language-ruby">&gt; \e
+measures?: (list xs) -&gt;
+  match xs
+    [string, @...nums, datetime], data.all?(nums, (x) -&gt; x is long &amp;&amp; x &gt;= 0 &amp;&amp; x &lt;= 100) -&gt; true
+    default -&gt; false
+\e
+function
+&gt; measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T]) 
+true
+&gt; measures?([:p2, 99, 2015-02-11T]) 
+true
+&gt; measures?([:p3, 2016-02-11T]) 
+true
+&gt; measures?([2016-02-11T])
+false
+&gt; measures?([]) 
+false
+&gt; measures?([:p4, 201, 2017-04-22T]) # number out of range
+false
+</code></pre>
+
+<h5 id="full-dict-patterns">Full dict patterns</h5>
+
+<p>Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have these and only these keys.</p>
+
+<pre><code class="language-text">matchPattern
+  : '{' ((stringLiteral matchPattern) ',' )* (stringLiteral matchPattern) '}' capture?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the pattern keys, or contains more than the given pattern keys, it does not match. An optional final capture matches the entire matched dict.</p>
+
+<p>The following function tests whether the supplied dict is a vector with non-nil double coordinates x and y. Only those two keys are allowed.</p>
+
+<pre><code class="language-ruby">&gt; \e
+vector_dict?: (dict v) -&gt;
+  match v
+    {:x double, :y double} -&gt; true
+    default -&gt; false
+\e
+function
+&gt; vector_dict?({:x 10, :y 20})
+false
+&gt; vector_dict?({:x 10.0, :y 20.0})
+true
+&gt; vector_dict?({:x 10.0, :y nil})
+false
+&gt; vector_dict?({:x 10.0, :y 20.0, :z 14.9})
+false
+&gt; vector_dict?({:x 10.0})
+false
+&gt; vector_dict?({:a &quot;one&quot; :b &quot;two&quot;})
+false
+&gt; vector_dict?(nil)
+false
+</code></pre>
+
+<h5 id="partial-dict-patterns">Partial dict patterns</h5>
+
+<p>Partial dict patterns match a subset of a dictionary&rsquo;s keys. Any remaining keys can be captured into a variable.  The syntax uses pairs of constant keys and value patterns. A splat capture is used to capture any keys and values not specified by the patterns. There can be only one splat capture, but its position can be freely chosen.</p>
+
+<pre><code class="language-text">matchPattern
+  :| '{' (((stringLiteral matchPattern)|splatCapture) ',' )* ((stringLiteral matchPattern)|splatCapture) '}' capture?
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+</code></pre>
+
+<p>All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the keys, it does not match. Additional keys are allowed. The optional final capture matches the entire matched dict.</p>
+
+<p>The following function checks if the given dict contains a &ldquo;name&rdquo; key with a string, and a &ldquo;born&rdquo; key with a datetime. Any additional keys are ignored.</p>
+
+<pre><code class="language-ruby">&gt; \e
+person?: (dict x) -&gt;
+  match x
+    {:name string, :born datetime, @...} -&gt; true
+    default -&gt; false
+\e
+function
+&gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T})
+true
+&gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T, :profession &quot;author&quot;})
+true
+&gt; person?({:name &quot;Mark Twain&quot; :profession &quot;author&quot;})
+false
+&gt; person?({:x 1, :y 2})
+false
+&gt; person?(nil)
+false
+</code></pre>
+
+<p>The following function checks if the given dict contains a &ldquo;name&rdquo; key with a string, and a &ldquo;born&rdquo; key with a datetime. In addition, at least a key &ldquo;job&rdquo;, or &ldquo;profession&rdquo; must be present.</p>
+
+<pre><code class="language-ruby">&gt; \e
+person?: (dict x) -&gt;
+  match x
+    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -&gt; true
+    default -&gt; false
+\e
+function
+&gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T})
+false
+&gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T, :profession &quot;author&quot;})
+true
+&gt; person?({:name &quot;Mark Twain&quot; :profession &quot;author&quot;})
+false
+&gt; person?({:x 1, :y 2})
+false
+&gt; person?(nil)
+false
+</code></pre>
+
+<h5 id="nesting-patterns">Nesting patterns</h5>
+
+<p>List and dict patterns nest naturally. The following function returns the most recent of an author&rsquo;s books.</p>
+
+<pre><code class="language-ruby">&gt; mark_twain: {:profession &quot;author&quot;, :books [&quot;The Gilded Age: A Tale of Today&quot;, &quot;Personal Recollections of Joan of Arc&quot;]}
+{
+  :books [&quot;The Gilded Age: A Tale of Today&quot;, &quot;Personal Recollections of Joan of Arc&quot;],
+  :profession &quot;author&quot;
+}
+
+&gt; \e
+latest_book: (dict person) -&gt;
+  match person
+    {:profession &quot;author&quot;, :books [@..., @latest_book]} -&gt; latest_book
+    default -&gt; nil
+\e
+function
+
+&gt; latest_book(mark_twain)
+&quot;Personal Recollections of Joan of Arc&quot;
+</code></pre>
+
+<p>The ability to capture a whole matching pattern can be useful when nesting. The following example uses a list pattern to extract the latest book, while also capturing the whole books list into a variable.</p>
+
+<pre><code class="language-ruby">&gt; \e
+latest_book_with_nr: (dict person) -&gt;
+  match person
+    {
+     :profession &quot;author&quot;,
+     :books [@..., @latest_book] @books 
+    } -&gt; 
+      &quot;The latest book is book nr. &quot;.. data.size(books) .. &quot;: &quot; .. latest_book
+    default -&gt; nil
+\e
+function
+
+&gt; latest_book_with_nr(mark_twain)
+&quot;The latest book is book nr. 2: Personal Recollections of Joan of Arc&quot;
+</code></pre>
 
 <h4 id="errors">Errors</h4>
 
-<p>TODO</p>
+<p>Tweakflow supports throwing arbitrary values as errors. If an error is thrown insied the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary.</p>
 
 <h5 id="throwing-errors">Throwing errors</h5>
 
-<p>TODO</p>
+<p>The syntax for throwing an error is as follows:</p>
 
 <pre><code class="language-text">'throw' expression
 </code></pre>
 
-<p>Example</p>
+<p>As an example, consider the following add function, which throws on binary overflow/underflow when adding longs.</p>
 
 <pre><code class="language-ruby">&gt; \e
-add: (long x=0, long y=0, throw_on_overflow=true) -&gt;
+add: (long x=0, long y=0) -&gt;
   let {
     long sum: x + y
   }
-  if throw_on_overflow
-    if x &gt; 0 and y &gt; 0 and sum &lt;= 0 then throw {:code &quot;overflow&quot;, :message &quot;binary overflow adding #{x} and #{y}&quot;}
-      if x &lt; 0 and y &lt; 0 and sum &gt;= 0 then throw {:code &quot;overflow&quot;, :message &quot;binary underflow adding #{x} and #{y}&quot;}
-    sum
-  else
+  if x &gt; 0 and y &gt; 0 and sum &lt;= 0 
+    throw {:code &quot;overflow&quot;, :message &quot;binary overflow adding #{x} and #{y}&quot;}
+  if x &lt; 0 and y &lt; 0 and sum &gt;= 0
+    throw {:code &quot;overflow&quot;, :message &quot;binary underflow adding #{x} and #{y}&quot;}
+  else 
     sum
 \e
 function
@@ -2255,24 +2984,24 @@ ERROR: {
 
 <h5 id="catching-errors">Catching errors</h5>
 
-<p>Errors can be caught if they thrown inside a <code>try/catch</code> expression. The error value and stacktrace can each be bound to an identifier in the <code>catch</code> block.</p>
+<p>Errors can be caught if they thrown inside a try expression. The error value and stacktrace can each be bound to an identifier in the catch block.</p>
 
 <pre><code class="language-text">tryCatch
   : 'try' expression 'catch' catchDeclaration expression
   ;
 
 catchDeclaration
-  :                               # catchAnonymous
-  | identifier                    # catchError
-  | identifier ',' identifier     # catchErrorAndTrace
+  :                               # catches discarding error
+  | identifier                    # catches error
+  | identifier ',' identifier     # catches error and trace
   ;  
 </code></pre>
 
-<p>The whole try-catch block is an expression. It evaluates the expression in the try block, and if that does not throw, the result of that is the result of the try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the identifiers in order, if supplied, and the catch expression is evaluated. The result of that becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.</p>
+<p>The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.</p>
 
 <pre><code class="language-ruby">&gt; \e 
 # add two longs, revert to fallback_value if overflow or underflow happens
-add_safe: (long x=0, long y=0, long fallback_value=0) -&gt; long
+add_safe: (long x=0, long y=0, long fallback_value=nil) -&gt; long
   try
     add(x, y)
   catch error
@@ -2287,35 +3016,154 @@ function
 &gt; add_safe(1, 2)
 3
 
-&gt; add_safe(math.max_long, 1, fallback_value: nil)
+&gt; add_safe(math.max_long, 1)
 nil
 </code></pre>
 
 <h4 id="references">References</h4>
 
-<p>Expressions can reference variables available in scope. There are four levels of scope in general: local, library, module, and global. If a variable is referenced via its name, it is searched in the current scope and if not found, the search propagates upwards the scope chain. Global scope contains named modules only. Global names are visible from everywhere, but references must be prefixed with <code>$</code> to explicitly reference a name in global scope.</p>
+<p>References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.</p>
+
+<p>The syntax is as follows:</p>
+
+<pre><code>reference
+  :                   identifier ('.' identifier)*   # unscoped reference
+  | ('library::')     identifier ('.' identifier)*   # library reference
+  | ('::'|'module::') identifier ('.' identifier)*   # module reference
+  | ('$'|'global::')  identifier ('.' identifier)*   # global reference
+  ;
+</code></pre>
+
+<p>The initial identifier is resolved based on the variant of the reference. Variant-specific details are given in later sections. Any identifiers after the first one are then resolved strictly inside the last found entity&rsquo;s scope.</p>
+
+<p>For example: the reference <code>foo.bar.baz</code> might point to a module import <code>foo</code> which contains a library <code>bar</code> which in turn contains a variable named <code>baz</code>.</p>
 
 <h5 id="unscoped-references">Unscoped references</h5>
 
+<p>Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references&rsquo; initial identifiers are resolved starting in the <a href="#scope">scope</a> they appear in, searching up the scope hierarchy towards module scope inclusively if the initial identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.</p>
+
+<p>TODO: example</p>
+
 <h5 id="library-scope-references">Library scope references</h5>
 
-<p>Libraries define a set of variables in library local scope. The module and global scopes are visible as well.</p>
+<p>Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
+
+<p>TODO: example</p>
 
 <h5 id="module-scope-references">Module scope references</h5>
 
-<p>TODO</p>
+<p>Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the <code>::</code> or <code>module::</code> anchors.</p>
+
+<p>TODO: example</p>
 
 <h5 id="global-scope-references">Global scope references</h5>
 
-<p>TODO</p>
+<p>Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with <code>$</code> or <code>global::</code> anchors.</p>
 
-<p>Global scope only holds module names. To resolve a reference in global scope, the reference must be prepended with <code>$</code>. This is unambiguously referencing the global symbol name.</p>
+<p>TODO: example</p>
 
-<h5 id="module-names">Module names</h5>
+<h5 id="referencing-values">Referencing values</h5>
 
-<p>TODO</p>
+<p>References in expressions must point to values. If <code>foo.bar.baz</code> points to a module import, a library and finally a variable, then <code>foo</code> on its own is an invalid value reference, as it points to a module, which is not a value. <code>foo.bar</code> is not a valid reference either. It points to a library which is not a value. Only the full reference <code>foo.bar.baz</code> points to a value.</p>
 
-<p>To skip the search chain and start resolving a reference in module scope, the reference can be prepended with <code>::</code>. This helps unambiguously referencing a namel in module scope, regardless of whether a name in a closer scope is shadowing it.</p>
+<p>The REPL evaluates input as expressions. It gives the following output when referencing a variable and a library respectively:</p>
+
+<pre><code class="language-ruby">&gt; strings.length
+function
+
+&gt; strings
+ERROR: {
+  :message &quot;Cannot reference LIBRARY. Not a value.&quot;,
+  :code &quot;INVALID_REFERENCE_TARGET&quot;,
+  ...
+}
+</code></pre>
+
+<h5 id="referencing-non-value-entities">Referencing non-value entities</h5>
+
+<p>References in aliases and exports may point to any kind of entity. Aliases provide local names for imported libraries and functions. For example:</p>
+
+<pre><code class="language-ruby"># file aliases.tf
+import * as std from &quot;std&quot;
+
+alias std.strings as str # local alias for imported library
+
+library util {
+  len: str.length        # uses aliased library name
+}
+</code></pre>
+
+<p>On the REPL:</p>
+
+<pre><code class="language-ruby">&gt; \load /path/to/aliases.tf
+aliases.tf&gt; util.len(&quot;foo&quot;)
+3
+</code></pre>
+
+<h5 id="circular-references">Circular references</h5>
+
+<p>Circular references are not allowed. Aliases, imports, and variables must not refer back to their values in their definitions. References to called functions are exempted from circular dependency analysis. Recursive calls are therefore permitted.</p>
+
+<pre><code class="language-ruby">&gt; \e
+let {
+  a: d
+  b: a
+  c: b
+  d: c
+} [a, b, c, d]
+\e
+ERROR: { 
+  :code &quot;CYCLIC_REFERENCE&quot;,
+  ...
+}
+</code></pre>
+
+<p>A recursive definition of the factorial function:</p>
+
+<pre><code class="language-ruby">&gt; \e
+factorial: (long x) -&gt; long
+  if x &lt; 0 then throw &quot;cannot calc factorial of negative number: #{x}&quot;
+  if x &lt;= 1 then 1
+  factorial(x-1)*x # recursive definition
+\e
+function
+&gt; factorial(1)
+1
+&gt; factorial(2)
+2
+&gt; factorial(3)
+6
+&gt; factorial(4)
+24
+&gt; factorial(5)
+120
+&gt; factorial(10)
+3628800
+</code></pre>
+
+<h5 id="closures">Closures</h5>
+
+<p>Function bodies can close over non-local values. The references are evaluated at the time the function is defined. The value is closed over, not the reference.</p>
+
+<p>The following example creates a sequence of functions, each multiplying its input by a number it closes over:</p>
+
+<pre><code class="language-ruby">&gt; \e
+fs: 
+  for i &lt;- [1, 2, 3],
+      (x) -&gt; x*i 
+\e
+[function, function, function]
+</code></pre>
+
+<p>Each function has closed over the value of <code>i</code>, not a reference to <code>i</code>. Therefore each function multiplies by a different number:</p>
+
+<pre><code class="language-ruby">&gt; fs[0](10) # first function multiplies by 1
+10
+&gt; fs[1](10) # second function multiplies by 2
+20
+&gt; fs[2](10) # third function multiplies by 3
+30
+</code></pre>
 
 <h4 id="operators">Operators</h4>
 
@@ -2470,6 +3318,12 @@ nil
 <h4 id="evaluation-precedence">Evaluation precedence</h4>
 
 <p>TODO: give order of constructs and operators</p>
+
+<p>manual grouping using parentheses</p>
+
+<h4 id="debugging">Debugging</h4>
+
+<p>TODO: describe the debug construct</p>
 
 <h2 id="language-tools">Language tools</h2>
 
