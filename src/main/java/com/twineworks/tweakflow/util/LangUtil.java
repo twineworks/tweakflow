@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 public class LangUtil {
 
-  private static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
+  private static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
 
   public static String escape(String s){
     String escaped = s
