@@ -513,13 +513,15 @@ Strings cast to doubles successfully if they pass the following regular expressi
 
 ```text
 [\x00-\x20]*                                 # optional leading whitespace
-[+-]?                                        # optional sign
+[-+]?                                        # optional sign
+(
 (NaN)|                                       # Not a Number
 (Infinity)|                                  # Infinity
-([0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?)|       # Digits optionally followed by decimal dot
+([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
                                              # fractional digits, and exponent                                              
-\.[0-9]+([eE][+-]?[0-9]+)?)                  # decimal dot followed by fractional digits
+\.[0-9]+([eE][-+]?[0-9]+)?)                  # decimal dot followed by fractional digits
                                              # and exponent
+)                                             
 [\x00-\x20]*                                 # optional trailing whitespace
 ```
 
@@ -869,9 +871,9 @@ Dicts are converted to lists as a sequence of key-value pairs. An empty dict giv
 
 The `function` type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures. 
 
-Function notation has two parts: function head, and body. The head holds the function signature: paramter list and return type. The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
+Function notation has two parts: function head, and body. The head holds the function signature: parameter list and return type. The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
 
-Formally function syntax is as follows: 
+Formally the syntax is as follows: 
 
 ```text
 functionLiteral
@@ -1083,7 +1085,7 @@ Import statements bring names exported from other modules into the current modul
 
 It is an error to import a name that is not explicitly exported.
 
-Imported names are placed in [module scope](#references). 
+Imported names are placed in [module scope](#scope). 
 
 Imports have the following syntax:
 
@@ -1124,6 +1126,8 @@ modulePath
 
 The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using [language tools](#language-tools) or by the host application when embedding. 
 
+Two modules may import each other's exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
+
 **Examples**
 
 Module `"./util/strings.tf"` is imported as a whole below. Any exported name `x` is available as `utils.x` locally.
@@ -1146,7 +1150,7 @@ import string_lib as str, conversion_lib as conv from "./util/strings.tf"
 
 #### Aliases
 
-Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in [module scope](#module-scope).
+Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in [module scope](#module-scope). Circular aliases are not allowed. An alias must ultimately point to a concrete entity.
 
 Aliases have the following syntax:
 
@@ -1218,7 +1222,7 @@ import util, str from "./lib.tf"
 
 ### Libraries
 
-A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name.
+A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in [library scope](#scopes).
 
 **Syntax**
 
@@ -1270,6 +1274,25 @@ If unspecified, the variable type is `any`, and no implicit casts take place.
 Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`. 
 
 Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.
+
+### Scopes
+
+All named entities like variables, libraries, aliases, and exports are placed in a scope in which each name must be unique. Tweakflow has four different kinds of scope ordered into a hierarchy:
+
+- global scope
+- module scope
+- library scope
+- local scope
+
+There is exactly one global scope per tweakflow program. It contains the names of [global modules](#global-modules), if any are loaded. 
+
+There is a distinct module scope per loaded module. It contains the names of the module's imports, aliases, and libraries. 
+
+There is a distinct library scope per library in a module. It contains the names of all library variables.
+
+There is a local scope per variable in a module. Nested local scopes are created as part of expressions that introduce identifiers, like [local variables](#local-variables) for example.
+
+Name resolution for references generally starts in the scope the reference appears in. If the name is not found the search propagates one level up until it stops after searching module scope. Global scope is not searched as part of the algorithm. Any references to global names must be explicitly marked as global references. See [references](#references) for syntax details.
 
 ### Annotations
 
@@ -1358,12 +1381,6 @@ foo.tf> \meta bar.baz
 }
 ```
 
-### Scope
-
-TODO
-
-TODO: You can't replace things in scope, importing, aliasing etc. cannot alter existing impor
-
 ### Expressions
 
 Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations. 
@@ -1374,7 +1391,7 @@ The `nil` value is written as simply `nil`. Semantiaclly, a `nil` value indicate
 
 #### Value literals
 
-All tweakflow data types have a literal notation outlined in their respective section under [data types](#data-types).
+All tweakflow data types have a literal notation outlined in their respective section under [data types](#data-types). 
 
 #### Type inspection
 
@@ -1420,6 +1437,37 @@ true
 
 > nil is any
 false
+```
+
+#### Type name
+
+The `typeof` keyword returns the name of a value's type.
+
+```text
+'typeof' expression
+```
+
+The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `void`.
+
+```ruby
+> typeof "foo"
+"string"
+> typeof (x) -> x+1
+"function"
+> typeof 1
+"long"
+> typeof 1.0
+"double"
+> typeof false
+"boolean"
+> typeof {}
+"dict"
+> typeof []
+"list"
+> typeof 2017-03-12T
+"datetime"
+> typeof nil
+"void"
 ```
 
 #### Type casts
@@ -1924,9 +1972,13 @@ function
 "foo"
 ```
 
+#### Call chaining
+
+TODO
+
 #### Local variables
 
-Tweakflow allows defining local variables for temporary results. The `let` expression defines a set of variables that are bound in its scope, shadowing any existing local variables of the same name.
+Local variables are useful as named temporary results. The `let` expression defines a set of variables that are bound in its local scope, shadowing any existing local variables of the same name in parent scopes.
 
 The formal syntax is as follows:
 
@@ -1939,8 +1991,6 @@ varDef
   : dataType? identifier ':' expression endOfStatement?
   ;
 ```
-
-TODO: limit provided and meta data for local variables. They are inaccessible, and should be rejected in analysis.
 
 Examples:
 
@@ -1967,43 +2017,737 @@ true
 
 ```
 
+Local variables shadow any existing variables:
+
+```ruby
+> \e
+let {
+  x: "foo"
+  y: let {
+       x: "bar"
+     }
+     x # "bar"
+} 
+x .. y # "foo".."bar"
+\e
+"foobar"
+```
+
 #### Conditional evaluation
 
-TODO
+Conditional evaluation is done using a traditional `if` construct. 
+
+```text
+'if' condition 'then'? then_expression 'else'? else_expression 
+```
+
+The `condition` expression is evaluated and cast to boolean. If the condition evalautes to `true`, the `then_expression` is evaluated and is the result of the expression. If the condition evaluates to `false` or `nil`, the `else_expression` is evaluated and is the result of the expression.  The `then` and `else` keywords are optional. 
+
+Some examples:
+
+```ruby
+> if true then 1 else 2
+1
+
+> f: (string x) -> if strings.length(x) > 2 then "long" else "short"
+function
+> f("hello")
+"long"
+> f("hi")
+"short"
+  
+> \e
+greeting: (string language) -> 
+  if language == "en" then "Good afternoon"
+  if language == "de" then "Guten Tag"
+  if language == "es" then "Hola"
+  if language == "zh" then "你好"
+  if language == "hi" then "नमस्ते"
+  else "Hello"
+\e
+function
+> greeting("de")
+"Guten Tag"
+> greeting("es")
+"Hola"
+> greeting()
+"Hello"
+```
+
+#### Default values
+
+Default values notation is a shorthand for replacing `nil` values with non-nil defaults. 
+
+```text
+expression 'default' default_expression
+```
+
+It is semantically identical to:
+
+```text
+if expression != nil then expression else default_expression
+```
+
+Given customer records, the following function creates a greeting line:
+
+```ruby
+> greeting: (dict customer) -> "Dear "..(customer[:name] default "customer")
+function
+> greeting({:id 723, :name "Jane Doe", :type "user"})
+"Dear Jane Doe"
+> greeting({:id 0, :type "admin"})
+"Dear customer"
+```
 
 #### List comprehensions
 
-TODO
+Tweakflow supports list comprehensions allowing to generate, transform, combine and filter lists. 
+
+```text
+listComprehension
+  : 'for' forHead ',' expression
+  ;
+
+forHead
+  : generator (',' (generator | varDef | filter))*
+  ;
+  
+generator
+  : dataType? identifier '<-' expression
+  ;
+  
+varDef
+  : metadef dataType? identifier ':' expression
+  ;  
+  
+filter
+  : expression
+  ;
+```
+
+A list comprehension uses generators to define variables that loop over list items. They nest in order if more than one generator is present. 
+
+Create a list of coordinates from given axes:
+
+```ruby
+> \e
+for
+  x <- ["a", "b", "c"],
+  y <- [1, 2, 3, 4, 5, 6],
+  x .. y
+\e
+["a1", "a2", "a3", "a4", "a5", "a6", "b1", "b2", "b3", "b4", "b5", "b6", "c1", "c2", "c3", "c4", "c5", "c6"]
+```
+
+Variable definitions in list comprehensions create helper variables. They are in scope for all subsequent expressions in the list comprehension.
+
+```ruby
+> \e
+for
+  x  <- data.range(1, 3),
+  y  <- data.range(x, 3),
+  p: x*y,
+  "#{x} * #{y} = #{p}"
+\e
+["1 * 1 = 1", "1 * 2 = 2", "1 * 3 = 3", "2 * 2 = 4", "2 * 3 = 6", "3 * 3 = 9"]
+```
+
+Free-standing expressions act as filters. They are evaluated and cast to boolean. If they evaluate to `true`, the current entry is part of the result list, if they evaluate to `false` or `nil`, the current element is omitted.
+
+Create a list of [pythagorean triples](https://en.wikipedia.org/wiki/Pythagorean_triple) trying sides up to the size of 15.
+
+```ruby
+> \e
+for
+  a <- data.range(1, 15),
+  b <- data.range(a, 15),
+  c: math.sqrt(a*a + b*b),  
+  (c as long) == c, # filter: only pass if is c an integer         
+  [a, b, c as long]
+\e
+[[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15]]
+```
+
+Above example loops over `a` going from 1 to 15, and `b` going from `a` to `15`, calculates `c`, and filters out any non-integer `c` values. If `c` happens to be an integer, the triple `[a, b, c]` is included in the result list.
 
 #### Pattern Matching
 
-TODO
+Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. 
+
+The formal syntax is as follows:
+
+```text
+match:
+  'match' expression matchBody
+  ;
+
+matchBody
+  : matchLine+
+  ;
+
+matchLine
+  : matchPattern (',' matchGuard)? '->' expression
+  | 'default' '->'  expression
+  ;
+
+matchGuard
+  : expression
+  ;
+```
+
+A match expression consists of the `match` keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the `default` line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.
+
+The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to `true` the match evalutes to the line's result expression. If the guard expression evaluates to `false` or `nil`,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a `default` line, the match evaluates to the default value. If there is no `default` line, the match evaluates to `nil`.
+
+The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches. 
+
+##### Existence and capturing patterns
+
+Existence matches are the simplest form of match. They match any value including `nil`. An existence match is indicated by the `@` operator. If that operator is followed by an identifier, it becomes a capturing match, binding the identifier to the matched value in the guard and result expressions of the line. Formally the syntax is as follows:
+
+```
+matchPattern
+  : '@' identifier?
+  ;
+```
+
+An example:
+
+```ruby
+> \e
+f: (long x) -> 
+  match x
+    @ -> true # always matches
+\e
+function
+> f(0)
+true
+> f(1)
+true
+> f(nil)
+true
+```
+
+Existence matches are not very useful for matching simple values, but they are useful when nested in list or dict patterns to assert element existence and extract element values from these structures. 
+
+```ruby
+> \e
+pair?: (list xs) ->
+  match xs
+    [@, @]  -> true
+    default -> false
+\e
+function
+> pair?([1, 2])
+true
+> pair?([1, 2, 3])
+false
+> pair?(nil)
+false
+
+> \e
+sequence_pair?: (list xs) ->
+  match xs
+#   capture   guard       result
+    [@a, @b], a+1 == b -> true    
+    default -> false
+\e
+function
+> sequence_pair?([1, 2])
+true
+> sequence_pair?([2, 4])
+false
+```
+
+##### Value patterns
+
+A value pattern compares against a concrete value. The comparison is done using the `==` operator. The syntax is:
+
+```text
+matchPattern
+  : expression  capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+```
+
+An optional capture pattern is allowed after the expression, to capture the matched value. If the capture does not specify an identifier, it has no effect.
+
+```ruby
+> \e
+low_prime?: (long x) ->
+  match x
+    2 -> true
+    3 -> true
+    5 -> true
+    7 -> true
+    default -> false
+\e
+function
+> low_prime?(1)
+false
+> low_prime?(2)
+true
+> low_prime?(3)
+true
+> low_prime?(4)
+false
+> low_prime?(5)
+true
+> low_prime?(nil)
+false
+```
+
+Value patterns have a special case: functions. Functions never compare as equal. Therefore a value pattern that compares against a function would never match. Instead, tweakflow uses function values in patterns as predicates.
+
+##### Predicate patterns
+
+Predicate patterns are syntactically identical to value patterns, as they are merely a special case of the match expression evaluating to a function.
+
+```text
+matchPattern
+  : expression  capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+```
+
+If the pattern expression evaluates to a function, it is treated as a predicate: the function is called with the matched value as first argument, and the result is cast to boolean. If it evaluates to `true`, the pattern matches, if it evaluates to `false` or `nil`, the pattern does not match.
+
+```ruby
+> div_by_4?: (long x) -> x % 4 == 0
+function
+
+> div_by_400?: (long x) -> x % 400 == 0
+function
+
+> div_by_100?: (long x) -> x % 100 == 0
+function
+
+> \e
+leap_year?: (long x) ->
+  match x
+	div_by_400? -> true
+	div_by_100? -> false
+    div_by_4?   -> true
+    default     -> false
+\e
+function
+
+> leap_year?(1900)
+false
+> leap_year?(1904)
+true
+> leap_year?(2000)
+true
+> leap_year?(2004)
+true
+> leap_year?(2016)
+true
+> leap_year?(2017)
+false
+```
+
+##### Type patterns
+
+Type patterns match on the data type of the matched value. Their syntax is as follows:
+
+```text
+matchPattern
+  : dataType capture?                     
+  ;
+
+capture
+  : '@' identifier?
+  ;
+```
+
+The pattern matches only if the matched value is of the given type. The `nil` value only matches the `void` data type. Any non-nil value matches the `any` type.
+
+As an example, consider the `int?` function, which returns true if the argument is a whole number given as long, double, or as a string.
+
+```ruby
+> \e
+int?: (x) ->
+  match x
+    long                      -> true
+    double, (x as long) == x  -> true
+    string                    -> try int?(x as double) catch false
+    default                   -> false
+\e
+function
+> int?(1)
+true
+> int?(1.0)
+true
+> int?(1.5)
+false
+> int?("2")
+true
+> int?("2e3")  # 2000
+true
+> int?("-2e3") # -2000
+true
+> int?("2e-3") # 0.002
+false
+> int?("2m")   # does not parse as double
+false
+> int?(nil)
+false
+```
+
+##### Full list patterns
+
+Full list patterns match a list in its entirety. It is a sequence of patterns corresponding to list items. The syntax for full list patterns is a non-empty list of match patterns of any kind, separated by comma:
+
+```text
+matchPattern
+  : '[' (matchPattern ',') * matchPattern ']' capture?                                     
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.
+
+```ruby
+> num?: (x) -> (x is long) || (x is double && !math.nan?(x) && math.abs(x) != Infinity)
+function
+> \e
+vector2d?: (list xs) ->
+  match xs
+    # match 2-element list, use num? as predicate for each item
+    [num?, num?] -> true 
+    default -> false
+\e
+function
+> vector2d?([1, 2])
+true
+> vector2d?(["a", "b"])
+false
+> vector2d?([8, 2, 2.0])
+false
+> vector2d?([8.0, 2.0])
+true
+> vector2d?([nil, nil])
+false
+> vector2d?(nil)
+false
+```
+
+##### Head list patterns
+
+A head list pattern matches the beginning of a list with item patterns, optionally also capturing the tail.
+
+The syntax for head list patterns is a list beginning with match patterns of any kind, separated by comma, then followed by a splat expression representing the tail:
+
+```text
+matchPattern
+  : '[' (matchPattern ',') * splatCapture ']' capture? 
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+Each pattern in the pattern list must match the items of the matched value in order, after which follows a tail of zero or more items. The tail can be captured into a variable. The optional final capture contains the entire matched list.
+
+The following function recursively checks whether the argument is a list of pairs of keys and values. All key positions must contain strings beginning with the letter `"a"`.
+
+```ruby
+> \e
+valid_list?: (list xs) ->
+  match xs
+    [] -> true
+    [string @key, @, @...tail], strings.starts_with?(key, "a") -> key_value_list?(tail)
+    default -> false
+\e
+function
+> valid_list?(["adam", 2, "abner", 7])
+true
+> valid_list?(["adam", 2, "eve", 7])
+false
+> valid_list?([1, "a"])
+false
+> valid_list?(["a1", nil, "a2", nil, "a3", "hello"])
+true
+> valid_list?(nil)
+false
+```
+
+##### Tail list patterns
+
+A tail list pattern matches the end of a list with item patterns, optionally also capturing the initial part of the list.
+
+The syntax for tail list patterns is a list beginning with a splat expression representing the initial list, followed by a sequence of match patterns of any kind, separated by comma:
+
+```text
+matchPattern
+  : '[' splatCapture ',' (matchPattern ',') * matchPattern ']' capture?                    
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+The initial splat capture matches zero or more items, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The ends of the pattern list and the checked value must coincide. The initial part of the list can be captured into a variable. The optional final capture contains the entire matched list.
+
+The following function checks whether a lists last element is a non-nil datetime.
+
+```ruby
+> \e
+ends_in_datetime?: (list xs) ->
+  match xs
+    [@..., datetime] -> true
+    default -> false
+\e
+> ends_in_datetime?(["a", "b"])
+false
+> ends_in_datetime?([])
+false
+> ends_in_datetime?([2017-02-24T, 2017-02-25T])
+true
+> ends_in_datetime?(nil)
+false
+> ends_in_datetime?([1, nil])
+false
+```
+
+##### Head-and-tail list patterns
+
+A head-and-tail list pattern matches the beginning and end of a list with item patterns, optionally also capturing the middle part of the list.
+
+The syntax for head-and-tail list pattern is a list beginning with a sequence of patterns of any kind,  a splat expression representing the middle of the list, followed again by a sequence of match patterns of any kind, separated by comma:
+
+```text
+matchPattern
+  : '[' (matchPattern ',') + splatCapture ',' (matchPattern ',')* matchPattern ']' capture?
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+The initial patterns must match the initial items in the list, the splat capture matches zero or more items following that, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The middle part of the list can be captured into a variable. The optional final capture contains the entire matched list.
+
+The following function checks that a list starts with a non-nil string and ends with a non-nil datetime, with zero or more non-nil longs in between, which must all be between 0 and 100 inclusively.
+
+```ruby
+> \e
+measures?: (list xs) ->
+  match xs
+    [string, @...nums, datetime], data.all?(nums, (x) -> x is long && x >= 0 && x <= 100) -> true
+    default -> false
+\e
+function
+> measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T]) 
+true
+> measures?([:p2, 99, 2015-02-11T]) 
+true
+> measures?([:p3, 2016-02-11T]) 
+true
+> measures?([2016-02-11T])
+false
+> measures?([]) 
+false
+> measures?([:p4, 201, 2017-04-22T]) # number out of range
+false
+```
+
+##### Full dict patterns
+
+Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have these and only these keys. 
+
+```text
+matchPattern
+  : '{' ((stringLiteral matchPattern) ',' )* (stringLiteral matchPattern) '}' capture?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the pattern keys, or contains more than the given pattern keys, it does not match. An optional final capture matches the entire matched dict.
+
+The following function tests whether the supplied dict is a vector with non-nil double coordinates x and y. Only those two keys are allowed. 
+
+```ruby
+> \e
+vector_dict?: (dict v) ->
+  match v
+    {:x double, :y double} -> true
+    default -> false
+\e
+function
+> vector_dict?({:x 10, :y 20})
+false
+> vector_dict?({:x 10.0, :y 20.0})
+true
+> vector_dict?({:x 10.0, :y nil})
+false
+> vector_dict?({:x 10.0, :y 20.0, :z 14.9})
+false
+> vector_dict?({:x 10.0})
+false
+> vector_dict?({:a "one" :b "two"})
+false
+> vector_dict?(nil)
+false
+```
+
+##### Partial dict patterns
+
+Partial dict patterns match a subset of a dictionary's keys. Any remaining keys can be captured into a variable.  The syntax uses pairs of constant keys and value patterns. A splat capture is used to capture any keys and values not specified by the patterns. There can be only one splat capture, but its position can be freely chosen.
+
+```text
+matchPattern
+  :| '{' (((stringLiteral matchPattern)|splatCapture) ',' )* ((stringLiteral matchPattern)|splatCapture) '}' capture?
+  ;
+
+splatCapture
+  : '@' '...' identifier?
+  ;
+
+capture
+  : '@' identifier?
+  ;  
+```
+
+All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the keys, it does not match. Additional keys are allowed. The optional final capture matches the entire matched dict.
+
+The following function checks if the given dict contains a "name" key with a string, and a "born" key with a datetime. Any additional keys are ignored.
+
+```ruby
+> \e
+person?: (dict x) ->
+  match x
+    {:name string, :born datetime, @...} -> true
+    default -> false
+\e
+function
+> person?({:name "Mark Twain", :born 1835-11-30T})
+true
+> person?({:name "Mark Twain", :born 1835-11-30T, :profession "author"})
+true
+> person?({:name "Mark Twain" :profession "author"})
+false
+> person?({:x 1, :y 2})
+false
+> person?(nil)
+false
+```
+
+The following function checks if the given dict contains a "name" key with a string, and a "born" key with a datetime. In addition, at least a key "job", or "profession" must be present.
+
+```ruby
+> \e
+person?: (dict x) ->
+  match x
+    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -> true
+    default -> false
+\e
+function
+> person?({:name "Mark Twain", :born 1835-11-30T})
+false
+> person?({:name "Mark Twain", :born 1835-11-30T, :profession "author"})
+true
+> person?({:name "Mark Twain" :profession "author"})
+false
+> person?({:x 1, :y 2})
+false
+> person?(nil)
+false
+```
+
+##### Nesting patterns
+
+List and dict patterns nest naturally. The following function returns the most recent of an author's books. 
+
+```ruby
+> mark_twain: {:profession "author", :books ["The Gilded Age: A Tale of Today", "Personal Recollections of Joan of Arc"]}
+{
+  :books ["The Gilded Age: A Tale of Today", "Personal Recollections of Joan of Arc"],
+  :profession "author"
+}
+
+> \e
+latest_book: (dict person) ->
+  match person
+    {:profession "author", :books [@..., @latest_book]} -> latest_book
+    default -> nil
+\e
+function
+
+> latest_book(mark_twain)
+"Personal Recollections of Joan of Arc"
+```
+
+The ability to capture a whole matching pattern can be useful when nesting. The following example uses a list pattern to extract the latest book, while also capturing the whole books list into a variable.
+
+```ruby
+> \e
+latest_book_with_nr: (dict person) ->
+  match person
+    {
+     :profession "author",
+     :books [@..., @latest_book] @books 
+    } -> 
+      "The latest book is book nr. ".. data.size(books) .. ": " .. latest_book
+    default -> nil
+\e
+function
+
+> latest_book_with_nr(mark_twain)
+"The latest book is book nr. 2: Personal Recollections of Joan of Arc"
+```
 
 #### Errors
 
-TODO
+Tweakflow supports throwing arbitrary values as errors. If an error is thrown insied the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary. 
 
 ##### Throwing errors
 
-TODO
+The syntax for throwing an error is as follows: 
 
 ```text
 'throw' expression
 ```
 
-Example
+As an example, consider the following add function, which throws on binary overflow/underflow when adding longs.
 
 ```ruby
 > \e
-add: (long x=0, long y=0, throw_on_overflow=true) ->
+add: (long x=0, long y=0) ->
   let {
     long sum: x + y
   }
-  if throw_on_overflow
-    if x > 0 and y > 0 and sum <= 0 then throw {:code "overflow", :message "binary overflow adding #{x} and #{y}"}
-      if x < 0 and y < 0 and sum >= 0 then throw {:code "overflow", :message "binary underflow adding #{x} and #{y}"}
-    sum
-  else
+  if x > 0 and y > 0 and sum <= 0 
+    throw {:code "overflow", :message "binary overflow adding #{x} and #{y}"}
+  if x < 0 and y < 0 and sum >= 0
+    throw {:code "overflow", :message "binary underflow adding #{x} and #{y}"}
+  else 
     sum
 \e
 function
@@ -2034,7 +2778,7 @@ ERROR: {
 
 ##### Catching errors
 
-Errors can be caught if they thrown inside a `try/catch` expression. The error value and stacktrace can each be bound to an identifier in the `catch` block.
+Errors can be caught if they thrown inside a try expression. The error value and stacktrace can each be bound to an identifier in the catch block.
 
 ```text
 tryCatch
@@ -2042,18 +2786,18 @@ tryCatch
   ;
 
 catchDeclaration
-  :                               # catchAnonymous
-  | identifier                    # catchError
-  | identifier ',' identifier     # catchErrorAndTrace
+  :                               # catches discarding error
+  | identifier                    # catches error
+  | identifier ',' identifier     # catches error and trace
   ;  
 ```
 
-The whole try-catch block is an expression. It evaluates the expression in the try block, and if that does not throw, the result of that is the result of the try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the identifiers in order, if supplied, and the catch expression is evaluated. The result of that becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.
+The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.
 
 ```ruby
 > \e 
 # add two longs, revert to fallback_value if overflow or underflow happens
-add_safe: (long x=0, long y=0, long fallback_value=0) -> long
+add_safe: (long x=0, long y=0, long fallback_value=nil) -> long
   try
     add(x, y)
   catch error
@@ -2068,35 +2812,162 @@ function
 > add_safe(1, 2)
 3
 
-> add_safe(math.max_long, 1, fallback_value: nil)
+> add_safe(math.max_long, 1)
 nil
 ```
 
 #### References
 
-Expressions can reference variables available in scope. There are four levels of scope in general: local, library, module, and global. If a variable is referenced via its name, it is searched in the current scope and if not found, the search propagates upwards the scope chain. Global scope contains named modules only. Global names are visible from everywhere, but references must be prefixed with `$` to explicitly reference a name in global scope.
+References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.
+
+The syntax is as follows:
+
+```
+reference
+  :                   identifier ('.' identifier)*   # unscoped reference
+  | ('library::')     identifier ('.' identifier)*   # library reference
+  | ('::'|'module::') identifier ('.' identifier)*   # module reference
+  | ('$'|'global::')  identifier ('.' identifier)*   # global reference
+  ;
+```
+
+The initial identifier is resolved based on the variant of the reference. Variant-specific details are given in later sections. Any identifiers after the first one are then resolved strictly inside the last found entity's scope. 
+
+For example: the reference `foo.bar.baz` might point to a module import `foo` which contains a library `bar` which in turn contains a variable named `baz`. 
 
 ##### Unscoped references
 
+Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the [scope](#scope) they appear in, searching up the scope hierarchy towards module scope inclusively if the initial identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope. 
+
+TODO: example
+
 ##### Library scope references
 
-Libraries define a set of variables in library local scope. The module and global scopes are visible as well.
+Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library's scope.  They are prefixed with the `library::` anchor.
+
+TODO: example
 
 ##### Module scope references
 
-TODO
+Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the `::` or `module::` anchors.
+
+TODO: example
 
 ##### Global scope references
 
-TODO
+Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors.  
 
-Global scope only holds module names. To resolve a reference in global scope, the reference must be prepended with `$`. This is unambiguously referencing the global symbol name.
+TODO: example
 
-##### Module names
+##### Referencing values
 
-TODO
+References in expressions must point to values. If `foo.bar.baz` points to a module import, a library and finally a variable, then `foo` on its own is an invalid value reference, as it points to a module, which is not a value. `foo.bar` is not a valid reference either. It points to a library which is not a value. Only the full reference `foo.bar.baz` points to a value. 
 
-To skip the search chain and start resolving a reference in module scope, the reference can be prepended with `::`. This helps unambiguously referencing a namel in module scope, regardless of whether a name in a closer scope is shadowing it.
+The REPL evaluates input as expressions. It gives the following output when referencing a variable and a library respectively:
+
+```ruby
+> strings.length
+function
+
+> strings
+ERROR: {
+  :message "Cannot reference LIBRARY. Not a value.",
+  :code "INVALID_REFERENCE_TARGET",
+  ...
+}
+```
+
+##### Referencing non-value entities
+
+References in aliases and exports may point to any kind of entity. Aliases provide local names for imported libraries and functions. For example:
+
+```ruby
+# file aliases.tf
+import * as std from "std"
+
+alias std.strings as str # local alias for imported library
+
+library util {
+  len: str.length        # uses aliased library name
+}
+```
+
+On the REPL:
+
+```ruby
+> \load /path/to/aliases.tf
+aliases.tf> util.len("foo")
+3
+```
+
+##### Circular references
+
+Circular references are not allowed. Aliases, imports, and variables must not refer back to their values in their definitions. References to called functions are exempted from circular dependency analysis. Recursive calls are therefore permitted.
+
+```ruby
+> \e
+let {
+  a: d
+  b: a
+  c: b
+  d: c
+} [a, b, c, d]
+\e
+ERROR: { 
+  :code "CYCLIC_REFERENCE",
+  ...
+}
+```
+
+A recursive definition of the factorial function: 
+
+```ruby
+> \e
+factorial: (long x) -> long
+  if x < 0 then throw "cannot calc factorial of negative number: #{x}"
+  if x <= 1 then 1
+  factorial(x-1)*x # recursive definition
+\e
+function
+> factorial(1)
+1
+> factorial(2)
+2
+> factorial(3)
+6
+> factorial(4)
+24
+> factorial(5)
+120
+> factorial(10)
+3628800
+```
+
+##### Closures
+
+Function bodies can close over non-local values. The references are evaluated at the time the function is defined. The value is closed over, not the reference. 
+
+The following example creates a sequence of functions, each multiplying its input by a number it closes over:
+
+```ruby
+> \e
+fs: 
+  for i <- [1, 2, 3],
+      (x) -> x*i 
+\e
+[function, function, function]
+```
+
+Each function has closed over the value of `i`, not a reference to `i`. Therefore each function multiplies by a different number:
+
+```ruby
+> fs[0](10) # first function multiplies by 1
+10
+> fs[1](10) # second function multiplies by 2
+20
+> fs[2](10) # third function multiplies by 3
+30
+```
 
 #### Operators
 
@@ -2137,6 +3008,12 @@ TODO: add parentheses for precedence grouping
 #### Evaluation precedence
 
 TODO: give order of constructs and operators 
+
+manual grouping using parentheses
+
+#### Debugging
+
+TODO: describe the debug construct
 
 ## Language tools
 
