@@ -35,11 +35,13 @@ final public class DoubleType implements Type {
 
   private String parseRegexPattern =
       "[\\x00-\\x20]*" +                            // optional leading whitespace
-      "[+-]?" +                                     // optional sign
+      "[-+]?" +                                     // optional sign
+      "(" +
       "(NaN)|" +                                    // NaN
       "(Infinity)|" +                               // Infinity
-      "([0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?)|" +   // digits.digits(E+-exponent)?
-      "(\\.[0-9]+([eE][+-]?[0-9]+)?)" +             // .digits(E+-exponent)?
+      "([0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?)|" +   // digits.digits(E+-exponent)?
+      "(\\.[0-9]+([eE][-+]?[0-9]+)?)" +             // .digits(E+-exponent)?
+      ")" +
       "[\\x00-\\x20]*";                             // optional trailing whitespace
 
   private Pattern parseRegex = Pattern.compile(parseRegexPattern);
