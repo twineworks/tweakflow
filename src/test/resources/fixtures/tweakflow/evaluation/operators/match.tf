@@ -1,8 +1,5 @@
 import core, data, math from "std"
 
-alias data.range as range
-alias math.sqrt as sqrt
-
 library lib {
   is_list: (x) -> typeof x == "list"
   is_long: (x) -> typeof x == "long"
