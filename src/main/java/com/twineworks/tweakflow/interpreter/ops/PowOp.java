@@ -58,14 +58,6 @@ final public class PowOp implements ExpressionOp {
 
     if (baseType == Types.LONG && exponentType == Types.LONG){
       double pow = java.lang.Math.pow(base.longNum(), exponent.longNum());
-
-      // convert back to a long if it happens to be in range
-      // http://stackoverflow.com/questions/9898512/how-to-test-if-a-double-is-an-integer
-      if (!Double.isInfinite(pow) && !Double.isNaN(pow) && (pow == java.lang.Math.rint(pow))
-          && pow >= Long.MIN_VALUE && pow <= Long.MAX_VALUE) {
-        return Values.make((long) pow);
-      }
-
       return Values.make(pow);
     }
 

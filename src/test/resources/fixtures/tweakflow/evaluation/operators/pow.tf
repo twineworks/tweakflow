@@ -15,15 +15,6 @@ library operator_spec {
   l1_l0: 1 ** 0        == 1
   l1_l1: 1 ** 1        == 1
 
-  # integer overflow converts to double
-  max_inc: max_long ** 2 > max_long
-
-  # long results come back as longs
-  l2_l10: (2 ** 10) is long
-
-  # unless they are out of range
-  l2_l100: (2 ** 100) is double
-
   d0_d1: 0.0 ** 1.0    == 0.0
   d1_d0: 1.0 ** 0.0    == 1.0
   d1_d1: 1.0 ** 1.0    == 1.0
