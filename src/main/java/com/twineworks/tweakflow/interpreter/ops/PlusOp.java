@@ -51,9 +51,11 @@ final public class PlusOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     Value left = leftOp.eval(stack, context);
-    if (left == Values.NIL) return Values.NIL;
-
     Value right = rightOp.eval(stack, context);
+
+    ensureValidTypes(left, right);
+
+    if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
 
     Type leftType = left.type();
@@ -77,6 +79,19 @@ final public class PlusOp implements ExpressionOp {
 
     }
     throw new LangException(LangError.CAST_ERROR, "Cannot add types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+
+  }
+
+  private void ensureValidTypes(Value left, Value right){
+    Type leftType = left.type();
+    Type rightType = right.type();
+
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+      return;
+    }
+
+    throw new LangException(LangError.CAST_ERROR, "cannot add types "+left.type().name()+" and " + right.type().name());
 
   }
 

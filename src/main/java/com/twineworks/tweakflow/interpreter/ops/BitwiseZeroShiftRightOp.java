@@ -47,9 +47,9 @@ final public class BitwiseZeroShiftRightOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     Value left = leftOp.eval(stack, context).castTo(Types.LONG);
-    if (left == Values.NIL) return Values.NIL;
-
     Value right = rightOp.eval(stack, context).castTo(Types.LONG);
+
+    if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
 
     return Values.make(left.longNum() >>> right.longNum());

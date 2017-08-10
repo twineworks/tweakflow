@@ -48,6 +48,8 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
     Value left = node.getLeftExpression().getOp().eval(stack, context);
     Value right = node.getRightExpression().getOp().eval(stack, context);
 
+    ensureValidTypes(left, right);
+
     if (left == Values.NIL) return right == Values.NIL ? Values.TRUE : Values.FALSE;
     if (right == Values.NIL) return Values.FALSE;
 
@@ -71,7 +73,20 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
       }
 
     }
-    throw new LangException(LangError.CAST_ERROR, "Cannot compare types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "cannot compare types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+
+  }
+
+  private void ensureValidTypes(Value left, Value right){
+    Type leftType = left.type();
+    Type rightType = right.type();
+
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+      return;
+    }
+
+    throw new LangException(LangError.CAST_ERROR, "cannot compare types "+left.type().name()+" and " + right.type().name());
 
   }
 
