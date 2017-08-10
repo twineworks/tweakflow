@@ -242,8 +242,33 @@
 <li><a href="#circular-references">Circular references</a></li>
 <li><a href="#closures">Closures</a></li>
 </ul></li>
-<li><a href="#operators">Operators</a></li>
-<li><a href="#evaluation-precedence">Evaluation precedence</a></li>
+<li><a href="#operators">Operators</a>
+<ul>
+<li><a href="#precedence-grouping">Precedence grouping</a></li>
+<li><a href="#bitwise-not">Bitwise not</a></li>
+<li><a href="#boolean-not">Boolean not</a></li>
+<li><a href="#unary-minus">Unary minus</a></li>
+<li><a href="#exponentiation">Exponentiation</a></li>
+<li><a href="#multiplication">Multiplication</a></li>
+<li><a href="#floating-point-division">Floating point division</a></li>
+<li><a href="#integer-division">Integer division</a></li>
+<li><a href="#division-remainder">Division remainder</a></li>
+<li><a href="#addition">Addition</a></li>
+<li><a href="#subtraction">Subtraction</a></li>
+<li><a href="#string-concatenation">String concatenation</a></li>
+<li><a href="#binary-shift-left">Binary shift left</a></li>
+<li><a href="#binary-shift-right-sign-preserving">Binary shift right, sign preserving</a></li>
+<li><a href="#binary-shift-right">Binary shift right</a></li>
+<li><a href="#less-than">Less than</a></li>
+<li><a href="#less-than-or-equal">Less than or equal</a></li>
+<li><a href="#greater-than">Greater than</a></li>
+<li><a href="#greater-than-or-equal">Greater than or equal</a></li>
+<li><a href="#equality-with-type-identity">Equality with type identity</a></li>
+<li><a href="#inequality-with-type-identity">Inequality with type identity</a></li>
+<li><a href="#equality">Equality</a></li>
+<li><a href="#inequality">Inequality</a></li>
+<li><a href="#operator-precedence">Operator precedence</a></li>
+</ul></li>
 <li><a href="#debugging">Debugging</a></li>
 </ul></li>
 </ul></li>
@@ -662,7 +687,7 @@ let {
 3
 </code></pre>
 
-<p>TODO: include endOfStatement Markers in their respective syntaxes</p>
+<p>TODO: include endOfStatement Markers in their respective syntaxes on modules, libs, vars, let, (check for var defintions, the looping construct should contain endOfMarker? not the vars)</p>
 
 <h3 id="comments">Comments</h3>
 
@@ -759,6 +784,12 @@ spans multiple lines
 <h5 id="double-as-long">Double as long</h5>
 
 <p>The double value is truncated at the decimal point and converted to the closest long value.</p>
+
+<p>If the double is <code>NaN</code>, the converted value is <code>0</code>.</p>
+
+<p>If the double is <code>Infinity</code>, the converted value is <code>math.max_long</code>.</p>
+
+<p>If the double is <code>-Infinity</code>, the converted value is <code>math.min_long</code>.</p>
 
 <h5 id="double-as-string">Double as string</h5>
 
@@ -1344,6 +1375,8 @@ moduleComponent
 
 <p>Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.</p>
 
+<p>Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors.</p>
+
 <p><strong>Example use of global modules for configuration</strong></p>
 
 <p>The following set of files constitute configuration variants, available globally as <code>env</code>.</p>
@@ -1371,6 +1404,8 @@ library my_lib {
   file_path: (string prefix) -&gt; $env.conf.data_path .. prefix .. &quot;_data.csv&quot;
 }
 </code></pre>
+
+<p>TODO: example on the repl loading multiple modules</p>
 
 <h4 id="imports">Imports</h4>
 
@@ -1487,7 +1522,7 @@ exportName
 
 <p>Below example exports the strings standard library under the name <code>str</code>, and a local library <code>common</code> under the name <code>util</code> .</p>
 
-<pre><code class="language-text"># lib.tf
+<pre><code class="language-ruby"># lib.tf
 import * as std from &quot;std&quot;
 
 export std.strings as str
@@ -1792,7 +1827,9 @@ nil
 
 <h4 id="container-access">Container access</h4>
 
-<p>List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime. The formal structure of container access expressions is as follows:</p>
+<p>List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime.</p>
+
+<p>The formal structure of container access expressions is as follows:</p>
 
 <pre><code class="language-text">containerAccess
   : expression'['containerAccessKeySequence']'
@@ -2219,11 +2256,46 @@ function
 
 <h4 id="call-chaining">Call chaining</h4>
 
-<p>TODO</p>
+<p>A computation might consist of a linear series of function calls feeding their output into the next function&rsquo;s input. Tweakflow supports a special syntax for that situation.</p>
+
+<p>The syntax is as follows:</p>
+
+<pre><code class="language-text">callChain
+  : '-&gt;&gt;' '('threadArg')' expression (',' expression)*      
+  ;
+
+threadArg
+  : expression
+  ;
+</code></pre>
+
+<p>The symbol <code>-&gt;&gt;</code> is a mnemonic for a threading needle. <code>threadArg</code> is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called witha single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.</p>
+
+<p>As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, dashes must be included to create groups of four characters, and finally all characters must be upper case.</p>
+
+<pre><code class="language-ruby">&gt; \e
+normalize: (string pn) -&gt;
+  -&gt;&gt; (pn)
+	  # remove whitespace
+      (x) -&gt; regex.replacing('\s', &quot;&quot;)(x),
+      # remove any dashes
+      (x) -&gt; strings.replace(x, &quot;-&quot;, &quot;&quot;), 
+      # split to a list of blocks of up to 4 chars
+      (x) -&gt; regex.splitting('(?&lt;=\G.{4})')(x),
+      # place dashes between blocks converting to single string
+      (xs) -&gt; strings.join(xs, &quot;-&quot;),
+      # upper case all characters
+      strings.upper_case
+\e
+function
+     
+&gt; normalize(&quot;39 hd-sd-asdi3437&quot;)
+&quot;39HD-SDAS-DI34-37&quot;
+</code></pre>
 
 <h4 id="local-variables">Local variables</h4>
 
-<p>Local variables are useful as named temporary results. The <code>let</code> expression defines a set of variables that are bound in its local scope, shadowing any existing local variables of the same name in parent scopes.</p>
+<p>Local variables are useful as named temporary results. The <code>let</code> expression defines a set of variables that are bound in a newly created local scope.</p>
 
 <p>The formal syntax is as follows:</p>
 
@@ -2531,7 +2603,7 @@ false
 
 <h5 id="predicate-patterns">Predicate patterns</h5>
 
-<p>Predicate patterns are syntactically identical to value patterns, as they are merely a special case of the match expression evaluating to a function.</p>
+<p>Predicate patterns are syntactically identical to value patterns, since they are merely a special case of the match expression evaluating to a function.</p>
 
 <pre><code class="language-text">matchPattern
   : expression  capture?                     
@@ -2726,7 +2798,7 @@ capture
 
 <p>The initial splat capture matches zero or more items, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The ends of the pattern list and the checked value must coincide. The initial part of the list can be captured into a variable. The optional final capture contains the entire matched list.</p>
 
-<p>The following function checks whether a lists last element is a non-nil datetime.</p>
+<p>The following function checks whether a list&rsquo;s last element is a non-nil datetime.</p>
 
 <pre><code class="language-ruby">&gt; \e
 ends_in_datetime?: (list xs) -&gt;
@@ -2792,7 +2864,7 @@ false
 
 <h5 id="full-dict-patterns">Full dict patterns</h5>
 
-<p>Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have these and only these keys.</p>
+<p>Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys.</p>
 
 <pre><code class="language-text">matchPattern
   : '{' ((stringLiteral matchPattern) ',' )* (stringLiteral matchPattern) '}' capture?
@@ -2933,7 +3005,7 @@ function
 
 <h4 id="errors">Errors</h4>
 
-<p>Tweakflow supports throwing arbitrary values as errors. If an error is thrown insied the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary.</p>
+<p>Tweakflow supports throwing arbitrary values as errors. If an error is thrown inside the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary.</p>
 
 <h5 id="throwing-errors">Throwing errors</h5>
 
@@ -3020,6 +3092,8 @@ function
 nil
 </code></pre>
 
+<p>TODO: define caught stack trace, and example</p>
+
 <h4 id="references">References</h4>
 
 <p>References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.</p>
@@ -3040,27 +3114,96 @@ nil
 
 <h5 id="unscoped-references">Unscoped references</h5>
 
-<p>Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references&rsquo; initial identifiers are resolved starting in the <a href="#scope">scope</a> they appear in, searching up the scope hierarchy towards module scope inclusively if the initial identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.</p>
+<p>Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references&rsquo; initial identifiers are resolved starting in the <a href="#scope">scope</a> they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.</p>
 
-<p>TODO: example</p>
+<p>An example file with comments highlighting scope changes and references:</p>
+
+<pre><code class="language-ruby"># scopes.tf
+
+# introduces 'strings' in module scope
+import strings from &quot;std&quot; 
+
+# introduces 'len' in module scope
+alias strings.length as len # references 'strings' in module scope 
+
+# introduces 'utils' in module scope
+library utils {            
+  # introduces 'f' in library scope
+  f: (x) -&gt; len(x)  # references 'len' from module scope
+  # introduces 'g' in library scope
+  g: (x) -&gt; f(x) + 1 # references 'f' in library scope
+}
+
+# introduces 'foo' in module scope
+library foo {
+  # introduces 'f' in library scope
+  f: (x) -&gt; utils.f(x) # references 'utils' from module scope
+}
+</code></pre>
+
+<p>An example nesting local scopes:</p>
+
+<pre><code class="language-ruby">&gt; \e
+let {
+  a: &quot;outer a&quot;
+  b: let {
+      a: &quot;inner a&quot;
+     }
+     a       # references inner a
+}
+a .. &quot; / &quot;.. b  
+\e
+&quot;outer a / inner a&quot;
+</code></pre>
 
 <h5 id="library-scope-references">Library scope references</h5>
 
 <p>Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
 
-<p>TODO: example</p>
+<pre><code class="language-ruby"># libary-refs.tf
+import strings from &quot;std&quot; 
+
+library utils {            
+  f: (x) -&gt; strings.length(x)  
+  g: (x) -&gt; let {
+              f: (n) -&gt; n+1
+            }
+            f(library::f(x)) # f(utils.f(x))
+}
+</code></pre>
+
+<p>Loading the module on the REPL:</p>
+
+<pre><code class="language-ruby">&gt; \load /path/to/library-refs.tf
+library-refs.tf&gt; utils.g(&quot;abc&quot;)
+4
+</code></pre>
 
 <h5 id="module-scope-references">Module scope references</h5>
 
 <p>Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the <code>::</code> or <code>module::</code> anchors.</p>
 
-<p>TODO: example</p>
+<pre><code class="language-ruby"># module-refs.tf
+import strings as s from &quot;std&quot; # introduce 's' in module scope
+
+library utils {
+  s: &quot;variable s&quot;
+  f: (x) -&gt; ::s.length(x) # reference 's' in module scope
+}
+</code></pre>
+
+<p>Loading the module on the REPL:</p>
+
+<pre><code class="language-ruby">&gt; \load /path/to/module-refs.tf
+module-refs.tf&gt; utils.f(&quot;foo&quot;)
+3
+</code></pre>
 
 <h5 id="global-scope-references">Global scope references</h5>
 
 <p>Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with <code>$</code> or <code>global::</code> anchors.</p>
 
-<p>TODO: example</p>
+<p>See <a href="#global-modules">global modules</a> for an example of global references pointing to global modules.</p>
 
 <h5 id="referencing-values">Referencing values</h5>
 
@@ -3167,159 +3310,831 @@ fs:
 
 <h4 id="operators">Operators</h4>
 
-<p>TODO</p>
+<p>TODO: operator introduction</p>
 
-<p>Tweakflow features the following operators in precedence order.</p>
+<h5 id="precedence-grouping">Precedence grouping</h5>
 
-<p>All binary operators are left-associative.  Taking addition as an example <code>a + b + c</code> is evaluated as <code>(a + b) + c</code>.</p>
+<p>Syntax: <code>(a)</code></p>
 
-<p>Operators desugar to standard library calls. There are no special operator semantics, thus operator behavior is completely defined by the behaviour of standard library functions.</p>
+<p>Sub-expressions in parentheses define evaluation precedence. <code>(a+b)*c</code> multiplies a sum with c, whereas <code>a+(b*c)</code> adds a product to a.</p>
 
-<p>TODO: add parentheses for precedence grouping</p>
+<h5 id="bitwise-not">Bitwise not</h5>
+
+<p>Syntax: <code>~a</code></p>
+
+<p>The operand is cast to long, and a bitwise not operation is performed on its two&rsquo;s complement representation, resulting in another long.</p>
+
+<p><code>~nil</code> evaluates to <code>nil</code></p>
+
+<pre><code class="language-ruby">&gt; ~0
+-1
+
+&gt; ~(-1)
+0
+</code></pre>
+
+<h5 id="boolean-not">Boolean not</h5>
+
+<p>Syntax: <code>!a</code> or its equivalent <code>not a</code></p>
+
+<p>The operand is cast to boolean and a negation is performed resulting in another boolean.</p>
+
+<p><code>!nil</code> evaluates to <code>true</code></p>
+
+<pre><code class="language-ruby">&gt; !&quot;foo&quot;
+</code></pre>
+
+<h5 id="unary-minus">Unary minus</h5>
+
+<p>Syntax: <code>-a</code></p>
+
+<p>The operand must be of type long or double. Any other types throw an error. The operand is negated retaining its original type. If the operand is <code>nil</code> the result is <code>nil</code>.</p>
+
+<p>The following special cases are defined:</p>
 
 <table>
 <thead>
 <tr>
-<th align="left">Operator</th>
-<th align="left">Role</th>
-<th align="left">Semantics</th>
+<th>Expression</th>
+<th>Result</th>
 </tr>
 </thead>
 
 <tbody>
 <tr>
-<td align="left"><code>-a</code></td>
-<td align="left">Negation</td>
-<td align="left"><code>$std.math.negate(a)</code></td>
+<td><code>-(Infinity)</code></td>
+<td><code>-Infinity</code></td>
 </tr>
 
 <tr>
-<td align="left"><code>!a</code></td>
-<td align="left">Boolean not</td>
-<td align="left"><code>$std.core.'not'(a)</code></td>
+<td><code>-NaN</code></td>
+<td><code>NaN</code></td>
 </tr>
 
 <tr>
-<td align="left"><code>not a</code></td>
-<td align="left">Boolean not</td>
-<td align="left"><code>$std.core.'not'(a)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a ** b</code></td>
-<td align="left">Exponentiation</td>
-<td align="left"><code>$std.math.power(a, b)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a * b</code></td>
-<td align="left">Multiplication</td>
-<td align="left"><code>$std.math.product([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a / b</code></td>
-<td align="left">Division</td>
-<td align="left"><code>$std.math.divide(a, b)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a // b</code></td>
-<td align="left">Integer Division</td>
-<td align="left"><code>$std.math.divide(a, b)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a % b</code></td>
-<td align="left">Modulo</td>
-<td align="left"><code>$std.math.modulo(a, b)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a + b</code></td>
-<td align="left">Addition</td>
-<td align="left"><code>$std.math.sum([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a - b</code></td>
-<td align="left">Subtraction</td>
-<td align="left"><code>$std.math.subtract(a, b)</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a .. b</code></td>
-<td align="left">String concatenation</td>
-<td align="left"><code>$std.strings.concat([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a &lt; b</code></td>
-<td align="left">Less than</td>
-<td align="left"><code>$std.math.'&lt;'([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a &lt;= b</code></td>
-<td align="left">Less than or equal</td>
-<td align="left"><code>$std.math.'&lt;='([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a &gt; b</code></td>
-<td align="left">Greater than</td>
-<td align="left"><code>$std.math.'&gt;'([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a &gt;= b</code></td>
-<td align="left">Greater than or equal</td>
-<td align="left"><code>$std.math.'&gt;='([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a == b</code></td>
-<td align="left">Equality</td>
-<td align="left"><code>$std.core.'=='([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a != b</code></td>
-<td align="left">Negated equality</td>
-<td align="left"><code>$std.core.'not'($std.core.'=='([a, b]))</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a &amp;&amp; b</code></td>
-<td align="left">Boolean and</td>
-<td align="left"><code>$std.core.'and'([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a and b</code></td>
-<td align="left">Boolean and</td>
-<td align="left"><code>$std.core.'and'([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a ¦¦ b</code></td>
-<td align="left">Boolean or</td>
-<td align="left"><code>$std.core.'or'([a, b])</code></td>
-</tr>
-
-<tr>
-<td align="left"><code>a or b</code></td>
-<td align="left">Boolean or</td>
-<td align="left"><code>$std.core.'or'([a, b])</code></td>
+<td><code>-math.min_long</code></td>
+<td><code>math.min_long</code></td>
 </tr>
 </tbody>
 </table>
 
-<h4 id="evaluation-precedence">Evaluation precedence</h4>
+<pre><code class="language-ruby">&gt; -(1)
+-1
+&gt; -(-1)
+1
+&gt; -(-2.3)
+2.3
+&gt; -(Infinity)
+-Infinity
+&gt; -(NaN)
+NaN
+&gt; -(&quot;foo&quot;)
+ERROR: {
+  :message &quot;Cannot negate type: string&quot;,
+  :code &quot;CAST_ERROR&quot;,
+  ...
+}
+
+</code></pre>
+
+<h5 id="exponentiation">Exponentiation</h5>
+
+<p>Syntax: <code>a**b</code></p>
+
+<p>Operand a is raised to the power of b.</p>
+
+<p>Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>The result is of type double.</p>
+
+<p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity ** Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity ** Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity ** -Infinity</code></td>
+<td><code>0.0</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity ** -Infinity</code></td>
+<td><code>0.0</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity ** 0</code></td>
+<td><code>1.0</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity ** 0</code></td>
+<td><code>1.0</code></td>
+</tr>
+
+<tr>
+<td><code>NaN ** 0</code></td>
+<td><code>1.0</code></td>
+</tr>
+
+<tr>
+<td><code>0 ** Infinity</code></td>
+<td><code>0.0</code></td>
+</tr>
+
+<tr>
+<td><code>0 ** -Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>NaN ** x</code> for all x != 0</td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>x ** NaN</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 2**3
+8.0
+&gt; 4**0.5
+2.0
+&gt; 2**10
+1024.0
+&gt; nil**nil
+nil
+&gt; &quot;2&quot;**&quot;3&quot;
+ERROR: {
+  :message &quot;cannot lift base of type string to exponent of type string&quot;,
+  :code &quot;CAST_ERROR&quot;,
+  ...
+}
+</code></pre>
+
+<h5 id="multiplication">Multiplication</h5>
+
+<p>Syntax: <code>a*b</code></p>
+
+<p>Operands are multiplied. Evaluation proceeds as follows:</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.</p>
+
+<p>If both operands are doubles, floating point multiplication is performed, and the result is another double.</p>
+
+<p>If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.</p>
+
+<p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity * Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * Infinity</code> <code>Infinity * -Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * -Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity * 0</code> <code>0 * Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * 0</code> <code>0 * -Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 2 * 3
+6
+&gt; 2 * 3.3
+6.6
+&gt; 2 * 3.3
+6.6
+&gt; 1.1 * 2.9
+3.19
+&gt; math.max_long * math.max_long # binary overflow
+1
+&gt; math.max_long as double * math.max_long # floating point multiplication
+8.507059173023462E37
+</code></pre>
+
+<h5 id="floating-point-division">Floating point division</h5>
+
+<p>Syntax: <code>a/b</code></p>
+
+<p>Evaluates to a divided by b.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are doubles, floating point division is performed.</p>
+
+<p>If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.</p>
+
+<p>The result is always a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>x / 0</code>  (x &gt; 0)</td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>x / 0</code>  (x &lt; 0)</td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>0 / 0</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td>`[+</td>
+<td>-]Infinity / [+</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 1 / 2
+0.5
+&gt; 5 / 0.5
+10.0
+&gt; nil / 2
+nil
+</code></pre>
+
+<h5 id="integer-division">Integer division</h5>
+
+<p>Syntax: <code>a//b</code></p>
+
+<p>Casts a and b to long, and performs integer division.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>Division by zero throws an error.</p>
+
+<p>Both operands are cast to long before division is performed. The result of the division is a long. Any remainder value is ignored.</p>
+
+<pre><code class="language-ruby">&gt; 10 // 2
+5
+&gt; 10 // 3
+3
+&gt; 10 // 4
+2
+&gt; 10 // 1
+10
+&gt; 10 // -3
+-3
+&gt; 10 // 0
+ERROR: {
+  :code &quot;DIVISION_BY_ZERO&quot;,
+  ...
+}
+</code></pre>
+
+<h5 id="division-remainder">Division remainder</h5>
+
+<p>Syntax: <code>a%b</code></p>
+
+<p>Evaluates to the remainder after a is divided by b.</p>
+
+<p>Each operatnd must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, an integer remainder calculation is performed, and the result is a long. <code>b</code> cannot be zero in this case. A division by zero throws an error.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</p>
+
+<p>The sign of the result depends on the sign of <code>a</code>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Signs</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>a &gt;= 0</code></td>
+<td><code>&gt;=0</code></td>
+</tr>
+
+<tr>
+<td><code>a &lt; 0</code></td>
+<td><code>&lt;=0</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>x % 0.0</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td>`[+</td>
+<td>-]Infinity / [+</td>
+</tr>
+
+<tr>
+<td>`0.0 % [+</td>
+<td>-]Infinity`</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 10 % 4
+2
+&gt; 10 % 3
+1
+&gt; 10 % 2.5
+0.0
+&gt; 5 % 1.5
+0.5
+&gt; -5 % 1.5
+-0.5
+</code></pre>
+
+<h5 id="addition">Addition</h5>
+
+<p>Syntax: <code>a+b</code></p>
+
+<p>Evaluates to the sum of a and b.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity + Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity + Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity + -Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity + -Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 1+2
+3
+&gt; 2.0+2
+4.0
+&gt; Infinity + 3
+Infinity
+&gt; math.max_long + 1   # binary overflow
+-9223372036854775808
+</code></pre>
+
+<h5 id="subtraction">Subtraction</h5>
+
+<p>Syntax: <code>a-b</code></p>
+
+<p>Evaluates to the value of a with b subtracted.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity - Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>(-Infinity) - Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity - (-Infinity</code>)</td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>(-Infinity) - (-Infinity)</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-ruby">&gt; 5-3
+2
+&gt; 5-10
+-5
+&gt; 2.3-9
+-6.7
+&gt; math.min_long - 1 # binary underflow
+9223372036854775807
+&gt; Infinity - 100
+Infinity
+</code></pre>
+
+<h5 id="string-concatenation">String concatenation</h5>
+
+<p>Syntax: <code>a..b</code></p>
+
+<p>Both operands are cast to string, then they are concatenated to form the result string. A <code>nil</code> value is converted to the string <code>&quot;nil&quot;</code> before concatenation.</p>
+
+<pre><code class="language-ruby">&gt; &quot;Hello&quot;..&quot; &quot;..&quot;World&quot;
+&quot;Hello World&quot;
+&gt; &quot;foo&quot;..1
+&quot;foo1&quot;
+</code></pre>
+
+<h5 id="binary-shift-left">Binary shift left</h5>
+
+<p>Syntax: <code>a&lt;&lt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &lt;&lt; 2
+4
+&gt; -1 &lt;&lt; 8
+-256
+&gt; 7 &lt;&lt; 1
+14
+&gt; 2.3 &lt;&lt; 4.9 # operands are cast to 2 &lt;&lt; 4
+32
+&gt; &quot;1&quot; &lt;&lt; 3.4 # operands are cast to 1 &lt;&lt; 3
+8
+&gt; nil &lt;&lt; 1
+nil
+</code></pre>
+
+<h5 id="binary-shift-right-sign-preserving">Binary shift right, sign preserving</h5>
+
+<p>Syntax: <code>a&gt;&gt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 8 &gt;&gt; 1
+4
+&gt; 8 &gt;&gt; 8
+0
+&gt; -1 &gt;&gt; 1
+-1
+&gt; -1 &gt;&gt; 8
+-1
+&gt; nil &gt;&gt; 2
+nil
+</code></pre>
+
+<h5 id="binary-shift-right">Binary shift right</h5>
+
+<p>Syntax: <code>a&gt;&gt;&gt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 8 &gt;&gt;&gt; 1
+4
+&gt; 8 &gt;&gt;&gt; 8
+0
+&gt; -1 &gt;&gt;&gt; 1
+9223372036854775807
+&gt; -1 &gt;&gt;&gt; 56
+255
+&gt; nil &gt;&gt;&gt; 2
+nil
+</code></pre>
+
+<h5 id="less-than">Less than</h5>
+
+<p>Syntax: <code>a&lt;b</code></p>
+
+<p>Evaluates to <code>true</code> if a is less than b, <code>false</code> otherwise.</p>
+
+<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+
+<p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &lt; 2
+true
+&gt; 1 &lt; 1
+false
+&gt; 1.0 &lt; 1
+false
+&gt; -Infinity &lt; 5
+true
+&gt; &quot;1&quot; &lt; 1
+ERROR: {
+  :message &quot;Cannot compare types: string and long&quot;,
+  :code &quot;CAST_ERROR&quot;,
+  ...
+}
+</code></pre>
+
+<h5 id="less-than-or-equal">Less than or equal</h5>
+
+<p>Syntax: <code>a&lt;=b</code></p>
+
+<p>Evaluates to true if a is less than b, or equal to b.</p>
+
+<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+
+<p>If either operand is <code>NaN</code> the result is <code>false</code>.</p>
+
+<p>If both operands are <code>nil</code>, the result is <code>true</code>.</p>
+
+<p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &lt;= 3
+true
+&gt; 1 &lt;= 1
+true
+&gt; 1.0 &lt;= Infinity
+true
+&gt; NaN &lt;= NaN
+false
+&gt; nil &lt;= nil
+true
+</code></pre>
+
+<h5 id="greater-than">Greater than</h5>
+
+<p>Syntax: <code>a&gt;b</code></p>
+
+<p>Evaluates to <code>true</code> if a is greater than b, <code>false</code> otherwise.</p>
+
+<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+
+<p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &gt; 2
+false
+&gt; Infinity &gt; 4
+true
+&gt; 5 &gt; 3
+true
+&gt; NaN &gt; 2
+false
+&gt; Infinity &gt; NaN
+false
+&gt; 4.0 &gt; 2
+true
+</code></pre>
+
+<h5 id="greater-than-or-equal">Greater than or equal</h5>
+
+<p>Syntax: <code>a&gt;=b</code></p>
+
+<p>Evaluates to true if a is greater than b, or equal to b.</p>
+
+<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+
+<p>If either operand is <code>NaN</code> the result is <code>false</code>.</p>
+
+<p>If both operands are <code>nil</code>, the result is <code>true</code>.</p>
+
+<p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &gt;= 2
+false
+&gt; Infinity &gt;= 2
+true
+&gt; 2.0 &gt;= 2
+true
+&gt; NaN &gt; 2
+false
+&gt; nil &gt;= nil
+true
+&gt; Infinity &gt;= -Infinity
+true
+</code></pre>
+
+<h5 id="equality-with-type-identity">Equality with type identity</h5>
+
+<p>Syntax: <code>a===b</code></p>
+
+<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise.</p>
+
+<pre><code class="language-ruby">&gt; 0 === -0
+true
+&gt; 1 === 1
+true
+&gt; 1 === 1.0
+false
+&gt; &quot;foo&quot; === &quot;foo&quot;
+true
+</code></pre>
+
+<h5 id="inequality-with-type-identity">Inequality with type identity</h5>
+
+<p>Syntax: <code>a!==b</code></p>
+
+<p>Evaluates to <code>false</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>true</code> otherwise.</p>
+
+<pre><code class="language-ruby">&gt; 0 !== 1
+true
+&gt; 0 !== 0
+false
+&gt; 1 !== 1.0
+true
+&gt; &quot;foo&quot; !== &quot;foo&quot;
+false
+</code></pre>
+
+<h5 id="equality">Equality</h5>
+
+<p>Syntax: <code>a==b</code></p>
+
+<p>Evaluates to <code>true</code> if a is equal to b. Returns <code>false</code> otherwise.</p>
+
+<p>Some type-specific rules apply in determining equality.</p>
+
+<p>The double special value <code>NaN</code> is not equal to anything, not even to itself.</p>
+
+<pre><code class="language-ruby">&gt; NaN == NaN
+false
+</code></pre>
+
+<p>A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.</p>
+
+<pre><code class="language-ruby">&gt; 0 == 0.0
+true
+&gt; 3 == 3.0
+true
+&gt; -4 == 4.0
+false
+&gt; 0 == NaN
+false
+</code></pre>
+
+<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="/tweakflow/modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
+
+<pre><code class="language-ruby"># same points in time, but different local time and time zone
+&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch) 
+0
+# same points in time are not equal
+&gt; 1970-01-01T01:00:00+01:00 == time.epoch       
+false
+# going back to UTC offset of time.epoch, they are equal
+&gt; 1970-01-01T00:00:00+00:00 == time.epoch
+true
+</code></pre>
+
+<p>Function values are never equal to anything, not even to themselves.</p>
+
+<pre><code class="language-ruby">&gt; strings.length(&quot;foo&quot;)
+3
+&gt; strings.length == strings.length
+false
+</code></pre>
+
+<p>Lists are equal if they contain items that compare as equal.</p>
+
+<pre><code class="language-ruby">&gt; [1, 2] == [1.0, 2.0]
+true
+&gt; [NaN] == [NaN]
+false
+</code></pre>
+
+<p>Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.</p>
+
+<pre><code class="language-ruby">&gt; {:a 1} == {:a 1.0}
+true
+&gt; {:a NaN} == {:a NaN}
+false
+</code></pre>
+
+<h5 id="inequality">Inequality</h5>
+
+<p>Syntax: <code>a!=b</code></p>
+
+<p>Inversion of equality. Evaluates to <code>true</code> if <code>a==b</code> evaluates to <code>false</code>. Evaluates to <code>false</code> if <code>a==b</code> evaluates to true.</p>
+
+<p>TODO:</p>
+
+<pre><code>| expression '&amp;' expression                               # bitwiseAndExp
+| expression '^' expression                               # bitwiseXorExp
+| expression '|' expression                               # bitwiseOrExp
+| expression '&amp;&amp;' expression                              # boolAndExp
+| expression 'and' expression                             # boolAndExp
+| expression '||' expression                              # boolOrExp
+| expression 'or' expression                              # boolOrExp
+</code></pre>
+
+<h5 id="operator-precedence">Operator precedence</h5>
 
 <p>TODO: give order of constructs and operators</p>
-
-<p>manual grouping using parentheses</p>
 
 <h4 id="debugging">Debugging</h4>
 
