@@ -376,7 +376,7 @@ Equivalent, but arguably less readable notation with variable definitions lackin
 3
 ```
 
-TODO: include endOfStatement Markers in their respective syntaxes
+TODO: include endOfStatement Markers in their respective syntaxes on modules, libs, vars, let, (check for var defintions, the looping construct should contain endOfMarker? not the vars)
 
 ### Comments
 
@@ -476,6 +476,12 @@ The double values `0.0`,  `-0.0`, and `NaN` are converted to `false`. Any other 
 ##### Double as long
 
 The double value is truncated at the decimal point and converted to the closest long value.
+
+If the double is `NaN`, the converted value is `0`.
+
+If the double is `Infinity`, the converted value is `math.max_long`.
+
+If the double is `-Infinity`, the converted value is `math.min_long`.
 
 ##### Double as string
 
@@ -1048,6 +1054,8 @@ Modules can declare themselves available under a specific name in [global scope]
 
 Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.
 
+Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors. 
+
 **Example use of global modules for configuration**
 
 The following set of files constitute configuration variants, available globally as `env`. 
@@ -1078,6 +1086,8 @@ library my_lib {
   file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv"
 }
 ```
+
+TODO: example on the repl loading multiple modules
 
 #### Imports
 
@@ -1201,7 +1211,7 @@ exportName
 
 Below example exports the strings standard library under the name `str`, and a local library `common` under the name `util` .
 
-```text
+```ruby
 # lib.tf
 import * as std from "std"
 
@@ -1519,7 +1529,9 @@ nil
 
 #### Container access
 
-List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime. The formal structure of container access expressions is as follows: 
+List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime.
+
+The formal structure of container access expressions is as follows: 
 
 ```text
 containerAccess
@@ -1974,11 +1986,48 @@ function
 
 #### Call chaining
 
-TODO
+A computation might consist of a linear series of function calls feeding their output into the next function's input. Tweakflow supports a special syntax for that situation. 
+
+The syntax is as follows:
+
+```text
+callChain
+  : '->>' '('threadArg')' expression (',' expression)*      
+  ;
+
+threadArg
+  : expression
+  ;
+```
+
+The symbol `->>` is a mnemonic for a threading needle. `threadArg` is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called witha single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.
+
+As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, dashes must be included to create groups of four characters, and finally all characters must be upper case.
+
+```ruby
+> \e
+normalize: (string pn) ->
+  ->> (pn)
+	  # remove whitespace
+      (x) -> regex.replacing('\s', "")(x),
+      # remove any dashes
+      (x) -> strings.replace(x, "-", ""), 
+      # split to a list of blocks of up to 4 chars
+      (x) -> regex.splitting('(?<=\G.{4})')(x),
+      # place dashes between blocks converting to single string
+      (xs) -> strings.join(xs, "-"),
+      # upper case all characters
+      strings.upper_case
+\e
+function
+     
+> normalize("39 hd-sd-asdi3437")
+"39HD-SDAS-DI34-37"
+```
 
 #### Local variables
 
-Local variables are useful as named temporary results. The `let` expression defines a set of variables that are bound in its local scope, shadowing any existing local variables of the same name in parent scopes.
+Local variables are useful as named temporary results. The `let` expression defines a set of variables that are bound in a newly created local scope.
 
 The formal syntax is as follows:
 
@@ -2304,7 +2353,7 @@ Value patterns have a special case: functions. Functions never compare as equal.
 
 ##### Predicate patterns
 
-Predicate patterns are syntactically identical to value patterns, as they are merely a special case of the match expression evaluating to a function.
+Predicate patterns are syntactically identical to value patterns, since they are merely a special case of the match expression evaluating to a function.
 
 ```text
 matchPattern
@@ -2508,7 +2557,7 @@ capture
 
 The initial splat capture matches zero or more items, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The ends of the pattern list and the checked value must coincide. The initial part of the list can be captured into a variable. The optional final capture contains the entire matched list.
 
-The following function checks whether a lists last element is a non-nil datetime.
+The following function checks whether a list's last element is a non-nil datetime.
 
 ```ruby
 > \e
@@ -2577,7 +2626,7 @@ false
 
 ##### Full dict patterns
 
-Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have these and only these keys. 
+Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys. 
 
 ```text
 matchPattern
@@ -2725,7 +2774,7 @@ function
 
 #### Errors
 
-Tweakflow supports throwing arbitrary values as errors. If an error is thrown insied the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary. 
+Tweakflow supports throwing arbitrary values as errors. If an error is thrown inside the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary. 
 
 ##### Throwing errors
 
@@ -2816,6 +2865,8 @@ function
 nil
 ```
 
+TODO: define caught stack trace, and example
+
 #### References
 
 References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.
@@ -2837,27 +2888,102 @@ For example: the reference `foo.bar.baz` might point to a module import `foo` wh
 
 ##### Unscoped references
 
-Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the [scope](#scope) they appear in, searching up the scope hierarchy towards module scope inclusively if the initial identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope. 
+Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the [scope](#scope) they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope. 
 
-TODO: example
+An example file with comments highlighting scope changes and references: 
+
+```ruby
+# scopes.tf
+
+# introduces 'strings' in module scope
+import strings from "std" 
+
+# introduces 'len' in module scope
+alias strings.length as len # references 'strings' in module scope 
+
+# introduces 'utils' in module scope
+library utils {            
+  # introduces 'f' in library scope
+  f: (x) -> len(x)  # references 'len' from module scope
+  # introduces 'g' in library scope
+  g: (x) -> f(x) + 1 # references 'f' in library scope
+}
+
+# introduces 'foo' in module scope
+library foo {
+  # introduces 'f' in library scope
+  f: (x) -> utils.f(x) # references 'utils' from module scope
+}
+```
+
+An example nesting local scopes:
+
+```ruby
+> \e
+let {
+  a: "outer a"
+  b: let {
+      a: "inner a"
+     }
+     a       # references inner a
+}
+a .. " / ".. b  
+\e
+"outer a / inner a"
+```
 
 ##### Library scope references
 
 Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library's scope.  They are prefixed with the `library::` anchor.
 
-TODO: example
+```ruby
+# libary-refs.tf
+import strings from "std" 
+
+library utils {            
+  f: (x) -> strings.length(x)  
+  g: (x) -> let {
+              f: (n) -> n+1
+            }
+            f(library::f(x)) # f(utils.f(x))
+}
+```
+
+Loading the module on the REPL:
+
+```ruby
+> \load /path/to/library-refs.tf
+library-refs.tf> utils.g("abc")
+4
+```
 
 ##### Module scope references
 
 Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the `::` or `module::` anchors.
 
-TODO: example
+```ruby
+# module-refs.tf
+import strings as s from "std" # introduce 's' in module scope
+
+library utils {
+  s: "variable s"
+  f: (x) -> ::s.length(x) # reference 's' in module scope
+}
+```
+
+Loading the module on the REPL:
+
+```ruby
+> \load /path/to/module-refs.tf
+module-refs.tf> utils.f("foo")
+3
+```
 
 ##### Global scope references
 
-Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors.  
+Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors. 
 
-TODO: example
+See [global modules](#global-modules) for an example of global references pointing to global modules. 
 
 ##### Referencing values
 
@@ -2971,45 +3097,652 @@ Each function has closed over the value of `i`, not a reference to `i`. Therefor
 
 #### Operators
 
-TODO
+TODO: operator introduction
 
-Tweakflow features the following operators in precedence order.
+##### Precedence grouping
 
-All binary operators are left-associative.  Taking addition as an example `a + b + c` is evaluated as `(a + b) + c`.
+Syntax: `(a)`
 
-Operators desugar to standard library calls. There are no special operator semantics, thus operator behavior is completely defined by the behaviour of standard library functions.
+Sub-expressions in parentheses define evaluation precedence. `(a+b)*c` multiplies a sum with c, whereas `a+(b*c)` adds a product to a.
 
-TODO: add parentheses for precedence grouping
+##### Bitwise not
 
-| Operator  | Role                  | Semantics                                |
-| :-------- | :-------------------- | :--------------------------------------- |
-| `-a`      | Negation              | `$std.math.negate(a)`                    |
-| `!a`      | Boolean not           | `$std.core.'not'(a)`                     |
-| `not a`   | Boolean not           | `$std.core.'not'(a)`                     |
-| `a ** b`  | Exponentiation        | `$std.math.power(a, b)`                  |
-| `a * b`   | Multiplication        | `$std.math.product([a, b])`              |
-| `a / b`   | Division              | `$std.math.divide(a, b)`                 |
-| `a // b`  | Integer Division      | `$std.math.divide(a, b)`                 |
-| `a % b`   | Modulo                | `$std.math.modulo(a, b)`                 |
-| `a + b`   | Addition              | `$std.math.sum([a, b])`                  |
-| `a - b`   | Subtraction           | `$std.math.subtract(a, b)`               |
-| `a .. b`  | String concatenation  | `$std.strings.concat([a, b])`            |
-| `a < b`   | Less than             | `$std.math.'<'([a, b])`                  |
-| `a <= b`  | Less than or equal    | `$std.math.'<='([a, b])`                 |
-| `a > b`   | Greater than          | `$std.math.'>'([a, b])`                  |
-| `a >= b`  | Greater than or equal | `$std.math.'>='([a, b])`                 |
-| `a == b`  | Equality              | `$std.core.'=='([a, b])`                 |
-| `a != b`  | Negated equality      | `$std.core.'not'($std.core.'=='([a, b]))` |
-| `a && b`  | Boolean and           | `$std.core.'and'([a, b])`                |
-| `a and b` | Boolean and           | `$std.core.'and'([a, b])`                |
-| `a ¦¦ b`  | Boolean or            | `$std.core.'or'([a, b])`                 |
-| `a or b`  | Boolean or            | `$std.core.'or'([a, b])`                 |
+Syntax: `~a`
 
-#### Evaluation precedence
+The operand is cast to long, and a bitwise not operation is performed on its two's complement representation, resulting in another long.
+
+`~nil` evaluates to `nil`
+
+```ruby
+> ~0
+-1
+
+> ~(-1)
+0
+```
+
+##### Boolean not
+
+Syntax: `!a` or its equivalent `not a`
+
+The operand is cast to boolean and a negation is performed resulting in another boolean. 
+
+`!nil` evaluates to `true`
+
+```ruby
+> !"foo"
+```
+
+##### Unary minus
+
+Syntax: `-a`
+
+The operand must be of type long or double. Any other types throw an error. The operand is negated retaining its original type. If the operand is `nil` the result is `nil`.
+
+The following special cases are defined:
+
+| Expression       | Result          |
+| ---------------- | --------------- |
+| `-(Infinity)`    | `-Infinity`     |
+| `-NaN`           | `NaN`           |
+| `-math.min_long` | `math.min_long` |
+
+```ruby
+> -(1)
+-1
+> -(-1)
+1
+> -(-2.3)
+2.3
+> -(Infinity)
+-Infinity
+> -(NaN)
+NaN
+> -("foo")
+ERROR: {
+  :message "Cannot negate type: string",
+  :code "CAST_ERROR",
+  ...
+}
+
+```
+
+##### Exponentiation
+
+Syntax: `a**b`
+
+Operand a is raised to the power of b. 
+
+Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error. 
+
+If any operand is `nil`, the result is `nil`.
+
+The result is of type double.
+
+Special cases involving `NaN` and `Infinity` are defined as follows:
+
+| Expression                | Result     |
+| ------------------------- | ---------- |
+| `Infinity ** Infinity`    | `Infinity` |
+| `-Infinity ** Infinity`   | `Infinity` |
+| `Infinity ** -Infinity`   | `0.0`      |
+| `-Infinity ** -Infinity`  | `0.0`      |
+| `Infinity ** 0`           | `1.0`      |
+| `-Infinity ** 0`          | `1.0`      |
+| `NaN ** 0`                | `1.0`      |
+| `0 ** Infinity`           | `0.0`      |
+| `0 ** -Infinity`          | `Infinity` |
+| `NaN ** x` for all x != 0 | `NaN`      |
+| `x ** NaN`                | `NaN`      |
+
+```ruby
+> 2**3
+8.0
+> 4**0.5
+2.0
+> 2**10
+1024.0
+> nil**nil
+nil
+> "2"**"3"
+ERROR: {
+  :message "cannot lift base of type string to exponent of type string",
+  :code "CAST_ERROR",
+  ...
+}
+```
+
+##### Multiplication
+
+Syntax: `a*b`
+
+Operands are multiplied. Evaluation proceeds as follows:
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.
+
+If both operands are doubles, floating point multiplication is performed, and the result is another double.
+
+If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.
+
+Special cases involving `NaN` and `Infinity` are defined as follows:
+
+| Expression                               | Result      |
+| ---------------------------------------- | ----------- |
+| `Infinity * Infinity`                    | `Infinity`  |
+| `-Infinity * Infinity` `Infinity * -Infinity` | `-Infinity` |
+| `-Infinity * -Infinity`                  | `Infinity`  |
+| `Infinity * 0` `0 * Infinity`            | `NaN`       |
+| `-Infinity * 0` `0 * -Infinity`          | `NaN`       |
+
+```ruby
+> 2 * 3
+6
+> 2 * 3.3
+6.6
+> 2 * 3.3
+6.6
+> 1.1 * 2.9
+3.19
+> math.max_long * math.max_long # binary overflow
+1
+> math.max_long as double * math.max_long # floating point multiplication
+8.507059173023462E37
+```
+
+##### Floating point division
+
+Syntax: `a/b`
+
+Evaluates to a divided by b. 
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are doubles, floating point division is performed.
+
+If any operands are longs, they are are implicitly cast to double first, and floating point division is performed. 
+
+The result is always a double.
+
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression                      | Result      |
+| ------------------------------- | ----------- |
+| `x / 0`  (x > 0)                | `Infinity`  |
+| `x / 0`  (x < 0)                | `-Infinity` |
+| `0 / 0`                         | `NaN`       |
+| `[+|-]Infinity / [+|-]Infinity` | `NaN`       |
+
+```ruby
+> 1 / 2
+0.5
+> 5 / 0.5
+10.0
+> nil / 2
+nil
+```
+
+##### Integer division
+
+Syntax: `a//b`
+
+Casts a and b to long, and performs integer division. 
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+Division by zero throws an error.
+
+Both operands are cast to long before division is performed. The result of the division is a long. Any remainder value is ignored.
+
+```ruby
+> 10 // 2
+5
+> 10 // 3
+3
+> 10 // 4
+2
+> 10 // 1
+10
+> 10 // -3
+-3
+> 10 // 0
+ERROR: {
+  :code "DIVISION_BY_ZERO",
+  ...
+}
+```
+
+##### Division remainder
+
+Syntax: `a%b`
+
+Evaluates to the remainder after a is divided by b. 
+
+Each operatnd must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are longs, an integer remainder calculation is performed, and the result is a long. `b` cannot be zero in this case. A division by zero throws an error.  
+
+If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to `NaN` when dividing by zero.
+
+The sign of the result depends on the sign of `a`.
+
+| Signs    | Result |
+| -------- | ------ |
+| `a >= 0` | `>=0`  |
+| `a < 0`  | `<=0`  |
+
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression                      | Result |
+| ------------------------------- | ------ |
+| `x % 0.0`                       | `NaN`  |
+| `[+|-]Infinity / [+|-]Infinity` | `NaN`  |
+| `0.0 % [+|-]Infinity`           | `0.0`  |
+
+```ruby
+> 10 % 4
+2
+> 10 % 3
+1
+> 10 % 2.5
+0.0
+> 5 % 1.5
+0.5
+> -5 % 1.5
+-0.5
+```
+
+##### Addition
+
+Syntax: `a+b`
+
+Evaluates to the sum of a and b.
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
+
+If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double. 
+
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression              | Result      |
+| ----------------------- | ----------- |
+| `Infinity + Infinity`   | `Infinity`  |
+| `-Infinity + Infinity`  | `NaN`       |
+| `Infinity + -Infinity`  | `NaN`       |
+| `-Infinity + -Infinity` | `-Infinity` |
+
+```ruby
+> 1+2
+3
+> 2.0+2
+4.0
+> Infinity + 3
+Infinity
+> math.max_long + 1   # binary overflow
+-9223372036854775808
+```
+
+##### Subtraction
+
+Syntax: `a-b`
+
+Evaluates to the value of a with b subtracted.
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
+
+If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double. 
+
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression                  | Result      |
+| --------------------------- | ----------- |
+| `Infinity - Infinity`       | `NaN`       |
+| `(-Infinity) - Infinity`    | `-Infinity` |
+| `Infinity - (-Infinity`)    | `Infinity`  |
+| `(-Infinity) - (-Infinity)` | `NaN`       |
+
+```ruby
+> 5-3
+2
+> 5-10
+-5
+> 2.3-9
+-6.7
+> math.min_long - 1 # binary underflow
+9223372036854775807
+> Infinity - 100
+Infinity
+```
+
+##### String concatenation
+
+Syntax: `a..b`
+
+Both operands are cast to string, then they are concatenated to form the result string. A `nil` value is converted to the string `"nil"` before concatenation.
+
+```ruby
+> "Hello".." ".."World"
+"Hello World"
+> "foo"..1
+"foo1"
+```
+
+##### Binary shift left
+
+Syntax: `a<<b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result. 
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 << 2
+4
+> -1 << 8
+-256
+> 7 << 1
+14
+> 2.3 << 4.9 # operands are cast to 2 << 4
+32
+> "1" << 3.4 # operands are cast to 1 << 3
+8
+> nil << 1
+nil
+```
+
+##### Binary shift right, sign preserving
+
+Syntax: `a>>b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 8 >> 1
+4
+> 8 >> 8
+0
+> -1 >> 1
+-1
+> -1 >> 8
+-1
+> nil >> 2
+nil
+```
+
+##### Binary shift right
+
+Syntax: `a>>>b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 8 >>> 1
+4
+> 8 >>> 8
+0
+> -1 >>> 1
+9223372036854775807
+> -1 >>> 56
+255
+> nil >>> 2
+nil
+```
+
+##### Less than
+
+Syntax: `a<b`
+
+Evaluates to `true` if a is less than b, `false` otherwise.
+
+Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+
+If either operand is `nil`, or `NaN` the result is `false`.
+
+```ruby
+> 1 < 2
+true
+> 1 < 1
+false
+> 1.0 < 1
+false
+> -Infinity < 5
+true
+> "1" < 1
+ERROR: {
+  :message "Cannot compare types: string and long",
+  :code "CAST_ERROR",
+  ...
+}
+```
+
+##### Less than or equal
+
+Syntax: `a<=b`
+
+Evaluates to true if a is less than b, or equal to b.
+
+Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+
+If either operand is `NaN` the result is `false`.
+
+If both operands are `nil`, the result is `true`.
+
+If exactly one operand is `nil`, the result is `false`.
+
+```ruby
+> 1 <= 3
+true
+> 1 <= 1
+true
+> 1.0 <= Infinity
+true
+> NaN <= NaN
+false
+> nil <= nil
+true
+```
+
+##### Greater than
+
+Syntax: `a>b`
+
+Evaluates to `true` if a is greater than b, `false` otherwise.
+
+Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+
+If either operand is `nil`, or `NaN` the result is `false`.
+
+```ruby
+> 1 > 2
+false
+> Infinity > 4
+true
+> 5 > 3
+true
+> NaN > 2
+false
+> Infinity > NaN
+false
+> 4.0 > 2
+true
+```
+
+##### Greater than or equal
+
+Syntax: `a>=b`
+
+Evaluates to true if a is greater than b, or equal to b.
+
+Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+
+If either operand is `NaN` the result is `false`.
+
+If both operands are `nil`, the result is `true`.
+
+If exactly one operand is `nil`, the result is `false`.
+
+```ruby
+> 1 >= 2
+false
+> Infinity >= 2
+true
+> 2.0 >= 2
+true
+> NaN > 2
+false
+> nil >= nil
+true
+> Infinity >= -Infinity
+true
+```
+
+##### Equality with type identity
+
+Syntax: `a===b`
+
+Evaluates to `true` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise.
+
+```ruby
+> 0 === -0
+true
+> 1 === 1
+true
+> 1 === 1.0
+false
+> "foo" === "foo"
+true
+```
+
+##### Inequality with type identity
+
+Syntax: `a!==b`
+
+Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise. 
+
+```ruby
+> 0 !== 1
+true
+> 0 !== 0
+false
+> 1 !== 1.0
+true
+> "foo" !== "foo"
+false
+```
+
+##### Equality
+
+Syntax: `a==b`
+
+Evaluates to `true` if a is equal to b. Returns `false` otherwise. 
+
+Some type-specific rules apply in determining equality.
+
+The double special value `NaN` is not equal to anything, not even to itself. 
+
+```ruby
+> NaN == NaN
+false
+```
+
+A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.
+
+```ruby
+> 0 == 0.0
+true
+> 3 == 3.0
+true
+> -4 == 4.0
+false
+> 0 == NaN
+false
+```
+
+Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/tweakflow/modules/std.html#compare) to determine whether datetime values represent the same point in time.
+
+```ruby
+# same points in time, but different local time and time zone
+> time.compare(1970-01-01T01:00:00+01:00, time.epoch) 
+0
+# same points in time are not equal
+> 1970-01-01T01:00:00+01:00 == time.epoch       
+false
+# going back to UTC offset of time.epoch, they are equal
+> 1970-01-01T00:00:00+00:00 == time.epoch
+true
+```
+
+Function values are never equal to anything, not even to themselves.
+
+```ruby
+> strings.length("foo")
+3
+> strings.length == strings.length
+false
+```
+
+Lists are equal if they contain items that compare as equal.
+
+```ruby
+> [1, 2] == [1.0, 2.0]
+true
+> [NaN] == [NaN]
+false
+```
+
+Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.
+
+```ruby
+> {:a 1} == {:a 1.0}
+true
+> {:a NaN} == {:a NaN}
+false
+```
+
+##### Inequality
+
+Syntax: `a!=b`
+
+Inversion of equality. Evaluates to `true` if `a==b` evaluates to `false`. Evaluates to `false` if `a==b` evaluates to true.
+
+TODO:
+
+```
+| expression '&' expression                               # bitwiseAndExp
+| expression '^' expression                               # bitwiseXorExp
+| expression '|' expression                               # bitwiseOrExp
+| expression '&&' expression                              # boolAndExp
+| expression 'and' expression                             # boolAndExp
+| expression '||' expression                              # boolOrExp
+| expression 'or' expression                              # boolOrExp
+```
+
+##### 
+
+##### Operator precedence
 
 TODO: give order of constructs and operators 
-
-manual grouping using parentheses
 
 #### Debugging
 
