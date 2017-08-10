@@ -4,6 +4,8 @@ alias math.abs as abs
 alias math.min_long as min_long
 alias math.max_long as max_long
 
+alias lib.close_to as close_to
+
 library lib {
   f: (x) -> x
   close_to: (double a, double b, long decimal_places=16) -> boolean
@@ -29,10 +31,10 @@ library operator_spec {
   d1_d1:  1.0 % 1.0    == 0
   d8_d5:  8.0 % 5.0    == 3.0
   d5_d25: 5.0 % 2.5    == 0
-  d1_d03:   lib.close_to( 1.0 %  0.3,  0.1)
-  dn1_d03:  lib.close_to(-1.0 %  0.3, -0.1)
-  dn1_dn03: lib.close_to(-1.0 % -0.3, -0.1)
-  d1_dn03:  lib.close_to( 1.0 % -0.3,  0.1)
+  d1_d03:   close_to( 1.0 %  0.3,  0.1)
+  dn1_d03:  close_to(-1.0 %  0.3, -0.1)
+  dn1_dn03: close_to(-1.0 % -0.3, -0.1)
+  d1_dn03:  close_to( 1.0 % -0.3,  0.1)
 
   l0_d0:   nan?(0 % 0.0) == true
   l0_d1:        0 % 1.0  == 0.0
