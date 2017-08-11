@@ -1,10 +1,10 @@
 ---
-title: The tweakflow data processing language
+title: The tweakflow language
 ---
 
 ## Motivation
 
-Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users. 
+Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users.
 
 ## Requirements
 
@@ -12,29 +12,27 @@ Tweakflow runs on the JVM. Java 8 or later is required.
 
 ## Design principles
 
-The following sections outline fundamental principles which inform the design of tweakflow. 
+The following sections outline fundamental principles which inform the design of tweakflow.
 
 ### Everything is a value
 
-All data and functions in tweakflow are immutable values. You can always create, inspect, compare and pass them around without worrying about object identity or unexpected modifications. There is no way a value in tweakflow can change. 
+All data and functions in tweakflow are immutable values. You can always create, inspect, compare and pass them around without worrying about object identity or unexpected modifications. There is no way a value in tweakflow can change.
 
-Tweakflow uses [persistent data structures](https://en.wikipedia.org/wiki/Persistent_data_structure) for its collections. It comes with a set of functions in the standard library to make compuations with immutable values easy. 
+Tweakflow uses [persistent data structures](https://en.wikipedia.org/wiki/Persistent_data_structure) for its collections. It comes with a set of functions in the standard library to make compuations with immutable values easy.
 
 ### Reproducible calculations
 
-All functions in tweakflow are pure. The practical consequence is that user-expressions do not maintain state, and cannot trigger any side-effects. All effectful operations like file I/O are performed by the host application. The results of such operations can be passed to user expressions as values, but user expressions cannot introduce any side-effects to the application themselves. 
+All functions in tweakflow are pure. The practical consequence is that user-expressions do not maintain state, and cannot trigger any side-effects. All effectful operations like file I/O are performed by the host application. The results of such operations can be passed to user expressions as values, but user expressions cannot introduce any side-effects to the application themselves.
 
 The above paradigm is familiar from spreadsheet applications. Spreadsheets allow users to work with data using formula expressions, but the formulas themselves are deterministic. The outcome of a spreadsheet calculation does not depend on when the spreadsheet was opened and by whom. Similarly, the outcome of tweakflow expressions is guaranteed to be reproducible and side-effect free.
 
 ### The host application is in control
 
-Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it realtively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user. 
+Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it realtively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.
 
-Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what the user expressions can call or have access to. 
+Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what the user expressions can call or have access to.
 
 ## Lexical structure
-
-
 
 ### Boolean literals
 
@@ -105,7 +103,7 @@ Exponent notation is given by an `e` or `E` character and followed by the powers
 
 Tweakflow does not support hexadecimal notation for doubles.
 
-In addition to regular numbers `NaN` (Not a Number) and `Infinity` literals can be used. 
+In addition to regular numbers `NaN` (Not a Number) and `Infinity` literals can be used.
 
 ```ruby
 > Infinity
@@ -132,7 +130,7 @@ NaN
 
 ### String literals
 
-Strings can occur in many places of an expression or program, playing different semantic roles. Stings appear as keys in dictionaries, as computation values, or as documentation strings, for example. Tweakflow offers several ways to write a literal string. The notations are interchangeable. Each of the notations is valid at any place a string is valid. 
+Strings can occur in many places of an expression or program, playing different semantic roles. Stings appear as keys in dictionaries, as computation values, or as documentation strings, for example. Tweakflow offers several ways to write a literal string. The notations are interchangeable. Each of the notations is valid at any place a string is valid.
 
 #### Single-quoted strings
 
@@ -243,7 +241,7 @@ Hello World
 
 #### Symbol strings
 
-Tweakflow allows symbol notation for strings. It can be useful to distinguish strings used as keys in dicts or as enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a `:`. Their name is their value. 
+Tweakflow allows symbol notation for strings. It can be useful to distinguish strings used as keys in dicts or as enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a `:`. Their name is their value.
 
 A symbol string is written as:
 
@@ -300,7 +298,7 @@ The basic form is extended to specify the local time in 24 hour format as `[hour
 2017-04-30T21:32:11.123456789Z@UTC
 ```
 
-The local time form is extended to specify an offset from UTC of the form `((+|-)[offset_hours]:[offset_minutes])|Z`  where offset hours and offset minutes is specified with 2 digits each. The shorthand Z means UTC time, no offset. 
+The local time form is extended to specify an offset from UTC of the form `((+|-)[offset_hours]:[offset_minutes])|Z`  where offset hours and offset minutes is specified with 2 digits each. The shorthand Z means UTC time, no offset.
 
 ```ruby
 > 2017-04-30T21:32:11+02:00
@@ -310,7 +308,7 @@ The local time form is extended to specify an offset from UTC of the form `((+|-
 2017-04-30T21:32:11Z@UTC
 ```
 
-The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an `@` sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as [identifiers](#identifiers), and will often have to be escaped by backticks. 
+The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an `@` sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as [identifiers](#identifiers), and will often have to be escaped by backticks.
 
 Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-). A list of known regional zone ids can be obtained by calling [time.zones](/tweakflow/modules/std.html#zones) of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-).
 
@@ -338,7 +336,7 @@ The escaped form with backticks allows an unconstrained set of characters, with 
 `.+?`
 ```
 
-The following example uses both variants of the syntax. The variable `%name%` has characters that are not permitted in an identifier, and is therefore escaped: 
+The following example uses both variants of the syntax. The variable `%name%` has characters that are not permitted in an identifier, and is therefore escaped:
 
 ```ruby
 > \e
@@ -353,7 +351,7 @@ greeting .. " " .. `%name%`
 
 ### End-of-statement markers
 
-Tweakflow allows to explicitly mark the end of a statement with a semicolon or newline. Any definition statements  for modules, libraries, imports, aliases, exports, and variables can be separated by any number of newlines or semicolons. 
+Tweakflow allows to explicitly mark the end of a statement with a semicolon or newline. Any definition statements  for modules, libraries, imports, aliases, exports, and variables can be separated by any number of newlines or semicolons.
 
 Tweakflow is structured to not be ambiguous in the absence of end-of-statement markers, and as such any end-of-statement markers are entirely optional. The markers are useful to improve readability. They are parsed as whitespace and discarded. Consecutive end-of-statement markers are read as one.
 
@@ -375,8 +373,6 @@ Equivalent, but arguably less readable notation with variable definitions lackin
 > let { a: 1 b: 2 } a+b
 3
 ```
-
-TODO: include endOfStatement Markers in their respective syntaxes on modules, libs, vars, let, (check for var defintions, the looping construct should contain endOfMarker? not the vars)
 
 ### Comments
 
@@ -412,45 +408,43 @@ spans multiple lines
 "hello"
 ```
 
-## Semantic structure
-
-### Data types
+## Data types
 
 Tweakflow supports a fixed set of data types. Each data type has literal notation, and a set of supported cast targets to other types. The following sections highlight all available types and their characteristics.
 
-#### Boolean
+### Boolean
 
 The `boolean` type holds the values `true` and `false`. Booleans are notated using [boolean literals](#boolean-literals). The following type casts are supported:
 
-##### Boolean as long
+Boolean as long
 
 Boolean `true` is cast to `1` and boolean `false` is cast to `0`.
 
-##### Boolean as double
+Boolean as double
 
 Boolean `true` is cast to `1.0` and boolean `false` is cast to `0.0`.
 
-##### Boolean as string
+Boolean as string
 
 Boolean `true` is cast to `"true"` and boolean `false` is cast to `"false"`.
 
-#### Long
+### Long
 
 The `long` type holds 64-bit signed integers. Integers are notated using [long literals](#long-literals). The following type casts are supported:
 
-##### Long as boolean
+Long as boolean
 
 The long `0` is converted to `false`. Any other long value is converted to `true`.
 
-##### Long as double
+Long as double
 
 The long number is converted to to closest double value possible.
 
-##### Long as string
+Long as string
 
 The long is converted to a decimal number with a potential leading minus sign.
 
-##### Long as datetime
+Long as datetime
 
 The long is interpreted as the number of milliseconds passed since `time.epoch` in UTC.
 
@@ -465,15 +459,15 @@ The long is interpreted as the number of milliseconds passed since `time.epoch` 
 1922-05-31T13:02:50Z@UTC
 ```
 
-#### Double
+### Double
 
 The `double` type holds 64-bit double-precision IEEE 754 floating point numbers. Literal floating point numbers are notated using [double literals](#double-literals). The following type casts are supported:
 
-##### Double as boolean
+Double as boolean
 
 The double values `0.0`,  `-0.0`, and `NaN` are converted to `false`. Any other values are converted to `true`.
 
-##### Double as long
+Double as long
 
 The double value is truncated at the decimal point and converted to the closest long value.
 
@@ -483,7 +477,7 @@ If the double is `Infinity`, the converted value is `math.max_long`.
 
 If the double is `-Infinity`, the converted value is `math.min_long`.
 
-##### Double as string
+Double as string
 
 - If the double value is `NaN`, the string is `"NaN"`.
 - If the double value is positive infinity, the string is `"Infinity"`.
@@ -495,15 +489,15 @@ For any other double value, the [conventions the Java language](https://docs.ora
 
 Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/tweakflow/modules/std.html#formatter-1) to to convert double values to strings in a controlled output format.
 
-#### String
+### String
 
 The `string` type holds text information. Strings are notated using [string literals](#string-literals). The following type casts are supported:
 
-##### String as boolean
+String as boolean
 
 The empty string `""` is cast to `false`. Any other string value is cast to `true`.
 
-##### String as long
+String as long
 
 The string is first trimmed of whitespace on both sides. It is then interpreted as a decimal number with an optional leading `+` or `-` sign, any leading zeros, and digits `0-9`. The trimmed string must conform to the regular expression:
 
@@ -513,7 +507,7 @@ The string is first trimmed of whitespace on both sides. It is then interpreted 
 
 If the resulting number does not fit in a 64-bit signed integer, an error is thrown.
 
-##### String as double
+String as double
 
 Strings cast to doubles successfully if they pass the following regular expression:
 
@@ -553,9 +547,9 @@ ERROR: {
 }
 ```
 
-##### String as list
+String as list
 
-A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode codepoints. 
+A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode codepoints.
 
 ```ruby
 > "" as list
@@ -568,19 +562,19 @@ A string is converted to a list of individual character strings. More precisely,
 ["I", " ", "l", "o", "v", "e", " ", "𝄞"]
 ```
 
-#### Datetime
+### Datetime
 
 The `datetime` type represents points in time while also carrying regional time zone information. Datetimes are notated using [datetime literals](#datetime-literals).
 
 The following type casts are supported:
 
-##### Datetime as boolean
+Datetime as boolean
 
 All datetime values cast to boolean `true`.
 
-##### Datetime as string
+Datetime as string
 
-A datetime value casts to a string compatible with [datetime literal](#datetime-literals) notation. 
+A datetime value casts to a string compatible with [datetime literal](#datetime-literals) notation.
 
 ```ruby
 > time.epoch as string
@@ -589,9 +583,9 @@ A datetime value casts to a string compatible with [datetime literal](#datetime-
 
 Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/tweakflow/modules/std.html#formatter) to to convert datetime values to strings in a controlled output format.
 
-##### Datetime as dict
+Datetime as dict
 
-A datetime value casts to a dict that contains all of its fields together with day of week, day of year, and week of year information. Supposing `x` is the datetime to cast, and `time` is the library from the standard module, the dict is equivalent to the following definition: 
+A datetime value casts to a dict that contains all of its fields together with day of week, day of year, and week of year information. Supposing `x` is the datetime to cast, and `time` is the library from the standard module, the dict is equivalent to the following definition:
 
 ```ruby
 {
@@ -646,13 +640,13 @@ For example:
 }
 ```
 
-#### List
+### List
 
 The `list` type holds a finite sequence of values in a defined order. It is equivalent to array types in other languages. They are indexed by long values, starting at index 0. Lists are internally indexed by integers and have a capacity limit of 2^31 = 2.147.483.648 elements.
 
 Lists are notated as a sequence of values inside square brackets. Commas separating entries are optional. The empty list is written as `[]`.
 
-A splat expression can be used to concatenate lists inline. 
+A splat expression can be used to concatenate lists inline.
 
 The formal syntax of a list literal is as follows:
 
@@ -709,7 +703,7 @@ When a splat expression is encountered, it is evaluated, cast to list and concat
 
 > [1, 2, ...{:key "value"}, 3] # the splat dict is cast to a list before concat
 [1, 2, "key", "value", 3]
- 
+
 > prepend: (x, list xs) -> list [x, ...xs]
 function
 > prepend("a", ["b", "c"])
@@ -723,11 +717,11 @@ function
 
 The following type casts are supported:
 
-##### List as boolean
+List as boolean
 
 An empty list `[]` converts to `false`. Any other list value converts to `true`.
 
-##### List as dict
+List as dict
 
 Lists are converted as sequences of key-value pairs. `["a" 1 "b" 2]` is converted to `{:a 1 :b 2}`. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is `nil` or cannot be cast to string, an error is thrown.
 
@@ -772,13 +766,13 @@ ERROR: {
 }
 ```
 
-#### Dict
+### Dict
 
-The `dict` type is an associative structure that maps string keys are to arbitrary values. Dicts do not support `nil` keys, but `nil` values are permitted. The order of keys in a dict is undefined. 
+The `dict` type is an associative structure that maps string keys are to arbitrary values. Dicts do not support `nil` keys, but `nil` values are permitted. The order of keys in a dict is undefined.
 
 Dicts are notated as a sequence of key and value pairs inside curly brackets. Keys are implicitly cast to strings. Commas separating entries are optional. The empty dict is written as `{}`.
 
-A splat expression can be used to merge dicts inline. 
+A splat expression can be used to merge dicts inline.
 
 The formal syntax of a dict literal is as follows:
 
@@ -839,7 +833,7 @@ When a splat expression is encountered, the splat value is cast to dict and merg
   :code 200,
   :status "found"
 }
- 
+
 # rightmost value for key :status is preserved
 > {:request_id 8273, :status "ok", ...{:code 403, :status "forbidden"}}
 {
@@ -851,11 +845,11 @@ When a splat expression is encountered, the splat value is cast to dict and merg
 
 The following type casts are supported:
 
-##### Dict as boolean
+Dict as boolean
 
 The empty dict `{}` converts to `false`. Any other dict value converts to `true`.
 
-##### Dict as list
+### Dict as list
 
 Dicts are converted to lists as a sequence of key-value pairs. An empty dict gives an empty list. Keys and values appear in pairs, but the order of the pairs is not defined.
 
@@ -873,13 +867,13 @@ Dicts are converted to lists as a sequence of key-value pairs. An empty dict giv
 ["a", 2, "b", 1]
 ```
 
-#### Function
+### Function
 
-The `function` type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures. 
+The `function` type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures.
 
 Function notation has two parts: function head, and body. The head holds the function signature: parameter list and return type. The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
 
-Formally the syntax is as follows: 
+Formally the syntax is as follows:
 
 ```text
 functionLiteral
@@ -909,7 +903,7 @@ If a function body is an expression, it is evaluated to the return value when th
 
 The following type casts are supported:
 
-##### Function as boolean
+Function as boolean
 
 All function values cast to boolean `true`.
 
@@ -981,20 +975,20 @@ function
 }
 ```
 
-##### Functions in Java
+#### Functions in Java
 
-Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword `via` followed by a map literal containing the key `:class` which points to a Java class. The Java class must implement the tag interface [UserFunction](#link-to-user), as well as a exactly one of the following interfaces governing parameter passing. 
+Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword `via` followed by a map literal containing the key `:class` which points to a Java class. The Java class must implement the tag interface [UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java), as well as a exactly one of the following interfaces governing parameter passing.
 
-| Interface               | Purpose                                  |
-| ----------------------- | ---------------------------------------- |
-| [Arity0UserFunction](#) | Implements zero-parameter functions.     |
-| [Arity1UserFunction](#) | Implements single-parameter functions.   |
-| [Arity2UserFunction](#) | Implements functions with two parameters |
-| [Arity3UserFunction](#) | Implements functions with three paramters. |
-| [Arity4UserFunction](#) | Implements functions with four parameters |
-| [ArityNUserFunction](#) | Implements functions with any number of parameters. Arguments are passed as an array of values. |
+| Interface                                | Purpose                                  |
+| ---------------------------------------- | ---------------------------------------- |
+| [Arity0UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java) | Implements zero-parameter functions.     |
+| [Arity1UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java) | Implements single-parameter functions.   |
+| [Arity2UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity2UserFunction.java) | Implements functions with two parameters |
+| [Arity3UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java) | Implements functions with three paramters. |
+| [Arity4UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java) | Implements functions with four parameters |
+| [ArityNUserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java) | Implements functions with any number of parameters. Arguments are passed as an array of values. |
 
-For example, the inner class [com.twineworks.tweakflow.std.Strings$concat](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43) implements the `strings.concat` function of the standard library. 
+For example, the inner class [com.twineworks.tweakflow.std.Strings$concat](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43) implements the `strings.concat` function of the standard library.
 
 ```ruby
 > f: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$concat"}
@@ -1005,25 +999,27 @@ function
 
 See the standard library functions in [std](https://github.com/twineworks/tweakflow/tree/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std) for examples of functions implemented in Java.
 
-#### Void
+### Void
 
-The `void` type is a type that has `nil` as its only value. The `nil` value reports `void` as its type, even though it is a valid member of any type. 
+The `void` type is a type that has `nil` as its only value. The `nil` value reports `void` as its type, even though it is a valid member of any type.
 
 The only `void` value `nil` casts successfully to any type, and remains `nil`.
 
-#### Any
+### Any
 
-The `any` type is a type is not concrete type of its own, but it is used to indicate the possibility of any type being present in the given context. The `any` type is used as a default in type declarations for variables, parameters and return types. 
+The `any` type is a type is not concrete type of its own, but it is used to indicate the possibility of any type being present in the given context. The `any` type is used as a default in type declarations for variables, parameters and return types.
+
+## Semantic structure
 
 ### Modules
 
-Modules are the top level organizational unit in tweakflow. A module is typically a file, but host applications are free to supply modules as in-memory text as well. There is exactly one module per file. 
+Modules are the top level organizational unit in tweakflow. A module is typically a file, but host applications are free to supply modules as in-memory text as well. There is exactly one module per file.
 
-Module files must be encoded in UTF-8. The default file extension for modules is `.tf`. 
+Module files must be encoded in UTF-8. The default file extension for modules is `.tf`.
 
-The role of a module is to provide a top level grouping of related functions and values. In this sense modules act like namespaces or packages. 
+The role of a module is to provide a top level grouping of related functions and values. In this sense modules act like namespaces or packages.
 
-A module usually starts with the `module` keyword. If there are no [annotations](#annotations), the `module` keyword becomes optional, and the beginning of the file is treated as the beginning of the module. 
+A module usually starts with the `module` keyword. If there are no [annotations](#annotations), the `module` keyword becomes optional, and the beginning of the file is treated as the beginning of the module.
 
 [Global modules](#global-modules) need to announce the fact that they are global, and provide a global identifier to store the module in. A global module starts with the keywords `global` `module` followed by an identifier. Any  [annotations](#annotations) go before that sequence.
 
@@ -1037,7 +1033,7 @@ module
 moduleHead
   : nameDec? (importDef | aliasDef | exportDef) *
   ;
-  
+
 nameDec
   : metaDef 'module'
   | metaDef 'global' 'module' identifier
@@ -1050,15 +1046,15 @@ moduleComponent
 
 #### Global modules
 
-Modules can declare themselves available under a specific name in [global scope](#references). It is an error to load more than one module claiming the same name.
+Modules can declare themselves available under a specific name in global scope. It is an error to load more than one module claiming the same name.
 
 Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.
 
-Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors. 
+Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors.
 
 **Example use of global modules for configuration**
 
-The following set of files constitute configuration variants, available globally as `env`. 
+The following set of files constitute configuration variants, available globally as `env`.
 
 ```ruby
 # environments/local.tf
@@ -1087,27 +1083,25 @@ library my_lib {
 }
 ```
 
-TODO: example on the repl loading multiple modules
-
 #### Imports
 
 Import statements bring names exported from other modules into the current module. The syntax allows importing individual names, or all exported names at once. If imported individually, names may be bound to local names that are different from the names in the source module.
 
 It is an error to import a name that is not explicitly exported.
 
-Imported names are placed in [module scope](#scope). 
+Imported names are placed in module scope.
 
 Imports have the following syntax:
 
 ```text
-importDef 
+importDef
   : 'import' importMember (','? importMember)* 'from' modulePath
   ;
 
 importMember
   : moduleImport
   | componentImport
-  ; 
+  ;
 
 moduleImport
   : '*' 'as' importModuleName
@@ -1134,7 +1128,7 @@ modulePath
   ;
 ```
 
-The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using [language tools](#language-tools) or by the host application when embedding. 
+The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.
 
 Two modules may import each other's exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
 
@@ -1160,7 +1154,7 @@ import string_lib as str, conversion_lib as conv from "./util/strings.tf"
 
 #### Aliases
 
-Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in [module scope](#module-scope). Circular aliases are not allowed. An alias must ultimately point to a concrete entity.
+Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in module scope. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.
 
 Aliases have the following syntax:
 
@@ -1195,7 +1189,7 @@ library my_util {
 }
 ```
 
-#### Exports 
+#### Exports
 
 A module defines its public interface using exports. Libraries can be exported inline when defined, or explicitly in an export statement. An export statement refers to a name and makes it available for other modules to import. You can optionally specify an export name, that is only visible to other modules when importing, but not within the exporting module itself. Exporting an imported or aliased name is allowed.
 
@@ -1232,7 +1226,7 @@ import util, str from "./lib.tf"
 
 ### Libraries
 
-A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in [library scope](#scopes).
+A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope.
 
 **Syntax**
 
@@ -1251,7 +1245,7 @@ export library nums {
 }
 ```
 
-### Variables 
+### Variables
 A variable is a named entity that holds a value. Variables are placed in [libraries](#libraries). Variables have a name, a  [type](#data-types), and a value. They can also be annotated by [docs and metadata](#annotations).
 
 ```
@@ -1261,7 +1255,7 @@ varDef
   ;
 ```
 
-The type of variables guarantees that referencing a variable results in a value of the specified type. Variable values are cast implicitly if necessary. 
+The type of variables guarantees that referencing a variable results in a value of the specified type. Variable values are cast implicitly if necessary.
 
 ```ruby
 > boolean bool_var: 1
@@ -1281,7 +1275,7 @@ If unspecified, the variable type is `any`, and no implicit casts take place.
 1
 ```
 
-Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`. 
+Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`.
 
 Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.
 
@@ -1294,9 +1288,9 @@ All named entities like variables, libraries, aliases, and exports are placed in
 - library scope
 - local scope
 
-There is exactly one global scope per tweakflow program. It contains the names of [global modules](#global-modules), if any are loaded. 
+There is exactly one global scope per tweakflow program. It contains the names of [global modules](#global-modules), if any are loaded.
 
-There is a distinct module scope per loaded module. It contains the names of the module's imports, aliases, and libraries. 
+There is a distinct module scope per loaded module. It contains the names of the module's imports, aliases, and libraries.
 
 There is a distinct library scope per library in a module. It contains the names of all library variables.
 
@@ -1306,9 +1300,9 @@ Name resolution for references generally starts in the scope the reference appea
 
 ### Annotations
 
-Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like [tfdoc](#tfdoc) can extract them to generate project documentation. 
+Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.
 
-Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyworkd `meta` followed by an expression. 
+Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyworkd `meta` followed by an expression.
 
 The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
 
@@ -1393,151 +1387,27 @@ foo.tf> \meta bar.baz
 
 ### Expressions
 
-Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations. 
+Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.
 
 #### Nil
 
-The `nil` value is written as simply `nil`. Semantiaclly, a `nil` value indicates the absence of a value. The `nil` value is special because it is a valid member of all data types. It casts to any type successfully as `nil`. 
+The `nil` value is written as simply `nil`. Semantiaclly, a `nil` value indicates the absence of a value. The `nil` value is special because it is a valid member of all data types. It casts to any type successfully as `nil`.
 
 #### Value literals
 
-All tweakflow data types have a literal notation outlined in their respective section under [data types](#data-types). 
-
-#### Type inspection
-
-Tweakflow allows checking the type of a value using the `is` keyword.
-
-```text
-expression 'is' (boolean|string|long|double|datetime|list|dict|function|void|any)
-```
-
-The check is a boolean expression and it evaluates to `true` or `false` depending on whether the given expression evaluates to a  member of the given data type. 
-
-As a special case, the `nil` value, even though a member of any type, only yields true when checked as being member of the `void` type. Therefore `expression is string` implies that expression evaluated to a non-nil string.
-
-As a special case, if `any` is given as data type, the result is true only if the expression evaluates to a value other than `nil`,  making the `expression is any` equivalent to `expression != nil`.
-
-```ruby
-> "" is string
-true
-
-> nil is string
-false
-
-> 42 is string
-false
-
-> {} is list
-false
-
-> [] is list
-true
-
-> {} is dict
-true
-
-> [1,2] is dict
-false
-
-> nil is void
-true
-
-> "foo" is any
-true
-
-> nil is any
-false
-```
-
-#### Type name
-
-The `typeof` keyword returns the name of a value's type.
-
-```text
-'typeof' expression
-```
-
-The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `void`.
-
-```ruby
-> typeof "foo"
-"string"
-> typeof (x) -> x+1
-"function"
-> typeof 1
-"long"
-> typeof 1.0
-"double"
-> typeof false
-"boolean"
-> typeof {}
-"dict"
-> typeof []
-"list"
-> typeof 2017-03-12T
-"datetime"
-> typeof nil
-"void"
-```
-
-#### Type casts
-
-The `as` keyword allows to explicitly cast a value expression to a given type.
-
-```text
-expression 'as' dataType
-```
-
-Type casts may throw errors if the types are incompatible or the specific value is not convertible. In general, type casts only succeed if there is either no information loss, or the amount of information loss is no greater than to be expected from the types involved. 
-
-Supported type casts are listed for each type in their respective section of [data types](#data-types). Type casts to `any` always succeed, and leave the value unchanged. Type casts to `void` only succeed if the value was `nil`.
-
-A few examples:
-
-```ruby
-> "1.4" as double # string to double
-1.4
-
-> ["a", "b", "c", "d"] as dict # list to dict
-{
-  :a "b",
-  :c "d"
-}
-
-> 1234567890123 as datetime # long to datetime
-2009-02-13T23:31:30.123Z@UTC
-
-> 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
-{
-  :month 7,
-  :day_of_year 204,
-  :hour 23,
-  :zone "Europe/Berlin",
-  :nano_of_second 298000000,
-  :offset_seconds 7200,
-  :second 32,
-  :minute 12,
-  :day_of_week 7,
-  :week_of_year 29,
-  :day_of_month 23,
-  :year 2017
-}
-
-> nil as string # nil casts to any type
-nil
-```
+All tweakflow data types have a literal notation outlined in their respective section under [data types](#data-types).
 
 #### Container access
 
 List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime.
 
-The formal structure of container access expressions is as follows: 
+The formal structure of container access expressions is as follows:
 
 ```text
 containerAccess
   : expression'['containerAccessKeySequence']'
   ;
-	
+
 containerAccessKeySequence
   : ((expression | splat) ','?)+
   ;
@@ -1628,7 +1498,7 @@ story: {
   :name "A Study in Scarlet"
   :adaptations [
     {:year 1914 :media "silent film"}
-    {:year 1968 :media "television series"}	
+    {:year 1968 :media "television series"}
   ]
 }
 \e
@@ -1682,7 +1552,7 @@ nil
 nil
 ```
 
-The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in [list literals](#list-literals).
+The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in [list literals](#list).
 
 ```ruby
 > path: [:adaptations 1 :media]
@@ -1700,13 +1570,13 @@ The list of keys in the traversal form can be interspersed with splat expression
 
 #### Function calls
 
-Function calls are notated by giving the function and following with round parentheses containing any arguments. 
+Function calls are notated by giving the function and following with round parentheses containing any arguments.
 
 Function calls have the following formal structure:
 
 ```text
 functionCall
-  :expression'('args')' 
+  :expression'('args')'
   ;
 
 args
@@ -1753,7 +1623,7 @@ function
 f: (long id = 0, string name = "n/a") -> string id .. "-" .. name
 ```
 
-Above function has parameters `id` of type long and `name` of type string. Both have non-nil default values. 
+Above function has parameters `id` of type long and `name` of type string. Both have non-nil default values.
 
 When calling a function it is possible to specify arguments values using position, name, or a mix of both.
 
@@ -1789,7 +1659,7 @@ Passing less than the declared number of positional arguments results in the mis
 > g: (x) -> x # x's default value is nil
 function
 
-> g(1) 
+> g(1)
 1
 
 > g() # x attains its default value nil
@@ -1808,7 +1678,7 @@ When calling function, you can also pass arguments by name. Arguments given by n
 "42-test"
 ```
 
-Omitted arguments are assigned their default parameter value. 
+Omitted arguments are assigned their default parameter value.
 
 ```ruby
 > f(id: 42)
@@ -1833,7 +1703,7 @@ ERROR: {
 
 ##### Mixed positional and named arguments
 
-Position and named arguments can be mixed in a single call. Positional arguments are listed first. Named arguments follow. 
+Position and named arguments can be mixed in a single call. Positional arguments are listed first. Named arguments follow.
 
 The following call passes `42` as `id` and `"test"`  as `name`. It mixes positional and named arguments.
 
@@ -1842,7 +1712,7 @@ The following call passes `42` as `id` and `"test"`  as `name`. It mixes positio
 "42-test"
 ```
 
-It is an error to supply any positional arguments after named arguments. 
+It is an error to supply any positional arguments after named arguments.
 
 ```ruby
 > f(id: 42, "test") # error, positional arguments cannot follow named arguments
@@ -1877,9 +1747,9 @@ The function [add_period](/tweakflow/modules/std.html#add-period) from the stand
 
 ##### Splat arguments
 
-Both positional arguments and named arguments can be supplied via a splat expression. This offers a notational convenience for cases where arguments have been collected into a list or dict. 
+Both positional arguments and named arguments can be supplied via a splat expression. This offers a notational convenience for cases where arguments have been collected into a list or dict.
 
-Whenever positional arguments are allowed, and a splat expression evaluates to a list, the items from the list are used as positional arguments in order. 
+Whenever positional arguments are allowed, and a splat expression evaluates to a list, the items from the list are used as positional arguments in order.
 
 ```ruby
 > args: [42, "name"]
@@ -1892,7 +1762,7 @@ Whenever positional arguments are allowed, and a splat expression evaluates to a
 Positional arguments can be interspersed with splats. The resulting arguments are concatenated left to right:
 
 ```ruby
-> f(42, ...["name"]) 
+> f(42, ...["name"])
 "42-name"
 
 > f(...[42], "name")
@@ -1904,7 +1774,7 @@ Positional arguments can be interspersed with splats. The resulting arguments ar
 
 Whenever named arguments are allowed, and a splat expression evaluates to a dict, the items from the dict are used as named arguments.
 
-Below example supplies the `id` and `name` named arguments. 
+Below example supplies the `id` and `name` named arguments.
 
 ```ruby
 > person: {:id 42, :name "test"}
@@ -1928,7 +1798,7 @@ Named arguments can be interspersed with splats. The resulting arguments dict is
 "42-test"
 ```
 
-Splats can be mixed as long as positional splats come first. 
+Splats can be mixed as long as positional splats come first.
 
 ```ruby
 > f(...[42, "testing"], ...{:name "foo"})
@@ -1986,7 +1856,7 @@ function
 
 #### Call chaining
 
-A computation might consist of a linear series of function calls feeding their output into the next function's input. Tweakflow supports a special syntax for that situation. 
+A computation might consist of a linear series of function calls feeding their output into the next function's input. Tweakflow supports a special syntax for that situation.
 
 The syntax is as follows:
 
@@ -2011,7 +1881,7 @@ normalize: (string pn) ->
 	  # remove whitespace
       (x) -> regex.replacing('\s', "")(x),
       # remove any dashes
-      (x) -> strings.replace(x, "-", ""), 
+      (x) -> strings.replace(x, "-", ""),
       # split to a list of blocks of up to 4 chars
       (x) -> regex.splitting('(?<=\G.{4})')(x),
       # place dashes between blocks converting to single string
@@ -2020,7 +1890,7 @@ normalize: (string pn) ->
       strings.upper_case
 \e
 function
-     
+
 > normalize("39 hd-sd-asdi3437")
 "39HD-SDAS-DI34-37"
 ```
@@ -2076,7 +1946,7 @@ let {
        x: "bar"
      }
      x # "bar"
-} 
+}
 x .. y # "foo".."bar"
 \e
 "foobar"
@@ -2084,13 +1954,13 @@ x .. y # "foo".."bar"
 
 #### Conditional evaluation
 
-Conditional evaluation is done using a traditional `if` construct. 
+Conditional evaluation is done using a traditional `if` construct.
 
 ```text
-'if' condition 'then'? then_expression 'else'? else_expression 
+'if' condition 'then'? then_expression 'else'? else_expression
 ```
 
-The `condition` expression is evaluated and cast to boolean. If the condition evalautes to `true`, the `then_expression` is evaluated and is the result of the expression. If the condition evaluates to `false` or `nil`, the `else_expression` is evaluated and is the result of the expression.  The `then` and `else` keywords are optional. 
+The `condition` expression is evaluated and cast to boolean. If the condition evalautes to `true`, the `then_expression` is evaluated and is the result of the expression. If the condition evaluates to `false` or `nil`, the `else_expression` is evaluated and is the result of the expression.  The `then` and `else` keywords are optional.
 
 Some examples:
 
@@ -2104,9 +1974,9 @@ function
 "long"
 > f("hi")
 "short"
-  
+
 > \e
-greeting: (string language) -> 
+greeting: (string language) ->
   if language == "en" then "Good afternoon"
   if language == "de" then "Guten Tag"
   if language == "es" then "Hola"
@@ -2125,7 +1995,7 @@ function
 
 #### Default values
 
-Default values notation is a shorthand for replacing `nil` values with non-nil defaults. 
+Default values notation is a shorthand for replacing `nil` values with non-nil defaults.
 
 ```text
 expression 'default' default_expression
@@ -2150,7 +2020,7 @@ function
 
 #### List comprehensions
 
-Tweakflow supports list comprehensions allowing to generate, transform, combine and filter lists. 
+Tweakflow supports list comprehensions allowing to generate, transform, combine and filter lists.
 
 ```text
 listComprehension
@@ -2160,21 +2030,21 @@ listComprehension
 forHead
   : generator (',' (generator | varDef | filter))*
   ;
-  
+
 generator
   : dataType? identifier '<-' expression
   ;
-  
+
 varDef
   : metadef dataType? identifier ':' expression
   ;  
-  
+
 filter
   : expression
   ;
 ```
 
-A list comprehension uses generators to define variables that loop over list items. They nest in order if more than one generator is present. 
+A list comprehension uses generators to define variables that loop over list items. They nest in order if more than one generator is present.
 
 Create a list of coordinates from given axes:
 
@@ -2221,7 +2091,7 @@ Above example loops over `a` going from 1 to 15, and `b` going from `a` to `15`,
 
 #### Pattern Matching
 
-Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. 
+Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted.
 
 The formal syntax is as follows:
 
@@ -2248,7 +2118,7 @@ A match expression consists of the `match` keyword, the value to match, an one o
 
 The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to `true` the match evalutes to the line's result expression. If the guard expression evaluates to `false` or `nil`,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a `default` line, the match evaluates to the default value. If there is no `default` line, the match evaluates to `nil`.
 
-The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches. 
+The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches.
 
 ##### Existence and capturing patterns
 
@@ -2264,7 +2134,7 @@ An example:
 
 ```ruby
 > \e
-f: (long x) -> 
+f: (long x) ->
   match x
     @ -> true # always matches
 \e
@@ -2277,7 +2147,7 @@ true
 true
 ```
 
-Existence matches are not very useful for matching simple values, but they are useful when nested in list or dict patterns to assert element existence and extract element values from these structures. 
+Existence matches are not very useful for matching simple values, but they are useful when nested in list or dict patterns to assert element existence and extract element values from these structures.
 
 ```ruby
 > \e
@@ -2472,7 +2342,7 @@ function
 vector2d?: (list xs) ->
   match xs
     # match 2-element list, use num? as predicate for each item
-    [num?, num?] -> true 
+    [num?, num?] -> true
     default -> false
 \e
 function
@@ -2498,7 +2368,7 @@ The syntax for head list patterns is a list beginning with match patterns of any
 
 ```text
 matchPattern
-  : '[' (matchPattern ',') * splatCapture ']' capture? 
+  : '[' (matchPattern ',') * splatCapture ']' capture?
   ;
 
 splatCapture
@@ -2610,15 +2480,15 @@ measures?: (list xs) ->
     default -> false
 \e
 function
-> measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T]) 
+> measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T])
 true
-> measures?([:p2, 99, 2015-02-11T]) 
+> measures?([:p2, 99, 2015-02-11T])
 true
-> measures?([:p3, 2016-02-11T]) 
+> measures?([:p3, 2016-02-11T])
 true
 > measures?([2016-02-11T])
 false
-> measures?([]) 
+> measures?([])
 false
 > measures?([:p4, 201, 2017-04-22T]) # number out of range
 false
@@ -2626,7 +2496,7 @@ false
 
 ##### Full dict patterns
 
-Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys. 
+Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys.
 
 ```text
 matchPattern
@@ -2640,7 +2510,7 @@ capture
 
 All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the pattern keys, or contains more than the given pattern keys, it does not match. An optional final capture matches the entire matched dict.
 
-The following function tests whether the supplied dict is a vector with non-nil double coordinates x and y. Only those two keys are allowed. 
+The following function tests whether the supplied dict is a vector with non-nil double coordinates x and y. Only those two keys are allowed.
 
 ```ruby
 > \e
@@ -2732,7 +2602,7 @@ false
 
 ##### Nesting patterns
 
-List and dict patterns nest naturally. The following function returns the most recent of an author's books. 
+List and dict patterns nest naturally. The following function returns the most recent of an author's books.
 
 ```ruby
 > mark_twain: {:profession "author", :books ["The Gilded Age: A Tale of Today", "Personal Recollections of Joan of Arc"]}
@@ -2761,8 +2631,8 @@ latest_book_with_nr: (dict person) ->
   match person
     {
      :profession "author",
-     :books [@..., @latest_book] @books 
-    } -> 
+     :books [@..., @latest_book] @books
+    } ->
       "The latest book is book nr. ".. data.size(books) .. ": " .. latest_book
     default -> nil
 \e
@@ -2774,11 +2644,11 @@ function
 
 #### Errors
 
-Tweakflow supports throwing arbitrary values as errors. If an error is thrown inside the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary. 
+Tweakflow supports throwing arbitrary values as errors. If an error is thrown inside the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary.
 
 ##### Throwing errors
 
-The syntax for throwing an error is as follows: 
+The syntax for throwing an error is as follows:
 
 ```text
 'throw' expression
@@ -2792,11 +2662,11 @@ add: (long x=0, long y=0) ->
   let {
     long sum: x + y
   }
-  if x > 0 and y > 0 and sum <= 0 
+  if x > 0 and y > 0 and sum <= 0
     throw {:code "overflow", :message "binary overflow adding #{x} and #{y}"}
   if x < 0 and y < 0 and sum >= 0
     throw {:code "overflow", :message "binary underflow adding #{x} and #{y}"}
-  else 
+  else
     sum
 \e
 function
@@ -2844,7 +2714,7 @@ catchDeclaration
 The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.
 
 ```ruby
-> \e 
+> \e
 # add two longs, revert to fallback_value if overflow or underflow happens
 add_safe: (long x=0, long y=0, long fallback_value=nil) -> long
   try
@@ -2857,15 +2727,13 @@ add_safe: (long x=0, long y=0, long fallback_value=nil) -> long
 
 \e
 function
-      
+
 > add_safe(1, 2)
 3
 
 > add_safe(math.max_long, 1)
 nil
 ```
-
-TODO: define caught stack trace, and example
 
 #### References
 
@@ -2882,24 +2750,24 @@ reference
   ;
 ```
 
-The initial identifier is resolved based on the variant of the reference. Variant-specific details are given in later sections. Any identifiers after the first one are then resolved strictly inside the last found entity's scope. 
+The initial identifier is resolved based on the variant of the reference. Variant-specific details are given in later sections. Any identifiers after the first one are then resolved strictly inside the last found entity's scope.
 
-For example: the reference `foo.bar.baz` might point to a module import `foo` which contains a library `bar` which in turn contains a variable named `baz`. 
+For example: the reference `foo.bar.baz` might point to a module import `foo` which contains a library `bar` which in turn contains a variable named `baz`.
 
 ##### Unscoped references
 
-Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the [scope](#scope) they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope. 
+Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the scope they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.
 
-An example file with comments highlighting scope changes and references: 
+An example file with comments highlighting scope changes and references:
 
 ```ruby
 # scopes.tf
 
 # introduces 'strings' in module scope
-import strings from "std" 
+import strings from "std"
 
 # introduces 'len' in module scope
-alias strings.length as len # references 'strings' in module scope 
+alias strings.length as len # references 'strings' in module scope
 
 # introduces 'utils' in module scope
 library utils {            
@@ -2938,7 +2806,7 @@ Libary scope references must appear inside a library. They limit the resolution 
 
 ```ruby
 # libary-refs.tf
-import strings from "std" 
+import strings from "std"
 
 library utils {            
   f: (x) -> strings.length(x)  
@@ -2981,13 +2849,13 @@ module-refs.tf> utils.f("foo")
 
 ##### Global scope references
 
-Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors. 
+Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors.
 
-See [global modules](#global-modules) for an example of global references pointing to global modules. 
+See [global modules](#global-modules) for an example of global references pointing to global modules.
 
 ##### Referencing values
 
-References in expressions must point to values. If `foo.bar.baz` points to a module import, a library and finally a variable, then `foo` on its own is an invalid value reference, as it points to a module, which is not a value. `foo.bar` is not a valid reference either. It points to a library which is not a value. Only the full reference `foo.bar.baz` points to a value. 
+References in expressions must point to values. If `foo.bar.baz` points to a module import, a library and finally a variable, then `foo` on its own is an invalid value reference, as it points to a module, which is not a value. `foo.bar` is not a valid reference either. It points to a library which is not a value. Only the full reference `foo.bar.baz` points to a value.
 
 The REPL evaluates input as expressions. It gives the following output when referencing a variable and a library respectively:
 
@@ -3039,13 +2907,13 @@ let {
   d: c
 } [a, b, c, d]
 \e
-ERROR: { 
+ERROR: {
   :code "CYCLIC_REFERENCE",
   ...
 }
 ```
 
-A recursive definition of the factorial function: 
+A recursive definition of the factorial function:
 
 ```ruby
 > \e
@@ -3071,15 +2939,15 @@ function
 
 ##### Closures
 
-Function bodies can close over non-local values. The references are evaluated at the time the function is defined. The value is closed over, not the reference. 
+Function bodies can close over non-local values. The references are evaluated at the time the function is defined. The value is closed over, not the reference.
 
 The following example creates a sequence of functions, each multiplying its input by a number it closes over:
 
 ```ruby
 > \e
-fs: 
+fs:
   for i <- [1, 2, 3],
-      (x) -> x*i 
+      (x) -> x*i
 \e
 [function, function, function]
 ```
@@ -3095,9 +2963,49 @@ Each function has closed over the value of `i`, not a reference to `i`. Therefor
 30
 ```
 
-#### Operators
+#### Debugging
 
-TODO: operator introduction
+Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
+
+```text
+'debug' expression (',' expression)?
+```
+
+Debug itself is an expression that evaluates to the value being debugged.
+
+If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.
+
+If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.
+
+As an example, the following function has some conditional branches, and is debugging which branches are taken.
+
+```ruby
+> \e
+sgn: (long x) ->
+  debug "DEBUG: calculating sign of x: #{x}",
+  if x > 0 then debug "DEBUG: x is positive", 1
+  if x < 0 then debug "DEBUG: x is negative", -1
+  else debug "DEBUG: x is zero or nil", 0
+\e
+function
+
+> sgn(10)
+"DEBUG: calculating sign of x: 10"
+"DEBUG: x is positive"
+1
+
+> sgn(-10)
+"DEBUG: calculating sign of x: -10"
+"DEBUG: x is negative"
+-1
+
+> sgn(0)
+"DEBUG: calculating sign of x: 0"
+"DEBUG: x is zero or nil"
+0
+```
+
+#### Operators
 
 ##### Precedence grouping
 
@@ -3123,9 +3031,9 @@ The operand is cast to long, and a bitwise not operation is performed on its two
 
 ##### Boolean not
 
-Syntax: `!a` or its equivalent `not a`
+Syntax: `!a` or `not a`
 
-The operand is cast to boolean and a negation is performed resulting in another boolean. 
+The operand is cast to boolean and a negation is performed resulting in another boolean.
 
 `!nil` evaluates to `true`
 
@@ -3171,9 +3079,9 @@ ERROR: {
 
 Syntax: `a**b`
 
-Operand a is raised to the power of b. 
+Operand a is raised to the power of b.
 
-Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error. 
+Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.
 
 If any operand is `nil`, the result is `nil`.
 
@@ -3257,7 +3165,7 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 
 Syntax: `a/b`
 
-Evaluates to a divided by b. 
+Evaluates to a divided by b.
 
 Each operand must be either a long or a double. Any other types throw an error.
 
@@ -3265,7 +3173,7 @@ If any operands are `nil`, the result is `nil`.
 
 If both operands are doubles, floating point division is performed.
 
-If any operands are longs, they are are implicitly cast to double first, and floating point division is performed. 
+If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.
 
 The result is always a double.
 
@@ -3276,7 +3184,7 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 | `x / 0`  (x > 0)                | `Infinity`  |
 | `x / 0`  (x < 0)                | `-Infinity` |
 | `0 / 0`                         | `NaN`       |
-| `[+|-]Infinity / [+|-]Infinity` | `NaN`       |
+| `[+¦-]Infinity / [+¦-]Infinity` | `NaN`       |
 
 ```ruby
 > 1 / 2
@@ -3291,7 +3199,7 @@ nil
 
 Syntax: `a//b`
 
-Casts a and b to long, and performs integer division. 
+Casts a and b to long, and performs integer division.
 
 Each operand must be either a long or a double. Any other types throw an error.
 
@@ -3323,7 +3231,7 @@ ERROR: {
 
 Syntax: `a%b`
 
-Evaluates to the remainder after a is divided by b. 
+Evaluates to the remainder after a is divided by b.
 
 Each operatnd must be either a long or a double. Any other types throw an error.
 
@@ -3345,8 +3253,8 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 | Expression                      | Result |
 | ------------------------------- | ------ |
 | `x % 0.0`                       | `NaN`  |
-| `[+|-]Infinity / [+|-]Infinity` | `NaN`  |
-| `0.0 % [+|-]Infinity`           | `0.0`  |
+| `[+¦-]Infinity % [+¦-]Infinity` | `NaN`  |
+| `0.0 % [+¦-]Infinity`           | `0.0`  |
 
 ```ruby
 > 10 % 4
@@ -3373,7 +3281,7 @@ If any operands are `nil`, the result is `nil`.
 
 If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
 
-If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double. 
+If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.
 
 Special cases involving `Infinity` and `NaN` are defined as follows:
 
@@ -3407,7 +3315,7 @@ If any operands are `nil`, the result is `nil`.
 
 If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
 
-If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double. 
+If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.
 
 Special cases involving `Infinity` and `NaN` are defined as follows:
 
@@ -3448,7 +3356,7 @@ Both operands are cast to string, then they are concatenated to form the result 
 
 Syntax: `a<<b`
 
-Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result. 
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.
 
 If any operand is `nil`, the result is `nil`.
 
@@ -3638,7 +3546,7 @@ true
 
 Syntax: `a!==b`
 
-Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise. 
+Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise.
 
 ```ruby
 > 0 !== 1
@@ -3655,11 +3563,11 @@ false
 
 Syntax: `a==b`
 
-Evaluates to `true` if a is equal to b. Returns `false` otherwise. 
+Evaluates to `true` if a is equal to b. Returns `false` otherwise.
 
 Some type-specific rules apply in determining equality.
 
-The double special value `NaN` is not equal to anything, not even to itself. 
+The double special value `NaN` is not equal to anything, not even to itself.
 
 ```ruby
 > NaN == NaN
@@ -3683,7 +3591,7 @@ Datetime values are equal only if their date, time, and timezone components matc
 
 ```ruby
 # same points in time, but different local time and time zone
-> time.compare(1970-01-01T01:00:00+01:00, time.epoch) 
+> time.compare(1970-01-01T01:00:00+01:00, time.epoch)
 0
 # same points in time are not equal
 > 1970-01-01T01:00:00+01:00 == time.epoch       
@@ -3726,39 +3634,270 @@ Syntax: `a!=b`
 
 Inversion of equality. Evaluates to `true` if `a==b` evaluates to `false`. Evaluates to `false` if `a==b` evaluates to true.
 
-TODO:
+##### Bitwise and
 
-```
-| expression '&' expression                               # bitwiseAndExp
-| expression '^' expression                               # bitwiseXorExp
-| expression '|' expression                               # bitwiseOrExp
-| expression '&&' expression                              # boolAndExp
-| expression 'and' expression                             # boolAndExp
-| expression '||' expression                              # boolOrExp
-| expression 'or' expression                              # boolOrExp
+Syntax: `a&b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 & 2
+0
+> 7 & 15
+7
+> -1 & 29837
+29837
+> 3 & 2
+2
+> nil & 1
+nil
 ```
 
-##### 
+##### Bitwise exclusive or
+
+Syntax: `a^b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 ^ 1
+0
+> 1 ^ 2
+3
+> -1 ^ 0
+-1
+> -1 ^ 1
+-2
+> nil ^ 2
+nil
+```
+
+##### Bitwise or
+
+Syntax: `a|b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 | 3
+3
+> -1 | 0
+-1
+> 1 | 2 | 4 | 8
+15
+> nil | 2
+nil
+```
+
+##### Boolean and
+
+Syntax: `a&&b` or `a and b`
+
+This operation is a short-circuiting boolean and. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `false` or `nil`, the whole expression evaluates to `false`, and `b` is not evaluated. If `a` evaluates to `true`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
+
+```ruby
+> 1 && 2
+true
+> 1 && 0
+false
+> false && throw "not evaluated"
+false
+> true && true
+true
+> [] && 1
+false
+> ["foo"] && 1
+true
+```
+
+##### Boolean or
+
+Syntax: `a||b` or `a or b`
+
+This operation is a short-circuiting boolean or. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `true`, the whole expression evaluates to `true`, and `b` is not evaluated. If `a` evaluates to `false` or `nil`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
+
+```ruby
+> true || false
+true
+> true || throw "not evaluated"
+true
+> false || true
+true
+> [] || []
+false
+> [] || [1]
+true
+```
+
+##### Type check
+
+Syntax: `a is datatype`
+
+```text
+datatype
+  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  ;
+```
+
+The check is a boolean expression and it evaluates to `true` or `false` depending on whether `a` evaluates to a  member of the given data type.
+
+As a special case, the `nil` value, even though a member of any type, only yields true when checked as being member of the `void` type. Therefore `a is string` implies that `a` is a non-nil string.
+
+As a special case, if `any` is given as data type, the result is true only if the expression evaluates to a value other than `nil`,  making  `a is any` equivalent to `a != nil`.
+
+```ruby
+> "" is string
+true
+> nil is string
+false
+> 42 is string
+false
+> {} is list
+false
+> [] is list
+true
+> {} is dict
+true
+> [1,2] is dict
+false
+> nil is void
+true
+> "foo" is any
+true
+> nil is any
+false
+```
+
+##### Type name
+
+Syntax: `typeof a`
+
+The expression returns the name of a value's type. The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `void`.
+
+```ruby
+> typeof "foo"
+"string"
+> typeof (x) -> x+1
+"function"
+> typeof 1
+"long"
+> typeof 1.0
+"double"
+> typeof false
+"boolean"
+> typeof {}
+"dict"
+> typeof []
+"list"
+> typeof 2017-03-12T
+"datetime"
+> typeof nil
+"void"
+```
+
+##### Type cast
+
+Syntax: `a as datatype`
+
+```text
+datatype
+  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  ;
+```
+
+The expression explicitly casts `a` to a given type.
+
+Type casts may throw errors if the types are incompatible or the specific value is not convertible. In general, type casts only succeed if there is either no information loss, or the amount of information loss is no greater than to be expected from the types involved.
+
+Supported type casts are listed for each type in their respective section of [data types](#data-types). Type casts to `any` always succeed, and leave the value unchanged. Type casts to `void` only succeed if `a` is `nil`.
+
+```ruby
+> "1.4" as double # string to double
+1.4
+
+> ["a", "b", "c", "d"] as dict # list to dict
+{
+  :a "b",
+  :c "d"
+}
+
+> 1234567890123 as datetime # long to datetime
+2009-02-13T23:31:30.123Z@UTC
+
+> 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
+{
+  :month 7,
+  :day_of_year 204,
+  :hour 23,
+  :zone "Europe/Berlin",
+  :nano_of_second 298000000,
+  :offset_seconds 7200,
+  :second 32,
+  :minute 12,
+  :day_of_week 7,
+  :week_of_year 29,
+  :day_of_month 23,
+  :year 2017
+}
+
+> nil as string # nil casts to any type
+nil
+```
 
 ##### Operator precedence
 
-TODO: give order of constructs and operators 
+The following table lists tweakflow operators and constructs in precedence order, starting with the highest precedence.
 
-#### Debugging
+All operators an constructs are left-associative. When chaning operators of the same precedence, they are evaluated left to right. The expression `a+b+c` is evaluated as `(a+b)+c` for example.
 
-TODO: describe the debug construct
-
-## Language tools
-
-### Interactive REPL
-
-TODO: describe itf
-
-### Runner
-
-TODO: describe tf
-
-### Metadata extraction
-
-TODO: describe tfdoc
+| Operator                            | Example                                 |
+| ----------------------------------- | --------------------------------------- |
+| Fuction call                        | `f(1, 2, 3)`                            |
+| Call chaining                       | `->> ("foo") f, g, h`                   |
+| Container access                    | `d[:a]`, `a[1]`                         |
+| Precedence grouping                 | `a+(b*c)`                               |
+| Type cast                           | `"1.2" as double`                       |
+| Default value                       | `name default "John Doe"`               |
+| Bitwise not                         | `~bits`                                 |
+| Boolean not                         | `!done`                                 |
+| Unary minus                         | `-(2+2)`                                |
+| Exponentiation                      | `2**10`                                 |
+| Multiplication                      | `2*2`                                   |
+| Floating point division             | `4/2`                                   |
+| Integer division                    | `4//2`                                  |
+| Division remainder                  | `length % 2`                            |
+| Addition                            | `4+2`                                   |
+| Subtraction                         | `4-2`                                   |
+| String concatenation                | `"Hello ".."World"`                     |
+| Binary shift left                   | `1 << 8`                                |
+| Binary shift right, sign preserving | `255 >> 2`                              |
+| Binary shift right                  | `-1 >>> 1`                              |
+| Less than                           | `a < max`                               |
+| Less than or equal                  | `a <= max`                              |
+| Greater than                        | `a > min`                               |
+| Greater than or equal               | `a >= min`                              |
+| Type check                          | `a is string`                           |
+| Type name                           | `typeof a`                              |
+| Equality with type identity         | `a === 1`                               |
+| Inequality with type identity       | `a !== 1`                               |
+| Equality                            | `a == "foo"`                            |
+| Inequality                          | `a != "foo"`                            |
+| Bitwise and                         | `bits & mask`                           |
+| Bitwise xor                         | `bits ^ flip`                           |
+| Bitwise or                          | `bits ¦ flags`                          |
+| Boolean and                         | `locked && loaded`                      |
+| Boolean or                          | `sleepy ¦¦ hungry`                      |
+| Pattern matching                    | `match xs [@,@] -> true`                |
+| List comprehension                  | `for x <- [1, 2, 3], x*x`               |
+| Conditional evaluation              | `if sleepy then sleep(8) else party(4)` |
+| Local variables                     | `let {a: 1; b: 2} a+b`                  |
+| Try / catch                         | `try sleep(:long) catch "tired"`        |
+| Throw                               | `throw "cannot do this"`                |
+| Debug                               | `debug "DEBUG x: #{x}"`                 |
 
