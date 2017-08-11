@@ -64,11 +64,7 @@
             </li>
             
             <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/embedding.html">Embedding guide</a>
-            </li>
-            
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source code</a>
+              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source</a>
             </li>
             
             
@@ -93,9 +89,9 @@
 <li><a href="#starting-a-tweakflow-repl">Starting a tweakflow REPL</a></li>
 <li><a href="#evaluating-expressions">Evaluating expressions</a></li>
 <li><a href="#calling-functions">Calling functions</a></li>
-<li><a href="#expression-scoped-variables">Expression-scoped variables</a></li>
 <li><a href="#variables">Variables</a></li>
 <li><a href="#variable-interpolation-in-strings">Variable interpolation in strings</a></li>
+<li><a href="#local-variables">Local variables</a></li>
 <li><a href="#types">Types</a></li>
 <li><a href="#defining-functions">Defining functions</a></li>
 <li><a href="#conditionals">Conditionals</a></li>
@@ -189,12 +185,6 @@ false
 2017-01-23T00:00:00Z@`UTC`
 </code></pre>
 
-<p>You can include the time, but omit the time zone, implying UTC time, which is fine for most applications that only use local time, and don&rsquo;t care about time zone differences.</p>
-
-<pre><code class="language-ruby">&gt; 2017-01-23T18:23:11
-2017-01-23T18:23:11Z@`UTC`
-</code></pre>
-
 <p>You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:</p>
 
 <pre><code class="language-ruby">&gt; 2017-01-23T18:23:11+01:00@`Europe/Berlin`
@@ -213,9 +203,7 @@ false
 2
 </code></pre>
 
-<p>You were using positional arguments. Since above functions only have few arguments, it&rsquo;s relatively easy to give the arguments in the correct order. Sometimes functions take a few more arguments. In these cases, it&rsquo;s convenient to use named arguments, so you don&rsquo;t have to worry about the correct order. You can just mention the name of the argument you want to pass, and follow it up with the value.</p>
-
-<p>Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="/tweakflow/modules/std.html#add-period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
+<p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="/tweakflow/modules/std.html#add-period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
 
 <pre><code class="language-ruby">&gt; time.add_period(start: 2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@`UTC`
@@ -225,36 +213,6 @@ false
 
 <pre><code class="language-ruby">&gt; time.add_period(2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@`UTC`
-</code></pre>
-
-<p>You can easily define a function yourself, and even call it immediately inline:</p>
-
-<pre><code class="language-ruby">&gt; (x) -&gt; x*x
-function
-&gt; ((x) -&gt; x*x)(5)
-25
-</code></pre>
-
-<h2 id="expression-scoped-variables">Expression-scoped variables</h2>
-
-<p>You can define helper variables scoped to an expression using let:</p>
-
-<pre><code class="language-ruby">&gt; let {sq: (x) -&gt; x*x; five: 5} sq(five)
-25
-</code></pre>
-
-<p>When writing tweakflow code in a file or application, you can format your input across multiple lines. But the REPL interprets hitting enter as a request to evaluate the current line as an expression, which can make entering long expressions in the REPL impractical.</p>
-
-<p>If you want to format your expression using multiple lines, you can enter multi-line edit mode using <code>\e</code> and the REPL will accept multiple lines as part of a single expression until you enter <code>\e</code> again. The REPL indicates you are in multi-line mode by placing a <code>*</code> in the prompt. You can rewrite the above example in multi-line mode on the REPL like this:</p>
-
-<pre><code class="language-ruby">&gt; \e
-let {
-  sq: (x) -&gt; x*x
-  five: 5
-}
-sq(five)
-\e
-25
 </code></pre>
 
 <h2 id="variables">Variables</h2>
@@ -316,23 +274,31 @@ z: x*y
 
 <p>There are other escape sequences like <code>\n</code> for newlines and <code>\t</code> for tabs.</p>
 
-<p>You can prevent the expansion of an escape sequence by prefixing it with a <code>\</code>.</p>
+<h2 id="local-variables">Local variables</h2>
 
-<pre><code class="language-ruby">&gt; &quot;Hello #{name}.\nNice to see you!&quot; # expand name and a newline
-&quot;Hello Joe.
-Nice to see you!&quot;
-&gt; &quot;Hello \#{name}.\\nNice to see you!&quot; # prefix with \ to prevent expansion
+<p>You can define helper variables scoped to an expression using let:</p>
+
+<pre><code class="language-ruby">&gt; let {sq: (x) -&gt; x*x; five: 5} sq(five)
+25
 </code></pre>
 
-<p>You can also use single-quoted strings. Single-quoted strings do not escape sequences at all.</p>
+<p>Tweakflow code can be formatted across multiple lines. But the REPL interprets hitting enter as a request to evaluate the current line as an expression, which can make entering multi-line expressions in the REPL impractical.</p>
 
-<pre><code class="language-ruby">&gt; 'Hello #{name}'
-&quot;Hello \#{name}&quot;
+<p>If you want to format your expression using multiple lines, you can enter multi-line edit mode using <code>\e</code> and the REPL will accept multiple lines as part of a single expression until you enter <code>\e</code> again. The REPL indicates you are in multi-line mode by placing a <code>*</code> in the prompt. You can rewrite the above example in multi-line mode on the REPL like this:</p>
+
+<pre><code class="language-ruby">&gt; \e
+let {
+  sq: (x) -&gt; x*x
+  five: 5
+}
+sq(five)
+\e
+25
 </code></pre>
 
 <h2 id="types">Types</h2>
 
-<p>Every value in tweakflow has an associated type. You can check for value types:</p>
+<p>Every value in tweakflow has an associated type. You can determine the types using <code>typeof</code>:</p>
 
 <pre><code class="language-ruby">&gt; typeof &quot;Hello&quot;
 &quot;string&quot;
@@ -387,25 +353,7 @@ function
 [1, 0, 9, 4]
 </code></pre>
 
-<p>You can create functions that remember values you supply at the time they are defined. Such functions are called closures, because they &lsquo;close over&rsquo; values. The function <code>make_adder</code> creates and returns a function that accepts an argument and adds a given constant <code>a</code>.</p>
-
-<pre><code class="language-ruby">&gt; make_adder: (a) -&gt; ((x) -&gt; x+a)
-function
-&gt; add_1: make_adder(1)
-function
-&gt; add_1(0)
-1
-&gt; add_1(1)
-2
-&gt; add_2: make_adder(2)
-function
-&gt; add_2(0)
-2
-&gt; add_2(1)
-3
-</code></pre>
-
-<p>In a similar fashion the standard library makes functions for you that are parameterized to your specifications. The next example asks the standard library to give you a <a href="/tweakflow/modules/std.html#formatter-1">formatter</a> function to convert numbers to strings.</p>
+<p>Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a <a href="/tweakflow/modules/std.html#formatter-1">formatter</a> function to convert numbers to strings.</p>
 
 <pre><code class="language-ruby">&gt; f: math.formatter('0.00', rounding_mode: 'half_up')
 function
@@ -431,7 +379,7 @@ function
 &quot;even&quot;
 </code></pre>
 
-<p>The formal syntax is: <code>if expression then? then_expression else? else_expression</code>. Both the <code>then_expression</code> and the <code>else_expression</code> are mandatory, but the <code>then</code> and <code>else</code> keywords are optional, allowing you to write nested conditions that look like a sequence of tests.</p>
+<p>The syntax is: <code>if condition then then_expression else else_expression</code>. Both the <code>then_expression</code> and the <code>else_expression</code> are mandatory, but the <code>then</code> and <code>else</code> keywords are optional, allowing you to write nested conditions that look like a sequence of tests.</p>
 
 <p>Define a function that returns the sign of a number as <code>-1</code>, <code>0</code>, or <code>1</code> if the number is negative, zero, or positive:</p>
 
@@ -497,69 +445,6 @@ for
 <h2 id="pattern-matching">Pattern matching</h2>
 
 <p>Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. The <code>@</code> sign followed by a variable name is used to indicate a captured match scoped to the expression associated with a pattern.</p>
-
-<p>The following example matches on value. The function <code>vowel?</code> returns true if called with a string holding a single latin vowel, false otherwise.</p>
-
-<pre><code class="language-ruby">&gt; \e
-vowel?: (x) -&gt;
-  match x
-    &quot;a&quot;     -&gt; true
-    &quot;e&quot;     -&gt; true
-    &quot;i&quot;     -&gt; true
-    &quot;o&quot;     -&gt; true
-    &quot;u&quot;     -&gt; true
-    default -&gt; false
-\e
-function
-&gt; vowel?(&quot;a&quot;)
-true
-&gt; vowel?(&quot;b&quot;)
-false
-&gt; vowel?(&quot;e&quot;)
-true
-</code></pre>
-
-<p>The next example matches on type. The function <code>numeric?</code> returns true if called with an argument of a numeric type, false otherwise.</p>
-
-<pre><code class="language-ruby">&gt; \e
-numeric?: (x) -&gt;
-  match x
-    long    -&gt; true
-    double  -&gt; true
-    default -&gt; false
-\e
-function
-&gt; numeric?(1.3)
-true
-&gt; numeric?(4)
-true
-&gt; numeric?(&quot;foo&quot;)
-false
-</code></pre>
-
-<p>The next example matches on structure. The function <code>magnitude</code> accepts a vector of two dimensions and returns its length. The vector may be a list with two numbers, or a dict that has two keys <code>:x</code> and <code>:y</code> with numeric values. The function returns <code>nil</code> if no valid vector was given. It uses the <code>numeric?</code> function from the previous example in guard expressions, so unexpected inputs are not processed.</p>
-
-<pre><code class="language-ruby">&gt; \e
-magnitude: (vec) -&gt;
-  match vec
-    [@x, @y],       numeric?(x) &amp;&amp; numeric?(y) -&gt; math.sqrt(x*x + y*y)
-    {:x @x, :y @y}, numeric?(x) &amp;&amp; numeric?(y) -&gt; math.sqrt(x*x + y*y)
-    default -&gt; nil
-\e
-function
-&gt; magnitude([0,0])
-0.0
-&gt; magnitude([3, 4])
-5.0
-&gt; magnitude([&quot;foo&quot;, 4])
-nil
-&gt; magnitude([3, 4, 5])
-nil
-&gt; magnitude({:x 3, :y 4})
-5.0
-&gt; magnitude({:x 3, :y 4, :z 4})
-nil
-</code></pre>
 
 <p>The next example matches on partial structure. The function <code>pairs</code> transforms a list of the form <code>[a, b, c, d, …]</code> into a list of pairs <code>[[a, b], [c, d], ...]</code>. If the list has an odd number of items, the last item is discarded. If the argument is not a list, the function returns <code>nil</code>.</p>
 
@@ -667,7 +552,7 @@ ERROR: {
 }
 </code></pre>
 
-<p>You can also define an unused expression-local variable that generates a more speaking output.</p>
+<p>You can also define a local variable that generates a more speaking output.</p>
 
 <pre><code class="language-ruby">&gt; \e
 extension: (name) -&gt;
@@ -694,38 +579,9 @@ ERROR: {
 
 <p>Above debug output should help sorting out the function to account for the fact that the argument might not contain a dot.</p>
 
-<p>If two expressions are supplied to debug, separated by comma, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.</p>
-
-<p>As an example, let&rsquo;s debug a function with some conditional branches, logging which branches are taken.</p>
-
-<pre><code class="language-ruby">&gt; \e
-sgn: (x) -&gt;
-  debug &quot;DEBUG: calculating sign of x: #{x}&quot;,
-  if x &gt; 0 then debug &quot;DEBUG: x is positive&quot;, 1
-  if x &lt; 0 then debug &quot;DEBUG: x is negative&quot;, -1
-  else debug &quot;DEBUG: x is zero or nil&quot;, 0
-\e
-function
-
-&gt; sgn(10)
-&quot;DEBUG: calculating sign of x: 10&quot;
-&quot;DEBUG: x is positive&quot;
-1
-
-&gt; sgn(-10)
-&quot;DEBUG: calculating sign of x: -10&quot;
-&quot;DEBUG: x is negative&quot;
--1
-
-&gt; sgn(0)
-&quot;DEBUG: calculating sign of x: 0&quot;
-&quot;DEBUG: x is zero or nil&quot;
-0
-</code></pre>
-
 <h2 id="conclusion">Conclusion</h2>
 
-<p>Above tutorial is to give a feel for the nature of tweakflow expressions. Check out the language reference for more detailed information about the language itself. The embedding guide explains how to include tweakflow in your application.</p>
+<p>You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the <a href="/tweakflow/reference.html">language reference</a> for detailed information about the language.</p>
 
       </main>
     </div>

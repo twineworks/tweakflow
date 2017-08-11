@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>The tweakflow data processing language | tweakflow - an embeddable expression language for the JVM</title>
+    <title>The tweakflow language | tweakflow - an embeddable expression language for the JVM</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,11 +64,7 @@
             </li>
             
             <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/embedding.html">Embedding guide</a>
-            </li>
-            
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source code</a>
+              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source</a>
             </li>
             
             
@@ -120,60 +116,25 @@
 <li><a href="#span-comments">Span comments</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#semantic-structure">Semantic structure</a>
-<ul>
 <li><a href="#data-types">Data types</a>
 <ul>
-<li><a href="#boolean">Boolean</a>
-<ul>
-<li><a href="#boolean-as-long">Boolean as long</a></li>
-<li><a href="#boolean-as-double">Boolean as double</a></li>
-<li><a href="#boolean-as-string">Boolean as string</a></li>
-</ul></li>
-<li><a href="#long">Long</a>
-<ul>
-<li><a href="#long-as-boolean">Long as boolean</a></li>
-<li><a href="#long-as-double">Long as double</a></li>
-<li><a href="#long-as-string">Long as string</a></li>
-<li><a href="#long-as-datetime">Long as datetime</a></li>
-</ul></li>
-<li><a href="#double">Double</a>
-<ul>
-<li><a href="#double-as-boolean">Double as boolean</a></li>
-<li><a href="#double-as-long">Double as long</a></li>
-<li><a href="#double-as-string">Double as string</a></li>
-</ul></li>
-<li><a href="#string">String</a>
-<ul>
-<li><a href="#string-as-boolean">String as boolean</a></li>
-<li><a href="#string-as-long">String as long</a></li>
-<li><a href="#string-as-double">String as double</a></li>
-<li><a href="#string-as-list">String as list</a></li>
-</ul></li>
-<li><a href="#datetime">Datetime</a>
-<ul>
-<li><a href="#datetime-as-boolean">Datetime as boolean</a></li>
-<li><a href="#datetime-as-string">Datetime as string</a></li>
-<li><a href="#datetime-as-dict">Datetime as dict</a></li>
-</ul></li>
-<li><a href="#list">List</a>
-<ul>
-<li><a href="#list-as-boolean">List as boolean</a></li>
-<li><a href="#list-as-dict">List as dict</a></li>
-</ul></li>
-<li><a href="#dict">Dict</a>
-<ul>
-<li><a href="#dict-as-boolean">Dict as boolean</a></li>
+<li><a href="#boolean">Boolean</a></li>
+<li><a href="#long">Long</a></li>
+<li><a href="#double">Double</a></li>
+<li><a href="#string">String</a></li>
+<li><a href="#datetime">Datetime</a></li>
+<li><a href="#list">List</a></li>
+<li><a href="#dict">Dict</a></li>
 <li><a href="#dict-as-list">Dict as list</a></li>
-</ul></li>
 <li><a href="#function">Function</a>
 <ul>
-<li><a href="#function-as-boolean">Function as boolean</a></li>
 <li><a href="#functions-in-java">Functions in Java</a></li>
 </ul></li>
 <li><a href="#void">Void</a></li>
 <li><a href="#any">Any</a></li>
 </ul></li>
+<li><a href="#semantic-structure">Semantic structure</a>
+<ul>
 <li><a href="#modules">Modules</a>
 <ul>
 <li><a href="#global-modules">Global modules</a></li>
@@ -189,9 +150,6 @@
 <ul>
 <li><a href="#nil">Nil</a></li>
 <li><a href="#value-literals">Value literals</a></li>
-<li><a href="#type-inspection">Type inspection</a></li>
-<li><a href="#type-name">Type name</a></li>
-<li><a href="#type-casts">Type casts</a></li>
 <li><a href="#container-access">Container access</a>
 <ul>
 <li><a href="#list-access">List access</a></li>
@@ -242,6 +200,7 @@
 <li><a href="#circular-references">Circular references</a></li>
 <li><a href="#closures">Closures</a></li>
 </ul></li>
+<li><a href="#debugging">Debugging</a></li>
 <li><a href="#operators">Operators</a>
 <ul>
 <li><a href="#precedence-grouping">Precedence grouping</a></li>
@@ -267,16 +226,17 @@
 <li><a href="#inequality-with-type-identity">Inequality with type identity</a></li>
 <li><a href="#equality">Equality</a></li>
 <li><a href="#inequality">Inequality</a></li>
+<li><a href="#bitwise-and">Bitwise and</a></li>
+<li><a href="#bitwise-exclusive-or">Bitwise exclusive or</a></li>
+<li><a href="#bitwise-or">Bitwise or</a></li>
+<li><a href="#boolean-and">Boolean and</a></li>
+<li><a href="#boolean-or">Boolean or</a></li>
+<li><a href="#type-check">Type check</a></li>
+<li><a href="#type-name">Type name</a></li>
+<li><a href="#type-cast">Type cast</a></li>
 <li><a href="#operator-precedence">Operator precedence</a></li>
 </ul></li>
-<li><a href="#debugging">Debugging</a></li>
 </ul></li>
-</ul></li>
-<li><a href="#language-tools">Language tools</a>
-<ul>
-<li><a href="#interactive-repl">Interactive REPL</a></li>
-<li><a href="#runner">Runner</a></li>
-<li><a href="#metadata-extraction">Metadata extraction</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -687,8 +647,6 @@ let {
 3
 </code></pre>
 
-<p>TODO: include endOfStatement Markers in their respective syntaxes on modules, libs, vars, let, (check for var defintions, the looping construct should contain endOfMarker? not the vars)</p>
-
 <h3 id="comments">Comments</h3>
 
 <p>Tweakflow supports line comments and span comments. Each form catering to different uses of comments in code.</p>
@@ -721,45 +679,43 @@ spans multiple lines
 &quot;hello&quot;
 </code></pre>
 
-<h2 id="semantic-structure">Semantic structure</h2>
-
-<h3 id="data-types">Data types</h3>
+<h2 id="data-types">Data types</h2>
 
 <p>Tweakflow supports a fixed set of data types. Each data type has literal notation, and a set of supported cast targets to other types. The following sections highlight all available types and their characteristics.</p>
 
-<h4 id="boolean">Boolean</h4>
+<h3 id="boolean">Boolean</h3>
 
 <p>The <code>boolean</code> type holds the values <code>true</code> and <code>false</code>. Booleans are notated using <a href="#boolean-literals">boolean literals</a>. The following type casts are supported:</p>
 
-<h5 id="boolean-as-long">Boolean as long</h5>
+<p>Boolean as long</p>
 
 <p>Boolean <code>true</code> is cast to <code>1</code> and boolean <code>false</code> is cast to <code>0</code>.</p>
 
-<h5 id="boolean-as-double">Boolean as double</h5>
+<p>Boolean as double</p>
 
 <p>Boolean <code>true</code> is cast to <code>1.0</code> and boolean <code>false</code> is cast to <code>0.0</code>.</p>
 
-<h5 id="boolean-as-string">Boolean as string</h5>
+<p>Boolean as string</p>
 
 <p>Boolean <code>true</code> is cast to <code>&quot;true&quot;</code> and boolean <code>false</code> is cast to <code>&quot;false&quot;</code>.</p>
 
-<h4 id="long">Long</h4>
+<h3 id="long">Long</h3>
 
 <p>The <code>long</code> type holds 64-bit signed integers. Integers are notated using <a href="#long-literals">long literals</a>. The following type casts are supported:</p>
 
-<h5 id="long-as-boolean">Long as boolean</h5>
+<p>Long as boolean</p>
 
 <p>The long <code>0</code> is converted to <code>false</code>. Any other long value is converted to <code>true</code>.</p>
 
-<h5 id="long-as-double">Long as double</h5>
+<p>Long as double</p>
 
 <p>The long number is converted to to closest double value possible.</p>
 
-<h5 id="long-as-string">Long as string</h5>
+<p>Long as string</p>
 
 <p>The long is converted to a decimal number with a potential leading minus sign.</p>
 
-<h5 id="long-as-datetime">Long as datetime</h5>
+<p>Long as datetime</p>
 
 <p>The long is interpreted as the number of milliseconds passed since <code>time.epoch</code> in UTC.</p>
 
@@ -773,15 +729,15 @@ spans multiple lines
 1922-05-31T13:02:50Z@UTC
 </code></pre>
 
-<h4 id="double">Double</h4>
+<h3 id="double">Double</h3>
 
 <p>The <code>double</code> type holds 64-bit double-precision IEEE 754 floating point numbers. Literal floating point numbers are notated using <a href="#double-literals">double literals</a>. The following type casts are supported:</p>
 
-<h5 id="double-as-boolean">Double as boolean</h5>
+<p>Double as boolean</p>
 
 <p>The double values <code>0.0</code>,  <code>-0.0</code>, and <code>NaN</code> are converted to <code>false</code>. Any other values are converted to <code>true</code>.</p>
 
-<h5 id="double-as-long">Double as long</h5>
+<p>Double as long</p>
 
 <p>The double value is truncated at the decimal point and converted to the closest long value.</p>
 
@@ -791,7 +747,7 @@ spans multiple lines
 
 <p>If the double is <code>-Infinity</code>, the converted value is <code>math.min_long</code>.</p>
 
-<h5 id="double-as-string">Double as string</h5>
+<p>Double as string</p>
 
 <ul>
 <li>If the double value is <code>NaN</code>, the string is <code>&quot;NaN&quot;</code>.</li>
@@ -805,15 +761,15 @@ spans multiple lines
 
 <p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="/tweakflow/modules/std.html#formatter-1">formatters</a> to to convert double values to strings in a controlled output format.</p>
 
-<h4 id="string">String</h4>
+<h3 id="string">String</h3>
 
 <p>The <code>string</code> type holds text information. Strings are notated using <a href="#string-literals">string literals</a>. The following type casts are supported:</p>
 
-<h5 id="string-as-boolean">String as boolean</h5>
+<p>String as boolean</p>
 
 <p>The empty string <code>&quot;&quot;</code> is cast to <code>false</code>. Any other string value is cast to <code>true</code>.</p>
 
-<h5 id="string-as-long">String as long</h5>
+<p>String as long</p>
 
 <p>The string is first trimmed of whitespace on both sides. It is then interpreted as a decimal number with an optional leading <code>+</code> or <code>-</code> sign, any leading zeros, and digits <code>0-9</code>. The trimmed string must conform to the regular expression:</p>
 
@@ -822,7 +778,7 @@ spans multiple lines
 
 <p>If the resulting number does not fit in a 64-bit signed integer, an error is thrown.</p>
 
-<h5 id="string-as-double">String as double</h5>
+<p>String as double</p>
 
 <p>Strings cast to doubles successfully if they pass the following regular expression:</p>
 
@@ -860,7 +816,7 @@ ERROR: {
 }
 </code></pre>
 
-<h5 id="string-as-list">String as list</h5>
+<p>String as list</p>
 
 <p>A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode codepoints.</p>
 
@@ -874,17 +830,17 @@ ERROR: {
 [&quot;I&quot;, &quot; &quot;, &quot;l&quot;, &quot;o&quot;, &quot;v&quot;, &quot;e&quot;, &quot; &quot;, &quot;𝄞&quot;]
 </code></pre>
 
-<h4 id="datetime">Datetime</h4>
+<h3 id="datetime">Datetime</h3>
 
 <p>The <code>datetime</code> type represents points in time while also carrying regional time zone information. Datetimes are notated using <a href="#datetime-literals">datetime literals</a>.</p>
 
 <p>The following type casts are supported:</p>
 
-<h5 id="datetime-as-boolean">Datetime as boolean</h5>
+<p>Datetime as boolean</p>
 
 <p>All datetime values cast to boolean <code>true</code>.</p>
 
-<h5 id="datetime-as-string">Datetime as string</h5>
+<p>Datetime as string</p>
 
 <p>A datetime value casts to a string compatible with <a href="#datetime-literals">datetime literal</a> notation.</p>
 
@@ -894,7 +850,7 @@ ERROR: {
 
 <p>Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="/tweakflow/modules/std.html#formatter">formatters</a> to to convert datetime values to strings in a controlled output format.</p>
 
-<h5 id="datetime-as-dict">Datetime as dict</h5>
+<p>Datetime as dict</p>
 
 <p>A datetime value casts to a dict that contains all of its fields together with day of week, day of year, and week of year information. Supposing <code>x</code> is the datetime to cast, and <code>time</code> is the library from the standard module, the dict is equivalent to the following definition:</p>
 
@@ -949,7 +905,7 @@ ERROR: {
 }
 </code></pre>
 
-<h4 id="list">List</h4>
+<h3 id="list">List</h3>
 
 <p>The <code>list</code> type holds a finite sequence of values in a defined order. It is equivalent to array types in other languages. They are indexed by long values, starting at index 0. Lists are internally indexed by integers and have a capacity limit of 2^31 = 2.147.483.648 elements.</p>
 
@@ -1008,7 +964,7 @@ splat
 
 &gt; [1, 2, ...{:key &quot;value&quot;}, 3] # the splat dict is cast to a list before concat
 [1, 2, &quot;key&quot;, &quot;value&quot;, 3]
- 
+
 &gt; prepend: (x, list xs) -&gt; list [x, ...xs]
 function
 &gt; prepend(&quot;a&quot;, [&quot;b&quot;, &quot;c&quot;])
@@ -1022,11 +978,11 @@ function
 
 <p>The following type casts are supported:</p>
 
-<h5 id="list-as-boolean">List as boolean</h5>
+<p>List as boolean</p>
 
 <p>An empty list <code>[]</code> converts to <code>false</code>. Any other list value converts to <code>true</code>.</p>
 
-<h5 id="list-as-dict">List as dict</h5>
+<p>List as dict</p>
 
 <p>Lists are converted as sequences of key-value pairs. <code>[&quot;a&quot; 1 &quot;b&quot; 2]</code> is converted to <code>{:a 1 :b 2}</code>. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is <code>nil</code> or cannot be cast to string, an error is thrown.</p>
 
@@ -1070,7 +1026,7 @@ ERROR: {
 }
 </code></pre>
 
-<h4 id="dict">Dict</h4>
+<h3 id="dict">Dict</h3>
 
 <p>The <code>dict</code> type is an associative structure that maps string keys are to arbitrary values. Dicts do not support <code>nil</code> keys, but <code>nil</code> values are permitted. The order of keys in a dict is undefined.</p>
 
@@ -1134,7 +1090,7 @@ splat
   :code 200,
   :status &quot;found&quot;
 }
- 
+
 # rightmost value for key :status is preserved
 &gt; {:request_id 8273, :status &quot;ok&quot;, ...{:code 403, :status &quot;forbidden&quot;}}
 {
@@ -1146,11 +1102,11 @@ splat
 
 <p>The following type casts are supported:</p>
 
-<h5 id="dict-as-boolean">Dict as boolean</h5>
+<p>Dict as boolean</p>
 
 <p>The empty dict <code>{}</code> converts to <code>false</code>. Any other dict value converts to <code>true</code>.</p>
 
-<h5 id="dict-as-list">Dict as list</h5>
+<h3 id="dict-as-list">Dict as list</h3>
 
 <p>Dicts are converted to lists as a sequence of key-value pairs. An empty dict gives an empty list. Keys and values appear in pairs, but the order of the pairs is not defined.</p>
 
@@ -1167,7 +1123,7 @@ splat
 [&quot;a&quot;, 2, &quot;b&quot;, 1]
 </code></pre>
 
-<h4 id="function">Function</h4>
+<h3 id="function">Function</h3>
 
 <p>The <code>function</code> type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures.</p>
 
@@ -1202,7 +1158,7 @@ viaDec
 
 <p>The following type casts are supported:</p>
 
-<h5 id="function-as-boolean">Function as boolean</h5>
+<p>Function as boolean</p>
 
 <p>All function values cast to boolean <code>true</code>.</p>
 
@@ -1272,9 +1228,9 @@ function
 }
 </code></pre>
 
-<h5 id="functions-in-java">Functions in Java</h5>
+<h4 id="functions-in-java">Functions in Java</h4>
 
-<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="#link-to-user">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
+<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
 
 <table>
 <thead>
@@ -1286,32 +1242,32 @@ function
 
 <tbody>
 <tr>
-<td><a href="#">Arity0UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
 <td>Implements zero-parameter functions.</td>
 </tr>
 
 <tr>
-<td><a href="#">Arity1UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
 <td>Implements single-parameter functions.</td>
 </tr>
 
 <tr>
-<td><a href="#">Arity2UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity2UserFunction.java">Arity2UserFunction</a></td>
 <td>Implements functions with two parameters</td>
 </tr>
 
 <tr>
-<td><a href="#">Arity3UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
 <td>Implements functions with three paramters.</td>
 </tr>
 
 <tr>
-<td><a href="#">Arity4UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
 <td>Implements functions with four parameters</td>
 </tr>
 
 <tr>
-<td><a href="#">ArityNUserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
 <td>Implements functions with any number of parameters. Arguments are passed as an array of values.</td>
 </tr>
 </tbody>
@@ -1327,15 +1283,17 @@ function
 
 <p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
 
-<h4 id="void">Void</h4>
+<h3 id="void">Void</h3>
 
 <p>The <code>void</code> type is a type that has <code>nil</code> as its only value. The <code>nil</code> value reports <code>void</code> as its type, even though it is a valid member of any type.</p>
 
 <p>The only <code>void</code> value <code>nil</code> casts successfully to any type, and remains <code>nil</code>.</p>
 
-<h4 id="any">Any</h4>
+<h3 id="any">Any</h3>
 
 <p>The <code>any</code> type is a type is not concrete type of its own, but it is used to indicate the possibility of any type being present in the given context. The <code>any</code> type is used as a default in type declarations for variables, parameters and return types.</p>
+
+<h2 id="semantic-structure">Semantic structure</h2>
 
 <h3 id="modules">Modules</h3>
 
@@ -1358,7 +1316,7 @@ function
 moduleHead
   : nameDec? (importDef | aliasDef | exportDef) *
   ;
-  
+
 nameDec
   : metaDef 'module'
   | metaDef 'global' 'module' identifier
@@ -1371,7 +1329,7 @@ moduleComponent
 
 <h4 id="global-modules">Global modules</h4>
 
-<p>Modules can declare themselves available under a specific name in <a href="#references">global scope</a>. It is an error to load more than one module claiming the same name.</p>
+<p>Modules can declare themselves available under a specific name in global scope. It is an error to load more than one module claiming the same name.</p>
 
 <p>Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.</p>
 
@@ -1405,26 +1363,24 @@ library my_lib {
 }
 </code></pre>
 
-<p>TODO: example on the repl loading multiple modules</p>
-
 <h4 id="imports">Imports</h4>
 
 <p>Import statements bring names exported from other modules into the current module. The syntax allows importing individual names, or all exported names at once. If imported individually, names may be bound to local names that are different from the names in the source module.</p>
 
 <p>It is an error to import a name that is not explicitly exported.</p>
 
-<p>Imported names are placed in <a href="#scope">module scope</a>.</p>
+<p>Imported names are placed in module scope.</p>
 
 <p>Imports have the following syntax:</p>
 
-<pre><code class="language-text">importDef 
+<pre><code class="language-text">importDef
   : 'import' importMember (','? importMember)* 'from' modulePath
   ;
 
 importMember
   : moduleImport
   | componentImport
-  ; 
+  ;
 
 moduleImport
   : '*' 'as' importModuleName
@@ -1451,7 +1407,7 @@ modulePath
   ;
 </code></pre>
 
-<p>The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using <a href="#language-tools">language tools</a> or by the host application when embedding.</p>
+<p>The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.</p>
 
 <p>Two modules may import each other&rsquo;s exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.</p>
 
@@ -1474,7 +1430,7 @@ modulePath
 
 <h4 id="aliases">Aliases</h4>
 
-<p>Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in <a href="#module-scope">module scope</a>. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.</p>
+<p>Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in module scope. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.</p>
 
 <p>Aliases have the following syntax:</p>
 
@@ -1541,7 +1497,7 @@ import util, str from &quot;./lib.tf&quot;
 
 <h3 id="libraries">Libraries</h3>
 
-<p>A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in <a href="#scopes">library scope</a>.</p>
+<p>A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope.</p>
 
 <p><strong>Syntax</strong></p>
 
@@ -1613,7 +1569,7 @@ false
 
 <h3 id="annotations">Annotations</h3>
 
-<p>Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like <a href="#tfdoc">tfdoc</a> can extract them to generate project documentation.</p>
+<p>Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.</p>
 
 <p>Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword <code>doc</code> followed by an expression. Meta annotations begin with the keyworkd <code>meta</code> followed by an expression.</p>
 
@@ -1707,124 +1663,6 @@ foo.tf&gt; \meta bar.baz
 
 <p>All tweakflow data types have a literal notation outlined in their respective section under <a href="#data-types">data types</a>.</p>
 
-<h4 id="type-inspection">Type inspection</h4>
-
-<p>Tweakflow allows checking the type of a value using the <code>is</code> keyword.</p>
-
-<pre><code class="language-text">expression 'is' (boolean|string|long|double|datetime|list|dict|function|void|any)
-</code></pre>
-
-<p>The check is a boolean expression and it evaluates to <code>true</code> or <code>false</code> depending on whether the given expression evaluates to a  member of the given data type.</p>
-
-<p>As a special case, the <code>nil</code> value, even though a member of any type, only yields true when checked as being member of the <code>void</code> type. Therefore <code>expression is string</code> implies that expression evaluated to a non-nil string.</p>
-
-<p>As a special case, if <code>any</code> is given as data type, the result is true only if the expression evaluates to a value other than <code>nil</code>,  making the <code>expression is any</code> equivalent to <code>expression != nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; &quot;&quot; is string
-true
-
-&gt; nil is string
-false
-
-&gt; 42 is string
-false
-
-&gt; {} is list
-false
-
-&gt; [] is list
-true
-
-&gt; {} is dict
-true
-
-&gt; [1,2] is dict
-false
-
-&gt; nil is void
-true
-
-&gt; &quot;foo&quot; is any
-true
-
-&gt; nil is any
-false
-</code></pre>
-
-<h4 id="type-name">Type name</h4>
-
-<p>The <code>typeof</code> keyword returns the name of a value&rsquo;s type.</p>
-
-<pre><code class="language-text">'typeof' expression
-</code></pre>
-
-<p>The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>void</code>.</p>
-
-<pre><code class="language-ruby">&gt; typeof &quot;foo&quot;
-&quot;string&quot;
-&gt; typeof (x) -&gt; x+1
-&quot;function&quot;
-&gt; typeof 1
-&quot;long&quot;
-&gt; typeof 1.0
-&quot;double&quot;
-&gt; typeof false
-&quot;boolean&quot;
-&gt; typeof {}
-&quot;dict&quot;
-&gt; typeof []
-&quot;list&quot;
-&gt; typeof 2017-03-12T
-&quot;datetime&quot;
-&gt; typeof nil
-&quot;void&quot;
-</code></pre>
-
-<h4 id="type-casts">Type casts</h4>
-
-<p>The <code>as</code> keyword allows to explicitly cast a value expression to a given type.</p>
-
-<pre><code class="language-text">expression 'as' dataType
-</code></pre>
-
-<p>Type casts may throw errors if the types are incompatible or the specific value is not convertible. In general, type casts only succeed if there is either no information loss, or the amount of information loss is no greater than to be expected from the types involved.</p>
-
-<p>Supported type casts are listed for each type in their respective section of <a href="#data-types">data types</a>. Type casts to <code>any</code> always succeed, and leave the value unchanged. Type casts to <code>void</code> only succeed if the value was <code>nil</code>.</p>
-
-<p>A few examples:</p>
-
-<pre><code class="language-ruby">&gt; &quot;1.4&quot; as double # string to double
-1.4
-
-&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;] as dict # list to dict
-{
-  :a &quot;b&quot;,
-  :c &quot;d&quot;
-}
-
-&gt; 1234567890123 as datetime # long to datetime
-2009-02-13T23:31:30.123Z@UTC
-
-&gt; 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
-{
-  :month 7,
-  :day_of_year 204,
-  :hour 23,
-  :zone &quot;Europe/Berlin&quot;,
-  :nano_of_second 298000000,
-  :offset_seconds 7200,
-  :second 32,
-  :minute 12,
-  :day_of_week 7,
-  :week_of_year 29,
-  :day_of_month 23,
-  :year 2017
-}
-
-&gt; nil as string # nil casts to any type
-nil
-</code></pre>
-
 <h4 id="container-access">Container access</h4>
 
 <p>List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime.</p>
@@ -1834,7 +1672,7 @@ nil
 <pre><code class="language-text">containerAccess
   : expression'['containerAccessKeySequence']'
   ;
-	
+
 containerAccessKeySequence
   : ((expression | splat) ','?)+
   ;
@@ -1922,7 +1760,7 @@ story: {
   :name &quot;A Study in Scarlet&quot;
   :adaptations [
     {:year 1914 :media &quot;silent film&quot;}
-    {:year 1968 :media &quot;television series&quot;}	
+    {:year 1968 :media &quot;television series&quot;}
   ]
 }
 \e
@@ -1974,7 +1812,7 @@ nil
 nil
 </code></pre>
 
-<p>The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in <a href="#list-literals">list literals</a>.</p>
+<p>The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in <a href="#list">list literals</a>.</p>
 
 <pre><code class="language-ruby">&gt; path: [:adaptations 1 :media]
 [&quot;adaptations&quot;, 1, &quot;media&quot;]
@@ -1996,7 +1834,7 @@ nil
 <p>Function calls have the following formal structure:</p>
 
 <pre><code class="language-text">functionCall
-  :expression'('args')' 
+  :expression'('args')'
   ;
 
 args
@@ -2073,7 +1911,7 @@ ERROR: {
 &gt; g: (x) -&gt; x # x's default value is nil
 function
 
-&gt; g(1) 
+&gt; g(1)
 1
 
 &gt; g() # x attains its default value nil
@@ -2167,7 +2005,7 @@ ERROR: {
 
 <p>Positional arguments can be interspersed with splats. The resulting arguments are concatenated left to right:</p>
 
-<pre><code class="language-ruby">&gt; f(42, ...[&quot;name&quot;]) 
+<pre><code class="language-ruby">&gt; f(42, ...[&quot;name&quot;])
 &quot;42-name&quot;
 
 &gt; f(...[42], &quot;name&quot;)
@@ -2279,7 +2117,7 @@ normalize: (string pn) -&gt;
 	  # remove whitespace
       (x) -&gt; regex.replacing('\s', &quot;&quot;)(x),
       # remove any dashes
-      (x) -&gt; strings.replace(x, &quot;-&quot;, &quot;&quot;), 
+      (x) -&gt; strings.replace(x, &quot;-&quot;, &quot;&quot;),
       # split to a list of blocks of up to 4 chars
       (x) -&gt; regex.splitting('(?&lt;=\G.{4})')(x),
       # place dashes between blocks converting to single string
@@ -2288,7 +2126,7 @@ normalize: (string pn) -&gt;
       strings.upper_case
 \e
 function
-     
+
 &gt; normalize(&quot;39 hd-sd-asdi3437&quot;)
 &quot;39HD-SDAS-DI34-37&quot;
 </code></pre>
@@ -2341,7 +2179,7 @@ let {
        x: &quot;bar&quot;
      }
      x # &quot;bar&quot;
-} 
+}
 x .. y # &quot;foo&quot;..&quot;bar&quot;
 \e
 &quot;foobar&quot;
@@ -2351,7 +2189,7 @@ x .. y # &quot;foo&quot;..&quot;bar&quot;
 
 <p>Conditional evaluation is done using a traditional <code>if</code> construct.</p>
 
-<pre><code class="language-text">'if' condition 'then'? then_expression 'else'? else_expression 
+<pre><code class="language-text">'if' condition 'then'? then_expression 'else'? else_expression
 </code></pre>
 
 <p>The <code>condition</code> expression is evaluated and cast to boolean. If the condition evalautes to <code>true</code>, the <code>then_expression</code> is evaluated and is the result of the expression. If the condition evaluates to <code>false</code> or <code>nil</code>, the <code>else_expression</code> is evaluated and is the result of the expression.  The <code>then</code> and <code>else</code> keywords are optional.</p>
@@ -2367,9 +2205,9 @@ function
 &quot;long&quot;
 &gt; f(&quot;hi&quot;)
 &quot;short&quot;
-  
+
 &gt; \e
-greeting: (string language) -&gt; 
+greeting: (string language) -&gt;
   if language == &quot;en&quot; then &quot;Good afternoon&quot;
   if language == &quot;de&quot; then &quot;Guten Tag&quot;
   if language == &quot;es&quot; then &quot;Hola&quot;
@@ -2419,15 +2257,15 @@ function
 forHead
   : generator (',' (generator | varDef | filter))*
   ;
-  
+
 generator
   : dataType? identifier '&lt;-' expression
   ;
-  
+
 varDef
   : metadef dataType? identifier ':' expression
   ;  
-  
+
 filter
   : expression
   ;
@@ -2517,7 +2355,7 @@ matchGuard
 <p>An example:</p>
 
 <pre><code class="language-ruby">&gt; \e
-f: (long x) -&gt; 
+f: (long x) -&gt;
   match x
     @ -&gt; true # always matches
 \e
@@ -2716,7 +2554,7 @@ function
 vector2d?: (list xs) -&gt;
   match xs
     # match 2-element list, use num? as predicate for each item
-    [num?, num?] -&gt; true 
+    [num?, num?] -&gt; true
     default -&gt; false
 \e
 function
@@ -2741,7 +2579,7 @@ false
 <p>The syntax for head list patterns is a list beginning with match patterns of any kind, separated by comma, then followed by a splat expression representing the tail:</p>
 
 <pre><code class="language-text">matchPattern
-  : '[' (matchPattern ',') * splatCapture ']' capture? 
+  : '[' (matchPattern ',') * splatCapture ']' capture?
   ;
 
 splatCapture
@@ -2848,15 +2686,15 @@ measures?: (list xs) -&gt;
     default -&gt; false
 \e
 function
-&gt; measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T]) 
+&gt; measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T])
 true
-&gt; measures?([:p2, 99, 2015-02-11T]) 
+&gt; measures?([:p2, 99, 2015-02-11T])
 true
-&gt; measures?([:p3, 2016-02-11T]) 
+&gt; measures?([:p3, 2016-02-11T])
 true
 &gt; measures?([2016-02-11T])
 false
-&gt; measures?([]) 
+&gt; measures?([])
 false
 &gt; measures?([:p4, 201, 2017-04-22T]) # number out of range
 false
@@ -2992,8 +2830,8 @@ latest_book_with_nr: (dict person) -&gt;
   match person
     {
      :profession &quot;author&quot;,
-     :books [@..., @latest_book] @books 
-    } -&gt; 
+     :books [@..., @latest_book] @books
+    } -&gt;
       &quot;The latest book is book nr. &quot;.. data.size(books) .. &quot;: &quot; .. latest_book
     default -&gt; nil
 \e
@@ -3021,11 +2859,11 @@ add: (long x=0, long y=0) -&gt;
   let {
     long sum: x + y
   }
-  if x &gt; 0 and y &gt; 0 and sum &lt;= 0 
+  if x &gt; 0 and y &gt; 0 and sum &lt;= 0
     throw {:code &quot;overflow&quot;, :message &quot;binary overflow adding #{x} and #{y}&quot;}
   if x &lt; 0 and y &lt; 0 and sum &gt;= 0
     throw {:code &quot;overflow&quot;, :message &quot;binary underflow adding #{x} and #{y}&quot;}
-  else 
+  else
     sum
 \e
 function
@@ -3071,7 +2909,7 @@ catchDeclaration
 
 <p>The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.</p>
 
-<pre><code class="language-ruby">&gt; \e 
+<pre><code class="language-ruby">&gt; \e
 # add two longs, revert to fallback_value if overflow or underflow happens
 add_safe: (long x=0, long y=0, long fallback_value=nil) -&gt; long
   try
@@ -3084,15 +2922,13 @@ add_safe: (long x=0, long y=0, long fallback_value=nil) -&gt; long
 
 \e
 function
-      
+
 &gt; add_safe(1, 2)
 3
 
 &gt; add_safe(math.max_long, 1)
 nil
 </code></pre>
-
-<p>TODO: define caught stack trace, and example</p>
 
 <h4 id="references">References</h4>
 
@@ -3114,17 +2950,17 @@ nil
 
 <h5 id="unscoped-references">Unscoped references</h5>
 
-<p>Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references&rsquo; initial identifiers are resolved starting in the <a href="#scope">scope</a> they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.</p>
+<p>Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references&rsquo; initial identifiers are resolved starting in the scope they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.</p>
 
 <p>An example file with comments highlighting scope changes and references:</p>
 
 <pre><code class="language-ruby"># scopes.tf
 
 # introduces 'strings' in module scope
-import strings from &quot;std&quot; 
+import strings from &quot;std&quot;
 
 # introduces 'len' in module scope
-alias strings.length as len # references 'strings' in module scope 
+alias strings.length as len # references 'strings' in module scope
 
 # introduces 'utils' in module scope
 library utils {            
@@ -3161,7 +2997,7 @@ a .. &quot; / &quot;.. b
 <p>Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
 
 <pre><code class="language-ruby"># libary-refs.tf
-import strings from &quot;std&quot; 
+import strings from &quot;std&quot;
 
 library utils {            
   f: (x) -&gt; strings.length(x)  
@@ -3255,7 +3091,7 @@ let {
   d: c
 } [a, b, c, d]
 \e
-ERROR: { 
+ERROR: {
   :code &quot;CYCLIC_REFERENCE&quot;,
   ...
 }
@@ -3291,9 +3127,9 @@ function
 <p>The following example creates a sequence of functions, each multiplying its input by a number it closes over:</p>
 
 <pre><code class="language-ruby">&gt; \e
-fs: 
+fs:
   for i &lt;- [1, 2, 3],
-      (x) -&gt; x*i 
+      (x) -&gt; x*i
 \e
 [function, function, function]
 </code></pre>
@@ -3308,9 +3144,47 @@ fs:
 30
 </code></pre>
 
-<h4 id="operators">Operators</h4>
+<h4 id="debugging">Debugging</h4>
 
-<p>TODO: operator introduction</p>
+<p>Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:</p>
+
+<pre><code class="language-text">'debug' expression (',' expression)?
+</code></pre>
+
+<p>Debug itself is an expression that evaluates to the value being debugged.</p>
+
+<p>If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.</p>
+
+<p>If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.</p>
+
+<p>As an example, the following function has some conditional branches, and is debugging which branches are taken.</p>
+
+<pre><code class="language-ruby">&gt; \e
+sgn: (long x) -&gt;
+  debug &quot;DEBUG: calculating sign of x: #{x}&quot;,
+  if x &gt; 0 then debug &quot;DEBUG: x is positive&quot;, 1
+  if x &lt; 0 then debug &quot;DEBUG: x is negative&quot;, -1
+  else debug &quot;DEBUG: x is zero or nil&quot;, 0
+\e
+function
+
+&gt; sgn(10)
+&quot;DEBUG: calculating sign of x: 10&quot;
+&quot;DEBUG: x is positive&quot;
+1
+
+&gt; sgn(-10)
+&quot;DEBUG: calculating sign of x: -10&quot;
+&quot;DEBUG: x is negative&quot;
+-1
+
+&gt; sgn(0)
+&quot;DEBUG: calculating sign of x: 0&quot;
+&quot;DEBUG: x is zero or nil&quot;
+0
+</code></pre>
+
+<h4 id="operators">Operators</h4>
 
 <h5 id="precedence-grouping">Precedence grouping</h5>
 
@@ -3335,7 +3209,7 @@ fs:
 
 <h5 id="boolean-not">Boolean not</h5>
 
-<p>Syntax: <code>!a</code> or its equivalent <code>not a</code></p>
+<p>Syntax: <code>!a</code> or <code>not a</code></p>
 
 <p>The operand is cast to boolean and a negation is performed resulting in another boolean.</p>
 
@@ -3604,8 +3478,8 @@ ERROR: {
 </tr>
 
 <tr>
-<td>`[+</td>
-<td>-]Infinity / [+</td>
+<td><code>[+¦-]Infinity / [+¦-]Infinity</code></td>
+<td><code>NaN</code></td>
 </tr>
 </tbody>
 </table>
@@ -3703,13 +3577,13 @@ ERROR: {
 </tr>
 
 <tr>
-<td>`[+</td>
-<td>-]Infinity / [+</td>
+<td><code>[+¦-]Infinity % [+¦-]Infinity</code></td>
+<td><code>NaN</code></td>
 </tr>
 
 <tr>
-<td>`0.0 % [+</td>
-<td>-]Infinity`</td>
+<td><code>0.0 % [+¦-]Infinity</code></td>
+<td><code>0.0</code></td>
 </tr>
 </tbody>
 </table>
@@ -4081,7 +3955,7 @@ false
 <p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="/tweakflow/modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
 
 <pre><code class="language-ruby"># same points in time, but different local time and time zone
-&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch) 
+&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
 0
 # same points in time are not equal
 &gt; 1970-01-01T01:00:00+01:00 == time.epoch       
@@ -4121,38 +3995,438 @@ false
 
 <p>Inversion of equality. Evaluates to <code>true</code> if <code>a==b</code> evaluates to <code>false</code>. Evaluates to <code>false</code> if <code>a==b</code> evaluates to true.</p>
 
-<p>TODO:</p>
+<h5 id="bitwise-and">Bitwise and</h5>
 
-<pre><code>| expression '&amp;' expression                               # bitwiseAndExp
-| expression '^' expression                               # bitwiseXorExp
-| expression '|' expression                               # bitwiseOrExp
-| expression '&amp;&amp;' expression                              # boolAndExp
-| expression 'and' expression                             # boolAndExp
-| expression '||' expression                              # boolOrExp
-| expression 'or' expression                              # boolOrExp
+<p>Syntax: <code>a&amp;b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &amp; 2
+0
+&gt; 7 &amp; 15
+7
+&gt; -1 &amp; 29837
+29837
+&gt; 3 &amp; 2
+2
+&gt; nil &amp; 1
+nil
+</code></pre>
+
+<h5 id="bitwise-exclusive-or">Bitwise exclusive or</h5>
+
+<p>Syntax: <code>a^b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 ^ 1
+0
+&gt; 1 ^ 2
+3
+&gt; -1 ^ 0
+-1
+&gt; -1 ^ 1
+-2
+&gt; nil ^ 2
+nil
+</code></pre>
+
+<h5 id="bitwise-or">Bitwise or</h5>
+
+<p>Syntax: <code>a|b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 | 3
+3
+&gt; -1 | 0
+-1
+&gt; 1 | 2 | 4 | 8
+15
+&gt; nil | 2
+nil
+</code></pre>
+
+<h5 id="boolean-and">Boolean and</h5>
+
+<p>Syntax: <code>a&amp;&amp;b</code> or <code>a and b</code></p>
+
+<p>This operation is a short-circuiting boolean and. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, the whole expression evaluates to <code>false</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>true</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; 1 &amp;&amp; 2
+true
+&gt; 1 &amp;&amp; 0
+false
+&gt; false &amp;&amp; throw &quot;not evaluated&quot;
+false
+&gt; true &amp;&amp; true
+true
+&gt; [] &amp;&amp; 1
+false
+&gt; [&quot;foo&quot;] &amp;&amp; 1
+true
+</code></pre>
+
+<h5 id="boolean-or">Boolean or</h5>
+
+<p>Syntax: <code>a||b</code> or <code>a or b</code></p>
+
+<p>This operation is a short-circuiting boolean or. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>true</code>, the whole expression evaluates to <code>true</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
+
+<pre><code class="language-ruby">&gt; true || false
+true
+&gt; true || throw &quot;not evaluated&quot;
+true
+&gt; false || true
+true
+&gt; [] || []
+false
+&gt; [] || [1]
+true
+</code></pre>
+
+<h5 id="type-check">Type check</h5>
+
+<p>Syntax: <code>a is datatype</code></p>
+
+<pre><code class="language-text">datatype
+  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  ;
+</code></pre>
+
+<p>The check is a boolean expression and it evaluates to <code>true</code> or <code>false</code> depending on whether <code>a</code> evaluates to a  member of the given data type.</p>
+
+<p>As a special case, the <code>nil</code> value, even though a member of any type, only yields true when checked as being member of the <code>void</code> type. Therefore <code>a is string</code> implies that <code>a</code> is a non-nil string.</p>
+
+<p>As a special case, if <code>any</code> is given as data type, the result is true only if the expression evaluates to a value other than <code>nil</code>,  making  <code>a is any</code> equivalent to <code>a != nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; &quot;&quot; is string
+true
+&gt; nil is string
+false
+&gt; 42 is string
+false
+&gt; {} is list
+false
+&gt; [] is list
+true
+&gt; {} is dict
+true
+&gt; [1,2] is dict
+false
+&gt; nil is void
+true
+&gt; &quot;foo&quot; is any
+true
+&gt; nil is any
+false
+</code></pre>
+
+<h5 id="type-name">Type name</h5>
+
+<p>Syntax: <code>typeof a</code></p>
+
+<p>The expression returns the name of a value&rsquo;s type. The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>void</code>.</p>
+
+<pre><code class="language-ruby">&gt; typeof &quot;foo&quot;
+&quot;string&quot;
+&gt; typeof (x) -&gt; x+1
+&quot;function&quot;
+&gt; typeof 1
+&quot;long&quot;
+&gt; typeof 1.0
+&quot;double&quot;
+&gt; typeof false
+&quot;boolean&quot;
+&gt; typeof {}
+&quot;dict&quot;
+&gt; typeof []
+&quot;list&quot;
+&gt; typeof 2017-03-12T
+&quot;datetime&quot;
+&gt; typeof nil
+&quot;void&quot;
+</code></pre>
+
+<h5 id="type-cast">Type cast</h5>
+
+<p>Syntax: <code>a as datatype</code></p>
+
+<pre><code class="language-text">datatype
+  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  ;
+</code></pre>
+
+<p>The expression explicitly casts <code>a</code> to a given type.</p>
+
+<p>Type casts may throw errors if the types are incompatible or the specific value is not convertible. In general, type casts only succeed if there is either no information loss, or the amount of information loss is no greater than to be expected from the types involved.</p>
+
+<p>Supported type casts are listed for each type in their respective section of <a href="#data-types">data types</a>. Type casts to <code>any</code> always succeed, and leave the value unchanged. Type casts to <code>void</code> only succeed if <code>a</code> is <code>nil</code>.</p>
+
+<pre><code class="language-ruby">&gt; &quot;1.4&quot; as double # string to double
+1.4
+
+&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;] as dict # list to dict
+{
+  :a &quot;b&quot;,
+  :c &quot;d&quot;
+}
+
+&gt; 1234567890123 as datetime # long to datetime
+2009-02-13T23:31:30.123Z@UTC
+
+&gt; 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
+{
+  :month 7,
+  :day_of_year 204,
+  :hour 23,
+  :zone &quot;Europe/Berlin&quot;,
+  :nano_of_second 298000000,
+  :offset_seconds 7200,
+  :second 32,
+  :minute 12,
+  :day_of_week 7,
+  :week_of_year 29,
+  :day_of_month 23,
+  :year 2017
+}
+
+&gt; nil as string # nil casts to any type
+nil
 </code></pre>
 
 <h5 id="operator-precedence">Operator precedence</h5>
 
-<p>TODO: give order of constructs and operators</p>
+<p>The following table lists tweakflow operators and constructs in precedence order, starting with the highest precedence.</p>
 
-<h4 id="debugging">Debugging</h4>
+<p>All operators an constructs are left-associative. When chaning operators of the same precedence, they are evaluated left to right. The expression <code>a+b+c</code> is evaluated as <code>(a+b)+c</code> for example.</p>
 
-<p>TODO: describe the debug construct</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Example</th>
+</tr>
+</thead>
 
-<h2 id="language-tools">Language tools</h2>
+<tbody>
+<tr>
+<td>Fuction call</td>
+<td><code>f(1, 2, 3)</code></td>
+</tr>
 
-<h3 id="interactive-repl">Interactive REPL</h3>
+<tr>
+<td>Call chaining</td>
+<td><code>-&gt;&gt; (&quot;foo&quot;) f, g, h</code></td>
+</tr>
 
-<p>TODO: describe itf</p>
+<tr>
+<td>Container access</td>
+<td><code>d[:a]</code>, <code>a[1]</code></td>
+</tr>
 
-<h3 id="runner">Runner</h3>
+<tr>
+<td>Precedence grouping</td>
+<td><code>a+(b*c)</code></td>
+</tr>
 
-<p>TODO: describe tf</p>
+<tr>
+<td>Type cast</td>
+<td><code>&quot;1.2&quot; as double</code></td>
+</tr>
 
-<h3 id="metadata-extraction">Metadata extraction</h3>
+<tr>
+<td>Default value</td>
+<td><code>name default &quot;John Doe&quot;</code></td>
+</tr>
 
-<p>TODO: describe tfdoc</p>
+<tr>
+<td>Bitwise not</td>
+<td><code>~bits</code></td>
+</tr>
+
+<tr>
+<td>Boolean not</td>
+<td><code>!done</code></td>
+</tr>
+
+<tr>
+<td>Unary minus</td>
+<td><code>-(2+2)</code></td>
+</tr>
+
+<tr>
+<td>Exponentiation</td>
+<td><code>2**10</code></td>
+</tr>
+
+<tr>
+<td>Multiplication</td>
+<td><code>2*2</code></td>
+</tr>
+
+<tr>
+<td>Floating point division</td>
+<td><code>4/2</code></td>
+</tr>
+
+<tr>
+<td>Integer division</td>
+<td><code>4//2</code></td>
+</tr>
+
+<tr>
+<td>Division remainder</td>
+<td><code>length % 2</code></td>
+</tr>
+
+<tr>
+<td>Addition</td>
+<td><code>4+2</code></td>
+</tr>
+
+<tr>
+<td>Subtraction</td>
+<td><code>4-2</code></td>
+</tr>
+
+<tr>
+<td>String concatenation</td>
+<td><code>&quot;Hello &quot;..&quot;World&quot;</code></td>
+</tr>
+
+<tr>
+<td>Binary shift left</td>
+<td><code>1 &lt;&lt; 8</code></td>
+</tr>
+
+<tr>
+<td>Binary shift right, sign preserving</td>
+<td><code>255 &gt;&gt; 2</code></td>
+</tr>
+
+<tr>
+<td>Binary shift right</td>
+<td><code>-1 &gt;&gt;&gt; 1</code></td>
+</tr>
+
+<tr>
+<td>Less than</td>
+<td><code>a &lt; max</code></td>
+</tr>
+
+<tr>
+<td>Less than or equal</td>
+<td><code>a &lt;= max</code></td>
+</tr>
+
+<tr>
+<td>Greater than</td>
+<td><code>a &gt; min</code></td>
+</tr>
+
+<tr>
+<td>Greater than or equal</td>
+<td><code>a &gt;= min</code></td>
+</tr>
+
+<tr>
+<td>Type check</td>
+<td><code>a is string</code></td>
+</tr>
+
+<tr>
+<td>Type name</td>
+<td><code>typeof a</code></td>
+</tr>
+
+<tr>
+<td>Equality with type identity</td>
+<td><code>a === 1</code></td>
+</tr>
+
+<tr>
+<td>Inequality with type identity</td>
+<td><code>a !== 1</code></td>
+</tr>
+
+<tr>
+<td>Equality</td>
+<td><code>a == &quot;foo&quot;</code></td>
+</tr>
+
+<tr>
+<td>Inequality</td>
+<td><code>a != &quot;foo&quot;</code></td>
+</tr>
+
+<tr>
+<td>Bitwise and</td>
+<td><code>bits &amp; mask</code></td>
+</tr>
+
+<tr>
+<td>Bitwise xor</td>
+<td><code>bits ^ flip</code></td>
+</tr>
+
+<tr>
+<td>Bitwise or</td>
+<td><code>bits ¦ flags</code></td>
+</tr>
+
+<tr>
+<td>Boolean and</td>
+<td><code>locked &amp;&amp; loaded</code></td>
+</tr>
+
+<tr>
+<td>Boolean or</td>
+<td><code>sleepy ¦¦ hungry</code></td>
+</tr>
+
+<tr>
+<td>Pattern matching</td>
+<td><code>match xs [@,@] -&gt; true</code></td>
+</tr>
+
+<tr>
+<td>List comprehension</td>
+<td><code>for x &lt;- [1, 2, 3], x*x</code></td>
+</tr>
+
+<tr>
+<td>Conditional evaluation</td>
+<td><code>if sleepy then sleep(8) else party(4)</code></td>
+</tr>
+
+<tr>
+<td>Local variables</td>
+<td><code>let {a: 1; b: 2} a+b</code></td>
+</tr>
+
+<tr>
+<td>Try / catch</td>
+<td><code>try sleep(:long) catch &quot;tired&quot;</code></td>
+</tr>
+
+<tr>
+<td>Throw</td>
+<td><code>throw &quot;cannot do this&quot;</code></td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td><code>debug &quot;DEBUG x: #{x}&quot;</code></td>
+</tr>
+</tbody>
+</table>
 
       </main>
     </div>
