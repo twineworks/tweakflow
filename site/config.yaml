@@ -18,11 +18,15 @@ menu:
       URL: "/modules/std.html"
       Weight: -400
 
-    - Name: "Embedding guide"
-      URL: "/embedding.html"
-      Weight: -300
+    # - Name: "Tools"
+    #   URL: "/tools.html"
+    #   Weight: -300
+    #
+    # - Name: "Embedding"
+    #   URL: "/embedding.html"
+    #   Weight: -200
 
-    - Name: "Source code"
+    - Name: "Source"
       URL: "https://github.com/twineworks/tweakflow/"
       Weight: -100
 
