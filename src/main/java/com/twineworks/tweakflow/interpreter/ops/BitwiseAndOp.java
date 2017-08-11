@@ -47,9 +47,9 @@ final public class BitwiseAndOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     Long left = leftOp.eval(stack, context).castTo(Types.LONG).longNum();
-    if (left == null) return Values.NIL;
-
     Long right = rightOp.eval(stack, context).castTo(Types.LONG).longNum();
+
+    if (left == null) return Values.NIL;
     if (right == null) return Values.NIL;
 
     return Values.make(left & right);
