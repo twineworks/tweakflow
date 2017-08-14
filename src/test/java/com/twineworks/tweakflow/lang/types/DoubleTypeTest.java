@@ -64,6 +64,14 @@ public class DoubleTypeTest {
     assertThat(Types.DOUBLE.canAttemptCastFrom(Types.STRING)).isTrue();
     assertThat(Types.DOUBLE.castFrom(Values.make("1.0"))).isEqualTo(Values.make(1.0d));
     assertThat(Types.DOUBLE.castFrom(Values.make("0.0"))).isEqualTo(Values.make(0.0d));
+    assertThat(Types.DOUBLE.castFrom(Values.make("999"))).isEqualTo(Values.make(999d));
+    assertThat(Types.DOUBLE.castFrom(Values.make("-3.2"))).isEqualTo(Values.make(-3.2d));
+    assertThat(Types.DOUBLE.castFrom(Values.make("+0.5e-2"))).isEqualTo(Values.make(0.005d));
+    assertThat(Types.DOUBLE.castFrom(Values.make(".4"))).isEqualTo(Values.make(.4d));
+    assertThat(Types.DOUBLE.castFrom(Values.make(".4E3"))).isEqualTo(Values.make(400d));
+    assertThat(Types.DOUBLE.castFrom(Values.make("-2.4E1"))).isEqualTo(Values.make(-24d));
+    // beyond long range
+    assertThat(Types.DOUBLE.castFrom(Values.make("922337203685477580700"))).isEqualTo(Values.make(922337203685477580700d));
   }
 
   @Test(expected = LangException.class)
@@ -76,6 +84,11 @@ public class DoubleTypeTest {
   public void cannot_cast_from_datetime() throws Exception {
     assertThat(Types.DOUBLE.canAttemptCastFrom(Types.DATETIME)).isFalse();
     Types.DOUBLE.castFrom(Values.EPOCH);
+  }
+
+  @Test(expected = LangException.class)
+  public void cannot_cast_from_invalid_string() throws Exception {
+    Types.DOUBLE.castFrom(Values.make("0.2kg"));
   }
 
   @Test(expected = LangException.class)
