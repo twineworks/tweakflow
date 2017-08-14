@@ -408,6 +408,382 @@ spans multiple lines
 "hello"
 ```
 
+## Semantic structure
+
+### Modules
+
+Modules are the top level organizational unit in tweakflow. A module is typically a file, but host applications are free to supply modules as in-memory text as well. There is exactly one module per file.
+
+Module files must be encoded in UTF-8. The default file extension for modules is `.tf`.
+
+The role of a module is to provide a top level grouping of related functions and values. In this sense modules act like namespaces or packages.
+
+A module usually starts with the `module` keyword. If there are no [annotations](#annotations), the `module` keyword becomes optional, and the beginning of the file is treated as the beginning of the module.
+
+[Global modules](#global-modules) need to announce the fact that they are global, and provide a global identifier to store the module in. A global module starts with the keywords `global` `module` followed by an identifier. Any  [annotations](#annotations) go before that sequence.
+
+Formally modules have the following syntax:
+
+```
+module
+  : moduleHead moduleComponent*
+  ;
+
+moduleHead
+  : nameDec? (importDef | aliasDef | exportDef) *
+  ;
+
+nameDec
+  : metaDef 'module'
+  | metaDef 'global' 'module' identifier
+  ;
+
+moduleComponent
+  : library
+  ;
+```
+
+#### Global modules
+
+Modules can declare themselves available under a specific name in global scope. It is an error to load more than one module claiming the same name.
+
+Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.
+
+Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors.
+
+**Example use of global modules for configuration**
+
+The following set of files constitute configuration variants, available globally as `env`.
+
+```ruby
+# environments/local.tf
+global module env
+
+export library conf {
+  string data_path: "/home/me/my_project/data/"
+}
+```
+
+```ruby
+# environments/production.tf
+global module env
+
+export library conf {
+  string data_path: "/var/incoming/data/"
+}
+```
+
+This file uses the environment configuration throught the global reference `$env`.
+
+```ruby
+# main.tf
+library my_lib {
+  file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv"
+}
+```
+
+#### Imports
+
+Import statements bring names exported from other modules into the current module. The syntax allows importing individual names, or all exported names at once. If imported individually, names may be bound to local names that are different from the names in the source module.
+
+It is an error to import a name that is not explicitly exported.
+
+Imported names are placed in module scope.
+
+Imports have the following syntax:
+
+```text
+importDef
+  : 'import' importMember (','? importMember)* 'from' modulePath
+  ;
+
+importMember
+  : moduleImport
+  | componentImport
+  ;
+
+moduleImport
+  : '*' 'as' importModuleName
+  ;
+
+componentImport
+  : exportComponentName ('as' importComponentName)?
+  ;
+
+importModuleName
+  : IDENTIFIER
+  ;
+
+importComponentName
+  : IDENTIFIER
+  ;
+
+exportComponentName
+  : IDENTIFIER
+  ;
+
+modulePath
+  : stringLiteral
+  ;
+```
+
+The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.
+
+Two modules may import each other's exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
+
+**Examples**
+
+Module `"./util/strings.tf"` is imported as a whole below. Any exported name `x` is available as `utils.x` locally.
+
+```javascript
+import * as utils from "./util/strings.tf"
+```
+
+A specific library `conversion_lib` is imported from `"./util/strings.tf"` below. Its local name remains `conversion_lib`.
+
+```javascript
+import conversion_lib from "./util/strings.tf"
+```
+
+Specific entities are imported individually below. The import statement references two exported libraries from module `"./util/strings.tf"`, making them available under local names `str` and `conv`.
+
+```javascript
+import string_lib as str, conversion_lib as conv from "./util/strings.tf"
+```
+
+#### Aliases
+
+Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in module scope. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.
+
+Aliases have the following syntax:
+
+```text
+aliasDef
+  : 'alias' reference 'as' aliasName
+  ;
+
+aliasName
+  : IDENTIFIER
+  ;
+```
+
+The following module uses aliases.
+
+```ruby
+# file: aliases.tf
+import * as std from "std"
+
+# s can be used as shortcut to std.strings
+alias std.strings as s
+# map can be used as shortcut to std.data.map
+alias std.data.map as map
+# aliases can be aliased again
+alias map as m
+
+library my_util {
+  # s alias used here
+  greeting: s.concat(["Hello", " ", "World!"]) 	# "Hello World!"
+  # m alias used here
+  mapped: m([1,2,3], (x) -> x*x) 				# [1, 4, 9]
+}
+```
+
+#### Exports
+
+A module defines its public interface using exports. Libraries can be exported inline when defined, or explicitly in an export statement. An export statement refers to a name and makes it available for other modules to import. You can optionally specify an export name, that is only visible to other modules when importing, but not within the exporting module itself. Exporting an imported or aliased name is allowed.
+
+```text
+exportDef
+  : 'export' reference ('as' exportName)?
+  ;
+
+exportName
+  : IDENTIFIER
+  ;
+```
+
+Below example exports the strings standard library under the name `str`, and a local library `common` under the name `util` .
+
+```ruby
+# lib.tf
+import * as std from "std"
+
+export std.strings as str
+export common as util
+
+library common {
+  ...
+}
+```
+
+The following file imports both the `str` and the `util` export.
+
+```ruby
+# main.tf
+import util, str from "./lib.tf"
+```
+
+### Libraries
+
+A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope.
+
+**Syntax**
+
+```text
+library
+  : metaDef 'export'? 'library' identifier '{' varDef* '}'
+  ;
+```
+
+Below is an exported library holding some functions.
+
+```ruby
+export library nums {
+  function square: (x) 	-> x**2
+  function root: (x) 	-> x**0.5
+}
+```
+
+### Variables
+A variable is a named entity that holds a value. Variables are placed in [libraries](#libraries). Variables have a name, a  [type](#data-types), and a value. They can also be annotated by [docs and metadata](#annotations).
+
+```
+varDef
+  : metaDef dataType? identifier ':' expression endOfStatement?
+  | metaDef 'provided' dataType? identifier endOfStatement?
+  ;
+```
+
+The type of variables guarantees that referencing a variable results in a value of the specified type. Variable values are cast implicitly if necessary.
+
+```ruby
+> boolean bool_var: 1
+true
+
+> boolean bool_var: 0
+false
+```
+
+If unspecified, the variable type is `any`, and no implicit casts take place.
+
+```ruby
+> some_var: 1
+1
+
+> any some_var: 1
+1
+```
+
+Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`.
+
+Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.
+
+### Scopes
+
+All named entities like variables, libraries, aliases, and exports are placed in a scope in which each name must be unique. Tweakflow has four different kinds of scope ordered into a hierarchy:
+
+- global scope
+- module scope
+- library scope
+- local scope
+
+There is exactly one global scope per tweakflow program. It contains the names of [global modules](#global-modules), if any are loaded.
+
+There is a distinct module scope per loaded module. It contains the names of the module's imports, aliases, and libraries.
+
+There is a distinct library scope per library in a module. It contains the names of all library variables.
+
+There is a local scope per variable in a module. Nested local scopes are created as part of expressions that introduce identifiers, like [local variables](#local-variables) for example.
+
+Name resolution for references generally starts in the scope the reference appears in. If the name is not found the search propagates one level up until it stops after searching module scope. Global scope is not searched as part of the algorithm. Any references to global names must be explicitly marked as global references. See [references](#references) for syntax details.
+
+### Annotations
+
+Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.
+
+Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyworkd `meta` followed by an expression.
+
+The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
+
+The following module contains a single library with a single function:
+
+```ruby
+module
+
+library bar {
+  function baz: (x) -> x*x
+}
+```
+
+The same module with a full set of annotations at the module, library, and variable level:
+
+```ruby
+# module foo.tf
+doc
+​~~~
+This is documentation at the module level.
+​~~~
+meta {
+  :title       "foo"
+  :description "Description of the module"
+  :version     "4.2"
+}
+module
+
+# library bar
+doc
+​~~~
+This is documentation for library bar.
+​~~~
+meta {
+  :author "John Doe et al."
+  :since  "2.3"
+}
+
+library bar {
+
+# function baz
+doc
+​~~~
+This is documentation for function baz.
+​~~~
+  meta {
+    :author "John Doe"
+    :date 2017-03-12T
+  }
+  function baz: (x) -> x*x
+}
+```
+
+You can inspect the documentation and metadata of modules, libraries and variables at the REPL using the `\doc` and `\meta` commands.
+
+```text
+foo.tf> \doc
+This is documentation at the module level.
+foo.tf> \meta
+{
+  :version "4.2",
+  :title "foo",
+  :description "Description of the module"
+}
+
+foo.tf> \doc bar
+This is documentation for library bar.
+foo.tf> \meta bar
+{
+  :author "John Doe et al.",
+  :since "2.3"
+}
+
+foo.tf> \doc bar.baz
+This is documentation for function baz.
+foo.tf> \meta bar.baz
+{
+  :author "John Doe",
+  :date 2017-03-12T00:00:00Z@UTC
+}
+```
+
 ## Data types
 
 Tweakflow supports a fixed set of data types. Each data type has literal notation, and a set of supported cast targets to other types. The following sections highlight all available types and their characteristics.
@@ -1009,395 +1385,19 @@ The only `void` value `nil` casts successfully to any type, and remains `nil`.
 
 The `any` type is a type is not concrete type of its own, but it is used to indicate the possibility of any type being present in the given context. The `any` type is used as a default in type declarations for variables, parameters and return types.
 
-## Semantic structure
-
-### Modules
-
-Modules are the top level organizational unit in tweakflow. A module is typically a file, but host applications are free to supply modules as in-memory text as well. There is exactly one module per file.
-
-Module files must be encoded in UTF-8. The default file extension for modules is `.tf`.
-
-The role of a module is to provide a top level grouping of related functions and values. In this sense modules act like namespaces or packages.
-
-A module usually starts with the `module` keyword. If there are no [annotations](#annotations), the `module` keyword becomes optional, and the beginning of the file is treated as the beginning of the module.
-
-[Global modules](#global-modules) need to announce the fact that they are global, and provide a global identifier to store the module in. A global module starts with the keywords `global` `module` followed by an identifier. Any  [annotations](#annotations) go before that sequence.
-
-Formally modules have the following syntax:
-
-```
-module
-  : moduleHead moduleComponent*
-  ;
-
-moduleHead
-  : nameDec? (importDef | aliasDef | exportDef) *
-  ;
-
-nameDec
-  : metaDef 'module'
-  | metaDef 'global' 'module' identifier
-  ;
-
-moduleComponent
-  : library
-  ;
-```
-
-#### Global modules
-
-Modules can declare themselves available under a specific name in global scope. It is an error to load more than one module claiming the same name.
-
-Global modules are designed to facilitate project-wide configuration and global libraries of which there must be exactly one in scope at all times. Individual modules remain in control of their functional dependencies through imports, but their global dependencies are controlled from the outside. When using tweakflow standalone, a global module would be loaded from the command line. When using tweakflow embedded, typically the host application would be loading global modules.
-
-Please note that a module referencing a global module cannot work standalone. Tweakflow resolves references after all modules are loaded, and unresolved references to global modules cause errors.
-
-**Example use of global modules for configuration**
-
-The following set of files constitute configuration variants, available globally as `env`.
-
-```ruby
-# environments/local.tf
-global module env
-
-export library conf {
-  string data_path: "/home/me/my_project/data/"
-}
-```
-
-```ruby
-# environments/production.tf
-global module env
-
-export library conf {
-  string data_path: "/var/incoming/data/"
-}
-```
-
-This file uses the environment configuration throught the global reference `$env`.
-
-```ruby
-# main.tf
-library my_lib {
-  file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv"
-}
-```
-
-#### Imports
-
-Import statements bring names exported from other modules into the current module. The syntax allows importing individual names, or all exported names at once. If imported individually, names may be bound to local names that are different from the names in the source module.
-
-It is an error to import a name that is not explicitly exported.
-
-Imported names are placed in module scope.
-
-Imports have the following syntax:
-
-```text
-importDef
-  : 'import' importMember (','? importMember)* 'from' modulePath
-  ;
-
-importMember
-  : moduleImport
-  | componentImport
-  ;
-
-moduleImport
-  : '*' 'as' importModuleName
-  ;
-
-componentImport
-  : exportComponentName ('as' importComponentName)?
-  ;
-
-importModuleName
-  : IDENTIFIER
-  ;
-
-importComponentName
-  : IDENTIFIER
-  ;
-
-exportComponentName
-  : IDENTIFIER
-  ;
-
-modulePath
-  : stringLiteral
-  ;
-```
-
-The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.
-
-Two modules may import each other's exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
-
-**Examples**
-
-Module `"./util/strings.tf"` is imported as a whole below. Any exported name `x` is available as `utils.x` locally.
-
-```javascript
-import * as utils from "./util/strings.tf"
-```
-
-A specific library `conversion_lib` is imported from `"./util/strings.tf"` below. Its local name remains `conversion_lib`.
-
-```javascript
-import conversion_lib from "./util/strings.tf"
-```
-
-Specific entities are imported individually below. The import statement references two exported libraries from module `"./util/strings.tf"`, making them available under local names `str` and `conv`.
-
-```javascript
-import string_lib as str, conversion_lib as conv from "./util/strings.tf"
-```
-
-#### Aliases
-
-Tweakflow allows local aliases to shorten or relabel names, making local code independent of name conventions in other modules. Aliases are placed in module scope. Circular aliases are not allowed. An alias must ultimately point to a concrete entity.
-
-Aliases have the following syntax:
-
-```text
-aliasDef
-  : 'alias' reference 'as' aliasName
-  ;
-
-aliasName
-  : IDENTIFIER
-  ;
-```
-
-The following module uses aliases.
-
-```ruby
-# file: aliases.tf
-import * as std from "std"
-
-# s can be used as shortcut to std.strings
-alias std.strings as s
-# map can be used as shortcut to std.data.map
-alias std.data.map as map
-# aliases can be aliased again
-alias map as m
-
-library my_util {
-  # s alias used here
-  greeting: s.concat(["Hello", " ", "World!"]) 	# "Hello World!"
-  # m alias used here
-  mapped: m([1,2,3], (x) -> x*x) 				# [1, 4, 9]
-}
-```
-
-#### Exports
-
-A module defines its public interface using exports. Libraries can be exported inline when defined, or explicitly in an export statement. An export statement refers to a name and makes it available for other modules to import. You can optionally specify an export name, that is only visible to other modules when importing, but not within the exporting module itself. Exporting an imported or aliased name is allowed.
-
-```text
-exportDef
-  : 'export' reference ('as' exportName)?
-  ;
-
-exportName
-  : IDENTIFIER
-  ;
-```
-
-Below example exports the strings standard library under the name `str`, and a local library `common` under the name `util` .
-
-```ruby
-# lib.tf
-import * as std from "std"
-
-export std.strings as str
-export common as util
-
-library common {
-  ...
-}
-```
-
-The following file imports both the `str` and the `util` export.
-
-```ruby
-# main.tf
-import util, str from "./lib.tf"
-```
-
-### Libraries
-
-A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope.
-
-**Syntax**
-
-```text
-library
-  : metaDef 'export'? 'library' identifier '{' varDef* '}'
-  ;
-```
-
-Below is an exported library holding some functions.
-
-```ruby
-export library nums {
-  function square: (x) 	-> x**2
-  function root: (x) 	-> x**0.5
-}
-```
-
-### Variables
-A variable is a named entity that holds a value. Variables are placed in [libraries](#libraries). Variables have a name, a  [type](#data-types), and a value. They can also be annotated by [docs and metadata](#annotations).
-
-```
-varDef
-  : metaDef dataType? identifier ':' expression endOfStatement?
-  | metaDef 'provided' dataType? identifier endOfStatement?
-  ;
-```
-
-The type of variables guarantees that referencing a variable results in a value of the specified type. Variable values are cast implicitly if necessary.
-
-```ruby
-> boolean bool_var: 1
-true
-
-> boolean bool_var: 0
-false
-```
-
-If unspecified, the variable type is `any`, and no implicit casts take place.
-
-```ruby
-> some_var: 1
-1
-
-> any some_var: 1
-1
-```
-
-Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`.
-
-Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.
-
-### Scopes
-
-All named entities like variables, libraries, aliases, and exports are placed in a scope in which each name must be unique. Tweakflow has four different kinds of scope ordered into a hierarchy:
-
-- global scope
-- module scope
-- library scope
-- local scope
-
-There is exactly one global scope per tweakflow program. It contains the names of [global modules](#global-modules), if any are loaded.
-
-There is a distinct module scope per loaded module. It contains the names of the module's imports, aliases, and libraries.
-
-There is a distinct library scope per library in a module. It contains the names of all library variables.
-
-There is a local scope per variable in a module. Nested local scopes are created as part of expressions that introduce identifiers, like [local variables](#local-variables) for example.
-
-Name resolution for references generally starts in the scope the reference appears in. If the name is not found the search propagates one level up until it stops after searching module scope. Global scope is not searched as part of the algorithm. Any references to global names must be explicitly marked as global references. See [references](#references) for syntax details.
-
-### Annotations
-
-Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.
-
-Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyworkd `meta` followed by an expression.
-
-The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
-
-The following module contains a single library with a single function:
-
-```ruby
-module
-
-library bar {
-  function baz: (x) -> x*x
-}
-```
-
-The same module with a full set of annotations at the module, library, and variable level:
-
-```ruby
-# module foo.tf
-doc
-​~~~
-This is documentation at the module level.
-​~~~
-meta {
-  :title       "foo"
-  :description "Description of the module"
-  :version     "4.2"
-}
-module
-
-# library bar
-doc
-​~~~
-This is documentation for library bar.
-​~~~
-meta {
-  :author "John Doe et al."
-  :since  "2.3"
-}
-
-library bar {
-
-# function baz
-doc
-​~~~
-This is documentation for function baz.
-​~~~
-  meta {
-    :author "John Doe"
-    :date 2017-03-12T
-  }
-  function baz: (x) -> x*x
-}
-```
-
-You can inspect the documentation and metadata of modules, libraries and variables at the REPL using the `\doc` and `\meta` commands.
-
-```text
-foo.tf> \doc
-This is documentation at the module level.
-foo.tf> \meta
-{
-  :version "4.2",
-  :title "foo",
-  :description "Description of the module"
-}
-
-foo.tf> \doc bar
-This is documentation for library bar.
-foo.tf> \meta bar
-{
-  :author "John Doe et al.",
-  :since "2.3"
-}
-
-foo.tf> \doc bar.baz
-This is documentation for function baz.
-foo.tf> \meta bar.baz
-{
-  :author "John Doe",
-  :date 2017-03-12T00:00:00Z@UTC
-}
-```
-
-### Expressions
+## Expressions
 
 Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.
 
-#### Nil
+### Nil
 
 The `nil` value is written as simply `nil`. Semantiaclly, a `nil` value indicates the absence of a value. The `nil` value is special because it is a valid member of all data types. It casts to any type successfully as `nil`.
 
-#### Value literals
+### Value literals
 
 All tweakflow data types have a literal notation outlined in their respective section under [data types](#data-types).
 
-#### Container access
+### Container access
 
 List and dict contents are accessed using square brackets. Tweakflow supports traversing through deep structure by giving several keys at a time. Splat keys allow traversing paths given by a list at runtime.
 
@@ -1417,7 +1417,7 @@ splat
   ;
 ```
 
-##### List access
+#### List access
 
 Indexes supplied for a list are automatically cast to long values.  If the given index does not exist in the list, the value of the access expression is `nil`. Accessing a `nil` list yields `nil`.
 
@@ -1450,7 +1450,7 @@ nil
 nil
 ```
 
-##### Dict access
+#### Dict access
 
 Dicts are indexed with strings. Keys are automatically cast to strings. If a given key does not exist, the value of the access expression is `nil`. Accessing `nil` yields `nil`.
 
@@ -1488,7 +1488,7 @@ nil
 nil
 ```
 
-##### Container traversal
+#### Container traversal
 
 Container access expressions can be chained to access nested data.
 
@@ -1568,7 +1568,7 @@ The list of keys in the traversal form can be interspersed with splat expression
 1968
 ```
 
-#### Function calls
+### Function calls
 
 Function calls are notated by giving the function and following with round parentheses containing any arguments.
 
@@ -1627,7 +1627,7 @@ Above function has parameters `id` of type long and `name` of type string. Both 
 
 When calling a function it is possible to specify arguments values using position, name, or a mix of both.
 
-##### Positional arguments
+#### Positional arguments
 
 Arguments given by position just list the values in parameter order and are seperated by comma. The following call passes `42` as `id` and `"test"` as `name`.
 
@@ -1666,7 +1666,7 @@ function
 nil
 ```
 
-##### Named arguments
+#### Named arguments
 
 When calling function, you can also pass arguments by name. Arguments given by name are listed in pairs of names and values separated by commas. The following call passes `42` as `id` and `"test"`  as `name` again, but uses named arguments this time. The order of named arguments does not matter.
 
@@ -1701,7 +1701,7 @@ ERROR: {
 }
 ```
 
-##### Mixed positional and named arguments
+#### Mixed positional and named arguments
 
 Position and named arguments can be mixed in a single call. Positional arguments are listed first. Named arguments follow.
 
@@ -1745,7 +1745,7 @@ The function [add_period](/tweakflow/modules/std.html#add-period) from the stand
 1970-01-03T00:00:00Z@UTC
 ```
 
-##### Splat arguments
+#### Splat arguments
 
 Both positional arguments and named arguments can be supplied via a splat expression. This offers a notational convenience for cases where arguments have been collected into a list or dict.
 
@@ -1812,7 +1812,7 @@ ERROR: {
 }
 ```
 
-##### Argument casting
+#### Argument casting
 
 Arguments given in function calls are automatically cast to the declared parameter type:
 
@@ -1828,7 +1828,7 @@ ERROR: {
 }
 ```
 
-##### Return value casting
+#### Return value casting
 
 Every function declares a return type. It is `any` by default. Every value a function returns is cast to the declared return type implicitly. If the return type of a function is `any`, the cast is not performed.
 
@@ -1854,7 +1854,7 @@ function
 "foo"
 ```
 
-#### Call chaining
+### Call chaining
 
 A computation might consist of a linear series of function calls feeding their output into the next function's input. Tweakflow supports a special syntax for that situation.
 
@@ -1895,7 +1895,7 @@ function
 "39HD-SDAS-DI34-37"
 ```
 
-#### Local variables
+### Local variables
 
 Local variables are useful as named temporary results. The `let` expression defines a set of variables that are bound in a newly created local scope.
 
@@ -1952,7 +1952,7 @@ x .. y # "foo".."bar"
 "foobar"
 ```
 
-#### Conditional evaluation
+### Conditional evaluation
 
 Conditional evaluation is done using a traditional `if` construct.
 
@@ -1993,7 +1993,7 @@ function
 "Hello"
 ```
 
-#### Default values
+### Default values
 
 Default values notation is a shorthand for replacing `nil` values with non-nil defaults.
 
@@ -2018,7 +2018,7 @@ function
 "Dear customer"
 ```
 
-#### List comprehensions
+### List comprehensions
 
 Tweakflow supports list comprehensions allowing to generate, transform, combine and filter lists.
 
@@ -2089,7 +2089,7 @@ for
 
 Above example loops over `a` going from 1 to 15, and `b` going from `a` to `15`, calculates `c`, and filters out any non-integer `c` values. If `c` happens to be an integer, the triple `[a, b, c]` is included in the result list.
 
-#### Pattern Matching
+### Pattern Matching
 
 Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted.
 
@@ -2120,7 +2120,7 @@ The match expression is evaluated by testing the value to match against each non
 
 The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches.
 
-##### Existence and capturing patterns
+#### Existence and capturing patterns
 
 Existence matches are the simplest form of match. They match any value including `nil`. An existence match is indicated by the `@` operator. If that operator is followed by an identifier, it becomes a capturing match, binding the identifier to the matched value in the guard and result expressions of the line. Formally the syntax is as follows:
 
@@ -2178,7 +2178,7 @@ true
 false
 ```
 
-##### Value patterns
+#### Value patterns
 
 A value pattern compares against a concrete value. The comparison is done using the `==` operator. The syntax is:
 
@@ -2221,7 +2221,7 @@ false
 
 Value patterns have a special case: functions. Functions never compare as equal. Therefore a value pattern that compares against a function would never match. Instead, tweakflow uses function values in patterns as predicates.
 
-##### Predicate patterns
+#### Predicate patterns
 
 Predicate patterns are syntactically identical to value patterns, since they are merely a special case of the match expression evaluating to a function.
 
@@ -2250,8 +2250,8 @@ function
 > \e
 leap_year?: (long x) ->
   match x
-	div_by_400? -> true
-	div_by_100? -> false
+    div_by_400? -> true
+    div_by_100? -> false
     div_by_4?   -> true
     default     -> false
 \e
@@ -2271,7 +2271,7 @@ true
 false
 ```
 
-##### Type patterns
+#### Type patterns
 
 Type patterns match on the data type of the matched value. Their syntax is as follows:
 
@@ -2319,7 +2319,7 @@ false
 false
 ```
 
-##### Full list patterns
+#### Full list patterns
 
 Full list patterns match a list in its entirety. It is a sequence of patterns corresponding to list items. The syntax for full list patterns is a non-empty list of match patterns of any kind, separated by comma:
 
@@ -2360,7 +2360,7 @@ false
 false
 ```
 
-##### Head list patterns
+#### Head list patterns
 
 A head list pattern matches the beginning of a list with item patterns, optionally also capturing the tail.
 
@@ -2405,7 +2405,7 @@ true
 false
 ```
 
-##### Tail list patterns
+#### Tail list patterns
 
 A tail list pattern matches the end of a list with item patterns, optionally also capturing the initial part of the list.
 
@@ -2448,7 +2448,7 @@ false
 false
 ```
 
-##### Head-and-tail list patterns
+#### Head-and-tail list patterns
 
 A head-and-tail list pattern matches the beginning and end of a list with item patterns, optionally also capturing the middle part of the list.
 
@@ -2494,7 +2494,7 @@ false
 false
 ```
 
-##### Full dict patterns
+#### Full dict patterns
 
 Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys.
 
@@ -2536,7 +2536,7 @@ false
 false
 ```
 
-##### Partial dict patterns
+#### Partial dict patterns
 
 Partial dict patterns match a subset of a dictionary's keys. Any remaining keys can be captured into a variable.  The syntax uses pairs of constant keys and value patterns. A splat capture is used to capture any keys and values not specified by the patterns. There can be only one splat capture, but its position can be freely chosen.
 
@@ -2600,7 +2600,7 @@ false
 false
 ```
 
-##### Nesting patterns
+#### Nesting patterns
 
 List and dict patterns nest naturally. The following function returns the most recent of an author's books.
 
@@ -2642,11 +2642,11 @@ function
 "The latest book is book nr. 2: Personal Recollections of Joan of Arc"
 ```
 
-#### Errors
+### Errors
 
 Tweakflow supports throwing arbitrary values as errors. If an error is thrown inside the try branch of a try/catch block, it is caught and the error value, as well as the stack trace can be inspected, handled, and re-thrown if necessary.
 
-##### Throwing errors
+#### Throwing errors
 
 The syntax for throwing an error is as follows:
 
@@ -2695,7 +2695,7 @@ ERROR: {
 }
 ```
 
-##### Catching errors
+#### Catching errors
 
 Errors can be caught if they thrown inside a try expression. The error value and stacktrace can each be bound to an identifier in the catch block.
 
@@ -2735,7 +2735,7 @@ function
 nil
 ```
 
-#### References
+### References
 
 References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.
 
@@ -2754,7 +2754,7 @@ The initial identifier is resolved based on the variant of the reference. Varian
 
 For example: the reference `foo.bar.baz` might point to a module import `foo` which contains a library `bar` which in turn contains a variable named `baz`.
 
-##### Unscoped references
+#### Unscoped references
 
 Unscoped references are the most common form of reference. They have no anchor prefix. Unscoped references' initial identifiers are resolved starting in the scope they appear in, searching up the scope hierarchy towards module scope inclusively if the identifier cannot be found. If the reference appears in a local scope, all parent local scopes are searched. The search does not propagate into global scope.
 
@@ -2800,7 +2800,7 @@ a .. " / ".. b
 "outer a / inner a"
 ```
 
-##### Library scope references
+#### Library scope references
 
 Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library's scope.  They are prefixed with the `library::` anchor.
 
@@ -2825,7 +2825,7 @@ library-refs.tf> utils.g("abc")
 4
 ```
 
-##### Module scope references
+#### Module scope references
 
 Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the `::` or `module::` anchors.
 
@@ -2847,13 +2847,13 @@ module-refs.tf> utils.f("foo")
 3
 ```
 
-##### Global scope references
+#### Global scope references
 
 Global scope references limit the resolution process of the initial identifier to global scope. They are prefixed with `$` or `global::` anchors.
 
 See [global modules](#global-modules) for an example of global references pointing to global modules.
 
-##### Referencing values
+#### Referencing values
 
 References in expressions must point to values. If `foo.bar.baz` points to a module import, a library and finally a variable, then `foo` on its own is an invalid value reference, as it points to a module, which is not a value. `foo.bar` is not a valid reference either. It points to a library which is not a value. Only the full reference `foo.bar.baz` points to a value.
 
@@ -2871,7 +2871,7 @@ ERROR: {
 }
 ```
 
-##### Referencing non-value entities
+#### Referencing non-value entities
 
 References in aliases and exports may point to any kind of entity. Aliases provide local names for imported libraries and functions. For example:
 
@@ -2894,7 +2894,7 @@ aliases.tf> util.len("foo")
 3
 ```
 
-##### Circular references
+#### Circular references
 
 Circular references are not allowed. Aliases, imports, and variables must not refer back to their values in their definitions. References to called functions are exempted from circular dependency analysis. Recursive calls are therefore permitted.
 
@@ -2937,7 +2937,7 @@ function
 3628800
 ```
 
-##### Closures
+#### Closures
 
 Function bodies can close over non-local values. The references are evaluated at the time the function is defined. The value is closed over, not the reference.
 
@@ -2963,57 +2963,15 @@ Each function has closed over the value of `i`, not a reference to `i`. Therefor
 30
 ```
 
-#### Debugging
+### Operators
 
-Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
-
-```text
-'debug' expression (',' expression)?
-```
-
-Debug itself is an expression that evaluates to the value being debugged.
-
-If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.
-
-If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.
-
-As an example, the following function has some conditional branches, and is debugging which branches are taken.
-
-```ruby
-> \e
-sgn: (long x) ->
-  debug "DEBUG: calculating sign of x: #{x}",
-  if x > 0 then debug "DEBUG: x is positive", 1
-  if x < 0 then debug "DEBUG: x is negative", -1
-  else debug "DEBUG: x is zero or nil", 0
-\e
-function
-
-> sgn(10)
-"DEBUG: calculating sign of x: 10"
-"DEBUG: x is positive"
-1
-
-> sgn(-10)
-"DEBUG: calculating sign of x: -10"
-"DEBUG: x is negative"
--1
-
-> sgn(0)
-"DEBUG: calculating sign of x: 0"
-"DEBUG: x is zero or nil"
-0
-```
-
-#### Operators
-
-##### Precedence grouping
+#### Precedence grouping
 
 Syntax: `(a)`
 
 Sub-expressions in parentheses define evaluation precedence. `(a+b)*c` multiplies a sum with c, whereas `a+(b*c)` adds a product to a.
 
-##### Bitwise not
+#### Bitwise not
 
 Syntax: `~a`
 
@@ -3029,7 +2987,7 @@ The operand is cast to long, and a bitwise not operation is performed on its two
 0
 ```
 
-##### Boolean not
+#### Boolean not
 
 Syntax: `!a` or `not a`
 
@@ -3041,7 +2999,7 @@ The operand is cast to boolean and a negation is performed resulting in another 
 > !"foo"
 ```
 
-##### Unary minus
+#### Unary minus
 
 Syntax: `-a`
 
@@ -3075,7 +3033,7 @@ ERROR: {
 
 ```
 
-##### Exponentiation
+#### Exponentiation
 
 Syntax: `a**b`
 
@@ -3120,7 +3078,7 @@ ERROR: {
 }
 ```
 
-##### Multiplication
+#### Multiplication
 
 Syntax: `a*b`
 
@@ -3161,7 +3119,7 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 8.507059173023462E37
 ```
 
-##### Floating point division
+#### Floating point division
 
 Syntax: `a/b`
 
@@ -3195,7 +3153,7 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 nil
 ```
 
-##### Integer division
+#### Integer division
 
 Syntax: `a//b`
 
@@ -3227,7 +3185,7 @@ ERROR: {
 }
 ```
 
-##### Division remainder
+#### Division remainder
 
 Syntax: `a%b`
 
@@ -3269,7 +3227,7 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 -0.5
 ```
 
-##### Addition
+#### Addition
 
 Syntax: `a+b`
 
@@ -3303,7 +3261,7 @@ Infinity
 -9223372036854775808
 ```
 
-##### Subtraction
+#### Subtraction
 
 Syntax: `a-b`
 
@@ -3339,7 +3297,7 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 Infinity
 ```
 
-##### String concatenation
+#### String concatenation
 
 Syntax: `a..b`
 
@@ -3352,7 +3310,7 @@ Both operands are cast to string, then they are concatenated to form the result 
 "foo1"
 ```
 
-##### Binary shift left
+#### Binary shift left
 
 Syntax: `a<<b`
 
@@ -3375,7 +3333,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Binary shift right, sign preserving
+#### Binary shift right, sign preserving
 
 Syntax: `a>>b`
 
@@ -3396,7 +3354,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Binary shift right
+#### Binary shift right
 
 Syntax: `a>>>b`
 
@@ -3417,7 +3375,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Less than
+#### Less than
 
 Syntax: `a<b`
 
@@ -3444,7 +3402,7 @@ ERROR: {
 }
 ```
 
-##### Less than or equal
+#### Less than or equal
 
 Syntax: `a<=b`
 
@@ -3471,7 +3429,7 @@ false
 true
 ```
 
-##### Greater than
+#### Greater than
 
 Syntax: `a>b`
 
@@ -3496,7 +3454,7 @@ false
 true
 ```
 
-##### Greater than or equal
+#### Greater than or equal
 
 Syntax: `a>=b`
 
@@ -3525,7 +3483,7 @@ true
 true
 ```
 
-##### Equality with type identity
+#### Equality with type identity
 
 Syntax: `a===b`
 
@@ -3542,7 +3500,7 @@ false
 true
 ```
 
-##### Inequality with type identity
+#### Inequality with type identity
 
 Syntax: `a!==b`
 
@@ -3559,7 +3517,7 @@ true
 false
 ```
 
-##### Equality
+#### Equality
 
 Syntax: `a==b`
 
@@ -3628,13 +3586,13 @@ true
 false
 ```
 
-##### Inequality
+#### Inequality
 
 Syntax: `a!=b`
 
 Inversion of equality. Evaluates to `true` if `a==b` evaluates to `false`. Evaluates to `false` if `a==b` evaluates to true.
 
-##### Bitwise and
+#### Bitwise and
 
 Syntax: `a&b`
 
@@ -3655,7 +3613,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Bitwise exclusive or
+#### Bitwise exclusive or
 
 Syntax: `a^b`
 
@@ -3676,7 +3634,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Bitwise or
+#### Bitwise or
 
 Syntax: `a|b`
 
@@ -3695,7 +3653,7 @@ If any operand is `nil`, the result is `nil`.
 nil
 ```
 
-##### Boolean and
+#### Boolean and
 
 Syntax: `a&&b` or `a and b`
 
@@ -3716,7 +3674,7 @@ false
 true
 ```
 
-##### Boolean or
+#### Boolean or
 
 Syntax: `a||b` or `a or b`
 
@@ -3735,7 +3693,7 @@ false
 true
 ```
 
-##### Type check
+#### Type check
 
 Syntax: `a is datatype`
 
@@ -3774,7 +3732,7 @@ true
 false
 ```
 
-##### Type name
+#### Type name
 
 Syntax: `typeof a`
 
@@ -3801,7 +3759,7 @@ The expression returns the name of a value's type. The possible results are: `"b
 "void"
 ```
 
-##### Type cast
+#### Type cast
 
 Syntax: `a as datatype`
 
@@ -3850,7 +3808,7 @@ Supported type casts are listed for each type in their respective section of [da
 nil
 ```
 
-##### Operator precedence
+#### Operator precedence
 
 The following table lists tweakflow operators and constructs in precedence order, starting with the highest precedence.
 
@@ -3901,3 +3859,46 @@ All operators an constructs are left-associative. When chaning operators of the 
 | Throw                               | `throw "cannot do this"`                |
 | Debug                               | `debug "DEBUG x: #{x}"`                 |
 
+### Debugging
+
+Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
+
+```text
+'debug' expression (',' expression)?
+```
+
+Debug itself is an expression.
+
+If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.
+
+If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.
+
+As an example, the following function has some conditional branches, and is debugging which branches are taken.
+
+```ruby
+> \e
+sgn: (long x) ->
+  debug "DEBUG: calculating sign of x: #{x}",
+  if x > 0 then debug "DEBUG: x is positive", 1
+  if x < 0 then debug "DEBUG: x is negative", -1
+  else debug "DEBUG: x is zero or nil", 0
+\e
+function
+
+> sgn(10)
+"DEBUG: calculating sign of x: 10"
+"DEBUG: x is positive"
+1
+
+> sgn(-10)
+"DEBUG: calculating sign of x: -10"
+"DEBUG: x is negative"
+-1
+
+> sgn(0)
+"DEBUG: calculating sign of x: 0"
+"DEBUG: x is zero or nil"
+0
+```
+
+### 
