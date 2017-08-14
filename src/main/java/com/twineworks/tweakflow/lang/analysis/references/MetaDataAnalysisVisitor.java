@@ -77,6 +77,14 @@ public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implem
 
   @Override
   public LibraryNode visit(LibraryNode node) {
+    if (node.hasMeta()){
+      visit(node.getMeta());
+    }
+
+    if (node.hasDoc()){
+      visit(node.getDoc());
+    }
+
     visit(node.getVars());
     return node;
   }
