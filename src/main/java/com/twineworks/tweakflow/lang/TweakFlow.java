@@ -37,8 +37,6 @@ import com.twineworks.tweakflow.lang.analysis.references.MetaDataAnalysisVisitor
 import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolverVisitor;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilderVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -117,11 +115,7 @@ public class TweakFlow {
     new ConstantOpsFoldingVisitor().visit(node);
     new OpSpecializationVisitor().visit(node);
 
-    if (node.getOp().isConstant()){
-      return Evaluator.evaluateInEmptyScope(node);
-    }
-
-    throw new LangException(LangError.LITERAL_VALUE_REQUIRED, "cannot evaluate non-literal: "+exp);
+    return Evaluator.evaluateInEmptyScope(node);
 
   }
 
