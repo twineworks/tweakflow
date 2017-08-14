@@ -1146,15 +1146,6 @@ public class ParserTest {
     assertThat(e27_elements).hasSize(1);
     assertThat(e27_elements).containsExactly("e0");
 
-//    e28: local::e0              # local reference
-    ExpressionNode e28 = varDefMap.get("e28").getValueExpression();
-    assertThat(e28).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e28_ref = (ReferenceNode) e28;
-    assertThat(e28_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> e28_elements = e28_ref.getElements();
-    assertThat(e28_elements).hasSize(1);
-    assertThat(e28_elements).containsExactly("e0");
-
 //  e29: "string ${e0}"         # string reference interpolation
     ExpressionNode e29 = varDefMap.get("e29").getValueExpression();
     assertThat(e29).isInstanceOf(StringConcatNode.class);

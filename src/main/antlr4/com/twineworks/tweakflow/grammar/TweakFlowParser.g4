@@ -326,7 +326,7 @@ dataType
   ;
 
 reference
-  : ('local::')?        identifier ('.' identifier)*          # localReference
+  :                     identifier ('.' identifier)*          # localReference
   | ('$'|'global::')    identifier ('.' identifier)*          # globalReference
   | ('::'|'module::')   identifier ('.' identifier)*          # moduleReference
   | ('library::')       identifier ('.' identifier)*          # libraryReference

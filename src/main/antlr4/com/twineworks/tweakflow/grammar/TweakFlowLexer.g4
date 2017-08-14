@@ -111,8 +111,6 @@ AT: '@';
 MODULE_REF: 'module::';
 LIBRARY_REF: 'library::';
 GLOBAL_REF: 'global::';
-LOCAL_REF: 'local::';
-
 
 DT
   : DATE'T'(TIME(OFFSET|(OFFSET TZ))?)?
@@ -249,7 +247,7 @@ STRING_ESCAPE_SEQUENCE
   ;
 
 STRING_REFERENCE_INTERPOLATION
-  : '#{'('local::'|'$'|'global::'|'module::'|'::'|'library::')?IDENTIFIER('.' IDENTIFIER)*'}'
+  : '#{'('$'|'global::'|'module::'|'::'|'library::')?IDENTIFIER('.' IDENTIFIER)*'}'
   ;
 
 STRING_END

@@ -24,7 +24,6 @@ library lib
   e25: $global_var            # global reference
   e26: global::global_var     # global reference
   e27: e0                     # local reference
-  e28: local::e0              # local reference
   e29: "string #{e0}"         # string reference interpolation
   e30: f(:a, :b)              # call f with arg0="a", arg1="b"
   e31: f(:a, b: "foo")        # call f with arg0="a", b="foo"
