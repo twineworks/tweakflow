@@ -318,14 +318,14 @@ main h2 {
 }
 
 main h3 {
-  font-size: 1.2em;
+  font-size: 1.3em;
   /*font-weight: bold;*/
   padding-top: 1.0rem;
   margin-bottom: 1.0rem;
 }
 
 main h4, main h5, main h6 {
-  font-size: 1.0em;
+  font-size: 1.2em;
   /*font-weight: bold;*/
   padding-top: 1.0rem;
   margin-bottom: 1.0rem;
