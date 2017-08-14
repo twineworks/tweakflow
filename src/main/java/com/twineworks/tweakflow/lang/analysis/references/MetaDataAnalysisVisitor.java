@@ -55,6 +55,18 @@ public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implem
   }
 
   @Override
+  public InteractiveNode visit(InteractiveNode node) {
+    node.getSections().forEach(this::visit);
+    return node;
+  }
+
+  @Override
+  public InteractiveSectionNode visit(InteractiveSectionNode node) {
+    visit(node.getVars());
+    return node;
+  }
+
+  @Override
   public ModuleNode visit(ModuleNode node) {
     if (node.hasMeta()){
       visit(node.getMeta());
