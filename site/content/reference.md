@@ -1353,18 +1353,18 @@ function
 
 #### Functions in Java
 
-Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword `via` followed by a map literal containing the key `:class` which points to a Java class. The Java class must implement the tag interface [UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java), as well as a exactly one of the following interfaces governing parameter passing.
+Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword `via` followed by a map literal containing the key `:class` which points to a Java class. The Java class must implement the tag interface [UserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java), as well as a exactly one of the following interfaces governing parameter passing.
 
 | Interface                                | Purpose                                  |
 | ---------------------------------------- | ---------------------------------------- |
-| [Arity0UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java) | Implements zero-parameter functions.     |
-| [Arity1UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java) | Implements single-parameter functions.   |
+| [Arity0UserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java) | Implements zero-parameter functions.     |
+| [Arity1UserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java) | Implements single-parameter functions.   |
 | [Arity2UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity2UserFunction.java) | Implements functions with two parameters |
-| [Arity3UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java) | Implements functions with three paramters. |
-| [Arity4UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java) | Implements functions with four parameters |
-| [ArityNUserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java) | Implements functions with any number of parameters. Arguments are passed as an array of values. |
+| [Arity3UserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java) | Implements functions with three paramters. |
+| [Arity4UserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java) | Implements functions with four parameters |
+| [ArityNUserFunction](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java) | Implements functions with any number of parameters. Arguments are passed as an array of values. |
 
-For example, the inner class [com.twineworks.tweakflow.std.Strings$concat](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43) implements the `strings.concat` function of the standard library.
+For example, the inner class [com.twineworks.tweakflow.std.Strings$concat](https://github.com/twineworks/tweakflow/blob/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43) implements the `strings.concat` function of the standard library.
 
 ```ruby
 > f: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$concat"}
@@ -1373,7 +1373,7 @@ function
 "FooBarBaz"
 ```
 
-See the standard library functions in [std](https://github.com/twineworks/tweakflow/tree/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std) for examples of functions implemented in Java.
+See the standard library functions in [std](https://github.com/twineworks/tweakflow/tree/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/std) for examples of functions implemented in Java.
 
 ### Void
 
@@ -3861,7 +3861,7 @@ All operators an constructs are left-associative. When chaning operators of the 
 
 ### Debugging
 
-Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
+The debug construct is used to inspect the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
 
 ```text
 'debug' expression (',' expression)?
@@ -3900,5 +3900,3 @@ function
 "DEBUG: x is zero or nil"
 0
 ```
-
-### 

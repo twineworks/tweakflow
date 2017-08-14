@@ -34,3 +34,5 @@ menu:
 
 params:
   indexHeadLine: "index headline parameter"
+  # shortcode {{< releaseTag >}}
+  releaseTag: "0.0.1"
