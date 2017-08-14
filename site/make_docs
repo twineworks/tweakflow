@@ -5,8 +5,19 @@ cd $(dirname "$0")/..
 
 echo "* generating documentation for std"
 bin/tfdoc -t doc/markdown_transformer -oe md -o site/content/modules std
-echo "* done"
+echo ""
+echo "* deleting old docs"
+rm -rf docs
+echo ""
 echo "* generating documentation site in /docs"
 cd site
-../../hugo/hugo -d ../docs
+# need hugo installed and on path
+# https://gohugo.io/
+hugo -d ../docs
+echo ""
+echo "* verifying html integrity"
+# need htmltest installed and on path
+# https://github.com/wjdp/htmltest
+htmltest
+echo ""
 echo "* done"

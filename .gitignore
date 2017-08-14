@@ -18,7 +18,8 @@ target
 # build artefacts
 dependency-reduced-pom.xml
 
-# temporary ignores
-/doc_site
+# local development ignores
 /bin
 
+# htmltest cache
+/site/tmp

@@ -1,0 +1,3 @@
+DirectoryPath: "../docs"
+CacheExpires: "12h"
+IgnoreDirectoryMissingTrailingSlash: true
