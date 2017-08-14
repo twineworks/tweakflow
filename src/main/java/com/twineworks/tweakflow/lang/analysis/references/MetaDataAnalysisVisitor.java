@@ -41,7 +41,16 @@ public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implem
 
   private void ensureNotInMeta(Node node){
     if (inMeta | inDoc){
-      throw new LangException(LangError.LITERAL_VALUE_REQUIRED, node.getSourceInfo());
+
+      String nodeType;
+
+      if (inMeta){
+        nodeType = "meta";
+      } else {
+        nodeType = "doc";
+      }
+
+      throw new LangException(LangError.LITERAL_VALUE_REQUIRED, "computations and functions not allowed in " + nodeType, node.getSourceInfo());
     }
   }
 
