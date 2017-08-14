@@ -310,7 +310,7 @@ The local time form is extended to specify an offset from UTC of the form `((+|-
 
 The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an `@` sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as [identifiers](#identifiers), and will often have to be escaped by backticks.
 
-Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-). A list of known regional zone ids can be obtained by calling [time.zones](/tweakflow/modules/std.html#zones) of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-).
+Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-). A list of known regional zone ids can be obtained by calling [time.zones](/modules/std.html#zones) of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-).
 
 ```ruby
 > 2017-04-30T21:32:11+02:00@`Europe/Berlin`
@@ -863,7 +863,7 @@ Double as string
 
 For any other double value, the [conventions the Java language](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-) are used.
 
-Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/tweakflow/modules/std.html#formatter-1) to to convert double values to strings in a controlled output format.
+Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/modules/std.html#formatter-1) to to convert double values to strings in a controlled output format.
 
 ### String
 
@@ -957,7 +957,7 @@ A datetime value casts to a string compatible with [datetime literal](#datetime-
 "1970-01-01T00:00:00Z@UTC"
 ```
 
-Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/tweakflow/modules/std.html#formatter) to to convert datetime values to strings in a controlled output format.
+Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/modules/std.html#formatter) to to convert datetime values to strings in a controlled output format.
 
 Datetime as dict
 
@@ -1329,7 +1329,7 @@ function
 ["F", "o", "o", "B", "a", "r"]
 ```
 
-The signature of a function can be inspected calling [fun.signature](/tweakflow/modules/std.html#signature) from the standard library.
+The signature of a function can be inspected calling [fun.signature](/modules/std.html#signature) from the standard library.
 
 ```ruby
 > f: (double x=1.0, double y=0.0) -> double    x+y
@@ -1735,7 +1735,7 @@ It is possible to specify a parameter in both positional and named arguments. Th
 
 Mixed style arguments are a useful idiom when a function exposes a set of leading arguments that have intuitive order, but allows for a set of less common option-style parameters to configure details.
 
-The function [add_period](/tweakflow/modules/std.html#add-period) from the standard library for example:
+The function [add_period](/modules/std.html#add-period) from the standard library for example:
 
 ```ruby
 > time.add_period(time.epoch, years: 1000)
@@ -3545,7 +3545,7 @@ false
 false
 ```
 
-Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/tweakflow/modules/std.html#compare) to determine whether datetime values represent the same point in time.
+Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/modules/std.html#compare) to determine whether datetime values represent the same point in time.
 
 ```ruby
 # same points in time, but different local time and time zone

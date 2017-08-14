@@ -4,11 +4,11 @@ title: Getting started
 
 # Getting started with tweakflow
 
-This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow. 
+This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 
 ## Starting a tweakflow REPL
 
-[Download](https://github.com/twineworks/tweakflow/releases) the latest release jar. And launch it using:
+[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. And launch it using:
 
 `java -jar tweakflow-version.jar itf`
 
@@ -22,7 +22,7 @@ tweakflow interactive shell    \? for help, \q to quit
 std.tf>
 ```
 
-The prompt tells you which module context you are in. In our case it is the [std.tf](/tweakflow/modules/std.html) module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering `\q`.
+The prompt tells you which module context you are in. In our case it is the [std.tf](/modules/std.html) module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering `\q`.
 
 ## Evaluating expressions
 
@@ -103,7 +103,7 @@ Let's call some functions from the standard library:
 2
 ```
 
-You were using positional arguments. Let's add 100 days to a date, and see where we end up. The function [add_period](/tweakflow/modules/std.html#add-period) takes multiple parameters. Let's just supply the start date and days to add using named arguments, and leave the other parameters at their default values.
+You were using positional arguments. Let's add 100 days to a date, and see where we end up. The function [add_period](/modules/std.html#add-period) takes multiple parameters. Let's just supply the start date and days to add using named arguments, and leave the other parameters at their default values.
 
 ```ruby
 > time.add_period(start: 2017-01-01T, days: 100)
@@ -179,7 +179,7 @@ You can include the values of variables in double quoted strings using the `#{va
 "Hello Joe"
 ```
 
-There are other escape sequences like `\n` for newlines and `\t` for tabs. 
+There are other escape sequences like `\n` for newlines and `\t` for tabs.
 
 ## Local variables
 
@@ -207,7 +207,7 @@ sq(five)
 
 ## Types
 
-Every value in tweakflow has an associated type. You can determine the types using `typeof`: 
+Every value in tweakflow has an associated type. You can determine the types using `typeof`:
 
 ```ruby
 > typeof "Hello"
@@ -253,7 +253,7 @@ function
 3
 ```
 
-The [data.map](/tweakflow/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
+The [data.map](/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
 
 ```ruby
 > data.map([1, 0, 3, -2], next)
@@ -267,7 +267,7 @@ You can write functions inline without naming them. Functions are just values, l
 [1, 0, 9, 4]
 ```
 
-Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a [formatter](/tweakflow/modules/std.html#formatter-1) function to convert numbers to strings.
+Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a [formatter](/modules/std.html#formatter-1) function to convert numbers to strings.
 
 ```ruby
 > f: math.formatter('0.00', rounding_mode: 'half_up')
@@ -284,7 +284,7 @@ function
 
 ## Conditionals
 
-Tweakflow supports a standard `if` construct to perform conditional calculations. 
+Tweakflow supports a standard `if` construct to perform conditional calculations.
 
 ```ruby
 > parity: (x) -> if x % 2 == 0 then "even" else "odd"
@@ -506,4 +506,4 @@ Above debug output should help sorting out the function to account for the fact 
 
 ## Conclusion
 
-You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the [language reference](/tweakflow/reference.html) for detailed information about the language. 
+You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the [language reference](/reference.html) for detailed information about the language.

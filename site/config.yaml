@@ -1,9 +1,8 @@
-baseURL: "https://twineworks.github.io/tweakflow/"
 languageCode: "en-us"
 title: "tweakflow - an embeddable expression language for the JVM"
 theme: "hugo-tweakflow"
 uglyurls: true
-# relativeURLs: true
+relativeURLs: true
 menu:
   main:
     - Name: "Getting started"
