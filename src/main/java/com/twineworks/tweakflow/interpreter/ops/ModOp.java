@@ -58,7 +58,9 @@ final public class ModOp implements ExpressionOp {
 
     if (leftType == Types.LONG){
       if (rightType == Types.LONG){
-        return Values.make(left.longNum() % right.longNum());
+        long r = right.longNum();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.longNum() % r);
       }
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum() % right.doubleNum());
