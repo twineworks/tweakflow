@@ -218,10 +218,12 @@ public class Evaluator {
 
         Object errorValue = e.get("value");
         if (errorValue instanceof Value){
+          // user-thrown errors
           errorCell.setValue((Value) errorValue);
         }
         else{
-          errorCell.setValue(Values.NIL);
+          // built-in errors
+          errorCell.setValue(e.toValue());
         }
 
         bindingsCells.puts(caughtException.getSymbolName(), errorCell);
