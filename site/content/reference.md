@@ -473,7 +473,7 @@ export library conf {
 }
 ```
 
-This file uses the environment configuration throught the global reference `$env`.
+This file uses environment configuration through the global reference `$env`.
 
 ```ruby
 # main.tf
