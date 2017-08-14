@@ -50,6 +50,7 @@ final public class DebugOp implements ExpressionOp {
 
   }
 
+  // debugged values never fold during analysis
   @Override
   public boolean isConstant() {
     return false;
