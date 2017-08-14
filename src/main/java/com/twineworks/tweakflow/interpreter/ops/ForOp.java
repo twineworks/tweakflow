@@ -59,7 +59,7 @@ final public class ForOp implements ExpressionOp {
   public ForOp(ForNode node) {
     this.node = node;
     this.head = node.getHead();
-    // TODO: need them in dependency order
+
     this.elements = head.getElements().toArray(new ForHeadElementNode[head.getElements().size()]);
 
     this.expressionOp = node.getExpression().getOp();

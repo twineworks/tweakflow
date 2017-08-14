@@ -165,6 +165,16 @@ public class AnalysisTest {
   }
 
   @Test
+  public void fails_on_for_shadowed_variable() throws Exception {
+
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/for_shadowing.tf");
+
+    assertThat(result.isError()).isTrue();
+    assertThat(result.getException().getCode()).isSameAs(LangError.ALREADY_DEFINED);
+
+  }
+
+  @Test
   public void fails_on_multiple_default_match_patterns() throws Exception {
 
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/match_multiple_default_patterns.tf");
