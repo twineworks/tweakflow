@@ -11,24 +11,24 @@
     <meta name="description" content="" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
-    <link rel="stylesheet" href="/tweakflow/css/normalize.css">
-    <link rel="stylesheet" href="/tweakflow/css/style.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/style.css">
 
-    <link rel="stylesheet" href="/tweakflow/js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./js/highlight/styles/atom-one-light.css">
 
-    <script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="./js/highlight/highlight.pack.js"></script>
     <script type="text/javascript">
       hljs.configure({languages: []});
       hljs.initHighlightingOnLoad();
     </script>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
-    <link rel="manifest" href="/tweakflow/img/manifest.json">
-    <link rel="mask-icon" href="/tweakflow/img/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="/tweakflow/img/favicon.ico">
-    <meta name="msapplication-config" content="/tweakflow/img/browserconfig.xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16x16.png">
+    <link rel="manifest" href="./img/manifest.json">
+    <link rel="mask-icon" href="./img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="msapplication-config" content="/img/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
     <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
@@ -43,7 +43,7 @@
 
       
       <div class="menu__logo-wrapper">
-          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg"></a>
+          <a href="./index.html" class="menu__logo"><img alt="tweakflow logo" src="./img/tweakflow_logo.svg"></a>
       </div>
       
       <nav role="navigation" class="menu__items-wrapper">
@@ -51,19 +51,19 @@
             
             
             
-            <li class="menu__item active" >              
-              <a class="menu__item-link" href="/tweakflow/getting-started.html">Getting started</a>
+            <li class="menu__item active" >
+              <a class="menu__item-link" href="./getting-started.html">Getting started</a>
             </li>
             
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/reference.html">Reference</a>
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/modules/std.html">Standard library</a>
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
             </li>
             
-            <li class="menu__item" >              
+            <li class="menu__item" >
               <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source</a>
             </li>
             
@@ -117,7 +117,7 @@
 
 <h2 id="starting-a-tweakflow-repl">Starting a tweakflow REPL</h2>
 
-<p><a href="https://github.com/twineworks/tweakflow/releases">Download</a> the latest release jar. And launch it using:</p>
+<p><a href="https://github.com/twineworks/tweakflow/releases/latest">Download</a> the latest release jar. And launch it using:</p>
 
 <p><code>java -jar tweakflow-version.jar itf</code></p>
 
@@ -130,7 +130,7 @@ tweakflow interactive shell    \? for help, \q to quit
 std.tf&gt;
 </code></pre>
 
-<p>The prompt tells you which module context you are in. In our case it is the <a href="/tweakflow/modules/std.html">std.tf</a> module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering <code>\q</code>.</p>
+<p>The prompt tells you which module context you are in. In our case it is the <a href="./modules/std.html">std.tf</a> module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering <code>\q</code>.</p>
 
 <h2 id="evaluating-expressions">Evaluating expressions</h2>
 
@@ -203,7 +203,7 @@ false
 2
 </code></pre>
 
-<p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="/tweakflow/modules/std.html#add-period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
+<p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="./modules/std.html#add-period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
 
 <pre><code class="language-ruby">&gt; time.add_period(start: 2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@`UTC`
@@ -341,7 +341,7 @@ function
 3
 </code></pre>
 
-<p>The <a href="/tweakflow/modules/std.html#map">data.map</a> function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.</p>
+<p>The <a href="./modules/std.html#map">data.map</a> function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.</p>
 
 <pre><code class="language-ruby">&gt; data.map([1, 0, 3, -2], next)
 [2, 1, 4, -1]
@@ -353,7 +353,7 @@ function
 [1, 0, 9, 4]
 </code></pre>
 
-<p>Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a <a href="/tweakflow/modules/std.html#formatter-1">formatter</a> function to convert numbers to strings.</p>
+<p>Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a <a href="./modules/std.html#formatter-1">formatter</a> function to convert numbers to strings.</p>
 
 <pre><code class="language-ruby">&gt; f: math.formatter('0.00', rounding_mode: 'half_up')
 function
@@ -581,7 +581,7 @@ ERROR: {
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the <a href="/tweakflow/reference.html">language reference</a> for detailed information about the language.</p>
+<p>You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the <a href="./reference.html">language reference</a> for detailed information about the language.</p>
 
       </main>
     </div>
@@ -592,18 +592,18 @@ ERROR: {
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">
-    <a href="/tweakflow/legal_notice">Legal notice</a>
+    <a href="./legal_notice.html">Legal notice</a>
   </div>
 </footer>
 
     
-<script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
+<script type="text/javascript" src="./js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="./js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
+<script type="text/javascript" src="./js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
 <script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/toc.js"></script>
+<script type="text/javascript" src="./js/vendor/zenscroll/zenscroll-min.js"></script>
+<script type="text/javascript" src="./js/toc.js"></script>
 
 </body>
 

@@ -3,46 +3,46 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/categories.html</loc>
+    <loc>/categories.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/embedding.html</loc>
+    <loc>/embedding.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/getting-started.html</loc>
+    <loc>/getting-started.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/legal_notice.html</loc>
+    <loc>/legal_notice.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/modules.html</loc>
+    <loc>/modules.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/tags.html</loc>
+    <loc>/tags.html</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/reference.html</loc>
+    <loc>/reference.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/tools.html</loc>
+    <loc>/tools.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/modules/std.html</loc>
+    <loc>/modules/std.html</loc>
   </url>
   
   <url>
-    <loc>https://twineworks.github.io/tweakflow/</loc>
+    <loc>/</loc>
   </url>
   
 </urlset>

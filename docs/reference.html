@@ -11,24 +11,24 @@
     <meta name="description" content="" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
-    <link rel="stylesheet" href="/tweakflow/css/normalize.css">
-    <link rel="stylesheet" href="/tweakflow/css/style.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/style.css">
 
-    <link rel="stylesheet" href="/tweakflow/js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./js/highlight/styles/atom-one-light.css">
 
-    <script type="text/javascript" src="/tweakflow/js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="./js/highlight/highlight.pack.js"></script>
     <script type="text/javascript">
       hljs.configure({languages: []});
       hljs.initHighlightingOnLoad();
     </script>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/tweakflow/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/tweakflow/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/tweakflow/img/favicon-16x16.png">
-    <link rel="manifest" href="/tweakflow/img/manifest.json">
-    <link rel="mask-icon" href="/tweakflow/img/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="/tweakflow/img/favicon.ico">
-    <meta name="msapplication-config" content="/tweakflow/img/browserconfig.xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16x16.png">
+    <link rel="manifest" href="./img/manifest.json">
+    <link rel="mask-icon" href="./img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="msapplication-config" content="/img/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
     <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
@@ -43,7 +43,7 @@
 
       
       <div class="menu__logo-wrapper">
-          <a href="/tweakflow" class="menu__logo"><img src="/tweakflow/img/tweakflow_logo.svg"></a>
+          <a href="./index.html" class="menu__logo"><img alt="tweakflow logo" src="./img/tweakflow_logo.svg"></a>
       </div>
       
       <nav role="navigation" class="menu__items-wrapper">
@@ -51,19 +51,19 @@
             
             
             
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/getting-started.html">Getting started</a>
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./getting-started.html">Getting started</a>
             </li>
             
-            <li class="menu__item active" >              
-              <a class="menu__item-link" href="/tweakflow/reference.html">Reference</a>
+            <li class="menu__item active" >
+              <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
-            <li class="menu__item" >              
-              <a class="menu__item-link" href="/tweakflow/modules/std.html">Standard library</a>
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
             </li>
             
-            <li class="menu__item" >              
+            <li class="menu__item" >
               <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">Source</a>
             </li>
             
@@ -589,7 +589,7 @@ Hello World
 
 <p>The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an <code>@</code> sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as <a href="#identifiers">identifiers</a>, and will often have to be escaped by backticks.</p>
 
-<p>Time zones are valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="/tweakflow/modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
+<p>Time zones are valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
 
 <pre><code class="language-ruby">&gt; 2017-04-30T21:32:11+02:00@`Europe/Berlin`
 2017-04-30T21:32:11+02:00@`Europe/Berlin`
@@ -1117,7 +1117,7 @@ foo.tf&gt; \meta bar.baz
 
 <p>For any other double value, the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-">conventions the Java language</a> are used.</p>
 
-<p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="/tweakflow/modules/std.html#formatter-1">formatters</a> to to convert double values to strings in a controlled output format.</p>
+<p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#formatter-1">formatters</a> to to convert double values to strings in a controlled output format.</p>
 
 <h3 id="string">String</h3>
 
@@ -1206,7 +1206,7 @@ ERROR: {
 &quot;1970-01-01T00:00:00Z@UTC&quot;
 </code></pre>
 
-<p>Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="/tweakflow/modules/std.html#formatter">formatters</a> to to convert datetime values to strings in a controlled output format.</p>
+<p>Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#formatter">formatters</a> to to convert datetime values to strings in a controlled output format.</p>
 
 <p>Datetime as dict</p>
 
@@ -1565,7 +1565,7 @@ function
 [&quot;F&quot;, &quot;o&quot;, &quot;o&quot;, &quot;B&quot;, &quot;a&quot;, &quot;r&quot;]
 </code></pre>
 
-<p>The signature of a function can be inspected calling <a href="/tweakflow/modules/std.html#signature">fun.signature</a> from the standard library.</p>
+<p>The signature of a function can be inspected calling <a href="./modules/std.html#signature">fun.signature</a> from the standard library.</p>
 
 <pre><code class="language-ruby">&gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
@@ -1981,7 +1981,7 @@ ERROR: {
 
 <p>Mixed style arguments are a useful idiom when a function exposes a set of leading arguments that have intuitive order, but allows for a set of less common option-style parameters to configure details.</p>
 
-<p>The function <a href="/tweakflow/modules/std.html#add-period">add_period</a> from the standard library for example:</p>
+<p>The function <a href="./modules/std.html#add-period">add_period</a> from the standard library for example:</p>
 
 <pre><code class="language-ruby">&gt; time.add_period(time.epoch, years: 1000)
 2970-01-01T00:00:00Z@UTC
@@ -3912,7 +3912,7 @@ false
 false
 </code></pre>
 
-<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="/tweakflow/modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
+<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
 
 <pre><code class="language-ruby"># same points in time, but different local time and time zone
 &gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
@@ -4390,7 +4390,7 @@ nil
 
 <h3 id="debugging">Debugging</h3>
 
-<p>Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:</p>
+<p>The debug construct is used to inspect the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:</p>
 
 <pre><code class="language-text">'debug' expression (',' expression)?
 </code></pre>
@@ -4437,18 +4437,18 @@ function
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">
-    <a href="/tweakflow/legal_notice">Legal notice</a>
+    <a href="./legal_notice.html">Legal notice</a>
   </div>
 </footer>
 
     
-<script type="text/javascript" src="/tweakflow/js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
+<script type="text/javascript" src="./js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="./js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
+<script type="text/javascript" src="./js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
 <script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="/tweakflow/js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="/tweakflow/js/toc.js"></script>
+<script type="text/javascript" src="./js/vendor/zenscroll/zenscroll-min.js"></script>
+<script type="text/javascript" src="./js/toc.js"></script>
 
 </body>
 

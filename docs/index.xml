@@ -2,29 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tweakflow: an embeddable expression language for the JVM on tweakflow - an embeddable expression language for the JVM</title>
-    <link>https://twineworks.github.io/tweakflow/</link>
+    <link>/</link>
     <description>Recent content in tweakflow: an embeddable expression language for the JVM on tweakflow - an embeddable expression language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="https://twineworks.github.io/tweakflow/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Embedding</title>
-      <link>https://twineworks.github.io/tweakflow/embedding.html</link>
+      <link>/embedding.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/embedding.html</guid>
+      <guid>/embedding.html</guid>
       <description>Embedding Guide TODO</description>
     </item>
     
     <item>
       <title>Getting started</title>
-      <link>https://twineworks.github.io/tweakflow/getting-started.html</link>
+      <link>/getting-started.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/getting-started.html</guid>
+      <guid>/getting-started.html</guid>
       <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 Starting a tweakflow REPL Download the latest release jar. And launch it using:
 java -jar tweakflow-version.jar itf
@@ -34,10 +34,10 @@ You should see a prompt similar to this:</description>
     
     <item>
       <title>Legal notice</title>
-      <link>https://twineworks.github.io/tweakflow/legal_notice.html</link>
+      <link>/legal_notice.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/legal_notice.html</guid>
+      <guid>/legal_notice.html</guid>
       <description>Legal Notice This website&amp;rsquo;s content is managed by Twineworks GmbH
 Helmholtzstr. 28
 10587 Berlin
@@ -57,10 +57,10 @@ Germany</description>
     
     <item>
       <title>The tweakflow language</title>
-      <link>https://twineworks.github.io/tweakflow/reference.html</link>
+      <link>/reference.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/reference.html</guid>
+      <guid>/reference.html</guid>
       <description>Motivation Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users.
 Requirements Tweakflow runs on the JVM. Java 8 or later is required.
 Design principles The following sections outline fundamental principles which inform the design of tweakflow.</description>
@@ -68,10 +68,10 @@ Design principles The following sections outline fundamental principles which in
     
     <item>
       <title>Tools</title>
-      <link>https://twineworks.github.io/tweakflow/tools.html</link>
+      <link>/tools.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/tools.html</guid>
+      <guid>/tools.html</guid>
       <description>Language Tools Interactive REPL TODO: describe itf
 Runner TODO: describe tf
 Metadata extraction TODO: describe tfdoc</description>
@@ -79,10 +79,10 @@ Metadata extraction TODO: describe tfdoc</description>
     
     <item>
       <title>std.tf</title>
-      <link>https://twineworks.github.io/tweakflow/modules/std.html</link>
+      <link>/modules/std.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://twineworks.github.io/tweakflow/modules/std.html</guid>
+      <guid>/modules/std.html</guid>
       <description>module std.tf The standard module contains basic functions for general computing tasks.
 library core The core library contains utility functions to process values at a basic level.
 id (any x) -&amp;gt; any
