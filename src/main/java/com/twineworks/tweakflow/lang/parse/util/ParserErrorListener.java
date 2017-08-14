@@ -64,7 +64,7 @@ public class ParserErrorListener implements ANTLRErrorListener {
       message = message.replaceAll(" expecting.*", "");
     }
     message = "line: "+line+" "+message;
-    exception = new LangException(LangError.PARSE_ERROR, message, new SourceInfo(parseUnit, line, charIndex+1, 0,0));
+    exception = new LangException(LangError.PARSE_ERROR, message, new SourceInfo(parseUnit, line, charIndex+1, -1,-1));
   }
 
   @Override

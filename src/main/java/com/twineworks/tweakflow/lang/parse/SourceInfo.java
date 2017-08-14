@@ -102,7 +102,7 @@ public class SourceInfo {
   public String getSourceCode(){
     String programText = parseUnit.getProgramText();
     if (programText == null) return null;
-    if (sourceIdxStart == 0 && sourceIdxEnd == 0) return null;
+    if (sourceIdxStart < 0 || sourceIdxEnd < 0) return null;
     if (sourceIdxStart < programText.length() &&  sourceIdxEnd < programText.length()){
         return programText.substring(sourceIdxStart, sourceIdxEnd+1);
     } else {
