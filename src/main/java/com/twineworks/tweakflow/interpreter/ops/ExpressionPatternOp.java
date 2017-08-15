@@ -58,7 +58,7 @@ final public class ExpressionPatternOp implements PatternOp {
       return callContext.call(v, subject).castTo(Types.BOOLEAN) == Values.TRUE;
     }
     else{
-      return subject.equals(v);
+      return subject.valueEquals(v);
     }
 
   }
