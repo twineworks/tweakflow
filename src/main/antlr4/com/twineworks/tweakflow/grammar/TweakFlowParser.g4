@@ -127,8 +127,7 @@ literal
   : nilLiteral                                              # nilLiteralExp
   | booleanLiteral                                          # booleanLiteralExp
   | dateTimeLiteral                                         # dateTimeLiteralExp
-  | keyLiteral                                              # keyLiteralExp
-  | stringLiteral                                           # stringLiteralExp
+  | stringConstant                                          # stringConstantExp
   | stringInterpolation                                     # stringInterpolationExp
   | longLiteral                                             # longLiteralExp
   | doubleLiteral                                           # doubleLiteralExp
@@ -215,8 +214,8 @@ matchPattern
   | '[' splatCapture ',' (matchPattern ',') * matchPattern ']' varCapture?                      # initLastListPattern
   | '[' (matchPattern ',') + splatCapture ',' (matchPattern ',')* matchPattern ']' varCapture?  # midListPattern
   | '[' (matchPattern ',') * matchPattern ']' varCapture?                                       # listPattern
-  | '{' ((keyLiteral matchPattern) ',' )* (keyLiteral matchPattern) '}' varCapture?                               # dictPattern
-  | '{' (((keyLiteral matchPattern)|splatCapture) ',' )* ((keyLiteral matchPattern)|splatCapture) '}' varCapture? # openDictPattern
+  | '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' varCapture?                               # dictPattern
+  | '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' varCapture? # openDictPattern
   | expression  varCapture?                     # expPattern
   ;
 
@@ -291,7 +290,7 @@ listLiteral
    ;
 
 dictLiteral
-   : '{' (((keyLiteral expression)|(stringLiteral expression)|(expression expression)|(splat)) ','? )*  '}'
+   : '{' (((stringConstant expression)|(expression expression)|(splat)) ','? )*  '}'
    ;
 
 
@@ -362,6 +361,11 @@ splatArg
 
 keyLiteral
   : KEY
+  ;
+
+stringConstant
+  : keyLiteral                                              # keyLiteralExp
+  | stringLiteral                                           # stringLiteralExp
   ;
 
 // via native/builtin support

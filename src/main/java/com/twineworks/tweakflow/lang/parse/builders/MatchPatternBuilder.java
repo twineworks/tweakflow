@@ -26,11 +26,11 @@ package com.twineworks.tweakflow.lang.parse.builders;
 
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.ast.expressions.StringNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
-import com.twineworks.tweakflow.lang.parse.util.CodeParseHelper;
 import com.twineworks.tweakflow.lang.types.Types;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -185,13 +185,16 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
 
     OpenDictPatternNode node = new OpenDictPatternNode();
     node.setSourceInfo(srcOf(parseUnit, ctx));
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
 
     List<TweakFlowParser.MatchPatternContext> matchPattern = ctx.matchPattern();
-    List<TweakFlowParser.KeyLiteralContext> keys = ctx.keyLiteral();
+    List<TweakFlowParser.StringConstantContext> keys = ctx.stringConstant();
 
     for (int i = 0; i < matchPattern.size(); i++) {
       TweakFlowParser.MatchPatternContext pattern = matchPattern.get(i);
-      String key = CodeParseHelper.key(keys.get(i));
+
+      StringNode keyNode = (StringNode) expressionBuilder.visit(keys.get(i));
+      String key = keyNode.getStringVal();
       if (node.getElements().containsKey(key)){
         throw new LangException(LangError.ALREADY_DEFINED, srcOf(parseUnit, keys.get(i)));
       }
@@ -218,13 +221,17 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
 
     DictPatternNode node = new DictPatternNode();
     node.setSourceInfo(srcOf(parseUnit, ctx));
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
 
     List<TweakFlowParser.MatchPatternContext> matchPattern = ctx.matchPattern();
-    List<TweakFlowParser.KeyLiteralContext> keys = ctx.keyLiteral();
+    List<TweakFlowParser.StringConstantContext> keys = ctx.stringConstant();
 
     for (int i = 0; i < matchPattern.size(); i++) {
       TweakFlowParser.MatchPatternContext pattern = matchPattern.get(i);
-      String key = CodeParseHelper.key(keys.get(i));
+
+      StringNode keyNode = (StringNode) expressionBuilder.visit(keys.get(i));
+      String key = keyNode.getStringVal();
+
       if (node.getElements().containsKey(key)){
         throw new LangException(LangError.ALREADY_DEFINED, srcOf(parseUnit, keys.get(i)));
       }

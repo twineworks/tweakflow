@@ -2512,7 +2512,7 @@ Full dict patterns match dictionaries as a whole. All expected keys are specifie
 
 ```text
 matchPattern
-  : '{' ((stringLiteral matchPattern) ',' )* (stringLiteral matchPattern) '}' capture?
+  : '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' capture?
   ;
 
 capture
@@ -2554,7 +2554,7 @@ Partial dict patterns match a subset of a dictionary's keys. Any remaining keys 
 
 ```text
 matchPattern
-  :| '{' (((stringLiteral matchPattern)|splatCapture) ',' )* ((stringLiteral matchPattern)|splatCapture) '}' capture?
+  :| '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' capture?
   ;
 
 splatCapture
