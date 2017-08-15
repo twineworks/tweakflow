@@ -27,10 +27,12 @@ package com.twineworks.tweakflow.lang.ast.expressions;
 import com.twineworks.tweakflow.interpreter.ops.ConstantOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
+import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.MatchLines;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,8 +58,19 @@ public class MatchNode extends AExpressionNode implements ExpressionNode {
       return expressionOp.eval(null, null).type();
     }
 
-    // TODO: check types of all branches, they might be uniform
-    return Types.ANY;
+    // Check if all branches are uniform, and return the uniform type if they are.
+    // Return ANY otherwise.
+    ArrayList<MatchLineNode> elements = matchLines.getElements();
+    if (elements.isEmpty()) return Types.ANY;
+    Type initialType = elements.get(0).getExpression().getValueType();
+
+    for (int i = 1; i < elements.size(); i++) {
+      MatchLineNode lineNode = elements.get(i);
+      Type lineType = lineNode.getExpression().getValueType();
+      if (lineNode != initialType) return Types.ANY;
+    }
+
+    return initialType;
 
   }
 
