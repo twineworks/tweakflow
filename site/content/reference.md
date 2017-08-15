@@ -18,7 +18,7 @@ The following sections outline fundamental principles which inform the design of
 
 All data and functions in tweakflow are immutable values. You can always create, inspect, compare and pass them around without worrying about object identity or unexpected modifications. There is no way a value in tweakflow can change.
 
-Tweakflow uses [persistent data structures](https://en.wikipedia.org/wiki/Persistent_data_structure) for its collections. It comes with a set of functions in the standard library to make compuations with immutable values easy.
+Tweakflow uses [persistent data structures](https://en.wikipedia.org/wiki/Persistent_data_structure) for its collections. It comes with a set of functions in the standard library to make computations with immutable values easy.
 
 ### Reproducible calculations
 
@@ -28,7 +28,7 @@ The above paradigm is familiar from spreadsheet applications. Spreadsheets allow
 
 ### The host application is in control
 
-Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it realtively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.
+Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it relatively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.
 
 Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what the user expressions can call or have access to.
 
@@ -199,17 +199,17 @@ world"
 
 #### Here document strings
 
-The [here document](https://en.wikipedia.org/wiki/Here_document) string notation starts with `~~~\r?\n` and ends with `\r?\n~~~`. All characters inbetween are preserved as a literal string that does not expand any escape sequences.  
+The [here document](https://en.wikipedia.org/wiki/Here_document) string notation starts with `~~~\r?\n` and ends with `\r?\n~~~`. All characters in between are preserved as a literal string that does not expand any escape sequences.  
 
-```
+```text
 ​~~~
 [literal string]
 ​~~~
 ```
 
-This style of string is useful when the role of a string is to represent a seperate document. It is typically used for documentation or embedded documents.
+This style of string is useful when the role of a string is to represent a separate document. It is typically used for documentation or embedded documents.
 
-```ruby
+````ruby
 > \e
 ​~~~
 Hello World
@@ -237,7 +237,7 @@ Hello World
     <Type>Voice</Type>  
   </Phone>  
 </Contact>"
-```
+````
 
 #### Symbol strings
 
@@ -254,10 +254,9 @@ The escaped form with backticks allows an unconstrained set of characters, with 
 ```text
 :`.+?`
 ```
-
 Symbol strings are regular strings. They are merely a notational convenience to distinguish data strings from strings used as keys. Therefore symbol notation is allowed in all places a string is accepted.
 
-```ruby
+```javascript
 > :foo
 "foo"
 
@@ -319,6 +318,7 @@ Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com
 > 2017-04-30T21:32:11+02:00@`UTC+02:00`
 2017-04-30T21:32:11+02:00@`UTC+02:00`
 ```
+
 
 ### Identifiers
 
