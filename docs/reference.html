@@ -204,36 +204,36 @@
 <li><a href="#operators">Operators</a>
 <ul>
 <li><a href="#precedence-grouping">Precedence grouping</a></li>
-<li><a href="#bitwise-not">Bitwise not</a></li>
 <li><a href="#boolean-not">Boolean not</a></li>
+<li><a href="#boolean-and">Boolean and</a></li>
+<li><a href="#boolean-or">Boolean or</a></li>
 <li><a href="#unary-minus">Unary minus</a></li>
-<li><a href="#exponentiation">Exponentiation</a></li>
+<li><a href="#addition">Addition</a></li>
+<li><a href="#subtraction">Subtraction</a></li>
 <li><a href="#multiplication">Multiplication</a></li>
 <li><a href="#floating-point-division">Floating point division</a></li>
 <li><a href="#integer-division">Integer division</a></li>
 <li><a href="#division-remainder">Division remainder</a></li>
-<li><a href="#addition">Addition</a></li>
-<li><a href="#subtraction">Subtraction</a></li>
-<li><a href="#string-concatenation">String concatenation</a></li>
-<li><a href="#binary-shift-left">Binary shift left</a></li>
-<li><a href="#binary-shift-right-sign-preserving">Binary shift right, sign preserving</a></li>
-<li><a href="#binary-shift-right">Binary shift right</a></li>
+<li><a href="#exponentiation">Exponentiation</a></li>
+<li><a href="#equality">Equality</a></li>
+<li><a href="#inequality">Inequality</a></li>
 <li><a href="#less-than">Less than</a></li>
 <li><a href="#less-than-or-equal">Less than or equal</a></li>
 <li><a href="#greater-than">Greater than</a></li>
 <li><a href="#greater-than-or-equal">Greater than or equal</a></li>
 <li><a href="#equality-with-type-identity">Equality with type identity</a></li>
 <li><a href="#inequality-with-type-identity">Inequality with type identity</a></li>
-<li><a href="#equality">Equality</a></li>
-<li><a href="#inequality">Inequality</a></li>
-<li><a href="#bitwise-and">Bitwise and</a></li>
-<li><a href="#bitwise-exclusive-or">Bitwise exclusive or</a></li>
-<li><a href="#bitwise-or">Bitwise or</a></li>
-<li><a href="#boolean-and">Boolean and</a></li>
-<li><a href="#boolean-or">Boolean or</a></li>
+<li><a href="#string-concatenation">String concatenation</a></li>
 <li><a href="#type-check">Type check</a></li>
 <li><a href="#type-name">Type name</a></li>
 <li><a href="#type-cast">Type cast</a></li>
+<li><a href="#bitwise-not">Bitwise not</a></li>
+<li><a href="#bitwise-shift-left">Bitwise shift left</a></li>
+<li><a href="#bitwise-shift-right-sign-preserving">Bitwise shift right, sign preserving</a></li>
+<li><a href="#bitwise-shift-right">Bitwise shift right</a></li>
+<li><a href="#bitwise-and">Bitwise and</a></li>
+<li><a href="#bitwise-exclusive-or">Bitwise exclusive or</a></li>
+<li><a href="#bitwise-or">Bitwise or</a></li>
 <li><a href="#operator-precedence">Operator precedence</a></li>
 </ul></li>
 <li><a href="#debugging">Debugging</a></li>
@@ -265,7 +265,7 @@
 
 <p>All data and functions in tweakflow are immutable values. You can always create, inspect, compare and pass them around without worrying about object identity or unexpected modifications. There is no way a value in tweakflow can change.</p>
 
-<p>Tweakflow uses <a href="https://en.wikipedia.org/wiki/Persistent_data_structure">persistent data structures</a> for its collections. It comes with a set of functions in the standard library to make compuations with immutable values easy.</p>
+<p>Tweakflow uses <a href="https://en.wikipedia.org/wiki/Persistent_data_structure">persistent data structures</a> for its collections. It comes with a set of functions in the standard library to make computations with immutable values easy.</p>
 
 <h3 id="reproducible-calculations">Reproducible calculations</h3>
 
@@ -275,7 +275,7 @@
 
 <h3 id="the-host-application-is-in-control">The host application is in control</h3>
 
-<p>Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it realtively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.</p>
+<p>Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it relatively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.</p>
 
 <p>Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what the user expressions can call or have access to.</p>
 
@@ -293,13 +293,13 @@
 
 <p>Decimal digits are read as 64-bit signed integers of type <code>long</code>. A prefix of <code>-</code> indicates a negative value.</p>
 
-<pre><code class="language-javascript">42
+<pre><code class="language-tweakflow">42
 -2
 </code></pre>
 
 <p>Long literals can also be written in hexadecimal form. They are notated as <code>0x</code> followed by up to  8 bytes. Each byte consists of two hexadecimal digits from <code>[0-9a-fA-F]</code>. The bytes are given in  big-endian order, meaning that the most significant byte is written first. If less than 8 bytes are provided, missing leading bytes are filled up with zeros. The resulting bit pattern is interpreted as a <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two&rsquo;s complement</a> signed 64-bit integer, exactly like a Java long value.</p>
 
-<pre><code class="language-ruby">&gt; 0x00
+<pre><code class="language-tweakflow">&gt; 0x00
 0
 
 &gt; 0xFF
@@ -332,7 +332,7 @@
 
 <p>Exponent notation is given by an <code>e</code> or <code>E</code> character and followed by the powers of ten to multiply with.</p>
 
-<pre><code class="language-ruby"># various ways to write the decimal number 3.1315
+<pre><code class="language-tweakflow"># various ways to write the decimal number 3.1315
 
 &gt; 3.1315
 3.1315
@@ -351,7 +351,7 @@
 
 <p>In addition to regular numbers <code>NaN</code> (Not a Number) and <code>Infinity</code> literals can be used.</p>
 
-<pre><code class="language-ruby">&gt; Infinity
+<pre><code class="language-tweakflow">&gt; Infinity
 Infinity
 
 &gt; -Infinity
@@ -381,7 +381,7 @@ NaN
 
 <p>A single quoted string begins and ends with a single quote character <code>'</code>. Line breaks, tabs, and other special characters are allowed, and included in the string verbatim. If a single-quote character is to be included in the string, it must be escaped with another single-quote. Aside from that, a single-quoted string does not expand any escape sequences.</p>
 
-<pre><code class="language-ruby">&gt; 'hello world'
+<pre><code class="language-tweakflow">&gt; 'hello world'
 &quot;hello world&quot;
 
 &gt; 'a single quote: '''
@@ -462,7 +462,7 @@ Line 3&quot;
 
 <p>To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of a variable reference, escape the hash character that opens the sequence, so it is interpreted literally.</p>
 
-<pre><code class="language-ruby">&gt; &quot;hello world&quot;
+<pre><code class="language-tweakflow">&gt; &quot;hello world&quot;
 &quot;hello world&quot;
 
 &gt; &quot;hello\nworld&quot;
@@ -486,16 +486,16 @@ world&quot;
 
 <h4 id="here-document-strings">Here document strings</h4>
 
-<p>The <a href="https://en.wikipedia.org/wiki/Here_document">here document</a> string notation starts with <code>~~~\r?\n</code> and ends with <code>\r?\n~~~</code>. All characters inbetween are preserved as a literal string that does not expand any escape sequences.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Here_document">here document</a> string notation starts with <code>~~~\r?\n</code> and ends with <code>\r?\n~~~</code>. All characters in between are preserved as a literal string that does not expand any escape sequences.</p>
 
-<pre><code>​~~~
+<pre><code class="language-text">​~~~
 [literal string]
 ​~~~
 </code></pre>
 
-<p>This style of string is useful when the role of a string is to represent a seperate document. It is typically used for documentation or embedded documents.</p>
+<p>This style of string is useful when the role of a string is to represent a separate document. It is typically used for documentation or embedded documents.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 ​~~~
 Hello World
 ​~~~
@@ -540,7 +540,7 @@ Hello World
 
 <p>Symbol strings are regular strings. They are merely a notational convenience to distinguish data strings from strings used as keys. Therefore symbol notation is allowed in all places a string is accepted.</p>
 
-<pre><code class="language-ruby">&gt; :foo
+<pre><code class="language-tweakflow">&gt; :foo
 &quot;foo&quot;
 
 &gt; :`Hello World`
@@ -565,13 +565,13 @@ Hello World
 
 <p>Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form <code>[year]-[month]-[day]T</code>  with year given as four digits, month and day give as two digits each.</p>
 
-<pre><code class="language-ruby">&gt; 2017-04-30T
+<pre><code class="language-tweakflow">&gt; 2017-04-30T
 2017-04-30T00:00:00Z@UTC
 </code></pre>
 
 <p>The basic form is extended to specify the local time in 24 hour format as <code>[hours]:[minutes]:[seconds](.[fraction_of_seconds])?</code> with two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.</p>
 
-<pre><code class="language-ruby">&gt; 2017-04-30T21:32:11
+<pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11
 2017-04-30T21:32:11Z@UTC
 
 &gt; 2017-04-30T21:32:11.123456789
@@ -580,7 +580,7 @@ Hello World
 
 <p>The local time form is extended to specify an offset from UTC of the form <code>((+|-)[offset_hours]:[offset_minutes])|Z</code>  where offset hours and offset minutes is specified with 2 digits each. The shorthand Z means UTC time, no offset.</p>
 
-<pre><code class="language-ruby">&gt; 2017-04-30T21:32:11+02:00
+<pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11+02:00
 2017-04-30T21:32:11+02:00@`UTC+02:00`
 
 &gt; 2017-04-30T21:32:11Z
@@ -591,7 +591,7 @@ Hello World
 
 <p>Time zones are valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
 
-<pre><code class="language-ruby">&gt; 2017-04-30T21:32:11+02:00@`Europe/Berlin`
+<pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11+02:00@`Europe/Berlin`
 2017-04-30T21:32:11+02:00@`Europe/Berlin`
 
 &gt; 2017-04-30T21:32:11+02:00@`UTC+02:00`
@@ -614,7 +614,7 @@ Hello World
 
 <p>The following example uses both variants of the syntax. The variable <code>%name%</code> has characters that are not permitted in an identifier, and is therefore escaped:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 let {
   greeting: &quot;Hello&quot;
   `%name%`: &quot;Joe&quot;
@@ -632,7 +632,7 @@ greeting .. &quot; &quot; .. `%name%`
 
 <p>Below example has variable definitions separated by end-of-statement markers. Both semicolon and newline are used to clearly separate the variable definitions:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 let {
   a: 1;
   b: 2;
@@ -643,7 +643,7 @@ let {
 
 <p>Equivalent, but arguably less readable notation with variable definitions lacking end-of-statement separation:</p>
 
-<pre><code class="language-ruby">&gt; let { a: 1 b: 2 } a+b
+<pre><code class="language-tweakflow">&gt; let { a: 1 b: 2 } a+b
 3
 </code></pre>
 
@@ -655,7 +655,7 @@ let {
 
 <p>The <code>#</code> token signifies a line comment. The <code>#</code> character and all subsequent characters to the next newline are ignored.</p>
 
-<pre><code class="language-ruby">&gt; 3 # This is a comment
+<pre><code class="language-tweakflow">&gt; 3 # This is a comment
 3
 </code></pre>
 
@@ -663,7 +663,7 @@ let {
 
 <p>The comment markers <code>/*</code> and <code>*/</code> enclose a comment that can span multiple lines. Span comments can be nested.</p>
 
-<pre><code class="language-ruby">&gt; 3 /* This is a comment */
+<pre><code class="language-tweakflow">&gt; 3 /* This is a comment */
 3
 
 &gt; /* this is a /* nested */ comment */ 3
@@ -725,7 +725,7 @@ moduleComponent
 
 <p>The following set of files constitute configuration variants, available globally as <code>env</code>.</p>
 
-<pre><code class="language-ruby"># environments/local.tf
+<pre><code class="language-tweakflow"># environments/local.tf
 global module env
 
 export library conf {
@@ -733,7 +733,7 @@ export library conf {
 }
 </code></pre>
 
-<pre><code class="language-ruby"># environments/production.tf
+<pre><code class="language-tweakflow"># environments/production.tf
 global module env
 
 export library conf {
@@ -743,7 +743,7 @@ export library conf {
 
 <p>This file uses environment configuration through the global reference <code>$env</code>.</p>
 
-<pre><code class="language-ruby"># main.tf
+<pre><code class="language-tweakflow"># main.tf
 library my_lib {
   file_path: (string prefix) -&gt; $env.conf.data_path .. prefix .. &quot;_data.csv&quot;
 }
@@ -795,23 +795,23 @@ modulePath
 
 <p>The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.</p>
 
-<p>Two modules may import each other&rsquo;s exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.</p>
+<p>Two modules may import each other&rsquo;s exports. However, an import must ultimately refer to a concrete entity. It must not refer back to itself through a circular chain of imports, aliases, and exports.</p>
 
 <p><strong>Examples</strong></p>
 
 <p>Module <code>&quot;./util/strings.tf&quot;</code> is imported as a whole below. Any exported name <code>x</code> is available as <code>utils.x</code> locally.</p>
 
-<pre><code class="language-javascript">import * as utils from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import * as utils from &quot;./util/strings.tf&quot;
 </code></pre>
 
 <p>A specific library <code>conversion_lib</code> is imported from <code>&quot;./util/strings.tf&quot;</code> below. Its local name remains <code>conversion_lib</code>.</p>
 
-<pre><code class="language-javascript">import conversion_lib from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import conversion_lib from &quot;./util/strings.tf&quot;
 </code></pre>
 
 <p>Specific entities are imported individually below. The import statement references two exported libraries from module <code>&quot;./util/strings.tf&quot;</code>, making them available under local names <code>str</code> and <code>conv</code>.</p>
 
-<pre><code class="language-javascript">import string_lib as str, conversion_lib as conv from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import string_lib as str, conversion_lib as conv from &quot;./util/strings.tf&quot;
 </code></pre>
 
 <h4 id="aliases">Aliases</h4>
@@ -831,7 +831,7 @@ aliasName
 
 <p>The following module uses aliases.</p>
 
-<pre><code class="language-ruby"># file: aliases.tf
+<pre><code class="language-tweakflow"># file: aliases.tf
 import * as std from &quot;std&quot;
 
 # s can be used as shortcut to std.strings
@@ -864,7 +864,7 @@ exportName
 
 <p>Below example exports the strings standard library under the name <code>str</code>, and a local library <code>common</code> under the name <code>util</code> .</p>
 
-<pre><code class="language-ruby"># lib.tf
+<pre><code class="language-tweakflow"># lib.tf
 import * as std from &quot;std&quot;
 
 export std.strings as str
@@ -877,7 +877,7 @@ library common {
 
 <p>The following file imports both the <code>str</code> and the <code>util</code> export.</p>
 
-<pre><code class="language-ruby"># main.tf
+<pre><code class="language-tweakflow"># main.tf
 import util, str from &quot;./lib.tf&quot;
 </code></pre>
 
@@ -894,7 +894,7 @@ import util, str from &quot;./lib.tf&quot;
 
 <p>Below is an exported library holding some functions.</p>
 
-<pre><code class="language-ruby">export library nums {
+<pre><code class="language-tweakflow">export library nums {
   function square: (x) 	-&gt; x**2
   function root: (x) 	-&gt; x**0.5
 }
@@ -912,7 +912,7 @@ import util, str from &quot;./lib.tf&quot;
 
 <p>The type of variables guarantees that referencing a variable results in a value of the specified type. Variable values are cast implicitly if necessary.</p>
 
-<pre><code class="language-ruby">&gt; boolean bool_var: 1
+<pre><code class="language-tweakflow">&gt; boolean bool_var: 1
 true
 
 &gt; boolean bool_var: 0
@@ -921,7 +921,7 @@ false
 
 <p>If unspecified, the variable type is <code>any</code>, and no implicit casts take place.</p>
 
-<pre><code class="language-ruby">&gt; some_var: 1
+<pre><code class="language-tweakflow">&gt; some_var: 1
 1
 
 &gt; any some_var: 1
@@ -957,13 +957,13 @@ false
 
 <p>Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.</p>
 
-<p>Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword <code>doc</code> followed by an expression. Meta annotations begin with the keyworkd <code>meta</code> followed by an expression.</p>
+<p>Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword <code>doc</code> followed by an expression. Meta annotations begin with the keyword <code>meta</code> followed by an expression.</p>
 
 <p>The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.</p>
 
 <p>The following module contains a single library with a single function:</p>
 
-<pre><code class="language-ruby">module
+<pre><code class="language-tweakflow">module
 
 library bar {
   function baz: (x) -&gt; x*x
@@ -972,7 +972,7 @@ library bar {
 
 <p>The same module with a full set of annotations at the module, library, and variable level:</p>
 
-<pre><code class="language-ruby"># module foo.tf
+<pre><code class="language-tweakflow"># module foo.tf
 doc
 ​~~~
 This is documentation at the module level.
@@ -1077,7 +1077,7 @@ foo.tf&gt; \meta bar.baz
 
 <p>The long is interpreted as the number of milliseconds passed since <code>time.epoch</code> in UTC.</p>
 
-<pre><code class="language-ruby">&gt; 0 as datetime
+<pre><code class="language-tweakflow">&gt; 0 as datetime
 1970-01-01T00:00:00Z@UTC
 
 &gt; 1501757830000 as datetime
@@ -1155,7 +1155,7 @@ foo.tf&gt; \meta bar.baz
 
 <p>Examples for casts from string to double:</p>
 
-<pre><code class="language-ruby">&gt; &quot;1.0&quot; as double
+<pre><code class="language-tweakflow">&gt; &quot;1.0&quot; as double
 1.0
 
 &gt; &quot;2e3&quot; as double
@@ -1176,9 +1176,9 @@ ERROR: {
 
 <p>String as list</p>
 
-<p>A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode codepoints.</p>
+<p>A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode code points.</p>
 
-<pre><code class="language-ruby">&gt; &quot;&quot; as list
+<pre><code class="language-tweakflow">&gt; &quot;&quot; as list
 []
 
 &gt; &quot;hello&quot; as list
@@ -1202,7 +1202,7 @@ ERROR: {
 
 <p>A datetime value casts to a string compatible with <a href="#datetime-literals">datetime literal</a> notation.</p>
 
-<pre><code class="language-ruby">&gt; time.epoch as string
+<pre><code class="language-tweakflow">&gt; time.epoch as string
 &quot;1970-01-01T00:00:00Z@UTC&quot;
 </code></pre>
 
@@ -1212,7 +1212,7 @@ ERROR: {
 
 <p>A datetime value casts to a dict that contains all of its fields together with day of week, day of year, and week of year information. Supposing <code>x</code> is the datetime to cast, and <code>time</code> is the library from the standard module, the dict is equivalent to the following definition:</p>
 
-<pre><code class="language-ruby">{
+<pre><code class="language-tweakflow">{
   :year              time.year(x),
   :month             time.month(x),
   :day_of_month      time.day_of_month(x),
@@ -1230,7 +1230,7 @@ ERROR: {
 
 <p>For example:</p>
 
-<pre><code class="language-ruby">&gt; time.epoch as dict
+<pre><code class="language-tweakflow">&gt; time.epoch as dict
 {
   :month 1,
   :day_of_year 1,
@@ -1284,7 +1284,7 @@ splat
 
 <p>A few example lists:</p>
 
-<pre><code class="language-ruby">&gt; [1, 2, 3] # a basic list
+<pre><code class="language-tweakflow">&gt; [1, 2, 3] # a basic list
 [1, 2, 3]
 
 &gt; [1 2 3] # commas are optional
@@ -1308,7 +1308,7 @@ splat
 
 <p>It is worth noting that <a href="#container-access">container access</a> has precedence over sequencing items in a list literal, which can lead to unexpected results when nesting list literals. You can disambiguate by placing explicit commas to sequence list items.</p>
 
-<pre><code class="language-ruby">&gt; [[&quot;a&quot;, &quot;b&quot;] [0]]   # container access x[0] has precedence over list literal sequence
+<pre><code class="language-tweakflow">&gt; [[&quot;a&quot;, &quot;b&quot;] [0]]   # container access x[0] has precedence over list literal sequence
 [&quot;a&quot;]
 
 &gt; [[&quot;a&quot;, &quot;b&quot;], [0]]  # ambiguity resolved
@@ -1317,7 +1317,7 @@ splat
 
 <p>When a splat expression is encountered, it is evaluated, cast to list and concatenated with any previous list items. A few examples of splats:</p>
 
-<pre><code class="language-ruby">&gt; [1, 2, ...[3, 4, 5]]
+<pre><code class="language-tweakflow">&gt; [1, 2, ...[3, 4, 5]]
 [1, 2, 3, 4, 5]
 
 &gt; [1, 2, ...{:key &quot;value&quot;}, 3] # the splat dict is cast to a list before concat
@@ -1344,7 +1344,7 @@ function
 
 <p>Lists are converted as sequences of key-value pairs. <code>[&quot;a&quot; 1 &quot;b&quot; 2]</code> is converted to <code>{:a 1 :b 2}</code>. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is <code>nil</code> or cannot be cast to string, an error is thrown.</p>
 
-<pre><code class="language-ruby">&gt; [&quot;a&quot; 1 &quot;b&quot; 2 &quot;c&quot; 3] as dict
+<pre><code class="language-tweakflow">&gt; [&quot;a&quot; 1 &quot;b&quot; 2 &quot;c&quot; 3] as dict
 {
   :a 1,
   :b 2,
@@ -1405,7 +1405,7 @@ splat
 
 <p>A few example dicts:</p>
 
-<pre><code class="language-ruby">&gt; {:code 200, :status &quot;found&quot;, :size 1232}
+<pre><code class="language-tweakflow">&gt; {:code 200, :status &quot;found&quot;, :size 1232}
 {
   :size 1232,
   :code 200,
@@ -1442,7 +1442,7 @@ splat
 
 <p>When a splat expression is encountered, the splat value is cast to dict and merged with the existing dict. The rightmost merged dict values take precedence in case splats contain keys that are already present.</p>
 
-<pre><code class="language-ruby">&gt; {:code 200, ...{:status &quot;found&quot;, :size 1232}}
+<pre><code class="language-tweakflow">&gt; {:code 200, ...{:status &quot;found&quot;, :size 1232}}
 {
   :size 1232,
   :code 200,
@@ -1468,7 +1468,7 @@ splat
 
 <p>Dicts are converted to lists as a sequence of key-value pairs. An empty dict gives an empty list. Keys and values appear in pairs, but the order of the pairs is not defined.</p>
 
-<pre><code class="language-ruby">&gt; {} as list
+<pre><code class="language-tweakflow">&gt; {} as list
 []
 
 &gt; {:a &quot;foo&quot; :b &quot;bar&quot;} as list
@@ -1522,7 +1522,7 @@ viaDec
 
 <p>Some examples:</p>
 
-<pre><code class="language-ruby"># A function with no parameters, returning a constant of any type
+<pre><code class="language-tweakflow"># A function with no parameters, returning a constant of any type
 &gt; f: () -&gt; 1
 function
 &gt; f()
@@ -1567,7 +1567,7 @@ function
 
 <p>The signature of a function can be inspected calling <a href="./modules/std.html#signature">fun.signature</a> from the standard library.</p>
 
-<pre><code class="language-ruby">&gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
+<pre><code class="language-tweakflow">&gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
 &gt; fun.signature(f)
 {
@@ -1633,10 +1633,22 @@ function
 
 <p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
 
-<pre><code class="language-ruby">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
+<pre><code class="language-tweakflow">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
 function
 &gt; f([&quot;Foo&quot;, &quot;Bar&quot;, &quot;Baz&quot;])
 &quot;FooBarBaz&quot;
+</code></pre>
+
+<p>It is worth noting that return values coming from java implementations of functions are still cast to return types as per the function declaration in tweakflow.</p>
+
+<pre><code class="language-tweakflow">&gt; f: (string x) -&gt; long via {:class &quot;com.twineworks.tweakflow.std.Strings$length&quot;}
+function
+&gt; g: (string x) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$length&quot;}
+function
+&gt; f(&quot;foo&quot;)
+3
+&gt; g(&quot;foo&quot;)
+&quot;3&quot;
 </code></pre>
 
 <p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
@@ -1657,7 +1669,7 @@ function
 
 <h3 id="nil">Nil</h3>
 
-<p>The <code>nil</code> value is written as simply <code>nil</code>. Semantiaclly, a <code>nil</code> value indicates the absence of a value. The <code>nil</code> value is special because it is a valid member of all data types. It casts to any type successfully as <code>nil</code>.</p>
+<p>The <code>nil</code> value is written as simply <code>nil</code>. Semantically, a <code>nil</code> value indicates the absence of a value. The <code>nil</code> value is special because it is a valid member of all data types. It casts to any type successfully as <code>nil</code>.</p>
 
 <h3 id="value-literals">Value literals</h3>
 
@@ -1686,7 +1698,7 @@ splat
 
 <p>Indexes supplied for a list are automatically cast to long values.  If the given index does not exist in the list, the value of the access expression is <code>nil</code>. Accessing a <code>nil</code> list yields <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; items: [&quot;a&quot; &quot;b&quot; &quot;c&quot;]
+<pre><code class="language-tweakflow">&gt; items: [&quot;a&quot; &quot;b&quot; &quot;c&quot;]
 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
 
 &gt; items[0]
@@ -1718,7 +1730,7 @@ nil
 
 <p>Dicts are indexed with strings. Keys are automatically cast to strings. If a given key does not exist, the value of the access expression is <code>nil</code>. Accessing <code>nil</code> yields <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; bag: {:a &quot;alpha&quot;, :b &quot;beta&quot;, &quot;1&quot; &quot;one&quot;, &quot;2&quot; &quot;two&quot;}
+<pre><code class="language-tweakflow">&gt; bag: {:a &quot;alpha&quot;, :b &quot;beta&quot;, &quot;1&quot; &quot;one&quot;, &quot;2&quot; &quot;two&quot;}
 {
   :a &quot;alpha&quot;,
   :b &quot;beta&quot;,
@@ -1755,7 +1767,7 @@ nil
 
 <p>Container access expressions can be chained to access nested data.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 story: {
   :name &quot;A Study in Scarlet&quot;
   :adaptations [
@@ -1796,7 +1808,7 @@ story: {
 
 <p>Tweakflow supports placing the keys of chained access inside a single set of square brackets. The semantics are exactly the same as chaining container access.</p>
 
-<pre><code class="language-ruby">&gt; story[:adaptations][1][:media]
+<pre><code class="language-tweakflow">&gt; story[:adaptations][1][:media]
 &quot;television series&quot;
 
 &gt; story[:adaptations 1 :media]
@@ -1805,7 +1817,7 @@ story: {
 
 <p>It is worth noting that if the traversal yields <code>nil</code> at any intermediate point, the result is <code>nil</code>, which is consistent with <code>nil[x]</code> being <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; story[:adaptations][4][:media] # there is no adaptation at index 4
+<pre><code class="language-tweakflow">&gt; story[:adaptations][4][:media] # there is no adaptation at index 4
 nil
 
 &gt; story[:adaptations 4 :media]
@@ -1814,7 +1826,7 @@ nil
 
 <p>The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in <a href="#list">list literals</a>.</p>
 
-<pre><code class="language-ruby">&gt; path: [:adaptations 1 :media]
+<pre><code class="language-tweakflow">&gt; path: [:adaptations 1 :media]
 [&quot;adaptations&quot;, 1, &quot;media&quot;]
 
 &gt; story[...path]
@@ -1857,13 +1869,13 @@ splatArg
 
 <p>A basic example defining a function, and calling it immediately:</p>
 
-<pre><code class="language-ruby">&gt; ((x) -&gt; x*x)(2) # call with argument x=2
+<pre><code class="language-tweakflow">&gt; ((x) -&gt; x*x)(2) # call with argument x=2
 4
 </code></pre>
 
 <p>You can reference the function and call it:</p>
 
-<pre><code class="language-ruby">&gt; f: (x) -&gt; x*x  # define a function and place it in f
+<pre><code class="language-tweakflow">&gt; f: (x) -&gt; x*x  # define a function and place it in f
 function
 
 &gt; f(2) # call function f
@@ -1875,7 +1887,7 @@ function
 
 <p>For the purposes of further discussion, let&rsquo;s define function <code>f</code> as:</p>
 
-<pre><code class="language-ruby">f: (long id = 0, string name = &quot;n/a&quot;) -&gt; string id .. &quot;-&quot; .. name
+<pre><code class="language-tweakflow">f: (long id = 0, string name = &quot;n/a&quot;) -&gt; string id .. &quot;-&quot; .. name
 </code></pre>
 
 <p>Above function has parameters <code>id</code> of type long and <code>name</code> of type string. Both have non-nil default values.</p>
@@ -1884,15 +1896,15 @@ function
 
 <h4 id="positional-arguments">Positional arguments</h4>
 
-<p>Arguments given by position just list the values in parameter order and are seperated by comma. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code> as <code>name</code>.</p>
+<p>Arguments given by position just list the values in parameter order and are separated by comma. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code> as <code>name</code>.</p>
 
-<pre><code class="language-ruby">&gt; f(42, &quot;test&quot;)
+<pre><code class="language-tweakflow">&gt; f(42, &quot;test&quot;)
 &quot;42-test&quot;
 </code></pre>
 
 <p>Passing more than the declared number of positional arguments is an error.</p>
 
-<pre><code class="language-ruby">&gt; f(42, &quot;test&quot;, &quot;too much&quot;)
+<pre><code class="language-tweakflow">&gt; f(42, &quot;test&quot;, &quot;too much&quot;)
 ERROR: {
   :message &quot;cannot call function with 3 arguments&quot;,
   :code &quot;UNEXPECTED_ARGUMENT&quot;,
@@ -1902,13 +1914,13 @@ ERROR: {
 
 <p>Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value <code>nil</code> unless explicitly specified in the function definition.</p>
 
-<pre><code class="language-ruby">&gt; f(12)
+<pre><code class="language-tweakflow">&gt; f(12)
 &quot;12-n/a&quot;
 
 &gt; f()
 &quot;0-n/a&quot;
 
-&gt; g: (x) -&gt; x # x's default value is nil
+&gt; g: (x) -&gt; x # default value of x is nil
 function
 
 &gt; g(1)
@@ -1922,7 +1934,7 @@ nil
 
 <p>When calling function, you can also pass arguments by name. Arguments given by name are listed in pairs of names and values separated by commas. The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code>  as <code>name</code> again, but uses named arguments this time. The order of named arguments does not matter.</p>
 
-<pre><code class="language-ruby">&gt; f(id: 42, name: &quot;test&quot;)
+<pre><code class="language-tweakflow">&gt; f(id: 42, name: &quot;test&quot;)
 &quot;42-test&quot;
 
 &gt; f(name: &quot;test&quot;, id: 42)
@@ -1931,7 +1943,7 @@ nil
 
 <p>Omitted arguments are assigned their default parameter value.</p>
 
-<pre><code class="language-ruby">&gt; f(id: 42)
+<pre><code class="language-tweakflow">&gt; f(id: 42)
 &quot;42-n/a&quot;
 
 &gt; f(name: &quot;test&quot;)
@@ -1943,7 +1955,7 @@ nil
 
 <p>It is an error to supply argument names not present in function parameters:</p>
 
-<pre><code class="language-ruby">&gt; f(id: 42, name: &quot;foo&quot;, country: &quot;US&quot;)
+<pre><code class="language-tweakflow">&gt; f(id: 42, name: &quot;foo&quot;, country: &quot;US&quot;)
 ERROR: {
   :message &quot;Function does not have parameter named: country&quot;,
   :code &quot;UNEXPECTED_ARGUMENT&quot;,
@@ -1956,13 +1968,13 @@ ERROR: {
 
 <p>The following call passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code>  as <code>name</code>. It mixes positional and named arguments.</p>
 
-<pre><code class="language-ruby">&gt; f(42, name: &quot;test&quot;)
+<pre><code class="language-tweakflow">&gt; f(42, name: &quot;test&quot;)
 &quot;42-test&quot;
 </code></pre>
 
 <p>It is an error to supply any positional arguments after named arguments.</p>
 
-<pre><code class="language-ruby">&gt; f(id: 42, &quot;test&quot;) # error, positional arguments cannot follow named arguments
+<pre><code class="language-tweakflow">&gt; f(id: 42, &quot;test&quot;) # error, positional arguments cannot follow named arguments
 ERROR: {
   :message &quot;Positional argument cannot follow named arguments.&quot;,
   :code &quot;UNEXPECTED_ARGUMENT&quot;,
@@ -1972,7 +1984,7 @@ ERROR: {
 
 <p>It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.</p>
 
-<pre><code class="language-ruby">&gt; f(42, &quot;test&quot;, id: 7)
+<pre><code class="language-tweakflow">&gt; f(42, &quot;test&quot;, id: 7)
 &quot;7-test&quot;
 
 &gt; f(42, &quot;test&quot;, id: 7, id: 8)
@@ -1983,7 +1995,7 @@ ERROR: {
 
 <p>The function <a href="./modules/std.html#add-period">add_period</a> from the standard library for example:</p>
 
-<pre><code class="language-ruby">&gt; time.add_period(time.epoch, years: 1000)
+<pre><code class="language-tweakflow">&gt; time.add_period(time.epoch, years: 1000)
 2970-01-01T00:00:00Z@UTC
 
 &gt; time.add_period(time.epoch, days: 2)
@@ -1996,7 +2008,7 @@ ERROR: {
 
 <p>Whenever positional arguments are allowed, and a splat expression evaluates to a list, the items from the list are used as positional arguments in order.</p>
 
-<pre><code class="language-ruby">&gt; args: [42, &quot;name&quot;]
+<pre><code class="language-tweakflow">&gt; args: [42, &quot;name&quot;]
 [42, &quot;name&quot;]
 
 &gt; f(...args) # splat positional arguments
@@ -2005,7 +2017,7 @@ ERROR: {
 
 <p>Positional arguments can be interspersed with splats. The resulting arguments are concatenated left to right:</p>
 
-<pre><code class="language-ruby">&gt; f(42, ...[&quot;name&quot;])
+<pre><code class="language-tweakflow">&gt; f(42, ...[&quot;name&quot;])
 &quot;42-name&quot;
 
 &gt; f(...[42], &quot;name&quot;)
@@ -2019,7 +2031,7 @@ ERROR: {
 
 <p>Below example supplies the <code>id</code> and <code>name</code> named arguments.</p>
 
-<pre><code class="language-ruby">&gt; person: {:id 42, :name &quot;test&quot;}
+<pre><code class="language-tweakflow">&gt; person: {:id 42, :name &quot;test&quot;}
 {
   :name &quot;test&quot;,
   :id 42
@@ -2030,7 +2042,7 @@ ERROR: {
 
 <p>Named arguments can be interspersed with splats. The resulting arguments dict is then merged left to right, with rightmost keys taking precedence in case of duplicates. Below example again effectively passes <code>42</code> as <code>id</code> and <code>&quot;test&quot;</code> as <code>name</code>.</p>
 
-<pre><code class="language-ruby">&gt; person: {:id 0, :name &quot;test&quot;}
+<pre><code class="language-tweakflow">&gt; person: {:id 0, :name &quot;test&quot;}
 {
   :name &quot;test&quot;,
   :id 0
@@ -2041,7 +2053,7 @@ ERROR: {
 
 <p>Splats can be mixed as long as positional splats come first.</p>
 
-<pre><code class="language-ruby">&gt; f(...[42, &quot;testing&quot;], ...{:name &quot;foo&quot;})
+<pre><code class="language-tweakflow">&gt; f(...[42, &quot;testing&quot;], ...{:name &quot;foo&quot;})
 &quot;42-foo&quot;
 
 &gt; f(...{:name &quot;foo&quot;}, ...[42, &quot;testing&quot;]) # no positional args allowed after named args
@@ -2056,7 +2068,7 @@ ERROR: {
 
 <p>Arguments given in function calls are automatically cast to the declared parameter type:</p>
 
-<pre><code class="language-ruby">&gt; f(&quot;3&quot;, 9837) # casts the first argument to long, and the second argument to string
+<pre><code class="language-tweakflow">&gt; f(&quot;3&quot;, 9837) # casts the first argument to long, and the second argument to string
 &quot;3-9837&quot;
 
 &gt; f(&quot;abc&quot;, &quot;def&quot;) # cannot cast first argument to long
@@ -2071,7 +2083,7 @@ ERROR: {
 
 <p>Every function declares a return type. It is <code>any</code> by default. Every value a function returns is cast to the declared return type implicitly. If the return type of a function is <code>any</code>, the cast is not performed.</p>
 
-<pre><code class="language-ruby">&gt; sum: (long x, long y) -&gt; long        x+y
+<pre><code class="language-tweakflow">&gt; sum: (long x, long y) -&gt; long        x+y
 function
 &gt; sum_d: (long x, long y) -&gt; double    x+y
 function
@@ -2107,11 +2119,11 @@ threadArg
   ;
 </code></pre>
 
-<p>The symbol <code>-&gt;&gt;</code> is a mnemonic for a threading needle. <code>threadArg</code> is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called witha single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.</p>
+<p>The symbol <code>-&gt;&gt;</code> is a mnemonic for a threading needle. <code>threadArg</code> is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called with a single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.</p>
 
 <p>As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, dashes must be included to create groups of four characters, and finally all characters must be upper case.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 normalize: (string pn) -&gt;
   -&gt;&gt; (pn)
 	  # remove whitespace
@@ -2148,7 +2160,7 @@ varDef
 
 <p>Examples:</p>
 
-<pre><code class="language-ruby">&gt; let {a: 1; b: 2} a + b
+<pre><code class="language-tweakflow">&gt; let {a: 1; b: 2} a + b
 3
 
 &gt; \e
@@ -2172,7 +2184,7 @@ true
 
 <p>Local variables shadow any existing variables:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 let {
   x: &quot;foo&quot;
   y: let {
@@ -2196,7 +2208,7 @@ x .. y # &quot;foo&quot;..&quot;bar&quot;
 
 <p>Some examples:</p>
 
-<pre><code class="language-ruby">&gt; if true then 1 else 2
+<pre><code class="language-tweakflow">&gt; if true then 1 else 2
 1
 
 &gt; f: (string x) -&gt; if strings.length(x) &gt; 2 then &quot;long&quot; else &quot;short&quot;
@@ -2238,7 +2250,7 @@ function
 
 <p>Given customer records, the following function creates a greeting line:</p>
 
-<pre><code class="language-ruby">&gt; greeting: (dict customer) -&gt; &quot;Dear &quot;..(customer[:name] default &quot;customer&quot;)
+<pre><code class="language-tweakflow">&gt; greeting: (dict customer) -&gt; &quot;Dear &quot;..(customer[:name] default &quot;customer&quot;)
 function
 &gt; greeting({:id 723, :name &quot;Jane Doe&quot;, :type &quot;user&quot;})
 &quot;Dear Jane Doe&quot;
@@ -2275,7 +2287,7 @@ filter
 
 <p>Create a list of coordinates from given axes:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 for
   x &lt;- [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
   y &lt;- [1, 2, 3, 4, 5, 6],
@@ -2286,7 +2298,7 @@ for
 
 <p>Variable definitions in list comprehensions create helper variables. They are in scope for all subsequent expressions in the list comprehension.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 for
   x  &lt;- data.range(1, 3),
   y  &lt;- data.range(x, 3),
@@ -2300,7 +2312,7 @@ for
 
 <p>Create a list of <a href="https://en.wikipedia.org/wiki/Pythagorean_triple">pythagorean triples</a> trying sides up to the size of 15.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 for
   a &lt;- data.range(1, 15),
   b &lt;- data.range(a, 15),
@@ -2339,7 +2351,7 @@ matchGuard
 
 <p>A match expression consists of the <code>match</code> keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the <code>default</code> line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.</p>
 
-<p>The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to <code>true</code> the match evalutes to the line&rsquo;s result expression. If the guard expression evaluates to <code>false</code> or <code>nil</code>,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a <code>default</code> line, the match evaluates to the default value. If there is no <code>default</code> line, the match evaluates to <code>nil</code>.</p>
+<p>The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to <code>true</code> the match evaluates to the line&rsquo;s result expression. If the guard expression evaluates to <code>false</code> or <code>nil</code>,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a <code>default</code> line, the match evaluates to the default value. If there is no <code>default</code> line, the match evaluates to <code>nil</code>.</p>
 
 <p>The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches.</p>
 
@@ -2354,7 +2366,7 @@ matchGuard
 
 <p>An example:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 f: (long x) -&gt;
   match x
     @ -&gt; true # always matches
@@ -2370,7 +2382,7 @@ true
 
 <p>Existence matches are not very useful for matching simple values, but they are useful when nested in list or dict patterns to assert element existence and extract element values from these structures.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 pair?: (list xs) -&gt;
   match xs
     [@, @]  -&gt; true
@@ -2413,7 +2425,7 @@ capture
 
 <p>An optional capture pattern is allowed after the expression, to capture the matched value. If the capture does not specify an identifier, it has no effect.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 low_prime?: (long x) -&gt;
   match x
     2 -&gt; true
@@ -2454,7 +2466,7 @@ capture
 
 <p>If the pattern expression evaluates to a function, it is treated as a predicate: the function is called with the matched value as first argument, and the result is cast to boolean. If it evaluates to <code>true</code>, the pattern matches, if it evaluates to <code>false</code> or <code>nil</code>, the pattern does not match.</p>
 
-<pre><code class="language-ruby">&gt; div_by_4?: (long x) -&gt; x % 4 == 0
+<pre><code class="language-tweakflow">&gt; div_by_4?: (long x) -&gt; x % 4 == 0
 function
 
 &gt; div_by_400?: (long x) -&gt; x % 400 == 0
@@ -2504,7 +2516,7 @@ capture
 
 <p>As an example, consider the <code>int?</code> function, which returns true if the argument is a whole number given as long, double, or as a string.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 int?: (x) -&gt;
   match x
     long                      -&gt; true
@@ -2548,7 +2560,7 @@ capture
 
 <p>Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.</p>
 
-<pre><code class="language-ruby">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.nan?(x) &amp;&amp; math.abs(x) != Infinity)
+<pre><code class="language-tweakflow">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.nan?(x) &amp;&amp; math.abs(x) != Infinity)
 function
 &gt; \e
 vector2d?: (list xs) -&gt;
@@ -2595,7 +2607,7 @@ capture
 
 <p>The following function recursively checks whether the argument is a list of pairs of keys and values. All key positions must contain strings beginning with the letter <code>&quot;a&quot;</code>.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 valid_list?: (list xs) -&gt;
   match xs
     [] -&gt; true
@@ -2638,7 +2650,7 @@ capture
 
 <p>The following function checks whether a list&rsquo;s last element is a non-nil datetime.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 ends_in_datetime?: (list xs) -&gt;
   match xs
     [@..., datetime] -&gt; true
@@ -2679,7 +2691,7 @@ capture
 
 <p>The following function checks that a list starts with a non-nil string and ends with a non-nil datetime, with zero or more non-nil longs in between, which must all be between 0 and 100 inclusively.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 measures?: (list xs) -&gt;
   match xs
     [string, @...nums, datetime], data.all?(nums, (x) -&gt; x is long &amp;&amp; x &gt;= 0 &amp;&amp; x &lt;= 100) -&gt; true
@@ -2705,7 +2717,7 @@ false
 <p>Full dict patterns match dictionaries as a whole. All expected keys are specified by the patterns, and any matched dict must have the given keys and only the given keys.</p>
 
 <pre><code class="language-text">matchPattern
-  : '{' ((stringLiteral matchPattern) ',' )* (stringLiteral matchPattern) '}' capture?
+  : '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' capture?
   ;
 
 capture
@@ -2717,7 +2729,7 @@ capture
 
 <p>The following function tests whether the supplied dict is a vector with non-nil double coordinates x and y. Only those two keys are allowed.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 vector_dict?: (dict v) -&gt;
   match v
     {:x double, :y double} -&gt; true
@@ -2745,7 +2757,7 @@ false
 <p>Partial dict patterns match a subset of a dictionary&rsquo;s keys. Any remaining keys can be captured into a variable.  The syntax uses pairs of constant keys and value patterns. A splat capture is used to capture any keys and values not specified by the patterns. There can be only one splat capture, but its position can be freely chosen.</p>
 
 <pre><code class="language-text">matchPattern
-  :| '{' (((stringLiteral matchPattern)|splatCapture) ',' )* ((stringLiteral matchPattern)|splatCapture) '}' capture?
+  :| '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' capture?
   ;
 
 splatCapture
@@ -2761,7 +2773,7 @@ capture
 
 <p>The following function checks if the given dict contains a &ldquo;name&rdquo; key with a string, and a &ldquo;born&rdquo; key with a datetime. Any additional keys are ignored.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 person?: (dict x) -&gt;
   match x
     {:name string, :born datetime, @...} -&gt; true
@@ -2782,7 +2794,7 @@ false
 
 <p>The following function checks if the given dict contains a &ldquo;name&rdquo; key with a string, and a &ldquo;born&rdquo; key with a datetime. In addition, at least a key &ldquo;job&rdquo;, or &ldquo;profession&rdquo; must be present.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 person?: (dict x) -&gt;
   match x
     {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -&gt; true
@@ -2805,7 +2817,7 @@ false
 
 <p>List and dict patterns nest naturally. The following function returns the most recent of an author&rsquo;s books.</p>
 
-<pre><code class="language-ruby">&gt; mark_twain: {:profession &quot;author&quot;, :books [&quot;The Gilded Age: A Tale of Today&quot;, &quot;Personal Recollections of Joan of Arc&quot;]}
+<pre><code class="language-tweakflow">&gt; mark_twain: {:profession &quot;author&quot;, :books [&quot;The Gilded Age: A Tale of Today&quot;, &quot;Personal Recollections of Joan of Arc&quot;]}
 {
   :books [&quot;The Gilded Age: A Tale of Today&quot;, &quot;Personal Recollections of Joan of Arc&quot;],
   :profession &quot;author&quot;
@@ -2825,7 +2837,7 @@ function
 
 <p>The ability to capture a whole matching pattern can be useful when nesting. The following example uses a list pattern to extract the latest book, while also capturing the whole books list into a variable.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 latest_book_with_nr: (dict person) -&gt;
   match person
     {
@@ -2854,7 +2866,7 @@ function
 
 <p>As an example, consider the following add function, which throws on binary overflow/underflow when adding longs.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 add: (long x=0, long y=0) -&gt;
   let {
     long sum: x + y
@@ -2894,7 +2906,7 @@ ERROR: {
 
 <h4 id="catching-errors">Catching errors</h4>
 
-<p>Errors can be caught if they thrown inside a try expression. The error value and stacktrace can each be bound to an identifier in the catch block.</p>
+<p>Errors can be caught if they thrown inside a try expression. The error value and stack trace can each be bound to an identifier in the catch block.</p>
 
 <pre><code class="language-text">tryCatch
   : 'try' expression 'catch' catchDeclaration expression
@@ -2909,7 +2921,7 @@ catchDeclaration
 
 <p>The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 # add two longs, revert to fallback_value if overflow or underflow happens
 add_safe: (long x=0, long y=0, long fallback_value=nil) -&gt; long
   try
@@ -2932,7 +2944,7 @@ nil
 
 <h3 id="references">References</h3>
 
-<p>References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.</p>
+<p>References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers separated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.</p>
 
 <p>The syntax is as follows:</p>
 
@@ -2954,7 +2966,7 @@ nil
 
 <p>An example file with comments highlighting scope changes and references:</p>
 
-<pre><code class="language-ruby"># scopes.tf
+<pre><code class="language-tweakflow"># scopes.tf
 
 # introduces 'strings' in module scope
 import strings from &quot;std&quot;
@@ -2979,7 +2991,7 @@ library foo {
 
 <p>An example nesting local scopes:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 let {
   a: &quot;outer a&quot;
   b: let {
@@ -2994,9 +3006,9 @@ a .. &quot; / &quot;.. b
 
 <h4 id="library-scope-references">Library scope references</h4>
 
-<p>Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
+<p>Library scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
 
-<pre><code class="language-ruby"># libary-refs.tf
+<pre><code class="language-tweakflow"># libary-refs.tf
 import strings from &quot;std&quot;
 
 library utils {            
@@ -3010,7 +3022,7 @@ library utils {
 
 <p>Loading the module on the REPL:</p>
 
-<pre><code class="language-ruby">&gt; \load /path/to/library-refs.tf
+<pre><code class="language-tweakflow">&gt; \load /path/to/library-refs.tf
 library-refs.tf&gt; utils.g(&quot;abc&quot;)
 4
 </code></pre>
@@ -3019,7 +3031,7 @@ library-refs.tf&gt; utils.g(&quot;abc&quot;)
 
 <p>Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the <code>::</code> or <code>module::</code> anchors.</p>
 
-<pre><code class="language-ruby"># module-refs.tf
+<pre><code class="language-tweakflow"># module-refs.tf
 import strings as s from &quot;std&quot; # introduce 's' in module scope
 
 library utils {
@@ -3030,7 +3042,7 @@ library utils {
 
 <p>Loading the module on the REPL:</p>
 
-<pre><code class="language-ruby">&gt; \load /path/to/module-refs.tf
+<pre><code class="language-tweakflow">&gt; \load /path/to/module-refs.tf
 module-refs.tf&gt; utils.f(&quot;foo&quot;)
 3
 </code></pre>
@@ -3047,7 +3059,7 @@ module-refs.tf&gt; utils.f(&quot;foo&quot;)
 
 <p>The REPL evaluates input as expressions. It gives the following output when referencing a variable and a library respectively:</p>
 
-<pre><code class="language-ruby">&gt; strings.length
+<pre><code class="language-tweakflow">&gt; strings.length
 function
 
 &gt; strings
@@ -3062,7 +3074,7 @@ ERROR: {
 
 <p>References in aliases and exports may point to any kind of entity. Aliases provide local names for imported libraries and functions. For example:</p>
 
-<pre><code class="language-ruby"># file aliases.tf
+<pre><code class="language-tweakflow"># file aliases.tf
 import * as std from &quot;std&quot;
 
 alias std.strings as str # local alias for imported library
@@ -3074,7 +3086,7 @@ library util {
 
 <p>On the REPL:</p>
 
-<pre><code class="language-ruby">&gt; \load /path/to/aliases.tf
+<pre><code class="language-tweakflow">&gt; \load /path/to/aliases.tf
 aliases.tf&gt; util.len(&quot;foo&quot;)
 3
 </code></pre>
@@ -3083,7 +3095,7 @@ aliases.tf&gt; util.len(&quot;foo&quot;)
 
 <p>Circular references are not allowed. Aliases, imports, and variables must not refer back to their values in their definitions. References to called functions are exempted from circular dependency analysis. Recursive calls are therefore permitted.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 let {
   a: d
   b: a
@@ -3099,7 +3111,7 @@ ERROR: {
 
 <p>A recursive definition of the factorial function:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 factorial: (long x) -&gt; long
   if x &lt; 0 then throw &quot;cannot calc factorial of negative number: #{x}&quot;
   if x &lt;= 1 then 1
@@ -3126,7 +3138,7 @@ function
 
 <p>The following example creates a sequence of functions, each multiplying its input by a number it closes over:</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 fs:
   for i &lt;- [1, 2, 3],
       (x) -&gt; x*i
@@ -3136,7 +3148,7 @@ fs:
 
 <p>Each function has closed over the value of <code>i</code>, not a reference to <code>i</code>. Therefore each function multiplies by a different number:</p>
 
-<pre><code class="language-ruby">&gt; fs[0](10) # first function multiplies by 1
+<pre><code class="language-tweakflow">&gt; fs[0](10) # first function multiplies by 1
 10
 &gt; fs[1](10) # second function multiplies by 2
 20
@@ -3152,21 +3164,6 @@ fs:
 
 <p>Sub-expressions in parentheses define evaluation precedence. <code>(a+b)*c</code> multiplies a sum with c, whereas <code>a+(b*c)</code> adds a product to a.</p>
 
-<h4 id="bitwise-not">Bitwise not</h4>
-
-<p>Syntax: <code>~a</code></p>
-
-<p>The operand is cast to long, and a bitwise not operation is performed on its two&rsquo;s complement representation, resulting in another long.</p>
-
-<p><code>~nil</code> evaluates to <code>nil</code></p>
-
-<pre><code class="language-ruby">&gt; ~0
--1
-
-&gt; ~(-1)
-0
-</code></pre>
-
 <h4 id="boolean-not">Boolean not</h4>
 
 <p>Syntax: <code>!a</code> or <code>not a</code></p>
@@ -3175,7 +3172,45 @@ fs:
 
 <p><code>!nil</code> evaluates to <code>true</code></p>
 
-<pre><code class="language-ruby">&gt; !&quot;foo&quot;
+<pre><code class="language-tweakflow">&gt; !&quot;foo&quot;
+</code></pre>
+
+<h4 id="boolean-and">Boolean and</h4>
+
+<p>Syntax: <code>a&amp;&amp;b</code> or <code>a and b</code></p>
+
+<p>This operation is a short-circuiting boolean and. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, the whole expression evaluates to <code>false</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>true</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 1 &amp;&amp; 2
+true
+&gt; 1 &amp;&amp; 0
+false
+&gt; false &amp;&amp; throw &quot;not evaluated&quot;
+false
+&gt; true &amp;&amp; true
+true
+&gt; [] &amp;&amp; 1
+false
+&gt; [&quot;foo&quot;] &amp;&amp; 1
+true
+</code></pre>
+
+<h4 id="boolean-or">Boolean or</h4>
+
+<p>Syntax: <code>a||b</code> or <code>a or b</code></p>
+
+<p>This operation is a short-circuiting boolean or. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>true</code>, the whole expression evaluates to <code>true</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; true || false
+true
+&gt; true || throw &quot;not evaluated&quot;
+true
+&gt; false || true
+true
+&gt; [] || []
+false
+&gt; [] || [1]
+true
 </code></pre>
 
 <h4 id="unary-minus">Unary minus</h4>
@@ -3212,7 +3247,7 @@ fs:
 </tbody>
 </table>
 
-<pre><code class="language-ruby">&gt; -(1)
+<pre><code class="language-tweakflow">&gt; -(1)
 -1
 &gt; -(-1)
 1
@@ -3229,6 +3264,355 @@ ERROR: {
   ...
 }
 
+</code></pre>
+
+<h4 id="addition">Addition</h4>
+
+<p>Syntax: <code>a+b</code></p>
+
+<p>Evaluates to the sum of a and b.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity + Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity + Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity + -Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity + -Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-tweakflow">&gt; 1+2
+3
+&gt; 2.0+2
+4.0
+&gt; Infinity + 3
+Infinity
+&gt; math.max_long + 1   # binary overflow
+-9223372036854775808
+</code></pre>
+
+<h4 id="subtraction">Subtraction</h4>
+
+<p>Syntax: <code>a-b</code></p>
+
+<p>Evaluates to the value of a with b subtracted.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity - Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>(-Infinity) - Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity - (-Infinity</code>)</td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>(-Infinity) - (-Infinity)</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-tweakflow">&gt; 5-3
+2
+&gt; 5-10
+-5
+&gt; 2.3-9
+-6.7
+&gt; math.min_long - 1 # binary underflow
+9223372036854775807
+&gt; Infinity - 100
+Infinity
+</code></pre>
+
+<h4 id="multiplication">Multiplication</h4>
+
+<p>Syntax: <code>a*b</code></p>
+
+<p>Operands are multiplied. Evaluation proceeds as follows:</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.</p>
+
+<p>If both operands are doubles, floating point multiplication is performed, and the result is another double.</p>
+
+<p>If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.</p>
+
+<p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Infinity * Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * Infinity</code> <code>Infinity * -Infinity</code></td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * -Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>Infinity * 0</code> <code>0 * Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>-Infinity * 0</code> <code>0 * -Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-tweakflow">&gt; 2 * 3
+6
+&gt; 2 * 3.3
+6.6
+&gt; 2 * 3.3
+6.6
+&gt; 1.1 * 2.9
+3.19
+&gt; math.max_long * math.max_long # binary overflow
+1
+&gt; math.max_long as double * math.max_long # floating point multiplication
+8.507059173023462E37
+</code></pre>
+
+<h4 id="floating-point-division">Floating point division</h4>
+
+<p>Syntax: <code>a/b</code></p>
+
+<p>Evaluates to a divided by b.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are doubles, floating point division is performed.</p>
+
+<p>If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.</p>
+
+<p>The result is always a double.</p>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>x / 0</code>  (x &gt; 0)</td>
+<td><code>Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>x / 0</code>  (x &lt; 0)</td>
+<td><code>-Infinity</code></td>
+</tr>
+
+<tr>
+<td><code>0 / 0</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>[+¦-]Infinity / [+¦-]Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-tweakflow">&gt; 1 / 2
+0.5
+&gt; 5 / 0.5
+10.0
+&gt; nil / 2
+nil
+</code></pre>
+
+<h4 id="integer-division">Integer division</h4>
+
+<p>Syntax: <code>a//b</code></p>
+
+<p>Casts a and b to long, and performs integer division.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>Division by zero throws an error.</p>
+
+<p>Both operands are cast to long before division is performed. The result of the division is a long. Any remainder value is ignored.</p>
+
+<pre><code class="language-tweakflow">&gt; 10 // 2
+5
+&gt; 10 // 3
+3
+&gt; 10 // 4
+2
+&gt; 10 // 1
+10
+&gt; 10 // -3
+-3
+&gt; 10 // 0
+ERROR: {
+  :code &quot;DIVISION_BY_ZERO&quot;,
+  ...
+}
+</code></pre>
+
+<h4 id="division-remainder">Division remainder</h4>
+
+<p>Syntax: <code>a%b</code></p>
+
+<p>Evaluates to the remainder after a is divided by b.</p>
+
+<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+
+<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+
+<p>If both operands are longs, an integer remainder calculation is performed, and the result is a long. <code>b</code> cannot be zero in this case. A division by zero throws an error.</p>
+
+<p>If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</p>
+
+<p>The sign of the result depends on the sign of <code>a</code>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Signs</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>a &gt;= 0</code></td>
+<td><code>&gt;=0</code></td>
+</tr>
+
+<tr>
+<td><code>a &lt; 0</code></td>
+<td><code>&lt;=0</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
+
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>x % 0.0</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>[+¦-]Infinity % [+¦-]Infinity</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
+<td><code>0.0 % [+¦-]Infinity</code></td>
+<td><code>0.0</code></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-tweakflow">&gt; 10 % 4
+2
+&gt; 10 % 3
+1
+&gt; 10 % 2.5
+0.0
+&gt; 5 % 1.5
+0.5
+&gt; -5 % 1.5
+-0.5
 </code></pre>
 
 <h4 id="exponentiation">Exponentiation</h4>
@@ -3311,7 +3695,7 @@ ERROR: {
 </tbody>
 </table>
 
-<pre><code class="language-ruby">&gt; 2**3
+<pre><code class="language-tweakflow">&gt; 2**3
 8.0
 &gt; 4**0.5
 2.0
@@ -3327,428 +3711,74 @@ ERROR: {
 }
 </code></pre>
 
-<h4 id="multiplication">Multiplication</h4>
+<h4 id="equality">Equality</h4>
 
-<p>Syntax: <code>a*b</code></p>
+<p>Syntax: <code>a==b</code></p>
 
-<p>Operands are multiplied. Evaluation proceeds as follows:</p>
+<p>Evaluates to <code>true</code> if a is equal to b. Returns <code>false</code> otherwise.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Some type-specific rules apply in determining equality.</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+<p>The double special value <code>NaN</code> is not equal to anything, not even to itself.</p>
 
-<p>If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.</p>
-
-<p>If both operands are doubles, floating point multiplication is performed, and the result is another double.</p>
-
-<p>If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.</p>
-
-<p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
-
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>Infinity * Infinity</code></td>
-<td><code>Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>-Infinity * Infinity</code> <code>Infinity * -Infinity</code></td>
-<td><code>-Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>-Infinity * -Infinity</code></td>
-<td><code>Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>Infinity * 0</code> <code>0 * Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>-Infinity * 0</code> <code>0 * -Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-ruby">&gt; 2 * 3
-6
-&gt; 2 * 3.3
-6.6
-&gt; 2 * 3.3
-6.6
-&gt; 1.1 * 2.9
-3.19
-&gt; math.max_long * math.max_long # binary overflow
-1
-&gt; math.max_long as double * math.max_long # floating point multiplication
-8.507059173023462E37
+<pre><code class="language-tweakflow">&gt; NaN == NaN
+false
 </code></pre>
 
-<h4 id="floating-point-division">Floating point division</h4>
+<p>A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.</p>
 
-<p>Syntax: <code>a/b</code></p>
-
-<p>Evaluates to a divided by b.</p>
-
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
-
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are doubles, floating point division is performed.</p>
-
-<p>If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.</p>
-
-<p>The result is always a double.</p>
-
-<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
-
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>x / 0</code>  (x &gt; 0)</td>
-<td><code>Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>x / 0</code>  (x &lt; 0)</td>
-<td><code>-Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>0 / 0</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>[+¦-]Infinity / [+¦-]Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-ruby">&gt; 1 / 2
-0.5
-&gt; 5 / 0.5
-10.0
-&gt; nil / 2
-nil
+<pre><code class="language-tweakflow">&gt; 0 == 0.0
+true
+&gt; 3 == 3.0
+true
+&gt; -4 == 4.0
+false
+&gt; 0 == NaN
+false
 </code></pre>
 
-<h4 id="integer-division">Integer division</h4>
+<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
 
-<p>Syntax: <code>a//b</code></p>
-
-<p>Casts a and b to long, and performs integer division.</p>
-
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
-
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>Division by zero throws an error.</p>
-
-<p>Both operands are cast to long before division is performed. The result of the division is a long. Any remainder value is ignored.</p>
-
-<pre><code class="language-ruby">&gt; 10 // 2
-5
-&gt; 10 // 3
-3
-&gt; 10 // 4
-2
-&gt; 10 // 1
-10
-&gt; 10 // -3
--3
-&gt; 10 // 0
-ERROR: {
-  :code &quot;DIVISION_BY_ZERO&quot;,
-  ...
-}
-</code></pre>
-
-<h4 id="division-remainder">Division remainder</h4>
-
-<p>Syntax: <code>a%b</code></p>
-
-<p>Evaluates to the remainder after a is divided by b.</p>
-
-<p>Each operatnd must be either a long or a double. Any other types throw an error.</p>
-
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, an integer remainder calculation is performed, and the result is a long. <code>b</code> cannot be zero in this case. A division by zero throws an error.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</p>
-
-<p>The sign of the result depends on the sign of <code>a</code>.</p>
-
-<table>
-<thead>
-<tr>
-<th>Signs</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>a &gt;= 0</code></td>
-<td><code>&gt;=0</code></td>
-</tr>
-
-<tr>
-<td><code>a &lt; 0</code></td>
-<td><code>&lt;=0</code></td>
-</tr>
-</tbody>
-</table>
-
-<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
-
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>x % 0.0</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>[+¦-]Infinity % [+¦-]Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>0.0 % [+¦-]Infinity</code></td>
-<td><code>0.0</code></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-ruby">&gt; 10 % 4
-2
-&gt; 10 % 3
-1
-&gt; 10 % 2.5
-0.0
-&gt; 5 % 1.5
-0.5
-&gt; -5 % 1.5
--0.5
-</code></pre>
-
-<h4 id="addition">Addition</h4>
-
-<p>Syntax: <code>a+b</code></p>
-
-<p>Evaluates to the sum of a and b.</p>
-
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
-
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.</p>
-
-<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
-
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>Infinity + Infinity</code></td>
-<td><code>Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>-Infinity + Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>Infinity + -Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>-Infinity + -Infinity</code></td>
-<td><code>-Infinity</code></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-ruby">&gt; 1+2
-3
-&gt; 2.0+2
-4.0
-&gt; Infinity + 3
-Infinity
-&gt; math.max_long + 1   # binary overflow
--9223372036854775808
-</code></pre>
-
-<h4 id="subtraction">Subtraction</h4>
-
-<p>Syntax: <code>a-b</code></p>
-
-<p>Evaluates to the value of a with b subtracted.</p>
-
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
-
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.</p>
-
-<p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
-
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>Infinity - Infinity</code></td>
-<td><code>NaN</code></td>
-</tr>
-
-<tr>
-<td><code>(-Infinity) - Infinity</code></td>
-<td><code>-Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>Infinity - (-Infinity</code>)</td>
-<td><code>Infinity</code></td>
-</tr>
-
-<tr>
-<td><code>(-Infinity) - (-Infinity)</code></td>
-<td><code>NaN</code></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-ruby">&gt; 5-3
-2
-&gt; 5-10
--5
-&gt; 2.3-9
--6.7
-&gt; math.min_long - 1 # binary underflow
-9223372036854775807
-&gt; Infinity - 100
-Infinity
-</code></pre>
-
-<h4 id="string-concatenation">String concatenation</h4>
-
-<p>Syntax: <code>a..b</code></p>
-
-<p>Both operands are cast to string, then they are concatenated to form the result string. A <code>nil</code> value is converted to the string <code>&quot;nil&quot;</code> before concatenation.</p>
-
-<pre><code class="language-ruby">&gt; &quot;Hello&quot;..&quot; &quot;..&quot;World&quot;
-&quot;Hello World&quot;
-&gt; &quot;foo&quot;..1
-&quot;foo1&quot;
-</code></pre>
-
-<h4 id="binary-shift-left">Binary shift left</h4>
-
-<p>Syntax: <code>a&lt;&lt;b</code></p>
-
-<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 1 &lt;&lt; 2
-4
-&gt; -1 &lt;&lt; 8
--256
-&gt; 7 &lt;&lt; 1
-14
-&gt; 2.3 &lt;&lt; 4.9 # operands are cast to 2 &lt;&lt; 4
-32
-&gt; &quot;1&quot; &lt;&lt; 3.4 # operands are cast to 1 &lt;&lt; 3
-8
-&gt; nil &lt;&lt; 1
-nil
-</code></pre>
-
-<h4 id="binary-shift-right-sign-preserving">Binary shift right, sign preserving</h4>
-
-<p>Syntax: <code>a&gt;&gt;b</code></p>
-
-<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 8 &gt;&gt; 1
-4
-&gt; 8 &gt;&gt; 8
+<pre><code class="language-tweakflow"># same points in time, but different local time and time zone
+&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
 0
-&gt; -1 &gt;&gt; 1
--1
-&gt; -1 &gt;&gt; 8
--1
-&gt; nil &gt;&gt; 2
-nil
+# same points in time are not equal
+&gt; 1970-01-01T01:00:00+01:00 == time.epoch       
+false
+# going back to UTC offset of time.epoch, they are equal
+&gt; 1970-01-01T00:00:00+00:00 == time.epoch
+true
 </code></pre>
 
-<h4 id="binary-shift-right">Binary shift right</h4>
+<p>Function values are never equal to anything, not even to themselves.</p>
 
-<p>Syntax: <code>a&gt;&gt;&gt;b</code></p>
-
-<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 8 &gt;&gt;&gt; 1
-4
-&gt; 8 &gt;&gt;&gt; 8
-0
-&gt; -1 &gt;&gt;&gt; 1
-9223372036854775807
-&gt; -1 &gt;&gt;&gt; 56
-255
-&gt; nil &gt;&gt;&gt; 2
-nil
+<pre><code class="language-tweakflow">&gt; strings.length(&quot;foo&quot;)
+3
+&gt; strings.length == strings.length
+false
 </code></pre>
+
+<p>Lists are equal if they contain items that compare as equal.</p>
+
+<pre><code class="language-tweakflow">&gt; [1, 2] == [1.0, 2.0]
+true
+&gt; [NaN] == [NaN]
+false
+</code></pre>
+
+<p>Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.</p>
+
+<pre><code class="language-tweakflow">&gt; {:a 1} == {:a 1.0}
+true
+&gt; {:a NaN} == {:a NaN}
+false
+</code></pre>
+
+<h4 id="inequality">Inequality</h4>
+
+<p>Syntax: <code>a!=b</code></p>
+
+<p>Inversion of equality. Evaluates to <code>true</code> if <code>a==b</code> evaluates to <code>false</code>. Evaluates to <code>false</code> if <code>a==b</code> evaluates to true.</p>
 
 <h4 id="less-than">Less than</h4>
 
@@ -3760,7 +3790,7 @@ nil
 
 <p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
 
-<pre><code class="language-ruby">&gt; 1 &lt; 2
+<pre><code class="language-tweakflow">&gt; 1 &lt; 2
 true
 &gt; 1 &lt; 1
 false
@@ -3790,7 +3820,7 @@ ERROR: {
 
 <p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
 
-<pre><code class="language-ruby">&gt; 1 &lt;= 3
+<pre><code class="language-tweakflow">&gt; 1 &lt;= 3
 true
 &gt; 1 &lt;= 1
 true
@@ -3812,7 +3842,7 @@ true
 
 <p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
 
-<pre><code class="language-ruby">&gt; 1 &gt; 2
+<pre><code class="language-tweakflow">&gt; 1 &gt; 2
 false
 &gt; Infinity &gt; 4
 true
@@ -3840,7 +3870,7 @@ true
 
 <p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
 
-<pre><code class="language-ruby">&gt; 1 &gt;= 2
+<pre><code class="language-tweakflow">&gt; 1 &gt;= 2
 false
 &gt; Infinity &gt;= 2
 true
@@ -3858,9 +3888,9 @@ true
 
 <p>Syntax: <code>a===b</code></p>
 
-<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise.</p>
+<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
 
-<pre><code class="language-ruby">&gt; 0 === -0
+<pre><code class="language-tweakflow">&gt; 0 === -0
 true
 &gt; 1 === 1
 true
@@ -3868,15 +3898,23 @@ true
 false
 &gt; &quot;foo&quot; === &quot;foo&quot;
 true
+&gt; {:a 1.0} === {:a 1.0}
+true
+&gt; {:a 1.0} === {:a 1}
+false
+&gt; [1.0] === [1.0]
+true
+&gt; [1.0] === [1]
+false
 </code></pre>
 
 <h4 id="inequality-with-type-identity">Inequality with type identity</h4>
 
 <p>Syntax: <code>a!==b</code></p>
 
-<p>Evaluates to <code>false</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>true</code> otherwise.</p>
+<p>Evaluates to <code>false</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>true</code> otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.</p>
 
-<pre><code class="language-ruby">&gt; 0 !== 1
+<pre><code class="language-tweakflow">&gt; 0 !== 1
 true
 &gt; 0 !== 0
 false
@@ -3884,171 +3922,26 @@ false
 true
 &gt; &quot;foo&quot; !== &quot;foo&quot;
 false
-</code></pre>
-
-<h4 id="equality">Equality</h4>
-
-<p>Syntax: <code>a==b</code></p>
-
-<p>Evaluates to <code>true</code> if a is equal to b. Returns <code>false</code> otherwise.</p>
-
-<p>Some type-specific rules apply in determining equality.</p>
-
-<p>The double special value <code>NaN</code> is not equal to anything, not even to itself.</p>
-
-<pre><code class="language-ruby">&gt; NaN == NaN
+&gt; {:a 1.0} !== {:a 1.0}
 false
-</code></pre>
-
-<p>A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.</p>
-
-<pre><code class="language-ruby">&gt; 0 == 0.0
+&gt; {:a 1.0} !== {:a 1}
 true
-&gt; 3 == 3.0
-true
-&gt; -4 == 4.0
+&gt; [1.0] !== [1.0]
 false
-&gt; 0 == NaN
-false
-</code></pre>
-
-<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
-
-<pre><code class="language-ruby"># same points in time, but different local time and time zone
-&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
-0
-# same points in time are not equal
-&gt; 1970-01-01T01:00:00+01:00 == time.epoch       
-false
-# going back to UTC offset of time.epoch, they are equal
-&gt; 1970-01-01T00:00:00+00:00 == time.epoch
+&gt; [1.0] !== [1]
 true
 </code></pre>
 
-<p>Function values are never equal to anything, not even to themselves.</p>
+<h4 id="string-concatenation">String concatenation</h4>
 
-<pre><code class="language-ruby">&gt; strings.length(&quot;foo&quot;)
-3
-&gt; strings.length == strings.length
-false
-</code></pre>
+<p>Syntax: <code>a..b</code></p>
 
-<p>Lists are equal if they contain items that compare as equal.</p>
+<p>Both operands are cast to string, then they are concatenated to form the result string. A <code>nil</code> value is converted to the string <code>&quot;nil&quot;</code> before concatenation.</p>
 
-<pre><code class="language-ruby">&gt; [1, 2] == [1.0, 2.0]
-true
-&gt; [NaN] == [NaN]
-false
-</code></pre>
-
-<p>Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.</p>
-
-<pre><code class="language-ruby">&gt; {:a 1} == {:a 1.0}
-true
-&gt; {:a NaN} == {:a NaN}
-false
-</code></pre>
-
-<h4 id="inequality">Inequality</h4>
-
-<p>Syntax: <code>a!=b</code></p>
-
-<p>Inversion of equality. Evaluates to <code>true</code> if <code>a==b</code> evaluates to <code>false</code>. Evaluates to <code>false</code> if <code>a==b</code> evaluates to true.</p>
-
-<h4 id="bitwise-and">Bitwise and</h4>
-
-<p>Syntax: <code>a&amp;b</code></p>
-
-<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 1 &amp; 2
-0
-&gt; 7 &amp; 15
-7
-&gt; -1 &amp; 29837
-29837
-&gt; 3 &amp; 2
-2
-&gt; nil &amp; 1
-nil
-</code></pre>
-
-<h4 id="bitwise-exclusive-or">Bitwise exclusive or</h4>
-
-<p>Syntax: <code>a^b</code></p>
-
-<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 1 ^ 1
-0
-&gt; 1 ^ 2
-3
-&gt; -1 ^ 0
--1
-&gt; -1 ^ 1
--2
-&gt; nil ^ 2
-nil
-</code></pre>
-
-<h4 id="bitwise-or">Bitwise or</h4>
-
-<p>Syntax: <code>a|b</code></p>
-
-<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.</p>
-
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<pre><code class="language-ruby">&gt; 1 | 3
-3
-&gt; -1 | 0
--1
-&gt; 1 | 2 | 4 | 8
-15
-&gt; nil | 2
-nil
-</code></pre>
-
-<h4 id="boolean-and">Boolean and</h4>
-
-<p>Syntax: <code>a&amp;&amp;b</code> or <code>a and b</code></p>
-
-<p>This operation is a short-circuiting boolean and. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, the whole expression evaluates to <code>false</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>true</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
-
-<pre><code class="language-ruby">&gt; 1 &amp;&amp; 2
-true
-&gt; 1 &amp;&amp; 0
-false
-&gt; false &amp;&amp; throw &quot;not evaluated&quot;
-false
-&gt; true &amp;&amp; true
-true
-&gt; [] &amp;&amp; 1
-false
-&gt; [&quot;foo&quot;] &amp;&amp; 1
-true
-</code></pre>
-
-<h4 id="boolean-or">Boolean or</h4>
-
-<p>Syntax: <code>a||b</code> or <code>a or b</code></p>
-
-<p>This operation is a short-circuiting boolean or. The first operand <code>a</code> is evaluated and cast to boolean. If <code>a</code> evaluates to <code>true</code>, the whole expression evaluates to <code>true</code>, and <code>b</code> is not evaluated. If <code>a</code> evaluates to <code>false</code> or <code>nil</code>, b is evaluated and cast to boolean. If <code>b</code> evaluates to <code>true</code> the whole expression evaluates to <code>true</code>. Otherwise the whole expression evaluates to <code>false</code>.</p>
-
-<pre><code class="language-ruby">&gt; true || false
-true
-&gt; true || throw &quot;not evaluated&quot;
-true
-&gt; false || true
-true
-&gt; [] || []
-false
-&gt; [] || [1]
-true
+<pre><code class="language-tweakflow">&gt; &quot;Hello&quot;..&quot; &quot;..&quot;World&quot;
+&quot;Hello World&quot;
+&gt; &quot;foo&quot;..1
+&quot;foo1&quot;
 </code></pre>
 
 <h4 id="type-check">Type check</h4>
@@ -4066,7 +3959,7 @@ true
 
 <p>As a special case, if <code>any</code> is given as data type, the result is true only if the expression evaluates to a value other than <code>nil</code>,  making  <code>a is any</code> equivalent to <code>a != nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; &quot;&quot; is string
+<pre><code class="language-tweakflow">&gt; &quot;&quot; is string
 true
 &gt; nil is string
 false
@@ -4092,9 +3985,9 @@ false
 
 <p>Syntax: <code>typeof a</code></p>
 
-<p>The expression returns the name of a value&rsquo;s type. The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>void</code>.</p>
+<p>The expression returns the name of a value&rsquo;s type. The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>&quot;void&quot;</code>.</p>
 
-<pre><code class="language-ruby">&gt; typeof &quot;foo&quot;
+<pre><code class="language-tweakflow">&gt; typeof &quot;foo&quot;
 &quot;string&quot;
 &gt; typeof (x) -&gt; x+1
 &quot;function&quot;
@@ -4129,7 +4022,7 @@ false
 
 <p>Supported type casts are listed for each type in their respective section of <a href="#data-types">data types</a>. Type casts to <code>any</code> always succeed, and leave the value unchanged. Type casts to <code>void</code> only succeed if <code>a</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; &quot;1.4&quot; as double # string to double
+<pre><code class="language-tweakflow">&gt; &quot;1.4&quot; as double # string to double
 1.4
 
 &gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;] as dict # list to dict
@@ -4161,11 +4054,146 @@ false
 nil
 </code></pre>
 
+<h4 id="bitwise-not">Bitwise not</h4>
+
+<p>Syntax: <code>~a</code></p>
+
+<p>The operand is cast to long, and a bitwise not operation is performed on its two&rsquo;s complement representation, resulting in another long.</p>
+
+<p><code>~nil</code> evaluates to <code>nil</code></p>
+
+<pre><code class="language-tweakflow">&gt; ~0
+-1
+
+&gt; ~(-1)
+0
+</code></pre>
+
+<h4 id="bitwise-shift-left">Bitwise shift left</h4>
+
+<p>Syntax: <code>a&lt;&lt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 1 &lt;&lt; 2
+4
+&gt; -1 &lt;&lt; 8
+-256
+&gt; 7 &lt;&lt; 1
+14
+&gt; 2.3 &lt;&lt; 4.9 # operands are cast to 2 &lt;&lt; 4
+32
+&gt; &quot;1&quot; &lt;&lt; 3.4 # operands are cast to 1 &lt;&lt; 3
+8
+&gt; nil &lt;&lt; 1
+nil
+</code></pre>
+
+<h4 id="bitwise-shift-right-sign-preserving">Bitwise shift right, sign preserving</h4>
+
+<p>Syntax: <code>a&gt;&gt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 8 &gt;&gt; 1
+4
+&gt; 8 &gt;&gt; 8
+0
+&gt; -1 &gt;&gt; 1
+-1
+&gt; -1 &gt;&gt; 8
+-1
+&gt; nil &gt;&gt; 2
+nil
+</code></pre>
+
+<h4 id="bitwise-shift-right">Bitwise shift right</h4>
+
+<p>Syntax: <code>a&gt;&gt;&gt;b</code></p>
+
+<p>Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 8 &gt;&gt;&gt; 1
+4
+&gt; 8 &gt;&gt;&gt; 8
+0
+&gt; -1 &gt;&gt;&gt; 1
+9223372036854775807
+&gt; -1 &gt;&gt;&gt; 56
+255
+&gt; nil &gt;&gt;&gt; 2
+nil
+</code></pre>
+
+<h4 id="bitwise-and">Bitwise and</h4>
+
+<p>Syntax: <code>a&amp;b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 1 &amp; 2
+0
+&gt; 7 &amp; 15
+7
+&gt; -1 &amp; 29837
+29837
+&gt; 3 &amp; 2
+2
+&gt; nil &amp; 1
+nil
+</code></pre>
+
+<h4 id="bitwise-exclusive-or">Bitwise exclusive or</h4>
+
+<p>Syntax: <code>a^b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 1 ^ 1
+0
+&gt; 1 ^ 2
+3
+&gt; -1 ^ 0
+-1
+&gt; -1 ^ 1
+-2
+&gt; nil ^ 2
+nil
+</code></pre>
+
+<h4 id="bitwise-or">Bitwise or</h4>
+
+<p>Syntax: <code>a|b</code></p>
+
+<p>Both operands are cast to long and their two&rsquo;s complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.</p>
+
+<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; 1 | 3
+3
+&gt; -1 | 0
+-1
+&gt; 1 | 2 | 4 | 8
+15
+&gt; nil | 2
+nil
+</code></pre>
+
 <h4 id="operator-precedence">Operator precedence</h4>
 
 <p>The following table lists tweakflow operators and constructs in precedence order, starting with the highest precedence.</p>
 
-<p>All operators an constructs are left-associative. When chaning operators of the same precedence, they are evaluated left to right. The expression <code>a+b+c</code> is evaluated as <code>(a+b)+c</code> for example.</p>
+<p>All operators an constructs are left-associative. When chaining operators of the same precedence, they are evaluated left to right. The expression <code>a+b+c</code> is evaluated as <code>(a+b)+c</code> for example.</p>
 
 <table>
 <thead>
@@ -4262,17 +4290,17 @@ nil
 </tr>
 
 <tr>
-<td>Binary shift left</td>
+<td>Bitwise shift left</td>
 <td><code>1 &lt;&lt; 8</code></td>
 </tr>
 
 <tr>
-<td>Binary shift right, sign preserving</td>
+<td>Bitwise shift right, sign preserving</td>
 <td><code>255 &gt;&gt; 2</code></td>
 </tr>
 
 <tr>
-<td>Binary shift right</td>
+<td>Bitwise shift right</td>
 <td><code>-1 &gt;&gt;&gt; 1</code></td>
 </tr>
 
@@ -4403,7 +4431,7 @@ nil
 
 <p>As an example, the following function has some conditional branches, and is debugging which branches are taken.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
 sgn: (long x) -&gt;
   debug &quot;DEBUG: calculating sign of x: #{x}&quot;,
   if x &gt; 0 then debug &quot;DEBUG: x is positive&quot;, 1

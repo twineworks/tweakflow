@@ -464,16 +464,16 @@ nil
 
 <h3 id="substring">substring</h3>
 
-<p><code>(string x, long from=0, long to=nil) -&gt; string</code></p>
+<p><code>(string x, long start=0, long end=nil) -&gt; string</code></p>
 
-<p>Returns a substring of <code>x</code> beginning at index <code>from</code> (inclusive) up to index <code>to</code> (exclusive).
-If <code>to</code> is <code>nil</code>, the substring extends to the end of <code>x</code>.</p>
+<p>Returns a substring of <code>x</code> beginning at index <code>start</code> (inclusive) up to index <code>end</code> (exclusive).
+If <code>end</code> is <code>nil</code>, the substring extends to the end of <code>x</code>.</p>
 
-<p>Returns an empty string if <code>to &lt;= from</code>.</p>
+<p>Returns an empty string if <code>end &lt;= start</code>.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<p>Throws an error if <code>from</code> is <code>nil</code> or <code>from &lt; 0</code>.</p>
+<p>Throws an error if <code>start</code> is <code>nil</code> or <code>start &lt; 0</code>.</p>
 
 <pre><code class="language-ruby">&gt; strings.substring(&quot;hello world&quot;)
 &quot;hello world&quot;
@@ -504,14 +504,14 @@ nil
 
 &gt; strings.substring(&quot;hello world&quot;, nil)
 ERROR: {
-  :message &quot;from must not be nil&quot;,
+  :message &quot;start must not be nil&quot;,
   :code &quot;NIL_ERROR&quot;,
   ...
 }
 
 &gt; strings.substring(&quot;hello world&quot;, -4)
 ERROR: {
-  :message &quot;from must not be negative: -4&quot;,
+  :message &quot;start must not be negative: -4&quot;,
   :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
 }
 </code></pre>
@@ -747,10 +747,10 @@ nil
 
 <h3 id="index-of">index_of</h3>
 
-<p><code>(string x, string sub, long from=0) -&gt; long</code></p>
+<p><code>(string x, string sub, long start=0) -&gt; long</code></p>
 
-<p>If <code>x</code> contains <code>sub</code> at or past index <code>from</code>, the function returns the index of the first occurrence of <code>sub</code>
-at or past index <code>from</code>.</p>
+<p>If <code>x</code> contains <code>sub</code> at or past index <code>start</code>, the function returns the index of the first occurrence of <code>sub</code>
+at or past index <code>start</code>.</p>
 
 <p>Returns <code>-1</code> otherwise.</p>
 
@@ -1816,13 +1816,13 @@ nil
 
 <h3 id="range">range</h3>
 
-<p><code>(long from=0, long to=0) -&gt; list</code></p>
+<p><code>(long start=0, long end=0) -&gt; list</code></p>
 
-<p>Returns a list with long values starting at <code>from</code>, and ending at <code>to</code>.</p>
+<p>Returns a list with long values starting at <code>start</code>, and ending at <code>end</code>.</p>
 
-<p>Returns an empty list if <code>from &gt; to</code>.</p>
+<p>Returns an empty list if <code>start &gt; end</code>.</p>
 
-<p>Returns <code>nil</code> if <code>from</code> is <code>nil</code> or <code>to</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>start</code> is <code>nil</code> or <code>end</code> is <code>nil</code>.</p>
 
 <pre><code class="language-ruby">&gt; data.range(0, 2)
 [0, 1, 2]
@@ -2409,12 +2409,12 @@ ERROR: {
 
 <h3 id="index-of-1">index_of</h3>
 
-<p><code>(list xs, x, long from=0) -&gt; long</code></p>
+<p><code>(list xs, x, long start=0) -&gt; long</code></p>
 
-<p>If <code>xs</code> contains <code>x</code> at or after index <code>from</code> returns the index of that occurence. Returns -1 otherwise.</p>
+<p>If <code>xs</code> contains <code>x</code> at or after index <code>start</code> returns the index of the earliest such occurrence. Returns -1 otherwise.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.<br />
-Returns <code>nil</code> if <code>from</code> is <code>nil</code>.</p>
+Returns <code>nil</code> if <code>start</code> is <code>nil</code>.</p>
 
 <pre><code class="language-ruby">&gt; data.index_of([1,2,3], 2)
 1
@@ -2642,11 +2642,11 @@ ERROR: {
 
 <h3 id="zip">zip</h3>
 
-<p><code>(list as, list bs) -&gt; list</code></p>
+<p><code>(list xs, list ys) -&gt; list</code></p>
 
-<p>Returns a list of same length as <code>as</code>. Each index <code>i</code> contains the value <code>[as[i], bs[i]]</code>.</p>
+<p>Returns a list of same length as <code>xs</code>. Each index <code>i</code> contains the value <code>[xs[i], ys[i]]</code>.</p>
 
-<p>Returns <code>nil</code> if <code>as</code> or <code>bs</code> are <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> or <code>ys</code> are <code>nil</code>.</p>
 
 <pre><code class="language-ruby">&gt; data.zip([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
 [[&quot;a&quot;, 1], [&quot;b&quot;, 2], [&quot;c&quot;, 3]]
@@ -4688,18 +4688,18 @@ function
 
 <h3 id="iterate">iterate</h3>
 
-<p><code>(long from, long to, any x, function f) -&gt; any</code></p>
+<p><code>(long start, long end, any x, function f) -&gt; any</code></p>
 
 <p>Calls <code>f</code> repeatedly with two arguments. The first call of <code>f</code> receives <code>x</code> as first argument.
 Subsequent calls to <code>f</code> receive as first argument the result of the previous call.</p>
 
-<p>The second argument is an index starting at <code>from</code> and ending inclusively at <code>to</code>.</p>
+<p>The second argument is an index starting at <code>start</code> and ending inclusively at <code>end</code>.</p>
 
 <p>Returns the result of the last call to <code>f</code>.</p>
 
-<p>Returns <code>nil</code> if <code>from</code>, <code>to</code>, or <code>f</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>start</code>, <code>end</code>, or <code>f</code> are <code>nil</code>.</p>
 
-<p>Returns <code>x</code> if <code>to</code> &lt; <code>from</code>.</p>
+<p>Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
 
 <pre><code class="language-ruby"># add natural numbers 1 to 10
 &gt; fun.iterate(1, 10, 0, (sum, i) -&gt; sum+i)
