@@ -43,6 +43,7 @@ public class Arity2CallSiteToArityNUser implements Arity2CallSite {
   private final Type p0Type;
   private final Type p1Type;
   private final Value[] args;
+  private final Type retType;
 
   public Arity2CallSiteToArityNUser(UserFunctionValue f, Node at, Stack stack, UserCallContext userCallContext) {
 
@@ -65,6 +66,7 @@ public class Arity2CallSiteToArityNUser implements Arity2CallSite {
       args[i] = parameterArray[i].getDefaultValue();
     }
 
+    retType = f.getSignature().getReturnType();
   }
 
   @Override
@@ -72,10 +74,9 @@ public class Arity2CallSiteToArityNUser implements Arity2CallSite {
 
     stack.push(stackEntry);
 
-    args[0] = arg0.castPresentTo(p0Type);
-    args[1] = arg1.castPresentTo(p1Type);
-    Value retValue = f.callVariadic(userCallContext, args);
-
+    args[0] = arg0.castTo(p0Type);
+    args[1] = arg1.castTo(p1Type);
+    Value retValue = f.callVariadic(userCallContext, args).castTo(retType);
     stack.pop();
     return retValue;
   }

@@ -101,9 +101,9 @@ public class Arity3CallSiteToStandard implements Arity3CallSite {
   @Override
   public Value call(Value arg0, Value arg1, Value arg2) {
 
-    argsFrame.geta(p0a).setValue(arg0.castPresentTo(p0Type));
-    argsFrame.geta(p1a).setValue(arg1.castPresentTo(p1Type));
-    argsFrame.geta(p2a).setValue(arg2.castPresentTo(p2Type));
+    argsFrame.geta(p0a).setValue(arg0.castTo(p0Type));
+    argsFrame.geta(p1a).setValue(arg1.castTo(p1Type));
+    argsFrame.geta(p2a).setValue(arg2.castTo(p2Type));
 
     stack.push(stackEntry);
     Value retValue = op.eval(stack, context);

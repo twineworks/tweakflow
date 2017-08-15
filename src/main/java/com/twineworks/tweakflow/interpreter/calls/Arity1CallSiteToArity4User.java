@@ -45,6 +45,7 @@ public class Arity1CallSiteToArity4User implements Arity1CallSite {
   private final Value defArg1;
   private final Value defArg2;
   private final Value defArg3;
+  private final Type retType;
 
   public Arity1CallSiteToArity4User(UserFunctionValue f, Node at, Stack stack, UserCallContext userCallContext) {
 
@@ -59,6 +60,8 @@ public class Arity1CallSiteToArity4User implements Arity1CallSite {
     defArg2 = params[2].getDefaultValue();
     defArg3 = params[3].getDefaultValue();
 
+    retType = f.getSignature().getReturnType();
+
     stackEntry = new StackEntry(at, LocalMemorySpace.EMPTY, Collections.emptyMap());
 
   }
@@ -66,7 +69,7 @@ public class Arity1CallSiteToArity4User implements Arity1CallSite {
   @Override
   public Value call(Value arg0) {
     stack.push(stackEntry);
-    Value retValue = f.call(userCallContext, arg0.castPresentTo(p0Type), defArg1, defArg2, defArg3);
+    Value retValue = f.call(userCallContext, arg0.castTo(p0Type), defArg1, defArg2, defArg3).castTo(retType);
     stack.pop();
     return retValue;
   }

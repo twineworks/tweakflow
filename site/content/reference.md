@@ -1372,6 +1372,18 @@ function
 > f(["Foo", "Bar", "Baz"])
 "FooBarBaz"
 ```
+It is worth noting that return values coming from java implementations of functions are still cast to return types as per the function declaration in tweakflow.
+
+```ruby
+> f: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"}
+function
+> g: (string x) -> string via {:class "com.twineworks.tweakflow.std.Strings$length"}
+function
+> f("foo")
+3
+> g("foo")
+"3"
+```
 
 See the standard library functions in [std](https://github.com/twineworks/tweakflow/tree/releases/{{< releaseTag >}}/src/main/java/com/twineworks/tweakflow/std) for examples of functions implemented in Java.
 

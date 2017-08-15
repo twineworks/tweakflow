@@ -39,6 +39,8 @@ library lib
 
   params_as_list_8: (p1, p2, p3, p4, p5, p6, p7, p8) -> list via {:class "com.twineworks.tweakflow.lang.values.ParamsAsList"}
 
+  params_as_list_8_auto_cast: (p1, p2, p3, p4, p5, p6, p7, p8) -> dict via {:class "com.twineworks.tweakflow.lang.values.ParamsAsList"}
+
 }
 
 library lib_spec {
@@ -82,5 +84,11 @@ library lib_spec {
   default_param_exp: ((x=3+4) -> x == 7)() == true
 
   params_as_list_8: lib.params_as_list_8(1, 2, 3, 4, 5, 6, 7, 8) == [1, 2, 3, 4, 5, 6, 7, 8]
+
+  params_as_list_autocast:
+    lib.params_as_list_8_auto_cast("a", 1, "b", 2, "c", 3, "d", 4)
+    ==
+    {:a 1, :b 2, :c 3, :d 4}
+
 
 }

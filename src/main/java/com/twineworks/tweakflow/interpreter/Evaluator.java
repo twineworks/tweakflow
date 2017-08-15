@@ -143,26 +143,27 @@ public class Evaluator {
     EvaluatorUserCallContext userCallContext = new EvaluatorUserCallContext(stack, context);
 
     UserFunction f = userFunction.getUserFunction();
+    Type retType = userFunction.getSignature().getReturnType();
 
     Value retValue;
     switch (callArgs.length){
       case 0:
-        retValue = ((Arity0UserFunction) f).call(userCallContext);
+        retValue = ((Arity0UserFunction) f).call(userCallContext).castTo(retType);
         break;
       case 1:
-        retValue = ((Arity1UserFunction) f).call(userCallContext, callArgs[0]);
+        retValue = ((Arity1UserFunction) f).call(userCallContext, callArgs[0]).castTo(retType);
         break;
       case 2:
-        retValue = ((Arity2UserFunction) f).call(userCallContext, callArgs[0], callArgs[1]);
+        retValue = ((Arity2UserFunction) f).call(userCallContext, callArgs[0], callArgs[1]).castTo(retType);
         break;
       case 3:
-        retValue = ((Arity3UserFunction) f).call(userCallContext, callArgs[0], callArgs[1], callArgs[2]);
+        retValue = ((Arity3UserFunction) f).call(userCallContext, callArgs[0], callArgs[1], callArgs[2]).castTo(retType);
         break;
       case 4:
-        retValue = ((Arity4UserFunction) f).call(userCallContext, callArgs[0], callArgs[1], callArgs[2], callArgs[3]);
+        retValue = ((Arity4UserFunction) f).call(userCallContext, callArgs[0], callArgs[1], callArgs[2], callArgs[3]).castTo(retType);
         break;
       default:
-        retValue = ((ArityNUserFunction) f).callVariadic(userCallContext, callArgs);
+        retValue = ((ArityNUserFunction) f).callVariadic(userCallContext, callArgs).castTo(retType);
     }
     stack.pop();
     return retValue;
