@@ -3,6 +3,8 @@ import core, data, math from "std"
 library lib {
   is_list: (x) -> typeof x == "list"
   is_long: (x) -> typeof x == "long"
+  is_list_1_nil: (x) -> if typeof x == "list" then [1] else nil
+  is_long_1_0: (x) -> if typeof x == "long" then 1 else 0
 }
 
 library match_expression_spec {
@@ -46,6 +48,22 @@ library match_expression_spec {
     )
     == "list"
 
+  match_predicate_casts_to_bool: (
+      match [1,2,3]
+        lib.is_long_1_0 -> "long"
+        lib.is_list_1_nil -> "list"
+        default -> "unknown"
+    )
+    == "list"
+
+  match_predicate_casts_to_bool_nil_is_false: (
+      match 2
+        lib.is_list_1_nil -> "list"
+        lib.is_long_1_0 -> "long"
+        default -> "unknown"
+    )
+    == "long"
+
 }
 
 library list_pattern_spec {
@@ -57,6 +75,30 @@ library list_pattern_spec {
         default -> "unknown"
     )
     == "one"
+
+  match_nested_predicate: (
+    match [1]
+      [lib.is_long] -> "predicate"
+      default -> "unknown"
+  )
+  == "predicate"
+
+  match_deeply_nested_predicate: (
+    match [[1]]
+      [[lib.is_long]] -> "predicate"
+      default -> "unknown"
+  )
+  == "predicate"
+
+  match_non_const_as_value: (
+    let {
+      v: [lib.is_long]
+    }
+    match {"a" 1}
+      v -> "no_predicate"
+      default -> "unknown"
+  )
+  == "unknown"
 
   match_list_nested_capture: (
       match [1,2,3]
@@ -89,12 +131,12 @@ library list_pattern_spec {
 
   # head tail variant
 
-  match_head_tail_list: (
-     match [1,2,3]
-       [@head, @...tail] -> head + tail[1]
-       default -> "no match"
-     )
-     == 4
+   match_head_tail_list: (
+      match [1,2,3]
+        [@head, @...tail] -> head + tail[1]
+        default -> "no match"
+      )
+      == 4
 
   match_head_tail_whole: (
      match [1,2,3]
@@ -309,6 +351,12 @@ library dict_pattern_spec {
     )
     == {:a 1, :b 2, :c 3, :d 4}
 
+  match_nested_predicate: (
+    match {"a" 1}
+      {:a lib.is_long} -> "predicate"
+      default -> "unknown"
+  )
+  == "predicate"
 
   match_everything_as_rest: (
       match {:a 1, :b 2, :c 3, :d 4}
@@ -338,13 +386,26 @@ library dict_pattern_spec {
     )
     == 4
 
+  match_nested_dict_with_capture_mix_key_notations: (
+      match {:a {:a 1, :b 2, :c 3}}
+        {'a' {"a" @a, :b @,
+# c: valid constant string as heredoc
+~~~
+c
+~~~
+
+@c}} -> a+c
+        default -> "unknown"
+    )
+    == 4
+
 }
 
 library operator_spec {
 
   match_capture_and_first_guard: (
       match 1
-         0 -> "zero"
+        0 -> "zero"
         @m, m > 0 -> "positive: "..m
         @m, m < 0 -> "negative: "..m
     )
@@ -352,7 +413,7 @@ library operator_spec {
 
   match_capture_and_second_guard: (
       match -1
-         0 -> "zero"
+        0 -> "zero"
         @m, m > 0 -> "positive: "..m
         @m, m < 0 -> "negative: "..m
     )
@@ -365,6 +426,23 @@ library operator_spec {
         default -> "unknown"
     )
     == "long"
+
+  match_type_any: (
+      match "foo"
+        long -> "long"
+        any  -> "anything"
+        default -> "unknown"
+    )
+    == "anything"
+
+  match_type_void: (
+      match nil
+        long -> "long"
+        any  -> "anything"
+        void -> "nothing"
+        default -> "unknown"
+    )
+    == "nothing"
 
   match_type_capture: (
       match 7

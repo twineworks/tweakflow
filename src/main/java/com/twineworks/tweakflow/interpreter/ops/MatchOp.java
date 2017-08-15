@@ -68,7 +68,7 @@ final public class MatchOp implements ExpressionOp {
       guardOps[i] = lineNode.getGuard() != null ? lineNode.getGuard().getOp() : null;
       resultOps[i] = lineNode.getExpression().getOp();
 
-      Set<String> keySet = lineNode.getPattern().getScope().getSymbols().keySet();
+      Set<String> keySet = lineNode.getExpression().getScope().getSymbols().keySet();
       templateFrames[i] = new ConstShapeMap<>(ShapeKey.getAll(keySet));
 
     }
@@ -88,7 +88,7 @@ final public class MatchOp implements ExpressionOp {
       if (patternOp.matches(subject, stack, context)){
 
         ConstShapeMap<Cell> cells = new ConstShapeMap<>(templateFrames[i]);
-        MemorySpace frame = new LocalMemorySpace(stackEntry.getSpace(), matchLineNodes.get(i).getScope(), MemorySpaceType.LOCAL, cells);
+        MemorySpace frame = new LocalMemorySpace(stackEntry.getSpace(), matchLineNodes.get(i).getExpression().getScope(), MemorySpaceType.LOCAL, cells);
 
         patternOp.bind(subject, frame);
         stack.push(new StackEntry(matchLineNodes.get(i).getPattern(), frame, stackEntry.getClosures()));

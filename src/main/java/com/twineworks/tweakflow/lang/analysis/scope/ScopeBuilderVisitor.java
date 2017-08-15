@@ -58,6 +58,7 @@ import java.util.ArrayList;
 public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements Visitor {
 
   private final ArrayDeque<Scope> scopes = new ArrayDeque<>();
+  private final ArrayDeque<Scope> matchLineScopes = new ArrayDeque<>();
 
   public ScopeBuilderVisitor(Scope topLevelScope) {
     scopes.push(topLevelScope);
@@ -353,9 +354,15 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     node.setScope(scope);
 
     LocalScope bindingsScope = new LocalScope(scope, ScopeType.LOCAL);
-    scopes.push(bindingsScope);
+
+    matchLineScopes.push(bindingsScope);
 
     visit(node.getPattern());
+
+    matchLineScopes.pop();
+
+    scopes.push(bindingsScope);
+
     if (node.getGuard() != null){
       visit(node.getGuard());
     }
@@ -453,7 +460,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   @Override
   public CapturePatternNode visit(CapturePatternNode node) {
     if (node.getScope() != null) return node;
-    Scope scope = scopes.peek();
+    Scope scope = matchLineScopes.peek();
     node.setScope(scope);
     super.visit(node);
 
