@@ -26,11 +26,6 @@ package com.twineworks.tweakflow.interpreter.ops;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
-import com.twineworks.tweakflow.lang.ast.expressions.MatchNode;
-import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.interpreter.Stack;
 import com.twineworks.tweakflow.interpreter.StackEntry;
@@ -38,6 +33,11 @@ import com.twineworks.tweakflow.interpreter.memory.Cell;
 import com.twineworks.tweakflow.interpreter.memory.LocalMemorySpace;
 import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.interpreter.memory.MemorySpaceType;
+import com.twineworks.tweakflow.lang.ast.expressions.MatchNode;
+import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
+import com.twineworks.tweakflow.lang.types.Types;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 import java.util.List;
 import java.util.Set;
@@ -69,7 +69,7 @@ final public class MatchOp implements ExpressionOp {
       resultOps[i] = lineNode.getExpression().getOp();
 
       Set<String> keySet = lineNode.getPattern().getScope().getSymbols().keySet();
-      templateFrames[i] = new ConstShapeMap(ShapeKey.getAll(keySet));
+      templateFrames[i] = new ConstShapeMap<>(ShapeKey.getAll(keySet));
 
     }
 
