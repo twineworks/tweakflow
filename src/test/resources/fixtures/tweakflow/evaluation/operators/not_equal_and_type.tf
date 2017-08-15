@@ -67,6 +67,10 @@ library operator_spec {
   al0_a:     ([0] !== [])      == true
   al0_al0:   ([0] !== [0])     == false
   al0_ad0:   ([0] !== [0.0])   == true
+  anan_anan: ([NaN] !== [NaN]) == true
+  af_af:     ([lib.f] !== [lib.f]) == true
+  mnan_mnan: ({:a NaN} !== {:a NaN}) == true
+  mf_mf:     ({:a lib.f} !== {:a lib.f}) == true
 
   dt_epoch:      (1970-01-01T00:00:00Z !== 1970-01-01T00:00:00Z) == false
   dt_epoch_dt:   (1970-01-01T00:00:00Z !== 1970-01-01T23:59:59Z) == true

@@ -189,7 +189,7 @@ final public class LongType implements Type {
   }
 
   @Override
-  public boolean valueIdentical(Value x, Value o) {
+  public boolean valueAndTypeEquals(Value x, Value o) {
     return (o.type() == this) && x.longNum().equals(o.longNum());
   }
 

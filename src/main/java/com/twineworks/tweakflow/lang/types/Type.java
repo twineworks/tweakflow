@@ -61,5 +61,5 @@ public interface Type {
   int valueHash(Value x);
   boolean valueEquals(Value x, Value o);
 
-  boolean valueIdentical(Value x, Value o);
+  boolean valueAndTypeEquals(Value x, Value o);
 }

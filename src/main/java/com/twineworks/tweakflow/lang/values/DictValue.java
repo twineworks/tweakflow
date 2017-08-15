@@ -121,7 +121,10 @@ final public class DictValue {
 
   
   public boolean equals(Object o) {
-    if (this == o) return true;
+
+    // a dict may not be equal to itself if it contains NaNs or functions
+    // if (this == o) return true;
+
     if (o == null) return false;
     if (o.getClass() == getClass()){
       DictValue that = (DictValue) o;

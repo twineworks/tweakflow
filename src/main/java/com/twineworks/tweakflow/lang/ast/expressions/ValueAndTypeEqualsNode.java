@@ -33,7 +33,7 @@ import com.twineworks.tweakflow.lang.types.Types;
 import java.util.Arrays;
 import java.util.List;
 
-public class IdenticalNode extends AExpressionNode implements ExpressionNode {
+public class ValueAndTypeEqualsNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
@@ -42,7 +42,7 @@ public class IdenticalNode extends AExpressionNode implements ExpressionNode {
     return leftExpression;
   }
 
-  public IdenticalNode setLeftExpression(ExpressionNode leftExpression) {
+  public ValueAndTypeEqualsNode setLeftExpression(ExpressionNode leftExpression) {
     this.leftExpression = leftExpression;
     return this;
   }
@@ -51,7 +51,7 @@ public class IdenticalNode extends AExpressionNode implements ExpressionNode {
     return rightExpression;
   }
 
-  public IdenticalNode setRightExpression(ExpressionNode rightExpression) {
+  public ValueAndTypeEqualsNode setRightExpression(ExpressionNode rightExpression) {
     this.rightExpression = rightExpression;
     return this;
   }
@@ -67,7 +67,7 @@ public class IdenticalNode extends AExpressionNode implements ExpressionNode {
   }
 
   @Override
-  public IdenticalNode setScope(Scope scope) {
+  public ValueAndTypeEqualsNode setScope(Scope scope) {
     this.scope = scope;
     return this;
   }

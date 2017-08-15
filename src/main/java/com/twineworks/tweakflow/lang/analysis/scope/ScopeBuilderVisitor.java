@@ -1022,7 +1022,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
 
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);
@@ -1030,7 +1030,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);

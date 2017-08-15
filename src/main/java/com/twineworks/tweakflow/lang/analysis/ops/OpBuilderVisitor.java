@@ -461,16 +461,16 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
   }
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     super.visit(node);
-    node.setOp(new IdenticalOp(node));
+    node.setOp(new ValueAndTypeEqualsOp(node));
     return node;
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     super.visit(node);
-    node.setOp(new NotIdenticalOp(node));
+    node.setOp(new NotValueAndTypeEqualsOp(node));
     return node;
   }
 

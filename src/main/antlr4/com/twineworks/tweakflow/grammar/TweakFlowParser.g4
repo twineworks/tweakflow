@@ -166,8 +166,8 @@ expression
   | expression '>=' expression                              # greaterThanOrEqualToExp
   | expression 'is' dataType                                # isExp
   | 'typeof' expression                                     # typeOfExp
-  | expression '===' expression                             # identicalExp
-  | expression '!==' expression                             # notIdenticalExp
+  | expression '===' expression                             # valueAndTypeEqualsExp
+  | expression '!==' expression                             # notValueAndTypeEqualsExp
   | expression '==' expression                              # equalExp
   | expression '!=' expression                              # notEqualExp
   | expression '&' expression                               # bitwiseAndExp

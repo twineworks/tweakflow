@@ -40,6 +40,10 @@ final public class Values {
 
   public static final Value EPOCH = new Value(Types.DATETIME, new DateTimeValue(Instant.EPOCH));
 
+  public static final Value NAN = new Value(Types.DOUBLE, Double.NaN);
+  public static final Value INFINITY = new Value(Types.DOUBLE, Double.POSITIVE_INFINITY);
+  public static final Value NEG_INFINITY = new Value(Types.DOUBLE, Double.NEGATIVE_INFINITY);
+
   public static final Value EMPTY_LIST = new Value(Types.LIST, new ListValue());
   public static final Value EMPTY_DICT = new Value(Types.DICT, new DictValue());
   public static final Value EMPTY_STRING = new Value(Types.STRING, "");
@@ -76,6 +80,15 @@ final public class Values {
   }
 
   public static Value make(Double d){
+    if (Double.isNaN(d)) return NAN;
+    if (Double.isInfinite(d)){
+      if (d == Double.POSITIVE_INFINITY){
+        return INFINITY;
+      }
+      else{
+        return NEG_INFINITY;
+      }
+    }
     return new Value(Types.DOUBLE, d);
   }
 

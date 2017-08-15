@@ -1032,16 +1032,16 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   }
 
   @Override
-  public ExpressionNode visitIdenticalExp(TweakFlowParser.IdenticalExpContext ctx) {
-    return new IdenticalNode()
+  public ExpressionNode visitValueAndTypeEqualsExp(TweakFlowParser.ValueAndTypeEqualsExpContext ctx) {
+    return new ValueAndTypeEqualsNode()
         .setLeftExpression(visit(ctx.expression(0)))
         .setRightExpression(visit(ctx.expression(1)))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
-  public ExpressionNode visitNotIdenticalExp(TweakFlowParser.NotIdenticalExpContext ctx) {
-    return new NotIdenticalNode()
+  public ExpressionNode visitNotValueAndTypeEqualsExp(TweakFlowParser.NotValueAndTypeEqualsExpContext ctx) {
+    return new NotValueAndTypeEqualsNode()
         .setLeftExpression(visit(ctx.expression(0)))
         .setRightExpression(visit(ctx.expression(1)))
         .setSourceInfo(srcOf(parseUnit, ctx));

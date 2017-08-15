@@ -94,13 +94,15 @@ final public class Value implements ValueProvider {
 
   @Override
   public boolean equals(Object o) {
-    // break out early if this is a function
-    // identity does not mean equality for functions
-    if (type == Types.FUNCTION) return false;
+    // maintain identity -> equality
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Value other = (Value) o;
     return type.valueEquals(this, other);
+  }
+
+  public boolean valueEquals(Value other) {
+    return other != null && type.valueEquals(this, other);
   }
 
   @Override
@@ -113,8 +115,8 @@ final public class Value implements ValueProvider {
     return hashCode;
   }
 
-  public boolean identical(Value other){
-    return type.valueIdentical(this, other);
+  public boolean valueAndTypeEquals(Value other){
+    return type.valueAndTypeEquals(this, other);
   }
 
   @Override

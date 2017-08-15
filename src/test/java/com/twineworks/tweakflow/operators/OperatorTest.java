@@ -110,13 +110,13 @@ public class OperatorTest {
   }
 
   @Test
-  public void identical() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/operators/identical.tf");
+  public void equal_and_type() throws Exception {
+    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/operators/equal_and_type.tf");
   }
 
   @Test
-  public void not_identical() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/operators/not_identical.tf");
+  public void not_equal_and_type() throws Exception {
+    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/operators/not_equal_and_type.tf");
   }
 
   @Test

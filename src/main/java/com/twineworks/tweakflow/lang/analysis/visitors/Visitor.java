@@ -95,8 +95,8 @@ public interface Visitor {
   ExpressionNode visit(NotNode node);
   ExpressionNode visit(EqualNode node);
   ExpressionNode visit(NotEqualNode node);
-  ExpressionNode visit(IdenticalNode node);
-  ExpressionNode visit(NotIdenticalNode node);
+  ExpressionNode visit(ValueAndTypeEqualsNode node);
+  ExpressionNode visit(NotValueAndTypeEqualsNode node);
   ExpressionNode visit(PlusNode node);
   ExpressionNode visit(MultNode node);
   ExpressionNode visit(DivNode node);

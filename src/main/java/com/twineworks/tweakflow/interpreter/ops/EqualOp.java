@@ -47,7 +47,7 @@ final public class EqualOp implements ExpressionOp {
 
     Value left = leftOp.eval(stack, context);
     Value right = rightOp.eval(stack, context);
-    if (left.equals(right)) return Values.TRUE;
+    if (left.valueEquals(right)) return Values.TRUE;
 
     return Values.FALSE;
   }

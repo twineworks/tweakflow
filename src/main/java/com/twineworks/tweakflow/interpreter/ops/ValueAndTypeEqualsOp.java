@@ -26,20 +26,20 @@ package com.twineworks.tweakflow.interpreter.ops;
 
 import com.twineworks.tweakflow.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.interpreter.Stack;
-import com.twineworks.tweakflow.lang.ast.expressions.NotIdenticalNode;
+import com.twineworks.tweakflow.lang.ast.expressions.ValueAndTypeEqualsNode;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
-final public class NotIdenticalOp implements ExpressionOp {
+final public class ValueAndTypeEqualsOp implements ExpressionOp {
 
-  private final NotIdenticalNode node;
+  private final ValueAndTypeEqualsNode node;
   private final ExpressionOp leftOp;
   private final ExpressionOp rightOp;
 
-  public NotIdenticalOp(NotIdenticalNode node) {
-    this.node = node;
-    leftOp = node.getLeftExpression().getOp();
-    rightOp = node.getRightExpression().getOp();
+  public ValueAndTypeEqualsOp(ValueAndTypeEqualsNode valueAndTypeEqualsNode) {
+    this.node = valueAndTypeEqualsNode;
+    leftOp = valueAndTypeEqualsNode.getLeftExpression().getOp();
+    rightOp = valueAndTypeEqualsNode.getRightExpression().getOp();
   }
 
   @Override
@@ -47,9 +47,9 @@ final public class NotIdenticalOp implements ExpressionOp {
 
     Value left = leftOp.eval(stack, context);
     Value right = rightOp.eval(stack, context);
-    if (left.identical(right)) return Values.FALSE;
+    if (left.valueAndTypeEquals(right)) return Values.TRUE;
 
-    return Values.TRUE;
+    return Values.FALSE;
   }
 
   @Override
@@ -59,12 +59,12 @@ final public class NotIdenticalOp implements ExpressionOp {
 
   @Override
   public ExpressionOp specialize() {
-    return new NotIdenticalOp(node);
+    return new ValueAndTypeEqualsOp(node);
   }
 
   @Override
   public ExpressionOp refresh() {
-    return new NotIdenticalOp(node);
+    return new ValueAndTypeEqualsOp(node);
   }
 
 

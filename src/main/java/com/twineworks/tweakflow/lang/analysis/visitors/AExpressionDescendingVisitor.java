@@ -271,13 +271,13 @@ public class AExpressionDescendingVisitor implements Visitor {
   }
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     node.getChildren().forEach((m) -> m.accept(this));
     return node;
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     node.getChildren().forEach((m) -> m.accept(this));
     return node;
   }

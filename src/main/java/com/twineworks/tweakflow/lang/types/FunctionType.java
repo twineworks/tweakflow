@@ -144,11 +144,12 @@ final public class FunctionType implements Type {
   public boolean valueEquals(Value x, Value o) {
     // functions are never equal to anything
     // they cannot be compared
+    // identity does not imply equality
     return false;
   }
 
   @Override
-  public boolean valueIdentical(Value x, Value o) {
+  public boolean valueAndTypeEquals(Value x, Value o) {
     return false;
   }
 

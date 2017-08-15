@@ -317,13 +317,13 @@ public class OpSpecializationVisitor extends AExpressionDescendingVisitor implem
   }
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     super.visit(node);
     return specialize(node);
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     super.visit(node);
     return specialize(node);
   }

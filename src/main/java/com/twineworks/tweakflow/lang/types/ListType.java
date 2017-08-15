@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.*;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,24 +177,39 @@ final public class ListType implements Type {
 
   @Override
   public boolean valueEquals(Value x, Value o) {
-    return o.type() == this &&
-        valueHash(x) == valueHash(o) &&
-        x.list().equals(o.list());
-  }
 
-  @Override
-  public boolean valueIdentical(Value x, Value o) {
+    if (x.type() != this) return false;
     if (o.type() != this) return false;
     ListValue xList = x.list();
     ListValue oList = o.list();
     if (xList.size() != oList.size()) return false;
-    int i=0;
-    for (Value xValue : xList) {
-      Value oValue = oList.get(i);
-      if (!xValue.identical(oValue)) return false;
-      i++;
+    Iterator<Value> xi = xList.iterator();
+    Iterator<Value> oi = oList.iterator();
+    // lists have same size, only one iterator need be queried for
+    // hasNext
+    while(xi.hasNext()){
+      if (!xi.next().valueEquals(oi.next())) return false;
     }
     return true;
+
+  }
+
+  @Override
+  public boolean valueAndTypeEquals(Value x, Value o) {
+    if (x.type() != this) return false;
+    if (o.type() != this) return false;
+    ListValue xList = x.list();
+    ListValue oList = o.list();
+    if (xList.size() != oList.size()) return false;
+    Iterator<Value> xi = xList.iterator();
+    Iterator<Value> oi = oList.iterator();
+    // lists have same size, only one iterator need be queried for
+    // hasNext
+    while(xi.hasNext()){
+      if (!xi.next().valueAndTypeEquals(oi.next())) return false;
+    }
+    return true;
+
   }
 
   @Override

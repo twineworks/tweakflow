@@ -192,13 +192,7 @@ final public class DictType implements Type {
 
   @Override
   public boolean valueEquals(Value x, Value o) {
-    return o.type() == this &&
-        valueHash(x) == valueHash(o) &&
-        x.dict().equals(o.dict());
-  }
-
-  @Override
-  public boolean valueIdentical(Value x, Value o) {
+    if (x.type() != this) return false;
     if (o.type() != this) return false;
     DictValue xDict = x.dict();
     DictValue oDict = o.dict();
@@ -207,7 +201,24 @@ final public class DictType implements Type {
       if (!oDict.containsKey(k)) return false;
       Value xValue = xDict.get(k);
       Value oValue = oDict.get(k);
-      if (!xValue.identical(oValue)) return false;
+      if (!xValue.valueEquals(oValue)) return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean valueAndTypeEquals(Value x, Value o) {
+    if (x.type() != this) return false;
+    if (o.type() != this) return false;
+    DictValue xDict = x.dict();
+    DictValue oDict = o.dict();
+    if (xDict.size() != oDict.size()) return false;
+    for (String k : xDict.keys()) {
+      if (!oDict.containsKey(k)) return false;
+      Value xValue = xDict.get(k);
+      Value oValue = oDict.get(k);
+      if (!xValue.valueAndTypeEquals(oValue)) return false;
     }
 
     return true;

@@ -36,7 +36,7 @@ public class ConstantPool {
     public int compare(Value a, Value b) {
 
       if (a == b) return 0;
-      if (a.identical(b)) return 0;
+      if (a.valueAndTypeEquals(b)) return 0;
 
       int ha = a.hashCode();
       int hb = b.hashCode();

@@ -239,12 +239,12 @@ public class AVisitor implements Visitor {
   }
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     return node;
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     return node;
   }
 

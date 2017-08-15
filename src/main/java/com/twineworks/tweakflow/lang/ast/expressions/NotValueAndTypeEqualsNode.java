@@ -32,7 +32,7 @@ import com.twineworks.tweakflow.lang.types.Types;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotIdenticalNode extends AExpressionNode implements ExpressionNode {
+public class NotValueAndTypeEqualsNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
@@ -41,7 +41,7 @@ public class NotIdenticalNode extends AExpressionNode implements ExpressionNode 
     return leftExpression;
   }
 
-  public NotIdenticalNode setLeftExpression(ExpressionNode leftExpression) {
+  public NotValueAndTypeEqualsNode setLeftExpression(ExpressionNode leftExpression) {
     this.leftExpression = leftExpression;
     return this;
   }
@@ -50,7 +50,7 @@ public class NotIdenticalNode extends AExpressionNode implements ExpressionNode 
     return rightExpression;
   }
 
-  public NotIdenticalNode setRightExpression(ExpressionNode rightExpression) {
+  public NotValueAndTypeEqualsNode setRightExpression(ExpressionNode rightExpression) {
     this.rightExpression = rightExpression;
     return this;
   }

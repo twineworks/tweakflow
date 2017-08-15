@@ -236,18 +236,13 @@ final public class ListValue implements Iterable<Value> {
 
     if (this == o) return true;
     if (o == null) return false;
+
     if (!(o instanceof ListValue)) return false;
-    if (getClass() == o.getClass()){
-      ListValue values = (ListValue) o;
-      return vec.equals(values.vec);
-    }
-    else{
-      return false;
-    }
+    ListValue values = (ListValue) o;
+    return vec.equals(values.vec);
 
   }
 
-  
   public int hashCode() {
     return vec.hashCode();
   }

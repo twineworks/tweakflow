@@ -177,7 +177,7 @@ final public class BooleanType implements Type {
   }
 
   @Override
-  public boolean valueIdentical(Value x, Value o) {
+  public boolean valueAndTypeEquals(Value x, Value o) {
     // boolean values are singletons
     return x == o;
   }

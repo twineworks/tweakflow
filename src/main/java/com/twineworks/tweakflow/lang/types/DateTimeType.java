@@ -166,7 +166,7 @@ final public class DateTimeType implements Type {
   }
 
   @Override
-  public boolean valueIdentical(Value x, Value o) {
+  public boolean valueAndTypeEquals(Value x, Value o) {
     return valueEquals(x, o);
   }
 

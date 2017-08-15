@@ -47,7 +47,7 @@ final public class NotEqualOp implements ExpressionOp {
 
     Value left = leftOp.eval(stack, context);
     Value right = rightOp.eval(stack, context);
-    if (left.equals(right)) return Values.FALSE;
+    if (left.valueEquals(right)) return Values.FALSE;
 
     return Values.TRUE;
   }

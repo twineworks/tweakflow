@@ -168,13 +168,13 @@ public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implem
   }
 
   @Override
-  public ExpressionNode visit(IdenticalNode node) {
+  public ExpressionNode visit(ValueAndTypeEqualsNode node) {
     ensureNotInMeta(node);
     return super.visit(node);
   }
 
   @Override
-  public ExpressionNode visit(NotIdenticalNode node) {
+  public ExpressionNode visit(NotValueAndTypeEqualsNode node) {
     ensureNotInMeta(node);
     return super.visit(node);
   }
