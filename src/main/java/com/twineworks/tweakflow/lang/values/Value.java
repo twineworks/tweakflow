@@ -135,13 +135,8 @@ final public class Value implements ValueProvider {
   }
 
   public Value castTo(Type type){
-    if (type == this.type || type == Types.ANY) return this;     // no cast necessary
+    if (type == this.type || type == Types.ANY || this == Values.NIL) return this;     // no cast necessary
     return type.castFrom(this);
-  }
-
-  public Value castPresentTo(Type type){
-    if (this == Values.NIL) return this;
-    return castTo(type);
   }
 
   public boolean isList() {

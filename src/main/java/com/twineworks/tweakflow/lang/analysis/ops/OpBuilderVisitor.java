@@ -233,7 +233,7 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
       Value rawDefaultValue = Evaluator.evaluateInEmptyScope(parameterNode.getDefaultValue());
       Value typedDefaultValue;
       try {
-        typedDefaultValue = rawDefaultValue.castPresentTo(parameterNode.getDeclaredType());
+        typedDefaultValue = rawDefaultValue.castTo(parameterNode.getDeclaredType());
       }
       catch(LangException e){
         e.setSourceInfo(node.getSourceInfo());

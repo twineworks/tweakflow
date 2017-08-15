@@ -690,7 +690,7 @@ public class Evaluator {
       List<ArgumentNode> argumentNodes = arguments.getList();
       // can simply cast arguments in place
       for (int i=0; i<argumentValues.length; i++){
-        argumentValues[i] = argumentValues[i].castPresentTo(parameters[i].getDeclaredType());
+        argumentValues[i] = argumentValues[i].castTo(parameters[i].getDeclaredType());
       }
       return argumentValues;
     }
@@ -714,7 +714,7 @@ public class Evaluator {
     if (argumentValues.length == parameters.length){
       // can simply cast arguments in place
       for (int i=0; i< argumentValues.length; i++){
-        argumentValues[i] = argumentValues[i].castPresentTo(parameters[i].getDeclaredType());
+        argumentValues[i] = argumentValues[i].castTo(parameters[i].getDeclaredType());
       }
       return argumentValues;
     }
