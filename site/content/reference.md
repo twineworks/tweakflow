@@ -2983,22 +2983,6 @@ Syntax: `(a)`
 
 Sub-expressions in parentheses define evaluation precedence. `(a+b)*c` multiplies a sum with c, whereas `a+(b*c)` adds a product to a.
 
-#### Bitwise not
-
-Syntax: `~a`
-
-The operand is cast to long, and a bitwise not operation is performed on its two's complement representation, resulting in another long.
-
-`~nil` evaluates to `nil`
-
-```ruby
-> ~0
--1
-
-> ~(-1)
-0
-```
-
 #### Boolean not
 
 Syntax: `!a` or `not a`
@@ -3009,6 +2993,46 @@ The operand is cast to boolean and a negation is performed resulting in another 
 
 ```ruby
 > !"foo"
+```
+
+#### Boolean and
+
+Syntax: `a&&b` or `a and b`
+
+This operation is a short-circuiting boolean and. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `false` or `nil`, the whole expression evaluates to `false`, and `b` is not evaluated. If `a` evaluates to `true`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
+
+```ruby
+> 1 && 2
+true
+> 1 && 0
+false
+> false && throw "not evaluated"
+false
+> true && true
+true
+> [] && 1
+false
+> ["foo"] && 1
+true
+```
+
+#### Boolean or
+
+Syntax: `a||b` or `a or b`
+
+This operation is a short-circuiting boolean or. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `true`, the whole expression evaluates to `true`, and `b` is not evaluated. If `a` evaluates to `false` or `nil`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
+
+```ruby
+> true || false
+true
+> true || throw "not evaluated"
+true
+> false || true
+true
+> [] || []
+false
+> [] || [1]
+true
 ```
 
 #### Unary minus
@@ -3045,50 +3069,76 @@ ERROR: {
 
 ```
 
-#### Exponentiation
+#### Addition
 
-Syntax: `a**b`
+Syntax: `a+b`
 
-Operand a is raised to the power of b.
+Evaluates to the sum of a and b.
 
-Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.
+Each operand must be either a long or a double. Any other types throw an error.
 
-If any operand is `nil`, the result is `nil`.
+If any operands are `nil`, the result is `nil`.
 
-The result is of type double.
+If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
 
-Special cases involving `NaN` and `Infinity` are defined as follows:
+If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.
 
-| Expression                | Result     |
-| ------------------------- | ---------- |
-| `Infinity ** Infinity`    | `Infinity` |
-| `-Infinity ** Infinity`   | `Infinity` |
-| `Infinity ** -Infinity`   | `0.0`      |
-| `-Infinity ** -Infinity`  | `0.0`      |
-| `Infinity ** 0`           | `1.0`      |
-| `-Infinity ** 0`          | `1.0`      |
-| `NaN ** 0`                | `1.0`      |
-| `0 ** Infinity`           | `0.0`      |
-| `0 ** -Infinity`          | `Infinity` |
-| `NaN ** x` for all x != 0 | `NaN`      |
-| `x ** NaN`                | `NaN`      |
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression              | Result      |
+| ----------------------- | ----------- |
+| `Infinity + Infinity`   | `Infinity`  |
+| `-Infinity + Infinity`  | `NaN`       |
+| `Infinity + -Infinity`  | `NaN`       |
+| `-Infinity + -Infinity` | `-Infinity` |
 
 ```ruby
-> 2**3
-8.0
-> 4**0.5
-2.0
-> 2**10
-1024.0
-> nil**nil
-nil
-> "2"**"3"
-ERROR: {
-  :message "cannot lift base of type string to exponent of type string",
-  :code "CAST_ERROR",
-  ...
-}
+> 1+2
+3
+> 2.0+2
+4.0
+> Infinity + 3
+Infinity
+> math.max_long + 1   # binary overflow
+-9223372036854775808
 ```
+
+#### Subtraction
+
+Syntax: `a-b`
+
+Evaluates to the value of a with b subtracted.
+
+Each operand must be either a long or a double. Any other types throw an error.
+
+If any operands are `nil`, the result is `nil`.
+
+If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
+
+If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.
+
+Special cases involving `Infinity` and `NaN` are defined as follows:
+
+| Expression                  | Result      |
+| --------------------------- | ----------- |
+| `Infinity - Infinity`       | `NaN`       |
+| `(-Infinity) - Infinity`    | `-Infinity` |
+| `Infinity - (-Infinity`)    | `Infinity`  |
+| `(-Infinity) - (-Infinity)` | `NaN`       |
+
+```ruby
+> 5-3
+2
+> 5-10
+-5
+> 2.3-9
+-6.7
+> math.min_long - 1 # binary underflow
+9223372036854775807
+> Infinity - 100
+Infinity
+```
+
 
 #### Multiplication
 
@@ -3239,153 +3289,125 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 -0.5
 ```
 
-#### Addition
+#### Exponentiation
 
-Syntax: `a+b`
+Syntax: `a**b`
 
-Evaluates to the sum of a and b.
+Operand a is raised to the power of b.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.
 
-If any operands are `nil`, the result is `nil`.
+If any operand is `nil`, the result is `nil`.
 
-If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
+The result is of type double.
 
-If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.
+Special cases involving `NaN` and `Infinity` are defined as follows:
 
-Special cases involving `Infinity` and `NaN` are defined as follows:
-
-| Expression              | Result      |
-| ----------------------- | ----------- |
-| `Infinity + Infinity`   | `Infinity`  |
-| `-Infinity + Infinity`  | `NaN`       |
-| `Infinity + -Infinity`  | `NaN`       |
-| `-Infinity + -Infinity` | `-Infinity` |
+| Expression                | Result     |
+| ------------------------- | ---------- |
+| `Infinity ** Infinity`    | `Infinity` |
+| `-Infinity ** Infinity`   | `Infinity` |
+| `Infinity ** -Infinity`   | `0.0`      |
+| `-Infinity ** -Infinity`  | `0.0`      |
+| `Infinity ** 0`           | `1.0`      |
+| `-Infinity ** 0`          | `1.0`      |
+| `NaN ** 0`                | `1.0`      |
+| `0 ** Infinity`           | `0.0`      |
+| `0 ** -Infinity`          | `Infinity` |
+| `NaN ** x` for all x != 0 | `NaN`      |
+| `x ** NaN`                | `NaN`      |
 
 ```ruby
-> 1+2
+> 2**3
+8.0
+> 4**0.5
+2.0
+> 2**10
+1024.0
+> nil**nil
+nil
+> "2"**"3"
+ERROR: {
+  :message "cannot lift base of type string to exponent of type string",
+  :code "CAST_ERROR",
+  ...
+}
+```
+
+#### Equality
+
+Syntax: `a==b`
+
+Evaluates to `true` if a is equal to b. Returns `false` otherwise.
+
+Some type-specific rules apply in determining equality.
+
+The double special value `NaN` is not equal to anything, not even to itself.
+
+```ruby
+> NaN == NaN
+false
+```
+
+A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.
+
+```ruby
+> 0 == 0.0
+true
+> 3 == 3.0
+true
+> -4 == 4.0
+false
+> 0 == NaN
+false
+```
+
+Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/modules/std.html#compare) to determine whether datetime values represent the same point in time.
+
+```ruby
+# same points in time, but different local time and time zone
+> time.compare(1970-01-01T01:00:00+01:00, time.epoch)
+0
+# same points in time are not equal
+> 1970-01-01T01:00:00+01:00 == time.epoch       
+false
+# going back to UTC offset of time.epoch, they are equal
+> 1970-01-01T00:00:00+00:00 == time.epoch
+true
+```
+
+Function values are never equal to anything, not even to themselves.
+
+```ruby
+> strings.length("foo")
 3
-> 2.0+2
-4.0
-> Infinity + 3
-Infinity
-> math.max_long + 1   # binary overflow
--9223372036854775808
+> strings.length == strings.length
+false
 ```
 
-#### Subtraction
-
-Syntax: `a-b`
-
-Evaluates to the value of a with b subtracted.
-
-Each operand must be either a long or a double. Any other types throw an error.
-
-If any operands are `nil`, the result is `nil`.
-
-If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
-
-If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.
-
-Special cases involving `Infinity` and `NaN` are defined as follows:
-
-| Expression                  | Result      |
-| --------------------------- | ----------- |
-| `Infinity - Infinity`       | `NaN`       |
-| `(-Infinity) - Infinity`    | `-Infinity` |
-| `Infinity - (-Infinity`)    | `Infinity`  |
-| `(-Infinity) - (-Infinity)` | `NaN`       |
+Lists are equal if they contain items that compare as equal.
 
 ```ruby
-> 5-3
-2
-> 5-10
--5
-> 2.3-9
--6.7
-> math.min_long - 1 # binary underflow
-9223372036854775807
-> Infinity - 100
-Infinity
+> [1, 2] == [1.0, 2.0]
+true
+> [NaN] == [NaN]
+false
 ```
 
-#### String concatenation
-
-Syntax: `a..b`
-
-Both operands are cast to string, then they are concatenated to form the result string. A `nil` value is converted to the string `"nil"` before concatenation.
+Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.
 
 ```ruby
-> "Hello".." ".."World"
-"Hello World"
-> "foo"..1
-"foo1"
+> {:a 1} == {:a 1.0}
+true
+> {:a NaN} == {:a NaN}
+false
 ```
 
-#### Binary shift left
+#### Inequality
 
-Syntax: `a<<b`
+Syntax: `a!=b`
 
-Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 1 << 2
-4
-> -1 << 8
--256
-> 7 << 1
-14
-> 2.3 << 4.9 # operands are cast to 2 << 4
-32
-> "1" << 3.4 # operands are cast to 1 << 3
-8
-> nil << 1
-nil
-```
-
-#### Binary shift right, sign preserving
-
-Syntax: `a>>b`
-
-Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 8 >> 1
-4
-> 8 >> 8
-0
-> -1 >> 1
--1
-> -1 >> 8
--1
-> nil >> 2
-nil
-```
-
-#### Binary shift right
-
-Syntax: `a>>>b`
-
-Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 8 >>> 1
-4
-> 8 >>> 8
-0
-> -1 >>> 1
-9223372036854775807
-> -1 >>> 56
-255
-> nil >>> 2
-nil
-```
+Inversion of equality. Evaluates to `true` if `a==b` evaluates to `false`. Evaluates to `false` if `a==b` evaluates to true.
 
 #### Less than
 
@@ -3499,7 +3521,7 @@ true
 
 Syntax: `a===b`
 
-Evaluates to `true` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise.
+Evaluates to `true` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
 
 ```ruby
 > 0 === -0
@@ -3510,13 +3532,21 @@ true
 false
 > "foo" === "foo"
 true
+> {:a 1.0} === {:a 1.0}
+true
+> {:a 1.0} === {:a 1}
+false
+> [1.0] === [1.0]
+true
+> [1.0] === [1]
+false
 ```
 
 #### Inequality with type identity
 
 Syntax: `a!==b`
 
-Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise.
+Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.
 
 ```ruby
 > 0 !== 1
@@ -3527,182 +3557,27 @@ false
 true
 > "foo" !== "foo"
 false
-```
-
-#### Equality
-
-Syntax: `a==b`
-
-Evaluates to `true` if a is equal to b. Returns `false` otherwise.
-
-Some type-specific rules apply in determining equality.
-
-The double special value `NaN` is not equal to anything, not even to itself.
-
-```ruby
-> NaN == NaN
+> {:a 1.0} !== {:a 1.0}
 false
-```
-
-A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.
-
-```ruby
-> 0 == 0.0
+> {:a 1.0} !== {:a 1}
 true
-> 3 == 3.0
-true
-> -4 == 4.0
+> [1.0] !== [1.0]
 false
-> 0 == NaN
-false
-```
-
-Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/modules/std.html#compare) to determine whether datetime values represent the same point in time.
-
-```ruby
-# same points in time, but different local time and time zone
-> time.compare(1970-01-01T01:00:00+01:00, time.epoch)
-0
-# same points in time are not equal
-> 1970-01-01T01:00:00+01:00 == time.epoch       
-false
-# going back to UTC offset of time.epoch, they are equal
-> 1970-01-01T00:00:00+00:00 == time.epoch
+> [1.0] !== [1]
 true
 ```
 
-Function values are never equal to anything, not even to themselves.
+#### String concatenation
+
+Syntax: `a..b`
+
+Both operands are cast to string, then they are concatenated to form the result string. A `nil` value is converted to the string `"nil"` before concatenation.
 
 ```ruby
-> strings.length("foo")
-3
-> strings.length == strings.length
-false
-```
-
-Lists are equal if they contain items that compare as equal.
-
-```ruby
-> [1, 2] == [1.0, 2.0]
-true
-> [NaN] == [NaN]
-false
-```
-
-Dicts are equal if they have the same keyset and values associated with the same keys compare as equal.
-
-```ruby
-> {:a 1} == {:a 1.0}
-true
-> {:a NaN} == {:a NaN}
-false
-```
-
-#### Inequality
-
-Syntax: `a!=b`
-
-Inversion of equality. Evaluates to `true` if `a==b` evaluates to `false`. Evaluates to `false` if `a==b` evaluates to true.
-
-#### Bitwise and
-
-Syntax: `a&b`
-
-Both operands are cast to long and their two's complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 1 & 2
-0
-> 7 & 15
-7
-> -1 & 29837
-29837
-> 3 & 2
-2
-> nil & 1
-nil
-```
-
-#### Bitwise exclusive or
-
-Syntax: `a^b`
-
-Both operands are cast to long and their two's complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 1 ^ 1
-0
-> 1 ^ 2
-3
-> -1 ^ 0
--1
-> -1 ^ 1
--2
-> nil ^ 2
-nil
-```
-
-#### Bitwise or
-
-Syntax: `a|b`
-
-Both operands are cast to long and their two's complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.
-
-If any operand is `nil`, the result is `nil`.
-
-```ruby
-> 1 | 3
-3
-> -1 | 0
--1
-> 1 | 2 | 4 | 8
-15
-> nil | 2
-nil
-```
-
-#### Boolean and
-
-Syntax: `a&&b` or `a and b`
-
-This operation is a short-circuiting boolean and. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `false` or `nil`, the whole expression evaluates to `false`, and `b` is not evaluated. If `a` evaluates to `true`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
-
-```ruby
-> 1 && 2
-true
-> 1 && 0
-false
-> false && throw "not evaluated"
-false
-> true && true
-true
-> [] && 1
-false
-> ["foo"] && 1
-true
-```
-
-#### Boolean or
-
-Syntax: `a||b` or `a or b`
-
-This operation is a short-circuiting boolean or. The first operand `a` is evaluated and cast to boolean. If `a` evaluates to `true`, the whole expression evaluates to `true`, and `b` is not evaluated. If `a` evaluates to `false` or `nil`, b is evaluated and cast to boolean. If `b` evaluates to `true` the whole expression evaluates to `true`. Otherwise the whole expression evaluates to `false`.
-
-```ruby
-> true || false
-true
-> true || throw "not evaluated"
-true
-> false || true
-true
-> [] || []
-false
-> [] || [1]
-true
+> "Hello".." ".."World"
+"Hello World"
+> "foo"..1
+"foo1"
 ```
 
 #### Type check
@@ -3820,56 +3695,198 @@ Supported type casts are listed for each type in their respective section of [da
 nil
 ```
 
+#### Bitwise not
+
+Syntax: `~a`
+
+The operand is cast to long, and a bitwise not operation is performed on its two's complement representation, resulting in another long.
+
+`~nil` evaluates to `nil`
+
+```ruby
+> ~0
+-1
+
+> ~(-1)
+0
+```
+
+#### Bitwise shift left
+
+Syntax: `a<<b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted left by b bits to form the result.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 << 2
+4
+> -1 << 8
+-256
+> 7 << 1
+14
+> 2.3 << 4.9 # operands are cast to 2 << 4
+32
+> "1" << 3.4 # operands are cast to 1 << 3
+8
+> nil << 1
+nil
+```
+
+#### Bitwise shift right, sign preserving
+
+Syntax: `a>>b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are identical to the leftmost bit of a.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 8 >> 1
+4
+> 8 >> 8
+0
+> -1 >> 1
+-1
+> -1 >> 8
+-1
+> nil >> 2
+nil
+```
+
+#### Bitwise shift right
+
+Syntax: `a>>>b`
+
+Both operands are cast to long. An error is thrown if any operand cannot be cast to long. The long value of a is shifted right by b bits to form the result. Bits coming in on the left side are set to 0.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 8 >>> 1
+4
+> 8 >>> 8
+0
+> -1 >>> 1
+9223372036854775807
+> -1 >>> 56
+255
+> nil >>> 2
+nil
+```
+
+#### Bitwise and
+
+Syntax: `a&b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary AND operation. The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 & 2
+0
+> 7 & 15
+7
+> -1 & 29837
+29837
+> 3 & 2
+2
+> nil & 1
+nil
+```
+
+#### Bitwise exclusive or
+
+Syntax: `a^b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary XOR operation.The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 ^ 1
+0
+> 1 ^ 2
+3
+> -1 ^ 0
+-1
+> -1 ^ 1
+-2
+> nil ^ 2
+nil
+```
+
+#### Bitwise or
+
+Syntax: `a|b`
+
+Both operands are cast to long and their two's complement representation bits are combined using the binary OR operation. The result is a long the resulting bits.
+
+If any operand is `nil`, the result is `nil`.
+
+```ruby
+> 1 | 3
+3
+> -1 | 0
+-1
+> 1 | 2 | 4 | 8
+15
+> nil | 2
+nil
+```
+
 #### Operator precedence
 
 The following table lists tweakflow operators and constructs in precedence order, starting with the highest precedence.
 
-All operators an constructs are left-associative. When chaning operators of the same precedence, they are evaluated left to right. The expression `a+b+c` is evaluated as `(a+b)+c` for example.
+All operators an constructs are left-associative. When chaining operators of the same precedence, they are evaluated left to right. The expression `a+b+c` is evaluated as `(a+b)+c` for example.
 
-| Operator                            | Example                                 |
-| ----------------------------------- | --------------------------------------- |
-| Fuction call                        | `f(1, 2, 3)`                            |
-| Call chaining                       | `->> ("foo") f, g, h`                   |
-| Container access                    | `d[:a]`, `a[1]`                         |
-| Precedence grouping                 | `a+(b*c)`                               |
-| Type cast                           | `"1.2" as double`                       |
-| Default value                       | `name default "John Doe"`               |
-| Bitwise not                         | `~bits`                                 |
-| Boolean not                         | `!done`                                 |
-| Unary minus                         | `-(2+2)`                                |
-| Exponentiation                      | `2**10`                                 |
-| Multiplication                      | `2*2`                                   |
-| Floating point division             | `4/2`                                   |
-| Integer division                    | `4//2`                                  |
-| Division remainder                  | `length % 2`                            |
-| Addition                            | `4+2`                                   |
-| Subtraction                         | `4-2`                                   |
-| String concatenation                | `"Hello ".."World"`                     |
-| Binary shift left                   | `1 << 8`                                |
-| Binary shift right, sign preserving | `255 >> 2`                              |
-| Binary shift right                  | `-1 >>> 1`                              |
-| Less than                           | `a < max`                               |
-| Less than or equal                  | `a <= max`                              |
-| Greater than                        | `a > min`                               |
-| Greater than or equal               | `a >= min`                              |
-| Type check                          | `a is string`                           |
-| Type name                           | `typeof a`                              |
-| Equality with type identity         | `a === 1`                               |
-| Inequality with type identity       | `a !== 1`                               |
-| Equality                            | `a == "foo"`                            |
-| Inequality                          | `a != "foo"`                            |
-| Bitwise and                         | `bits & mask`                           |
-| Bitwise xor                         | `bits ^ flip`                           |
-| Bitwise or                          | `bits ¦ flags`                          |
-| Boolean and                         | `locked && loaded`                      |
-| Boolean or                          | `sleepy ¦¦ hungry`                      |
-| Pattern matching                    | `match xs [@,@] -> true`                |
-| List comprehension                  | `for x <- [1, 2, 3], x*x`               |
-| Conditional evaluation              | `if sleepy then sleep(8) else party(4)` |
-| Local variables                     | `let {a: 1; b: 2} a+b`                  |
-| Try / catch                         | `try sleep(:long) catch "tired"`        |
-| Throw                               | `throw "cannot do this"`                |
-| Debug                               | `debug "DEBUG x: #{x}"`                 |
+| Operator                             | Example                                 |
+| ------------------------------------ | --------------------------------------- |
+| Fuction call                         | `f(1, 2, 3)`                            |
+| Call chaining                        | `->> ("foo") f, g, h`                   |
+| Container access                     | `d[:a]`, `a[1]`                         |
+| Precedence grouping                  | `a+(b*c)`                               |
+| Type cast                            | `"1.2" as double`                       |
+| Default value                        | `name default "John Doe"`               |
+| Bitwise not                          | `~bits`                                 |
+| Boolean not                          | `!done`                                 |
+| Unary minus                          | `-(2+2)`                                |
+| Exponentiation                       | `2**10`                                 |
+| Multiplication                       | `2*2`                                   |
+| Floating point division              | `4/2`                                   |
+| Integer division                     | `4//2`                                  |
+| Division remainder                   | `length % 2`                            |
+| Addition                             | `4+2`                                   |
+| Subtraction                          | `4-2`                                   |
+| String concatenation                 | `"Hello ".."World"`                     |
+| Bitwise shift left                   | `1 << 8`                                |
+| Bitwise shift right, sign preserving | `255 >> 2`                              |
+| Bitwise shift right                  | `-1 >>> 1`                              |
+| Less than                            | `a < max`                               |
+| Less than or equal                   | `a <= max`                              |
+| Greater than                         | `a > min`                               |
+| Greater than or equal                | `a >= min`                              |
+| Type check                           | `a is string`                           |
+| Type name                            | `typeof a`                              |
+| Equality with type identity          | `a === 1`                               |
+| Inequality with type identity        | `a !== 1`                               |
+| Equality                             | `a == "foo"`                            |
+| Inequality                           | `a != "foo"`                            |
+| Bitwise and                          | `bits & mask`                           |
+| Bitwise xor                          | `bits ^ flip`                           |
+| Bitwise or                           | `bits ¦ flags`                          |
+| Boolean and                          | `locked && loaded`                      |
+| Boolean or                           | `sleepy ¦¦ hungry`                      |
+| Pattern matching                     | `match xs [@,@] -> true`                |
+| List comprehension                   | `for x <- [1, 2, 3], x*x`               |
+| Conditional evaluation               | `if sleepy then sleep(8) else party(4)` |
+| Local variables                      | `let {a: 1; b: 2} a+b`                  |
+| Try / catch                          | `try sleep(:long) catch "tired"`        |
+| Throw                                | `throw "cannot do this"`                |
+| Debug                                | `debug "DEBUG x: #{x}"`                 |
 
 ### Debugging
 
@@ -3912,3 +3929,4 @@ function
 "DEBUG: x is zero or nil"
 0
 ```
+
