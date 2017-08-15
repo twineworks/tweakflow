@@ -282,14 +282,14 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     List<TweakFlowParser.MatchLineContext> matchLineContexts = matchBodyContext.matchLine();
 
     int size = matchLineContexts.size();
-    boolean hasDefaultPattern = false;
+
     for (int i = 0; i < size; i++) {
       TweakFlowParser.MatchLineContext matchLineContext = matchLineContexts.get(i);
       MatchLineNode matchLineNode = new MatchLineBuilder(parseUnit).visit(matchLineContext);
+
+      // ensure the default pattern appears last, if present
       if (matchLineNode.getPattern() instanceof DefaultPatternNode){
-        // only one default pattern node allowed
-        if (hasDefaultPattern) throw new LangException(LangError.MULTIPLE_DEFAULT_PATTERNS, matchLineNode.getPattern().getSourceInfo());
-        hasDefaultPattern = true;
+        if (i != size-1) throw new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
       }
       matchLines.getElements().add(matchLineNode);
     }

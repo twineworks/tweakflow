@@ -180,7 +180,17 @@ public class AnalysisTest {
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/match_multiple_default_patterns.tf");
 
     assertThat(result.isError()).isTrue();
-    assertThat(result.getException().getCode()).isSameAs(LangError.MULTIPLE_DEFAULT_PATTERNS);
+    assertThat(result.getException().getCode()).isSameAs(LangError.DEFAULT_PATTERN_NOT_LAST);
+
+  }
+
+  @Test
+  public void fails_on_default_match_pattern_not_last() throws Exception {
+
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/match_default_pattern_not_last.tf");
+
+    assertThat(result.isError()).isTrue();
+    assertThat(result.getException().getCode()).isSameAs(LangError.DEFAULT_PATTERN_NOT_LAST);
 
   }
 
