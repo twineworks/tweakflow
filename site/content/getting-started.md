@@ -470,7 +470,7 @@ function
 > extension("file")
 -1
 ERROR: {
-  :message "from must not be negative: -1",
+  :message "start must not be negative: -1",
   :code "INDEX_OUT_OF_BOUNDS",
   ...
 }
@@ -496,7 +496,7 @@ function
 > extension("file")
 "DEBUG: last position of dot in file: -1"
 ERROR: {
-  :message "from must not be negative: -1",
+  :message "start must not be negative: -1",
   :code "INDEX_OUT_OF_BOUNDS",
   ...
 }

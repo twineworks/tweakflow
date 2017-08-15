@@ -353,20 +353,20 @@ public final class Strings {
   public static final class indexOf implements UserFunction, Arity3UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value x, Value sub, Value from) {
+    public Value call(UserCallContext context, Value x, Value sub, Value start) {
 
       if (x == Values.NIL) return Values.NIL;
       if (sub == Values.NIL) return Values.NIL;
-      if (from == Values.NIL) return Values.NIL;
+      if (start == Values.NIL) return Values.NIL;
 
       String xStr = x.string();
       String subStr = sub.string();
-      Long fromIdx = from.longNum();
+      Long startIdx = start.longNum();
       int idx = 0;
 
-      if (fromIdx > 0){
-        if (fromIdx <= Integer.MAX_VALUE){
-          idx = fromIdx.intValue();
+      if (startIdx > 0){
+        if (startIdx <= Integer.MAX_VALUE){
+          idx = startIdx.intValue();
         }
         // from index larger than possible string length
         else{
@@ -409,47 +409,47 @@ public final class Strings {
     }
   }
 
-  // function substring (string x, long from, long to=nil) -> string
+  // function substring (string x, long start, long to=nil) -> string
   public static final class substring implements UserFunction, Arity3UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value x, Value from, Value to) {
+    public Value call(UserCallContext context, Value x, Value start, Value end) {
 
       if (x == Values.NIL) return Values.NIL;
 
-      if (from == Values.NIL){
-        throw new LangException(LangError.NIL_ERROR, "from must not be nil");
+      if (start == Values.NIL){
+        throw new LangException(LangError.NIL_ERROR, "start must not be nil");
       }
 
       String xStr = x.string();
-      Long fromLong = from.longNum();
-      Long toLong = to.longNum();
+      Long startLong = start.longNum();
+      Long endLong = end.longNum();
 
       int codePoints = xStr.codePointCount(0, xStr.length());
-      int fromIdx = 0;
-      int toIdx = codePoints;
+      int startIdx = 0;
+      int endIdx = codePoints;
 
-      if (to != Values.NIL){
-        if (toLong <= 0){
+      if (end != Values.NIL){
+        if (endLong <= 0){
           return Values.EMPTY_STRING;
         }
-        if (toLong < codePoints){
-          toIdx = toLong.intValue();
+        if (endLong < codePoints){
+          endIdx = endLong.intValue();
         }
       }
 
-      if (fromLong >= toIdx || fromLong >= codePoints){
+      if (startLong >= endIdx || startLong >= codePoints){
         return Values.EMPTY_STRING;
       }
 
-      fromIdx = fromLong.intValue();
+      startIdx = startLong.intValue();
 
-      if (fromIdx < 0){
-        throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "from must not be negative: "+ fromLong);
+      if (startIdx < 0){
+        throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "start must not be negative: "+ startLong);
       }
 
-      int startCodepoint = xStr.offsetByCodePoints(0, fromIdx);
-      int endCodepoint = xStr.offsetByCodePoints(0, toIdx);
+      int startCodepoint = xStr.offsetByCodePoints(0, startIdx);
+      int endCodepoint = xStr.offsetByCodePoints(0, endIdx);
       return Values.make(xStr.substring(startCodepoint, endCodepoint));
     }
   }

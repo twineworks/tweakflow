@@ -94,25 +94,25 @@ public final class Fun {
     }
   }
 
-  // function iterate: (long from, long to, x, function f) ->      via {:class "com.twineworks.tweakflow.std.Fun$iterate"}
+  // function iterate: (long start, long end, x, function f) ->      via {:class "com.twineworks.tweakflow.std.Fun$iterate"}
   public static final class iterate implements UserFunction, Arity4UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value from, Value to, Value x, Value f) {
+    public Value call(UserCallContext context, Value start, Value end, Value x, Value f) {
 
       if (f == Values.NIL) return Values.NIL;
 
-      Long fromLong = from.longNum();
-      Long toLong = to.longNum();
+      Long startLong = start.longNum();
+      Long endLong = end.longNum();
 
-      if (fromLong == null || toLong == null) return Values.NIL;
+      if (startLong == null || endLong == null) return Values.NIL;
 
-      if (toLong - fromLong < 0) return x;
+      if (endLong - startLong < 0) return x;
 
       Arity2CallSite fcs = context.createArity2CallSite(f);
 
-      long i = fromLong;
-      while(i <= toLong){
+      long i = startLong;
+      while(i <= endLong){
         x = fcs.call(x, Values.make(i));
         i++;
       }

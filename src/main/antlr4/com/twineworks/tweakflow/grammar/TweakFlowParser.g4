@@ -337,8 +337,6 @@ reference
 
 identifier
   : IDENTIFIER
-  | FROM
-  | AS
   ;
 
 containerAccessKeySequence

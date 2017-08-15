@@ -197,16 +197,16 @@ Returns `nil` if `x` is `nil`.
 
 ### substring
 
-`(string x, long from=0, long to=nil) -> string`
+`(string x, long start=0, long end=nil) -> string`
 
-Returns a substring of `x` beginning at index `from` (inclusive) up to index `to` (exclusive).
-If `to` is `nil`, the substring extends to the end of `x`.
+Returns a substring of `x` beginning at index `start` (inclusive) up to index `end` (exclusive).
+If `end` is `nil`, the substring extends to the end of `x`.
 
-Returns an empty string if `to <= from`.
+Returns an empty string if `end <= start`.
 
 Returns `nil` if `x` is `nil`.
 
-Throws an error if `from` is `nil` or `from < 0`.
+Throws an error if `start` is `nil` or `start < 0`.
 
 ```ruby
 > strings.substring("hello world")
@@ -238,14 +238,14 @@ nil
 
 > strings.substring("hello world", nil)
 ERROR: {
-  :message "from must not be nil",
+  :message "start must not be nil",
   :code "NIL_ERROR",
   ...
 }
 
 > strings.substring("hello world", -4)
 ERROR: {
-  :message "from must not be negative: -4",
+  :message "start must not be negative: -4",
   :code "INDEX_OUT_OF_BOUNDS",
 }
 ```
@@ -491,10 +491,10 @@ nil
 
 ### index_of
 
-`(string x, string sub, long from=0) -> long`
+`(string x, string sub, long start=0) -> long`
 
-If `x` contains `sub` at or past index `from`, the function returns the index of the first occurrence of `sub`
-at or past index `from`.
+If `x` contains `sub` at or past index `start`, the function returns the index of the first occurrence of `sub`
+at or past index `start`.
 
 Returns `-1` otherwise.
 
@@ -1593,13 +1593,13 @@ nil
 
 ### range
 
-`(long from=0, long to=0) -> list`
+`(long start=0, long end=0) -> list`
 
-Returns a list with long values starting at `from`, and ending at `to`.
+Returns a list with long values starting at `start`, and ending at `end`.
 
-Returns an empty list if `from > to`.
+Returns an empty list if `start > end`.
 
-Returns `nil` if `from` is `nil` or `to` is `nil`.
+Returns `nil` if `start` is `nil` or `end` is `nil`.
 
 ```ruby
 > data.range(0, 2)
@@ -2207,12 +2207,12 @@ ERROR: {
 
 ### index_of
 
-`(list xs, x, long from=0) -> long`
+`(list xs, x, long start=0) -> long`
 
-If `xs` contains `x` at or after index `from` returns the index of that occurence. Returns -1 otherwise.
+If `xs` contains `x` at or after index `start` returns the index of the earliest such occurrence. Returns -1 otherwise.
 
 Returns `nil` if `xs` is `nil`.\
-Returns `nil` if `from` is `nil`.
+Returns `nil` if `start` is `nil`.
 
 ```ruby
 > data.index_of([1,2,3], 2)
@@ -2447,11 +2447,11 @@ ERROR: {
 
 ### zip
 
-`(list as, list bs) -> list`
+`(list xs, list ys) -> list`
 
-Returns a list of same length as `as`. Each index `i` contains the value `[as[i], bs[i]]`.
+Returns a list of same length as `xs`. Each index `i` contains the value `[xs[i], ys[i]]`.
 
-Returns `nil` if `as` or `bs` are `nil`.
+Returns `nil` if `xs` or `ys` are `nil`.
 
 ```ruby
 > data.zip(["a", "b", "c"], [1, 2, 3])
@@ -4537,18 +4537,18 @@ function
 
 ### iterate
 
-`(long from, long to, any x, function f) -> any`
+`(long start, long end, any x, function f) -> any`
 
 Calls `f` repeatedly with two arguments. The first call of `f` receives `x` as first argument.
 Subsequent calls to `f` receive as first argument the result of the previous call.
 
-The second argument is an index starting at `from` and ending inclusively at `to`.
+The second argument is an index starting at `start` and ending inclusively at `end`.
 
 Returns the result of the last call to `f`.
 
-Returns `nil` if `from`, `to`, or `f` is `nil`.
+Returns `nil` if `start`, `end`, or `f` are `nil`.
 
-Returns `x` if `to` < `from`.
+Returns `x` if `end` < `start`.
 
 ```ruby
 # add natural numbers 1 to 10

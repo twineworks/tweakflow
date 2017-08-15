@@ -717,26 +717,26 @@ public final class Data {
     }
   }
 
-  // function index_of: (list xs, x, long from=0) -> list
+  // function index_of: (list xs, x, long start=0) -> list
   public static final class indexOf implements UserFunction, Arity3UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value xs, Value x, Value from) {
+    public Value call(UserCallContext context, Value xs, Value x, Value start) {
 
       ListValue xsList = xs.list();
-      Long fromLong = from.longNum();
+      Long startLong = start.longNum();
 
       if (xsList == null){
         return Values.NIL;
       }
 
-      if (fromLong == null){
+      if (startLong == null){
         return Values.NIL;
       }
 
-      if (fromLong >= xsList.size()) return Values.LONG_NEG_ONE;
+      if (startLong >= xsList.size()) return Values.LONG_NEG_ONE;
 
-      return Values.make(xsList.indexOf(x, fromLong));
+      return Values.make(xsList.indexOf(x, startLong));
     }
   }
 
@@ -1654,16 +1654,16 @@ public final class Data {
     }
   }
 
-  // function range: (long from, long to) -> long
+  // function range: (long start, long end) -> long
   public static final class range implements UserFunction, Arity2UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value from, Value to) {
+    public Value call(UserCallContext context, Value start, Value end) {
 
-      if (from == Values.NIL) return Values.NIL;
-      if (to == Values.NIL) return Values.NIL;
+      if (start == Values.NIL) return Values.NIL;
+      if (end == Values.NIL) return Values.NIL;
 
-      return Values.makeRange(from.longNum(), to.longNum());
+      return Values.makeRange(start.longNum(), end.longNum());
     }
   }
 
