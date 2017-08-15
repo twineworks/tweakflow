@@ -291,7 +291,7 @@ listLiteral
    ;
 
 dictLiteral
-   : '{' (((keyLiteral expression)|(expression expression)|(splat)) ','? )*  '}'
+   : '{' (((keyLiteral expression)|(stringLiteral expression)|(expression expression)|(splat)) ','? )*  '}'
    ;
 
 
