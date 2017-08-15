@@ -26,10 +26,12 @@ package com.twineworks.tweakflow.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.ast.structure.match.DataTypePatternNode;
 import com.twineworks.tweakflow.lang.types.Type;
+import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.interpreter.Stack;
 import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.values.Values;
 
 final public class DataTypePatternOp implements PatternOp {
 
@@ -50,7 +52,7 @@ final public class DataTypePatternOp implements PatternOp {
 
   @Override
   public boolean matches(Value subject, Stack stack, EvaluationContext context) {
-    return (subject.type() == type);
+    return (subject.type() == type || (subject != Values.NIL && type == Types.ANY));
   }
 
   @Override
