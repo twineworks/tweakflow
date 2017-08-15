@@ -529,7 +529,7 @@ modulePath
 
 The given module path is first appended the default module extension if not present. Then the module path is searched for on the load path. If the module path starts with a dot, tweakflow searches for the file relative to the module doing the import. The resulting path must still be on the load path. If the module path does not start with a dot, tweakflow searches all load path locations in their specified order. The order is typically specified on the command line when using language tools or by the host application when embedding.
 
-Two modules may import each other's exports. However, an import must ultimately refer to a concrete enity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
+Two modules may import each other's exports. However, an import must ultimately refer to a concrete entity. It must not refer back to itself through a circular chain of imports, aliases, and exports.
 
 **Examples**
 
@@ -701,7 +701,7 @@ Name resolution for references generally starts in the scope the reference appea
 
 Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.
 
-Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyworkd `meta` followed by an expression.
+Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyword `meta` followed by an expression.
 
 The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
 
@@ -925,7 +925,7 @@ ERROR: {
 
 String as list
 
-A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode codepoints.
+A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode code points.
 
 ```tweakflow
 > "" as list
@@ -1403,7 +1403,7 @@ Tweakflow expressions evaluate to values. The most basic of which are literal va
 
 ### Nil
 
-The `nil` value is written as simply `nil`. Semantiaclly, a `nil` value indicates the absence of a value. The `nil` value is special because it is a valid member of all data types. It casts to any type successfully as `nil`.
+The `nil` value is written as simply `nil`. Semantically, a `nil` value indicates the absence of a value. The `nil` value is special because it is a valid member of all data types. It casts to any type successfully as `nil`.
 
 ### Value literals
 
@@ -1882,7 +1882,7 @@ threadArg
   ;
 ```
 
-The symbol `->>` is a mnemonic for a threading needle. `threadArg` is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called witha single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.
+The symbol `->>` is a mnemonic for a threading needle. `threadArg` is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called with a single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.
 
 As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, dashes must be included to create groups of four characters, and finally all characters must be upper case.
 
@@ -2128,7 +2128,7 @@ matchGuard
 
 A match expression consists of the `match` keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the `default` line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.
 
-The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to `true` the match evalutes to the line's result expression. If the guard expression evaluates to `false` or `nil`,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a `default` line, the match evaluates to the default value. If there is no `default` line, the match evaluates to `nil`.
+The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to `true` the match evaluates to the line's result expression. If the guard expression evaluates to `false` or `nil`,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a `default` line, the match evaluates to the default value. If there is no `default` line, the match evaluates to `nil`.
 
 The patterns available for matching include existence matches, value matches, predicate matches, type matches and structural matches.
 
@@ -2709,7 +2709,7 @@ ERROR: {
 
 #### Catching errors
 
-Errors can be caught if they thrown inside a try expression. The error value and stacktrace can each be bound to an identifier in the catch block.
+Errors can be caught if they thrown inside a try expression. The error value and stack trace can each be bound to an identifier in the catch block.
 
 ```text
 tryCatch
@@ -2749,7 +2749,7 @@ nil
 
 ### References
 
-References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers seperated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.
+References point to named values. There are four variants of references: unscoped references, library scope references, module scope references, and global scope references. All variants have a basic structure: a sequence of identifiers separated by the dot character. Scoped references include an anchor prefix specifying where to begin name resolution.
 
 The syntax is as follows:
 
@@ -2814,7 +2814,7 @@ a .. " / ".. b
 
 #### Library scope references
 
-Libary scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library's scope.  They are prefixed with the `library::` anchor.
+Library scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library's scope.  They are prefixed with the `library::` anchor.
 
 ```tweakflow
 # libary-refs.tf
@@ -3253,7 +3253,7 @@ Syntax: `a%b`
 
 Evaluates to the remainder after a is divided by b.
 
-Each operatnd must be either a long or a double. Any other types throw an error.
+Each operand must be either a long or a double. Any other types throw an error.
 
 If any operands are `nil`, the result is `nil`.
 
@@ -3623,7 +3623,7 @@ false
 
 Syntax: `typeof a`
 
-The expression returns the name of a value's type. The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `void`.
+The expression returns the name of a value's type. The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `"void"`.
 
 ```tweakflow
 > typeof "foo"
