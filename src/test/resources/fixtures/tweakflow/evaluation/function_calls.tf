@@ -41,6 +41,7 @@ library lib
 
   params_as_list_8_auto_cast: (p1, p2, p3, p4, p5, p6, p7, p8) -> dict via {:class "com.twineworks.tweakflow.lang.values.ParamsAsList"}
 
+  escaped_param: (`my x`=0) -> `my x`+1
 }
 
 library lib_spec {
@@ -89,6 +90,9 @@ library lib_spec {
     lib.params_as_list_8_auto_cast("a", 1, "b", 2, "c", 3, "d", 4)
     ==
     {:a 1, :b 2, :c 3, :d 4}
+
+  escaped_param:
+    lib.escaped_param(`my x`: 8) == 9
 
 
 }
