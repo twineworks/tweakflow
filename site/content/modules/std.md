@@ -1858,6 +1858,38 @@ nil
 
 ```
 
+### slices
+
+`(list xs, long s=1) -> list`
+
+Partitions `xs` into slices. Returns a list of slices, each of size `s`. The last slice may contain less than `s` items.
+
+Returns an empty list if `xs` is empty.
+
+Returns `nil` if any argument is `nil`.
+
+Throws an error if `s <= 0`.
+
+
+```ruby
+> data.slices([1,2,3,4,5,6,7,8,9,0], 3)
+[[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
+> data.slices(nil)
+nil
+> data.slices([])
+[]
+std.tf> data.slices([], 4)
+[]
+> data.slices([1,2,3], 0)
+ERROR: {
+  :value {
+    :message "s must be positive, was 0",
+    :code "ILLEGAL_ARGUMENT"
+  }
+  ...
+}
+```
+
 ### reverse
 
 `(list xs) -> list`

@@ -2073,6 +2073,53 @@ nil
 
 doc
 ~~~
+`(list xs, long s=1) -> list`
+
+Partitions `xs` into slices. Returns a list of slices, each of size `s`. The last slice may contain less than `s` items.
+
+Returns an empty list if `xs` is empty.
+
+Returns `nil` if any argument is `nil`.
+
+Throws an error if `s <= 0`.
+
+
+```ruby
+> data.slices([1,2,3,4,5,6,7,8,9,0], 3)
+[[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
+> data.slices(nil)
+nil
+> data.slices([])
+[]
+> data.slices([], 4)
+[]
+> data.slices([1,2,3], 0)
+ERROR: {
+  :value {
+    :message "s must be positive, was 0",
+    :code "ILLEGAL_ARGUMENT"
+  }
+  ...
+}
+```
+~~~
+
+  function slices: (list xs, long s=1) -> list
+    if xs == nil || s == nil then nil
+    if s <= 0 then throw {:message "s must be positive, was #{s}" :code "ILLEGAL_ARGUMENT"}
+    if empty?(xs) then []
+    let {
+      slice_count: math.ceil(size(xs)/s)
+      init: {:xs xs, :slices []}
+      iteration: (a) -> {
+                  :xs drop(s, a[:xs]),
+                  :slices [...a[:slices], take(s, a[:xs])]
+                 }
+    }
+    fun.times(slice_count, init, iteration)[:slices]
+
+doc
+~~~
 `(list xs) -> list`
 
 Returns a list that contains all elements of `xs` in reverse order.
