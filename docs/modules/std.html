@@ -155,6 +155,7 @@
 <li><a href="#head">head</a></li>
 <li><a href="#last">last</a></li>
 <li><a href="#slice">slice</a></li>
+<li><a href="#slices">slices</a></li>
 <li><a href="#reverse">reverse</a></li>
 <li><a href="#sort">sort</a></li>
 <li><a href="#repeat">repeat</a></li>
@@ -2070,6 +2071,36 @@ Returns an empty list if <code>start &gt;= end</code>.</p>
 &gt; data.slice(nil, 0, 1)
 nil
 
+</code></pre>
+
+<h3 id="slices">slices</h3>
+
+<p><code>(list xs, long s=1) -&gt; list</code></p>
+
+<p>Partitions <code>xs</code> into slices. Returns a list of slices, each of size <code>s</code>. The last slice may contain less than <code>s</code> items.</p>
+
+<p>Returns an empty list if <code>xs</code> is empty.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
+
+<p>Throws an error if <code>s &lt;= 0</code>.</p>
+
+<pre><code class="language-ruby">&gt; data.slices([1,2,3,4,5,6,7,8,9,0], 3)
+[[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
+&gt; data.slices(nil)
+nil
+&gt; data.slices([])
+[]
+std.tf&gt; data.slices([], 4)
+[]
+&gt; data.slices([1,2,3], 0)
+ERROR: {
+  :value {
+    :message &quot;s must be positive, was 0&quot;,
+    :code &quot;ILLEGAL_ARGUMENT&quot;
+  }
+  ...
+}
 </code></pre>
 
 <h3 id="reverse">reverse</h3>
