@@ -16,7 +16,7 @@ interactive
   ;
 
 interactiveSection
-  : 'in_scope' reference varDef* endOfStatement?
+  : 'in_scope' reference (varDef endOfStatement?)* endOfStatement?
   ;
 
 interactiveInput
