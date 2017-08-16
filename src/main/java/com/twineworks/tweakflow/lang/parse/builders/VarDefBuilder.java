@@ -48,22 +48,45 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
 
     ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
 
-    // expression is missing on provided vars, it is implicitly nil
-    ExpressionNode expression;
-    if (ctx.expression() == null){
-      expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx));
-    }
-    else{
-      expression = expressionBuilder.visit(ctx.expression());
-      expression = expressionBuilder.addImplicitCast(declaredType, expression);
-    }
+
+    ExpressionNode expression = expressionBuilder.visit(ctx.expression());
+    expression = expressionBuilder.addImplicitCast(declaredType, expression);
 
     VarDefNode varDef = new VarDefNode()
         .setSourceInfo(srcOf(parseUnit, ctx))
         .setSymbolName(identifier(ctx.identifier().getText()))
         .setDeclaredType(declaredType)
         .setValueExpression(expression)
-        .setDeclaredProvided(isProvided(ctx));
+        .setDeclaredProvided(false);
+
+    TweakFlowParser.DocContext docContext = getDocContext(ctx);
+    if (docContext != null){
+      varDef.setDoc(new DocBuilder(parseUnit).visitDoc(docContext));
+    }
+
+    TweakFlowParser.MetaContext metaContext = getMetaContext(ctx);
+    if (metaContext != null){
+      varDef.setMeta(new MetaBuilder(parseUnit).visitMeta(metaContext));
+    }
+
+    return varDef;
+  }
+
+  @Override
+  public VarDefNode visitVarDec(TweakFlowParser.VarDecContext ctx) {
+    Type declaredType = type(ctx.dataType());
+
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
+
+    // expression is missing on provided vars, it is implicitly nil
+    ExpressionNode expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx));
+
+    VarDefNode varDef = new VarDefNode()
+        .setSourceInfo(srcOf(parseUnit, ctx))
+        .setSymbolName(identifier(ctx.identifier().getText()))
+        .setDeclaredType(declaredType)
+        .setValueExpression(expression)
+        .setDeclaredProvided(true);
 
     TweakFlowParser.DocContext docContext = getDocContext(ctx);
     if (docContext != null){
@@ -92,6 +115,14 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
     return metaDef.doc();
   }
 
+  private TweakFlowParser.DocContext getDocContext(TweakFlowParser.VarDecContext ctx){
+
+    TweakFlowParser.MetaDefContext metaDef = ctx.metaDef();
+    if (metaDef == null) return null;
+
+    return metaDef.doc();
+  }
+
 
   /**
    * Helper for null safe extraction of MetaContext from a VarDefContext.
@@ -107,8 +138,12 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
     return metaDef.meta();
   }
 
-  private boolean isProvided(TweakFlowParser.VarDefContext ctx){
-    return ctx.provided() != null;
+  private TweakFlowParser.MetaContext getMetaContext(TweakFlowParser.VarDecContext ctx){
+
+    TweakFlowParser.MetaDefContext metaDef = ctx.metaDef();
+    if (metaDef == null) return null;
+
+    return metaDef.meta();
   }
 
 }

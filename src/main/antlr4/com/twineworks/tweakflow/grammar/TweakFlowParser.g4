@@ -111,13 +111,22 @@ exportName
 // library
 
 library
-  : metaDef 'export'? 'library' identifier '{' varDef* '}'
+  : metaDef 'export'? 'library' identifier '{' libVar* '}'
+  ;
+
+libVar
+  : varDef
+  | varDec
   ;
 
 varDef
   : metaDef dataType? identifier ':' expression endOfStatement?
-  | metaDef provided dataType? identifier endOfStatement?
   ;
+
+varDec
+  : metaDef provided dataType? identifier endOfStatement?
+  ;
+
 
 provided
   : 'provided'
