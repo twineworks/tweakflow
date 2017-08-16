@@ -205,6 +205,16 @@ public class AnalysisTest {
   }
 
   @Test
+  public void fails_on_match_pattern_invalid_open_dict_capture() throws Exception {
+
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/match_pattern_invalid_open_dict_capture.tf");
+
+    assertThat(result.isError()).isTrue();
+    assertThat(result.getException().getCode()).isSameAs(LangError.PARSE_ERROR);
+
+  }
+
+  @Test
   public void fails_on_call_referencing_a_non_function() throws Exception {
 
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/invalid_call_reference.tf");
