@@ -50,6 +50,8 @@ library operator_spec {
   nan_d0:     nan?(NaN / 0.0) == true
   d0_nan:     nan?(0.0 / NaN) == true
 
+  nil_bar: try     nil / "bar"    catch "error" == "error"
+  foo_nil: try   "foo" / nil      catch "error" == "error"
   foo_bar: try   "foo" / "bar"    catch "error" == "error"
   l0_bar:  try       0 / "bar"    catch "error" == "error"
   bar_l0:  try   "bar" / 0        catch "error" == "error"

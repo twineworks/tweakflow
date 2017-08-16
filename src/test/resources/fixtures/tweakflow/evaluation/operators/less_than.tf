@@ -46,6 +46,8 @@ library operator_spec {
   nan_d0:     NaN < 0.0 == false
   d0_nan:     0.0 < NaN == false
 
+  nil_bar: try     nil < "bar"    catch "error" == "error"
+  foo_nil: try   "foo" < nil      catch "error" == "error"
   foo_bar: try   "foo" < "bar"    catch "error" == "error"
   l0_bar:  try       0 < "bar"    catch "error" == "error"
   bar_l0:  try   "bar" < 0        catch "error" == "error"
