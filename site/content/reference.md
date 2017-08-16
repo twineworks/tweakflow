@@ -631,7 +631,7 @@ A  library is a named collection of variables. The variables typically hold func
 
 ```text
 library
-  : metaDef 'export'? 'library' identifier '{' varDef* '}'
+  : metaDef 'export'? 'library' identifier '{' (varDef endOfStatement?)* '}'
   ;
 ```
 
@@ -649,8 +649,8 @@ A variable is a named entity that holds a value. Variables are placed in [librar
 
 ```
 varDef
-  : metaDef dataType? identifier ':' expression endOfStatement?
-  | metaDef 'provided' dataType? identifier endOfStatement?
+  : metaDef dataType? identifier ':' expression
+  | metaDef 'provided' dataType? identifier
   ;
 ```
 
@@ -705,6 +705,20 @@ Both doc and meta annotations are optional. They can occur in any order before t
 
 The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
 
+The formal syntax is:
+```text
+metaDef
+  : ((meta doc) | (doc meta) | meta | doc | ())
+  ;
+
+meta
+  : 'meta' literal endOfStatement?
+  ;
+
+doc
+  : 'doc' literal endOfStatement?
+  ;
+```
 The following module contains a single library with a single function:
 
 ```tweakflow
@@ -1915,11 +1929,11 @@ The formal syntax is as follows:
 
 ```text
 let
-  :'let' '{' varDef* '}' expression
+  :'let' '{' (varDef endOfStatement?)* '}' expression
   ;
 
 varDef
-  : dataType? identifier ':' expression endOfStatement?
+  : dataType? identifier ':' expression
   ;
 ```
 

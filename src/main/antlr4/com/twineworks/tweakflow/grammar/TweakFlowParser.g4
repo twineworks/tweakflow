@@ -111,7 +111,7 @@ exportName
 // library
 
 library
-  : metaDef 'export'? 'library' identifier '{' libVar* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement?)* '}'
   ;
 
 libVar
@@ -120,11 +120,11 @@ libVar
   ;
 
 varDef
-  : metaDef dataType? identifier ':' expression endOfStatement?
+  : metaDef dataType? identifier ':' expression
   ;
 
 varDec
-  : metaDef provided dataType? identifier endOfStatement?
+  : metaDef provided dataType? identifier
   ;
 
 
@@ -189,7 +189,7 @@ expression
   | 'match' expression matchBody                            # matchExp
   | 'for' forHead ',' expression                            # forExp
   | 'if' expression 'then'? expression 'else'? expression   # ifExp
-  | 'let' '{' varDef* '}' expression                        # letExp
+  | 'let' '{' (varDef endOfStatement?)* '}' expression                        # letExp
   | 'try' expression 'catch' catchDeclaration expression    # tryCatchExp
   | 'throw' expression                                      # throwErrorExp
   | 'debug' expression (',' expression)?                    # debugExp
