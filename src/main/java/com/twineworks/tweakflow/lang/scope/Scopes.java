@@ -27,8 +27,10 @@ package com.twineworks.tweakflow.lang.scope;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.util.LangUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Scopes {
 
@@ -107,14 +109,14 @@ public class Scopes {
     return (sym.getTarget() == SymbolTarget.MODULE);
   }
 
-  public static boolean isLibraryScope(Scope s){
+  private static boolean isLibraryScope(Scope s){
     if (s == null) return false;
     if (!(s instanceof Symbol)) return false;
     Symbol sym = (Symbol) s;
     return (sym.getTarget() == SymbolTarget.LIBRARY);
   }
 
-  static public Scope findModuleScope(Scope s){
+  private static Scope findModuleScope(Scope s){
 
     Objects.requireNonNull(s);
 
@@ -149,24 +151,6 @@ public class Scopes {
 
     return currentScope;
   }
-
-//  static public Scope findFlowScope(Scope s){
-//    Objects.requireNonNull(s);
-//
-//    // find symbol scope up the hierarchy
-//    Scope currentScope = s;
-//    while(!isFlowScope(currentScope)){
-//
-//      currentScope = currentScope.getEnclosingScope();
-//      // illegal reference, there is no flow to anchor from
-//      if (currentScope == null){
-//        throw new LangException(LangError.UNRESOLVED_REFERENCE, "cannot find enclosing flow");
-//      }
-//    }
-//
-//    return currentScope;
-//  }
-
 
   static private Symbol resolveInGlobal(List<String> names, Scope scope) {
 
@@ -208,22 +192,6 @@ public class Scopes {
 
   }
 
-
-//  static private Symbol resolveInFlow(List<String> names, Scope scope){
-//
-//    Objects.requireNonNull(names);
-//    Objects.requireNonNull(scope);
-//
-//    if (names.isEmpty()){
-//      throw new IllegalArgumentException("Names to resolve cannot be empty");
-//    }
-//
-//    // resolve members starting from that scope
-//    return Scopes.resolveMembers(names, findFlowScope(scope));
-//
-//  }
-
-
   static private Symbol resolveInLocal(List<String> names, Scope scope){
 
     Objects.requireNonNull(names);
@@ -244,10 +212,10 @@ public class Scopes {
     if (symbol.isScoped()){
       // if the reference has multiple elements, continue resolving
       // the following parts as members
-      return Scopes.resolveMembers(names.subList(1, names.size()), symbol);
+      return Scopes.resolveMembers(names, symbol, 1);
     }
 
-    throw new LangException(LangError.UNRESOLVED_REFERENCE);
+    throw new LangException(LangError.UNRESOLVED_REFERENCE, createNotFoundMessage(symbol, names, 1));
 
   }
 
@@ -262,28 +230,13 @@ public class Scopes {
         return symbols.get(name);
       }
 
-//      Symbol inheritedSymbol = findInInherited(name, scope);
-//      if (inheritedSymbol != null) return inheritedSymbol;
       currentScope = currentScope.getEnclosingScope();
     }
     // nothing found, throw
-    throw new LangException(LangError.UNRESOLVED_REFERENCE);
+    throw new LangException(LangError.UNRESOLVED_REFERENCE, LangUtil.escapeIdentifier(name)+" is undefined");
   }
 
-//  private static Symbol findInInherited(String name, Scope scope) {
-//    Scope inheritedScope = scope.getInheritedScope();
-//    while (inheritedScope != null){
-//      Map<String, Symbol> symbols = inheritedScope.getSymbols();
-//      if (symbols.containsKey(name)){
-//        return symbols.get(name);
-//      }
-//      inheritedScope = inheritedScope.getInheritedScope();
-//    }
-//    return null;
-//
-//  }
-
-  static private Symbol resolveMembers(List<String> names, Scope scope){
+  static private Symbol resolveMembers(List<String> names, Scope scope, int startNameIdx) {
 
     if (names.isEmpty()){
       throw new IllegalArgumentException("Names to resolve cannot be empty");
@@ -292,7 +245,7 @@ public class Scopes {
     Scope currentScope = scope;
 
     // loop over names
-    for (int i = 0; i < names.size(); i++) {
+    for (int i = startNameIdx; i < names.size(); i++) {
 
       // last item may be a simple symbol, all in-between must be scoped to
       // accommodate member resolution
@@ -313,35 +266,51 @@ public class Scopes {
             currentScope = symbol;
           }
           else{
-            throw new LangException(LangError.UNRESOLVED_REFERENCE);
+            throw new LangException(LangError.UNRESOLVED_REFERENCE, createNotFoundMessage(symbol, names, i+1));
           }
         }
       }
       else {
-        throw new LangException(LangError.UNRESOLVED_REFERENCE);
-//        Symbol inheritedSymbol = findInInherited(currentName, scope);
-//        if (inheritedSymbol != null){
-//          if (last){
-//            return inheritedSymbol;
-//          }
-//          else{
-//            // dig down
-//            if (inheritedSymbol.isScoped()){
-//              currentScope = inheritedSymbol;
-//            }
-//            else{
-//              throw new LangException(LangError.UNRESOLVED_REFERENCE);
-//            }
-//          }
-//        }
-//        // not found as inherited either
-//        else{
-//          throw new LangException(LangError.UNRESOLVED_REFERENCE);
-//        }
+        throw new LangException(LangError.UNRESOLVED_REFERENCE, createNotFoundMessage(currentScope, names, i));
       }
     }
 
     throw new AssertionError("Should never be here");
+
+  }
+
+  static private Symbol resolveMembers(List<String> names, Scope scope){
+    return resolveMembers(names, scope, 0);
+  }
+
+  private static String createNotFoundMessage(Scope scope, List<String> names, int notFoundIndex) {
+
+
+    List<String> escapedNames = names.stream().map(LangUtil::escapeIdentifier).collect(Collectors.toList());
+    String notFoundName = escapedNames.get(notFoundIndex);
+
+    if (notFoundIndex == 0){
+      return notFoundName + " is undefined";
+    }
+
+    StringBuilder foundUpToBuilder = new StringBuilder();
+    foundUpToBuilder.append(escapedNames.get(0));
+    for(int i=1;i<notFoundIndex;i++){
+      foundUpToBuilder.append(".").append(escapedNames.get(i));
+    }
+
+    String foundUpTo = foundUpToBuilder.toString();
+
+    if (scope instanceof Symbol){
+      Symbol symbol = (Symbol) scope;
+      String scopeName = symbol.getTarget().name();
+      return notFoundName+" is not defined in "+scopeName+" "+foundUpTo;
+    }
+    else {
+      return notFoundName + " is undefined";
+    }
+
+
   }
 
 
