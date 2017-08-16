@@ -1878,7 +1878,7 @@ Throws an error if `s <= 0`.
 nil
 > data.slices([])
 []
-std.tf> data.slices([], 4)
+> data.slices([], 4)
 []
 > data.slices([1,2,3], 0)
 ERROR: {
