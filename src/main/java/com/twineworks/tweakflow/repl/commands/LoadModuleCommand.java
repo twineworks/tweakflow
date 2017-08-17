@@ -61,7 +61,7 @@ public class LoadModuleCommand implements Command {
       return loadState;
     }
     else{
-      terminal.println("ERROR: "+loadState.getEvaluationResult().getException().getDigestMessage());
+      terminal.println(loadState.getEvaluationResult().getException().getDigestMessage());
       return state;
     }
 

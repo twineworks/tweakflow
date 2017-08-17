@@ -73,7 +73,7 @@ public class DocCommand implements Command {
         doc = Evaluator.evaluateDocExpression((MetaDataNode) node);
       }
       catch(LangException e){
-        terminal.println("ERROR: "+e.getDigestMessage());
+        terminal.println(e.getDigestMessage());
         return;
       }
     }
@@ -110,7 +110,7 @@ public class DocCommand implements Command {
       ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
       if (parseResult.isError()){
-        terminal.println("ERROR: "+parseResult.getException().getDigestMessage());
+        terminal.println(parseResult.getException().getDigestMessage());
       }
       // input was a reference?
       else if (parseResult.getNode() instanceof ReferenceNode){
@@ -119,7 +119,7 @@ public class DocCommand implements Command {
           Cell resolved = Spaces.resolve(node, state.getInteractiveSpace());
           printDoc(resolved.getSymbol().getTargetNode(), terminal);
         } catch (LangException e){
-          terminal.println("ERROR: "+e.getDigestMessage());
+          terminal.println(e.getDigestMessage());
         }
       }
       else {

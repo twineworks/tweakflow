@@ -180,11 +180,11 @@ nil
 25
 
 > core.eval("hello")
-ERROR: {
-  :code "UNRESOLVED_REFERENCE",
-  :source "hello"
-  ...
-}
+ERROR:
+  code: UNRESOLVED_REFERENCE
+  message: hello is undefined
+  at: <eval>:1:1
+  source: hello
 ```
 ~~~
   function eval:    (string x) -> via {:class "com.twineworks.tweakflow.std.Core$eval"}
@@ -291,17 +291,18 @@ nil
 "好"
 
 > strings.substring("hello world", nil)
-ERROR: {
-  :message "start must not be nil",
-  :code "NIL_ERROR",
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: start must not be nil
+  at: [interactive]:14:10
+  source: strings.substring("hello world", nil)
 
 > strings.substring("hello world", -4)
-ERROR: {
-  :message "start must not be negative: -4",
-  :code "INDEX_OUT_OF_BOUNDS",
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: start must not be negative: -4
+  at: [interactive]:14:10
+  source: strings.substring("hello world", -4)
 ```
 ~~~
 
@@ -913,11 +914,11 @@ Throws an error if `xs` is neither a `dict` nor a `list`.
 nil
 
 > data.size("foo")
-ERROR: {
-  :message "size is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: size is not defined for type string
+  at: [interactive]:14:10
+  source: data.size("foo")
 ```
 ~~~
 
@@ -950,11 +951,11 @@ false
 nil
 
 > data.empty?("foo")
-ERROR: {
-  :message "empty? is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: empty? is not defined for type string
+  at: [interactive]:14:10
+  source: data.empty?("foo")
 ```
 ~~~
 
@@ -1084,11 +1085,11 @@ nil
 nil
 
 > data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], "default")
-ERROR: {
-  :message "Cannot cast c to long",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast c to long
+  at: [interactive]:14:10
+  source: data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], "default")
 ```
 ~~~
 
@@ -1281,11 +1282,11 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 nil
 
 > data.keys("foo")
-ERROR: {
-  :message "keys is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: keys is not defined for type string
+  at: [interactive]:14:10
+  source: data.keys("foo")
 
 ```
 ~~~
@@ -1324,11 +1325,11 @@ false
 true
 
 > data.has?("foo", 1)
-ERROR: {
-  :message "has? is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: has? is not defined for type string
+  at: [interactive]:14:10
+  source: data.has?("foo", 1)
 
 > data.has?("foo" as list, 1)
 true
@@ -1364,10 +1365,11 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 nil
 
 > data.values("foo")
-ERROR: {
-  :message "values is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: values is not defined for type string
+  at: [interactive]:14:10
+  source: data.values("foo")
 ```
 ~~~
 
@@ -1482,11 +1484,10 @@ nil
 nil
 
 > data.find([], nil)
-ERROR: {
-  :message "predicate function cannot be nil",
-  :code "NIL_ERROR",
-  ...
-}
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.find([], nil)
 ```
 ~~~
   function find: (list xs, function p) ->                   via {:class "com.twineworks.tweakflow.std.Data$find"}
@@ -1523,11 +1524,11 @@ nil
 nil
 
 > data.find_index([], nil)
-ERROR: {
-  :message "predicate function cannot be nil",
-  :code "NIL_ERROR",
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.find_index([], nil)
 ```
 ~~~
   function find_index: (list xs, function p) -> long        via {:class "com.twineworks.tweakflow.std.Data$findIndex"}
@@ -1558,18 +1559,18 @@ Throws an error if index is negative or `nil`.
 nil
 
 > data.insert([], -2, "a")
-ERROR: {
-  :message "cannot insert at index -2",
-  :code "INDEX_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: cannot insert at index -2
+  at: [interactive]:14:10
+  source: data.insert([], -2, "a")
 
 > data.insert([], nil, "a")
-ERROR: {
-  :message "cannot insert at nil index",
-  :code "NIL_ERROR",
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: cannot insert at nil index
+  at: [interactive]:14:10
+  source: data.insert([], nil, "a")
 
 ```
 ~~~
@@ -1613,11 +1614,11 @@ nil
 [0, 1]
 
 > data.delete([], -2)
-ERROR: {
-  :message "cannot delete at index -2",
-  :code "INDEX_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: cannot delete index -2
+  at: [interactive]:14:10
+  source: data.delete([], -2)
 ```
 ~~~
 
@@ -1700,18 +1701,18 @@ Throws an error if `p` is `nil`.
 nil
 
 > data.filter([], nil)
-ERROR: {
-  :message "predicate function cannot be nil",
-  :code "NIL_ERROR",
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.filter([], nil)
 
 > data.filter(1, (x) -> true)
-ERROR: {
-  :message "filter is not defined for type long",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: filter is not defined for type long
+  at: [interactive]:14:10
+  source: data.filter(1, (x) -> true)
 ```
 ~~~
 
@@ -1941,11 +1942,11 @@ Throws an error if `xs` is empty.
 nil
 
 > data.init([])
-ERROR: {
-  :message "list must not be empty",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.init([])
 
 ```
 ~~~
@@ -1970,11 +1971,11 @@ Throws an error if `xs` is empty.
 nil
 
 > data.tail([])
-ERROR: {
-  :message "list must not be empty",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.tail([])
 ```
 ~~~
 
@@ -1998,11 +1999,11 @@ Throws an error if `xs` is empty.
 nil
 
 > data.head([])
-ERROR: {
-  :message "list must not be empty",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.head([])
 ```
 ~~~
 
@@ -2026,11 +2027,11 @@ Throws an error if `xs` is empty.
 nil
 
 > data.last([])
-ERROR: {
-  :message "list must not be empty",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.last([])
 ```
 ~~~
 
@@ -2094,12 +2095,14 @@ nil
 > data.slices([], 4)
 []
 > data.slices([1,2,3], 0)
-ERROR: {
-  :value {
-    :message "s must be positive, was 0",
-    :code "ILLEGAL_ARGUMENT"
-  }
-  ...
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: std.tf:2109:20
+  source: throw {:message "s must be positive, was #{s}" :code "ILLEGAL_ARGUMENT"}
+  value: {
+  :message "s must be positive, was 0",
+  :code "ILLEGAL_ARGUMENT"
 }
 ```
 ~~~
@@ -2195,11 +2198,11 @@ Throws an error if `n` is negative.
 nil
 
 > data.repeat(-2, "foo")
-ERROR: {
-  :message "Cannot repeat -2 times",
-  :code "INDEX_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: Cannot repeat -2 times
+  at: [interactive]:14:10
+  source: data.repeat(-2, "foo")
 ```
 ~~~
 
@@ -2230,11 +2233,11 @@ nil
 nil
 
 > data.concat(["foo", "bar"])
-ERROR: {
-  :message "cannot concat type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot concat type string
+  at: [interactive]:14:10
+  source: data.concat(["foo", "bar"])
 ```
 ~~~
 
@@ -2273,11 +2276,11 @@ nil
 nil
 
 > data.merge(["foo", "bar"])
-ERROR: {
-  :message "cannot merge type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot merge type string
+  at: [interactive]:14:10
+  source: data.merge(["foo", "bar"])
 ```
 ~~~
 
@@ -2527,11 +2530,11 @@ false
 nil
 
 > data.contains?("foo", "bar")
-ERROR: {
-  :message "contains? is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: contains? is not defined for type string
+  at: [interactive]:14:10
+  source: data.contains?("foo", "bar")
 ```
 ~~~
 
@@ -2709,11 +2712,11 @@ nil
 nil
 
 > data.map("foo", (x) -> x)
-ERROR: {
-  :message "map is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.map("foo", (x) -> x)
 ```
 ~~~
 
@@ -2749,11 +2752,11 @@ nil
 nil
 
 > data.flatmap("foo", (x) -> x)
-ERROR: {
-  :message "map is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.flatmap("foo", (x) -> x)
 ```
 ~~~
 
@@ -2790,11 +2793,11 @@ nil
 nil
 
 > data.mapcat("foo", (x) -> x)
-ERROR: {
-  :message "map is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.mapcat("foo", (x) -> x)
 ```
 ~~~
   function mapcat: (xs, function f) -> list
@@ -2965,11 +2968,11 @@ nil
 nil
 
 > data.reduce("foo", 0, (x) -> x)
-ERROR: {
-  :message "reduce is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce("foo", 0, (x) -> x)
 ```
 ~~~
 
@@ -3019,11 +3022,11 @@ nil
 nil
 
 > data.reduce_until("foo", 0, (a) -> true, (a, x) -> a)
-ERROR: {
-  :message "reduce_until is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce_until is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce_until("foo", 0, (a) -> true, (a, x) -> a)
 ```
 ~~~
 
@@ -3073,11 +3076,11 @@ nil
 nil
 
 > data.reduce_while("foo", 0, (a) -> true, (a, x) -> a)
-ERROR: {
-  :message "reduce_while is not defined for type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce_while is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce_while("foo", 0, (a) -> true, (a, x) -> a)
 ```
 ~~~
 
@@ -3734,11 +3737,11 @@ nil
 nil
 
 > time.with_year(time.epoch, 1000000000)
-ERROR: {
-  :message "Invalid value for Year (valid values -999999999 - 999999999): 1000000000",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
+  at: [interactive]:14:10
+  source: time.with_year(time.epoch, 1000000000)
 ```
 ~~~
 
@@ -3765,11 +3768,11 @@ nil
 nil
 
 > time.with_month(time.epoch, 13)
-ERROR: {
-  :message "Invalid value for MonthOfYear (valid values 1 - 12): 13",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for MonthOfYear (valid values 1 - 12): 13
+  at: [interactive]:14:10
+  source: time.with_month(time.epoch, 13)
 
 ```
 ~~~
@@ -3798,11 +3801,11 @@ nil
 nil
 
 > time.with_day_of_month(time.epoch, 33)
-ERROR: {
-  :message "Invalid value for DayOfMonth (valid values 1 - 28/31): 33",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
+  at: [interactive]:14:10
+  source: time.with_day_of_month(time.epoch, 33)
 ```
 ~~~
 
@@ -3829,11 +3832,11 @@ nil
 nil
 
 > time.with_hour(time.epoch, 25)
-ERROR: {
-  :message "Invalid value for HourOfDay (valid values 0 - 23): 25",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for HourOfDay (valid values 0 - 23): 25
+  at: [interactive]:14:10
+  source: time.with_hour(time.epoch, 25)
 ```
 ~~~
 
@@ -3860,11 +3863,11 @@ nil
 nil
 
 > time.with_minute(time.epoch, 78)
-ERROR: {
-  :message "Invalid value for MinuteOfHour (valid values 0 - 59): 78",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
+  at: [interactive]:14:10
+  source: time.with_minute(time.epoch, 78)
 ```
 ~~~
 
@@ -3891,11 +3894,11 @@ nil
 nil
 
 > time.with_second(time.epoch, 78)
-ERROR: {
-  :message "Invalid value for SecondOfMinute (valid values 0 - 59): 78",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
+  at: [interactive]:14:10
+  source: time.with_second(time.epoch, 78)
 ```
 ~~~
 
@@ -3922,11 +3925,11 @@ nil
 nil
 
 > time.with_nano_of_second(time.epoch, 1000000000)
-ERROR: {
-  :message "Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
+  at: [interactive]:14:10
+  source: time.with_nano_of_second(time.epoch, 1000000000)
 ```
 ~~~
 
@@ -3956,11 +3959,11 @@ nil
 nil
 
 > time.with_zone(time.epoch, "---")
-ERROR: {
-  :message "unknown time zone id: ---",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unknown time zone id: ---
+  at: [interactive]:14:10
+  source: time.with_zone(time.epoch, "---")
 ```
 ~~~
 
@@ -3995,11 +3998,11 @@ nil
 nil
 
 > time.same_instant_at_zone(time.epoch, "---")
-ERROR: {
-  :message "unknown time zone id: ---",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unknown time zone id: ---
+  at: [interactive]:14:10
+  source: time.same_instant_at_zone(time.epoch, "---")
 ```
 ~~~
 
@@ -4177,11 +4180,11 @@ nil
 
 # patterns specifies mandatory @ sign and backticks before timezone
 > f("2017-04-23T21:43:11 Europe/Berlin")
-ERROR: {
-  :message "Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19
+  at: [interactive]:14:10
+  source: f("2017-04-23T21:43:11 Europe/Berlin")
 
 # strict parser
 > f: time.parser('uuuu-MM-dd')
@@ -4189,11 +4192,11 @@ function
 
 # there is no march 32nd
 > f("2015-03-32")
-ERROR: {
-  :message "Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
+  at: [interactive]:14:10
+  source: f("2015-03-32")
 
 # lenient parser
 > f: time.parser('uuuu-MM-dd', true)
@@ -4280,11 +4283,11 @@ Infinity
 NaN
 
 > math.abs(math.min_long)
-ERROR: {
-  :message "cannot represent magnitude as long",
-  :code "NUMBER_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: NUMBER_OUT_OF_BOUNDS
+  message: cannot represent magnitude as long
+  at: [interactive]:14:10
+  source: math.abs(math.min_long)
 
 > math.abs(math.min_long as double)
 9.223372036854776E18
@@ -4293,11 +4296,11 @@ ERROR: {
 nil
 
 > math.abs("hello")
-ERROR: {
-  :message "cannot determine magnitude of type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot determine magnitude of type string
+  at: [interactive]:14:10
+  source: math.abs("hello")
 ```
 ~~~
 
@@ -4387,11 +4390,11 @@ Throws an error if `x` is not a numeric type.
 nil
 
 > math.inc([])
-ERROR: {
-  :message "cannot increment type list",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot increment type list
+  at: [interactive]:14:10
+  source: math.inc([])
 ```
 ~~~
 
@@ -4427,11 +4430,11 @@ Throws an error if `x` is not a numeric type.
 nil
 
 > math.dec([])
-ERROR: {
-  :message "cannot decrement type list",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot decrement type list
+  at: [interactive]:14:10
+  source: math.dec([])
 ```
 ~~~
 
@@ -4511,11 +4514,11 @@ nil
 nil
 
 > math.min(["foo"])
-ERROR: {
-  :message "cannot compare type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot compare type string
+  at: [interactive]:14:10
+  source: math.min(["foo"])
 ```
 ~~~
 
@@ -4545,11 +4548,11 @@ nil
 nil
 
 > math.max(["foo"])
-ERROR: {
-  :message "cannot compare type string",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot compare type string
+  at: [interactive]:14:10
+  source: math.max(["foo"])
 ```
 ~~~
 
@@ -4969,11 +4972,11 @@ Throws an error if `pattern` or `decimal_symbols` is invalid.
 203.23
 
 > f("203.23kg")
-ERROR: {
-  :message "Partial match not allowed. Parsing ended at index: 6",
-  :code "ILLEGAL_ARGUMENT",
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Partial match not allowed. Parsing ended at index: 6
+  at: [interactive]:14:10
+  source: f("203.23kg")
 
 # lenient parser
 > f: math.parser('0.##', nil, true)

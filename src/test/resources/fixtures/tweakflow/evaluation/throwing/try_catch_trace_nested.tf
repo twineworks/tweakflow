@@ -26,25 +26,43 @@ library nested_throw_spec {
           }
 
     }
-    caught[:cause] == {
-      :error "throwing"
-      :trace [
-               "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:12:13", # throw
-               "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:7:5",   # let
-               "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:6:3",   # nested_catch_trace
-               "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:4:1",   # library
-               "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:1:1"    # module
-             ]
+    caught ==
+    {
+      :cause {
+                   :error "throwing"
+                   :trace {
+                                :code "CUSTOM_ERROR"
+                                :message "CUSTOM_ERROR"
+                                :at "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:12:13"
+                                :source 'throw "throwing"'
+                                :value "throwing"
+                                :stack [
+                                         "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:12:13", # throw
+                                         "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:7:5",   # let
+                                         "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:6:3",   # nested_catch_trace
+                                         "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:4:1",   # library
+                                         "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:1:1"    # module
+                                       ]
+                              }
+             }
+      :trace {
+                   :code "CUSTOM_ERROR"
+                   :message "CUSTOM_ERROR"
+                   :at        "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:20:13"
+                   :source    "throw caught"
+                   :value     caught[:cause]
+                   :stack     [
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:20:13", # re-throw
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:14:13", # let
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:14:13", # catch
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:7:5",   # let
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:6:3",   # nested_catch_trace
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:4:1",   # library
+                                "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:1:1"    # module
+                              ]
+
+             }
     }
-    &&
-    caught[:trace] ==
-    [
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:20:13", # re-throw
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:14:13", # let
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:14:13", # catch
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:7:5",   # let
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:6:3",   # nested_catch_trace
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:4:1",   # library
-      "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:1:1"    # module
-    ]
+
+
 }

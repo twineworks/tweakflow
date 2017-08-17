@@ -24,7 +24,12 @@
 
 package com.twineworks.tweakflow.interpreter;
 
+import com.twineworks.tweakflow.lang.values.ListValue;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+
 import java.util.ArrayDeque;
+import java.util.stream.Collectors;
 
 public class Stack extends ArrayDeque<StackEntry> {
 
@@ -33,4 +38,16 @@ public class Stack extends ArrayDeque<StackEntry> {
     copy.addAll(this);
     return copy;
   }
+
+  public Value toValue(){
+
+    ListValue list = new ListValue(
+        stream()
+            .map(StackEntry::toValue)
+            .collect(Collectors.toList())
+    );
+
+    return Values.make(list);
+  }
+
 }

@@ -45,7 +45,7 @@ public class InteractiveInputCommand {
     ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
     if (parseResult.isError()){
-      terminal.println("ERROR: "+parseResult.getException().getDigestMessage());
+      terminal.println(parseResult.getException().getDigestMessage());
       return state;
     }
     // input was an expression?

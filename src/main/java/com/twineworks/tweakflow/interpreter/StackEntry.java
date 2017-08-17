@@ -24,10 +24,12 @@
 
 package com.twineworks.tweakflow.interpreter;
 
+import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueProvider;
+import com.twineworks.tweakflow.lang.values.Values;
 
 import java.util.Map;
 
@@ -52,6 +54,10 @@ public class StackEntry {
 
   public Map<ReferenceNode, ValueProvider> getClosures() {
     return closures;
+  }
+
+  public Value toValue(){
+    return Values.make(node.getSourceInfo().getFullLocation());
   }
 
   @Override

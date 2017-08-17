@@ -49,7 +49,6 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Evaluator {
 
@@ -217,15 +216,17 @@ public class Evaluator {
         Cell errorCell = new Cell()
             .setSymbol(catchExpression.getScope().getSymbols().get(caughtException.getSymbolName()));
 
-        Object errorValue = e.get("value");
-        if (errorValue instanceof Value){
-          // user-thrown errors
-          errorCell.setValue((Value) errorValue);
-        }
-        else{
-          // built-in errors
-          errorCell.setValue(e.toValue());
-        }
+        errorCell.setValue(e.toErrorValue());
+
+//        Object errorValue = e.get("value");
+//        if (errorValue instanceof Value){
+//          // user-thrown errors
+//          errorCell.setValue((Value) errorValue);
+//        }
+//        else{
+//          // built-in errors
+//          errorCell.setValue(e.toValue());
+//        }
 
         bindingsCells.puts(caughtException.getSymbolName(), errorCell);
 
@@ -235,13 +236,7 @@ public class Evaluator {
           Cell traceCell = new Cell()
               .setSymbol(catchExpression.getScope().getSymbols().get(caughtTrace.getSymbolName()));
 
-          Stack errorStack = e.getStack();
-          if (errorStack != null){
-            traceCell.setValue(makeStackTraceValue(errorStack));
-          }
-          else {
-            traceCell.setValue(Values.NIL);
-          }
+          traceCell.setValue(e.toTraceValue());
 
           bindingsCells.puts(caughtTrace.getSymbolName(), traceCell);
 
@@ -264,7 +259,7 @@ public class Evaluator {
   public static Value evaluateThrowNode(ThrowNode throwNode, Stack stack, EvaluationContext context) {
     Value data = evaluateExpression(throwNode.getExceptionExpression(), stack, context);
     stack.push(new StackEntry(throwNode, stack.peek().getSpace(), stack.peek().getClosures()));
-    throw new LangException(LangError.CUSTOM_ERROR, "CUSTOM_ERROR", stack.copy(), throwNode.getSourceInfo())
+    throw new LangException(LangError.CUSTOM_ERROR, "CUSTOM_ERROR", stack, throwNode.getSourceInfo())
         .put("value", data);
   }
 
@@ -327,21 +322,6 @@ public class Evaluator {
       throw ex;
     }
 
-  }
-
-  public static Value makeStackTraceValue(Stack stack){
-
-    ListValue list = new ListValue(
-        stack.stream()
-            .map(Evaluator::makeStackEntryValue)
-            .collect(Collectors.toList())
-    );
-
-    return Values.make(list);
-  }
-
-  private static Value makeStackEntryValue(StackEntry entry){
-    return Values.make(entry.getNode().getSourceInfo().getFullLocation());
   }
 
   public static Value[] evalArguments(Arguments arguments, Stack stack, EvaluationContext context){

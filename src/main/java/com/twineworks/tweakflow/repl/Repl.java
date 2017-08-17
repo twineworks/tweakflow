@@ -40,6 +40,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -56,7 +57,7 @@ public class Repl {
         .action(Arguments.append());
 
     parser.addArgument("module")
-        .setDefault(new ReplState().getMainModulePath())
+        .setDefault(Collections.singletonList(new ReplState().getMainModulePath()))
         .nargs("*")
         .type(String.class);
 
@@ -180,7 +181,7 @@ public class Repl {
     state.evaluate();
 
     if (state.getEvaluationResult().isError()){
-      textTerminal.println("ERROR: "+state.getEvaluationResult().getException().getDigestMessage());
+      textTerminal.println(state.getEvaluationResult().getException().getDigestMessage());
       return false;
     }
 

@@ -96,7 +96,7 @@ public class InspectCommand implements Command {
       ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
       if (parseResult.isError()){
-        terminal.println("ERROR: "+parseResult.getException().getDigestMessage());
+        terminal.println(parseResult.getException().getDigestMessage());
       }
       // input was a reference?
       else if (parseResult.getNode() instanceof ReferenceNode){
@@ -105,7 +105,7 @@ public class InspectCommand implements Command {
           Cell resolved = Spaces.resolve(node, state.getInteractiveSpace());
           terminal.print(MemorySpaceInspector.inspect(resolved, expandFunctions));
         } catch (LangException e){
-          terminal.println("ERROR: "+e.getDigestMessage());
+          terminal.println(e.getDigestMessage());
         }
       }
       else {

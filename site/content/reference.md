@@ -477,9 +477,19 @@ This file uses environment configuration through the global reference `$env`.
 
 ```tweakflow
 # main.tf
-library my_lib {
+library app {
   file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv"
 }
+```
+On the REPL:
+```tweakflow
+> \load main.tf environments/local.tf # load main with local environment
+> app.file_path("foo")
+"/home/me/my_project/data/foo_data.csv"
+
+> \load main.tf environments/production.tf # load main with production environment
+> app.file_path("foo")
+"/var/incoming/data/foo_data.csv"
 ```
 
 #### Imports
@@ -931,10 +941,13 @@ Examples for casts from string to double:
 98.0
 
 > "200.0kg" as double
-ERROR: {
-  :message "Cannot cast 200.0kg to double",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast 200.0kg to double
+  at: [interactive]:3:10
+  source: "200.0kg" as double
+
+
 ```
 
 String as list
@@ -1144,16 +1157,19 @@ Lists are converted as sequences of key-value pairs. `["a" 1 "b" 2]` is converte
 }
 
 > ["a" "b" nil "d"] as dict # nil keys are not allowed
-ERROR: {
-  :message "Cannot cast list to dict with nil key at index: 2",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast list to dict with nil key at index: 2
+  at: [interactive]:3:10
+  source: ["a" "b" nil "d"] as dict
 
 > [1 2 3] as dict
-ERROR: {
-  :message "Cannot cast list with odd number of items to dict",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast list with odd number of items to dict
+  at: [interactive]:3:11
+  source: [1 2 3] as dict
+
 ```
 
 ### Dict
@@ -1666,11 +1682,11 @@ Passing more than the declared number of positional arguments is an error.
 
 ```tweakflow
 > f(42, "test", "too much")
-ERROR: {
-  :message "cannot call function with 3 arguments",
-  :code "UNEXPECTED_ARGUMENT",
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: cannot call function with 3 arguments
+  at: [interactive]:4:5
+  source: `$`: f(42, "test", "too much")
 ```
 
 Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value `nil` unless explicitly specified in the function definition.
@@ -1721,10 +1737,11 @@ It is an error to supply argument names not present in function parameters:
 
 ```tweakflow
 > f(id: 42, name: "foo", country: "US")
-ERROR: {
-  :message "Function does not have parameter named: country",
-  :code "UNEXPECTED_ARGUMENT",
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: Function does not have parameter named: country
+  at: [interactive]:4:33
+  source: country: "US"
 ```
 
 #### Mixed positional and named arguments
@@ -1742,11 +1759,11 @@ It is an error to supply any positional arguments after named arguments.
 
 ```tweakflow
 > f(id: 42, "test") # error, positional arguments cannot follow named arguments
-ERROR: {
-  :message "Positional argument cannot follow named arguments.",
-  :code "UNEXPECTED_ARGUMENT",
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: Positional argument cannot follow named arguments.
+  at: [interactive]:4:20
+  source: "test"
 ```
 
 It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.
@@ -1831,11 +1848,11 @@ Splats can be mixed as long as positional splats come first.
 "42-foo"
 
 > f(...{:name "foo"}, ...[42, "testing"]) # no positional args allowed after named args
-ERROR: {
-  :message "List splat provides positional arguments and cannot follow named arguments.",
-  :code "UNEXPECTED_ARGUMENT",
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: List splat provides positional arguments and cannot follow named arguments.
+  at: [interactive]:4:31
+  source: ...[42, "testing"]
 ```
 
 #### Argument casting
@@ -1847,11 +1864,11 @@ Arguments given in function calls are automatically cast to the declared paramet
 "3-9837"
 
 > f("abc", "def") # cannot cast first argument to long
-ERROR: {
-  :message "Cannot cast abc to long",
-  :code "CAST_ERROR",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast abc to long
+  at: [interactive]:4:10
+  source: f("abc", "def")
 ```
 
 #### Return value casting
@@ -2701,24 +2718,28 @@ function
 3
 
 > add(math.max_long, 1)
-ERROR: {
-  :code "CUSTOM_ERROR",
-  :value {
-    :message "binary overflow adding 9223372036854775807 and 1",
-    :code "overflow"
-  },
-  ...
-}        
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: [interactive]:8:5
+  source: throw {:code "overflow", :message "binary overflow adding #{x} and #{y}"}
+  value: {
+  :message "binary overflow adding 9223372036854775807 and 1",
+  :code "overflow"
+}
+
 
 > add(math.min_long, -1)
-ERROR: {
-  :code "CUSTOM_ERROR",
-  :value {
-    :message "binary underflow adding -9223372036854775808 and -1",
-    :code "overflow"
-  },
-  ...
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: [interactive]:11:5
+  source: throw {:code "overflow", :message "binary underflow adding #{x} and #{y}"}
+  value: {
+  :message "binary underflow adding -9223372036854775808 and -1",
+  :code "overflow"
 }
+
 ```
 
 #### Catching errors
@@ -2759,6 +2780,60 @@ function
 
 > add_safe(math.max_long, 1)
 nil
+```
+
+#### Error conventions
+By convention, the tweakflow runtime and standard libraries throw dict errors that contain the following keys:
+
+| Key       | Content                                                         |
+| --------- | --------------------------------------------------------------- |
+| code      | a short mnemonic string code indicating the nature of the error |
+| message   | a text description of the problem                               |
+
+Additional keys may be present depending on the nature of the error.
+
+```tweakflow
+> try 1//0 catch error error
+{
+  :message "division by zero",
+  :code "DIVISION_BY_ZERO"
+}
+> try throw "foo" catch error error
+"foo"
+```
+
+#### Capturing the error trace
+When catching errors with two identifiers, the second identifier contains a detailed trace of where the error occurred. The trace is a dict containing the following keys:
+
+| Key                | Content                                                         |
+| ------------------ | --------------------------------------------------------------- |
+| code               | a short mnemonic string code indicating the nature of the error |
+| message            | a text description of the problem                               |
+| at (optional)      | location where the error was thrown as string `file:line:char`  |
+| source (optional)  | source code of the expression throwing the exception            |
+| value (optional)   | error value as caught in first catch identifier                 |
+| stack (optional)   | list of string locations leading to the error, each in `file:line:char` format |
+
+Additional keys may be present depending on the nature of the error.
+
+```tweakflow
+> try 1//0 catch _, trace trace
+{
+  :message "division by zero",
+  :stack ["[interactive]:3:5", "[interactive]:2:3", "[interactive]:1:1"],
+  :code "DIVISION_BY_ZERO",
+  :at "[interactive]:3:14",
+  :source "1//0"
+}
+> try throw "foo" catch _, trace trace
+{
+  :message "CUSTOM_ERROR",
+  :stack ["[interactive]:3:14", "[interactive]:3:5", "[interactive]:2:3", "[interactive]:1:1"],
+  :code "CUSTOM_ERROR",
+  :value "foo",
+  :at "[interactive]:3:14",
+  :source "throw \"foo\""
+}
 ```
 
 ### References
@@ -2890,11 +2965,11 @@ The REPL evaluates input as expressions. It gives the following output when refe
 function
 
 > strings
-ERROR: {
-  :message "Cannot reference LIBRARY. Not a value.",
-  :code "INVALID_REFERENCE_TARGET",
-  ...
-}
+ERROR:
+  code: INVALID_REFERENCE_TARGET
+  message: Cannot reference LIBRARY. Not a value.
+  at: [interactive]:3:10
+  source: strings
 ```
 
 #### Referencing non-value entities
@@ -2933,10 +3008,12 @@ let {
   d: c
 } [a, b, c, d]
 \e
-ERROR: {
-  :code "CYCLIC_REFERENCE",
-  ...
-}
+ERROR:
+  code: CYCLIC_REFERENCE
+  message: CYCLIC_REFERENCE
+  at: [interactive]:7:3
+  source: d: c
+  cycle: "d@[interactive]:7:3 -> c@[interactive]:6:3 -> b@[interactive]:5:3 -> a@[interactive]:4:3 -> d@[interactive]:7:3"
 ```
 
 A recursive definition of the factorial function:
@@ -3075,11 +3152,11 @@ The following special cases are defined:
 > -(NaN)
 NaN
 > -("foo")
-ERROR: {
-  :message "Cannot negate type: string",
-  :code "CAST_ERROR",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot negate type: string
+  at: [interactive]:3:10
+  source: -("foo")
 
 ```
 
@@ -3255,10 +3332,11 @@ Both operands are cast to long before division is performed. The result of the d
 > 10 // -3
 -3
 > 10 // 0
-ERROR: {
-  :code "DIVISION_BY_ZERO",
-  ...
-}
+ERROR:
+  code: DIVISION_BY_ZERO
+  message: division by zero
+  at: [interactive]:3:10
+  source: 10 // 0
 ```
 
 #### Division remainder
@@ -3341,11 +3419,11 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 > nil**nil
 nil
 > "2"**"3"
-ERROR: {
-  :message "cannot lift base of type string to exponent of type string",
-  :code "CAST_ERROR",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: cannot lift base of type string to exponent of type string
+  at: [interactive]:3:10
+  source: "2"**"3"
 ```
 
 #### Equality
@@ -3443,11 +3521,12 @@ false
 > -Infinity < 5
 true
 > "1" < 1
-ERROR: {
-  :message "Cannot compare types: string and long",
-  :code "CAST_ERROR",
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: cannot compare types string and long
+  at: [interactive]:3:10
+  source: "1" < 1
+
 ```
 
 #### Less than or equal

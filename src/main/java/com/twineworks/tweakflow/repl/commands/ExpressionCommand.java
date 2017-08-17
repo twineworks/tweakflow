@@ -45,7 +45,7 @@ public class ExpressionCommand {
     EvaluationResult evaluationResult = expressionState.getEvaluationResult();
 
     if (evaluationResult.isError()){
-      terminal.println("ERROR: "+evaluationResult.getException().getDigestMessage());
+      terminal.println(evaluationResult.getException().getDigestMessage());
       if (measure){
         printDuration(terminal, expressionState.getLoadDurationMillis(), expressionState.getAnalysisDurationMillis(), totalDuration);
       }

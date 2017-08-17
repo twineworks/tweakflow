@@ -45,7 +45,7 @@ public class VarDefCommand {
     EvaluationResult evaluationResult = expressionState.getEvaluationResult();
 
     if (evaluationResult.isError()){
-      terminal.println("ERROR: "+evaluationResult.getException().getDigestMessage());
+      terminal.println(evaluationResult.getException().getDigestMessage());
       varDefs.remove(varName);
       return state;
     }

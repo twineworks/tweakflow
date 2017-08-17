@@ -24,10 +24,12 @@
 
 package com.twineworks.tweakflow.lang.errors;
 
-import com.twineworks.tweakflow.lang.parse.SourceInfo;
-import com.twineworks.tweakflow.lang.values.*;
-import com.twineworks.tweakflow.interpreter.Evaluator;
 import com.twineworks.tweakflow.interpreter.Stack;
+import com.twineworks.tweakflow.lang.parse.SourceInfo;
+import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
+import com.twineworks.tweakflow.lang.values.Values;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class LangException extends RuntimeException {
   private LangException(Throwable t, ErrorCode code, String message, Stack stack, SourceInfo sourceInfo) {
     super(message, t);
     this.code = code;
-    this.stack = stack;
+    this.stack = stack == null ? null : stack.copy();
     this.sourceInfo = sourceInfo;
   }
 
@@ -57,7 +59,7 @@ public class LangException extends RuntimeException {
   public LangException(ErrorCode code, String message, Stack stack, SourceInfo sourceInfo) {
     super(message);
     this.code = code;
-    this.stack = stack;
+    this.stack = stack == null ? null : stack.copy();
     this.sourceInfo = sourceInfo;
   }
 
@@ -75,7 +77,7 @@ public class LangException extends RuntimeException {
   public LangException(ErrorCode code, String message, Stack stack) {
     super(message);
     this.code = code;
-    this.stack = stack;
+    this.stack = stack == null ? null : stack.copy();
   }
 
   public LangException(ErrorCode code, String message) {
@@ -89,13 +91,13 @@ public class LangException extends RuntimeException {
 
   public LangException(ErrorCode code, Stack stack) {
     this.code = code;
-    this.stack = stack;
+    this.stack = stack == null ? null : stack.copy();
   }
 
   public LangException(Throwable t, ErrorCode code, Stack stack) {
     super(t);
     this.code = code;
-    this.stack = stack;
+    this.stack = stack == null ? null : stack.copy();
   }
 
   public SourceInfo getSourceInfo() {
@@ -162,7 +164,7 @@ public class LangException extends RuntimeException {
   }
 
   public void setStack(Stack stack) {
-    this.stack = stack;
+    this.stack = stack.copy();
   }
 
   public ErrorCode getCode() {
@@ -190,16 +192,79 @@ public class LangException extends RuntimeException {
       return ((LangException) getCause()).getDigestMessage();
     }
 
-    return ValueInspector.inspect(toValue());
+//    System.out.println(getSourceInfo().getParseUnit().getProgramText());
+    return makeTraceString(getStack());
   }
 
-  public Value toValue(){
-//    printStackTrace();
+  private String makeTraceString(Stack stack) {
+    StringBuilder trace = new StringBuilder();
+
+    trace.append("ERROR: \n");
+    trace.append("  code: ").append(code.getName()).append("\n");
+    trace.append("  message: ").append(getMessage() == null? code.getName() : getMessage()).append("\n");
+
+    if (getSourceInfo() != null){
+      trace.append("  at: ").append(getSourceInfo().toString()).append("\n");
+
+      String source = getSourceInfo().getSourceCode();
+      if (source != null){
+        trace.append("  source: ");
+        if (source.length() < 250){
+          trace.append(source);
+        }
+        else{
+          trace.append(source.substring(0, 250));
+        }
+        trace.append("\n");
+      }
+    }
+
+    for (Map.Entry<String, Object> entry : properties.entrySet()) {
+
+      try {
+        String traceLine = "";
+        if (entry.getValue() instanceof Value){
+          traceLine = ValueInspector.inspect((Value) entry.getValue());
+        }
+        else{
+          traceLine = ValueInspector.inspect(Values.make(entry.getValue()));
+        }
+        trace.append("  ").append(entry.getKey()).append(": ").append(traceLine).append("\n");
+      }
+      catch (RuntimeException ignore){
+      }
+    }
+
+    trace.append("TRACE:\n");
+
+    if (stack == null){
+      trace.append("  none");
+    }
+    else{
+
+      stack.forEach(
+          (x) -> trace
+              .append("  ")
+              .append(x.getNode().getSourceInfo().getFullLocation())
+              .append("\n")
+      );
+
+    }
+
+    return trace.toString();
+  }
+
+
+  public Value toTraceValue(){
+    //    printStackTrace();
     DictValue dict = new DictValue();
     dict = dict.put("code", Values.make(code.getName()));
 
     if (getMessage() != null){
       dict = dict.put("message", Values.make(getMessage()));
+    }
+    else{
+      dict = dict.put("message", Values.make(code.getName()));
     }
 
     if (getSourceInfo() != null){
@@ -215,10 +280,6 @@ public class LangException extends RuntimeException {
       }
     }
 
-    if (getStack() != null){
-      dict = dict.put("stack", Evaluator.makeStackTraceValue(stack));
-    }
-
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
       try {
         if (entry.getValue() instanceof Value){
@@ -232,8 +293,11 @@ public class LangException extends RuntimeException {
       }
     }
 
-    return Values.make(dict);
+    if (stack != null){
+      dict = dict.put("stack", stack.toValue());
+    }
 
+    return Values.make(dict);
   }
 
   public Map<String, Object> getProperties() {
@@ -278,5 +342,21 @@ public class LangException extends RuntimeException {
   public LangException putIfAbsent(String key, Object value) {
     properties.putIfAbsent(key, value);
     return this;
+  }
+
+  public Value toErrorValue() {
+    // catchable value given explicitly?
+    Object explicitValue = get("value");
+    if (explicitValue instanceof Value) return (Value) explicitValue;
+
+    // construct an error value
+    DictValue dict = new DictValue();
+    dict = dict.put("code", Values.make(code.getName()));
+
+    if (getMessage() != null){
+      dict = dict.put("message", Values.make(getMessage()));
+    }
+    return Values.make(dict);
+
   }
 }
