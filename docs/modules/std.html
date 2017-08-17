@@ -407,11 +407,11 @@ nil
 25
 
 &gt; core.eval(&quot;hello&quot;)
-ERROR: {
-  :code &quot;UNRESOLVED_REFERENCE&quot;,
-  :source &quot;hello&quot;
-  ...
-}
+ERROR:
+  code: UNRESOLVED_REFERENCE
+  message: hello is undefined
+  at: &lt;eval&gt;:1:1
+  source: hello
 </code></pre>
 
 <h2 id="library-strings">library strings</h2>
@@ -504,17 +504,18 @@ nil
 &quot;好&quot;
 
 &gt; strings.substring(&quot;hello world&quot;, nil)
-ERROR: {
-  :message &quot;start must not be nil&quot;,
-  :code &quot;NIL_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: start must not be nil
+  at: [interactive]:14:10
+  source: strings.substring(&quot;hello world&quot;, nil)
 
 &gt; strings.substring(&quot;hello world&quot;, -4)
-ERROR: {
-  :message &quot;start must not be negative: -4&quot;,
-  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: start must not be negative: -4
+  at: [interactive]:14:10
+  source: strings.substring(&quot;hello world&quot;, -4)
 </code></pre>
 
 <h3 id="replace">replace</h3>
@@ -1037,11 +1038,11 @@ function
 nil
 
 &gt; data.size(&quot;foo&quot;)
-ERROR: {
-  :message &quot;size is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: size is not defined for type string
+  at: [interactive]:14:10
+  source: data.size(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="empty">empty?</h3>
@@ -1070,11 +1071,11 @@ false
 nil
 
 &gt; data.empty?(&quot;foo&quot;)
-ERROR: {
-  :message &quot;empty? is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: empty? is not defined for type string
+  at: [interactive]:14:10
+  source: data.empty?(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="get">get</h3>
@@ -1191,11 +1192,11 @@ nil
 nil
 
 &gt; data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], &quot;default&quot;)
-ERROR: {
-  :message &quot;Cannot cast c to long&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast c to long
+  at: [interactive]:14:10
+  source: data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], &quot;default&quot;)
 </code></pre>
 
 <h3 id="put-in">put_in</h3>
@@ -1372,11 +1373,11 @@ nil
 nil
 
 &gt; data.keys(&quot;foo&quot;)
-ERROR: {
-  :message &quot;keys is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: keys is not defined for type string
+  at: [interactive]:14:10
+  source: data.keys(&quot;foo&quot;)
 
 </code></pre>
 
@@ -1411,11 +1412,11 @@ false
 true
 
 &gt; data.has?(&quot;foo&quot;, 1)
-ERROR: {
-  :message &quot;has? is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: has? is not defined for type string
+  at: [interactive]:14:10
+  source: data.has?(&quot;foo&quot;, 1)
 
 &gt; data.has?(&quot;foo&quot; as list, 1)
 true
@@ -1447,10 +1448,11 @@ true
 nil
 
 &gt; data.values(&quot;foo&quot;)
-ERROR: {
-  :message &quot;values is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: values is not defined for type string
+  at: [interactive]:14:10
+  source: data.values(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="entries">entries</h3>
@@ -1550,11 +1552,10 @@ nil
 nil
 
 &gt; data.find([], nil)
-ERROR: {
-  :message &quot;predicate function cannot be nil&quot;,
-  :code &quot;NIL_ERROR&quot;,
-  ...
-}
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.find([], nil)
 </code></pre>
 
 <h3 id="find-index">find_index</h3>
@@ -1588,11 +1589,11 @@ nil
 nil
 
 &gt; data.find_index([], nil)
-ERROR: {
-  :message &quot;predicate function cannot be nil&quot;,
-  :code &quot;NIL_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.find_index([], nil)
 </code></pre>
 
 <h3 id="insert">insert</h3>
@@ -1619,18 +1620,18 @@ If <code>i</code> is bigger than the largest index in <code>xs</code>, any inter
 nil
 
 &gt; data.insert([], -2, &quot;a&quot;)
-ERROR: {
-  :message &quot;cannot insert at index -2&quot;,
-  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: cannot insert at index -2
+  at: [interactive]:14:10
+  source: data.insert([], -2, &quot;a&quot;)
 
 &gt; data.insert([], nil, &quot;a&quot;)
-ERROR: {
-  :message &quot;cannot insert at nil index&quot;,
-  :code &quot;NIL_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: cannot insert at nil index
+  at: [interactive]:14:10
+  source: data.insert([], nil, &quot;a&quot;)
 
 </code></pre>
 
@@ -1670,11 +1671,11 @@ nil
 [0, 1]
 
 &gt; data.delete([], -2)
-ERROR: {
-  :message &quot;cannot delete at index -2&quot;,
-  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: cannot delete index -2
+  at: [interactive]:14:10
+  source: data.delete([], -2)
 </code></pre>
 
 <h3 id="select">select</h3>
@@ -1749,18 +1750,18 @@ Throws an error if <code>p</code> is <code>nil</code>.</p>
 nil
 
 &gt; data.filter([], nil)
-ERROR: {
-  :message &quot;predicate function cannot be nil&quot;,
-  :code &quot;NIL_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+  at: [interactive]:14:10
+  source: data.filter([], nil)
 
 &gt; data.filter(1, (x) -&gt; true)
-ERROR: {
-  :message &quot;filter is not defined for type long&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: filter is not defined for type long
+  at: [interactive]:14:10
+  source: data.filter(1, (x) -&gt; true)
 </code></pre>
 
 <h3 id="shuffle">shuffle</h3>
@@ -1962,11 +1963,11 @@ nil
 nil
 
 &gt; data.init([])
-ERROR: {
-  :message &quot;list must not be empty&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.init([])
 
 </code></pre>
 
@@ -1987,11 +1988,11 @@ ERROR: {
 nil
 
 &gt; data.tail([])
-ERROR: {
-  :message &quot;list must not be empty&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.tail([])
 </code></pre>
 
 <h3 id="head">head</h3>
@@ -2011,11 +2012,11 @@ ERROR: {
 nil
 
 &gt; data.head([])
-ERROR: {
-  :message &quot;list must not be empty&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.head([])
 </code></pre>
 
 <h3 id="last">last</h3>
@@ -2035,11 +2036,11 @@ ERROR: {
 nil
 
 &gt; data.last([])
-ERROR: {
-  :message &quot;list must not be empty&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: list must not be empty
+  at: [interactive]:14:10
+  source: data.last([])
 </code></pre>
 
 <h3 id="slice">slice</h3>
@@ -2094,12 +2095,14 @@ nil
 &gt; data.slices([], 4)
 []
 &gt; data.slices([1,2,3], 0)
-ERROR: {
-  :value {
-    :message &quot;s must be positive, was 0&quot;,
-    :code &quot;ILLEGAL_ARGUMENT&quot;
-  }
-  ...
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: std.tf:2109:20
+  source: throw {:message &quot;s must be positive, was #{s}&quot; :code &quot;ILLEGAL_ARGUMENT&quot;}
+  value: {
+  :message &quot;s must be positive, was 0&quot;,
+  :code &quot;ILLEGAL_ARGUMENT&quot;
 }
 </code></pre>
 
@@ -2171,11 +2174,11 @@ If a == b, f returns 0.</p>
 nil
 
 &gt; data.repeat(-2, &quot;foo&quot;)
-ERROR: {
-  :message &quot;Cannot repeat -2 times&quot;,
-  :code &quot;INDEX_OUT_OF_BOUNDS&quot;,
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: Cannot repeat -2 times
+  at: [interactive]:14:10
+  source: data.repeat(-2, &quot;foo&quot;)
 </code></pre>
 
 <h3 id="concat-1">concat</h3>
@@ -2202,11 +2205,11 @@ nil
 nil
 
 &gt; data.concat([&quot;foo&quot;, &quot;bar&quot;])
-ERROR: {
-  :message &quot;cannot concat type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot concat type string
+  at: [interactive]:14:10
+  source: data.concat([&quot;foo&quot;, &quot;bar&quot;])
 </code></pre>
 
 <h3 id="merge">merge</h3>
@@ -2241,11 +2244,11 @@ nil
 nil
 
 &gt; data.merge([&quot;foo&quot;, &quot;bar&quot;])
-ERROR: {
-  :message &quot;cannot merge type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot merge type string
+  at: [interactive]:14:10
+  source: data.merge([&quot;foo&quot;, &quot;bar&quot;])
 </code></pre>
 
 <h3 id="take">take</h3>
@@ -2431,11 +2434,11 @@ false
 nil
 
 &gt; data.contains?(&quot;foo&quot;, &quot;bar&quot;)
-ERROR: {
-  :message &quot;contains? is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: contains? is not defined for type string
+  at: [interactive]:14:10
+  source: data.contains?(&quot;foo&quot;, &quot;bar&quot;)
 </code></pre>
 
 <h3 id="index-of-1">index_of</h3>
@@ -2592,11 +2595,11 @@ nil
 nil
 
 &gt; data.map(&quot;foo&quot;, (x) -&gt; x)
-ERROR: {
-  :message &quot;map is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.map(&quot;foo&quot;, (x) -&gt; x)
 </code></pre>
 
 <h3 id="flatmap">flatmap</h3>
@@ -2628,11 +2631,11 @@ nil
 nil
 
 &gt; data.flatmap(&quot;foo&quot;, (x) -&gt; x)
-ERROR: {
-  :message &quot;map is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.flatmap(&quot;foo&quot;, (x) -&gt; x)
 </code></pre>
 
 <h3 id="mapcat">mapcat</h3>
@@ -2664,11 +2667,11 @@ nil
 nil
 
 &gt; data.mapcat(&quot;foo&quot;, (x) -&gt; x)
-ERROR: {
-  :message &quot;map is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: map is not defined for type string
+  at: [interactive]:14:10
+  source: data.mapcat(&quot;foo&quot;, (x) -&gt; x)
 </code></pre>
 
 <h3 id="zip">zip</h3>
@@ -2809,11 +2812,11 @@ nil
 nil
 
 &gt; data.reduce(&quot;foo&quot;, 0, (x) -&gt; x)
-ERROR: {
-  :message &quot;reduce is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce(&quot;foo&quot;, 0, (x) -&gt; x)
 </code></pre>
 
 <h3 id="reduce-until">reduce_until</h3>
@@ -2859,11 +2862,11 @@ nil
 nil
 
 &gt; data.reduce_until(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
-ERROR: {
-  :message &quot;reduce_until is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce_until is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce_until(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 </code></pre>
 
 <h3 id="reduce-while">reduce_while</h3>
@@ -2909,11 +2912,11 @@ nil
 nil
 
 &gt; data.reduce_while(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
-ERROR: {
-  :message &quot;reduce_while is not defined for type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: reduce_while is not defined for type string
+  at: [interactive]:14:10
+  source: data.reduce_while(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 </code></pre>
 
 <h2 id="library-time">library time</h2>
@@ -3515,11 +3518,11 @@ nil
 nil
 
 &gt; time.with_year(time.epoch, 1000000000)
-ERROR: {
-  :message &quot;Invalid value for Year (valid values -999999999 - 999999999): 1000000000&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
+  at: [interactive]:14:10
+  source: time.with_year(time.epoch, 1000000000)
 </code></pre>
 
 <h3 id="with-month">with_month</h3>
@@ -3542,11 +3545,11 @@ nil
 nil
 
 &gt; time.with_month(time.epoch, 13)
-ERROR: {
-  :message &quot;Invalid value for MonthOfYear (valid values 1 - 12): 13&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for MonthOfYear (valid values 1 - 12): 13
+  at: [interactive]:14:10
+  source: time.with_month(time.epoch, 13)
 
 </code></pre>
 
@@ -3570,11 +3573,11 @@ nil
 nil
 
 &gt; time.with_day_of_month(time.epoch, 33)
-ERROR: {
-  :message &quot;Invalid value for DayOfMonth (valid values 1 - 28/31): 33&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
+  at: [interactive]:14:10
+  source: time.with_day_of_month(time.epoch, 33)
 </code></pre>
 
 <h3 id="with-hour">with_hour</h3>
@@ -3597,11 +3600,11 @@ nil
 nil
 
 &gt; time.with_hour(time.epoch, 25)
-ERROR: {
-  :message &quot;Invalid value for HourOfDay (valid values 0 - 23): 25&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for HourOfDay (valid values 0 - 23): 25
+  at: [interactive]:14:10
+  source: time.with_hour(time.epoch, 25)
 </code></pre>
 
 <h3 id="with-minute">with_minute</h3>
@@ -3624,11 +3627,11 @@ nil
 nil
 
 &gt; time.with_minute(time.epoch, 78)
-ERROR: {
-  :message &quot;Invalid value for MinuteOfHour (valid values 0 - 59): 78&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
+  at: [interactive]:14:10
+  source: time.with_minute(time.epoch, 78)
 </code></pre>
 
 <h3 id="with-second">with_second</h3>
@@ -3651,11 +3654,11 @@ nil
 nil
 
 &gt; time.with_second(time.epoch, 78)
-ERROR: {
-  :message &quot;Invalid value for SecondOfMinute (valid values 0 - 59): 78&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
+  at: [interactive]:14:10
+  source: time.with_second(time.epoch, 78)
 </code></pre>
 
 <h3 id="with-nano-of-second">with_nano_of_second</h3>
@@ -3678,11 +3681,11 @@ nil
 nil
 
 &gt; time.with_nano_of_second(time.epoch, 1000000000)
-ERROR: {
-  :message &quot;Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
+  at: [interactive]:14:10
+  source: time.with_nano_of_second(time.epoch, 1000000000)
 </code></pre>
 
 <h3 id="with-zone">with_zone</h3>
@@ -3708,11 +3711,11 @@ nil
 nil
 
 &gt; time.with_zone(time.epoch, &quot;---&quot;)
-ERROR: {
-  :message &quot;unknown time zone id: ---&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unknown time zone id: ---
+  at: [interactive]:14:10
+  source: time.with_zone(time.epoch, &quot;---&quot;)
 </code></pre>
 
 <h3 id="same-instant-at-zone">same_instant_at_zone</h3>
@@ -3742,11 +3745,11 @@ nil
 nil
 
 &gt; time.same_instant_at_zone(time.epoch, &quot;---&quot;)
-ERROR: {
-  :message &quot;unknown time zone id: ---&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unknown time zone id: ---
+  at: [interactive]:14:10
+  source: time.same_instant_at_zone(time.epoch, &quot;---&quot;)
 </code></pre>
 
 <h3 id="unix-timestamp">unix_timestamp</h3>
@@ -3887,11 +3890,11 @@ nil
 
 # patterns specifies mandatory @ sign and backticks before timezone
 &gt; f(&quot;2017-04-23T21:43:11 Europe/Berlin&quot;)
-ERROR: {
-  :message &quot;Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19
+  at: [interactive]:14:10
+  source: f(&quot;2017-04-23T21:43:11 Europe/Berlin&quot;)
 
 # strict parser
 &gt; f: time.parser('uuuu-MM-dd')
@@ -3899,11 +3902,11 @@ function
 
 # there is no march 32nd
 &gt; f(&quot;2015-03-32&quot;)
-ERROR: {
-  :message &quot;Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
+  at: [interactive]:14:10
+  source: f(&quot;2015-03-32&quot;)
 
 # lenient parser
 &gt; f: time.parser('uuuu-MM-dd', true)
@@ -3978,11 +3981,11 @@ Infinity
 NaN
 
 &gt; math.abs(math.min_long)
-ERROR: {
-  :message &quot;cannot represent magnitude as long&quot;,
-  :code &quot;NUMBER_OUT_OF_BOUNDS&quot;,
-  ...
-}
+ERROR:
+  code: NUMBER_OUT_OF_BOUNDS
+  message: cannot represent magnitude as long
+  at: [interactive]:14:10
+  source: math.abs(math.min_long)
 
 &gt; math.abs(math.min_long as double)
 9.223372036854776E18
@@ -3991,11 +3994,11 @@ ERROR: {
 nil
 
 &gt; math.abs(&quot;hello&quot;)
-ERROR: {
-  :message &quot;cannot determine magnitude of type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot determine magnitude of type string
+  at: [interactive]:14:10
+  source: math.abs(&quot;hello&quot;)
 </code></pre>
 
 <h3 id="rand">rand</h3>
@@ -4078,11 +4081,11 @@ If <code>x</code> is a long, returns x+1. </p>
 nil
 
 &gt; math.inc([])
-ERROR: {
-  :message &quot;cannot increment type list&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot increment type list
+  at: [interactive]:14:10
+  source: math.inc([])
 </code></pre>
 
 <h3 id="dec">dec</h3>
@@ -4114,11 +4117,11 @@ If <code>x</code> is a long, returns x-1. </p>
 nil
 
 &gt; math.dec([])
-ERROR: {
-  :message &quot;cannot decrement type list&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot decrement type list
+  at: [interactive]:14:10
+  source: math.dec([])
 </code></pre>
 
 <h3 id="compare-1">compare</h3>
@@ -4171,11 +4174,11 @@ nil
 nil
 
 &gt; math.min([&quot;foo&quot;])
-ERROR: {
-  :message &quot;cannot compare type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot compare type string
+  at: [interactive]:14:10
+  source: math.min([&quot;foo&quot;])
 </code></pre>
 
 <h3 id="max">max</h3>
@@ -4201,11 +4204,11 @@ nil
 nil
 
 &gt; math.max([&quot;foo&quot;])
-ERROR: {
-  :message &quot;cannot compare type string&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: cannot compare type string
+  at: [interactive]:14:10
+  source: math.max([&quot;foo&quot;])
 </code></pre>
 
 <h3 id="round">round</h3>
@@ -4554,11 +4557,11 @@ If <code>lenient</code> is <code>true</code> then partial matches of <code>x</co
 203.23
 
 &gt; f(&quot;203.23kg&quot;)
-ERROR: {
-  :message &quot;Partial match not allowed. Parsing ended at index: 6&quot;,
-  :code &quot;ILLEGAL_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Partial match not allowed. Parsing ended at index: 6
+  at: [interactive]:14:10
+  source: f(&quot;203.23kg&quot;)
 
 # lenient parser
 &gt; f: math.parser('0.##', nil, true)

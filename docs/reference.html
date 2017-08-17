@@ -189,6 +189,8 @@
 <ul>
 <li><a href="#throwing-errors">Throwing errors</a></li>
 <li><a href="#catching-errors">Catching errors</a></li>
+<li><a href="#error-conventions">Error conventions</a></li>
+<li><a href="#capturing-the-error-trace">Capturing the error trace</a></li>
 </ul></li>
 <li><a href="#references">References</a>
 <ul>
@@ -744,9 +746,20 @@ export library conf {
 <p>This file uses environment configuration through the global reference <code>$env</code>.</p>
 
 <pre><code class="language-tweakflow"># main.tf
-library my_lib {
+library app {
   file_path: (string prefix) -&gt; $env.conf.data_path .. prefix .. &quot;_data.csv&quot;
 }
+</code></pre>
+
+<p>On the REPL:</p>
+
+<pre><code class="language-tweakflow">&gt; \load main.tf environments/local.tf # load main with local environment
+&gt; app.file_path(&quot;foo&quot;)
+&quot;/home/me/my_project/data/foo_data.csv&quot;
+
+&gt; \load main.tf environments/production.tf # load main with production environment
+&gt; app.file_path(&quot;foo&quot;)
+&quot;/var/incoming/data/foo_data.csv&quot;
 </code></pre>
 
 <h4 id="imports">Imports</h4>
@@ -1183,10 +1196,13 @@ foo.tf&gt; \meta bar.baz
 98.0
 
 &gt; &quot;200.0kg&quot; as double
-ERROR: {
-  :message &quot;Cannot cast 200.0kg to double&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast 200.0kg to double
+  at: [interactive]:3:10
+  source: &quot;200.0kg&quot; as double
+
+
 </code></pre>
 
 <p>String as list</p>
@@ -1387,16 +1403,19 @@ function
 }
 
 &gt; [&quot;a&quot; &quot;b&quot; nil &quot;d&quot;] as dict # nil keys are not allowed
-ERROR: {
-  :message &quot;Cannot cast list to dict with nil key at index: 2&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast list to dict with nil key at index: 2
+  at: [interactive]:3:10
+  source: [&quot;a&quot; &quot;b&quot; nil &quot;d&quot;] as dict
 
 &gt; [1 2 3] as dict
-ERROR: {
-  :message &quot;Cannot cast list with odd number of items to dict&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast list with odd number of items to dict
+  at: [interactive]:3:11
+  source: [1 2 3] as dict
+
 </code></pre>
 
 <h3 id="dict">Dict</h3>
@@ -1603,7 +1622,7 @@ function
 
 <h4 id="functions-in-java">Functions in Java</h4>
 
-<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
+<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
 
 <table>
 <thead>
@@ -1615,12 +1634,12 @@ function
 
 <tbody>
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
 <td>Implements zero-parameter functions.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
 <td>Implements single-parameter functions.</td>
 </tr>
 
@@ -1630,23 +1649,23 @@ function
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
 <td>Implements functions with three paramters.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
 <td>Implements functions with four parameters</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
 <td>Implements functions with any number of parameters. Arguments are passed as an array of values.</td>
 </tr>
 </tbody>
 </table>
 
-<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
+<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.3/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
 
 <pre><code class="language-tweakflow">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
 function
@@ -1666,7 +1685,7 @@ function
 &quot;3&quot;
 </code></pre>
 
-<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.1/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
+<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.3/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
 
 <h3 id="void">Void</h3>
 
@@ -1920,11 +1939,11 @@ function
 <p>Passing more than the declared number of positional arguments is an error.</p>
 
 <pre><code class="language-tweakflow">&gt; f(42, &quot;test&quot;, &quot;too much&quot;)
-ERROR: {
-  :message &quot;cannot call function with 3 arguments&quot;,
-  :code &quot;UNEXPECTED_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: cannot call function with 3 arguments
+  at: [interactive]:4:5
+  source: `$`: f(42, &quot;test&quot;, &quot;too much&quot;)
 </code></pre>
 
 <p>Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value <code>nil</code> unless explicitly specified in the function definition.</p>
@@ -1971,10 +1990,11 @@ nil
 <p>It is an error to supply argument names not present in function parameters:</p>
 
 <pre><code class="language-tweakflow">&gt; f(id: 42, name: &quot;foo&quot;, country: &quot;US&quot;)
-ERROR: {
-  :message &quot;Function does not have parameter named: country&quot;,
-  :code &quot;UNEXPECTED_ARGUMENT&quot;,
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: Function does not have parameter named: country
+  at: [interactive]:4:33
+  source: country: &quot;US&quot;
 </code></pre>
 
 <h4 id="mixed-positional-and-named-arguments">Mixed positional and named arguments</h4>
@@ -1990,11 +2010,11 @@ ERROR: {
 <p>It is an error to supply any positional arguments after named arguments.</p>
 
 <pre><code class="language-tweakflow">&gt; f(id: 42, &quot;test&quot;) # error, positional arguments cannot follow named arguments
-ERROR: {
-  :message &quot;Positional argument cannot follow named arguments.&quot;,
-  :code &quot;UNEXPECTED_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: Positional argument cannot follow named arguments.
+  at: [interactive]:4:20
+  source: &quot;test&quot;
 </code></pre>
 
 <p>It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.</p>
@@ -2072,11 +2092,11 @@ ERROR: {
 &quot;42-foo&quot;
 
 &gt; f(...{:name &quot;foo&quot;}, ...[42, &quot;testing&quot;]) # no positional args allowed after named args
-ERROR: {
-  :message &quot;List splat provides positional arguments and cannot follow named arguments.&quot;,
-  :code &quot;UNEXPECTED_ARGUMENT&quot;,
-  ...
-}
+ERROR:
+  code: UNEXPECTED_ARGUMENT
+  message: List splat provides positional arguments and cannot follow named arguments.
+  at: [interactive]:4:31
+  source: ...[42, &quot;testing&quot;]
 </code></pre>
 
 <h4 id="argument-casting">Argument casting</h4>
@@ -2087,11 +2107,11 @@ ERROR: {
 &quot;3-9837&quot;
 
 &gt; f(&quot;abc&quot;, &quot;def&quot;) # cannot cast first argument to long
-ERROR: {
-  :message &quot;Cannot cast abc to long&quot;,
-  :code &quot;CAST_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast abc to long
+  at: [interactive]:4:10
+  source: f(&quot;abc&quot;, &quot;def&quot;)
 </code></pre>
 
 <h4 id="return-value-casting">Return value casting</h4>
@@ -2899,24 +2919,28 @@ function
 3
 
 &gt; add(math.max_long, 1)
-ERROR: {
-  :code &quot;CUSTOM_ERROR&quot;,
-  :value {
-    :message &quot;binary overflow adding 9223372036854775807 and 1&quot;,
-    :code &quot;overflow&quot;
-  },
-  ...
-}        
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: [interactive]:8:5
+  source: throw {:code &quot;overflow&quot;, :message &quot;binary overflow adding #{x} and #{y}&quot;}
+  value: {
+  :message &quot;binary overflow adding 9223372036854775807 and 1&quot;,
+  :code &quot;overflow&quot;
+}
+
 
 &gt; add(math.min_long, -1)
-ERROR: {
-  :code &quot;CUSTOM_ERROR&quot;,
-  :value {
-    :message &quot;binary underflow adding -9223372036854775808 and -1&quot;,
-    :code &quot;overflow&quot;
-  },
-  ...
+ERROR:
+  code: CUSTOM_ERROR
+  message: CUSTOM_ERROR
+  at: [interactive]:11:5
+  source: throw {:code &quot;overflow&quot;, :message &quot;binary underflow adding #{x} and #{y}&quot;}
+  value: {
+  :message &quot;binary underflow adding -9223372036854775808 and -1&quot;,
+  :code &quot;overflow&quot;
 }
+
 </code></pre>
 
 <h4 id="catching-errors">Catching errors</h4>
@@ -2955,6 +2979,108 @@ function
 
 &gt; add_safe(math.max_long, 1)
 nil
+</code></pre>
+
+<h4 id="error-conventions">Error conventions</h4>
+
+<p>By convention, the tweakflow runtime and standard libraries throw dict errors that contain the following keys:</p>
+
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Content</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>code</td>
+<td>a short mnemonic string code indicating the nature of the error</td>
+</tr>
+
+<tr>
+<td>message</td>
+<td>a text description of the problem</td>
+</tr>
+</tbody>
+</table>
+
+<p>Additional keys may be present depending on the nature of the error.</p>
+
+<pre><code class="language-tweakflow">&gt; try 1//0 catch error error
+{
+  :message &quot;division by zero&quot;,
+  :code &quot;DIVISION_BY_ZERO&quot;
+}
+&gt; try throw &quot;foo&quot; catch error error
+&quot;foo&quot;
+</code></pre>
+
+<h4 id="capturing-the-error-trace">Capturing the error trace</h4>
+
+<p>When catching errors with two identifiers, the second identifier contains a detailed trace of where the error occurred. The trace is a dict containing the following keys:</p>
+
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Content</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>code</td>
+<td>a short mnemonic string code indicating the nature of the error</td>
+</tr>
+
+<tr>
+<td>message</td>
+<td>a text description of the problem</td>
+</tr>
+
+<tr>
+<td>at (optional)</td>
+<td>location where the error was thrown as string <code>file:line:char</code></td>
+</tr>
+
+<tr>
+<td>source (optional)</td>
+<td>source code of the expression throwing the exception</td>
+</tr>
+
+<tr>
+<td>value (optional)</td>
+<td>error value as caught in first catch identifier</td>
+</tr>
+
+<tr>
+<td>stack (optional)</td>
+<td>list of string locations leading to the error, each in <code>file:line:char</code> format</td>
+</tr>
+</tbody>
+</table>
+
+<p>Additional keys may be present depending on the nature of the error.</p>
+
+<pre><code class="language-tweakflow">&gt; try 1//0 catch _, trace trace
+{
+  :message &quot;division by zero&quot;,
+  :stack [&quot;[interactive]:3:5&quot;, &quot;[interactive]:2:3&quot;, &quot;[interactive]:1:1&quot;],
+  :code &quot;DIVISION_BY_ZERO&quot;,
+  :at &quot;[interactive]:3:14&quot;,
+  :source &quot;1//0&quot;
+}
+&gt; try throw &quot;foo&quot; catch _, trace trace
+{
+  :message &quot;CUSTOM_ERROR&quot;,
+  :stack [&quot;[interactive]:3:14&quot;, &quot;[interactive]:3:5&quot;, &quot;[interactive]:2:3&quot;, &quot;[interactive]:1:1&quot;],
+  :code &quot;CUSTOM_ERROR&quot;,
+  :value &quot;foo&quot;,
+  :at &quot;[interactive]:3:14&quot;,
+  :source &quot;throw \&quot;foo\&quot;&quot;
+}
 </code></pre>
 
 <h3 id="references">References</h3>
@@ -3078,11 +3204,11 @@ module-refs.tf&gt; utils.f(&quot;foo&quot;)
 function
 
 &gt; strings
-ERROR: {
-  :message &quot;Cannot reference LIBRARY. Not a value.&quot;,
-  :code &quot;INVALID_REFERENCE_TARGET&quot;,
-  ...
-}
+ERROR:
+  code: INVALID_REFERENCE_TARGET
+  message: Cannot reference LIBRARY. Not a value.
+  at: [interactive]:3:10
+  source: strings
 </code></pre>
 
 <h4 id="referencing-non-value-entities">Referencing non-value entities</h4>
@@ -3118,10 +3244,12 @@ let {
   d: c
 } [a, b, c, d]
 \e
-ERROR: {
-  :code &quot;CYCLIC_REFERENCE&quot;,
-  ...
-}
+ERROR:
+  code: CYCLIC_REFERENCE
+  message: CYCLIC_REFERENCE
+  at: [interactive]:7:3
+  source: d: c
+  cycle: &quot;d@[interactive]:7:3 -&gt; c@[interactive]:6:3 -&gt; b@[interactive]:5:3 -&gt; a@[interactive]:4:3 -&gt; d@[interactive]:7:3&quot;
 </code></pre>
 
 <p>A recursive definition of the factorial function:</p>
@@ -3273,11 +3401,11 @@ true
 &gt; -(NaN)
 NaN
 &gt; -(&quot;foo&quot;)
-ERROR: {
-  :message &quot;Cannot negate type: string&quot;,
-  :code &quot;CAST_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: Cannot negate type: string
+  at: [interactive]:3:10
+  source: -(&quot;foo&quot;)
 
 </code></pre>
 
@@ -3547,10 +3675,11 @@ nil
 &gt; 10 // -3
 -3
 &gt; 10 // 0
-ERROR: {
-  :code &quot;DIVISION_BY_ZERO&quot;,
-  ...
-}
+ERROR:
+  code: DIVISION_BY_ZERO
+  message: division by zero
+  at: [interactive]:3:10
+  source: 10 // 0
 </code></pre>
 
 <h4 id="division-remainder">Division remainder</h4>
@@ -3719,11 +3848,11 @@ ERROR: {
 &gt; nil**nil
 nil
 &gt; &quot;2&quot;**&quot;3&quot;
-ERROR: {
-  :message &quot;cannot lift base of type string to exponent of type string&quot;,
-  :code &quot;CAST_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: cannot lift base of type string to exponent of type string
+  at: [interactive]:3:10
+  source: &quot;2&quot;**&quot;3&quot;
 </code></pre>
 
 <h4 id="equality">Equality</h4>
@@ -3814,11 +3943,12 @@ false
 &gt; -Infinity &lt; 5
 true
 &gt; &quot;1&quot; &lt; 1
-ERROR: {
-  :message &quot;Cannot compare types: string and long&quot;,
-  :code &quot;CAST_ERROR&quot;,
-  ...
-}
+ERROR:
+  code: CAST_ERROR
+  message: cannot compare types string and long
+  at: [interactive]:3:10
+  source: &quot;1&quot; &lt; 1
+
 </code></pre>
 
 <h4 id="less-than-or-equal">Less than or equal</h4>
