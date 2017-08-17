@@ -89,25 +89,25 @@ public class Run {
         .setDefault(new ArrayList())
         .action(Arguments.append());
 
-    parser.addArgument("module")
-        .type(String.class);
-
     parser.addArgument("-m", "--main")
         .setDefault("main.main")
-        .nargs("?")
         .type(String.class);
 
     parser.addArgument("-a", "--arg")
         .required(false)
-        .dest("args")
+        .dest("arg")
         .type(StringArg.class)
         .action(Arguments.append());
 
     parser.addArgument("-ea", "--eval_arg")
         .required(false)
-        .dest("args")
+        .dest("arg")
         .type(EvalArg.class)
         .action(Arguments.append());
+
+    parser.addArgument("module")
+        .type(String.class)
+        .nargs("+");
 
     return parser;
 
@@ -155,7 +155,8 @@ public class Run {
 
     ArgumentParser parser = createMainArgumentParser();
     LoadPath loadPath = TweakFlow.makeMinimalLoadPath();
-    String path = "std";
+    List<String> modules = Collections.singletonList("std");
+
     String main = "main.main";
     String lib = "main";
     String var = "main";
@@ -167,7 +168,7 @@ public class Run {
       // load path
       Namespace res = parser.parseArgs(args);
       List loadPathArgs = (List) res.getAttrs().get("load_path");
-      path = res.getString("module");
+      modules = res.getList("module");
 
       if (loadPathArgs.size() == 0){
         // default load path
@@ -187,7 +188,7 @@ public class Run {
       var = mainParts[1];
 
       // args
-      List callArgs = (List) res.getAttrs().get("args");
+      List callArgs = (List) res.getAttrs().get("arg");
       if (callArgs == null){
         callArgs = Collections.emptyList();
       }
@@ -214,9 +215,9 @@ public class Run {
 
     try {
       Loader loader = new Loader(loadPath);
-      TweakFlowRuntime runtime = TweakFlow.evaluate(loader, path, new DefaultDebugHandler());
+      TweakFlowRuntime runtime = TweakFlow.evaluate(loader, modules, new DefaultDebugHandler());
 
-      TweakFlowRuntime.VarHandle entryHandle = runtime.createVarHandle(path, lib, var);
+      TweakFlowRuntime.VarHandle entryHandle = runtime.createVarHandle(modules.get(0), lib, var);
 
       EvaluatorUserCallContext entryCallContext = runtime.createCallContext(entryHandle);
       Value result = entryCallContext.call(entryHandle.getValue(), callArgValues);

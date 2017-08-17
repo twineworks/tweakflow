@@ -79,8 +79,11 @@ public class TweakFlow {
   }
 
   public static TweakFlowRuntime evaluate(Loader loader, String path, DebugHandler debugHandler){
-
     List<String> paths = Collections.singletonList(path);
+    return evaluate(loader, paths, debugHandler);
+  }
+
+  public static TweakFlowRuntime evaluate(Loader loader, List<String> paths, DebugHandler debugHandler){
 
     AnalysisResult analysisResult = Analysis.analyze(paths, loader);
     if (analysisResult.isError()) throw analysisResult.getException();
