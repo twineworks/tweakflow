@@ -30,17 +30,20 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
+import java.util.List;
+
 public class LoadModuleCommand implements Command {
 
   public static void supplyParser(Subparsers subparsers) {
     Subparser subparser = subparsers.addParser("\\load", false);
     subparser.aliases("\\l");
     subparser.defaultHelp(false);
-    subparser.help("load a module, removes interactive variables");
+    subparser.help("load a set of modules, removes interactive variables");
     subparser.setDefault("command", new LoadModuleCommand());
 
-    subparser.addArgument("path")
-        .help("the path to load, relative paths are searched in load_path")
+    subparser.addArgument("module")
+        .help("modules to load, first given module's scope is entered, relative paths are searched in load_path")
+        .nargs("+")
         .type(String.class);
 
   }
@@ -49,10 +52,10 @@ public class LoadModuleCommand implements Command {
   public ReplState perform(Namespace args, String input, TextTerminal terminal, ReplState state) {
 
     ReplState loadState = state.copy();
-    String path = args.getString("path");
+    List<String> paths = args.getList("module");
 
     loadState.getVarDefs().clear();
-    loadState.setModulePath(path);
+    loadState.setModulePaths(paths);
     loadState.evaluate();
     if (loadState.getEvaluationResult().isSuccess()){
       return loadState;

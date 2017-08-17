@@ -40,17 +40,16 @@ import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.util.LangUtil;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ReplState {
 
   private final String stdlibPath = "std.tf";
 
   // currently loaded module
-  private String modulePath = stdlibPath;
+  private String mainModulePath = stdlibPath;
+  private List<String> modulePaths = Collections.singletonList(mainModulePath);
+  private String mainModuleKey = mainModulePath;
 
   // file system load path
   private List<String> loadPath = new ArrayList<>();
@@ -83,16 +82,23 @@ public class ReplState {
     return loadPath;
   }
 
-  public String getModulePath() {
-    return modulePath;
+  public String getMainModulePath() {
+    return mainModulePath;
+  }
+
+  public String getMainModuleKey() {
+    return mainModuleKey;
   }
 
   public String getPromptVarName() {
     return promptVarName;
   }
 
-  public ReplState setModulePath(String modulePath) {
-    this.modulePath = modulePath;
+  public ReplState setModulePaths(List<String> modulePaths){
+    Objects.requireNonNull(modulePaths);
+    if (modulePaths.size() == 0) throw new IllegalArgumentException("modulePaths cannot be empty");
+    this.modulePaths = modulePaths;
+    mainModulePath = modulePaths.get(0);
     return this;
   }
 
@@ -114,9 +120,12 @@ public class ReplState {
     if (analysisResult == null) return 0;
     AnalysisSet analysisSet = analysisResult.getAnalysisSet();
     if (analysisSet == null) return 0;
-    AnalysisUnit analysisUnit = analysisSet.getUnits().get(getModulePath());
-    if (analysisUnit == null) return 0;
-    return analysisUnit.getLoadDurationMillis();
+    long loadDuration = 0;
+    for (AnalysisUnit analysisUnit : analysisSet.getUnits().values()) {
+      if (analysisUnit == null) return 0;
+      loadDuration += analysisUnit.getLoadDurationMillis();
+    }
+    return loadDuration;
   }
 
   public MemoryLocation getInteractiveModuleLocation() {
@@ -175,7 +184,7 @@ public class ReplState {
         .getCells()
         .gets(getInteractivePath())
         .getCells()
-        .gets(getModulePath());
+        .gets(mainModuleKey);
   }
 
   public Cell getModuleSpace(){
@@ -184,7 +193,7 @@ public class ReplState {
         .getGlobalMemorySpace()
         .getUnitSpace()
         .getCells()
-        .gets(getModulePath());
+        .gets(mainModuleKey);
   }
 
   public MemorySpace getUnitSpace(){
@@ -214,7 +223,7 @@ public class ReplState {
         .setEvaluationResult(evaluationResult)
         .setLoader(loader)
         .setInteractiveModuleLocation(interactiveModuleLocation)
-        .setModulePath(modulePath)
+        .setModulePaths(new ArrayList<>(modulePaths))
         .setMultiLine(multiLine)
         .setPromptInput(promptInput);
 
@@ -243,7 +252,9 @@ public class ReplState {
     }
 
     setLoader(new Loader(lp));
-    modulePath = loader.getLoadPath().findParseUnit(modulePath).getPath();
+
+    // resolved path is used as a key in data structures
+    mainModuleKey = loader.getLoadPath().findParseUnit(mainModulePath).getPath();
 
   }
 
@@ -254,7 +265,7 @@ public class ReplState {
     // interactive unit for scope of loaded module
     builder
         .append("interactive\n")
-        .append("  in_scope ").append(LangUtil.escapeIdentifier(modulePath)).append("\n");
+        .append("  in_scope ").append(LangUtil.escapeIdentifier(mainModuleKey)).append("\n");
 
     // add defined variables
     Map<String, String> varDefs = getVarDefs();
@@ -300,8 +311,7 @@ public class ReplState {
     }
 
     List<String> pathList = new ArrayList<>();
-    pathList.add(getStdlibPath());
-    pathList.add(getModulePath());
+    pathList.addAll(modulePaths);
     pathList.add(getInteractivePath());
 
     // compile

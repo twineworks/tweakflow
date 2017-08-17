@@ -56,8 +56,8 @@ public class Repl {
         .action(Arguments.append());
 
     parser.addArgument("module")
-        .setDefault(new ReplState().getModulePath())
-        .nargs("?")
+        .setDefault(new ReplState().getMainModulePath())
+        .nargs("*")
         .type(String.class);
 
     return parser;
@@ -118,8 +118,8 @@ public class Repl {
       }
 
       // put current module path in state
-      String module = res.getString("module");
-      state.setModulePath(module);
+      List<String> modules = res.getList("module");
+      state.setModulePaths(modules);
 
 
     } catch (ArgumentParserException e) {
@@ -157,7 +157,7 @@ public class Repl {
   }
 
   private static String prompt(ReplState state){
-    String prompt = Paths.get(state.getModulePath()).getFileName().toString();
+    String prompt = Paths.get(state.getMainModuleKey()).getFileName().toString();
 
     if (state.isMultiLine()){
       prompt += "*";
