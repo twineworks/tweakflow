@@ -82,7 +82,7 @@ public class LoadPath {
   }
 
   public LoadPath addCurrentWorkingDirectory(){
-    getLocations().add(new FilesystemLocation(Paths.get("")));
+    getLocations().add(new FilesystemLocation(Paths.get(""), false));
     return this;
   }
 

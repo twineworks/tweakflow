@@ -24,20 +24,39 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.FilesystemParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class FilesystemLocation implements LoadPathLocation {
 
   private final Path rootPath;
+  private final Path absRootPath;
+  private final boolean strict;
   private final UserObjectFactory userObjectFactory = new UserObjectFactory();
+  private final String defaultExtension;
+
+
+  public FilesystemLocation(Path rootPath, boolean strict, String defaultExtension){
+    Objects.requireNonNull(rootPath, defaultExtension);
+    this.rootPath = rootPath;
+    this.absRootPath = rootPath.toAbsolutePath();
+    this.strict = strict;
+    this.defaultExtension = defaultExtension;
+  }
 
   public FilesystemLocation(Path rootPath) {
-    this.rootPath = rootPath;
+    this(rootPath, true, ".tf");
+  }
+
+  public FilesystemLocation(Path rootPath, boolean strict) {
+    this(rootPath, strict, ".tf");
   }
 
   public Path getRootPath() {
@@ -48,25 +67,41 @@ public class FilesystemLocation implements LoadPathLocation {
   public boolean pathExists(String path) {
 
     path = resolve(path);
-    // TODO: ensure resolved path is still within root path
-    return Paths.get(path).toFile().exists();
+    return pathAccessible(path) && Paths.get(path).toFile().exists();
 
+  }
+
+  private boolean pathAccessible(String path){
+    return !strict || path.startsWith(pathToString(absRootPath));
   }
 
   @Override
   public ParseUnit getParseUnit(String path) {
-    // TODO: ensure resolved path still starts with root path
+
+    path = resolve(path);
+    if (!pathAccessible(path)){
+      throw new LangException(LangError.CANNOT_FIND_MODULE, "cannot access path "+path+" from file system location "+absRootPath);
+    }
     return new FilesystemParseUnit(this, resolve(path));
   }
 
   @Override
   public String resolve(String path) {
 
-    if (!path.endsWith(".tf")){
-      path = path + ".tf";
-    }
+    path = applyDefaultExtension(path);
 
-    return rootPath.resolve(path).toAbsolutePath().normalize().toString().replace('\\','/');
+    return pathToString(rootPath.resolve(path).toAbsolutePath().normalize());
+  }
+
+  private String applyDefaultExtension(String path) {
+    if (!path.endsWith(defaultExtension)){
+      path = path + defaultExtension;
+    }
+    return path;
+  }
+
+  private String pathToString(Path path){
+    return path.toString().replace('\\', '/');
   }
 
   @Override

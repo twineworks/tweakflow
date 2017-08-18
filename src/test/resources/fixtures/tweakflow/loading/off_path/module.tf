@@ -1,0 +1,3 @@
+library util {
+  foo: "";
+}

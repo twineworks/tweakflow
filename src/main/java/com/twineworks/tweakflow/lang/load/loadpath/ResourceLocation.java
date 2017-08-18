@@ -24,6 +24,8 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
@@ -37,9 +39,15 @@ public class ResourceLocation implements LoadPathLocation {
   private final Path rootPath;
   private final UserObjectFactory userObjectFactory = new UserObjectFactory();
   private final static Path BASE_PATH = Paths.get("");
+  private final String defaultExtension;
+
+  public ResourceLocation(Path rootPath, String defaultExtension){
+    this.rootPath = rootPath;
+    this.defaultExtension = defaultExtension;
+  }
 
   public ResourceLocation(Path rootPath) {
-    this.rootPath = rootPath;
+    this(rootPath, ".tf");
   }
 
   public ResourceLocation() {
@@ -53,22 +61,20 @@ public class ResourceLocation implements LoadPathLocation {
   @Override
   public boolean pathExists(String path) {
 
-    if (!path.endsWith(".tf")){
-      path = path + ".tf";
-    }
+    path = applyDefaultExtension(path);
+    path = pathToString(rootPath.resolve(path).normalize());
+    return pathAccessible(path) && InOut.resourceExists(path);
+  }
 
-    // TODO: ensure resolved path is still within root path
-    return InOut.resourceExists(pathToString(rootPath.resolve(path)));
+  private boolean pathAccessible(String path){
+    return path.startsWith(pathToString(rootPath));
   }
 
   @Override
   public ParseUnit getParseUnit(String path) {
 
-    if (!path.endsWith(".tf")){
-      path = path + ".tf";
-    }
+    path = applyDefaultExtension(path);
 
-    // TODO: ensure resolved path is still within root path
     Path normalized = rootPath.resolve(path).normalize();
     Path relative;
 
@@ -76,7 +82,11 @@ public class ResourceLocation implements LoadPathLocation {
       relative = normalized;
     }
     else{
-      relative = rootPath.relativize(normalized);
+      relative = rootPath.relativize(normalized).normalize();
+    }
+
+    if (!pathAccessible(pathToString(normalized))){
+      throw new LangException(LangError.CANNOT_FIND_MODULE, "cannot access path "+path+" from resource location "+pathToString(rootPath));
     }
 
     return new ResourceParseUnit(this, pathToString(relative), pathToString(normalized), this.getClass().getClassLoader());
@@ -85,13 +95,26 @@ public class ResourceLocation implements LoadPathLocation {
   @Override
   public String resolve(String path) {
 
-    if (!path.endsWith(".tf")){
-      path = path + ".tf";
-    }
+    path = applyDefaultExtension(path);
 
     Path normalized = rootPath.resolve(path).normalize();
-    Path relative = rootPath.normalize().relativize(normalized);
+
+    Path relative;
+    if (rootPath.equals(BASE_PATH)){
+      relative = normalized;
+    }
+    else{
+      relative = rootPath.relativize(normalized);
+    }
+
     return pathToString(relative);
+  }
+
+  private String applyDefaultExtension(String path) {
+    if (!path.endsWith(defaultExtension)){
+      path = path + defaultExtension;
+    }
+    return path;
   }
 
   @Override
@@ -99,9 +122,10 @@ public class ResourceLocation implements LoadPathLocation {
     return userObjectFactory;
   }
 
+
+
   private String pathToString(Path path){
-    String str = path.toString().replace('\\', '/');
-    return str;
+    return path.toString().replace('\\', '/');
   }
 
 }
