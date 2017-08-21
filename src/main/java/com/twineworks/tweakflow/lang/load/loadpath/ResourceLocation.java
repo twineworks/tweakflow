@@ -37,22 +37,32 @@ import java.nio.file.Paths;
 public class ResourceLocation implements LoadPathLocation {
 
   private final Path rootPath;
-  private final UserObjectFactory userObjectFactory = new UserObjectFactory();
+  private final UserObjectFactory userObjectFactory;
   private final static Path BASE_PATH = Paths.get("");
   private final String defaultExtension;
+  private final boolean allowNativeFunctions;
 
-  public ResourceLocation(Path rootPath, String defaultExtension){
-    this.rootPath = rootPath;
-    this.defaultExtension = defaultExtension;
-  }
-
-  public ResourceLocation(Path rootPath) {
-    this(rootPath, ".tf");
-  }
 
   public ResourceLocation() {
-    this(BASE_PATH);
+    this(BASE_PATH, true, ".tf");
   }
+  public ResourceLocation(Path rootPath) {
+    this(rootPath, true, ".tf");
+  }
+
+
+  public ResourceLocation(Path rootPath, String defaultExtension){
+    this(rootPath, true, defaultExtension);
+  }
+
+  public ResourceLocation(Path rootPath, boolean allowNativeFunctions, String defaultExtension){
+    this.rootPath = rootPath;
+    this.defaultExtension = defaultExtension;
+    this.allowNativeFunctions = allowNativeFunctions;
+    this.userObjectFactory =  allowNativeFunctions ? new UserObjectFactory() : null;
+  }
+
+
 
   public Path getRootPath() {
     return rootPath;
@@ -122,6 +132,10 @@ public class ResourceLocation implements LoadPathLocation {
     return userObjectFactory;
   }
 
+  @Override
+  public boolean allowsNativeFunctions() {
+    return allowNativeFunctions;
+  }
 
 
   private String pathToString(Path path){

@@ -48,7 +48,7 @@ public class Interpreter {
   }
 
   public EvaluationResult evaluate(){
-    EvaluationContext context = new EvaluationContext(userObjectFactory, debugHandler);
+    EvaluationContext context = new EvaluationContext(debugHandler);
     try {
       MemorySpaceBuilder.buildRuntimeSpace(runtimeSet);
       Evaluator.evaluateSpace(runtimeSet.getGlobalMemorySpace().getUnitSpace(), context);

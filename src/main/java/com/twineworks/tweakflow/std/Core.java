@@ -82,7 +82,7 @@ public final class Core {
     @Override
     public Value call(UserCallContext context, Value x) {
       if (x == Values.NIL) return Values.NIL;
-      return TweakFlow.evaluateExpression(x.string());
+      return TweakFlow.evaluateExpression(x.string(), false);
     }
   }
 

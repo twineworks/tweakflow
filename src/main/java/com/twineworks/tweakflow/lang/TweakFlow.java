@@ -99,8 +99,12 @@ public class TweakFlow {
   }
 
   public static Value evaluateExpression(String exp){
+    return evaluateExpression(exp, true);
+  }
 
-    MemoryParseUnit parseUnit = new MemoryLocation().add("<eval>", exp);
+  public static Value evaluateExpression(String exp, boolean allowNativeFunctions){
+
+    MemoryParseUnit parseUnit = new MemoryLocation(allowNativeFunctions).put("<eval>", exp);
     ParseResult parseResult = new Parser(parseUnit).parseExpression();
 
     if (parseResult.isError()){

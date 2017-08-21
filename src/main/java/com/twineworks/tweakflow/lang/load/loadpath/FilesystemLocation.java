@@ -39,24 +39,28 @@ public class FilesystemLocation implements LoadPathLocation {
   private final Path rootPath;
   private final Path absRootPath;
   private final boolean strict;
-  private final UserObjectFactory userObjectFactory = new UserObjectFactory();
+  private final UserObjectFactory userObjectFactory;
   private final String defaultExtension;
+  private final boolean allowNativeFunctions;
 
 
-  public FilesystemLocation(Path rootPath, boolean strict, String defaultExtension){
+  public FilesystemLocation(Path rootPath, boolean strict, boolean allowNativeFunctions, String defaultExtension){
     Objects.requireNonNull(rootPath, defaultExtension);
     this.rootPath = rootPath;
     this.absRootPath = rootPath.toAbsolutePath();
     this.strict = strict;
     this.defaultExtension = defaultExtension;
+    this.allowNativeFunctions = allowNativeFunctions;
+    userObjectFactory = allowNativeFunctions ? new UserObjectFactory(): null;
+
   }
 
   public FilesystemLocation(Path rootPath) {
-    this(rootPath, true, ".tf");
+    this(rootPath, true, true, ".tf");
   }
 
   public FilesystemLocation(Path rootPath, boolean strict) {
-    this(rootPath, strict, ".tf");
+    this(rootPath, strict, true, ".tf");
   }
 
   public Path getRootPath() {
@@ -107,6 +111,11 @@ public class FilesystemLocation implements LoadPathLocation {
   @Override
   public UserObjectFactory getUserObjectFactory() {
     return userObjectFactory;
+  }
+
+  @Override
+  public boolean allowsNativeFunctions() {
+    return allowNativeFunctions;
   }
 
 }

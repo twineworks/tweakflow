@@ -22,46 +22,17 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.errors;
+package com.twineworks.tweakflow.std;
 
-public enum LangError implements ErrorCode {
+import com.twineworks.tweakflow.LibraryTestHelper;
+import org.junit.Test;
 
-  OK,
-  UNKNOWN_ERROR,
-  PARSE_ERROR,
-  IO_ERROR,
-  CANNOT_FIND_MODULE,
-  CANNOT_FIND_EXPORT,
-  INVALID_IMPORT_PATH,
-  INVALID_REFERENCE_TARGET,
-  UNRESOLVED_REFERENCE,
-  ALREADY_DEFINED,
-  CYCLIC_REFERENCE,
-  INCOMPATIBLE_TYPES,
-  NUMBER_OUT_OF_BOUNDS,
-  LITERAL_VALUE_REQUIRED,
-  CAST_ERROR,
-  CANNOT_CALL,
-  USER_CLASS_SPEC_MISSING,
-  USER_CLASS_INCOMPATIBLE,
-  UNEXPECTED_ARGUMENT,
-  CUSTOM_ERROR,
-  INDEX_OUT_OF_BOUNDS,
-  NIL_ERROR,
-  DIVISION_BY_ZERO,
-  DEFAULT_PATTERN_NOT_LAST,
-  ILLEGAL_ARGUMENT,
-  INVALID_DATETIME,
-  NATIVE_CODE_RESTRICTED;
+public class CoreTest {
 
-  @Override
-  public int getNumber() {
-    return 0;
+  @Test
+  public void eval() throws Exception {
+    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
   }
 
-  @Override
-  public String getName() {
-    return this.name();
-  }
 
 }

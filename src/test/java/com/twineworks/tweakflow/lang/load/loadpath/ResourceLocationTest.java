@@ -24,11 +24,19 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
+import com.twineworks.tweakflow.interpreter.EvaluatorUserCallContext;
+import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
+import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.Test;
 
 import java.nio.file.Paths;
+import java.util.List;
 
+import static org.assertj.core.api.Fail.fail;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class ResourceLocationTest {
@@ -107,6 +115,34 @@ public class ResourceLocationTest {
   public void refuses_unit_off_path_file() throws Exception {
     ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
     loc.getParseUnit("../off_path/module.tf");
+  }
+
+  @Test
+  public void allowing_native_evaluates_native_function() throws Exception {
+    LoadPath loadPath = new LoadPath();
+    List<LoadPathLocation> locations = loadPath.getLocations();
+    locations.add(new ResourceLocation(Paths.get(assetDir), true, ".tf"));
+
+    TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
+    TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
+    EvaluatorUserCallContext callContext = runtime.createCallContext(varHandle);
+    assertThat(callContext.call(varHandle.getValue())).isSameAs(Values.TRUE);
+  }
+
+  @Test
+  public void disallowing_native_throws_evaluating_native_function() throws Exception {
+    LoadPath loadPath = new LoadPath();
+    List<LoadPathLocation> locations = loadPath.getLocations();
+    locations.add(new ResourceLocation(Paths.get(assetDir),false, ".tf"));
+
+    try {
+      TweakFlow.evaluate(new Loader(loadPath), "native.tf");
+    } catch(LangException e){
+      assertThat(e.getCode()).isEqualTo(LangError.NATIVE_CODE_RESTRICTED);
+      return;
+    }
+
+    fail("should have thrown");
   }
 
 }

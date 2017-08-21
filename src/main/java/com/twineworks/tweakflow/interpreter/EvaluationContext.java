@@ -25,7 +25,6 @@
 package com.twineworks.tweakflow.interpreter;
 
 import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -33,29 +32,22 @@ import java.util.Map;
 
 public class EvaluationContext {
 
-  private final UserObjectFactory userObjectFactory;
   private final DebugHandler debugHandler;
 
   private final Map<Cell, List<RecursiveDeferredClosure>> recursiveDeferredClosures;
 
-  public EvaluationContext(UserObjectFactory userObjectFactory) {
-    this.userObjectFactory = userObjectFactory;
+  public EvaluationContext() {
     this.debugHandler = new DefaultDebugHandler();
     this.recursiveDeferredClosures = new IdentityHashMap<>();
   }
 
-  public EvaluationContext(UserObjectFactory userObjectFactory, DebugHandler debugHandler) {
-    this.userObjectFactory = userObjectFactory;
+  public EvaluationContext(DebugHandler debugHandler) {
     this.debugHandler = debugHandler;
     this.recursiveDeferredClosures = new IdentityHashMap<>();
   }
 
   public Map<Cell, List<RecursiveDeferredClosure>> getRecursiveDeferredClosures() {
     return recursiveDeferredClosures;
-  }
-
-  public UserObjectFactory getUserObjectFactory() {
-    return userObjectFactory;
   }
 
   public DebugHandler getDebugHandler() {

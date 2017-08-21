@@ -96,7 +96,7 @@ public class MetaCommand implements Command {
     }
     else {
 
-      MemoryParseUnit parseUnit = new MemoryLocation().add("<prompt>", spaceRef);
+      MemoryParseUnit parseUnit = new MemoryLocation().put("<prompt>", spaceRef);
       ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
       if (parseResult.isError()){

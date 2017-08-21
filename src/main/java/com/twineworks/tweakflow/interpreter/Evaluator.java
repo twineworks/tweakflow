@@ -42,7 +42,6 @@ import com.twineworks.tweakflow.lang.ast.structure.VarDecNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
@@ -270,7 +269,7 @@ public class Evaluator {
         new GlobalMemorySpace(new GlobalScope()),
         Collections.emptyMap())
     );
-    return evaluateExpression(node, stack, new EvaluationContext(new UserObjectFactory()));
+    return evaluateExpression(node, stack, new EvaluationContext());
   }
 
   public static Value evaluateInEmptyScope(ExpressionOp op){
@@ -280,7 +279,7 @@ public class Evaluator {
         new GlobalMemorySpace(new GlobalScope()),
         Collections.emptyMap())
     );
-    return op.eval(stack, new EvaluationContext(new UserObjectFactory()));
+    return op.eval(stack, new EvaluationContext());
   }
 
   public static Value evaluateMetaExpression(MetaDataNode node){

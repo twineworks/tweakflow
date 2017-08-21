@@ -59,7 +59,7 @@ public class ParserTest {
   @Test
   public void parses_empty_module() throws Exception {
 
-    Parser p = new Parser(new MemoryLocation().add("", ""));
+    Parser p = new Parser(new MemoryLocation().put("", ""));
     ParseResult result = p.parseUnit();
 
     // parse is successful

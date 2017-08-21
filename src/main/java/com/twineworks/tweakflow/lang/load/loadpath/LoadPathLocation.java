@@ -33,5 +33,6 @@ public interface LoadPathLocation {
   ParseUnit getParseUnit(String path);
   String resolve(String path);
   UserObjectFactory getUserObjectFactory();
+  boolean allowsNativeFunctions();
 
 }

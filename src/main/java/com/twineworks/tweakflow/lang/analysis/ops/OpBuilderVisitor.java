@@ -34,6 +34,7 @@ import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.values.*;
 
@@ -251,11 +252,17 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
     if (node.getVia() != null){
 
       // user functions are always compile time constants
-      UserObjectFactory userObjectFactory = node.getSourceInfo().getParseUnit().getLocation().getUserObjectFactory();
+      LoadPathLocation location = node.getSourceInfo().getParseUnit().getLocation();
+      if (location.allowsNativeFunctions()){
+        UserObjectFactory userObjectFactory = location.getUserObjectFactory();
 
-      FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Evaluator.evaluateInEmptyScope(node.getVia().getExpression()));
-      node.setFunctionValue(Values.make(userFunction));
-      return node.setOp(new ConstantOp(node.getFunctionValue()));
+        FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Evaluator.evaluateInEmptyScope(node.getVia().getExpression()));
+        node.setFunctionValue(Values.make(userFunction));
+        return node.setOp(new ConstantOp(node.getFunctionValue()));
+      }
+      else {
+        throw new LangException(LangError.NATIVE_CODE_RESTRICTED, "code in location "+node.getSourceInfo().getParseUnit().getPath()+" cannot define native functions", node.getSourceInfo());
+      }
 
     }
 

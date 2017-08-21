@@ -41,7 +41,7 @@ public class InteractiveInputCommand {
 
     // try parsing line as interactive input
     String input = state.getInput();
-    MemoryParseUnit parseUnit = new MemoryLocation().add("<prompt>", input);
+    MemoryParseUnit parseUnit = new MemoryLocation().put("<prompt>", input);
     ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
     if (parseResult.isError()){

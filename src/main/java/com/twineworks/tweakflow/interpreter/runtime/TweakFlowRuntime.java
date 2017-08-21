@@ -24,19 +24,18 @@
 
 package com.twineworks.tweakflow.interpreter.runtime;
 
-import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
-import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
-import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
-import com.twineworks.tweakflow.lang.scope.Symbol;
-import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.interpreter.*;
 import com.twineworks.tweakflow.interpreter.Stack;
 import com.twineworks.tweakflow.interpreter.memory.Cell;
 import com.twineworks.tweakflow.interpreter.memory.LocalMemorySpace;
 import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
+import com.twineworks.tweakflow.lang.scope.Symbol;
+import com.twineworks.tweakflow.lang.values.Value;
 
 import java.util.*;
 
@@ -67,12 +66,12 @@ public class TweakFlowRuntime {
 
   public TweakFlowRuntime(RuntimeSet runtimeSet) {
     this.runtimeSet = runtimeSet;
-    context = new EvaluationContext(new UserObjectFactory(), new DefaultDebugHandler());
+    context = new EvaluationContext(new DefaultDebugHandler());
   }
 
   public TweakFlowRuntime(RuntimeSet runtimeSet, DebugHandler debugHandler) {
     this.runtimeSet = runtimeSet;
-    context = new EvaluationContext(new UserObjectFactory(), debugHandler);
+    context = new EvaluationContext(debugHandler);
   }
 
   private String modulePath(String path){
@@ -156,5 +155,14 @@ public class TweakFlowRuntime {
     stack.push(new StackEntry(cell.getSymbol().getNode(), cell, Collections.emptyMap()));
     return new EvaluatorUserCallContext(stack, context);
   }
+
+  public RuntimeSet getRuntimeSet() {
+    return runtimeSet;
+  }
+
+  public EvaluationContext getContext() {
+    return context;
+  }
+
 
 }

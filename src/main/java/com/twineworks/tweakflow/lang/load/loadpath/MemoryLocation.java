@@ -35,9 +35,17 @@ import java.util.Objects;
 public class MemoryLocation implements LoadPathLocation {
 
   final private Map<String, MemoryParseUnit> parseUnits = new HashMap<>();
-  final private UserObjectFactory userObjectFactory = new UserObjectFactory();
+  final private UserObjectFactory userObjectFactory;
+  final private boolean allowNativeFunctions;
 
-  public MemoryLocation() {}
+  public MemoryLocation() {
+    this(true);
+  }
+
+  public MemoryLocation(boolean allowNativeFunctions){
+    this.allowNativeFunctions = allowNativeFunctions;
+    userObjectFactory = allowNativeFunctions ? new UserObjectFactory() : null;
+  }
 
   public Map<String, MemoryParseUnit> getParseUnits() {
     return parseUnits;
@@ -64,9 +72,15 @@ public class MemoryLocation implements LoadPathLocation {
     return userObjectFactory;
   }
 
-  public MemoryParseUnit add(String path, String programText) {
-    MemoryParseUnit memoryParseUnit = new MemoryParseUnit(this, programText, path);
-    parseUnits.put(path, memoryParseUnit);
+  @Override
+  public boolean allowsNativeFunctions() {
+    return allowNativeFunctions;
+  }
+
+  public MemoryParseUnit put(String name, String programText) {
+    MemoryParseUnit memoryParseUnit = new MemoryParseUnit(this, programText, name);
+    parseUnits.put(name, memoryParseUnit);
     return memoryParseUnit;
   }
+
 }
