@@ -34,7 +34,6 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.*;
 import com.twineworks.tweakflow.util.LangUtil;
 
@@ -51,7 +50,7 @@ public class ReplState {
   private String mainModuleKey = mainModulePath;
 
   // file system load path
-  private List<String> loadPath = new ArrayList<>();
+  private List<String> loadPathElements = new ArrayList<>();
 
   // interactive expression evaluation and variable prompt
   private final String interactivePath = "[interactive]";
@@ -59,7 +58,7 @@ public class ReplState {
   private String promptInput;
   private Map<String, String> varDefs = new LinkedHashMap<>();
 
-  private Loader loader;
+  private LoadPath loadPath;
 
   // evaluation results and convenient derivatives
   private EvaluationResult evaluationResult;
@@ -75,8 +74,17 @@ public class ReplState {
 
   private String input = "";
 
-  public List<String> getLoadPath() {
+  public LoadPath getLoadPath() {
     return loadPath;
+  }
+
+  public ReplState setLoadPath(LoadPath loadPath) {
+    this.loadPath = loadPath;
+    return this;
+  }
+
+  public List<String> getLoadPathElements() {
+    return loadPathElements;
   }
 
   public String getMainModulePath() {
@@ -85,6 +93,11 @@ public class ReplState {
 
   public String getMainModuleKey() {
     return mainModuleKey;
+  }
+
+  private ReplState setMainModuleKey(String mainModuleKey) {
+    this.mainModuleKey = mainModuleKey;
+    return this;
   }
 
   public String getPromptVarName() {
@@ -125,14 +138,6 @@ public class ReplState {
     return loadDuration;
   }
 
-  public Loader getLoader() {
-    return loader;
-  }
-
-  public ReplState setLoader(Loader loader) {
-    this.loader = loader;
-    return this;
-  }
 
   public String getInteractivePath() {
     return interactivePath;
@@ -208,19 +213,19 @@ public class ReplState {
     ReplState copy = new ReplState()
         .setShouldQuit(shouldQuit)
         .setAnalysisResult(analysisResult)
+        .setLoadPath(loadPath)
         .setEvaluationResult(evaluationResult)
-        .setLoader(loader)
         .setModulePaths(new ArrayList<>(modulePaths))
         .setMultiLine(multiLine)
-        .setPromptInput(promptInput);
-
+        .setPromptInput(promptInput)
+        .setMainModuleKey(mainModuleKey);
 
     copy.varDefs.putAll(varDefs);
-    copy.loadPath.addAll(loadPath);
+    copy.loadPathElements.addAll(loadPathElements);
     return copy;
   }
 
-  private void supplyLoader(){
+  private LoadPath makeLoadPath(){
 
     LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
 
@@ -235,7 +240,7 @@ public class ReplState {
     loadPathBuilder.add(interactiveLocation);
 
     // all file system loading locations mentioned in state
-    for (String s : getLoadPath()) {
+    for (String s : getLoadPathElements()) {
       FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(s))
           .confineToPath(true)
           .allowNativeFunctions(true)
@@ -243,11 +248,7 @@ public class ReplState {
       loadPathBuilder.add(location);
     }
 
-    LoadPath lp = loadPathBuilder.build();
-    setLoader(new Loader(lp));
-
-    // resolved path is used as a key in data structures
-    mainModuleKey = loader.getLoadPath().findParseUnit(mainModulePath).getPath();
+    return loadPathBuilder.build();
 
   }
 
@@ -280,16 +281,16 @@ public class ReplState {
           .append("\n");
     }
 
-    String programText = builder.toString();
-    return programText;
+    return builder.toString();
 
   }
 
   public void evaluate(){
 
     try {
-
-      supplyLoader();
+      setLoadPath(makeLoadPath());
+      // resolved path is used as a key in data structures
+      mainModuleKey = getLoadPath().findParseUnit(mainModulePath).getPath();
 
     } catch (LangException e){
       analysisResult = null;
@@ -302,7 +303,7 @@ public class ReplState {
     pathList.add(getInteractivePath());
 
     // compile
-    analysisResult = Analysis.analyze(pathList, getLoader());
+    analysisResult = Analysis.analyze(pathList, getLoadPath());
     if (analysisResult.isError()){
       // compilation went wrong, wrap as evaluation result
       setEvaluationResult(EvaluationResult.error(LangException.wrap(analysisResult.getException())));

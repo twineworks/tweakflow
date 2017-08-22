@@ -26,7 +26,6 @@ package com.twineworks.tweakflow.lang.analysis;
 
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.scope.Symbol;
@@ -51,10 +50,8 @@ public class AnalysisRelativeResourceImportsTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
     List<String> paths = Collections.singletonList("fixtures/tweakflow/analysis/imports/main.tf");
-    result = Analysis.analyze(paths, loader);
+    result = Analysis.analyze(paths, loadPath);
 
     if (result.isSuccess()){
       analysisSet = result.getAnalysisSet();

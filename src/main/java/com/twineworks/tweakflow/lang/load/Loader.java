@@ -46,9 +46,7 @@ import java.util.Map;
 
 public class Loader {
 
-  private final LoadPath loadPath;
-
-  private AnalysisUnit load(String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  private static AnalysisUnit load(LoadPath loadPath, String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
 
     long loadStart = System.currentTimeMillis();
 
@@ -101,10 +99,10 @@ public class Loader {
         // relative?
         if (importPath.startsWith(".")){
           importPath = Paths.get(modulePath).resolveSibling(importPath).normalize().toString();
-          collectResult = load(importPath, pathLocation, workSet, true);
+          collectResult = load(loadPath, importPath, pathLocation, workSet, true);
         }
         else{
-          collectResult = load(importPath, workSet, collectImports);
+          collectResult = load(loadPath, importPath, workSet, collectImports);
         }
 
         anImport.setImportedUnit(collectResult);
@@ -121,7 +119,7 @@ public class Loader {
   }
 
   // load finding the file in load path first
-  public AnalysisUnit load(String modulePath, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  public static AnalysisUnit load(LoadPath loadPath, String modulePath, Map<String, AnalysisUnit> workSet, boolean collectImports){
 
     LoadPathLocation pathLocation = loadPath.pathLocationFor(modulePath);
 
@@ -129,11 +127,11 @@ public class Loader {
       throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
     }
 
-    return load(modulePath, pathLocation, workSet, collectImports);
+    return load(loadPath, modulePath, pathLocation, workSet, collectImports);
 
   }
 
-  public AnalysisUnit load(String modulePath){
+  public static AnalysisUnit load(LoadPath loadPath, String modulePath){
 
     LoadPathLocation pathLocation = loadPath.pathLocationFor(modulePath);
 
@@ -141,26 +139,19 @@ public class Loader {
       throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
     }
 
-    return load(modulePath, pathLocation, new HashMap<>(), false);
+    return load(loadPath, modulePath, pathLocation, new HashMap<>(), false);
 
   }
 
-  public Map<String, AnalysisUnit> load(List<String> modulePaths, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  public static Map<String, AnalysisUnit> load(LoadPath loadPath, List<String> modulePaths, Map<String, AnalysisUnit> workSet, boolean collectImports){
 
     for (String modulePath : modulePaths) {
-      load(modulePath, workSet, collectImports);
+      load(loadPath, modulePath, workSet, collectImports);
     }
 
     return workSet;
 
   }
 
-  public Loader(LoadPath loadPath) {
-    this.loadPath = loadPath;
-  }
-
-  public LoadPath getLoadPath() {
-    return loadPath;
-  }
 
 }

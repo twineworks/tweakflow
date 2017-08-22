@@ -29,7 +29,6 @@ import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.Test;
 
@@ -231,7 +230,7 @@ public class FilesystemLocationTest {
         .add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(true).build())
         .build();
 
-    TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
+    TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, "native.tf");
     TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
     EvaluatorUserCallContext callContext = runtime.createCallContext(varHandle);
     assertThat(callContext.call(varHandle.getValue())).isSameAs(Values.TRUE);
@@ -244,7 +243,7 @@ public class FilesystemLocationTest {
         .build();
 
     try {
-      TweakFlow.evaluate(new Loader(loadPath), "native.tf");
+      TweakFlow.evaluate(loadPath, "native.tf");
     } catch(LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.NATIVE_CODE_RESTRICTED);
       return;

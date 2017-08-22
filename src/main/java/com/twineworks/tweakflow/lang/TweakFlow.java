@@ -37,7 +37,6 @@ import com.twineworks.tweakflow.lang.analysis.references.MetaDataAnalysisVisitor
 import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolverVisitor;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilderVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
@@ -64,30 +63,26 @@ public class TweakFlow {
         .build();
   }
 
-  public static Loader makeDefaultLoader(){
-    return new Loader(makeStdAndCurrentDirectoryLoadPath());
-  }
-
   public static TweakFlowRuntime evaluate(String path, DebugHandler debugHandler){
-    return evaluate(makeDefaultLoader(), path, debugHandler);
+    return evaluate(makeStdAndCurrentDirectoryLoadPath(), path, debugHandler);
   }
 
   public static TweakFlowRuntime evaluate(String path){
-    return evaluate(makeDefaultLoader(), path);
+    return evaluate(makeStdAndCurrentDirectoryLoadPath(), path);
   }
 
-  public static TweakFlowRuntime evaluate(Loader loader, String path){
-    return evaluate(loader, path, new DefaultDebugHandler());
+  public static TweakFlowRuntime evaluate(LoadPath loadPath, String path){
+    return evaluate(loadPath, path, new DefaultDebugHandler());
   }
 
-  public static TweakFlowRuntime evaluate(Loader loader, String path, DebugHandler debugHandler){
+  public static TweakFlowRuntime evaluate(LoadPath loadPath, String path, DebugHandler debugHandler){
     List<String> paths = Collections.singletonList(path);
-    return evaluate(loader, paths, debugHandler);
+    return evaluate(loadPath, paths, debugHandler);
   }
 
-  public static TweakFlowRuntime evaluate(Loader loader, List<String> paths, DebugHandler debugHandler){
+  public static TweakFlowRuntime evaluate(LoadPath loadPath, List<String> paths, DebugHandler debugHandler){
 
-    AnalysisResult analysisResult = Analysis.analyze(paths, loader);
+    AnalysisResult analysisResult = Analysis.analyze(paths, loadPath);
     if (analysisResult.isError()) throw analysisResult.getException();
     Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet(), debugHandler);
 

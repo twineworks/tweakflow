@@ -27,7 +27,6 @@ package com.twineworks.tweakflow.lang.analysis;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
@@ -48,12 +47,10 @@ public class AnalysisTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
     List<String> filePaths = new ArrayList<>(paths.length);
     filePaths.addAll(Arrays.asList(paths));
 
-    return Analysis.analyze(filePaths, loader);
+    return Analysis.analyze(filePaths, loadPath);
   }
 
   @Test

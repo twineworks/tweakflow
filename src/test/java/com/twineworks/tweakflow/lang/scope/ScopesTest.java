@@ -24,15 +24,14 @@
 
 package com.twineworks.tweakflow.lang.scope;
 
+import com.twineworks.tweakflow.lang.analysis.Analysis;
+import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.ast.ComponentNode;
 import com.twineworks.tweakflow.lang.ast.expressions.LetNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
-import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
-import com.twineworks.tweakflow.lang.analysis.Analysis;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import org.junit.Test;
@@ -53,9 +52,7 @@ public class ScopesTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
-    result = Analysis.analyze(Collections.singletonList("fixtures/tweakflow/analysis/scopes/scope.tf"), loader);
+    result = Analysis.analyze(Collections.singletonList("fixtures/tweakflow/analysis/scopes/scope.tf"), loadPath);
 
     if (result.isSuccess()){
       module = (ModuleNode) result.getAnalysisSet().getUnits().get("fixtures/tweakflow/analysis/scopes/scope.tf").getUnit();

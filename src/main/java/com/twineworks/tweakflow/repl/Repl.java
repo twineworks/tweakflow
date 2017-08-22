@@ -105,7 +105,7 @@ public class Repl {
 
       // put load path in state
       List loadPathArgs = (List) res.getAttrs().get("load_path");
-      List<String> loadPath = state.getLoadPath();
+      List<String> loadPath = state.getLoadPathElements();
 
       if (loadPathArgs.size() == 0){
         // default load path

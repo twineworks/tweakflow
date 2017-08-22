@@ -52,11 +52,11 @@ public class ScopeBuilderTest {
     LoadPath loadPath = new LoadPath.Builder()
         .add(new ResourceLocation.Builder().build())
         .build();
-    Loader loader = new Loader(loadPath);
 
-    AnalysisSet space = new AnalysisSet(loader);
+
+    AnalysisSet space = new AnalysisSet(loadPath);
     String path = "fixtures/tweakflow/analysis/imports/scope.tf";
-    loader.load(path, space.getUnits(), true);
+    Loader.load(loadPath, path, space.getUnits(), true);
     module = (ModuleNode) space.getUnits().get(path).getUnit();
     ScopeBuilder.buildScope(space, module);
 

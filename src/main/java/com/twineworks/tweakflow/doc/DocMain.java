@@ -127,15 +127,15 @@ public class DocMain {
 
 
       // get the modules and process them in order
-      Loader loader = new Loader(loadPath);
-      List<Arity1CallSite> transformers = createTransformers(loader, (List) res.getAttrs().get("transformer"));
+
+      List<Arity1CallSite> transformers = createTransformers(loadPath, (List) res.getAttrs().get("transformer"));
 
       List modules = (List) res.getAttrs().get("module");
 
       for (Object moduleObj : modules) {
         StringBuilder out = new StringBuilder();
         String module = (String) moduleObj;
-        AnalysisUnit analysisUnit = loader.load(module);
+        AnalysisUnit analysisUnit = Loader.load(loadPath, module);
         Value value = Doc.makeMetaValue(analysisUnit.getUnit());
 
         if (transformers.isEmpty()) {
@@ -180,12 +180,12 @@ public class DocMain {
 
   }
 
-  private static List<Arity1CallSite> createTransformers(Loader loader, List transformers) {
+  private static List<Arity1CallSite> createTransformers(LoadPath loadPath, List transformers) {
 
     List<Arity1CallSite> ret = new ArrayList<>();
     for (Object transformer : transformers) {
       String path = transformer.toString();
-      TweakFlowRuntime runtime = TweakFlow.evaluate(loader, path, new DefaultDebugHandler());
+      TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, path, new DefaultDebugHandler());
       TweakFlowRuntime.VarHandle f = runtime.createVarHandle(path, "transform", "transform");
       ret.add(runtime.createCallContext(f).createArity1CallSite(f.getValue()));
     }

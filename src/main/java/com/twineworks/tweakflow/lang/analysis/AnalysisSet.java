@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.analysis;
 
-import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 
@@ -41,14 +41,14 @@ public class AnalysisSet {
   private IdentityHashMap<Symbol, LinkedHashSet<Symbol>> dependencies;
   private IdentityHashMap<Symbol, LinkedHashSet<Symbol>> dependants;
 
-  private final Loader loader;
+  private final LoadPath loadPath;
 
-  public Loader getLoader() {
-    return loader;
+  public LoadPath getLoadPath() {
+    return loadPath;
   }
 
-  public AnalysisSet(Loader loader) {
-    this.loader = loader;
+  public AnalysisSet(LoadPath loadPath) {
+    this.loadPath = loadPath;
   }
 
   public Map<String, AnalysisUnit> getUnits() {

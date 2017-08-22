@@ -26,6 +26,9 @@ package com.twineworks.tweakflow.interpreter;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.interpreter.memory.Cell;
+import com.twineworks.tweakflow.interpreter.memory.GlobalMemorySpace;
+import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
@@ -34,7 +37,6 @@ import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.ErrorCode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.scope.ScopeType;
@@ -43,9 +45,6 @@ import com.twineworks.tweakflow.lang.values.FunctionValue;
 import com.twineworks.tweakflow.lang.values.StandardFunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.GlobalMemorySpace;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -63,10 +62,8 @@ public class InterpreterTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
     List<String> pathList = Arrays.asList(paths);
-    AnalysisResult analysisResult = Analysis.analyze(pathList, loader);
+    AnalysisResult analysisResult = Analysis.analyze(pathList, loadPath);
 
     if (analysisResult.isError()){
       analysisResult.getException().printDetails();
@@ -85,12 +82,10 @@ public class InterpreterTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
     List<String> pathList = new ArrayList<>(Arrays.asList(paths));
     pathList.add("com/twineworks/tweakflow/std/std.tf");
 
-    AnalysisResult analysisResult = Analysis.analyze(pathList, loader);
+    AnalysisResult analysisResult = Analysis.analyze(pathList, loadPath);
 
     if (analysisResult.isError()){
       analysisResult.getException().printDetails();

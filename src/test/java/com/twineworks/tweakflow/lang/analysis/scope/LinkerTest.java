@@ -24,11 +24,10 @@
 
 package com.twineworks.tweakflow.lang.analysis.scope;
 
+import com.twineworks.tweakflow.lang.analysis.Analysis;
+import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
-import com.twineworks.tweakflow.lang.analysis.Analysis;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.scope.Symbol;
@@ -48,9 +47,7 @@ public class LinkerTest {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-    Loader loader = new Loader(loadPath);
-
-    return Analysis.analyze(Collections.singletonList(path), loader);
+    return Analysis.analyze(Collections.singletonList(path), loadPath);
 
   }
 

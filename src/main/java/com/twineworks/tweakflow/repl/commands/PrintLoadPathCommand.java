@@ -44,7 +44,7 @@ public class PrintLoadPathCommand implements Command {
   @Override
   public ReplState perform(Namespace args, String input, TextTerminal terminal, ReplState state) {
 
-    for (String s : state.getLoadPath()) {
+    for (String s : state.getLoadPathElements()) {
      terminal.println(s);
     }
 

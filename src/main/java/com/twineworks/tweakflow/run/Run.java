@@ -222,8 +222,8 @@ public class Run {
     }
 
     try {
-      Loader loader = new Loader(loadPath);
-      TweakFlowRuntime runtime = TweakFlow.evaluate(loader, modules, new DefaultDebugHandler());
+
+      TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, modules, new DefaultDebugHandler());
 
       TweakFlowRuntime.VarHandle entryHandle = runtime.createVarHandle(modules.get(0), lib, var);
 

@@ -35,6 +35,7 @@ import com.twineworks.tweakflow.lang.analysis.scope.Linker;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilder;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 
 import java.util.List;
 
@@ -77,11 +78,11 @@ public class Analysis {
   }
 
 
-  public static AnalysisResult analyze(List<String> paths, Loader loader){
+  public static AnalysisResult analyze(List<String> paths, LoadPath loadPath){
     long start = System.currentTimeMillis();
     try {
-      AnalysisSet analysisSet = new AnalysisSet(loader);
-      loader.load(paths, analysisSet.getUnits(), true);
+      AnalysisSet analysisSet = new AnalysisSet(loadPath);
+      Loader.load(loadPath, paths, analysisSet.getUnits(), true);
       return analyze(analysisSet);
     } catch (RuntimeException e){
       long end = System.currentTimeMillis();

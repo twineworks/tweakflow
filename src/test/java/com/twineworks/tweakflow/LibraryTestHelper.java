@@ -26,18 +26,17 @@ package com.twineworks.tweakflow;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
+import com.twineworks.tweakflow.interpreter.EvaluationResult;
+import com.twineworks.tweakflow.interpreter.Interpreter;
+import com.twineworks.tweakflow.interpreter.memory.Cell;
+import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.interpreter.Interpreter;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -56,10 +55,8 @@ public class LibraryTestHelper {
         .build();
 
 
-    Loader loader = new Loader(loadPath);
-
     List<String> paths = Collections.singletonList(path);
-    AnalysisResult analysisResult = Analysis.analyze(paths, loader);
+    AnalysisResult analysisResult = Analysis.analyze(paths, loadPath);
 
     if (analysisResult.isError()){
       analysisResult.getException().printDetails();

@@ -31,7 +31,6 @@ import com.twineworks.tweakflow.interpreter.memory.LocalMemorySpace;
 import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 import com.twineworks.tweakflow.lang.scope.Symbol;
@@ -75,8 +74,7 @@ public class TweakFlowRuntime {
   }
 
   private String modulePath(String path){
-    Loader loader = runtimeSet.getAnalysisSet().getLoader();
-    LoadPath loadPath = loader.getLoadPath();
+    LoadPath loadPath = runtimeSet.getAnalysisSet().getLoadPath();
     LoadPathLocation loadPathLocation = loadPath.pathLocationFor(path);
     if (loadPathLocation == null) return null;
     return loadPathLocation.resolve(path);
