@@ -44,8 +44,10 @@ public class LinkerTest {
 
   public AnalysisResult compile(String path) throws Exception {
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().build())
+        .build();
+
     Loader loader = new Loader(loadPath);
 
     return Analysis.analyze(Collections.singletonList(path), loader);

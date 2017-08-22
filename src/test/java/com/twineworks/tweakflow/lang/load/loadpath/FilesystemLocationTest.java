@@ -34,7 +34,6 @@ import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.Test;
 
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
@@ -228,9 +227,9 @@ public class FilesystemLocationTest {
 
   @Test
   public void allowing_native_evaluates_native_function() throws Exception {
-    LoadPath loadPath = new LoadPath();
-    List<LoadPathLocation> locations = loadPath.getLocations();
-    locations.add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(true).build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(true).build())
+        .build();
 
     TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
     TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
@@ -240,9 +239,9 @@ public class FilesystemLocationTest {
 
   @Test
   public void disallowing_native_throws_evaluating_native_function() throws Exception {
-    LoadPath loadPath = new LoadPath();
-    List<LoadPathLocation> locations = loadPath.getLocations();
-    locations.add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(false).build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(false).build())
+        .build();
 
     try {
       TweakFlow.evaluate(new Loader(loadPath), "native.tf");

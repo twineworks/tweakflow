@@ -30,19 +30,57 @@ import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class LoadPath {
 
-  private List<LoadPathLocation> locations = new ArrayList<>();
+  public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPath> {
+
+    private final List<LoadPathLocation> locations = new ArrayList<>();
+
+    public Builder() { }
+
+    @Override
+    public LoadPath build() {
+      return new LoadPath(locations);
+    }
+
+    public LoadPath.Builder add(LoadPathLocation location){
+      locations.add(location);
+      return this;
+    }
+
+
+    public LoadPath.Builder addStdLocation(){
+      locations.add(
+          new ResourceLocation.Builder()
+              .path(Paths.get("com/twineworks/tweakflow/std"))
+              .build()
+      );
+      return this;
+    }
+
+    public LoadPath.Builder addCurrentWorkingDirectory(){
+      locations.add(
+          new FilesystemLocation.Builder(Paths.get(".").toAbsolutePath())
+              .confineToPath(false)
+              .allowNativeFunctions(true)
+              .build()
+      );
+      return this;
+    }
+  }
+
+  private final List<LoadPathLocation> locations;
+
+  private LoadPath(List<LoadPathLocation> locations){
+    this.locations = Collections.unmodifiableList(locations);
+  }
 
   public List<LoadPathLocation> getLocations() {
     return locations;
-  }
-
-  public void setLocations(List<LoadPathLocation> locations) {
-    this.locations = locations;
   }
 
   public boolean pathExists(String path){
@@ -76,18 +114,5 @@ public class LoadPath {
     throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+path);
   }
 
-  public LoadPath addStdLocation(){
-    getLocations().add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
-    return this;
-  }
-
-  public LoadPath addCurrentWorkingDirectory(){
-    FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(".").toAbsolutePath())
-        .confineToPath(false)
-        .allowNativeFunctions(true)
-        .build();
-    getLocations().add(location);
-    return this;
-  }
 
 }

@@ -36,7 +36,6 @@ import org.junit.Test;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static org.assertj.core.api.Fail.fail;
 import static org.assertj.core.api.StrictAssertions.assertThat;
@@ -51,13 +50,12 @@ public class MemoryLocationTest {
 
   @Test
   public void allowing_native_evaluates_native_function() throws Exception {
-    LoadPath loadPath = new LoadPath();
-    List<LoadPathLocation> locations = loadPath.getLocations();
-    MemoryLocation memoryLocation = new MemoryLocation.Builder()
-        .allowNativeFunctions(true)
-        .add("native.tf", readFile("native.tf"))
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new MemoryLocation.Builder()
+            .allowNativeFunctions(true)
+            .add("native.tf", readFile("native.tf"))
+            .build())
         .build();
-    locations.add(memoryLocation);
 
     TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
     TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
@@ -67,13 +65,12 @@ public class MemoryLocationTest {
 
   @Test
   public void disallowing_native_throws_evaluating_native_function() throws Exception {
-    LoadPath loadPath = new LoadPath();
-    List<LoadPathLocation> locations = loadPath.getLocations();
-    MemoryLocation memoryLocation = new MemoryLocation.Builder()
-        .allowNativeFunctions(false)
-        .add("native.tf", readFile("native.tf"))
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new MemoryLocation.Builder()
+            .allowNativeFunctions(false)
+            .add("native.tf", readFile("native.tf"))
+            .build())
         .build();
-    locations.add(memoryLocation);
 
     try {
       TweakFlow.evaluate(new Loader(loadPath), "native.tf");

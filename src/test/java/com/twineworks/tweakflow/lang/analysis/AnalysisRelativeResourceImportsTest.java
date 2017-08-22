@@ -47,8 +47,10 @@ public class AnalysisRelativeResourceImportsTest {
 
   public AnalysisRelativeResourceImportsTest() {
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().build())
+        .build();
+
     Loader loader = new Loader(loadPath);
 
     List<String> paths = Collections.singletonList("fixtures/tweakflow/analysis/imports/main.tf");

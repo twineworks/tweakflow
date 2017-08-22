@@ -49,8 +49,10 @@ public class ScopesTest {
 
   public ScopesTest() {
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().build())
+        .build();
+
     Loader loader = new Loader(loadPath);
 
     result = Analysis.analyze(Collections.singletonList("fixtures/tweakflow/analysis/scopes/scope.tf"), loader);

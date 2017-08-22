@@ -50,9 +50,11 @@ public class LibraryTestHelper {
 
   public static void assertSpecModule(String path){
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build())
+        .add(new ResourceLocation.Builder().build())
+        .build();
+
 
     Loader loader = new Loader(loadPath);
 

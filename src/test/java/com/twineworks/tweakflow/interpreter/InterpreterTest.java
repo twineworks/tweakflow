@@ -59,8 +59,9 @@ public class InterpreterTest {
 
   private EvaluationResult evaluate(String ... paths){
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().build())
+        .build();
 
     Loader loader = new Loader(loadPath);
 
@@ -80,8 +81,9 @@ public class InterpreterTest {
 
   private EvaluationResult evaluateWithStd(String ... paths){
 
-    LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation.Builder().build());
+    LoadPath loadPath = new LoadPath.Builder()
+        .add(new ResourceLocation.Builder().build())
+        .build();
 
     Loader loader = new Loader(loadPath);
 

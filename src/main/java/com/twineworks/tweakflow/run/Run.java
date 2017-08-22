@@ -154,8 +154,10 @@ public class Run {
   public static void main(String[] args){
 
     ArgumentParser parser = createMainArgumentParser();
-    LoadPath loadPath = TweakFlow.makeMinimalLoadPath();
+    LoadPath.Builder loadPathBuilder = new LoadPath.Builder().addStdLocation();
     List<String> modules = Collections.singletonList("std");
+
+    LoadPath loadPath = null;
 
     String main = "main.main";
     String lib = "main";
@@ -172,7 +174,7 @@ public class Run {
 
       if (loadPathArgs.size() == 0){
         // default load path
-        loadPath.addCurrentWorkingDirectory();
+        loadPathBuilder.addCurrentWorkingDirectory();
       }
       else{
         // custom load path
@@ -181,9 +183,11 @@ public class Run {
               .allowNativeFunctions(true)
               .confineToPath(true)
               .build();
-          loadPath.getLocations().add(location);
+          loadPathBuilder.add(location);
         }
       }
+
+      loadPath = loadPathBuilder.build();
 
       // main
       main = res.getString("main");

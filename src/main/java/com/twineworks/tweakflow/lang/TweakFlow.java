@@ -51,19 +51,21 @@ import java.util.List;
 
 public class TweakFlow {
 
-  public static LoadPath makeDefaultLoadPath(){
-    return new LoadPath()
+  public static LoadPath makeStdAndCurrentDirectoryLoadPath(){
+    return new LoadPath.Builder()
         .addStdLocation()
-        .addCurrentWorkingDirectory();
+        .addCurrentWorkingDirectory()
+        .build();
   }
 
-  public static LoadPath makeMinimalLoadPath(){
-    return new LoadPath()
-        .addStdLocation();
+  public static LoadPath makeStdLoadPath(){
+    return new LoadPath.Builder()
+        .addStdLocation()
+        .build();
   }
 
   public static Loader makeDefaultLoader(){
-    return new Loader(makeDefaultLoadPath());
+    return new Loader(makeStdAndCurrentDirectoryLoadPath());
   }
 
   public static TweakFlowRuntime evaluate(String path, DebugHandler debugHandler){

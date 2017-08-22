@@ -222,18 +222,17 @@ public class ReplState {
 
   private void supplyLoader(){
 
-    LoadPath lp = new LoadPath();
-    List<LoadPathLocation> locations = lp.getLocations();
+    LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
 
     // std resources are first
-    locations.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
+    loadPathBuilder.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
 
     // the memory location for the interactive module
     MemoryLocation interactiveLocation = new MemoryLocation.Builder()
         .add(getInteractivePath(), buildInteractiveProgramText())
         .build();
 
-    locations.add(interactiveLocation);
+    loadPathBuilder.add(interactiveLocation);
 
     // all file system loading locations mentioned in state
     for (String s : getLoadPath()) {
@@ -241,9 +240,10 @@ public class ReplState {
           .confineToPath(true)
           .allowNativeFunctions(true)
           .build();
-      locations.add(location);
+      loadPathBuilder.add(location);
     }
 
+    LoadPath lp = loadPathBuilder.build();
     setLoader(new Loader(lp));
 
     // resolved path is used as a key in data structures

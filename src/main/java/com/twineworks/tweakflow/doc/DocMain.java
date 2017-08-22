@@ -89,7 +89,7 @@ public class DocMain {
   public static void main(String[] args) {
 
     ArgumentParser parser = createMainArgumentParser();
-    LoadPath loadPath = TweakFlow.makeMinimalLoadPath();
+    LoadPath loadPath;
 
     try {
 
@@ -99,16 +99,21 @@ public class DocMain {
 
       if (loadPathArgs.size() == 0) {
         // default load path
-        loadPath.addCurrentWorkingDirectory();
+        loadPath = new LoadPath.Builder()
+            .addStdLocation()
+            .addCurrentWorkingDirectory()
+            .build();
       } else {
+        LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
         // custom load path
         for (Object loadPathArg : loadPathArgs) {
           FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(loadPathArg.toString()))
               .allowNativeFunctions(true)
               .confineToPath(true)
               .build();
-          loadPath.getLocations().add(location);
+          loadPathBuilder.add(location);
         }
+        loadPath = loadPathBuilder.build();
       }
 
       // output path
