@@ -66,7 +66,6 @@ public class Loader {
     ParseResult parseResult = parser.parseUnit();
 
     if (!parseResult.isSuccess()){
-      // throw LangException.wrap(parseResult.getException(), LangError.PARSE_ERROR);
       throw parseResult.getException();
     }
 
