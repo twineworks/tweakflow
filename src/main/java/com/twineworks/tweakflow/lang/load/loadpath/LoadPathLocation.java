@@ -24,7 +24,6 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 public interface LoadPathLocation {
@@ -32,7 +31,6 @@ public interface LoadPathLocation {
   boolean pathExists(String path);
   ParseUnit getParseUnit(String path);
   String resolve(String path);
-  UserObjectFactory getUserObjectFactory();
   boolean allowsNativeFunctions();
 
 }

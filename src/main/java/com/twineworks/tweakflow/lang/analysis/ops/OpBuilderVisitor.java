@@ -254,7 +254,7 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
       // user functions are always compile time constants
       LoadPathLocation location = node.getSourceInfo().getParseUnit().getLocation();
       if (location.allowsNativeFunctions()){
-        UserObjectFactory userObjectFactory = location.getUserObjectFactory();
+        UserObjectFactory userObjectFactory = new UserObjectFactory();
 
         FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Evaluator.evaluateInEmptyScope(node.getVia().getExpression()));
         node.setFunctionValue(Values.make(userFunction));

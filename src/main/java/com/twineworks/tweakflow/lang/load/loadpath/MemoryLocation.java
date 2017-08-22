@@ -68,11 +68,6 @@ public class MemoryLocation implements LoadPathLocation {
   }
 
   @Override
-  public UserObjectFactory getUserObjectFactory() {
-    return userObjectFactory;
-  }
-
-  @Override
   public boolean allowsNativeFunctions() {
     return allowNativeFunctions;
   }

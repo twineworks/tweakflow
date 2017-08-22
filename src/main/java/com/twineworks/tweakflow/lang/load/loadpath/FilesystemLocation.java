@@ -26,7 +26,6 @@ package com.twineworks.tweakflow.lang.load.loadpath;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.FilesystemParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
@@ -39,7 +38,6 @@ public class FilesystemLocation implements LoadPathLocation {
   private final Path rootPath;
   private final Path absRootPath;
   private final boolean strict;
-  private final UserObjectFactory userObjectFactory;
   private final String defaultExtension;
   private final boolean allowNativeFunctions;
 
@@ -51,8 +49,6 @@ public class FilesystemLocation implements LoadPathLocation {
     this.strict = strict;
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
-    userObjectFactory = allowNativeFunctions ? new UserObjectFactory(): null;
-
   }
 
   public FilesystemLocation(Path rootPath) {
@@ -106,11 +102,6 @@ public class FilesystemLocation implements LoadPathLocation {
 
   private String pathToString(Path path){
     return path.toString().replace('\\', '/');
-  }
-
-  @Override
-  public UserObjectFactory getUserObjectFactory() {
-    return userObjectFactory;
   }
 
   @Override

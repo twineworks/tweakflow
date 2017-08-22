@@ -128,11 +128,6 @@ public class ResourceLocation implements LoadPathLocation {
   }
 
   @Override
-  public UserObjectFactory getUserObjectFactory() {
-    return userObjectFactory;
-  }
-
-  @Override
   public boolean allowsNativeFunctions() {
     return allowNativeFunctions;
   }
