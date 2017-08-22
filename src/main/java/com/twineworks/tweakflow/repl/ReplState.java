@@ -248,7 +248,11 @@ public class ReplState {
 
     // all file system loading locations mentioned in state
     for (String s : getLoadPath()) {
-      locations.add(new FilesystemLocation(Paths.get(s)));
+      FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(s))
+          .confineToPath(true)
+          .allowNativeFunctions(true)
+          .build();
+      locations.add(location);
     }
 
     setLoader(new Loader(lp));

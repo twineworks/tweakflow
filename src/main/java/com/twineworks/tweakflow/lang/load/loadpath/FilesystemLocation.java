@@ -35,6 +35,42 @@ import java.util.Objects;
 
 public class FilesystemLocation implements LoadPathLocation {
 
+  public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPathLocation> {
+
+    private final Path path;
+    private boolean confineToPath = true;
+    private boolean allowNativeFunctions = true;
+    private String defaultExtension = ".tf";
+
+    public Builder(Path path) {
+      Objects.requireNonNull(path, "path cannot be null");
+      this.path = path;
+    }
+
+    @Override
+    public FilesystemLocation build() {
+      return new FilesystemLocation(path, confineToPath, allowNativeFunctions, defaultExtension);
+    }
+
+    public Builder confineToPath(boolean confineToPath) {
+      this.confineToPath = confineToPath;
+      return this;
+    }
+
+    public Builder allowNativeFunctions(boolean allowNativeFunctions) {
+      this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public Builder defaultExtension(String defaultExtension) {
+      this.defaultExtension = defaultExtension;
+      if (this.defaultExtension == null){
+        this.defaultExtension = "";
+      }
+      return this;
+    }
+  }
+
   private final Path rootPath;
   private final Path absRootPath;
   private final boolean strict;
@@ -42,21 +78,14 @@ public class FilesystemLocation implements LoadPathLocation {
   private final boolean allowNativeFunctions;
 
 
-  public FilesystemLocation(Path rootPath, boolean strict, boolean allowNativeFunctions, String defaultExtension){
+  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, String defaultExtension){
     Objects.requireNonNull(rootPath, defaultExtension);
     this.rootPath = rootPath;
     this.absRootPath = rootPath.toAbsolutePath();
-    this.strict = strict;
+    this.strict = confineToPath;
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
-  }
 
-  public FilesystemLocation(Path rootPath) {
-    this(rootPath, true, true, ".tf");
-  }
-
-  public FilesystemLocation(Path rootPath, boolean strict) {
-    this(rootPath, strict, true, ".tf");
   }
 
   public Path getRootPath() {

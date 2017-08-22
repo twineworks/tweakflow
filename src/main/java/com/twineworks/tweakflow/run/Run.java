@@ -177,7 +177,11 @@ public class Run {
       else{
         // custom load path
         for (Object loadPathArg : loadPathArgs) {
-          loadPath.getLocations().add(new FilesystemLocation(Paths.get(loadPathArg.toString())));
+          FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(loadPathArg.toString()))
+              .allowNativeFunctions(true)
+              .confineToPath(true)
+              .build();
+          loadPath.getLocations().add(location);
         }
       }
 

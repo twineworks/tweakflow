@@ -82,7 +82,11 @@ public class LoadPath {
   }
 
   public LoadPath addCurrentWorkingDirectory(){
-    getLocations().add(new FilesystemLocation(Paths.get(""), false));
+    FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(".").toAbsolutePath())
+        .confineToPath(false)
+        .allowNativeFunctions(true)
+        .build();
+    getLocations().add(location);
     return this;
   }
 

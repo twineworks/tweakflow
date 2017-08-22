@@ -44,173 +44,185 @@ public class FilesystemLocationTest {
   private static String assetDir = "src/test/resources/fixtures/tweakflow/loading/on_path";
 
   @Test
-  public void strict_finds_on_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_on_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("module.tf")).isTrue();
   }
 
   @Test
-  public void strict_finds_on_path_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_on_path_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("./module.tf")).isTrue();
   }
 
   @Test
-  public void strict_finds_on_path_default_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_on_path_default_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("module")).isTrue();
   }
 
 
   @Test
-  public void strict_finds_on_path_custom_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true, true, ".ext");
+  public void confined_finds_on_path_custom_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir))
+        .confineToPath(true)
+        .defaultExtension(".ext")
+        .build();
     assertThat(loc.pathExists("custom")).isTrue();
   }
 
   @Test
-  public void strict_finds_on_path_back_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_on_path_back_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("../on_path/module.tf")).isTrue();
   }
 
   @Test
-  public void strict_refuses_off_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_refuses_off_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("../off_path/module.tf")).isFalse();
   }
 
   @Test
-  public void strict_finds_absolute_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_absolute_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.pathExists(Paths.get(".").toAbsolutePath().toString()+"/"+assetDir+"/module.tf")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_on_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_on_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists("module.tf")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_on_path_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_on_path_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists("./module.tf")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_on_path_default_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_on_path_default_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists("module")).isTrue();
   }
 
 
   @Test
-  public void non_strict_finds_on_path_custom_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false, true, ".ext");
+  public void unconfined_finds_on_path_custom_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir))
+        .confineToPath(false)
+        .defaultExtension(".ext")
+        .build();
     assertThat(loc.pathExists("custom")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_on_path_back_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_on_path_back_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists("../on_path/module.tf")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_off_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_off_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists("../off_path/module.tf")).isTrue();
   }
 
   @Test
-  public void non_strict_finds_absolute_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_absolute_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.pathExists(Paths.get(".").toAbsolutePath().toString()+"/"+assetDir+"/module.tf")).isTrue();
   }
 
   @Test
-  public void strict_finds_unit_on_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_unit_on_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("module.tf")).isNotNull();
   }
 
   @Test
-  public void strict_finds_unit_on_path_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_unit_on_path_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("./module.tf")).isNotNull();
   }
 
   @Test
-  public void strict_finds_unit_on_path_default_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_unit_on_path_default_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("module")).isNotNull();
   }
 
 
   @Test
-  public void strict_finds_unit_on_path_custom_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true, true, ".ext");
+  public void confined_finds_unit_on_path_custom_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir))
+        .confineToPath(true)
+        .defaultExtension(".ext")
+        .build();
     assertThat(loc.getParseUnit("custom")).isNotNull();
   }
 
   @Test
-  public void strict_finds_unit_on_path_back_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_unit_on_path_back_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("../on_path/module.tf")).isNotNull();
   }
 
   @Test(expected = LangException.class)
-  public void strict_unit_refuses_off_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_unit_refuses_off_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     loc.getParseUnit("../off_path/module.tf");
   }
 
   @Test
-  public void strict_finds_unit_absolute_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), true);
+  public void confined_finds_unit_absolute_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit(Paths.get(".").toAbsolutePath().toString()+"/"+assetDir+"/module.tf")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_on_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_on_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit("module.tf")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_on_path_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_on_path_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit("./module.tf")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_on_path_default_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_on_path_default_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit("module")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_on_path_custom_extension_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false, true, ".ext");
+  public void unconfined_finds_unit_on_path_custom_extension_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir))
+        .confineToPath(false)
+        .defaultExtension(".ext")
+        .build();
     assertThat(loc.getParseUnit("custom")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_on_path_back_relative_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_on_path_back_relative_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit("../on_path/module.tf")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_off_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_off_path_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit("../off_path/module.tf")).isNotNull();
   }
 
   @Test
-  public void non_strict_finds_unit_absolute_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation(Paths.get(assetDir), false);
+  public void unconfined_finds_unit_absolute_file() throws Exception {
+    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).confineToPath(false).build();
     assertThat(loc.getParseUnit(Paths.get(".").toAbsolutePath().toString()+"/"+assetDir+"/module.tf")).isNotNull();
   }
 
@@ -218,7 +230,7 @@ public class FilesystemLocationTest {
   public void allowing_native_evaluates_native_function() throws Exception {
     LoadPath loadPath = new LoadPath();
     List<LoadPathLocation> locations = loadPath.getLocations();
-    locations.add(new FilesystemLocation(Paths.get(assetDir), true, true, ".tf"));
+    locations.add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(true).build());
 
     TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
     TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
@@ -230,7 +242,7 @@ public class FilesystemLocationTest {
   public void disallowing_native_throws_evaluating_native_function() throws Exception {
     LoadPath loadPath = new LoadPath();
     List<LoadPathLocation> locations = loadPath.getLocations();
-    locations.add(new FilesystemLocation(Paths.get(assetDir), true, false, ".tf"));
+    locations.add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(false).build());
 
     try {
       TweakFlow.evaluate(new Loader(loadPath), "native.tf");
