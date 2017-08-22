@@ -38,7 +38,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
-import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
+import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -116,7 +116,7 @@ public class Run {
   private static String[] parseMain(String main){
 
     // get main
-    MemoryParseUnit parseUnit = new MemoryLocation().put("<main>", main);
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("<main>", main).build().getParseUnit("<main>");
     ParseResult parseResult = new Parser(parseUnit).parseReference();
 
     if (parseResult.isError()){
@@ -135,7 +135,7 @@ public class Run {
   }
 
   public static ExpressionNode parseExp(String exp){
-    MemoryParseUnit parseUnit = new MemoryLocation().put("<exp>", exp);
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("<exp>", exp).build().getParseUnit("<exp>");
     ParseResult parseResult = new Parser(parseUnit).parseExpression();
 
     if (parseResult.isError()){

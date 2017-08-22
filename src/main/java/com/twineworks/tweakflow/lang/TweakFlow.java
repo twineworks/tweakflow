@@ -42,7 +42,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
-import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
+import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.values.Value;
 
@@ -104,7 +104,12 @@ public class TweakFlow {
 
   public static Value evaluateExpression(String exp, boolean allowNativeFunctions){
 
-    MemoryParseUnit parseUnit = new MemoryLocation(allowNativeFunctions).put("<eval>", exp);
+    ParseUnit parseUnit = new MemoryLocation.Builder()
+        .allowNativeFunctions(allowNativeFunctions)
+        .add("<eval>", exp)
+        .build()
+        .getParseUnit("<eval>");
+
     ParseResult parseResult = new Parser(parseUnit).parseExpression();
 
     if (parseResult.isError()){

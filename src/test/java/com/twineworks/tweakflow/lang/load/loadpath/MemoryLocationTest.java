@@ -45,14 +45,20 @@ public class MemoryLocationTest {
 
   private static String assetDir = "src/test/resources/fixtures/tweakflow/loading/on_path";
 
+  private String readFile(String onPathFile) throws Exception {
+    return new String(Files.readAllBytes(Paths.get(assetDir+"/"+onPathFile)), StandardCharsets.UTF_8);
+  }
+
   @Test
   public void allowing_native_evaluates_native_function() throws Exception {
     LoadPath loadPath = new LoadPath();
     List<LoadPathLocation> locations = loadPath.getLocations();
-    MemoryLocation memoryLocation = new MemoryLocation(true);
+    MemoryLocation memoryLocation = new MemoryLocation.Builder()
+        .allowNativeFunctions(true)
+        .add("native.tf", readFile("native.tf"))
+        .build();
     locations.add(memoryLocation);
 
-    memoryLocation.put("native.tf", new String(Files.readAllBytes(Paths.get(assetDir+"/native.tf")), StandardCharsets.UTF_8));
     TweakFlowRuntime runtime = TweakFlow.evaluate(new Loader(loadPath), "native.tf");
     TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
     EvaluatorUserCallContext callContext = runtime.createCallContext(varHandle);
@@ -63,10 +69,11 @@ public class MemoryLocationTest {
   public void disallowing_native_throws_evaluating_native_function() throws Exception {
     LoadPath loadPath = new LoadPath();
     List<LoadPathLocation> locations = loadPath.getLocations();
-    MemoryLocation memoryLocation = new MemoryLocation(false);
+    MemoryLocation memoryLocation = new MemoryLocation.Builder()
+        .allowNativeFunctions(false)
+        .add("native.tf", readFile("native.tf"))
+        .build();
     locations.add(memoryLocation);
-
-    memoryLocation.put("native.tf", new String(Files.readAllBytes(Paths.get(assetDir+"/native.tf")), StandardCharsets.UTF_8));
 
     try {
       TweakFlow.evaluate(new Loader(loadPath), "native.tf");

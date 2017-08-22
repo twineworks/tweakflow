@@ -31,7 +31,7 @@ import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
-import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
+import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.repl.ReplState;
 import com.twineworks.tweakflow.repl.console.TextTerminal;
 
@@ -41,7 +41,7 @@ public class InteractiveInputCommand {
 
     // try parsing line as interactive input
     String input = state.getInput();
-    MemoryParseUnit parseUnit = new MemoryLocation().put("<prompt>", input);
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("<prompt>", input).build().getParseUnit("<prompt>");
     ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
     if (parseResult.isError()){

@@ -24,27 +24,54 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class MemoryLocation implements LoadPathLocation {
 
-  final private Map<String, MemoryParseUnit> parseUnits = new HashMap<>();
-  final private UserObjectFactory userObjectFactory;
-  final private boolean allowNativeFunctions;
+  public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPathLocation> {
 
-  public MemoryLocation() {
-    this(true);
+    private boolean allowNativeFunctions = true;
+    private Map<String, String> content = new HashMap<>();
+
+    public Builder() { }
+
+    @Override
+    public MemoryLocation build() {
+      return new MemoryLocation(allowNativeFunctions, content);
+    }
+
+    public MemoryLocation.Builder allowNativeFunctions(boolean allowNativeFunctions) {
+      this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public MemoryLocation.Builder add(String name, String programText) {
+      if (content.containsKey(name)){
+        throw new IllegalArgumentException("name "+name+" is already present");
+      }
+      content.put(name, programText);
+      return this;
+    }
+
   }
 
-  public MemoryLocation(boolean allowNativeFunctions){
+  final private Map<String, MemoryParseUnit> parseUnits;
+  final private boolean allowNativeFunctions;
+
+  public MemoryLocation(boolean allowNativeFunctions, Map<String, String> content){
     this.allowNativeFunctions = allowNativeFunctions;
-    userObjectFactory = allowNativeFunctions ? new UserObjectFactory() : null;
+    Map<String, MemoryParseUnit> units = new HashMap<>();
+    for (String name : content.keySet()) {
+      units.put(name, new MemoryParseUnit(this, content.get(name), name));
+    }
+
+    this.parseUnits = Collections.unmodifiableMap(units);
   }
 
   public Map<String, MemoryParseUnit> getParseUnits() {
@@ -72,10 +99,5 @@ public class MemoryLocation implements LoadPathLocation {
     return allowNativeFunctions;
   }
 
-  public MemoryParseUnit put(String name, String programText) {
-    MemoryParseUnit memoryParseUnit = new MemoryParseUnit(this, programText, name);
-    parseUnits.put(name, memoryParseUnit);
-    return memoryParseUnit;
-  }
 
 }

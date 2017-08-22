@@ -24,6 +24,11 @@
 
 package com.twineworks.tweakflow.repl;
 
+import com.twineworks.tweakflow.interpreter.EvaluationResult;
+import com.twineworks.tweakflow.interpreter.Interpreter;
+import com.twineworks.tweakflow.interpreter.memory.Cell;
+import com.twineworks.tweakflow.interpreter.memory.GlobalMemorySpace;
+import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
@@ -31,12 +36,6 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.*;
-import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
-import com.twineworks.tweakflow.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.interpreter.Interpreter;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.GlobalMemorySpace;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.util.LangUtil;
 
 import java.nio.file.Paths;
@@ -60,8 +59,6 @@ public class ReplState {
   private String promptInput;
   private Map<String, String> varDefs = new LinkedHashMap<>();
 
-  // memory location for interactive module
-  private MemoryLocation interactiveModuleLocation;
   private Loader loader;
 
   // evaluation results and convenient derivatives
@@ -126,15 +123,6 @@ public class ReplState {
       loadDuration += analysisUnit.getLoadDurationMillis();
     }
     return loadDuration;
-  }
-
-  public MemoryLocation getInteractiveModuleLocation() {
-    return interactiveModuleLocation;
-  }
-
-  public ReplState setInteractiveModuleLocation(MemoryLocation interactiveModuleLocation) {
-    this.interactiveModuleLocation = interactiveModuleLocation;
-    return this;
   }
 
   public Loader getLoader() {
@@ -222,7 +210,6 @@ public class ReplState {
         .setAnalysisResult(analysisResult)
         .setEvaluationResult(evaluationResult)
         .setLoader(loader)
-        .setInteractiveModuleLocation(interactiveModuleLocation)
         .setModulePaths(new ArrayList<>(modulePaths))
         .setMultiLine(multiLine)
         .setPromptInput(promptInput);
@@ -242,8 +229,10 @@ public class ReplState {
     locations.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
 
     // the memory location for the interactive module
-    MemoryLocation interactiveLocation = new MemoryLocation();
-    setInteractiveModuleLocation(interactiveLocation);
+    MemoryLocation interactiveLocation = new MemoryLocation.Builder()
+        .add(getInteractivePath(), buildInteractiveProgramText())
+        .build();
+
     locations.add(interactiveLocation);
 
     // all file system loading locations mentioned in state
@@ -262,7 +251,7 @@ public class ReplState {
 
   }
 
-  private void supplyInteractiveUnit(){
+  private String buildInteractiveProgramText(){
 
     StringBuilder builder = new StringBuilder(100);
 
@@ -292,12 +281,7 @@ public class ReplState {
     }
 
     String programText = builder.toString();
-
-    MemoryLocation location = getInteractiveModuleLocation();
-    MemoryParseUnit interactiveUnit = new MemoryParseUnit(location, programText, getInteractivePath());
-
-    location.getParseUnits().clear();
-    location.getParseUnits().put(getInteractivePath(), interactiveUnit);
+    return programText;
 
   }
 
@@ -306,7 +290,6 @@ public class ReplState {
     try {
 
       supplyLoader();
-      supplyInteractiveUnit();
 
     } catch (LangException e){
       analysisResult = null;

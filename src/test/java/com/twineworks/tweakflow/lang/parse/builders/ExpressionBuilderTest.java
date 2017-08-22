@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExpressionBuilderTest {
 
   private ExpressionBuilder makeBuilder(){
-    return new ExpressionBuilder(new MemoryLocation().put( "", ""));
+    return new ExpressionBuilder(new MemoryLocation.Builder().add( "", "").build().getParseUnit(""));
   }
 
   @Test
