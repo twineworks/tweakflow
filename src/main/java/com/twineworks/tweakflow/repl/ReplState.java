@@ -239,7 +239,7 @@ public class ReplState {
     List<LoadPathLocation> locations = lp.getLocations();
 
     // std resources are first
-    locations.add(new ResourceLocation(Paths.get("com/twineworks/tweakflow/std")));
+    locations.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
 
     // the memory location for the interactive module
     MemoryLocation interactiveLocation = new MemoryLocation();

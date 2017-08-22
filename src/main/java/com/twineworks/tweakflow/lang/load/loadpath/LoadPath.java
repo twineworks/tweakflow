@@ -77,7 +77,7 @@ public class LoadPath {
   }
 
   public LoadPath addStdLocation(){
-    getLocations().add(new ResourceLocation(Paths.get("com/twineworks/tweakflow/std")));
+    getLocations().add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
     return this;
   }
 

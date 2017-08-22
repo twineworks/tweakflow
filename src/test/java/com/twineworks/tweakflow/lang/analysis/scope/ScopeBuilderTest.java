@@ -50,7 +50,7 @@ public class ScopeBuilderTest {
   public ScopeBuilderTest() {
 
     LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation());
+    loadPath.getLocations().add(new ResourceLocation.Builder().build());
     Loader loader = new Loader(loadPath);
 
     AnalysisSet space = new AnalysisSet(loader);

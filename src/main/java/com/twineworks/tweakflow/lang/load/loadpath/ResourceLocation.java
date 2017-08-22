@@ -26,43 +26,60 @@ package com.twineworks.tweakflow.lang.load.loadpath;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import com.twineworks.tweakflow.util.InOut;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class ResourceLocation implements LoadPathLocation {
 
+  public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPathLocation> {
+
+    private Path path = ROOT_PATH;
+    private boolean allowNativeFunctions = true;
+    private String defaultExtension = ".tf";
+
+    public Builder() {
+    }
+
+    @Override
+    public ResourceLocation build() {
+      return new ResourceLocation(path, allowNativeFunctions, defaultExtension);
+    }
+
+    public ResourceLocation.Builder path(Path path){
+      Objects.requireNonNull(path, "path cannot be null");
+      this.path = path;
+      return this;
+    }
+
+    public ResourceLocation.Builder allowNativeFunctions(boolean allowNativeFunctions) {
+      this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public ResourceLocation.Builder defaultExtension(String defaultExtension) {
+      this.defaultExtension = defaultExtension;
+      if (this.defaultExtension == null){
+        this.defaultExtension = "";
+      }
+      return this;
+    }
+  }
+
   private final Path rootPath;
-  private final UserObjectFactory userObjectFactory;
-  private final static Path BASE_PATH = Paths.get("");
+  private final static Path ROOT_PATH = Paths.get("");
   private final String defaultExtension;
   private final boolean allowNativeFunctions;
-
-
-  public ResourceLocation() {
-    this(BASE_PATH, true, ".tf");
-  }
-  public ResourceLocation(Path rootPath) {
-    this(rootPath, true, ".tf");
-  }
-
-
-  public ResourceLocation(Path rootPath, String defaultExtension){
-    this(rootPath, true, defaultExtension);
-  }
 
   public ResourceLocation(Path rootPath, boolean allowNativeFunctions, String defaultExtension){
     this.rootPath = rootPath;
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
-    this.userObjectFactory =  allowNativeFunctions ? new UserObjectFactory() : null;
   }
-
-
 
   public Path getRootPath() {
     return rootPath;
@@ -88,7 +105,7 @@ public class ResourceLocation implements LoadPathLocation {
     Path normalized = rootPath.resolve(path).normalize();
     Path relative;
 
-    if (rootPath.equals(BASE_PATH)){
+    if (rootPath.equals(ROOT_PATH)){
       relative = normalized;
     }
     else{
@@ -110,7 +127,7 @@ public class ResourceLocation implements LoadPathLocation {
     Path normalized = rootPath.resolve(path).normalize();
 
     Path relative;
-    if (rootPath.equals(BASE_PATH)){
+    if (rootPath.equals(ROOT_PATH)){
       relative = normalized;
     }
     else{

@@ -60,7 +60,7 @@ public class InterpreterTest {
   private EvaluationResult evaluate(String ... paths){
 
     LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation());
+    loadPath.getLocations().add(new ResourceLocation.Builder().build());
 
     Loader loader = new Loader(loadPath);
 
@@ -81,7 +81,7 @@ public class InterpreterTest {
   private EvaluationResult evaluateWithStd(String ... paths){
 
     LoadPath loadPath = new LoadPath();
-    loadPath.getLocations().add(new ResourceLocation());
+    loadPath.getLocations().add(new ResourceLocation.Builder().build());
 
     Loader loader = new Loader(loadPath);
 

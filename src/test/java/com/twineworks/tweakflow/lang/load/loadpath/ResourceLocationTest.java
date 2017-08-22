@@ -45,75 +45,78 @@ public class ResourceLocationTest {
 
   @Test
   public void finds_on_path_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("module.tf")).isTrue();
   }
 
   @Test
   public void finds_on_path_relative_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("./module.tf")).isTrue();
   }
 
   @Test
   public void finds_on_path_default_extension_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("module")).isTrue();
   }
 
 
   @Test
   public void finds_on_path_custom_extension_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir), ".ext");
+    ResourceLocation loc = new ResourceLocation.Builder()
+        .path(Paths.get(assetDir))
+        .defaultExtension(".ext")
+        .build();
     assertThat(loc.pathExists("custom")).isTrue();
   }
 
   @Test
   public void finds_on_path_back_relative_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("../on_path/module.tf")).isTrue();
   }
 
   @Test
   public void refuses_off_path_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.pathExists("../off_path/module.tf")).isFalse();
   }
 
   @Test
   public void finds_unit_on_path_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("module.tf")).isNotNull();
   }
 
   @Test
   public void finds_unit_on_path_relative_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("./module.tf")).isNotNull();
   }
 
   @Test
   public void finds_unit_on_path_default_extension_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("module")).isNotNull();
   }
 
 
   @Test
   public void finds_unit_on_path_custom_extension_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir), ".ext");
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).defaultExtension(".ext").build();
     assertThat(loc.getParseUnit("custom")).isNotNull();
   }
 
   @Test
   public void finds_unit_on_path_back_relative_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     assertThat(loc.getParseUnit("../on_path/module.tf")).isNotNull();
   }
 
   @Test(expected = LangException.class)
   public void refuses_unit_off_path_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation(Paths.get(assetDir));
+    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
     loc.getParseUnit("../off_path/module.tf");
   }
 

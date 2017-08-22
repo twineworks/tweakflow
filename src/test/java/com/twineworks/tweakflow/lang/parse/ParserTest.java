@@ -77,7 +77,7 @@ public class ParserTest {
   public void parses_module_metadata() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/module.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/module.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -107,7 +107,7 @@ public class ParserTest {
   public void parses_module_imports() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/module.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/module.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -170,7 +170,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_month() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_month.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_month.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -183,7 +183,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_day() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_day.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_day.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -196,7 +196,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_hour() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_hour.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_hour.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -209,7 +209,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_minute() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_minute.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_minute.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -222,7 +222,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_second() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -235,7 +235,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_second_fraction() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second_fraction.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second_fraction.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -248,7 +248,7 @@ public class ParserTest {
   public void fails_on_datetime_invalid_offset_for_tz() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_offset_for_tz.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_offset_for_tz.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -262,7 +262,7 @@ public class ParserTest {
   public void parses_module_aliases() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/module.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/module.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -285,7 +285,7 @@ public class ParserTest {
   public void parses_module_explicitly_named_exports() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/module.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/module.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -308,7 +308,7 @@ public class ParserTest {
   public void parses_module_implicitly_named_exports() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/module.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/module.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -331,7 +331,7 @@ public class ParserTest {
   public void parses_library_metadata() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/library.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/library.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -364,7 +364,7 @@ public class ParserTest {
   public void parses_vardef_metadata() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/vardef.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/vardef.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -394,7 +394,7 @@ public class ParserTest {
   public void parses_typed_vardefs() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/typed_vardefs.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/typed_vardefs.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -443,7 +443,7 @@ public class ParserTest {
   public void parses_literal_expressions() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/literal_expressions.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/literal_expressions.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -846,7 +846,7 @@ public class ParserTest {
   public void parses_semantic_expressions() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/semantic_expressions.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/semantic_expressions.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -1248,7 +1248,7 @@ public class ParserTest {
   public void parses_empty_interactive_unit() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/empty_interactive.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/empty_interactive.tf")
     );
     ParseResult result = p.parseUnit();
 
@@ -1268,7 +1268,7 @@ public class ParserTest {
   public void parses_interactive_unit() throws Exception {
 
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation(), "fixtures/tweakflow/analysis/parsing/interactive.tf")
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/interactive.tf")
     );
     ParseResult result = p.parseUnit();
 
