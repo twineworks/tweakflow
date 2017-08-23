@@ -27,7 +27,7 @@ package com.twineworks.tweakflow.lang.values;
 import com.twineworks.collections.shapemap.ShapeKey;
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 
 import java.util.*;
 

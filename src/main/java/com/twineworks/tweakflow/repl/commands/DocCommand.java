@@ -24,9 +24,9 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
-import com.twineworks.tweakflow.interpreter.Evaluator;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.Spaces;
+import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 import com.twineworks.tweakflow.lang.ast.MetaDataNode;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;

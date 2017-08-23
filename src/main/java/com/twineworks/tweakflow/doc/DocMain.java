@@ -24,14 +24,13 @@
 
 package com.twineworks.tweakflow.doc;
 
-import com.twineworks.tweakflow.interpreter.DefaultDebugHandler;
-import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Arity1CallSite;
 import com.twineworks.tweakflow.lang.values.Value;
@@ -50,6 +49,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DocMain {
 
@@ -125,13 +125,18 @@ public class DocMain {
         outputPath = Paths.get(output);
       }
 
+      // create transformers
 
-      // get the modules and process them in order
+      List<String> transformerList  = new ArrayList<>();
+      for (Object t : (List) res.getAttrs().get("transformer")) {
+        transformerList.add(t.toString());
+      }
 
-      List<Arity1CallSite> transformers = createTransformers(loadPath, (List) res.getAttrs().get("transformer"));
+      List<Arity1CallSite> transformers = createTransformers(loadPath, transformerList);
 
       List modules = (List) res.getAttrs().get("module");
 
+      // get the modules and process them in order
       for (Object moduleObj : modules) {
         StringBuilder out = new StringBuilder();
         String module = (String) moduleObj;
@@ -155,10 +160,6 @@ public class DocMain {
         } else {
           Path outPath = outputPath.resolve(module);
           String fileName = outPath.getFileName().toString();
-          // replace filename extension, if any, with given one
-//          if (fileName.contains(".")){
-//            fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-//          }
           fileName += "." + outputExtension;
           outPath = outputPath.resolve(module).resolveSibling(fileName);
           Files.createDirectories(outPath.getParent());
@@ -180,14 +181,20 @@ public class DocMain {
 
   }
 
-  private static List<Arity1CallSite> createTransformers(LoadPath loadPath, List transformers) {
+  private static List<Arity1CallSite> createTransformers(LoadPath loadPath, List<String> transformers) {
 
     List<Arity1CallSite> ret = new ArrayList<>();
-    for (Object transformer : transformers) {
-      String path = transformer.toString();
-      TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, path, new DefaultDebugHandler());
-      TweakFlowRuntime.VarHandle f = runtime.createVarHandle(path, "transform", "transform");
-      ret.add(runtime.createCallContext(f).createArity1CallSite(f.getValue()));
+
+    Runtime runtime = TweakFlow.compile(loadPath, transformers);
+    Map<String, Runtime.Module> modules = runtime.getModules();
+
+    for (String transformer : transformers) {
+      String key = runtime.moduleKey(transformer);
+      Runtime.Module module = modules.get(key);
+      Runtime.Library transformLib = module.getLibrary("transform");
+      Runtime.Var transformVar = transformLib.getVar("transform");
+      transformVar.evaluate();
+      ret.add(transformVar.arity1CallSite());
     }
 
     return ret;

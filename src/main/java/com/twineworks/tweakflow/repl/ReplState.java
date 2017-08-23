@@ -24,11 +24,11 @@
 
 package com.twineworks.tweakflow.repl;
 
-import com.twineworks.tweakflow.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.interpreter.Interpreter;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.GlobalMemorySpace;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.GlobalMemorySpace;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;

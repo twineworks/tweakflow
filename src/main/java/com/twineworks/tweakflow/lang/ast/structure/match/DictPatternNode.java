@@ -28,7 +28,7 @@ import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
-import com.twineworks.tweakflow.interpreter.ops.PatternOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.PatternOp;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

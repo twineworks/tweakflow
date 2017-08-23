@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.doc;
 
-import com.twineworks.tweakflow.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Evaluator;
 import com.twineworks.tweakflow.lang.ast.ComponentNode;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;

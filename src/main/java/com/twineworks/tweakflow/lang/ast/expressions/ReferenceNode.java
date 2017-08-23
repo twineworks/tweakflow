@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.ast.expressions;
 
-import com.twineworks.tweakflow.interpreter.ops.ConstantOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.ConstantOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.scope.Symbol;

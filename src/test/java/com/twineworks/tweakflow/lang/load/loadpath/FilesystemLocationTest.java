@@ -24,12 +24,12 @@
 
 package com.twineworks.tweakflow.lang.load.loadpath;
 
-import com.twineworks.tweakflow.interpreter.EvaluatorUserCallContext;
-import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Values;
+import org.assertj.core.api.StrictAssertions;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -230,10 +230,11 @@ public class FilesystemLocationTest {
         .add(new FilesystemLocation.Builder(Paths.get(assetDir)).allowNativeFunctions(true).build())
         .build();
 
-    TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, "native.tf");
-    TweakFlowRuntime.VarHandle varHandle = runtime.createVarHandle("native.tf", "native", "yes");
-    EvaluatorUserCallContext callContext = runtime.createCallContext(varHandle);
-    assertThat(callContext.call(varHandle.getValue())).isSameAs(Values.TRUE);
+    Runtime runtime = TweakFlow.compile(loadPath, "native.tf");
+    runtime.evaluate();
+    Runtime.Var var = runtime.getModules().get(runtime.moduleKey("native.tf")).getLibrary("native").getVar("yes");
+
+    StrictAssertions.assertThat(var.call()).isSameAs(Values.TRUE);
   }
 
   @Test
@@ -243,7 +244,7 @@ public class FilesystemLocationTest {
         .build();
 
     try {
-      TweakFlow.evaluate(loadPath, "native.tf");
+      TweakFlow.compile(loadPath, "native.tf").evaluate();
     } catch(LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.NATIVE_CODE_RESTRICTED);
       return;

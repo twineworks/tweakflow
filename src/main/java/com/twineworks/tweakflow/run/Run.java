@@ -24,21 +24,19 @@
 
 package com.twineworks.tweakflow.run;
 
-import com.twineworks.tweakflow.interpreter.DefaultDebugHandler;
-import com.twineworks.tweakflow.interpreter.Evaluator;
-import com.twineworks.tweakflow.interpreter.EvaluatorUserCallContext;
-import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.Evaluator;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -52,6 +50,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Run {
 
@@ -222,13 +221,12 @@ public class Run {
     }
 
     try {
-
-      TweakFlowRuntime runtime = TweakFlow.evaluate(loadPath, modules, new DefaultDebugHandler());
-
-      TweakFlowRuntime.VarHandle entryHandle = runtime.createVarHandle(modules.get(0), lib, var);
-
-      EvaluatorUserCallContext entryCallContext = runtime.createCallContext(entryHandle);
-      Value result = entryCallContext.call(entryHandle.getValue(), callArgValues);
+      Runtime runtime = TweakFlow.compile(loadPath, modules, new DefaultDebugHandler());
+      Map<String, Runtime.Module> runtimeModules = runtime.getModules();
+      Runtime.Module module = runtimeModules.get(runtime.moduleKey(modules.get(0)));
+      Runtime.Var mainVar = module.getLibrary(lib).getVar(var);
+      mainVar.evaluate();
+      Value result = mainVar.call(callArgValues);
 
       System.out.println(ValueInspector.inspect(result));
     }

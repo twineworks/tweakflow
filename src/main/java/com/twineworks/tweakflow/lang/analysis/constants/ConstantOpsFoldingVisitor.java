@@ -24,8 +24,8 @@
 
 package com.twineworks.tweakflow.lang.analysis.constants;
 
-import com.twineworks.tweakflow.interpreter.Evaluator;
-import com.twineworks.tweakflow.interpreter.ops.ConstantOp;
+import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.ops.ConstantOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;

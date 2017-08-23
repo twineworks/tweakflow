@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.ast.expressions;
 
-import com.twineworks.tweakflow.interpreter.ops.ExpressionOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.ExpressionOp;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
 

@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.lang.ast.structure.match;
 
 import com.twineworks.tweakflow.lang.ast.Node;
-import com.twineworks.tweakflow.interpreter.ops.PatternOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.PatternOp;
 
 public interface MatchPatternNode extends Node {
   PatternOp getPatternOp();

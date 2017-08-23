@@ -26,10 +26,10 @@ package com.twineworks.tweakflow;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
-import com.twineworks.tweakflow.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.interpreter.Interpreter;
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;

@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.errors;
 
-import com.twineworks.tweakflow.interpreter.Stack;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.values.DictValue;
 import com.twineworks.tweakflow.lang.values.Value;

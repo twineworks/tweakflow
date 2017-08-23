@@ -30,7 +30,7 @@ import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
 import com.twineworks.tweakflow.lang.scope.Symbol;
-import com.twineworks.tweakflow.interpreter.ops.CapturePatternOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.CapturePatternOp;
 
 import java.util.Collections;
 import java.util.List;

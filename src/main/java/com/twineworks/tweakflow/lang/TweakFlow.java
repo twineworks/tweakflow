@@ -24,8 +24,6 @@
 
 package com.twineworks.tweakflow.lang;
 
-import com.twineworks.tweakflow.interpreter.*;
-import com.twineworks.tweakflow.interpreter.runtime.TweakFlowRuntime;
 import com.twineworks.tweakflow.lang.analysis.Analysis;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.constants.ConstantOpsFoldingVisitor;
@@ -37,11 +35,16 @@ import com.twineworks.tweakflow.lang.analysis.references.MetaDataAnalysisVisitor
 import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolverVisitor;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilderVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.RuntimeSet;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.values.Value;
 
@@ -50,49 +53,24 @@ import java.util.List;
 
 public class TweakFlow {
 
-  public static LoadPath makeStdAndCurrentDirectoryLoadPath(){
-    return new LoadPath.Builder()
-        .addStdLocation()
-        .addCurrentWorkingDirectory()
-        .build();
+  public static Runtime compile(LoadPath loadPath, String path){
+    return compile(loadPath, path, new DefaultDebugHandler());
   }
 
-  public static LoadPath makeStdLoadPath(){
-    return new LoadPath.Builder()
-        .addStdLocation()
-        .build();
+
+  public static Runtime compile(LoadPath loadPath, String path, DebugHandler debugHandler){
+    return compile(loadPath, Collections.singletonList(path), debugHandler);
   }
 
-  public static TweakFlowRuntime evaluate(String path, DebugHandler debugHandler){
-    return evaluate(makeStdAndCurrentDirectoryLoadPath(), path, debugHandler);
+  public static Runtime compile(LoadPath loadPath, List<String> paths){
+    return compile(loadPath, paths, new DefaultDebugHandler());
   }
 
-  public static TweakFlowRuntime evaluate(String path){
-    return evaluate(makeStdAndCurrentDirectoryLoadPath(), path);
-  }
-
-  public static TweakFlowRuntime evaluate(LoadPath loadPath, String path){
-    return evaluate(loadPath, path, new DefaultDebugHandler());
-  }
-
-  public static TweakFlowRuntime evaluate(LoadPath loadPath, String path, DebugHandler debugHandler){
-    List<String> paths = Collections.singletonList(path);
-    return evaluate(loadPath, paths, debugHandler);
-  }
-
-  public static TweakFlowRuntime evaluate(LoadPath loadPath, List<String> paths, DebugHandler debugHandler){
-
+  public static Runtime compile(LoadPath loadPath, List<String> paths, DebugHandler debugHandler){
     AnalysisResult analysisResult = Analysis.analyze(paths, loadPath);
     if (analysisResult.isError()) throw analysisResult.getException();
-    Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet(), debugHandler);
-
-    EvaluationResult evaluationResult = interpreter.evaluate();
-    if (evaluationResult.isError()) throw evaluationResult.getException();
-
-    RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
-
-    return new TweakFlowRuntime(runtimeSet);
-
+    RuntimeSet runtimeSet = new RuntimeSet(analysisResult.getAnalysisSet());
+    return new Runtime(runtimeSet, debugHandler);
   }
 
   public static Value evaluateExpression(String exp){

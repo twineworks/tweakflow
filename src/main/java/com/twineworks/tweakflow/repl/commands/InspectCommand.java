@@ -24,9 +24,9 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
-import com.twineworks.tweakflow.interpreter.memory.Cell;
-import com.twineworks.tweakflow.interpreter.memory.MemorySpaceInspector;
-import com.twineworks.tweakflow.interpreter.memory.Spaces;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceInspector;
+import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
