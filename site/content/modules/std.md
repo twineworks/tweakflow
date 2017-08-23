@@ -16,7 +16,7 @@ The core library contains utility functions to process values at a basic level.
 
 Identity function. Returns `x`.
 
-```ruby
+```tweakflow
 > core.id("foo")
 "foo"
 
@@ -38,7 +38,7 @@ If `x` is a function the string `'function'` is returned.
 Otherwise literal notation is used.
 If `x` is not a function, and contains no functions as children `x == core.eval(core.inspect(x))` generally holds true.
 
-```ruby
+```tweakflow
 > core.inspect(1)
 "1"
 
@@ -65,7 +65,7 @@ If `x` is not a function, and contains no functions as children `x == core.eval(
 
 Returns `false` if `x` is `nil`, returns `true` otherwise.
 
-```ruby
+```tweakflow
 > core.present?("foo")
 true
 
@@ -79,7 +79,7 @@ false
 
 Returns `true` if `x` is `nil`, returns `false` otherwise.
 
-```ruby
+```tweakflow
 > core.nil?("foo")
 false
 
@@ -93,7 +93,7 @@ true
 
 Returns a hashcode of `x`. Values that compare as equal are guaranteed to have the same hashcode.
 
-```ruby
+```tweakflow
 > core.hash("foo")
 101574
 
@@ -119,7 +119,7 @@ Functions can be declared and called within `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > core.eval("1")
 1
 
@@ -159,7 +159,7 @@ If any `x` is `nil`, it is concatenated into the output string as `"nil"`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > strings.concat(["foo", "bar"])
 "foobar"
 
@@ -184,7 +184,7 @@ Returns the number of unicode codepoints in given string `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > strings.length("")
 0
 
@@ -208,7 +208,7 @@ Returns `nil` if `x` is `nil`.
 
 Throws an error if `start` is `nil` or `start < 0`.
 
-```ruby
+```tweakflow
 > strings.substring("hello world")
 "hello world"
 
@@ -261,7 +261,7 @@ so `search.replace('ooo', 'oo', 'g')` results in `'go'` rather than `'og'`.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > strings.replace('ooo', 'oo', 'g')
 "go"
 
@@ -289,7 +289,7 @@ If any `x` is `nil`, it is concatenated into the output string as `"nil"`.
 
 Returns `nil` if `xs` is `nil` or `s` is `nil`.
 
-```ruby
+```tweakflow
 > strings.join(["foo", "bar"])
 "foobar"
 
@@ -321,7 +321,7 @@ Returns `x` with leading and trailing whitespace characters removed.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > strings.trim("  foo  ")
 "foo"
 
@@ -340,7 +340,7 @@ Returns `x` with all characters converted to lower case as per conventions of th
 
 Returns `nil` if `x` is `nil` or `lang` is `nil`.
 
-```ruby
+```tweakflow
 > strings.lower_case("FOO")
 "foo"
 
@@ -359,7 +359,7 @@ Returns `x` with all characters converted to uper case as per conventions of the
 
 Returns `nil` if `x` is `nil` or `lang` is `nil`.
 
-```ruby
+```tweakflow
 > strings.upper_case("foo")
 "FOO"
 
@@ -386,7 +386,7 @@ If `case_sensitive` is `false`, lower case characters are considered equal to th
 
 Throws an error if any argument is `nil`.
 
-```ruby
+```tweakflow
 > f: strings.comparator("en-US", true)
 function
 
@@ -414,7 +414,7 @@ Returns a list of unicode codepoints that make up given string `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > strings.chars("foo")
 ["f", "o", "o"]
 
@@ -436,7 +436,7 @@ Returns a list of strings obtained by splitting `x` using separator `s`.
 
 Returns `nil` if `x` is `nil` or `s` is `nil`.
 
-```ruby
+```tweakflow
 > strings.split("hello world")
 ["hello", "world"]
 
@@ -453,7 +453,7 @@ Returns `false` otherwise.
 
 Returns `nil` if `x` is `nil` or `init` is `nil`.
 
-```ruby
+```tweakflow
 > strings.starts_with?("yellow", "yell")
 true
 
@@ -476,7 +476,7 @@ Returns `false` otherwise.
 
 Returns `nil` if `x` is `nil` or `tail` is `nil`.
 
-```ruby
+```tweakflow
 > strings.ends_with?("yellow", "low")
 true
 
@@ -501,7 +501,7 @@ Returns `-1` otherwise.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > strings.index_of("foobar", "foo")
 0
 
@@ -527,7 +527,7 @@ If `end` is `nil`, it is interpreted as the last index of `x`.
 
 Returns `nil` if `x` is `nil` or `sub` is `nil`.
 
-```ruby
+```tweakflow
 > strings.last_index_of("elementary", "e")
 4
 
@@ -566,7 +566,7 @@ Calling `f` with a `nil` argument returns `nil`.
 Throws an error if `pattern` is `nil` or not a valid regular expression.
 
 
-```ruby
+```tweakflow
 > digits?: regex.matching('\d+')
 function
 
@@ -596,7 +596,7 @@ Calling `f` with a `nil` argument returns `nil`.
 
 Throws an error if `pattern` is `nil` or not a valid regular expression.
 
-```ruby
+```tweakflow
 # match ISO date and optional hh:mm time, capturing year, month, day, time
 > date_parts: regex.capturing('(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}:\d{2}))?')
 function
@@ -631,7 +631,7 @@ Calling `f` with a `nil` argument returns `nil`.
 
 Throws an error if `pattern` is `nil` or not a valid regular expression.
 
-```ruby
+```tweakflow
 # scan for hh:mm pattern, capturing hours and minutes separately for each match.
 # AM/PM indicator is optional.
 > clock_times: regex.scanning('(\d{1,2}):(\d{2})( AM| PM)?')
@@ -670,7 +670,7 @@ Calling `f` with a `nil` argument returns `nil`.
 
 Throws an error if `pattern` is `nil` or not a valid regular expression.\
 
-```ruby
+```tweakflow
 # split on space
 > f: regex.splitting(' ')
 function
@@ -715,7 +715,7 @@ Calling `f` with a `nil` argument returns `nil`.
 
 Throws an error if any argument is `nil` or `pattern` is not a valid regular expression.
 
-```ruby
+```tweakflow
 # match date in yyyy/dd/mm format and convert to ISO date
 > to_iso_date: regex.replacing('(\d{4})/(\d{2})/(\d{2})', '$1-$3-$2')
 function
@@ -745,7 +745,7 @@ The resulting string matches `x` literally as a pattern.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 # splits by word boundary
 > f: regex.splitting('\b')
 function
@@ -776,7 +776,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `dict` nor a `list`.
 
-```ruby
+```tweakflow
 > data.size([])
 0
 
@@ -810,7 +810,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `dict` nor a `list`.
 
-```ruby
+```tweakflow
 > data.empty?([])
 true
 
@@ -847,7 +847,7 @@ Throws an error if `xs` is neither a `dict` nor a `list`. \
 Throws an error if `xs` is a `list` and `key` cannot be cast to a `long`. \
 Throws an error if `xs` is a `dict` and `key` cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 > data.get(["a", "b", "c"], 0, "foo")
 "a"
 
@@ -881,7 +881,7 @@ Throws an error if `key` is `nil`. \
 Throws an error if `xs` is a `list` and `key` cannot be cast to a `long` or `key` is negative. \
 Throws an error if `xs` is a `dict` and `key` cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 > data.put([], 0, "foo")
 ["foo"]
 
@@ -928,7 +928,7 @@ Throws an error if `xs` or an accessed nested structure is neither a `dict` nor 
 Throws an error if `xs` or an accessed nested structure is a `list` and the key cannot be cast to a `long`. \
 Throws an error if `xs` or an accessed nested structure is a `dict` and the key cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 > data.get_in([["a", "b"], ["c", "d"], ["e", "f"]], [2, 0], "foo")
 "e"
 
@@ -977,7 +977,7 @@ Throws an error if `xs` is a `dict` or a `list` and `keys` is `nil`. \
 Throws an error if navigating into a `list` and the key cannot be cast to a `long` or the key is negative. \
 Throws an error if navigating into a `dict` and the key cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 
 > \e
 data.put_in(
@@ -1036,7 +1036,7 @@ Throws an error if `f` is `nil`. \
 Throws an error if `xs` is a `list` and `key` cannot be cast to a `long` or `key` is negative. \
 Throws an error if `xs` is a `dict` and `key` cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 > data.update(["a", "b", "c"], 0, (x) -> x.."-updated")
 ["a-updated", "b", "c"]
 
@@ -1073,7 +1073,7 @@ Throws an error if `f` is `nil`. \
 Throws an error if navigating into a `list` and the key cannot be cast to a `long` or the key is negative. \
 Throws an error if navigating into a `dict` and the key cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 
 > \e
 data.update_in(
@@ -1119,7 +1119,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.keys([])
 []
 
@@ -1156,7 +1156,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list`, nor a `dict`.
 
-```ruby
+```tweakflow
 > data.has?(["a", "b", "c"], 2)
 true
 
@@ -1196,7 +1196,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.values([])
 []
 
@@ -1228,7 +1228,7 @@ Returns a `list` where each element is a `dict`. For each key `k` in `xs` there 
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.entries({})
 []
 
@@ -1259,7 +1259,7 @@ Returns a list consisting of `x` followed by all elements of `xs`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.prepend("a", ["b", "c"])
 ["a", "b", "c"]
 
@@ -1278,7 +1278,7 @@ Returns a list consisting of all elements of `xs` followed by `x`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.append(["a", "b"], "c")
 ["a", "b", "c"]
 
@@ -1306,7 +1306,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.find([1, 2, 3, 4, 5], (x) -> x >= 3)
 3
 
@@ -1344,7 +1344,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.find_index([1, 2, 3, 4, 5], (x) -> x >= 3)
 2
 
@@ -1377,7 +1377,7 @@ Returns `nil` if `xs` is nil.
 
 Throws an error if index is negative or `nil`.
 
-```ruby
+```tweakflow
 > data.insert([], 0, "a")
 ["a"]
 
@@ -1421,7 +1421,7 @@ Returns `xs` if `key` is `nil`.
 Throws an error if `xs` is a list and `key` cannot be cast to a `long`. \
 Throws an error if `xs` is a dict and `key` cannot be cast to a `string`.
 
-```ruby
+```tweakflow
 > data.delete(["a", "b", "c"], 0)
 ["b", "c"]
 
@@ -1462,7 +1462,7 @@ Returns `nil` if `xs` is `nil` or `keys` is `nil`.
 Throws an error if `xs` is a `list` and a `key` cannot be cast to `long`.\
 Throws an error if `xs` is a `dict` and a `key` cannot be cast to `string`.
 
-```ruby
+```tweakflow
 > data.select(["a", "b", "c"], [0, 2])
 ["a", "c"]
 
@@ -1500,7 +1500,7 @@ Returns `nil` if `xs` is `nil`.
 Throws an error if `xs` is neither a `list` nor a `dict`.\
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.filter([0,1,2,3,4,5,6,7,8], (x) -> x % 2 == 0)
 [0, 2, 4, 6, 8]
 
@@ -1547,7 +1547,7 @@ The same seed will shuffle lists of equal length in the same way.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.shuffle([1, 2, 3, 4, 5, 6], "hello")
 [5, 2, 6, 4, 1, 3]
 
@@ -1572,7 +1572,7 @@ Returns a list with all duplicates in `xs` removed. Values are considered duplic
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.unique([1, 1, 2, 3, 3])
 [1, 2, 3]
 
@@ -1602,7 +1602,7 @@ Returns an empty list if `start > end`.
 
 Returns `nil` if `start` is `nil` or `end` is `nil`.
 
-```ruby
+```tweakflow
 > data.range(0, 2)
 [0, 1, 2]
 
@@ -1636,7 +1636,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.any?([1,2,3,4,5], (x) -> x % 2 == 0)
 true
 
@@ -1670,7 +1670,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.none?([1,2,3,4,5], (x) -> x % 2 == 0)
 false
 
@@ -1706,7 +1706,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `p` is `nil`.
 
-```ruby
+```tweakflow
 > data.all?([1,2,3,4,5], (x) -> x % 2 == 0)
 false
 
@@ -1736,7 +1736,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is empty.
 
-```ruby
+```tweakflow
 > data.init([1,2,3])
 [1, 2]
 
@@ -1762,7 +1762,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is empty.
 
-```ruby
+```tweakflow
 > data.tail([1,2,3])
 [2, 3]
 
@@ -1787,7 +1787,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is empty.
 
-```ruby
+```tweakflow
 > data.head([1,2,3])
 1
 
@@ -1812,7 +1812,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is empty.
 
-```ruby
+```tweakflow
 > data.last([1,2,3])
 3
 
@@ -1841,7 +1841,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `start` is `nil` or `start < 0`.
 
-```ruby
+```tweakflow
 > data.slice([1,2,3,4,5], 3)
 [4, 5]
 
@@ -1872,7 +1872,7 @@ Returns `nil` if any argument is `nil`.
 Throws an error if `s <= 0`.
 
 
-```ruby
+```tweakflow
 > data.slices([1,2,3,4,5,6,7,8,9,0], 3)
 [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
 > data.slices(nil)
@@ -1901,7 +1901,7 @@ Returns a list that contains all elements of `xs` in reverse order.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.reverse([1, 2, 3])
 [3, 2, 1]
 
@@ -1920,7 +1920,7 @@ If a < b, f returns a negative number.\
 If a > b, f returns a positive number.\
 If a == b, f returns 0.
 
-```ruby
+```tweakflow
 > data.sort([1, 4, 5, 3, 6, 7], math.compare)
 [1, 3, 4, 5, 6, 7]
 
@@ -1953,7 +1953,7 @@ Returns `nil` if `n` is `nil`.
 
 Throws an error if `n` is negative.
 
-```ruby
+```tweakflow
 > data.repeat(3, "foo")
 ["foo", "foo", "foo"]
 
@@ -1982,7 +1982,7 @@ Returns `nil` if any element of `lists` is `nil`.
 
 Throws an error if any element of `lists` is not a `list`.
 
-```ruby
+```tweakflow
 > data.concat([[1,2,3], [4,5,6], [7,8,9]])
 [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -2015,7 +2015,7 @@ Returns `nil` if any element of `dicts` is `nil`.
 
 Throws an error if any element of `dicts` is not a `dict`.
 
-```ruby
+```tweakflow
 > data.merge([{:a 1}, {:b 2}, {:c 3}])
 {
   :a 1,
@@ -2053,7 +2053,7 @@ Returns an empty list if `n` is negative.
 
 Returns `nil` if `n` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.take(2, ["a", "b", "c", "d"])
 ["a", "b"]
 
@@ -2081,7 +2081,7 @@ Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to
 
 Returns `nil` if `p` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 
 > data.take_while((x) -> x < 5, [2, 3, 3, 2, 5, 1, 2])
 [2, 3, 3, 2]
@@ -2107,7 +2107,7 @@ Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to
 
 Returns `nil` if `p` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 
 > data.take_until((x) -> x >= 5, [2, 3, 3, 2, 5, 1, 2])
 [2, 3, 3, 2]
@@ -2138,7 +2138,7 @@ Returns `xs` if `n` is negative.
 
 Returns `nil` if `n` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.drop(2, ["a", "b", "c", "d"])
 ["c", "d"]
 
@@ -2166,7 +2166,7 @@ Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)
 
 Returns `nil` if `p` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.drop_while((x) -> x <= 2, [1, 2, 3, 4])
 [3, 4]
 
@@ -2188,7 +2188,7 @@ Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)
 
 Returns `nil` if `p` is `nil` or `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.drop_until((x) -> x > 2, [1, 2, 3, 4])
 [3, 4]
 
@@ -2216,7 +2216,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.contains?([1,2,3], 2)
 true
 
@@ -2249,7 +2249,7 @@ If `xs` contains `x` at or after index `start` returns the index of the earliest
 Returns `nil` if `xs` is `nil`.\
 Returns `nil` if `start` is `nil`.
 
-```ruby
+```tweakflow
 > data.index_of([1,2,3], 2)
 1
 
@@ -2278,7 +2278,7 @@ If `end` is `nil`, it is interpreted as the last index of `xs`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.last_index_of([1,2,3], 2)
 1
 
@@ -2312,7 +2312,7 @@ Returns `nil` if `xs` does not contain an entry with value `x`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.key_of({:a 1, :b 2}, 1)
 "a"
 
@@ -2338,7 +2338,7 @@ Otherwise the element is appended to the list. Returns the result list.
 
 Returns nil if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.flatten([[1, 2, 3], 4, 5, [6, 7, 8]])
 [1, 2, 3, 4, 5, 6, 7, 8]
 
@@ -2371,7 +2371,7 @@ Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.map([1,2,3], (x) -> x*x)
 [1, 4, 9]
 
@@ -2422,7 +2422,7 @@ Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.flatmap([1, 2, 3], (x) -> data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
 
@@ -2459,7 +2459,7 @@ Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.mapcat([1, 2, 3], (x) -> data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
 
@@ -2488,7 +2488,7 @@ Returns a list of same length as `xs`. Each index `i` contains the value `[xs[i]
 
 Returns `nil` if `xs` or `ys` are `nil`.
 
-```ruby
+```tweakflow
 > data.zip(["a", "b", "c"], [1, 2, 3])
 [["a", 1], ["b", 2], ["c", 3]]
 
@@ -2516,7 +2516,7 @@ In case there are duplicate keys in `keys`, the last index of a key provides the
 
 Returns `nil` if `keys` or `values` are `nil`.
 
-```ruby
+```tweakflow
 > data.zip_dict(["a", "b", "c"], [1, 2, 3])
 {
   :a 1,
@@ -2559,7 +2559,7 @@ Returns a `list` with all elements from `xs` separated by `s`.
 
 Returns `nil` if `xs` is `nil`.
 
-```ruby
+```tweakflow
 > data.interpose([1, 2, 3, 4], 0)
 [1, 0, 2, 0, 3, 0, 4]
 
@@ -2588,7 +2588,7 @@ Returns `nil` if `xs` is `nil` or `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 > data.reduce([1,2,3], 0, (a, x) -> a+x)
 6
 
@@ -2647,7 +2647,7 @@ Returns `nil` if `xs`, `f`, or `p` are `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 
 # sum up integers, until sum exceeds 10
 > data.reduce_until([1,2,3,4,5,6,7,8], 0, (a) -> a > 10, (a, x) -> a+x)
@@ -2698,7 +2698,7 @@ Returns `nil` if `xs`, `f`, or `p` are `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
 
-```ruby
+```tweakflow
 
 # sum up integers, until sum exceeds 10
 > data.reduce_while([1,2,3,4,5,6,7,8], 0, (a) -> a <= 10, (a, x) -> a+x)
@@ -2750,7 +2750,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.seconds_between(time.epoch, time.epoch)
 0
 
@@ -2777,7 +2777,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.minutes_between(time.epoch, time.epoch)
 0
 
@@ -2804,7 +2804,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.hours_between(time.epoch, time.epoch)
 0
 
@@ -2831,7 +2831,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.days_between(time.epoch, time.epoch)
 0
 
@@ -2858,7 +2858,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.months_between(time.epoch, time.epoch)
 0
 
@@ -2885,7 +2885,7 @@ Returns a negative number if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.years_between(time.epoch, time.epoch)
 0
 
@@ -2912,7 +2912,7 @@ The values are negative if start datetime is after end datetime.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.period_between(time.epoch, time.epoch)
 {
   :months 0,
@@ -2951,7 +2951,7 @@ A duration of `-1` nanosecond is represented as `-1` `:seconds` and `999,999,999
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 > time.duration_between(time.epoch, time.epoch)
 {
   :nano_seconds 0,
@@ -2990,7 +2990,7 @@ Supply negative period numbers to effectively subtract a period.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 
 > time.add_period(time.epoch, 0, 0, 1)
 1970-01-02T00:00:00Z@UTC
@@ -3018,7 +3018,7 @@ Supply negative numbers to effectively subtract a duration.
 
 Returns `nil` if any argument is `nil`.
 
-```ruby
+```tweakflow
 
 > time.add_duration(time.epoch, 0, 1)
 1970-01-01T00:00:00.000000001Z@UTC
@@ -3044,7 +3044,7 @@ Returns the year component of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.year(time.epoch)
 1970
 
@@ -3063,7 +3063,7 @@ Returns the month component of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.month(time.epoch)
 1
 
@@ -3082,7 +3082,7 @@ Returns the day of month component of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.day_of_month(time.epoch)
 1
 
@@ -3101,7 +3101,7 @@ Returns the day of year of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.day_of_year(time.epoch)
 1
 
@@ -3132,7 +3132,7 @@ The returned number represents a day of week as per the following mapping.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.day_of_week(time.epoch)
 4
 
@@ -3151,7 +3151,7 @@ Returns the hour of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.hour(time.epoch)
 0
 
@@ -3170,7 +3170,7 @@ Returns the minute of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.minute(time.epoch)
 0
 
@@ -3189,7 +3189,7 @@ Returns the second of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.second(time.epoch)
 0
 
@@ -3208,7 +3208,7 @@ Returns the nanoseconds of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.nano_of_second(time.epoch)
 0
 
@@ -3230,7 +3230,7 @@ Returns the week of year for given datetime `x`. The ISO-8601 definition is used
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.week_of_year(time.epoch)
 1
 
@@ -3261,7 +3261,7 @@ Returns the number of seconds in the offset from UTC for given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.offset_seconds(time.epoch)
 0
 
@@ -3283,7 +3283,7 @@ Returns the time zone for given datetime `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > time.zone(time.epoch)
 "UTC"
 
@@ -3307,7 +3307,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given year.
 
-```ruby
+```tweakflow
 > time.with_year(time.epoch, 2007)
 2007-01-01T00:00:00Z@UTC
 
@@ -3335,7 +3335,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given month.
 
-```ruby
+```tweakflow
 > time.with_month(time.epoch, 6)
 1970-06-01T00:00:00Z@UTC
 
@@ -3364,7 +3364,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `day_of_month`.
 
-```ruby
+```tweakflow
 > time.with_day_of_month(time.epoch, 23)
 1970-01-23T00:00:00Z@UTC
 
@@ -3392,7 +3392,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `hour`.
 
-```ruby
+```tweakflow
 > time.with_hour(time.epoch, 4)
 1970-01-01T04:00:00Z@UTC
 
@@ -3420,7 +3420,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `minute`.
 
-```ruby
+```tweakflow
 > time.with_minute(time.epoch, 42)
 1970-01-01T00:42:00Z@UTC
 
@@ -3448,7 +3448,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `second`.
 
-```ruby
+```tweakflow
 > time.with_second(time.epoch, 42)
 1970-01-01T00:00:42Z@UTC
 
@@ -3476,7 +3476,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `nano_of_second`.
 
-```ruby
+```tweakflow
 > time.with_nano_of_second(time.epoch, 123456789)
 1970-01-01T00:00:00.123456789Z@UTC
 
@@ -3504,7 +3504,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `tz`.
 
-```ruby
+```tweakflow
 > time.with_zone(time.epoch, "Europe/Berlin")
 1970-01-01T00:00:00+01:00@`Europe/Berlin`
 
@@ -3535,7 +3535,7 @@ Returns `nil` if any argument is `nil`.
 
 Throws an error if no datetime can be constructed with given `tz`.
 
-```ruby
+```tweakflow
 > time.same_instant_at_zone(time.epoch, "Europe/Berlin")
 1970-01-01T01:00:00+01:00@`Europe/Berlin`
 
@@ -3568,7 +3568,7 @@ Returns a datetime representing epoch + `s` seconds in time zone `UTC`.
 
 Returns `nil` if `s` is `nil`.
 
-```ruby
+```tweakflow
 
 > time.unix_timestamp(0)
 1970-01-01T00:00:00Z@UTC
@@ -3588,7 +3588,7 @@ Returns a datetime representing epoch + `ms` milliseconds in time zone `UTC`.
 
 Returns `nil` if `s` is `nil`.
 
-```ruby
+```tweakflow
 
 > time.unix_timestamp_ms(0)
 1970-01-01T00:00:00Z@UTC
@@ -3611,7 +3611,7 @@ Returns 1 if `b` precedes `a`.\
 Returns 0 if `a` and `b` describe the same instant in time.\
 Assumes `nil` to precede any non-nil datetime.
 
-```ruby
+```tweakflow
 > time.compare(time.epoch, time.epoch)
 0
 
@@ -3645,7 +3645,7 @@ supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/Da
 Throws an error if any argument is `nil`.\
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns) for the DateTimeFormatter of the Java language.
 
-```ruby
+```tweakflow
 > f: time.formatter("d MMM uuuu")
 function
 
@@ -3690,7 +3690,7 @@ If `lenient` is true, the parser will attempt to correct invalid datetime values
 
 The default time zone is used unless the pattern parses both a time component and a time zone in which case the parsed values are used.
 
-```ruby
+```tweakflow
 > f: time.parser("uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']")
 function
 
@@ -3749,7 +3749,7 @@ function
 
 Returns a list of all known time zone ids.
 
-```ruby
+```tweakflow
 > time.zones()
 ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", ...]
 
@@ -3782,7 +3782,7 @@ If `x` is `nil`, returns `nil`.
 
 Throws an error if `x` is not numeric and not `nil`.
 
-```ruby
+```tweakflow
 > math.abs(100)
 100
 
@@ -3828,7 +3828,7 @@ This function is pure and deterministically returns the same number for the same
 
 To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next `seed`.
 
-```ruby
+```tweakflow
 > dice_roll: (any seed) -> (math.rand(seed) *6 +1) as long
 function
 
@@ -3884,7 +3884,7 @@ If `x` is `nil`, returns `nil`.
 
 Throws an error if `x` is not a numeric type.
 
-```ruby
+```tweakflow
 > math.inc(2.0)
 3.0
 
@@ -3921,7 +3921,7 @@ If `x` is `nil`, returns `nil`.
 
 Throws an error if `x` is not a numeric type.
 
-```ruby
+```tweakflow
 > math.dec(2.0)
 1.0
 
@@ -3959,7 +3959,7 @@ The order reflected by this function sorts these values in order: `nil`, `NaN`, 
 
 Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 
-```ruby
+```tweakflow
 > math.compare(1, 1)
 0
 
@@ -3983,7 +3983,7 @@ Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil`.
 
 Throws an error if any `x` is non-numeric.
 
-```ruby
+```tweakflow
 > math.min([1,2,3])
 1
 
@@ -4014,7 +4014,7 @@ Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil`.
 
 Throws an error if any `x` is non-numeric.
 
-```ruby
+```tweakflow
 > math.max([1,2,3])
 3
 
@@ -4043,7 +4043,7 @@ Given a double `x`, returns `x` rounded to the closest integral value.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.round(2.3)
 2.0
 
@@ -4062,7 +4062,7 @@ Given a double `x`, returns `x` to the next larger integral value.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.ceil(2.3)
 3.0
 
@@ -4081,7 +4081,7 @@ Given a double `x`, returns `x` to the next smaller integral value.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.floor(2.3)
 2.0
 
@@ -4098,7 +4098,7 @@ nil
 
 Given a double `x`, returns `true` if `x` is NaN, returns `false` otherwise.
 
-```ruby
+```tweakflow
 > math.nan?(2.3)
 false
 
@@ -4119,7 +4119,7 @@ Returns `NaN` if `x` is negative.
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.sqrt(9.0)
 3.0
 
@@ -4138,7 +4138,7 @@ Returns the trigonometric sine of angle `x` given in radians. \
 Returns `NaN` if `x` is an `Infinity` or `NaN`.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.sin(0)
 0.0
 
@@ -4157,7 +4157,7 @@ Returns the trigonometric cosine of angle `x` given in radians. \
 Returns `NaN` if `x` is an `Infinity` or `NaN`.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.cos(0)
 1.0
 
@@ -4179,7 +4179,7 @@ Returns the trigonometric tangent of angle `x` given in radians. \
 Returns `NaN` if `x` is an `Infinity` or `NaN`.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.tan(0)
 0.0
 
@@ -4198,7 +4198,7 @@ Returns the arc sine of `x` in the range of -pi/2 throuh pi/2. \
 Returns `NaN` if `x` is `NaN` or its absolute value is greater than 1.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.asin(0)
 0.0
 
@@ -4217,7 +4217,7 @@ Returns the arc cosine of `x` in the range of 0.0 throuh pi. \
 Returns `NaN` if `x` is `NaN` or its absolute value is greater than 1.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.acos(0)
 1.5707963267948966
 
@@ -4239,7 +4239,7 @@ Returns the arc tangent of `x` in the range of -pi/2 through pi/2. \
 Returns `NaN` if `x` is `NaN`.\
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.atan(0)
 0.0
 
@@ -4261,7 +4261,7 @@ Returns `-Infinity` if `x` is `0` \
 Returns `Infinity` if `x` is `Infinity` \
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.log(0)
 -Infinity
 
@@ -4283,7 +4283,7 @@ Returns `-Infinity` if `x` is `0` \
 Returns `Infinity` if `x` is `Infinity` \
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.log10(0)
 -Infinity
 
@@ -4302,7 +4302,7 @@ Given a long `x`, returns the number of bits set to 1 in the binary two's comple
 
 Returns `nil` if `x` is `nil`.
 
-```ruby
+```tweakflow
 > math.bit_count(1) # 1
 1
 
@@ -4341,7 +4341,7 @@ If `decimal_symbols` is `nil` (the default), 'en-US' decimal symbols are used.
 Throws an error if `rounding_mode` is `nil`.\
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.
 
-```ruby
+```tweakflow
 > f: math.formatter()
 function
 
@@ -4393,7 +4393,7 @@ If `lenient` is `true` then partial matches of `x` return the number that result
 Throws an error if `pattern` or `decimal_symbols` is invalid.
 
 
-```ruby
+```tweakflow
 > f: math.parser()
 
 > f("203.23")
@@ -4454,7 +4454,7 @@ Returns the result of the last call to `f`, or `x` if `n` is `0`.
 Returns `nil` if `n` is negative or `nil`.
 Returns `nil` if `f` is `nil`.
 
-```ruby
+```tweakflow
 > double_up: (x) -> 2*x
 function
 
@@ -4464,7 +4464,7 @@ function
 
 Example: computing [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number)
 
-```ruby
+```tweakflow
 # helper: given fibonacci number n and n+1, compute fibonacci number n+1 and n+2
 > next_fib_pair: (p) -> if p == [0, 0] then [0, 1] else [p[1], p[0]+p[1]]
 function
@@ -4496,7 +4496,7 @@ Returns `nil` if `p` is `nil`.
 Returns `nil` if `f` is `nil`.
 
 
-```ruby
+```tweakflow
 # keep doubling up 1 until the result exceeds 60,000
 > fun.until((x) -> x>60000, 1, (x) -> x*2)
 65536
@@ -4541,7 +4541,7 @@ Returns `nil` if `p` is `nil`.\
 Returns `nil` if `f` is `nil`.
 
 
-```ruby
+```tweakflow
 # keep doubling up 1 while the result is smaller than 60,000
 > fun.while((x) -> x<60000, 1, (x) -> x*2)
 65536
@@ -4585,7 +4585,7 @@ Returns `nil` if `start`, `end`, or `f` are `nil`.
 
 Returns `x` if `end` < `start`.
 
-```ruby
+```tweakflow
 # add natural numbers 1 to 10
 > fun.iterate(1, 10, 0, (sum, i) -> sum+i)
 55
@@ -4614,7 +4614,7 @@ and the result of the previous call to subsequent calls. Returns result of final
 Returns `state` if `fs` is empty.
 Returns `nil` if `fs` is nil.
 
-```ruby
+```tweakflow
 > \e
   rev_str: (str) -> fun.thread(
     str,
@@ -4642,7 +4642,7 @@ Given a list of functions `fs`, returns a composite function that calls all func
 Returns `nil` if `fs` is `nil`.
 Throws an error if `fs` is empty.
 
-```ruby
+```tweakflow
 > f: fun.chain([(x) -> x+10, (x) -> x*2]) # add 10, then double result
 function
 
@@ -4662,7 +4662,7 @@ with conventional mathematical notation.
 Returns `nil` if `fs` is `nil`.
 Throws an error if `fs` is empty.
 
-```ruby
+```tweakflow
 > f: fun.compose([(x) -> x+10, (x) -> x*2]) # double result, then add 10
 function
 
@@ -4694,7 +4694,7 @@ Each parameter in the parameters list is a dict of the form:
 
 Returns `nil` if `f` is `nil`.
 
-```ruby
+```tweakflow
 > fun.signature(strings.replace)
 {
   :return_type "string",
@@ -4745,7 +4745,7 @@ The human readable names are given in the language tag passed as the locale para
 
 Returns `en-US` display names if `lang` is `nil` or unknown.
 
-```ruby
+```tweakflow
 # list available languages with french display names
 > locale.languages('fr')
 {
@@ -4785,7 +4785,7 @@ The dict contains the following keys:
 
 Returns `en-US` decimal symbols if `lang` is `nil`.
 
-```ruby
+```tweakflow
 > locale.decimal_symbols()
 {
   :infinity "∞",

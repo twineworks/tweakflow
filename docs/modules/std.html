@@ -294,7 +294,7 @@
 
 <p>Identity function. Returns <code>x</code>.</p>
 
-<pre><code class="language-ruby">&gt; core.id(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; core.id(&quot;foo&quot;)
 &quot;foo&quot;
 
 &gt; core.id({:a &quot;b&quot;})
@@ -315,7 +315,7 @@ If <code>x</code> is a function the string <code>'function'</code> is returned.
 Otherwise literal notation is used.
 If <code>x</code> is not a function, and contains no functions as children <code>x == core.eval(core.inspect(x))</code> generally holds true.</p>
 
-<pre><code class="language-ruby">&gt; core.inspect(1)
+<pre><code class="language-tweakflow">&gt; core.inspect(1)
 &quot;1&quot;
 
 &gt; core.inspect([1, 2, 3])
@@ -340,7 +340,7 @@ If <code>x</code> is not a function, and contains no functions as children <code
 
 <p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, returns <code>true</code> otherwise.</p>
 
-<pre><code class="language-ruby">&gt; core.present?(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; core.present?(&quot;foo&quot;)
 true
 
 &gt; core.present?(nil)
@@ -353,7 +353,7 @@ false
 
 <p>Returns <code>true</code> if <code>x</code> is <code>nil</code>, returns <code>false</code> otherwise.</p>
 
-<pre><code class="language-ruby">&gt; core.nil?(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; core.nil?(&quot;foo&quot;)
 false
 
 &gt; core.nil?(nil)
@@ -366,7 +366,7 @@ true
 
 <p>Returns a hashcode of <code>x</code>. Values that compare as equal are guaranteed to have the same hashcode.</p>
 
-<pre><code class="language-ruby">&gt; core.hash(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; core.hash(&quot;foo&quot;)
 101574
 
 &gt; core.hash(nil)
@@ -391,7 +391,7 @@ Functions can be declared and called within <code>x</code>.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; core.eval(&quot;1&quot;)
+<pre><code class="language-tweakflow">&gt; core.eval(&quot;1&quot;)
 1
 
 &gt; core.eval(&quot;'str'&quot;)
@@ -429,7 +429,7 @@ If any <code>x</code> is <code>nil</code>, it is concatenated into the output st
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.concat([&quot;foo&quot;, &quot;bar&quot;])
+<pre><code class="language-tweakflow">&gt; strings.concat([&quot;foo&quot;, &quot;bar&quot;])
 &quot;foobar&quot;
 
 &gt; strings.concat([1, 2, 3])
@@ -453,7 +453,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.length(&quot;&quot;)
+<pre><code class="language-tweakflow">&gt; strings.length(&quot;&quot;)
 0
 
 &gt; strings.length(&quot;foo&quot;)
@@ -476,7 +476,7 @@ If <code>end</code> is <code>nil</code>, the substring extends to the end of <co
 
 <p>Throws an error if <code>start</code> is <code>nil</code> or <code>start &lt; 0</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.substring(&quot;hello world&quot;)
+<pre><code class="language-tweakflow">&gt; strings.substring(&quot;hello world&quot;)
 &quot;hello world&quot;
 
 &gt; strings.substring(&quot;hello world&quot;, 6)
@@ -528,7 +528,7 @@ so <code>search.replace('ooo', 'oo', 'g')</code> results in <code>'go'</code> ra
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.replace('ooo', 'oo', 'g')
+<pre><code class="language-tweakflow">&gt; strings.replace('ooo', 'oo', 'g')
 &quot;go&quot;
 
 &gt; strings.replace('foo', 'oo', 'ast')
@@ -555,7 +555,7 @@ If any <code>x</code> is <code>nil</code>, it is concatenated into the output st
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code> or <code>s</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.join([&quot;foo&quot;, &quot;bar&quot;])
+<pre><code class="language-tweakflow">&gt; strings.join([&quot;foo&quot;, &quot;bar&quot;])
 &quot;foobar&quot;
 
 &gt; strings.join([&quot;foo&quot;, &quot;bar&quot;], &quot;, &quot;)
@@ -586,7 +586,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.trim(&quot;  foo  &quot;)
+<pre><code class="language-tweakflow">&gt; strings.trim(&quot;  foo  &quot;)
 &quot;foo&quot;
 
 &gt; strings.trim(&quot;line\r\n&quot;)
@@ -604,7 +604,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>lang</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.lower_case(&quot;FOO&quot;)
+<pre><code class="language-tweakflow">&gt; strings.lower_case(&quot;FOO&quot;)
 &quot;foo&quot;
 
 &gt; strings.lower_case(&quot;TITLE&quot;)
@@ -622,7 +622,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>lang</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.upper_case(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; strings.upper_case(&quot;foo&quot;)
 &quot;FOO&quot;
 
 &gt; strings.upper_case(&quot;straße&quot;)
@@ -648,7 +648,7 @@ If <code>case_sensitive</code> is <code>false</code>, lower case characters are 
 
 <p>Throws an error if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; f: strings.comparator(&quot;en-US&quot;, true)
+<pre><code class="language-tweakflow">&gt; f: strings.comparator(&quot;en-US&quot;, true)
 function
 
 &gt; f(&quot;foo&quot;, &quot;FOO&quot;)
@@ -675,7 +675,7 @@ function
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.chars(&quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; strings.chars(&quot;foo&quot;)
 [&quot;f&quot;, &quot;o&quot;, &quot;o&quot;]
 
 &gt; strings.chars(&quot;你好&quot;)
@@ -696,7 +696,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>s</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.split(&quot;hello world&quot;)
+<pre><code class="language-tweakflow">&gt; strings.split(&quot;hello world&quot;)
 [&quot;hello&quot;, &quot;world&quot;]
 
 &gt; strings.split(&quot;a,b,c&quot;, &quot;,&quot;)
@@ -712,7 +712,7 @@ Returns <code>false</code> otherwise.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>init</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.starts_with?(&quot;yellow&quot;, &quot;yell&quot;)
+<pre><code class="language-tweakflow">&gt; strings.starts_with?(&quot;yellow&quot;, &quot;yell&quot;)
 true
 
 &gt; strings.starts_with?(&quot;yellow&quot;, &quot;blue&quot;)
@@ -734,7 +734,7 @@ Returns <code>false</code> otherwise.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>tail</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.ends_with?(&quot;yellow&quot;, &quot;low&quot;)
+<pre><code class="language-tweakflow">&gt; strings.ends_with?(&quot;yellow&quot;, &quot;low&quot;)
 true
 
 &gt; strings.ends_with?(&quot;yellow&quot;, &quot;high&quot;)
@@ -758,7 +758,7 @@ at or past index <code>start</code>.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.index_of(&quot;foobar&quot;, &quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; strings.index_of(&quot;foobar&quot;, &quot;foo&quot;)
 0
 
 &gt; strings.index_of(&quot;foobar&quot;, &quot;bar&quot;)
@@ -783,7 +783,7 @@ If <code>end</code> is <code>nil</code>, it is interpreted as the last index of 
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>sub</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; strings.last_index_of(&quot;elementary&quot;, &quot;e&quot;)
+<pre><code class="language-tweakflow">&gt; strings.last_index_of(&quot;elementary&quot;, &quot;e&quot;)
 4
 
 &gt; strings.last_index_of(&quot;elementary&quot;, &quot;e&quot;, 100)
@@ -819,7 +819,7 @@ Calling <code>f</code> with a <code>nil</code> argument returns <code>nil</code>
 
 <p>Throws an error if <code>pattern</code> is <code>nil</code> or not a valid regular expression.</p>
 
-<pre><code class="language-ruby">&gt; digits?: regex.matching('\d+')
+<pre><code class="language-tweakflow">&gt; digits?: regex.matching('\d+')
 function
 
 &gt; digits?(&quot;12345&quot;)
@@ -848,7 +848,7 @@ If a group is optional, and is not matched by the input string, its value in the
 
 <p>Throws an error if <code>pattern</code> is <code>nil</code> or not a valid regular expression.</p>
 
-<pre><code class="language-ruby"># match ISO date and optional hh:mm time, capturing year, month, day, time
+<pre><code class="language-tweakflow"># match ISO date and optional hh:mm time, capturing year, month, day, time
 &gt; date_parts: regex.capturing('(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}:\d{2}))?')
 function
 
@@ -882,7 +882,7 @@ If a group is optional, and is not matched by the input string, its value in the
 
 <p>Throws an error if <code>pattern</code> is <code>nil</code> or not a valid regular expression.</p>
 
-<pre><code class="language-ruby"># scan for hh:mm pattern, capturing hours and minutes separately for each match.
+<pre><code class="language-tweakflow"># scan for hh:mm pattern, capturing hours and minutes separately for each match.
 # AM/PM indicator is optional.
 &gt; clock_times: regex.scanning('(\d{1,2}):(\d{2})( AM| PM)?')
 function
@@ -920,7 +920,7 @@ empty strings are removed from the list.</p>
 
 <p>Throws an error if <code>pattern</code> is <code>nil</code> or not a valid regular expression.</p>
 
-<pre><code class="language-ruby"># split on space
+<pre><code class="language-tweakflow"># split on space
 &gt; f: regex.splitting(' ')
 function
 
@@ -964,7 +964,7 @@ the occurrence of opening group parentheses. To replace a literal <code>$n</code
 
 <p>Throws an error if any argument is <code>nil</code> or <code>pattern</code> is not a valid regular expression.</p>
 
-<pre><code class="language-ruby"># match date in yyyy/dd/mm format and convert to ISO date
+<pre><code class="language-tweakflow"># match date in yyyy/dd/mm format and convert to ISO date
 &gt; to_iso_date: regex.replacing('(\d{4})/(\d{2})/(\d{2})', '$1-$3-$2')
 function
 
@@ -993,7 +993,7 @@ The resulting string matches <code>x</code> literally as a pattern.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby"># splits by word boundary
+<pre><code class="language-tweakflow"># splits by word boundary
 &gt; f: regex.splitting('\b')
 function
 
@@ -1022,7 +1022,7 @@ function
 
 <p>Throws an error if <code>xs</code> is neither a <code>dict</code> nor a <code>list</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.size([])
+<pre><code class="language-tweakflow">&gt; data.size([])
 0
 
 &gt; data.size([1,2,3])
@@ -1055,7 +1055,7 @@ ERROR:
 
 <p>Throws an error if <code>xs</code> is neither a <code>dict</code> nor a <code>list</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.empty?([])
+<pre><code class="language-tweakflow">&gt; data.empty?([])
 true
 
 &gt; data.empty?([1,2,3])
@@ -1091,7 +1091,7 @@ Returns <code>not_found</code> if <code>key</code> is not present in <code>xs</c
 Throws an error if <code>xs</code> is a <code>list</code> and <code>key</code> cannot be cast to a <code>long</code>. <br />
 Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.get([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0, &quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; data.get([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0, &quot;foo&quot;)
 &quot;a&quot;
 
 &gt; data.get([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 10, &quot;foo&quot;)
@@ -1124,7 +1124,7 @@ Throws an error if <code>key</code> is <code>nil</code>. <br />
 Throws an error if <code>xs</code> is a <code>list</code> and <code>key</code> cannot be cast to a <code>long</code> or <code>key</code> is negative. <br />
 Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.put([], 0, &quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; data.put([], 0, &quot;foo&quot;)
 [&quot;foo&quot;]
 
 &gt; data.put([&quot;bar&quot;], 0, &quot;foo&quot;)
@@ -1170,7 +1170,7 @@ Returns <code>xs</code> if <code>keys</code> is empty.</p>
 Throws an error if <code>xs</code> or an accessed nested structure is a <code>list</code> and the key cannot be cast to a <code>long</code>. <br />
 Throws an error if <code>xs</code> or an accessed nested structure is a <code>dict</code> and the key cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.get_in([[&quot;a&quot;, &quot;b&quot;], [&quot;c&quot;, &quot;d&quot;], [&quot;e&quot;, &quot;f&quot;]], [2, 0], &quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; data.get_in([[&quot;a&quot;, &quot;b&quot;], [&quot;c&quot;, &quot;d&quot;], [&quot;e&quot;, &quot;f&quot;]], [2, 0], &quot;foo&quot;)
 &quot;e&quot;
 
 &gt; data.get_in([[&quot;a&quot;, &quot;b&quot;], [&quot;c&quot;, &quot;d&quot;], [&quot;e&quot;, &quot;f&quot;]], [8, 0], &quot;foo&quot;)
@@ -1218,7 +1218,7 @@ Throws an error if <code>xs</code> is a <code>dict</code> or a <code>list</code>
 Throws an error if navigating into a <code>list</code> and the key cannot be cast to a <code>long</code> or the key is negative. <br />
 Throws an error if navigating into a <code>dict</code> and the key cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; \e
 data.put_in(
   {
@@ -1276,7 +1276,7 @@ Throws an error if <code>f</code> is <code>nil</code>. <br />
 Throws an error if <code>xs</code> is a <code>list</code> and <code>key</code> cannot be cast to a <code>long</code> or <code>key</code> is negative. <br />
 Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.update([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0, (x) -&gt; x..&quot;-updated&quot;)
+<pre><code class="language-tweakflow">&gt; data.update([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0, (x) -&gt; x..&quot;-updated&quot;)
 [&quot;a-updated&quot;, &quot;b&quot;, &quot;c&quot;]
 
 &gt; data.update([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 5, (x) -&gt; &quot;original was: &quot;..x)
@@ -1312,7 +1312,7 @@ Throws an error if <code>f</code> is <code>nil</code>. <br />
 Throws an error if navigating into a <code>list</code> and the key cannot be cast to a <code>long</code> or the key is negative. <br />
 Throws an error if navigating into a <code>dict</code> and the key cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; \e
 data.update_in(
   {
@@ -1357,7 +1357,7 @@ nil
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.keys([])
+<pre><code class="language-tweakflow">&gt; data.keys([])
 []
 
 &gt; data.keys([&quot;a&quot;, nil, &quot;c&quot;])
@@ -1393,7 +1393,7 @@ If <code>xs</code> is a <code>dict</code>, <code>key</code> is cast to a <code>s
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code>, nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.has?([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 2)
+<pre><code class="language-tweakflow">&gt; data.has?([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 2)
 true
 
 &gt; data.has?([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 3)
@@ -1432,7 +1432,7 @@ true
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.values([])
+<pre><code class="language-tweakflow">&gt; data.values([])
 []
 
 &gt; data.values([&quot;a&quot;, nil, &quot;c&quot;])
@@ -1463,7 +1463,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.entries({})
+<pre><code class="language-tweakflow">&gt; data.entries({})
 []
 
 &gt; data.entries({:foo &quot;bar&quot;})
@@ -1493,7 +1493,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.prepend(&quot;a&quot;, [&quot;b&quot;, &quot;c&quot;])
+<pre><code class="language-tweakflow">&gt; data.prepend(&quot;a&quot;, [&quot;b&quot;, &quot;c&quot;])
 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
 
 &gt; data.prepend(&quot;a&quot;, [])
@@ -1511,7 +1511,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.append([&quot;a&quot;, &quot;b&quot;], &quot;c&quot;)
+<pre><code class="language-tweakflow">&gt; data.append([&quot;a&quot;, &quot;b&quot;], &quot;c&quot;)
 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
 
 &gt; data.append([], &quot;a&quot;)
@@ -1538,7 +1538,7 @@ If <code>p</code> accepts two arguments, <code>p(x, i)</code> is evaluated, wher
 
 <p>Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.find([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 3)
+<pre><code class="language-tweakflow">&gt; data.find([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 3)
 3
 
 # find first even number on an even index
@@ -1575,7 +1575,7 @@ If <code>p</code> accepts two arguments, <code>p(x, i)</code> is evaluated, wher
 
 <p>Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.find_index([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 3)
+<pre><code class="language-tweakflow">&gt; data.find_index([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 3)
 2
 
 # find index of first even number on an even index
@@ -1607,7 +1607,7 @@ If <code>i</code> is bigger than the largest index in <code>xs</code>, any inter
 
 <p>Throws an error if index is negative or <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.insert([], 0, &quot;a&quot;)
+<pre><code class="language-tweakflow">&gt; data.insert([], 0, &quot;a&quot;)
 [&quot;a&quot;]
 
 &gt; data.insert([&quot;a&quot;, &quot;b&quot;, &quot;d&quot;], 2, &quot;c&quot;)
@@ -1650,7 +1650,7 @@ Returns <code>xs</code> if <code>key</code> is <code>nil</code>.</p>
 <p>Throws an error if <code>xs</code> is a list and <code>key</code> cannot be cast to a <code>long</code>. <br />
 Throws an error if <code>xs</code> is a dict and <code>key</code> cannot be cast to a <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.delete([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0)
+<pre><code class="language-tweakflow">&gt; data.delete([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 0)
 [&quot;b&quot;, &quot;c&quot;]
 
 &gt; data.delete([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], 1)
@@ -1690,7 +1690,7 @@ If <code>xs</code> does not have any of the <code>keys</code>, <code>not_found</
 <p>Throws an error if <code>xs</code> is a <code>list</code> and a <code>key</code> cannot be cast to <code>long</code>.<br />
 Throws an error if <code>xs</code> is a <code>dict</code> and a <code>key</code> cannot be cast to <code>string</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.select([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [0, 2])
+<pre><code class="language-tweakflow">&gt; data.select([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [0, 2])
 [&quot;a&quot;, &quot;c&quot;]
 
 &gt; data.select([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [0, 2, 10])
@@ -1727,7 +1727,7 @@ with all elements for which predicate function <code>p</code> returns a value th
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.<br />
 Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.filter([0,1,2,3,4,5,6,7,8], (x) -&gt; x % 2 == 0)
+<pre><code class="language-tweakflow">&gt; data.filter([0,1,2,3,4,5,6,7,8], (x) -&gt; x % 2 == 0)
 [0, 2, 4, 6, 8]
 
 &gt; data.filter([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;], (x, i) -&gt; i % 2 == 0)
@@ -1773,7 +1773,7 @@ The same seed will shuffle lists of equal length in the same way.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.shuffle([1, 2, 3, 4, 5, 6], &quot;hello&quot;)
+<pre><code class="language-tweakflow">&gt; data.shuffle([1, 2, 3, 4, 5, 6], &quot;hello&quot;)
 [5, 2, 6, 4, 1, 3]
 
 &gt; data.shuffle([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;], &quot;hello&quot;)
@@ -1797,7 +1797,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.unique([1, 1, 2, 3, 3])
+<pre><code class="language-tweakflow">&gt; data.unique([1, 1, 2, 3, 3])
 [1, 2, 3]
 
 &gt; data.unique([1.0, 1, 2.0, 2, 3.0, 3])
@@ -1826,7 +1826,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>start</code> is <code>nil</code> or <code>end</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.range(0, 2)
+<pre><code class="language-tweakflow">&gt; data.range(0, 2)
 [0, 1, 2]
 
 &gt; data.range(-3, 3)
@@ -1859,7 +1859,7 @@ Returns false otherwise.</p>
 
 <p>Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.any?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
+<pre><code class="language-tweakflow">&gt; data.any?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
 true
 
 &gt; data.any?([1,3,5], (x) -&gt; x % 2 == 0)
@@ -1892,7 +1892,7 @@ Returns true otherwise.</p>
 
 <p>Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.none?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
+<pre><code class="language-tweakflow">&gt; data.none?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
 false
 
 &gt; data.none?([1,3,5], (x) -&gt; x % 2 == 0)
@@ -1927,7 +1927,7 @@ Returns true if <code>xs</code> is empty.</p>
 
 <p>Throws an error if <code>p</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.all?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
+<pre><code class="language-tweakflow">&gt; data.all?([1,2,3,4,5], (x) -&gt; x % 2 == 0)
 false
 
 &gt; data.all?([2,4,6], (x) -&gt; x % 2 == 0)
@@ -1956,7 +1956,7 @@ nil
 
 <p>Throws an error if <code>xs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; data.init([1,2,3])
+<pre><code class="language-tweakflow">&gt; data.init([1,2,3])
 [1, 2]
 
 &gt; data.init(nil)
@@ -1981,7 +1981,7 @@ ERROR:
 
 <p>Throws an error if <code>xs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; data.tail([1,2,3])
+<pre><code class="language-tweakflow">&gt; data.tail([1,2,3])
 [2, 3]
 
 &gt; data.tail(nil)
@@ -2005,7 +2005,7 @@ ERROR:
 
 <p>Throws an error if <code>xs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; data.head([1,2,3])
+<pre><code class="language-tweakflow">&gt; data.head([1,2,3])
 1
 
 &gt; data.head(nil)
@@ -2029,7 +2029,7 @@ ERROR:
 
 <p>Throws an error if <code>xs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; data.last([1,2,3])
+<pre><code class="language-tweakflow">&gt; data.last([1,2,3])
 3
 
 &gt; data.last(nil)
@@ -2057,7 +2057,7 @@ Returns an empty list if <code>start &gt;= end</code>.</p>
 
 <p>Throws an error if <code>start</code> is <code>nil</code> or <code>start &lt; 0</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.slice([1,2,3,4,5], 3)
+<pre><code class="language-tweakflow">&gt; data.slice([1,2,3,4,5], 3)
 [4, 5]
 
 &gt; data.slice([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;], 1, 4)
@@ -2086,7 +2086,7 @@ nil
 
 <p>Throws an error if <code>s &lt;= 0</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.slices([1,2,3,4,5,6,7,8,9,0], 3)
+<pre><code class="language-tweakflow">&gt; data.slices([1,2,3,4,5,6,7,8,9,0], 3)
 [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
 &gt; data.slices(nil)
 nil
@@ -2114,7 +2114,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.reverse([1, 2, 3])
+<pre><code class="language-tweakflow">&gt; data.reverse([1, 2, 3])
 [3, 2, 1]
 
 &gt; data.reverse(nil)
@@ -2132,7 +2132,7 @@ If a &lt; b, f returns a negative number.<br />
 If a &gt; b, f returns a positive number.<br />
 If a == b, f returns 0.</p>
 
-<pre><code class="language-ruby">&gt; data.sort([1, 4, 5, 3, 6, 7], math.compare)
+<pre><code class="language-tweakflow">&gt; data.sort([1, 4, 5, 3, 6, 7], math.compare)
 [1, 3, 4, 5, 6, 7]
 
 # sorts numbers by numeric value
@@ -2164,7 +2164,7 @@ If a == b, f returns 0.</p>
 
 <p>Throws an error if <code>n</code> is negative.</p>
 
-<pre><code class="language-ruby">&gt; data.repeat(3, &quot;foo&quot;)
+<pre><code class="language-tweakflow">&gt; data.repeat(3, &quot;foo&quot;)
 [&quot;foo&quot;, &quot;foo&quot;, &quot;foo&quot;]
 
 &gt; data.repeat(0, &quot;foo&quot;)
@@ -2192,7 +2192,7 @@ Returns <code>nil</code> if any element of <code>lists</code> is <code>nil</code
 
 <p>Throws an error if any element of <code>lists</code> is not a <code>list</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.concat([[1,2,3], [4,5,6], [7,8,9]])
+<pre><code class="language-tweakflow">&gt; data.concat([[1,2,3], [4,5,6], [7,8,9]])
 [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 &gt; data.concat([[1,nil,3], [nil,5,6], [7,nil,nil]])
@@ -2224,7 +2224,7 @@ Returns <code>nil</code> if any element of <code>dicts</code> is <code>nil</code
 
 <p>Throws an error if any element of <code>dicts</code> is not a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.merge([{:a 1}, {:b 2}, {:c 3}])
+<pre><code class="language-tweakflow">&gt; data.merge([{:a 1}, {:b 2}, {:c 3}])
 {
   :a 1,
   :b 2,
@@ -2261,7 +2261,7 @@ Returns an empty list if <code>n</code> is negative.</p>
 
 <p>Returns <code>nil</code> if <code>n</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.take(2, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;])
+<pre><code class="language-tweakflow">&gt; data.take(2, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;])
 [&quot;a&quot;, &quot;b&quot;]
 
 &gt; data.take(10, [&quot;a&quot;, &quot;b&quot;])
@@ -2288,7 +2288,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; data.take_while((x) -&gt; x &lt; 5, [2, 3, 3, 2, 5, 1, 2])
 [2, 3, 3, 2]
 
@@ -2313,7 +2313,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; data.take_until((x) -&gt; x &gt;= 5, [2, 3, 3, 2, 5, 1, 2])
 [2, 3, 3, 2]
 
@@ -2343,7 +2343,7 @@ Returns <code>xs</code> if <code>n</code> is negative.</p>
 
 <p>Returns <code>nil</code> if <code>n</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.drop(2, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;])
+<pre><code class="language-tweakflow">&gt; data.drop(2, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;])
 [&quot;c&quot;, &quot;d&quot;]
 
 &gt; data.drop(10, [&quot;a&quot;, &quot;b&quot;])
@@ -2370,7 +2370,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.drop_while((x) -&gt; x &lt;= 2, [1, 2, 3, 4])
+<pre><code class="language-tweakflow">&gt; data.drop_while((x) -&gt; x &lt;= 2, [1, 2, 3, 4])
 [3, 4]
 
 &gt; data.drop_while((x) -&gt; x &gt; 10, [1, 2, 3])
@@ -2391,7 +2391,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code> or <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.drop_until((x) -&gt; x &gt; 2, [1, 2, 3, 4])
+<pre><code class="language-tweakflow">&gt; data.drop_until((x) -&gt; x &gt; 2, [1, 2, 3, 4])
 [3, 4]
 
 &gt; data.drop_until((x) -&gt; x &lt;= 2, [1, 2, 3, 4])
@@ -2418,7 +2418,7 @@ If <code>xs</code> is a <code>dict</code>, returns <code>true</code> if any entr
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.contains?([1,2,3], 2)
+<pre><code class="language-tweakflow">&gt; data.contains?([1,2,3], 2)
 true
 
 &gt; data.contains?([1,2,3], 4)
@@ -2450,7 +2450,7 @@ ERROR:
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.<br />
 Returns <code>nil</code> if <code>start</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.index_of([1,2,3], 2)
+<pre><code class="language-tweakflow">&gt; data.index_of([1,2,3], 2)
 1
 
 &gt; data.index_of([1,2,3], 4)
@@ -2478,7 +2478,7 @@ If <code>end</code> is <code>nil</code>, it is interpreted as the last index of 
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.last_index_of([1,2,3], 2)
+<pre><code class="language-tweakflow">&gt; data.last_index_of([1,2,3], 2)
 1
 
 &gt; data.last_index_of([1,2,3,1,2,3], 2)
@@ -2511,7 +2511,7 @@ If there are multiple such entries, it is undefined which of the keys is returne
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.key_of({:a 1, :b 2}, 1)
+<pre><code class="language-tweakflow">&gt; data.key_of({:a 1, :b 2}, 1)
 &quot;a&quot;
 
 &gt; data.key_of({:a 1, :b 2}, 3)
@@ -2536,7 +2536,7 @@ Otherwise the element is appended to the list. Returns the result list.</p>
 
 <p>Returns nil if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.flatten([[1, 2, 3], 4, 5, [6, 7, 8]])
+<pre><code class="language-tweakflow">&gt; data.flatten([[1, 2, 3], 4, 5, [6, 7, 8]])
 [1, 2, 3, 4, 5, 6, 7, 8]
 
 &gt; data.flatten([1, 2, 3])
@@ -2568,7 +2568,7 @@ If <code>f</code> accepts two arguments, each entries&rsquo;s value and the key 
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.map([1,2,3], (x) -&gt; x*x)
+<pre><code class="language-tweakflow">&gt; data.map([1,2,3], (x) -&gt; x*x)
 [1, 4, 9]
 
 &gt; data.map([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], (x, i) -&gt; i..&quot; -&gt; &quot;..x)
@@ -2618,7 +2618,7 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.flatmap([1, 2, 3], (x) -&gt; data.repeat(x, x))
+<pre><code class="language-tweakflow">&gt; data.flatmap([1, 2, 3], (x) -&gt; data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
 
 &gt; data.flatmap([1, 2, 1], (x) -&gt; if x == 1 then [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;] else &quot;-&quot;)
@@ -2654,7 +2654,7 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.mapcat([1, 2, 3], (x) -&gt; data.repeat(x, x))
+<pre><code class="language-tweakflow">&gt; data.mapcat([1, 2, 3], (x) -&gt; data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
 
 &gt; data.mapcat([1, 2, 1], (x) -&gt; if x == 1 then [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;] else &quot;nothing&quot;)
@@ -2682,7 +2682,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>xs</code> or <code>ys</code> are <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.zip([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
+<pre><code class="language-tweakflow">&gt; data.zip([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
 [[&quot;a&quot;, 1], [&quot;b&quot;, 2], [&quot;c&quot;, 3]]
 
 &gt; data.zip([1, 2], [1, 2, 3])
@@ -2709,7 +2709,7 @@ is the index of the key in <code>keys</code>.</p>
 
 <p>Returns <code>nil</code> if <code>keys</code> or <code>values</code> are <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.zip_dict([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
+<pre><code class="language-tweakflow">&gt; data.zip_dict([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
 {
   :a 1,
   :b 2,
@@ -2751,7 +2751,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.interpose([1, 2, 3, 4], 0)
+<pre><code class="language-tweakflow">&gt; data.interpose([1, 2, 3, 4], 0)
 [1, 0, 2, 0, 3, 0, 4]
 
 &gt; data.interpose([1], &quot;foo&quot;)
@@ -2779,7 +2779,7 @@ If <code>f</code> accepts three arguments, the accumulated value, <code>x</code>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">&gt; data.reduce([1,2,3], 0, (a, x) -&gt; a+x)
+<pre><code class="language-tweakflow">&gt; data.reduce([1,2,3], 0, (a, x) -&gt; a+x)
 6
 
 &gt; data.reduce([], 0, (a, x) -&gt; a+x)
@@ -2837,7 +2837,7 @@ for the current accumulated value.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 # sum up integers, until sum exceeds 10
 &gt; data.reduce_until([1,2,3,4,5,6,7,8], 0, (a) -&gt; a &gt; 10, (a, x) -&gt; a+x)
 15
@@ -2887,7 +2887,7 @@ for the current accumulated value.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 # sum up integers, until sum exceeds 10
 &gt; data.reduce_while([1,2,3,4,5,6,7,8], 0, (a) -&gt; a &lt;= 10, (a, x) -&gt; a+x)
 15
@@ -2937,7 +2937,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.seconds_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.seconds_between(time.epoch, time.epoch)
 0
 
 &gt; time.seconds_between(1970-01-01T00:00:00, 1970-01-01T00:00:01)
@@ -2963,7 +2963,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.minutes_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.minutes_between(time.epoch, time.epoch)
 0
 
 &gt; time.minutes_between(1970-01-01T00:00:00, 1970-01-01T00:01:00)
@@ -2989,7 +2989,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.hours_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.hours_between(time.epoch, time.epoch)
 0
 
 &gt; time.hours_between(1970-01-01T00:00:00, 1970-01-01T01:00:00)
@@ -3015,7 +3015,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.days_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.days_between(time.epoch, time.epoch)
 0
 
 &gt; time.days_between(1970-01-01T, 1970-01-02T)
@@ -3041,7 +3041,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.months_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.months_between(time.epoch, time.epoch)
 0
 
 &gt; time.months_between(1970-01-01T, 1970-02-01T)
@@ -3067,7 +3067,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.years_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.years_between(time.epoch, time.epoch)
 0
 
 &gt; time.years_between(1970-01-01T, 1971-01-01T)
@@ -3093,7 +3093,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.period_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.period_between(time.epoch, time.epoch)
 {
   :months 0,
   :years 0,
@@ -3131,7 +3131,7 @@ A duration of <code>-1</code> nanosecond is represented as <code>-1</code> <code
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.duration_between(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.duration_between(time.epoch, time.epoch)
 {
   :nano_seconds 0,
   :seconds 0
@@ -3169,7 +3169,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; time.add_period(time.epoch, 0, 0, 1)
 1970-01-02T00:00:00Z@UTC
 
@@ -3196,7 +3196,7 @@ nil
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; time.add_duration(time.epoch, 0, 1)
 1970-01-01T00:00:00.000000001Z@UTC
 
@@ -3221,7 +3221,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.year(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.year(time.epoch)
 1970
 
 &gt; time.year(2017-02-21T)
@@ -3239,7 +3239,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.month(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.month(time.epoch)
 1
 
 &gt; time.month(2017-02-21T)
@@ -3257,7 +3257,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.day_of_month(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.day_of_month(time.epoch)
 1
 
 &gt; time.day_of_month(2017-02-21T)
@@ -3275,7 +3275,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.day_of_year(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.day_of_year(time.epoch)
 1
 
 &gt; time.day_of_year(2017-02-21T)
@@ -3341,7 +3341,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.day_of_week(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.day_of_week(time.epoch)
 4
 
 &gt; time.day_of_week(2017-05-24T)
@@ -3359,7 +3359,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.hour(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.hour(time.epoch)
 0
 
 &gt; time.hour(2017-02-21T23:00:00)
@@ -3377,7 +3377,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.minute(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.minute(time.epoch)
 0
 
 &gt; time.minute(2017-02-21T00:59:00)
@@ -3395,7 +3395,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.second(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.second(time.epoch)
 0
 
 &gt; time.second(2017-02-21T00:00:12)
@@ -3413,7 +3413,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.nano_of_second(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.nano_of_second(time.epoch)
 0
 
 &gt; time.nano_of_second(2017-02-21T00:00:00.123456789)
@@ -3434,7 +3434,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.week_of_year(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.week_of_year(time.epoch)
 1
 
 &gt; time.week_of_year(2010-01-01T)
@@ -3464,7 +3464,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.offset_seconds(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.offset_seconds(time.epoch)
 0
 
 &gt; time.offset_seconds(2010-01-01T00:00:00.00+02:00)
@@ -3485,7 +3485,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.zone(time.epoch)
+<pre><code class="language-tweakflow">&gt; time.zone(time.epoch)
 &quot;UTC&quot;
 
 &gt; time.zone(2010-01-01T00:00:00.00+02:00)
@@ -3508,7 +3508,7 @@ nil
 
 <p>Throws an error if no datetime can be constructed with given year.</p>
 
-<pre><code class="language-ruby">&gt; time.with_year(time.epoch, 2007)
+<pre><code class="language-tweakflow">&gt; time.with_year(time.epoch, 2007)
 2007-01-01T00:00:00Z@UTC
 
 &gt; time.with_year(time.epoch, nil)
@@ -3535,7 +3535,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given month.</p>
 
-<pre><code class="language-ruby">&gt; time.with_month(time.epoch, 6)
+<pre><code class="language-tweakflow">&gt; time.with_month(time.epoch, 6)
 1970-06-01T00:00:00Z@UTC
 
 &gt; time.with_month(time.epoch, nil)
@@ -3563,7 +3563,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>day_of_month</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_day_of_month(time.epoch, 23)
+<pre><code class="language-tweakflow">&gt; time.with_day_of_month(time.epoch, 23)
 1970-01-23T00:00:00Z@UTC
 
 &gt; time.with_day_of_month(time.epoch, nil)
@@ -3590,7 +3590,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>hour</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_hour(time.epoch, 4)
+<pre><code class="language-tweakflow">&gt; time.with_hour(time.epoch, 4)
 1970-01-01T04:00:00Z@UTC
 
 &gt; time.with_hour(time.epoch, nil)
@@ -3617,7 +3617,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>minute</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_minute(time.epoch, 42)
+<pre><code class="language-tweakflow">&gt; time.with_minute(time.epoch, 42)
 1970-01-01T00:42:00Z@UTC
 
 &gt; time.with_minute(time.epoch, nil)
@@ -3644,7 +3644,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>second</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_second(time.epoch, 42)
+<pre><code class="language-tweakflow">&gt; time.with_second(time.epoch, 42)
 1970-01-01T00:00:42Z@UTC
 
 &gt; time.with_second(time.epoch, nil)
@@ -3671,7 +3671,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>nano_of_second</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_nano_of_second(time.epoch, 123456789)
+<pre><code class="language-tweakflow">&gt; time.with_nano_of_second(time.epoch, 123456789)
 1970-01-01T00:00:00.123456789Z@UTC
 
 &gt; time.with_nano_of_second(time.epoch, nil)
@@ -3698,7 +3698,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.with_zone(time.epoch, &quot;Europe/Berlin&quot;)
+<pre><code class="language-tweakflow">&gt; time.with_zone(time.epoch, &quot;Europe/Berlin&quot;)
 1970-01-01T00:00:00+01:00@`Europe/Berlin`
 
 &gt; time.with_zone(time.epoch, &quot;GMT+08:00&quot;)
@@ -3728,7 +3728,7 @@ ERROR:
 
 <p>Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
 
-<pre><code class="language-ruby">&gt; time.same_instant_at_zone(time.epoch, &quot;Europe/Berlin&quot;)
+<pre><code class="language-tweakflow">&gt; time.same_instant_at_zone(time.epoch, &quot;Europe/Berlin&quot;)
 1970-01-01T01:00:00+01:00@`Europe/Berlin`
 
 &gt; time.same_instant_at_zone(time.epoch, &quot;GMT+08:00&quot;)
@@ -3760,7 +3760,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>s</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; time.unix_timestamp(0)
 1970-01-01T00:00:00Z@UTC
 
@@ -3779,7 +3779,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>s</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">
+<pre><code class="language-tweakflow">
 &gt; time.unix_timestamp_ms(0)
 1970-01-01T00:00:00Z@UTC
 
@@ -3801,7 +3801,7 @@ Returns 1 if <code>b</code> precedes <code>a</code>.<br />
 Returns 0 if <code>a</code> and <code>b</code> describe the same instant in time.<br />
 Assumes <code>nil</code> to precede any non-nil datetime.</p>
 
-<pre><code class="language-ruby">&gt; time.compare(time.epoch, time.epoch)
+<pre><code class="language-tweakflow">&gt; time.compare(time.epoch, time.epoch)
 0
 
 &gt; time.compare(time.epoch, 2017-05-24T)
@@ -3833,7 +3833,7 @@ supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/Dat
 <p>Throws an error if any argument is <code>nil</code>.<br />
 Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">pattern</a> for the DateTimeFormatter of the Java language.</p>
 
-<pre><code class="language-ruby">&gt; f: time.formatter(&quot;d MMM uuuu&quot;)
+<pre><code class="language-tweakflow">&gt; f: time.formatter(&quot;d MMM uuuu&quot;)
 function
 
 &gt; f(time.epoch)
@@ -3876,7 +3876,7 @@ If <code>lenient</code> is true, the parser will attempt to correct invalid date
 
 <p>The default time zone is used unless the pattern parses both a time component and a time zone in which case the parsed values are used.</p>
 
-<pre><code class="language-ruby">&gt; f: time.parser(&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;)
+<pre><code class="language-tweakflow">&gt; f: time.parser(&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;)
 function
 
 &gt; f(nil)
@@ -3934,7 +3934,7 @@ function
 
 <p>Returns a list of all known time zone ids.</p>
 
-<pre><code class="language-ruby">&gt; time.zones()
+<pre><code class="language-tweakflow">&gt; time.zones()
 [&quot;Africa/Abidjan&quot;, &quot;Africa/Accra&quot;, &quot;Africa/Addis_Ababa&quot;, ...]
 
 # get all Europe/x time zones
@@ -3965,7 +3965,7 @@ If <code>x</code> is a long, and is equal to <code>math.min_long</code>, the abs
 
 <p>Throws an error if <code>x</code> is not numeric and not <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.abs(100)
+<pre><code class="language-tweakflow">&gt; math.abs(100)
 100
 
 &gt; math.abs(-100)
@@ -4010,7 +4010,7 @@ This function is pure and deterministically returns the same number for the same
 
 <p>To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next <code>seed</code>.</p>
 
-<pre><code class="language-ruby">&gt; dice_roll: (any seed) -&gt; (math.rand(seed) *6 +1) as long
+<pre><code class="language-tweakflow">&gt; dice_roll: (any seed) -&gt; (math.rand(seed) *6 +1) as long
 function
 
 &gt; dice_roll(&quot;hello&quot;)
@@ -4065,7 +4065,7 @@ If <code>x</code> is a long, returns x+1. </p>
 
 <p>Throws an error if <code>x</code> is not a numeric type.</p>
 
-<pre><code class="language-ruby">&gt; math.inc(2.0)
+<pre><code class="language-tweakflow">&gt; math.inc(2.0)
 3.0
 
 &gt; math.inc(-2.0)
@@ -4101,7 +4101,7 @@ If <code>x</code> is a long, returns x-1. </p>
 
 <p>Throws an error if <code>x</code> is not a numeric type.</p>
 
-<pre><code class="language-ruby">&gt; math.dec(2.0)
+<pre><code class="language-tweakflow">&gt; math.dec(2.0)
 1.0
 
 &gt; math.dec(-2.0)
@@ -4138,7 +4138,7 @@ Returns 0 if a == b.</p>
 
 <p>Throws an error if <code>a</code> or <code>b</code> are not <code>nil</code>, nor of type <code>long</code> or <code>double</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.compare(1, 1)
+<pre><code class="language-tweakflow">&gt; math.compare(1, 1)
 0
 
 &gt; math.compare(nil, 7)
@@ -4161,7 +4161,7 @@ Returns 0 if a == b.</p>
 
 <p>Throws an error if any <code>x</code> is non-numeric.</p>
 
-<pre><code class="language-ruby">&gt; math.min([1,2,3])
+<pre><code class="language-tweakflow">&gt; math.min([1,2,3])
 1
 
 &gt; math.min([1.0, 2.0, -3.0])
@@ -4191,7 +4191,7 @@ ERROR:
 
 <p>Throws an error if any <code>x</code> is non-numeric.</p>
 
-<pre><code class="language-ruby">&gt; math.max([1,2,3])
+<pre><code class="language-tweakflow">&gt; math.max([1,2,3])
 3
 
 &gt; math.max([1.0, 2.0, -3.0])
@@ -4219,7 +4219,7 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.round(2.3)
+<pre><code class="language-tweakflow">&gt; math.round(2.3)
 2.0
 
 &gt; math.round(-2.3)
@@ -4237,7 +4237,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.ceil(2.3)
+<pre><code class="language-tweakflow">&gt; math.ceil(2.3)
 3.0
 
 &gt; math.ceil(-2.3)
@@ -4255,7 +4255,7 @@ nil
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.floor(2.3)
+<pre><code class="language-tweakflow">&gt; math.floor(2.3)
 2.0
 
 &gt; math.floor(-2.3)
@@ -4271,7 +4271,7 @@ nil
 
 <p>Given a double <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
 
-<pre><code class="language-ruby">&gt; math.nan?(2.3)
+<pre><code class="language-tweakflow">&gt; math.nan?(2.3)
 false
 
 &gt; math.nan?(NaN)
@@ -4291,7 +4291,7 @@ false
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.sqrt(9.0)
+<pre><code class="language-tweakflow">&gt; math.sqrt(9.0)
 3.0
 
 &gt; math.sqrt(-9.0)
@@ -4309,7 +4309,7 @@ nil
 Returns <code>NaN</code> if <code>x</code> is an <code>Infinity</code> or <code>NaN</code>.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.sin(0)
+<pre><code class="language-tweakflow">&gt; math.sin(0)
 0.0
 
 &gt; math.sin(math.pi/2)
@@ -4327,7 +4327,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 Returns <code>NaN</code> if <code>x</code> is an <code>Infinity</code> or <code>NaN</code>.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.cos(0)
+<pre><code class="language-tweakflow">&gt; math.cos(0)
 1.0
 
 &gt; math.cos(math.pi)
@@ -4348,7 +4348,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 Returns <code>NaN</code> if <code>x</code> is an <code>Infinity</code> or <code>NaN</code>.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.tan(0)
+<pre><code class="language-tweakflow">&gt; math.tan(0)
 0.0
 
 &gt; math.tan(1)
@@ -4366,7 +4366,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 Returns <code>NaN</code> if <code>x</code> is <code>NaN</code> or its absolute value is greater than 1.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.asin(0)
+<pre><code class="language-tweakflow">&gt; math.asin(0)
 0.0
 
 &gt; math.asin(0.5)
@@ -4384,7 +4384,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 Returns <code>NaN</code> if <code>x</code> is <code>NaN</code> or its absolute value is greater than 1.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.acos(0)
+<pre><code class="language-tweakflow">&gt; math.acos(0)
 1.5707963267948966
 
 &gt; math.acos(0.5)
@@ -4405,7 +4405,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 Returns <code>NaN</code> if <code>x</code> is <code>NaN</code>.<br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.atan(0)
+<pre><code class="language-tweakflow">&gt; math.atan(0)
 0.0
 
 &gt; math.atan(-1)
@@ -4426,7 +4426,7 @@ Returns <code>-Infinity</code> if <code>x</code> is <code>0</code> <br />
 Returns <code>Infinity</code> if <code>x</code> is <code>Infinity</code> <br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.log(0)
+<pre><code class="language-tweakflow">&gt; math.log(0)
 -Infinity
 
 &gt; math.log(1)
@@ -4447,7 +4447,7 @@ Returns <code>-Infinity</code> if <code>x</code> is <code>0</code> <br />
 Returns <code>Infinity</code> if <code>x</code> is <code>Infinity</code> <br />
 Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.log10(0)
+<pre><code class="language-tweakflow">&gt; math.log10(0)
 -Infinity
 
 &gt; math.log10(1)
@@ -4465,7 +4465,7 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; math.bit_count(1) # 1
+<pre><code class="language-tweakflow">&gt; math.bit_count(1) # 1
 1
 
 &gt; math.bit_count(2) # 10
@@ -4502,7 +4502,7 @@ supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFor
 <p>Throws an error if <code>rounding_mode</code> is <code>nil</code>.<br />
 Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.</p>
 
-<pre><code class="language-ruby">&gt; f: math.formatter()
+<pre><code class="language-tweakflow">&gt; f: math.formatter()
 function
 
 &gt; f(100)
@@ -4551,7 +4551,7 @@ If <code>lenient</code> is <code>true</code> then partial matches of <code>x</co
 
 <p>Throws an error if <code>pattern</code> or <code>decimal_symbols</code> is invalid.</p>
 
-<pre><code class="language-ruby">&gt; f: math.parser()
+<pre><code class="language-tweakflow">&gt; f: math.parser()
 
 &gt; f(&quot;203.23&quot;)
 203.23
@@ -4610,7 +4610,7 @@ Subsequent calls to <code>f</code> receive as argument the result of the previou
 <p>Returns <code>nil</code> if <code>n</code> is negative or <code>nil</code>.
 Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; double_up: (x) -&gt; 2*x
+<pre><code class="language-tweakflow">&gt; double_up: (x) -&gt; 2*x
 function
 
 &gt; fun.times(10, 1, double_up)
@@ -4619,7 +4619,7 @@ function
 
 <p>Example: computing <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci numbers</a></p>
 
-<pre><code class="language-ruby"># helper: given fibonacci number n and n+1, compute fibonacci number n+1 and n+2
+<pre><code class="language-tweakflow"># helper: given fibonacci number n and n+1, compute fibonacci number n+1 and n+2
 &gt; next_fib_pair: (p) -&gt; if p == [0, 0] then [0, 1] else [p[1], p[0]+p[1]]
 function
 
@@ -4649,7 +4649,7 @@ If <code>p</code> returns <code>true</code>, execution completes and the tested 
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code>.
 Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby"># keep doubling up 1 until the result exceeds 60,000
+<pre><code class="language-tweakflow"># keep doubling up 1 until the result exceeds 60,000
 &gt; fun.until((x) -&gt; x&gt;60000, 1, (x) -&gt; x*2)
 65536
 
@@ -4692,7 +4692,7 @@ If <code>p</code> returns <code>false</code>, execution completes and the tested
 <p>Returns <code>nil</code> if <code>p</code> is <code>nil</code>.<br />
 Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby"># keep doubling up 1 while the result is smaller than 60,000
+<pre><code class="language-tweakflow"># keep doubling up 1 while the result is smaller than 60,000
 &gt; fun.while((x) -&gt; x&lt;60000, 1, (x) -&gt; x*2)
 65536
 
@@ -4735,7 +4735,7 @@ Subsequent calls to <code>f</code> receive as first argument the result of the p
 
 <p>Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
 
-<pre><code class="language-ruby"># add natural numbers 1 to 10
+<pre><code class="language-tweakflow"># add natural numbers 1 to 10
 &gt; fun.iterate(1, 10, 0, (sum, i) -&gt; sum+i)
 55
 
@@ -4763,7 +4763,7 @@ and the result of the previous call to subsequent calls. Returns result of final
 <p>Returns <code>state</code> if <code>fs</code> is empty.
 Returns <code>nil</code> if <code>fs</code> is nil.</p>
 
-<pre><code class="language-ruby">&gt; \e
+<pre><code class="language-tweakflow">&gt; \e
   rev_str: (str) -&gt; fun.thread(
     str,
     [
@@ -4790,7 +4790,7 @@ function
 <p>Returns <code>nil</code> if <code>fs</code> is <code>nil</code>.
 Throws an error if <code>fs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; f: fun.chain([(x) -&gt; x+10, (x) -&gt; x*2]) # add 10, then double result
+<pre><code class="language-tweakflow">&gt; f: fun.chain([(x) -&gt; x+10, (x) -&gt; x*2]) # add 10, then double result
 function
 
 &gt; f(1)  # (1+10)*2
@@ -4809,7 +4809,7 @@ with conventional mathematical notation.</p>
 <p>Returns <code>nil</code> if <code>fs</code> is <code>nil</code>.
 Throws an error if <code>fs</code> is empty.</p>
 
-<pre><code class="language-ruby">&gt; f: fun.compose([(x) -&gt; x+10, (x) -&gt; x*2]) # double result, then add 10
+<pre><code class="language-tweakflow">&gt; f: fun.compose([(x) -&gt; x+10, (x) -&gt; x*2]) # double result, then add 10
 function
 
 &gt; f(1)  # (1*2)+10
@@ -4880,7 +4880,7 @@ function
 
 <p>Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; fun.signature(strings.replace)
+<pre><code class="language-tweakflow">&gt; fun.signature(strings.replace)
 {
   :return_type &quot;string&quot;,
   :parameters [{
@@ -4928,7 +4928,7 @@ The human readable names are given in the language tag passed as the locale para
 
 <p>Returns <code>en-US</code> display names if <code>lang</code> is <code>nil</code> or unknown.</p>
 
-<pre><code class="language-ruby"># list available languages with french display names
+<pre><code class="language-tweakflow"># list available languages with french display names
 &gt; locale.languages('fr')
 {
   :`en-IE` &quot;anglais (Irlande)&quot;,
@@ -5002,7 +5002,7 @@ The human readable names are given in the language tag passed as the locale para
 
 <p>Returns <code>en-US</code> decimal symbols if <code>lang</code> is <code>nil</code>.</p>
 
-<pre><code class="language-ruby">&gt; locale.decimal_symbols()
+<pre><code class="language-tweakflow">&gt; locale.decimal_symbols()
 {
   :infinity &quot;∞&quot;,
   :grouping_separator &quot;,&quot;,
