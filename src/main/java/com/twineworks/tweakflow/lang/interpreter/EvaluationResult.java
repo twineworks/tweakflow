@@ -29,18 +29,17 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 public class EvaluationResult {
 
   private final LangException exception;
-  private final RuntimeSet runtimeSet;
+  private static final EvaluationResult OK = new EvaluationResult(null);
 
-  static public EvaluationResult ok(RuntimeSet runtimeSet){
-    return new EvaluationResult(null, runtimeSet);
+  static public EvaluationResult ok(){
+    return OK;
   }
 
   static public EvaluationResult error(LangException exception){
-    return new EvaluationResult(exception, null);
+    return new EvaluationResult(exception);
   }
 
-  private EvaluationResult(LangException exception, RuntimeSet runtimeSet){
-    this.runtimeSet = runtimeSet;
+  private EvaluationResult(LangException exception){
     this.exception = exception;
   }
 
@@ -56,7 +55,4 @@ public class EvaluationResult {
     return exception;
   }
 
-  public RuntimeSet getRuntimeSet() {
-    return runtimeSet;
-  }
 }

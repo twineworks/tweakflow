@@ -189,7 +189,7 @@ public class DocMain {
     Map<String, Runtime.Module> modules = runtime.getModules();
 
     for (String transformer : transformers) {
-      String key = runtime.moduleKey(transformer);
+      String key = runtime.unitKey(transformer);
       Runtime.Module module = modules.get(key);
       Runtime.Library transformLib = module.getLibrary("transform");
       Runtime.Var transformVar = transformLib.getVar("transform");

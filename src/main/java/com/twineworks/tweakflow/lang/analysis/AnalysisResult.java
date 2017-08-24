@@ -48,7 +48,7 @@ public class AnalysisResult {
   }
 
   public boolean isSuccess() {
-    return exception == null;
+    return exception == null && analysisSet != null;
   }
 
   public boolean isError(){

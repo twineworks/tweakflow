@@ -57,7 +57,7 @@ public class MemoryLocationTest {
 
     Runtime runtime = TweakFlow.compile(loadPath, "native.tf");
     runtime.evaluate();
-    Runtime.Var var = runtime.getModules().get(runtime.moduleKey("native.tf")).getLibrary("native").getVar("yes");
+    Runtime.Var var = runtime.getModules().get(runtime.unitKey("native.tf")).getLibrary("native").getVar("yes");
 
     assertThat(var.call()).isSameAs(Values.TRUE);
   }

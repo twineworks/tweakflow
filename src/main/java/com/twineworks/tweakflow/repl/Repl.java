@@ -107,15 +107,9 @@ public class Repl {
       List loadPathArgs = (List) res.getAttrs().get("load_path");
       List<String> loadPath = state.getLoadPathElements();
 
-      if (loadPathArgs.size() == 0){
-        // default load path
-        loadPath.add(".");
-      }
-      else{
-        // custom load path
-        for (Object loadPathArg : loadPathArgs) {
-          loadPath.add(loadPathArg.toString());
-        }
+      // custom load path
+      for (Object loadPathArg : loadPathArgs) {
+        loadPath.add(loadPathArg.toString());
       }
 
       // put current module path in state

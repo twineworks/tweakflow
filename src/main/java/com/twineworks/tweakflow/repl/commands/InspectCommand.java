@@ -24,15 +24,13 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceInspector;
-import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.runtime.RuntimeInspector;
 import com.twineworks.tweakflow.repl.ReplState;
 import com.twineworks.tweakflow.repl.console.TextTerminal;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -76,19 +74,19 @@ public class InspectCommand implements Command {
     boolean expandFunctions = args.getBoolean("function_definitions");
 
     if (spaceRef.isEmpty()){
-      terminal.print(MemorySpaceInspector.inspect(state.getInteractiveSpace(), expandFunctions));
+      terminal.print(RuntimeInspector.inspect(state.getInteractiveSection(), expandFunctions));
     }
     else if (spaceRef.equals("$")){
-      terminal.print(MemorySpaceInspector.inspect(state.getGlobalSpace(), expandFunctions));
+      terminal.print(RuntimeInspector.inspect(state.getGlobals(), expandFunctions));
     }
     else if (spaceRef.equals("::")){
-      terminal.print(MemorySpaceInspector.inspect(state.getModuleSpace(), expandFunctions));
+      terminal.print(RuntimeInspector.inspect(state.getMainModule(), expandFunctions));
     }
     else if (spaceRef.equals("/")){
-      terminal.print(MemorySpaceInspector.inspect(state.getUnitSpace(), expandFunctions));
+      terminal.print(RuntimeInspector.inspect(state.getUnits(), expandFunctions));
     }
     else if (spaceRef.equals("*")){
-      terminal.print(MemorySpaceInspector.inspect(state.getExportSpace(), expandFunctions));
+      terminal.print(RuntimeInspector.inspect(state.getExports(), expandFunctions));
     }
     else {
 
@@ -105,8 +103,7 @@ public class InspectCommand implements Command {
       else if (parseResult.getNode() instanceof ReferenceNode){
         ReferenceNode node = (ReferenceNode) parseResult.getNode();
         try {
-          Cell resolved = Spaces.resolve(node, state.getInteractiveSpace());
-          terminal.print(MemorySpaceInspector.inspect(resolved, expandFunctions));
+          terminal.print(RuntimeInspector.inspect(state.getInteractiveSection().resolve(node), expandFunctions));
         } catch (LangException e){
           terminal.println(e.getDigestMessage());
         }

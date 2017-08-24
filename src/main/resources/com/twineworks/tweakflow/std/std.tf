@@ -25,11 +25,11 @@ doc
 The standard module contains basic functions for general computing tasks.
 ~~~
 
-# meta
-# {
-#   :date "2017-05-12"
-#   :since "1.0.0"
-# }
+#meta
+#{
+#  :date "2017-05-12"
+#  :since "1.0.0"
+#}
 
 module
 

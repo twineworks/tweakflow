@@ -24,18 +24,13 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
-import com.twineworks.tweakflow.lang.ast.MetaDataNode;
-import com.twineworks.tweakflow.lang.ast.Node;
-import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -64,32 +59,37 @@ public class DocCommand implements Command {
 
   }
 
-  private void printDoc(Node node, TextTerminal terminal){
+  private void printDoc(Runtime.Node item, TextTerminal terminal){
 
-    Value doc = Values.NIL;
+    try {
+      Value doc = docOf(item);
 
-    if (node instanceof MetaDataNode){
-      try {
-        doc = Evaluator.evaluateDocExpression((MetaDataNode) node);
-      }
-      catch(LangException e){
-        terminal.println(e.getDigestMessage());
-        return;
-      }
-    }
-
-    if (doc == Values.NIL){
-      terminal.println("no documentation available");
-    }
-    else{
-      if (doc.isString()){
-        terminal.println(doc.string());
+      if (doc == Values.NIL){
+        terminal.println("no documentation available");
       }
       else{
-        terminal.println(ValueInspector.inspect(doc));
+        if (doc.isString()){
+          terminal.println(doc.string());
+        }
+        else{
+          terminal.println(ValueInspector.inspect(doc));
+        }
       }
+
+    } catch (LangException e){
+      terminal.println(e.getDigestMessage());
     }
 
+  }
+
+  private Value docOf(Runtime.Node item){
+    Value doc = Values.NIL;
+
+    if (item instanceof Runtime.DocMeta){
+      doc = ((Runtime.DocMeta) item).getDoc();
+    }
+
+    return doc;
   }
 
   @Override
@@ -98,15 +98,15 @@ public class DocCommand implements Command {
     String spaceRef = args.getString("reference");
 
     if (spaceRef.isEmpty()){
-      SymbolNode targetNode = state.getModuleSpace().getSymbol().getTargetNode();
-      // this should always be a module node
-      if (targetNode instanceof MetaDataNode){
-        printDoc(targetNode, terminal);
-      }
+      printDoc(state.getMainModule(), terminal);
     }
     else {
 
-      ParseUnit parseUnit = new MemoryLocation.Builder().add("<prompt>", spaceRef).build().getParseUnit("<prompt>");
+      ParseUnit parseUnit = new MemoryLocation.Builder()
+          .add("<prompt>", spaceRef)
+          .build()
+          .getParseUnit("<prompt>");
+
       ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
       if (parseResult.isError()){
@@ -116,8 +116,7 @@ public class DocCommand implements Command {
       else if (parseResult.getNode() instanceof ReferenceNode){
         ReferenceNode node = (ReferenceNode) parseResult.getNode();
         try {
-          Cell resolved = Spaces.resolve(node, state.getInteractiveSpace());
-          printDoc(resolved.getSymbol().getTargetNode(), terminal);
+          printDoc(state.getInteractiveSection().resolve(node), terminal);
         } catch (LangException e){
           terminal.println(e.getDigestMessage());
         }

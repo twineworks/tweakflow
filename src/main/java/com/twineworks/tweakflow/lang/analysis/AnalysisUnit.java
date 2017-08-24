@@ -34,6 +34,7 @@ public class AnalysisUnit {
   private String path;
   private AnalysisStage stage;
 
+  private long totalLoadDurationMillis;
   private long loadDurationMillis;
   private long parseDurationMillis;
   private long buildDurationMillis;
@@ -74,8 +75,8 @@ public class AnalysisUnit {
     return this;
   }
 
-  public long getLoadDurationMillis() {
-    return loadDurationMillis;
+  public long getTotalLoadDurationMillis() {
+    return totalLoadDurationMillis;
   }
 
   public long getParseDurationMillis() {
@@ -84,6 +85,15 @@ public class AnalysisUnit {
 
   public long getBuildDurationMillis() {
     return buildDurationMillis;
+  }
+
+  public long getLoadDurationMillis() {
+    return loadDurationMillis;
+  }
+
+  public AnalysisUnit setTotalLoadDurationMillis(long totalLoadDurationMillis) {
+    this.totalLoadDurationMillis = totalLoadDurationMillis;
+    return this;
   }
 
   public AnalysisUnit setLoadDurationMillis(long loadDurationMillis) {

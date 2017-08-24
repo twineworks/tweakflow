@@ -115,7 +115,7 @@ public class MemorySpaceBuilderVisitor extends AVisitor implements Visitor {
     // interactive space has empty exports
     return new Cell()
         .setEnclosingSpace(globalMemorySpace)
-        .setSymbol(node.getExportSymbol())
+        .setSymbol(node.getExportSymbol(), true)
         .setScope(node.getPublicScope());
 
   }

@@ -51,16 +51,6 @@ public class MemorySpaceInspector {
       return;
     }
 
-//    if (space instanceof Cell){
-//      Cell cell = (Cell) space;
-//
-//      if (cell.getValue() != null){ // variable?
-//        ValueInspector.inspect(out, cell.getValue(), leadingIndent, inheritedIndent, indentationUnit, expandFunctions);
-//        return;
-//      }
-//      // fall through if cell is not a value cell
-//    }
-
     MemorySpaceType spaceType = space.getMemorySpaceType();
     boolean inspectChildren = false;
 

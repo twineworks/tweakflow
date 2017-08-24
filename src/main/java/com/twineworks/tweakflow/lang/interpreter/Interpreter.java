@@ -24,23 +24,18 @@
 
 package com.twineworks.tweakflow.lang.interpreter;
 
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceBuilder;
-import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
+import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceBuilder;
 
 public class Interpreter {
 
   private final RuntimeSet runtimeSet;
   private final DebugHandler debugHandler;
 
-  public Interpreter(AnalysisSet analysisSet) {
+  public Interpreter(AnalysisResult analysisResult) {
     debugHandler = new DefaultDebugHandler();
-    runtimeSet = new RuntimeSet(analysisSet);
-  }
-
-  public Interpreter(AnalysisSet analysisSet, DebugHandler debugHandler) {
-    runtimeSet = new RuntimeSet(analysisSet);
-    this.debugHandler = debugHandler;
+    runtimeSet = new RuntimeSet(analysisResult);
   }
 
   public EvaluationResult evaluate(){
@@ -48,7 +43,7 @@ public class Interpreter {
     try {
       MemorySpaceBuilder.buildRuntimeSpace(runtimeSet);
       Evaluator.evaluateSpace(runtimeSet.getGlobalMemorySpace().getUnitSpace(), context);
-      return EvaluationResult.ok(runtimeSet);
+      return EvaluationResult.ok();
     }
     catch (Throwable e){
       return EvaluationResult.error(LangException.wrap(e));

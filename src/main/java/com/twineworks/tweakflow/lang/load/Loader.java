@@ -79,6 +79,9 @@ public class Loader {
 
     workSet.put(parseUnit.getPath(), unit);
 
+    long loadEnd = System.currentTimeMillis();
+    unit.setLoadDurationMillis(loadEnd-loadStart);
+
     // if it's a regular module, collect imports
     if (collectImports && unitNode instanceof ModuleNode){
 
@@ -111,8 +114,8 @@ public class Loader {
 
     }
 
-    long loadEnd = System.currentTimeMillis();
-    unit.setLoadDurationMillis(loadEnd-loadStart);
+    long totalLoadEnd = System.currentTimeMillis();
+    unit.setTotalLoadDurationMillis(totalLoadEnd-loadStart);
 
     return unit;
 

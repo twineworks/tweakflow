@@ -24,18 +24,13 @@
 
 package com.twineworks.tweakflow.repl.commands;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
-import com.twineworks.tweakflow.lang.ast.MetaDataNode;
-import com.twineworks.tweakflow.lang.ast.Node;
-import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -64,22 +59,37 @@ public class MetaCommand implements Command {
 
   }
 
-  private void printMeta(Node node, TextTerminal terminal){
+  private void printMeta(Runtime.Node item, TextTerminal terminal){
 
-    Value meta = Values.NIL;
+    try {
+      Value meta = metaOf(item);
 
-    if (node instanceof MetaDataNode){
-      try {
-        meta = Evaluator.evaluateMetaExpression((MetaDataNode) node);
+      if (meta == Values.NIL){
+        terminal.println("no meta data available");
       }
-      catch(LangException e){
-        terminal.println(e.getDigestMessage());
-        return;
+      else{
+        if (meta.isString()){
+          terminal.println(meta.string());
+        }
+        else{
+          terminal.println(ValueInspector.inspect(meta));
+        }
       }
+
+    } catch (LangException e){
+      terminal.println(e.getDigestMessage());
     }
 
-    terminal.println(ValueInspector.inspect(meta));
+  }
 
+  private Value metaOf(Runtime.Node item){
+    Value meta = Values.NIL;
+
+    if (item instanceof Runtime.DocMeta){
+      meta = ((Runtime.DocMeta) item).getMeta();
+    }
+
+    return meta;
   }
 
   @Override
@@ -88,15 +98,15 @@ public class MetaCommand implements Command {
     String spaceRef = args.getString("reference");
 
     if (spaceRef.isEmpty()){
-      SymbolNode targetNode = state.getModuleSpace().getSymbol().getTargetNode();
-      // this should always be a module node
-      if (targetNode instanceof MetaDataNode){
-        printMeta(targetNode, terminal);
-      }
+      printMeta(state.getMainModule(), terminal);
     }
     else {
 
-      ParseUnit parseUnit = new MemoryLocation.Builder().add("<prompt>", spaceRef).build().getParseUnit("<prompt>");
+      ParseUnit parseUnit = new MemoryLocation.Builder()
+          .add("<prompt>", spaceRef)
+          .build()
+          .getParseUnit("<prompt>");
+
       ParseResult parseResult = new Parser(parseUnit).parseInteractiveInput();
 
       if (parseResult.isError()){
@@ -106,8 +116,7 @@ public class MetaCommand implements Command {
       else if (parseResult.getNode() instanceof ReferenceNode){
         ReferenceNode node = (ReferenceNode) parseResult.getNode();
         try {
-          Cell resolved = Spaces.resolve(node, state.getInteractiveSpace());
-          printMeta(resolved.getSymbol().getTargetNode(), terminal);
+          printMeta(state.getInteractiveSection().resolve(node), terminal);
         } catch (LangException e){
           terminal.println(e.getDigestMessage());
         }
@@ -120,5 +129,6 @@ public class MetaCommand implements Command {
 
     return state;
   }
+
 
 }

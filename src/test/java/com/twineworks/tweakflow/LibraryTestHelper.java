@@ -26,14 +26,13 @@ package com.twineworks.tweakflow;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
-import com.twineworks.tweakflow.lang.analysis.Analysis;
-import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -42,7 +41,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
 public class LibraryTestHelper {
@@ -54,27 +52,19 @@ public class LibraryTestHelper {
         .add(new ResourceLocation.Builder().build())
         .build();
 
-
+    Runtime runtime;
     List<String> paths = Collections.singletonList(path);
-    AnalysisResult analysisResult = Analysis.analyze(paths, loadPath);
 
-    if (analysisResult.isError()){
-      analysisResult.getException().printDetails();
+    try {
+      runtime = TweakFlow.compile(loadPath, paths);
+      runtime.evaluate();
+    } catch (LangException e){
+      e.printDetails();
+      throw e;
     }
-
-    assertThat(analysisResult.isSuccess()).isTrue();
-
-    Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet());
-    EvaluationResult evaluate = interpreter.evaluate();
-
-    if (evaluate.isError()){
-      evaluate.getException().printDetails();
-    }
-
-    assertThat(evaluate.isSuccess()).isTrue();
 
     // find all libraries that have names ending in _spec, and ensure all their cells are boolean true
-    MemorySpace moduleSpace = evaluate.getRuntimeSet().getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
+    MemorySpace moduleSpace = runtime.getRuntimeSet().getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
     // library space is present
     ConstShapeMap<Cell> libCells = moduleSpace.getCells();

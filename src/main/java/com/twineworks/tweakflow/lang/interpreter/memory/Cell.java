@@ -57,7 +57,13 @@ public class Cell implements MemorySpace, ValueProvider {
     if (symbol.isScoped()){
 
       if (publicScope){
-        cells = new ConstShapeMap<>(ShapeKey.getAll(symbol.getPublicScope().getSymbols().keySet()));
+        if (symbol.getTarget() == SymbolTarget.INTERACTIVE){
+          cells = new ConstShapeMap<>();
+        }
+        else{
+          cells = new ConstShapeMap<>(ShapeKey.getAll(symbol.getPublicScope().getSymbols().keySet()));
+        }
+
       }
       else{
         if (symbol.getTarget() == SymbolTarget.INTERACTIVE_SECTION){

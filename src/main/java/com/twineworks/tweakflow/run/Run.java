@@ -222,10 +222,10 @@ public class Run {
 
     try {
       Runtime runtime = TweakFlow.compile(loadPath, modules, new DefaultDebugHandler());
+      runtime.evaluate();
       Map<String, Runtime.Module> runtimeModules = runtime.getModules();
-      Runtime.Module module = runtimeModules.get(runtime.moduleKey(modules.get(0)));
+      Runtime.Module module = runtimeModules.get(runtime.unitKey(modules.get(0)));
       Runtime.Var mainVar = module.getLibrary(lib).getVar(var);
-      mainVar.evaluate();
       Value result = mainVar.call(callArgValues);
 
       System.out.println(ValueInspector.inspect(result));

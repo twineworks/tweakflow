@@ -26,19 +26,19 @@ package com.twineworks.tweakflow.lang.interpreter;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.tweakflow.LibraryTestHelper;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.GlobalMemorySpace;
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
-import com.twineworks.tweakflow.lang.analysis.Analysis;
-import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
+import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.ErrorCode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
+import com.twineworks.tweakflow.lang.interpreter.memory.GlobalMemorySpace;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.scope.ScopeType;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.FunctionValue;
@@ -53,30 +53,31 @@ import java.util.List;
 
 import static com.twineworks.util.ShapeMapAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
 public class InterpreterTest {
 
-  private EvaluationResult evaluate(String ... paths){
+  private Runtime evaluate(String ... paths){
 
     LoadPath loadPath = new LoadPath.Builder()
         .add(new ResourceLocation.Builder().build())
         .build();
 
     List<String> pathList = Arrays.asList(paths);
-    AnalysisResult analysisResult = Analysis.analyze(pathList, loadPath);
 
-    if (analysisResult.isError()){
-      analysisResult.getException().printDetails();
+    Runtime runtime;
+    try {
+      runtime = TweakFlow.compile(loadPath, pathList);
+      runtime.evaluate();
+      return runtime;
+    } catch (LangException e){
+//      e.printDetails();
+      throw e;
     }
-
-    assertThat(analysisResult.isSuccess()).isTrue();
-
-    Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet());
-    return interpreter.evaluate();
 
   }
 
-  private EvaluationResult evaluateWithStd(String ... paths){
+  private Runtime evaluateWithStd(String ... paths){
 
     LoadPath loadPath = new LoadPath.Builder()
         .add(new ResourceLocation.Builder().build())
@@ -85,16 +86,15 @@ public class InterpreterTest {
     List<String> pathList = new ArrayList<>(Arrays.asList(paths));
     pathList.add("com/twineworks/tweakflow/std/std.tf");
 
-    AnalysisResult analysisResult = Analysis.analyze(pathList, loadPath);
-
-    if (analysisResult.isError()){
-      analysisResult.getException().printDetails();
+    Runtime runtime;
+    try {
+      runtime = TweakFlow.compile(loadPath, pathList);
+      runtime.evaluate();
+      return runtime;
+    } catch (LangException e){
+//      e.printDetails();
+      throw e;
     }
-
-    assertThat(analysisResult.isSuccess()).isTrue();
-
-    Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet());
-    return interpreter.evaluate();
 
   }
 
@@ -103,7 +103,7 @@ public class InterpreterTest {
 
   String path = "fixtures/tweakflow/evaluation/empty.tf";
 
-    EvaluationResult result = evaluate(path);
+    Runtime result = evaluate(path);
     RuntimeSet runtimeSet = result.getRuntimeSet();
     ModuleNode moduleNode = (ModuleNode) runtimeSet.getAnalysisSet().getUnits().get(path).getUnit();
 
@@ -208,13 +208,8 @@ public class InterpreterTest {
   public void evaluates_literals() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/literals.tf";
-    EvaluationResult evaluationResult = evaluate(path);
+    Runtime evaluationResult = evaluate(path);
 
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
-
-    assertThat(evaluationResult.isSuccess()).isTrue();
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -323,13 +318,7 @@ public class InterpreterTest {
   public void evaluates_imports() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/imports/main.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
-
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
-
-    assertThat(evaluationResult.isSuccess()).isTrue();
+    Runtime evaluationResult = evaluateWithStd(path);
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -396,13 +385,8 @@ public class InterpreterTest {
 
     String path = "fixtures/tweakflow/evaluation/closures/recursion.tf";
 
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    Runtime evaluationResult = evaluateWithStd(path);
 
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
-
-    assertThat(evaluationResult.isSuccess()).isTrue();
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -438,13 +422,8 @@ public class InterpreterTest {
 
     String path = "fixtures/tweakflow/evaluation/cross_recursion.tf";
 
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    Runtime evaluationResult = evaluateWithStd(path);
 
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
-
-    assertThat(evaluationResult.isSuccess()).isTrue();
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -504,16 +483,18 @@ public class InterpreterTest {
   public void evaluates_throw() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/throwing/throw.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      Runtime evaluationResult = evaluateWithStd(path);
+    } catch (LangException exception){
+      ErrorCode code = exception.getCode();
+      assertThat(code).isSameAs(LangError.CUSTOM_ERROR);
 
-    assertThat(evaluationResult.isError()).isTrue();
-    LangException exception = evaluationResult.getException();
+      Value errorValue = (Value) exception.get("value");
+      assertThat(errorValue).isEqualTo(Values.make("error"));
+      return;
+    }
 
-    ErrorCode code = exception.getCode();
-    assertThat(code).isSameAs(LangError.CUSTOM_ERROR);
-
-    Value errorValue = (Value) exception.get("value");
-    assertThat(errorValue).isEqualTo(Values.make("error"));
+    fail("Expected LangException");
 
   }
 
@@ -521,13 +502,8 @@ public class InterpreterTest {
   public void evaluates_try_catch() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/throwing/try_catch.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    Runtime evaluationResult = evaluateWithStd(path);
 
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
-
-    assertThat(evaluationResult.isSuccess()).isTrue();
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -586,10 +562,7 @@ public class InterpreterTest {
   public void evaluates_bindings() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/bindings.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
+    Runtime evaluationResult = evaluateWithStd(path);
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
 
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
@@ -641,12 +614,8 @@ public class InterpreterTest {
   public void evaluates_closures() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/closures/closures.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
+    Runtime evaluationResult = evaluateWithStd(path);
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
-
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
     // library space is present
@@ -709,10 +678,7 @@ public class InterpreterTest {
   public void evaluates_operators() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/operators.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
+    Runtime evaluationResult = evaluateWithStd(path);
 
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
 
@@ -965,10 +931,7 @@ public class InterpreterTest {
 
     String path = "fixtures/tweakflow/evaluation/parameter_casts.tf";
 
-    EvaluationResult evaluationResult = evaluateWithStd(path);
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
+    Runtime evaluationResult = evaluateWithStd(path);
 
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     MemorySpace moduleSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
@@ -997,10 +960,7 @@ public class InterpreterTest {
     String module_path_b = "fixtures/tweakflow/evaluation/interactive/module_b.tf";
     String interactivePath = "fixtures/tweakflow/evaluation/interactive/interactive.tf";
 
-    EvaluationResult evaluationResult = evaluateWithStd(module_path_a, module_path_b, interactivePath);
-    if (evaluationResult.isError()){
-      evaluationResult.getException().printDetails();
-    }
+    Runtime evaluationResult = evaluateWithStd(module_path_a, module_path_b, interactivePath);
 
     RuntimeSet runtimeSet = evaluationResult.getRuntimeSet();
     ConstShapeMap<Cell> unitCells = runtimeSet.getGlobalMemorySpace().getUnitSpace().getCells();
@@ -1054,10 +1014,15 @@ public class InterpreterTest {
   public void fails_on_extra_positional_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/extra_positional_args.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
 
-    assertThat(evaluationResult.isError()).isTrue();
-    assertThat(evaluationResult.getException().getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+    fail("expected LangException");
 
   }
 
@@ -1065,21 +1030,30 @@ public class InterpreterTest {
   public void fails_on_extra_named_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/extra_named_args.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
 
-    assertThat(evaluationResult.isError()).isTrue();
-    assertThat(evaluationResult.getException().getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
-
+    fail("expected LangException");
   }
 
   @Test
   public void fails_on_extra_splat_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/extra_splat_args.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
 
-    assertThat(evaluationResult.isError()).isTrue();
-    assertThat(evaluationResult.getException().getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+    fail("expected LangException");
 
   }
 
@@ -1087,10 +1061,15 @@ public class InterpreterTest {
   public void fails_on_non_map_splat_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/non_map_splat_args.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
 
-    assertThat(evaluationResult.isError()).isTrue();
-    assertThat(evaluationResult.getException().getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+    fail("expected LangException");
 
   }
 
@@ -1098,10 +1077,15 @@ public class InterpreterTest {
   public void fails_on_nil_splat_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/nil_splat_args.tf";
-    EvaluationResult evaluationResult = evaluateWithStd(path);
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
 
-    assertThat(evaluationResult.isError()).isTrue();
-    assertThat(evaluationResult.getException().getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+    fail("expected LangException");
 
   }
 

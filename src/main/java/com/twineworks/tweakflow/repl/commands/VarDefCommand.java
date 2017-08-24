@@ -25,7 +25,6 @@
 package com.twineworks.tweakflow.repl.commands;
 
 import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.repl.ReplState;
 import com.twineworks.tweakflow.repl.console.TextTerminal;
@@ -50,9 +49,8 @@ public class VarDefCommand {
       return state;
     }
     else {
-      Cell interactiveSpace = expressionState.getInteractiveSpace();
       terminal.println(
-          ValueInspector.inspect(interactiveSpace.getCells().gets(varName).getValue())
+          ValueInspector.inspect(expressionState.getInteractiveSection().getVar(varName).getValue())
       );
       return expressionState;
     }

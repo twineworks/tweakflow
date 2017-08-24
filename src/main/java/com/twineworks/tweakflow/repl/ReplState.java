@@ -24,17 +24,17 @@
 
 package com.twineworks.tweakflow.repl;
 
-import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.GlobalMemorySpace;
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
-import com.twineworks.tweakflow.lang.analysis.Analysis;
-import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
+import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.loadpath.*;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
+import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
+import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
+import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
+import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
+import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.util.LangUtil;
 
 import java.nio.file.Paths;
@@ -55,14 +55,14 @@ public class ReplState {
   // interactive expression evaluation and variable prompt
   private final String interactivePath = "[interactive]";
   private final String promptVarName = "$";
+  private final Map<String, String> varDefs = new LinkedHashMap<>();
   private String promptInput;
-  private Map<String, String> varDefs = new LinkedHashMap<>();
 
   private LoadPath loadPath;
 
   // evaluation results and convenient derivatives
   private EvaluationResult evaluationResult;
-  private AnalysisResult analysisResult;
+  private Runtime runtime;
   private MemorySpace moduleSpace;
   private MemorySpace interactiveSpace;
 
@@ -95,6 +95,15 @@ public class ReplState {
     return mainModuleKey;
   }
 
+  public Runtime getRuntime(){
+    return runtime;
+  }
+
+  public ReplState setRuntime(Runtime runtime){
+    this.runtime = runtime;
+    return this;
+  }
+
   private ReplState setMainModuleKey(String mainModuleKey) {
     this.mainModuleKey = mainModuleKey;
     return this;
@@ -112,27 +121,16 @@ public class ReplState {
     return this;
   }
 
-  public AnalysisResult getAnalysisResult() {
-    return analysisResult;
-  }
-
-  public ReplState setAnalysisResult(AnalysisResult analysisResult) {
-    this.analysisResult = analysisResult;
-    return this;
-  }
-
   public long getAnalysisDurationMillis(){
-    if (analysisResult == null) return 0;
-    return analysisResult.getAnalysisDurationMillis();
+    if (runtime == null) return 0;
+    return runtime.getAnalysisResult().getAnalysisDurationMillis();
   }
 
   public long getLoadDurationMillis(){
-    if (analysisResult == null) return 0;
-    AnalysisSet analysisSet = analysisResult.getAnalysisSet();
-    if (analysisSet == null) return 0;
+    if (runtime == null) return 0;
+    AnalysisSet analysisSet = runtime.getAnalysisResult().getAnalysisSet();
     long loadDuration = 0;
     for (AnalysisUnit analysisUnit : analysisSet.getUnits().values()) {
-      if (analysisUnit == null) return 0;
       loadDuration += analysisUnit.getLoadDurationMillis();
     }
     return loadDuration;
@@ -169,51 +167,35 @@ public class ReplState {
     return this;
   }
 
-  public Cell getInteractiveSpace(){
-    return evaluationResult
-        .getRuntimeSet()
-        .getGlobalMemorySpace()
-        .getUnitSpace()
-        .getCells()
-        .gets(getInteractivePath())
-        .getCells()
-        .gets(mainModuleKey);
+  public Runtime.Module getMainModule(){
+    return runtime.getModules().get(mainModuleKey);
   }
 
-  public Cell getModuleSpace(){
-    return evaluationResult
-        .getRuntimeSet()
-        .getGlobalMemorySpace()
-        .getUnitSpace()
-        .getCells()
-        .gets(mainModuleKey);
+  public Runtime.InteractiveUnit getInteractiveUnit(){
+    return (Runtime.InteractiveUnit) runtime.getUnits().getChildren().get(getInteractivePath());
   }
 
-  public MemorySpace getUnitSpace(){
-    return evaluationResult
-        .getRuntimeSet()
-        .getGlobalMemorySpace()
-        .getUnitSpace();
+  public Runtime.InteractiveSection getInteractiveSection() {
+    return getInteractiveUnit().getSection(mainModuleKey);
   }
 
-  public MemorySpace getExportSpace(){
-    return evaluationResult
-        .getRuntimeSet()
-        .getGlobalMemorySpace()
-        .getExportSpace();
+  public Runtime.Globals getGlobals(){
+    return runtime.getGlobals();
   }
 
-  public GlobalMemorySpace getGlobalSpace(){
-    return evaluationResult
-        .getRuntimeSet()
-        .getGlobalMemorySpace();
+  public Runtime.Units getUnits(){
+    return runtime.getUnits();
+  }
+
+  public Runtime.Exports getExports(){
+    return runtime.getExports();
   }
 
   public ReplState copy() {
     ReplState copy = new ReplState()
         .setShouldQuit(shouldQuit)
-        .setAnalysisResult(analysisResult)
         .setLoadPath(loadPath)
+        .setRuntime(runtime)
         .setEvaluationResult(evaluationResult)
         .setModulePaths(new ArrayList<>(modulePaths))
         .setMultiLine(multiLine)
@@ -225,19 +207,16 @@ public class ReplState {
     return copy;
   }
 
-  private LoadPath makeLoadPath(){
-
+  private LoadPath.Builder nonInteractiveLoadPath(){
     LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
 
     // std resources are first
     loadPathBuilder.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
 
-    // the memory location for the interactive module
-    MemoryLocation interactiveLocation = new MemoryLocation.Builder()
-        .add(getInteractivePath(), buildInteractiveProgramText())
-        .build();
-
-    loadPathBuilder.add(interactiveLocation);
+    // default if none given
+    if (getLoadPathElements().size() == 0){
+      loadPathBuilder.addCurrentWorkingDirectory();
+    }
 
     // all file system loading locations mentioned in state
     for (String s : getLoadPathElements()) {
@@ -248,6 +227,24 @@ public class ReplState {
       loadPathBuilder.add(location);
     }
 
+    return loadPathBuilder;
+  }
+
+  private LoadPath makeLoadPath(){
+
+    LoadPath.Builder loadPathBuilder = nonInteractiveLoadPath();
+    LoadPath nonInteractive = loadPathBuilder.build();
+
+    // resolved path is used as a key in data structures
+    // needed for interactive section to specify scope
+    mainModuleKey = nonInteractive.findParseUnit(mainModulePath).getPath();
+
+    // the memory location for the interactive module
+    MemoryLocation interactiveLocation = new MemoryLocation.Builder()
+        .add(getInteractivePath(), buildInteractiveProgramText())
+        .build();
+
+    loadPathBuilder.add(interactiveLocation);
     return loadPathBuilder.build();
 
   }
@@ -287,31 +284,21 @@ public class ReplState {
 
   public void evaluate(){
 
+    runtime = null;
+
     try {
       setLoadPath(makeLoadPath());
-      // resolved path is used as a key in data structures
-      mainModuleKey = getLoadPath().findParseUnit(mainModulePath).getPath();
+
+      List<String> paths = new ArrayList<>();
+      paths.addAll(modulePaths);
+      paths.add(getInteractivePath());
+
+      runtime = TweakFlow.compile(getLoadPath(), paths);
+      runtime.evaluate();
+      setEvaluationResult(EvaluationResult.ok());
 
     } catch (LangException e){
-      analysisResult = null;
       setEvaluationResult(EvaluationResult.error(e));
-      return;
-    }
-
-    List<String> pathList = new ArrayList<>();
-    pathList.addAll(modulePaths);
-    pathList.add(getInteractivePath());
-
-    // compile
-    analysisResult = Analysis.analyze(pathList, getLoadPath());
-    if (analysisResult.isError()){
-      // compilation went wrong, wrap as evaluation result
-      setEvaluationResult(EvaluationResult.error(LangException.wrap(analysisResult.getException())));
-    }
-    else {
-      // compilation was fine, evaluate and set result
-      Interpreter interpreter = new Interpreter(analysisResult.getAnalysisSet());
-      setEvaluationResult(interpreter.evaluate());
     }
 
   }

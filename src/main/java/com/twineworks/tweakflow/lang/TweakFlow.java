@@ -69,7 +69,7 @@ public class TweakFlow {
   public static Runtime compile(LoadPath loadPath, List<String> paths, DebugHandler debugHandler){
     AnalysisResult analysisResult = Analysis.analyze(paths, loadPath);
     if (analysisResult.isError()) throw analysisResult.getException();
-    RuntimeSet runtimeSet = new RuntimeSet(analysisResult.getAnalysisSet());
+    RuntimeSet runtimeSet = new RuntimeSet(analysisResult);
     return new Runtime(runtimeSet, debugHandler);
   }
 

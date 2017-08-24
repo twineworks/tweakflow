@@ -24,24 +24,32 @@
 
 package com.twineworks.tweakflow.lang.interpreter;
 
+import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
+import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.interpreter.memory.GlobalMemorySpace;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceBuilder;
-import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 
 public class RuntimeSet {
 
   private final AnalysisSet analysisSet;
+  private final AnalysisResult analysisResult;
 
   private final GlobalMemorySpace globalMemorySpace;
 
-  public RuntimeSet(AnalysisSet analysisSet) {
-    this.analysisSet = analysisSet;
+  public RuntimeSet(AnalysisResult analysisResult) {
+    if (!analysisResult.isSuccess()) throw new AssertionError("RuntimeSet can only be instantiated with a successful AnalysisResult");
+    this.analysisResult = analysisResult;
+    this.analysisSet = analysisResult.getAnalysisSet();
     this.globalMemorySpace = new GlobalMemorySpace(analysisSet.getGlobalScope());
     MemorySpaceBuilder.buildRuntimeSpace(this);
   }
 
   public AnalysisSet getAnalysisSet() {
     return analysisSet;
+  }
+
+  public AnalysisResult getAnalysisResult() {
+    return analysisResult;
   }
 
   public GlobalMemorySpace getGlobalMemorySpace() {
