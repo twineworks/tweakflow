@@ -172,7 +172,7 @@ public class DocMain {
       parser.handleError(e);
       System.exit(1);
     } catch (LangException e) {
-      e.printDigest();
+      e.printDigestMessage();
       System.exit(1);
     } catch (IOException e) {
       e.printStackTrace();

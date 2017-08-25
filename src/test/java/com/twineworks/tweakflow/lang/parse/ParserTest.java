@@ -399,7 +399,7 @@ public class ParserTest {
     ParseResult result = p.parseUnit();
 
     if (result.isError()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
 
     // parse is successful
@@ -448,7 +448,7 @@ public class ParserTest {
     ParseResult result = p.parseUnit();
 
     if (result.isError()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     // parse is successful
     assertThat(result.isSuccess()).isTrue();

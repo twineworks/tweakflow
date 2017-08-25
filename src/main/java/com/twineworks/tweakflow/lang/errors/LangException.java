@@ -171,14 +171,14 @@ public class LangException extends RuntimeException {
     return code;
   }
 
-  public void printDetails(){
-    printDigest();
+  public void printDigestMessageAndStackTrace(){
+    printDigestMessage();
     System.err.flush();
     printStackTrace();
     System.err.flush();
   }
 
-  public void printDigest(){
+  public void printDigestMessage(){
     System.err.println(getDigestMessage());
   }
 
@@ -257,7 +257,22 @@ public class LangException extends RuntimeException {
 
   public Value toTraceValue(){
     //    printStackTrace();
+
+    // custom properties
     DictValue dict = new DictValue();
+    for (Map.Entry<String, Object> entry : properties.entrySet()) {
+      try {
+        if (entry.getValue() instanceof Value){
+          dict = dict.put(entry.getKey(), (Value) entry.getValue());
+        }
+        else{
+          dict = dict.put(entry.getKey(), Values.make(entry.getValue()));
+        }
+      }
+      catch (RuntimeException ignore){
+      }
+    }
+
     dict = dict.put("code", Values.make(code.getName()));
 
     if (getMessage() != null){
@@ -277,19 +292,6 @@ public class LangException extends RuntimeException {
         else{
           dict = dict.put("source", Values.make(source.substring(0, 250)));
         }
-      }
-    }
-
-    for (Map.Entry<String, Object> entry : properties.entrySet()) {
-      try {
-        if (entry.getValue() instanceof Value){
-          dict = dict.put(entry.getKey(), (Value) entry.getValue());
-        }
-        else{
-          dict = dict.put(entry.getKey(), Values.make(entry.getValue()));
-        }
-      }
-      catch (RuntimeException ignore){
       }
     }
 

@@ -34,7 +34,7 @@ import com.twineworks.tweakflow.lang.values.*;
 
 import java.nio.file.Paths;
 
-public class Doc {
+class Doc {
 
   private static Value makeMetaValue(ModuleNode node){
 
@@ -90,7 +90,7 @@ public class Doc {
 
   }
 
-  public static Value makeMetaValue(Node node){
+  static Value makeMetaValue(Node node){
 
     // module
     if (node instanceof ModuleNode){

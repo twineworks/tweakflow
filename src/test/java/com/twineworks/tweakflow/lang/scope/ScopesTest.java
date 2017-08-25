@@ -63,7 +63,7 @@ public class ScopesTest {
   @Test
   public void test_harness_is_valid() throws Exception {
     if (result.isError()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
   }

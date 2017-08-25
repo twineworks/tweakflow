@@ -55,11 +55,6 @@ public enum LangError implements ErrorCode {
   NATIVE_CODE_RESTRICTED;
 
   @Override
-  public int getNumber() {
-    return 0;
-  }
-
-  @Override
   public String getName() {
     return this.name();
   }

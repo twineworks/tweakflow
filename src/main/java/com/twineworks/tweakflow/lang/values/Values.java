@@ -215,18 +215,6 @@ final public class Values {
     return new Value(Types.LIST, new ListValue(list));
   }
 
-  public static Value makeListOfValues(Collection<Value> items){
-    return Values.make(new ListValue(items));
-  }
-
-  // convenient stub for testing
-  public static Value makeConstantFunctionStub(Value ret) {
-    FunctionSignature functionSignature = new FunctionSignature(new LinkedHashMap<>(), ret.type());
-    FunctionNode node = new FunctionNode()
-        .setDeclaredReturnType(ret.type());
-
-    return make(new StandardFunctionValue(node, functionSignature, Collections.emptyMap()));
-  }
 }
 
 

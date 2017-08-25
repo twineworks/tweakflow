@@ -27,23 +27,23 @@ package com.twineworks.tweakflow;
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
 import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.ast.expressions.FunctionNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.ValueInspector;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.values.*;
 
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Fail.fail;
 
-public class LibraryTestHelper {
+public class TestHelper {
 
   public static void assertSpecModule(String path){
 
@@ -59,7 +59,7 @@ public class LibraryTestHelper {
       runtime = TweakFlow.compile(loadPath, paths);
       runtime.evaluate();
     } catch (LangException e){
-      e.printDetails();
+      e.printDigestMessageAndStackTrace();
       throw e;
     }
 
@@ -83,5 +83,12 @@ public class LibraryTestHelper {
 
   }
 
+  // convenient stub for testing
+  public static Value makeConstantFunctionStub(Value ret) {
+    FunctionSignature functionSignature = new FunctionSignature(new LinkedHashMap<>(), ret.type());
+    FunctionNode node = new FunctionNode()
+        .setDeclaredReturnType(ret.type());
 
+    return Values.make(new StandardFunctionValue(node, functionSignature, Collections.emptyMap()));
+  }
 }

@@ -64,7 +64,7 @@ public class AnalysisRelativeResourceImportsTest {
   public void analysis_successful() throws Exception {
 
     if (result.isError()){
-      result.getException().printDigest();
+      result.getException().printDigestMessage();
       System.err.flush();
       result.getException().printStackTrace();
       System.err.flush();

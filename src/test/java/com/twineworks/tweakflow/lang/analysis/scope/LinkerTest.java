@@ -141,7 +141,7 @@ public class LinkerTest {
     String src = "fixtures/tweakflow/analysis/exports/import_simple_export.tf";
 
     AnalysisResult result = compile(src);
-    if (result.isError()) result.getException().printDetails();
+    if (result.isError()) result.getException().printDigestMessageAndStackTrace();
     assertThat(result.isSuccess()).isTrue();
 
     ModuleNode module = (ModuleNode) result.getAnalysisSet().getUnits().get(src).getUnit();
@@ -181,7 +181,7 @@ public class LinkerTest {
     String src = "fixtures/tweakflow/analysis/exports/import_reexports.tf";
 
     AnalysisResult result = compile(src);
-    if (result.isError()) result.getException().printDetails();
+    if (result.isError()) result.getException().printDigestMessageAndStackTrace();
     assertThat(result.isSuccess()).isTrue();
 
     ModuleNode module = (ModuleNode) result.getAnalysisSet().getUnits().get(src).getUnit();
@@ -220,7 +220,7 @@ public class LinkerTest {
     String src = "fixtures/tweakflow/analysis/exports/mutual/mutual_a.tf";
 
     AnalysisResult result = compile(src);
-    if (result.isError()) result.getException().printDetails();
+    if (result.isError()) result.getException().printDigestMessageAndStackTrace();
     assertThat(result.isSuccess()).isTrue();
 
     ModuleNode module = (ModuleNode) result.getAnalysisSet().getUnits().get(src).getUnit();

@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class BooleanTypeTest {
   @Test
   public void casts_from_function() throws Exception {
     assertThat(Types.BOOLEAN.canAttemptCastFrom(Types.FUNCTION)).isTrue();
-    assertThat(Types.BOOLEAN.castFrom(Values.makeConstantFunctionStub(Values.make(1L)))).isSameAs(Values.TRUE);
+    assertThat(Types.BOOLEAN.castFrom(TestHelper.makeConstantFunctionStub(Values.make(1L)))).isSameAs(Values.TRUE);
   }
 
   @Test

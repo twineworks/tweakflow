@@ -1041,8 +1041,7 @@ public final class Data {
       for (Value value : list) {
         set.add(value);
       }
-
-      return Values.makeListOfValues(set);
+      return Values.make(new ListValue(set));
 
     }
   }

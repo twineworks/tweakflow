@@ -60,7 +60,7 @@ public class Interpreter {
 
   }
 
-  public static void evaluateSpace(MemorySpace space, Stack stack, EvaluationContext context){
+  private static void evaluateSpace(MemorySpace space, Stack stack, EvaluationContext context){
 
     ConstShapeMap<Cell> cells = space.getCells();
     for (Cell cell : cells.values()) {
@@ -164,6 +164,30 @@ public class Interpreter {
         retValue = ((ArityNUserFunction) f).callVariadic(userCallContext, callArgs).castTo(retType);
     }
     stack.pop();
+    return retValue;
+
+  }
+
+  public static Value evaluateStandardFunctionCall(CallNode node, StandardFunctionValue standardFunction, Arguments arguments, Stack stack, EvaluationContext context){
+
+    ConstShapeMap<Cell> args = mapArgumentsIntoCellMap(
+        arguments,
+        evalArguments(arguments, stack, context),
+        standardFunction.getSignature()
+    );
+
+    LocalMemorySpace argSpace = new LocalMemorySpace(
+        stack.peek().getSpace(),
+        standardFunction.getBody().getScope(),
+        MemorySpaceType.CALL_ARGUMENTS,
+        args
+    );
+
+    // put all local closures into arg space
+    stack.push(new StackEntry(node, argSpace, standardFunction.getClosures()));
+    Value retValue = standardFunction.getBody().getOp().eval(stack, context);
+    stack.pop();
+
     return retValue;
 
   }
@@ -333,7 +357,7 @@ public class Interpreter {
     return args;
   }
 
-  public static Value castArgumentValue(ArgumentNode node, FunctionParameter param, Value rawValue){
+  private static Value castArgumentValue(ArgumentNode node, FunctionParameter param, Value rawValue){
 
     if (rawValue == Values.NIL) return rawValue;
 
@@ -353,7 +377,7 @@ public class Interpreter {
   }
 
   @SuppressWarnings("unchecked")
-  public static ConstShapeMap<Cell> mapArgumentsIntoCellMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
+  private static ConstShapeMap<Cell> mapArgumentsIntoCellMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
 
     if (argumentValues.length <= 3 && arguments.allPositional()){
       switch (argumentValues.length){
@@ -502,7 +526,7 @@ public class Interpreter {
   }
 
   @SuppressWarnings("unchecked")
-  public static ConstShapeMap<Value> mapArgumentsIntoValueMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
+  private static ConstShapeMap<Value> mapArgumentsIntoValueMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
 
     if (argumentValues.length <= 3 && arguments.allPositional()){
       switch (argumentValues.length){
@@ -666,7 +690,6 @@ public class Interpreter {
     FunctionParameter[] parameters = signature.getParameterArray();
 
     if (arguments.allPositional() && argumentValues.length == parameters.length){
-      List<ArgumentNode> argumentNodes = arguments.getList();
       // can simply cast arguments in place
       for (int i=0; i<argumentValues.length; i++){
         argumentValues[i] = argumentValues[i].castTo(parameters[i].getDeclaredType());

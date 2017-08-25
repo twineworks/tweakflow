@@ -61,7 +61,7 @@ public class ValueInspector {
     if (v.type() == Types.STRING){
       out.append(leadingIndent)
           .append('"')
-          .append(LangUtil.escape(v.string()))
+          .append(LangUtil.escapeString(v.string()))
           .append('"');
       return;
     }
@@ -149,6 +149,5 @@ public class ValueInspector {
     out.append(v.value().toString());
 
   }
-
 
 }

@@ -24,24 +24,24 @@
 
 package com.twineworks.tweakflow.std;
 
-import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.TestHelper;
 import org.junit.Test;
 
 public class RegexTest {
 
   @Test
   public void matching() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/matching.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/matching.tf");
   }
 
   @Test
   public void capturing() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/capturing.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/capturing.tf");
   }
 
   @Test
   public void replacing() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/replacing.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/replacing.tf");
   }
 
 }

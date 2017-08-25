@@ -24,18 +24,13 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.collections.shapemap.ConstShapeMap;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
-import com.twineworks.tweakflow.lang.interpreter.StackEntry;
-import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
-import com.twineworks.tweakflow.lang.interpreter.memory.LocalMemorySpace;
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpaceType;
 import com.twineworks.tweakflow.lang.ast.args.Arguments;
 import com.twineworks.tweakflow.lang.ast.expressions.CallNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.FunctionValue;
 import com.twineworks.tweakflow.lang.values.StandardFunctionValue;
@@ -43,7 +38,6 @@ import com.twineworks.tweakflow.lang.values.UserFunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 
 import static com.twineworks.tweakflow.lang.interpreter.Interpreter.evalArguments;
-import static com.twineworks.tweakflow.lang.interpreter.Interpreter.mapArgumentsIntoCellMap;
 
 final public class CallOp implements ExpressionOp {
 
@@ -87,27 +81,7 @@ final public class CallOp implements ExpressionOp {
   }
 
   private Value evaluateStandard(StandardFunctionValue standardFunction, Arguments arguments, Stack stack, EvaluationContext context){
-
-    ConstShapeMap<Cell> args = mapArgumentsIntoCellMap(
-        arguments,
-        evalArguments(arguments, stack, context),
-        standardFunction.getSignature()
-    );
-
-    LocalMemorySpace argSpace = new LocalMemorySpace(
-        stack.peek().getSpace(),
-        standardFunction.getBody().getScope(),
-        MemorySpaceType.CALL_ARGUMENTS,
-        args
-    );
-
-    // put all local closures into arg space
-    stack.push(new StackEntry(node, argSpace, standardFunction.getClosures()));
-    Value retValue = standardFunction.getBody().getOp().eval(stack, context);
-    stack.pop();
-
-    return retValue;
-
+    return Interpreter.evaluateStandardFunctionCall(node, standardFunction, arguments, stack, context);
   }
 
   @Override

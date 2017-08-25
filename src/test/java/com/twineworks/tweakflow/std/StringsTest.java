@@ -24,14 +24,14 @@
 
 package com.twineworks.tweakflow.std;
 
-import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.TestHelper;
 import org.junit.Test;
 
 public class StringsTest {
 
   @Test
   public void length() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/length.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/length.tf");
   }
 
 }

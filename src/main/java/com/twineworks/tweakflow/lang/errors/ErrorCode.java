@@ -25,6 +25,5 @@
 package com.twineworks.tweakflow.lang.errors;
 
 public interface ErrorCode {
-  int getNumber();
   String getName();
 }

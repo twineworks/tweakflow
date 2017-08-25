@@ -278,7 +278,7 @@ public class AnalysisTest {
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/libraries/basic_library.tf");
 
     if (!result.isSuccess()){
-      result.getException().printDigest();
+      result.getException().printDigestMessage();
       result.getException().printStackTrace();
     }
 
@@ -301,7 +301,7 @@ public class AnalysisTest {
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/imports/main.tf");
 
     if (!result.isSuccess()){
-      result.getException().printDigest();
+      result.getException().printDigestMessage();
       result.getException().printStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
@@ -545,7 +545,7 @@ public class AnalysisTest {
     String path = "fixtures/tweakflow/analysis/expressions/explicit_casts.tf";
     AnalysisResult result = analyze(path);
     if (!result.isSuccess()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
 
@@ -582,7 +582,7 @@ public class AnalysisTest {
     String interactivePath = "fixtures/tweakflow/analysis/interactive/simple_interactive_session.tf";
     AnalysisResult result = analyze(modulePath, interactivePath);
     if (!result.isSuccess()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
 
@@ -628,7 +628,7 @@ public class AnalysisTest {
     String interactivePath = "fixtures/tweakflow/analysis/interactive/interactive_closure.tf";
     AnalysisResult result = analyze(modulePath, interactivePath);
     if (!result.isSuccess()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
 
@@ -667,7 +667,7 @@ public class AnalysisTest {
     String interactive_path = "fixtures/tweakflow/analysis/interactive/interactive_session.tf";
     AnalysisResult result = analyze(module_a_path, module_b_path, interactive_path);
     if (!result.isSuccess()){
-      result.getException().printDetails();
+      result.getException().printDigestMessageAndStackTrace();
     }
     assertThat(result.isSuccess()).isTrue();
 
@@ -806,7 +806,7 @@ public class AnalysisTest {
       result.getException().printStackTrace();
       System.out.flush();
       System.err.flush();
-      result.getException().printDigest();
+      result.getException().printDigestMessage();
     }
     assertThat(result.isSuccess()).isTrue();
 

@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.lang.interpreter;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
-import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
@@ -350,34 +350,34 @@ public class InterpreterTest {
   public void evaluates_import_simple_export() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/exports/import_simple_export.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_import_reexports() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/exports/import_reexports.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_mutual_imports() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/exports/mutual/main.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_import_values() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/exports/import_values.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_function_calls() throws Exception {
     String path = "fixtures/tweakflow/evaluation/function_calls.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
@@ -462,21 +462,21 @@ public class InterpreterTest {
   public void evaluates_recursion_variants() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/closures/recursion_variants.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_try_catch_trace() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_try_catch_nested() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
@@ -652,13 +652,13 @@ public class InterpreterTest {
   @Test
   public void evaluates_cross_lib_closures() throws Exception {
     String path = "fixtures/tweakflow/evaluation/closures/cross_lib_closures.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test
   public void evaluates_cross_module_closures() throws Exception {
     String path = "fixtures/tweakflow/evaluation/closures/cross_module_closures.tf";
-    LibraryTestHelper.assertSpecModule(path);
+    TestHelper.assertSpecModule(path);
   }
 
   @Test

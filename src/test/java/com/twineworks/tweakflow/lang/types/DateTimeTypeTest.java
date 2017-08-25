@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -66,7 +67,7 @@ public class DateTimeTypeTest {
   @Test(expected = LangException.class)
   public void cannot_cast_from_function() throws Exception {
     assertThat(Types.DATETIME.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.DATETIME.castFrom(Values.makeConstantFunctionStub(Values.TRUE));
+    Types.DATETIME.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
   }
 
   @Test(expected = LangException.class)

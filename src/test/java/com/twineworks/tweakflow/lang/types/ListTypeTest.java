@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -96,7 +97,7 @@ public class ListTypeTest {
   @Test(expected = LangException.class)
   public void cannot_cast_from_function() throws Exception {
     assertThat(Types.LIST.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.LIST.castFrom(Values.makeConstantFunctionStub(Values.TRUE));
+    Types.LIST.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
   }
 
   @Test(expected = LangException.class)

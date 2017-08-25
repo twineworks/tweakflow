@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -77,7 +78,7 @@ public class DoubleTypeTest {
   @Test(expected = LangException.class)
   public void cannot_cast_from_function() throws Exception {
     assertThat(Types.DOUBLE.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.DOUBLE.castFrom(Values.makeConstantFunctionStub(Values.TRUE));
+    Types.DOUBLE.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
   }
 
   @Test(expected = LangException.class)

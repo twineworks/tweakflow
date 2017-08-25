@@ -51,12 +51,19 @@ import com.twineworks.tweakflow.lang.values.Value;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Entry point for tweakflow evaluation.
+ * <p>
+ * Use <code>compile</code> to load a set of files and create a {@link Runtime}.
+ * <p>
+ * Use <code>evaluate</code> to evaluate an expression in empty scope.
+ */
 public class TweakFlow {
 
   public static Runtime compile(LoadPath loadPath, String path){
     return compile(loadPath, path, new DefaultDebugHandler());
   }
-  
+
   public static Runtime compile(LoadPath loadPath, String path, DebugHandler debugHandler){
     return compile(loadPath, Collections.singletonList(path), debugHandler);
   }
@@ -72,11 +79,11 @@ public class TweakFlow {
     return new Runtime(runtimeSet, debugHandler);
   }
 
-  public static Value evaluateExpression(String exp){
-    return evaluateExpression(exp, true);
+  public static Value evaluate(String exp){
+    return evaluate(exp, true);
   }
 
-  public static Value evaluateExpression(String exp, boolean allowNativeFunctions){
+  public static Value evaluate(String exp, boolean allowNativeFunctions){
 
     ParseUnit parseUnit = new MemoryLocation.Builder()
         .allowNativeFunctions(allowNativeFunctions)

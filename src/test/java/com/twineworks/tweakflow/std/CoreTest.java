@@ -24,14 +24,14 @@
 
 package com.twineworks.tweakflow.std;
 
-import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.TestHelper;
 import org.junit.Test;
 
 public class CoreTest {
 
   @Test
   public void eval() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
   }
 
 

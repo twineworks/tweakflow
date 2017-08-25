@@ -24,44 +24,44 @@
 
 package com.twineworks.tweakflow.std;
 
-import com.twineworks.tweakflow.LibraryTestHelper;
+import com.twineworks.tweakflow.TestHelper;
 import org.junit.Test;
 
 public class DataTest {
 
   @Test
   public void get_in() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
   }
 
   @Test
   public void get() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get.tf");
   }
 
   @Test
   public void filter() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
   }
 
   @Test
   public void map() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/map.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/map.tf");
   }
 
   @Test
   public void has() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
   }
 
   @Test
   public void reduce() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/reduce.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/reduce.tf");
   }
 
   @Test
   public void inspect() throws Exception {
-    LibraryTestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/inspect.tf");
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/inspect.tf");
   }
 
 

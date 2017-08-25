@@ -210,7 +210,7 @@ public class Run {
         }
         else if (callArg instanceof EvalArg){
           EvalArg arg = (EvalArg) callArg;
-          Value callValue = TweakFlow.evaluateExpression(arg.str);
+          Value callValue = TweakFlow.evaluate(arg.str);
           callArgValues[i] = callValue;
         }
       }

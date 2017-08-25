@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -36,7 +37,7 @@ public class FunctionTypeTest {
   @Test
   public void casts_from_function() throws Exception {
     assertThat(Types.FUNCTION.canAttemptCastFrom(Types.FUNCTION)).isTrue();
-    Value x = Values.makeConstantFunctionStub(Values.TRUE);
+    Value x = TestHelper.makeConstantFunctionStub(Values.TRUE);
     assertThat(Types.FUNCTION.castFrom(x)).isSameAs(x);
   }
 
