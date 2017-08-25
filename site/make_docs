@@ -8,6 +8,12 @@ bin/tfdoc -t doc/markdown_transformer -oe md -o site/content/modules std
 echo ""
 echo "* deleting old docs"
 rm -rf docs
+rm -rf target/site/apidocs
+rm -rf site/static/apidocs
+echo ""
+echo "* generating javadoc site in /site/static/apidocs"
+mvn javadoc:javadoc
+cp -r target/site/apidocs site/static
 echo ""
 echo "* generating documentation site in /docs"
 cd site
