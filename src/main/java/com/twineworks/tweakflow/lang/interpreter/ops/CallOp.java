@@ -26,7 +26,7 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.interpreter.StackEntry;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
@@ -42,8 +42,8 @@ import com.twineworks.tweakflow.lang.values.StandardFunctionValue;
 import com.twineworks.tweakflow.lang.values.UserFunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 
-import static com.twineworks.tweakflow.lang.interpreter.Evaluator.evalArguments;
-import static com.twineworks.tweakflow.lang.interpreter.Evaluator.mapArgumentsIntoCellMap;
+import static com.twineworks.tweakflow.lang.interpreter.Interpreter.evalArguments;
+import static com.twineworks.tweakflow.lang.interpreter.Interpreter.mapArgumentsIntoCellMap;
 
 final public class CallOp implements ExpressionOp {
 
@@ -78,10 +78,10 @@ final public class CallOp implements ExpressionOp {
 
     Value[] argValues = evalArguments(arguments, stack, context);
     if (arguments.allPositional()){
-      return Evaluator.evaluateUserFunctionCall(userFunction, Evaluator.argumentsForPositionalUserCall(argValues, userFunction.getSignature()), node, stack, context);
+      return Interpreter.evaluateUserFunctionCall(userFunction, Interpreter.argumentsForPositionalUserCall(argValues, userFunction.getSignature()), node, stack, context);
     }
     else {
-      return Evaluator.evaluateUserFunctionCall(userFunction, Evaluator.argumentsForUserCall(arguments, argValues, userFunction.getSignature()), node, stack, context);
+      return Interpreter.evaluateUserFunctionCall(userFunction, Interpreter.argumentsForUserCall(arguments, argValues, userFunction.getSignature()), node, stack, context);
     }
 
   }
@@ -133,7 +133,7 @@ final public class CallOp implements ExpressionOp {
 
     if (callableOp.isConstant()){
       try {
-        Value callable = Evaluator.evaluateInEmptyScope(node.getExpression());
+        Value callable = Interpreter.evaluateInEmptyScope(node.getExpression());
         if (node.getArguments().allPositional()){
           int argCount = node.getArguments().getList().size();
           switch (argCount){

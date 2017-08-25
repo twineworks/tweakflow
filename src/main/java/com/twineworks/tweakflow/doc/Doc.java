@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.doc;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.ComponentNode;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
@@ -42,8 +42,8 @@ public class Doc {
     moduleDict = moduleDict.put("node", Values.make("module"));
     moduleDict = moduleDict.put("path", Values.make(node.getSourceInfo().getParseUnit().getPath()));
     moduleDict = moduleDict.put("file", Values.make(Paths.get(node.getSourceInfo().getParseUnit().getPath()).getFileName().toString()));
-    moduleDict = moduleDict.put("doc", Evaluator.evaluateDocExpression(node));
-    moduleDict = moduleDict.put("meta", Evaluator.evaluateMetaExpression(node));
+    moduleDict = moduleDict.put("doc", Interpreter.evaluateDocExpression(node));
+    moduleDict = moduleDict.put("meta", Interpreter.evaluateMetaExpression(node));
     moduleDict = moduleDict.put("global", node.isGlobal() ? Values.TRUE : Values.FALSE);
 
     if (node.isGlobal()){
@@ -63,8 +63,8 @@ public class Doc {
 
     DictValue libDict = new DictValue();
     libDict = libDict.put("node", Values.make("library"));
-    libDict = libDict.put("doc", Evaluator.evaluateDocExpression(node));
-    libDict = libDict.put("meta", Evaluator.evaluateMetaExpression(node));
+    libDict = libDict.put("doc", Interpreter.evaluateDocExpression(node));
+    libDict = libDict.put("meta", Interpreter.evaluateMetaExpression(node));
     libDict = libDict.put("export", node.isExport() ? Values.TRUE : Values.FALSE);
     libDict = libDict.put("name", Values.make(node.getSymbolName()));
 
@@ -82,8 +82,8 @@ public class Doc {
     DictValue varDict = new DictValue();
     varDict = varDict.put("node", Values.make("var"));
     varDict = varDict.put("type", Values.make(node.getDeclaredType().name()));
-    varDict = varDict.put("doc", Evaluator.evaluateDocExpression(node));
-    varDict = varDict.put("meta", Evaluator.evaluateMetaExpression(node));
+    varDict = varDict.put("doc", Interpreter.evaluateDocExpression(node));
+    varDict = varDict.put("meta", Interpreter.evaluateMetaExpression(node));
     varDict = varDict.put("name", Values.make(node.getSymbolName()));
     varDict = varDict.put("source_code", Values.make(node.getSourceInfo().getSourceCode()));
     return Values.make(varDict);

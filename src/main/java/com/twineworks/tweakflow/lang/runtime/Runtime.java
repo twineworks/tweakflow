@@ -86,7 +86,7 @@ public class Runtime {
 
     @Override
     public void evaluate() {
-      Evaluator.evaluateSpace(space, runtime.getEvaluationContext());
+      Interpreter.evaluateSpace(space, runtime.getEvaluationContext());
     }
 
   }
@@ -112,7 +112,7 @@ public class Runtime {
 
     @Override
     public void evaluate() {
-      Evaluator.evaluateSpace(space, runtime.getEvaluationContext());
+      Interpreter.evaluateSpace(space, runtime.getEvaluationContext());
     }
 
   }
@@ -138,7 +138,7 @@ public class Runtime {
 
     @Override
     public void evaluate() {
-      Evaluator.evaluateSpace(space, runtime.getEvaluationContext());
+      Interpreter.evaluateSpace(space, runtime.getEvaluationContext());
     }
   }
 
@@ -178,7 +178,7 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Evaluator.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
     }
 
     @Override
@@ -223,7 +223,7 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Evaluator.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
     }
 
     public Name resolve(ReferenceNode node){
@@ -302,19 +302,19 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Evaluator.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
     }
 
     @Override
     public Value getMeta() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateMetaExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateMetaExpression((MetaDataNode) targetNode);
     }
 
     @Override
     public Value getDoc() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateDocExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateDocExpression((MetaDataNode) targetNode);
     }
 
     @Override
@@ -359,19 +359,19 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Evaluator.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
     }
 
     @Override
     public Value getMeta() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateMetaExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateMetaExpression((MetaDataNode) targetNode);
     }
 
     @Override
     public Value getDoc() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateDocExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateDocExpression((MetaDataNode) targetNode);
     }
 
     @Override
@@ -418,19 +418,19 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Evaluator.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, new Stack(), runtime.getEvaluationContext());
     }
 
     @Override
     public Value getMeta() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateMetaExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateMetaExpression((MetaDataNode) targetNode);
     }
 
     @Override
     public Value getDoc() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateDocExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateDocExpression((MetaDataNode) targetNode);
     }
 
     @Override
@@ -489,43 +489,43 @@ public class Runtime {
     public Value call(Value ... args) {
       Stack stack = new Stack();
       stack.push(new StackEntry(cell.getSymbol().getNode(), cell, Collections.emptyMap()));
-      return new EvaluatorUserCallContext(stack, runtime.getEvaluationContext()).call(getValue(), args);
+      return new CallContext(stack, runtime.getEvaluationContext()).call(getValue(), args);
     }
 
     public Arity1CallSite arity1CallSite() {
       Stack stack = new Stack();
       stack.push(new StackEntry(cell.getSymbol().getNode(), cell, Collections.emptyMap()));
-      return new EvaluatorUserCallContext(stack, runtime.getEvaluationContext()).createArity1CallSite(getValue());
+      return new CallContext(stack, runtime.getEvaluationContext()).createArity1CallSite(getValue());
     }
 
     public Arity2CallSite arity2CallSite() {
       Stack stack = new Stack();
       stack.push(new StackEntry(cell.getSymbol().getNode(), cell, Collections.emptyMap()));
-      return new EvaluatorUserCallContext(stack, runtime.getEvaluationContext()).createArity2CallSite(getValue());
+      return new CallContext(stack, runtime.getEvaluationContext()).createArity2CallSite(getValue());
     }
 
     public Arity3CallSite arity3CallSite() {
       Stack stack = new Stack();
       stack.push(new StackEntry(cell.getSymbol().getNode(), cell, Collections.emptyMap()));
-      return new EvaluatorUserCallContext(stack, runtime.getEvaluationContext()).createArity3CallSite(getValue());
+      return new CallContext(stack, runtime.getEvaluationContext()).createArity3CallSite(getValue());
     }
 
     public void evaluate(){
       Stack stack = new Stack();
       stack.push(new StackEntry(cell.getSymbol().getNode(), cell.getEnclosingSpace(), Collections.emptyMap()));
-      Evaluator.evaluateCell(cell, stack, runtime.getEvaluationContext());
+      Interpreter.evaluateCell(cell, stack, runtime.getEvaluationContext());
     }
 
     @Override
     public Value getMeta() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateMetaExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateMetaExpression((MetaDataNode) targetNode);
     }
 
     @Override
     public Value getDoc() {
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      return Evaluator.evaluateDocExpression((MetaDataNode) targetNode);
+      return Interpreter.evaluateDocExpression((MetaDataNode) targetNode);
     }
 
     @Override
@@ -553,7 +553,7 @@ public class Runtime {
   }
 
   public void evaluate(){
-    Evaluator.evaluateSpace(runtimeSet.getGlobalMemorySpace().getUnitSpace(), context);
+    Interpreter.evaluateSpace(runtimeSet.getGlobalMemorySpace().getUnitSpace(), context);
   }
 
   public String unitKey(String path){
@@ -647,6 +647,10 @@ public class Runtime {
 
   public AnalysisResult getAnalysisResult(){
     return runtimeSet.getAnalysisResult();
+  }
+
+  public DebugHandler getDebugHandler(){
+    return context.getDebugHandler();
   }
 
   private EvaluationContext getEvaluationContext() {

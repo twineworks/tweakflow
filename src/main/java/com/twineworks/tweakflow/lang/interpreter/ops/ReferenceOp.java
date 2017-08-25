@@ -35,7 +35,7 @@ import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 
 import java.util.List;
 
-import static com.twineworks.tweakflow.lang.interpreter.Evaluator.evaluateCell;
+import static com.twineworks.tweakflow.lang.interpreter.Interpreter.evaluateCell;
 
 final public class ReferenceOp implements ExpressionOp {
   private final ReferenceNode node;

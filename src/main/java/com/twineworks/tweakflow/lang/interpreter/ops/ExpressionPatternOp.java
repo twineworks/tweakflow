@@ -29,7 +29,7 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.EvaluatorUserCallContext;
+import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 
@@ -54,7 +54,7 @@ final public class ExpressionPatternOp implements PatternOp {
   public boolean matches(Value subject, Stack stack, EvaluationContext context) {
     Value v = op.eval(stack, context);
     if (v.type() == Types.FUNCTION){
-      EvaluatorUserCallContext callContext = new EvaluatorUserCallContext(stack, context);
+      CallContext callContext = new CallContext(stack, context);
       return callContext.call(v, subject).castTo(Types.BOOLEAN) == Values.TRUE;
     }
     else{

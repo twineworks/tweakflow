@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.expressions.ContainerAccessNode;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.ListValue;
@@ -43,7 +43,7 @@ final public class SimpleListContainerAccessConstantKeyOp implements ExpressionO
     this.node = node;
     this.containerOp = node.getContainerExpression().getOp();
 
-    this.idx = Evaluator.evaluateInEmptyScope(node.getKeysExpression()).list().get(0).castTo(Types.LONG).longNum().intValue();
+    this.idx = Interpreter.evaluateInEmptyScope(node.getKeysExpression()).list().get(0).castTo(Types.LONG).longNum().intValue();
   }
 
   @Override

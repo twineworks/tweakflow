@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.analysis.constants;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.ops.ConstantOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
@@ -95,7 +95,7 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
 
     if (node.getOp().isConstant()){
       try {
-        node.setOp(new ConstantOp(constantPool.get(Evaluator.evaluateInEmptyScope(node))));
+        node.setOp(new ConstantOp(constantPool.get(Interpreter.evaluateInEmptyScope(node))));
       }
       catch(LangException ignored){}
     }
@@ -119,7 +119,7 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
           ExpressionNode targetValue = targetVar.getValueExpression();
           if (targetValue.getOp().isConstant()){
             try {
-              node.setOp(new ConstantOp(constantPool.get(Evaluator.evaluateInEmptyScope(targetValue))));
+              node.setOp(new ConstantOp(constantPool.get(Interpreter.evaluateInEmptyScope(targetValue))));
             }
             catch(LangException ignored){}
           }

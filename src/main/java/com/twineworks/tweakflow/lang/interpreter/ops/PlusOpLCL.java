@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.PlusNode;
 import com.twineworks.tweakflow.lang.values.Value;
@@ -40,7 +40,7 @@ final public class PlusOpLCL implements ExpressionOp {
   public PlusOpLCL(PlusNode node) {
     this.node = node;
     leftOp = node.getLeftExpression().getOp();
-    right = Evaluator.evaluateInEmptyScope(node.getRightExpression()).longNum();
+    right = Interpreter.evaluateInEmptyScope(node.getRightExpression()).longNum();
   }
 
   @Override

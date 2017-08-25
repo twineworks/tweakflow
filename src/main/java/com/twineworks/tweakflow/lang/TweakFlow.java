@@ -37,7 +37,7 @@ import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilderVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
 import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.RuntimeSet;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -56,8 +56,7 @@ public class TweakFlow {
   public static Runtime compile(LoadPath loadPath, String path){
     return compile(loadPath, path, new DefaultDebugHandler());
   }
-
-
+  
   public static Runtime compile(LoadPath loadPath, String path, DebugHandler debugHandler){
     return compile(loadPath, Collections.singletonList(path), debugHandler);
   }
@@ -102,7 +101,7 @@ public class TweakFlow {
     new ConstantOpsFoldingVisitor().visit(node);
     new OpSpecializationVisitor().visit(node);
 
-    return Evaluator.evaluateInEmptyScope(node);
+    return Interpreter.evaluateInEmptyScope(node);
 
   }
 

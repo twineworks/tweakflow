@@ -27,19 +27,19 @@ package com.twineworks.tweakflow.lang.interpreter;
 import com.twineworks.tweakflow.lang.values.*;
 import com.twineworks.tweakflow.lang.interpreter.calls.CallSites;
 
-public class EvaluatorUserCallContext implements UserCallContext {
+public class CallContext implements UserCallContext {
 
   private final Stack stack;
   private final EvaluationContext evaluationContext;
 
-  public EvaluatorUserCallContext(Stack stack, EvaluationContext evaluationContext) {
+  public CallContext(Stack stack, EvaluationContext evaluationContext) {
     this.stack = stack;
     this.evaluationContext = evaluationContext;
   }
 
   @Override
   public Value call(Value f, Value ... args) {
-    return Evaluator.performUserCall(f, args, stack, evaluationContext);
+    return Interpreter.performUserCall(f, args, stack, evaluationContext);
   }
 
   @Override

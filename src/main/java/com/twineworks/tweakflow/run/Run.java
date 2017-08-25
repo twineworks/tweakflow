@@ -29,7 +29,7 @@ import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -147,7 +147,7 @@ public class Run {
   }
 
   public static Value evalExp(ExpressionNode node){
-    return Evaluator.evaluateInEmptyScope(node);
+    return Interpreter.evaluateInEmptyScope(node);
   }
 
   public static void main(String[] args){

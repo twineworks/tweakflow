@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.expressions.ContainerAccessNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
@@ -117,7 +117,7 @@ final public class ContainerAccessOp implements ExpressionOp {
       if (node.getContainerExpression().getValueType() == Types.DICT){
         // through a constant path?
         if (node.getKeysExpression().getOp().isConstant()){
-          ListValue keys = Evaluator.evaluateInEmptyScope(node.getKeysExpression()).list();
+          ListValue keys = Interpreter.evaluateInEmptyScope(node.getKeysExpression()).list();
           // of a single key?
           if (keys.size() == 1){
             String key = keys.get(0).castTo(Types.STRING).string();
@@ -133,7 +133,7 @@ final public class ContainerAccessOp implements ExpressionOp {
       if (node.getContainerExpression().getValueType() == Types.LIST){
         // through a constant path?
         if (node.getKeysExpression().getOp().isConstant()){
-          ListValue keys = Evaluator.evaluateInEmptyScope(node.getKeysExpression()).list();
+          ListValue keys = Interpreter.evaluateInEmptyScope(node.getKeysExpression()).list();
           // of a single index?
           if (keys.size() == 1){
             Long idx = keys.get(0).castTo(Types.LONG).longNum();

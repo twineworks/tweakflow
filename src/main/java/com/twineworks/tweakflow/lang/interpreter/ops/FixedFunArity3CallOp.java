@@ -25,8 +25,8 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
-import com.twineworks.tweakflow.lang.interpreter.EvaluatorUserCallContext;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.interpreter.calls.CallSites;
 import com.twineworks.tweakflow.lang.ast.args.ArgumentNode;
@@ -47,7 +47,7 @@ final public class FixedFunArity3CallOp implements ExpressionOp {
 
   public FixedFunArity3CallOp(CallNode node) {
     this.node = node;
-    this.f = Evaluator.evaluateInEmptyScope(node.getExpression());
+    this.f = Interpreter.evaluateInEmptyScope(node.getExpression());
 
     List<ArgumentNode> argsList = node.getArguments().getList();
     this.arg0Op = argsList.get(0).getExpression().getOp();
@@ -59,7 +59,7 @@ final public class FixedFunArity3CallOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     if (cs == null){
-      cs = CallSites.createArity3CallSite(f, node, stack, context, new EvaluatorUserCallContext(stack, context));
+      cs = CallSites.createArity3CallSite(f, node, stack, context, new CallContext(stack, context));
     }
     return cs.call(arg0Op.eval(stack, context), arg1Op.eval(stack, context), arg2Op.eval(stack, context));
   }

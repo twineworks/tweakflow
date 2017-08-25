@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.analysis.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.ops.*;
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
@@ -231,7 +231,7 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
         throw new LangException(LangError.LITERAL_VALUE_REQUIRED, "parameter "+parameterNode.getSymbolName()+" default value must be a literal", parameterNode.getSourceInfo());
       }
 
-      Value rawDefaultValue = Evaluator.evaluateInEmptyScope(parameterNode.getDefaultValue());
+      Value rawDefaultValue = Interpreter.evaluateInEmptyScope(parameterNode.getDefaultValue());
       Value typedDefaultValue;
       try {
         typedDefaultValue = rawDefaultValue.castTo(parameterNode.getDeclaredType());
@@ -256,7 +256,7 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
       if (location.allowsNativeFunctions()){
         UserObjectFactory userObjectFactory = new UserObjectFactory();
 
-        FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Evaluator.evaluateInEmptyScope(node.getVia().getExpression()));
+        FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Interpreter.evaluateInEmptyScope(node.getVia().getExpression()));
         node.setFunctionValue(Values.make(userFunction));
         return node.setOp(new ConstantOp(node.getFunctionValue()));
       }

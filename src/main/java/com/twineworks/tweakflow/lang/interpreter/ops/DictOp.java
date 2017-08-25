@@ -24,7 +24,7 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.expressions.DictEntryNode;
 import com.twineworks.tweakflow.lang.ast.expressions.DictNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
@@ -91,7 +91,7 @@ final public class DictOp implements ExpressionOp {
       }
       else{
         try {
-          Evaluator.evaluateInEmptyScope(dictEntryNode.getKey());
+          Interpreter.evaluateInEmptyScope(dictEntryNode.getKey());
         } catch (LangException ignored){
           allDictKeysConstant = false;
           break;

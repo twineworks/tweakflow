@@ -27,7 +27,7 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.ast.expressions.ThrowNode;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 
 final public class ThrowOp implements ExpressionOp {
@@ -40,7 +40,7 @@ final public class ThrowOp implements ExpressionOp {
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
-    return Evaluator.evaluateThrowNode(node, stack, context);
+    return Interpreter.evaluateThrowNode(node, stack, context);
   }
 
   @Override

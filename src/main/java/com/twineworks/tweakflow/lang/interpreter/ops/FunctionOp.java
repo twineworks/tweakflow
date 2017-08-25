@@ -36,7 +36,7 @@ import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 
 import java.util.*;
 
-import static com.twineworks.tweakflow.lang.interpreter.Evaluator.evaluateCell;
+import static com.twineworks.tweakflow.lang.interpreter.Interpreter.evaluateCell;
 
 final public class FunctionOp implements ExpressionOp {
 

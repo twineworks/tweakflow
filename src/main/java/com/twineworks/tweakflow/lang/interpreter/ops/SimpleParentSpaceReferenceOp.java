@@ -31,7 +31,7 @@ import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 
 import static com.twineworks.collections.shapemap.ConstShapeMap.Accessor;
 import static com.twineworks.collections.shapemap.ConstShapeMap.accessor;
-import static com.twineworks.tweakflow.lang.interpreter.Evaluator.evaluateCell;
+import static com.twineworks.tweakflow.lang.interpreter.Interpreter.evaluateCell;
 
 final public class SimpleParentSpaceReferenceOp implements ExpressionOp {
 

@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Evaluator;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.DictEntryNode;
 import com.twineworks.tweakflow.lang.ast.expressions.DictNode;
@@ -69,7 +69,7 @@ final public class ConstantKeysDictOp implements ExpressionOp {
       ExpressionNode keyExp = entryNode.getKey();
       ExpressionOp keyOp = keyExp.getOp();
 
-      String key = Evaluator.evaluateInEmptyScope(keyOp).string();
+      String key = Interpreter.evaluateInEmptyScope(keyOp).string();
       if (key == null) throw new LangException(LangError.NIL_ERROR, "dict key cannot be nil", keyExp.getSourceInfo());
       entries[i] = new AbstractMap.SimpleEntry<String, Value>(key, Values.NIL);
       valueOps[i] = entryNode.getValue().getOp();
@@ -79,7 +79,7 @@ final public class ConstantKeysDictOp implements ExpressionOp {
 
       if (valueOp.isConstant()){
         try {
-          v = Evaluator.evaluateInEmptyScope(valueOp);
+          v = Interpreter.evaluateInEmptyScope(valueOp);
         }
         catch (LangException ignored){}
       }
