@@ -56,7 +56,7 @@ public class EvalExpressionInEmptyScope {
   }
 
   @Test(expected = LangException.class)
-  public void cannot_use_standard_library_in_standalone_evaluation() throws Exception {
+  public void cannot_use_standard_library_in_empty_scope() throws Exception {
     String code = "strings.length('foo')";
     TweakFlow.evaluate(code);
   }
