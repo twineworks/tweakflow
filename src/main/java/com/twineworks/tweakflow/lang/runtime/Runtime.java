@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.lang.runtime;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
+import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
@@ -445,11 +446,13 @@ public class Runtime {
     private final Cell cell;
     private final Runtime runtime;
     private final List<Cell> dependants;
+    private final boolean isProvided;
 
     private Var(Runtime runtime, Cell cell) {
 
       this.cell = cell;
       this.runtime = runtime;
+      this.isProvided = ((VarDefNode) cell.getSymbol().getNode()).isDeclaredProvided();
 
       RuntimeSet runtimeSet = runtime.getRuntimeSet();
       LocalMemorySpace unitSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace();
@@ -473,6 +476,14 @@ public class Runtime {
         }
       }
 
+    }
+
+    public boolean isProvided() {
+      return isProvided;
+    }
+
+    public void update(Value value){
+      runtime.updateVar(this, value);
     }
 
     public Value getValue(){
@@ -660,6 +671,29 @@ public class Runtime {
 
   private EvaluationContext getEvaluationContext() {
     return context;
+  }
+
+  private void updateVar(Runtime.Var var, Value value){
+
+    Objects.requireNonNull(value, "Value cannot be null, use Values.NIL instead");
+    if (!var.isProvided()) throw new IllegalStateException("Only vars declared as provided can change.");
+
+    // if there is no change in value, there's no need to re-evaluate anything
+    Value existing = var.cell.getValue();
+    if (value.equals(existing)) return;
+
+    var.cell.setValue(value);
+
+    for (Cell dependant : var.dependants) {
+      dependant.setDirty(true);
+    }
+
+    for (Cell dependant : var.dependants) {
+      Stack stack = new Stack();
+      stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+      Interpreter.evaluateCell(dependant, stack, getEvaluationContext());
+    }
+
   }
 
 }
