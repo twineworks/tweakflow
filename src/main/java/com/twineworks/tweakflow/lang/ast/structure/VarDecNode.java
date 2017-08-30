@@ -43,20 +43,10 @@ public class VarDecNode implements MetaDataNode, SymbolNode {
   private MetaNode metaNode;
 
   private Type declaredType;
-  private boolean isDeclaredConstant;
 
   private SourceInfo sourceInfo;
   private String name;
   private Scope scope;
-
-  public boolean isDeclaredConstant() {
-    return isDeclaredConstant;
-  }
-
-  public VarDecNode setDeclaredConstant(boolean declaredConstant) {
-    isDeclaredConstant = declaredConstant;
-    return this;
-  }
 
   public Type getDeclaredType() {
     return declaredType;

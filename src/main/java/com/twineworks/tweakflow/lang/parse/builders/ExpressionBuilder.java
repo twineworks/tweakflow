@@ -957,7 +957,6 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       String exceptionName = identifier(catchDeclaration.identifier().getText());
       caughtException = new VarDecNode()
           .setDeclaredType(Types.ANY)
-          .setDeclaredConstant(false)
           .setSymbolName(exceptionName)
           .setSourceInfo(srcOf(parseUnit, catchDeclaration.identifier()));
 
@@ -968,14 +967,12 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       String exceptionName = identifier(catchDeclaration.identifier().get(0).getText());
       caughtException = new VarDecNode()
           .setDeclaredType(Types.ANY)
-          .setDeclaredConstant(false)
           .setSymbolName(exceptionName)
           .setSourceInfo(srcOf(parseUnit, catchDeclaration.identifier().get(0)));
 
       String traceName = identifier(catchDeclaration.identifier().get(1).getText());
       caughtTrace = new VarDecNode()
           .setDeclaredType(Types.ANY)
-          .setDeclaredConstant(false)
           .setSymbolName(traceName)
           .setSourceInfo(srcOf(parseUnit, catchDeclaration.identifier().get(1)));
 
