@@ -9,6 +9,11 @@ library operator_spec {
 
   nil_nil: nil // nil  == nil
 
+  # associativity
+  assoc_1: 8*4//2  == 16
+  assoc_2: 8//4*2  == 4
+  assoc_3: 8//4//2 == 1
+
   l0_l1: 0 // 1        == 0
   l1_l0: try   1 // 0  catch "error" == "error"
   l1_l1: 1 // 1        == 1

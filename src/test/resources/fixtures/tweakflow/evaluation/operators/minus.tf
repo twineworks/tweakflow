@@ -24,6 +24,11 @@ library operator_spec {
   # extremes
   min_max: max_long - min_long == -1
 
+  # associativity
+  assoc_1: 1 - 2 + 3 == 2
+  assoc_2: 1 + 2 - 3 == 0
+  assoc_3: 3 - 2 - 1 == 0
+
   d0_d1: 0.0 - 1.0    == -1.0
   d1_d0: 1.0 - 0.0    == 1.0
   d1_d1: 1.0 - 1.0    == 0.0

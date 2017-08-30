@@ -25,6 +25,14 @@ interactiveInput
   | empty
   ;
 
+standaloneExpression
+  : expression EOF
+  ;
+
+standaloneReference
+  : reference EOF
+  ;
+
 empty
   : EOF
   ;
@@ -159,12 +167,12 @@ expression
   | 'not' expression                                        # boolNotExp
   | '-' expression                                          # unaryMinusExp
   | expression '**' expression                              # powExp
-  | expression '*' expression                               # multExp
   | expression '/' expression                               # divExp
   | expression '//' expression                              # intDivExp
+  | expression '*' expression                               # multExp
   | expression '%' expression                               # modExp
-  | expression '+' expression                               # addExp
   | expression '-' expression                               # subExp
+  | expression '+' expression                               # addExp
   | expression '..' expression                              # concatExp
   | expression '<<' expression                              # shiftLeftExp
   | expression '>>' expression                              # preservingShiftRightExp
