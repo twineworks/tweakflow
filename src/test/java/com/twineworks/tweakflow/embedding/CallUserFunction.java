@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.samples;
+package com.twineworks.tweakflow.embedding;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangError;
