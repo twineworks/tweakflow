@@ -803,11 +803,11 @@ public class InterpreterTest {
 
     // power:            2**10
     Cell power = vars.gets("power");
-    assertThat(power.getValue()).isEqualTo(Values.make(1024L));
+    assertThat(power.getValue()).isEqualTo(Values.make(1024.0));
 
     // divide:           16/2
     Cell divide = vars.gets("divide");
-    assertThat(divide.getValue()).isEqualTo(Values.make(8L));
+    assertThat(divide.getValue()).isEqualTo(Values.make(8.0));
 
     // modulo:           16 % 3 # 16=3*5+1 -> 1
     Cell modulo = vars.gets("modulo");
