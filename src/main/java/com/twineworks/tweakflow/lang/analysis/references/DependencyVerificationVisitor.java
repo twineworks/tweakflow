@@ -26,7 +26,10 @@ package com.twineworks.tweakflow.lang.analysis.references;
 
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
-import com.twineworks.tweakflow.lang.ast.expressions.*;
+import com.twineworks.tweakflow.lang.ast.SymbolNode;
+import com.twineworks.tweakflow.lang.ast.expressions.CallNode;
+import com.twineworks.tweakflow.lang.ast.expressions.ExpressionType;
+import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.CapturePatternNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
@@ -34,7 +37,10 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 import com.twineworks.tweakflow.lang.scope.SymbolTarget;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class DependencyVerificationVisitor extends AExpressionDescendingVisitor implements Visitor {
 
@@ -191,8 +197,10 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
     LinkedHashSet<Symbol> currentVarDependencies = topLevelStack.peek();
     if (currentVarDependencies != null){
       Symbol referencedSymbol = node.getReferencedSymbol();
-      if (referencedSymbol.isLibraryVar()){
-        currentVarDependencies.add(referencedSymbol);
+      SymbolNode targetNode = referencedSymbol.getTargetNode();
+
+      if (targetNode.getScope().isLibrary()){
+        currentVarDependencies.add(targetNode.getScope().getSymbols().get(targetNode.getSymbolName()));
       }
     }
     return node;
