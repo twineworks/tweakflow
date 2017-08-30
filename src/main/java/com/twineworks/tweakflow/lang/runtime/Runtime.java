@@ -26,13 +26,12 @@ package com.twineworks.tweakflow.lang.runtime;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.collections.shapemap.ShapeKey;
-import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
-import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
 import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.ast.MetaDataNode;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
+import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.*;
@@ -44,6 +43,7 @@ import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 import com.twineworks.tweakflow.lang.scope.Symbol;
+import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.values.Arity1CallSite;
 import com.twineworks.tweakflow.lang.values.Arity2CallSite;
 import com.twineworks.tweakflow.lang.values.Arity3CallSite;
@@ -261,7 +261,7 @@ public class Runtime {
       this.runtime = runtime;
     }
 
-    private Runtime getRuntime(){
+    public Runtime getRuntime(){
       return runtime;
     }
 
@@ -447,12 +447,16 @@ public class Runtime {
     private final Runtime runtime;
     private final List<Cell> dependants;
     private final boolean isProvided;
+    private final VarDefNode varDefNode;
+    private final Type declaredType;
 
     private Var(Runtime runtime, Cell cell) {
 
       this.cell = cell;
       this.runtime = runtime;
-      this.isProvided = ((VarDefNode) cell.getSymbol().getNode()).isDeclaredProvided();
+      this.varDefNode= (VarDefNode) cell.getSymbol().getNode();
+      this.isProvided = varDefNode.isDeclaredProvided();
+      this.declaredType = varDefNode.getDeclaredType();
 
       RuntimeSet runtimeSet = runtime.getRuntimeSet();
       LocalMemorySpace unitSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace();
@@ -476,6 +480,10 @@ public class Runtime {
         }
       }
 
+    }
+
+    public Type getDeclaredType() {
+      return declaredType;
     }
 
     public boolean isProvided() {
@@ -673,16 +681,53 @@ public class Runtime {
     return context;
   }
 
+  public void updateVars(Runtime.Var[] vars, Value[] values){
+
+    Objects.requireNonNull(vars, "vars cannot be null");
+    Objects.requireNonNull(values, "values cannot be null");
+
+    if (vars.length != values.length){
+      throw new IllegalArgumentException("vars and values must have same length");
+    }
+
+    HashSet<Cell> dependants = new HashSet<>();
+    for (int i = 0; i < vars.length; i++) {
+      Var var = vars[i];
+      Objects.requireNonNull(var, "index: "+i+" var cannot be null");
+      Value value = values[i];
+      Objects.requireNonNull(value, "index: "+i+" value cannot be null, use Values.NIL instead");
+
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+
+      // if there is no change in value, there's no need to re-evaluate anything
+      Value existing = var.cell.getValue();
+      if (value.equals(existing)) continue;
+      var.cell.setValue(value.castTo(var.getDeclaredType()));
+      dependants.addAll(var.dependants);
+    }
+
+    for (Cell dependant : dependants) {
+      dependant.setDirty(true);
+    }
+
+    for (Cell dependant : dependants) {
+      Stack stack = new Stack();
+      stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+      Interpreter.evaluateCell(dependant, stack, getEvaluationContext());
+    }
+
+  }
+
   private void updateVar(Runtime.Var var, Value value){
 
     Objects.requireNonNull(value, "Value cannot be null, use Values.NIL instead");
-    if (!var.isProvided()) throw new IllegalStateException("Only vars declared as provided can change.");
+    if (!var.isProvided()) throw new UnsupportedOperationException("Only vars declared as provided can change.");
 
     // if there is no change in value, there's no need to re-evaluate anything
     Value existing = var.cell.getValue();
     if (value.equals(existing)) return;
 
-    var.cell.setValue(value);
+    var.cell.setValue(value.castTo(var.getDeclaredType()));
 
     for (Cell dependant : var.dependants) {
       dependant.setDirty(true);
