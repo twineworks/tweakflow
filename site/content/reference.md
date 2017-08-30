@@ -3948,12 +3948,12 @@ All operators an constructs are left-associative. When chaining operators of the
 | Boolean not                          | `!done`                                 |
 | Unary minus                          | `-(2+2)`                                |
 | Exponentiation                       | `2**10`                                 |
-| Multiplication                       | `2*2`                                   |
 | Floating point division              | `4/2`                                   |
 | Integer division                     | `4//2`                                  |
+| Multiplication                       | `2*2`                                   |
 | Division remainder                   | `length % 2`                            |
-| Addition                             | `4+2`                                   |
 | Subtraction                          | `4-2`                                   |
+| Addition                             | `4+2`                                   |
 | String concatenation                 | `"Hello ".."World"`                     |
 | Bitwise shift left                   | `1 << 8`                                |
 | Bitwise shift right, sign preserving | `255 >> 2`                              |
