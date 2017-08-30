@@ -236,7 +236,7 @@ final public class Parser extends TweakFlowParserBaseListener {
       parser.removeErrorListeners();
       parser.addErrorListener(errorListener);
 
-      TweakFlowParser.ReferenceContext reference = parser.reference();
+      TweakFlowParser.ReferenceContext reference = parser.standaloneReference().reference();
 
       if (parser.getNumberOfSyntaxErrors() > 0){
         long parseEnd = System.currentTimeMillis();
@@ -305,7 +305,7 @@ final public class Parser extends TweakFlowParserBaseListener {
       parser.removeErrorListeners();
       parser.addErrorListener(errorListener);
 
-      TweakFlowParser.ExpressionContext parseTree = parser.expression();
+      TweakFlowParser.ExpressionContext parseTree = parser.standaloneExpression().expression();
 
       if (parser.getNumberOfSyntaxErrors() > 0){
         long parseEnd = System.currentTimeMillis();
