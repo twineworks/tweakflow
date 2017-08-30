@@ -94,11 +94,10 @@ final public class Value implements ValueProvider {
 
   @Override
   public boolean equals(Object o) {
-    // maintain identity -> equality
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Value other = (Value) o;
-    return type.valueEquals(this, other);
+    return type.valueAndTypeEquals(this, other);
   }
 
   public boolean valueEquals(Value other) {
