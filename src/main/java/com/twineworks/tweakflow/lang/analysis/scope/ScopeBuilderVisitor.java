@@ -664,6 +664,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
           .setNode(caughtException)
           .setTarget(SymbolTarget.VAR);
       catchScope.getSymbols().put(caughtException.getSymbolName(), exceptionSymbol);
+      caughtException.setScope(catchScope);
     }
 
     VarDecNode caughtTrace = node.getCaughtTrace();
@@ -676,6 +677,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
           .setNode(caughtTrace)
           .setTarget(SymbolTarget.VAR);
       catchScope.getSymbols().put(caughtTrace.getSymbolName(), traceSymbol);
+      caughtTrace.setScope(catchScope);
     }
 
     scopes.push(catchScope);
