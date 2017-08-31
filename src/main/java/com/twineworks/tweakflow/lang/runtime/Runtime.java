@@ -30,6 +30,8 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.ast.MetaDataNode;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;
+import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.ast.expressions.NilNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
@@ -42,12 +44,12 @@ import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
+import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
+import com.twineworks.tweakflow.lang.parse.SourceInfo;
+import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.lang.values.Arity1CallSite;
-import com.twineworks.tweakflow.lang.values.Arity2CallSite;
-import com.twineworks.tweakflow.lang.values.Arity3CallSite;
-import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -323,6 +325,7 @@ public class Runtime {
     public Map<String, Node> getChildren() {
       return runtime.childrenOf(cell);
     }
+
   }
 
   public static class ModuleExports implements Name, DocMeta {
@@ -718,6 +721,80 @@ public class Runtime {
 
   }
 
+  public void updateVars(Object ... varsAndValuesInPairs){
+
+    Objects.requireNonNull(varsAndValuesInPairs, "vars cannot be null");
+
+    if (varsAndValuesInPairs.length % 2 != 0){
+      throw new IllegalArgumentException("vars and values must come in pairs");
+    }
+
+    HashSet<Cell> dependants = new HashSet<>();
+    for (int i = 0; i < varsAndValuesInPairs.length; i+=2) {
+      Var var = (Var) varsAndValuesInPairs[i];
+      Objects.requireNonNull(var, "index: "+i+" var cannot be null");
+      Value value = (Value) varsAndValuesInPairs[i+1];
+      Objects.requireNonNull(value, "index: "+(i+1)+" value cannot be null, use Values.NIL instead");
+
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+
+      // if there is no change in value, there's no need to re-evaluate anything
+      Value existing = var.cell.getValue();
+      if (value.equals(existing)) continue;
+      var.cell.setValue(value.castTo(var.getDeclaredType()));
+      dependants.addAll(var.dependants);
+    }
+
+    for (Cell dependant : dependants) {
+      dependant.setDirty(true);
+    }
+
+    for (Cell dependant : dependants) {
+      Stack stack = new Stack();
+      stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+      Interpreter.evaluateCell(dependant, stack, getEvaluationContext());
+    }
+
+  }
+
+  public void updateVars(List<Runtime.Var> vars, List<Value> values){
+
+    Objects.requireNonNull(vars, "vars cannot be null");
+    Objects.requireNonNull(values, "values cannot be null");
+
+    if (vars.size() != values.size()){
+      throw new IllegalArgumentException("vars and values must have same size");
+    }
+
+    HashSet<Cell> dependants = new HashSet<>();
+    for (int i = 0; i < vars.size(); i++) {
+      Var var = vars.get(i);
+      Objects.requireNonNull(var, "index: "+i+" var cannot be null");
+      Value value = values.get(i);
+      Objects.requireNonNull(value, "index: "+i+" value cannot be null, use Values.NIL instead");
+
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+
+      // if there is no change in value, there's no need to re-evaluate anything
+      Value existing = var.cell.getValue();
+      if (value.equals(existing)) continue;
+      var.cell.setValue(value.castTo(var.getDeclaredType()));
+      dependants.addAll(var.dependants);
+    }
+
+    for (Cell dependant : dependants) {
+      dependant.setDirty(true);
+    }
+
+    for (Cell dependant : dependants) {
+      Stack stack = new Stack();
+      stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+      Interpreter.evaluateCell(dependant, stack, getEvaluationContext());
+    }
+
+  }
+
+
   private void updateVar(Runtime.Var var, Value value){
 
     Objects.requireNonNull(value, "Value cannot be null, use Values.NIL instead");
@@ -740,5 +817,15 @@ public class Runtime {
     }
 
   }
+
+  public CallContext createCallContext(){
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("<none>", "").build().getParseUnit("<none>");
+    ExpressionNode stubNode = new NilNode().setSourceInfo(new SourceInfo(parseUnit, 0, 0, 0, 0));
+
+    Stack stack = new Stack();
+    stack.push(new StackEntry(stubNode, new Cell().setValue(Values.NIL), Collections.emptyMap()));
+    return new CallContext(stack, getEvaluationContext());
+  }
+
 
 }
