@@ -29,7 +29,7 @@ Creating values The Values class provides static singleton members for certain c
       
       <guid>/getting-started.html</guid>
       <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
-Starting a tweakflow REPL Download the latest release jar. And launch it using:
+Starting a tweakflow REPL [Download](https://github.com/twineworks/tweakflow/releases/latest the latest release jar. And launch it using:
 java -jar tweakflow-0.0.4.jar itf
 The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
 You should see a prompt similar to this:</description>
