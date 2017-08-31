@@ -7,23 +7,27 @@ menu:
   main:
     - Name: "Getting started"
       URL: "/getting-started.html"
-      Weight: -600
+      Weight: -700
 
     - Name: "Reference"
       URL: "/reference.html"
-      Weight: -500
+      Weight: -600
 
     - Name: "Standard library"
       URL: "/modules/std.html"
-      Weight: -400
+      Weight: -500
 
     # - Name: "Tools"
     #   URL: "/tools.html"
-    #   Weight: -300
-    #
-    # - Name: "Embedding"
-    #   URL: "/embedding.html"
-    #   Weight: -200
+    #   Weight: -400
+
+    - Name: "Embedding"
+      URL: "/embedding.html"
+      Weight: -300
+
+    - Name: "Javadoc"
+      URL: "/apidocs/index.html"
+      Weight: -200
 
     - Name: "Source"
       URL: "https://github.com/twineworks/tweakflow/"
@@ -34,4 +38,4 @@ menu:
 params:
   indexHeadLine: "index headline parameter"
   # shortcode {{< releaseTag >}}
-  releaseTag: "0.0.3"
+  releaseTag: "0.0.4"
