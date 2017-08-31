@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.embedding;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.util.LangUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
@@ -47,6 +48,28 @@ public class EvalExpressionInEmptyScope {
         "} a .. ' ' .. b";
 
     assertThat(TweakFlow.evaluate(code)).isEqualTo(Values.make("hello world"));
+
+  }
+
+  @Test
+  public void evaluates_embedded_expression() throws Exception {
+
+    String exp = "if (first_name && last_name) then \n" +
+        "'Dear ' .. first_name .. ' '.. last_name\n" +
+        "else\n" +
+        "'Dear customer'";
+    // make sure exp parses as an expression
+    assertThat(TweakFlow.parse(exp).isSuccess()).isTrue();
+
+    String firstName = "Mary";
+    String lastName = "Poppins";
+
+    String code = "let {" +
+        "  first_name: \""+ LangUtil.escapeString(firstName)+"\";" +
+        "  last_name: \""+ LangUtil.escapeString(lastName)+"\";" +
+        "} "+exp;
+
+    assertThat(TweakFlow.evaluate(code)).isEqualTo(Values.make("Dear Mary Poppins"));
 
   }
 

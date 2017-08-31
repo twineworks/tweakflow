@@ -33,6 +33,8 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.assertj.core.api.StrictAssertions.fail;
 
@@ -109,15 +111,22 @@ public class EvalProvidedVars {
 
     // initially
     // a: 0, b: 0
+    // use variant 1
     runtime.updateVars(providedVars, new Value[] {Values.make(0), Values.make(0)});
     assertThat(c.getValue()).isEqualTo(Values.make(0));
 
     // a: 1, b: 1
-    runtime.updateVars(providedVars, new Value[] {Values.make(1), Values.make(1)});
+    // use variant 2
+    runtime.updateVars(
+        a, Values.make(1),
+        b, Values.make(1));
     assertThat(c.getValue()).isEqualTo(Values.make(1L));
 
     // a: 2, b: 2
-    runtime.updateVars(providedVars, new Value[] {Values.make(2), Values.make(2)});
+    // use variant 3
+    runtime.updateVars(
+        Arrays.asList(a, b),
+        Arrays.asList(Values.make(2), Values.make(2)));
     assertThat(c.getValue()).isEqualTo(Values.make(4L));
 
     // a:3, b: 3
