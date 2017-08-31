@@ -25,9 +25,11 @@
 package com.twineworks.tweakflow.examples;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
+import com.twineworks.tweakflow.lang.values.Arity1CallSite;
 import com.twineworks.tweakflow.lang.values.DateTimeValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -64,17 +66,31 @@ public class ModuleEvaluation {
 
     // compile the module
     Runtime.Module m = compileModule(module);
-    // get a handle on time_format.format
+    // get a handle on time_format.format which evaluated to a function
     Runtime.Var format = m.getLibrary("time_format").getVar("format");
 
     // evaluate the module so vars get evaluated
     m.evaluate();
 
+    // calling a function: variant 1, use var call
     // get now() as per local timezone
     Value now = Values.make(new DateTimeValue(ZonedDateTime.now()));
 
     // print the result of calling format with now as argument
-    System.out.println(format.call(now).string());
+    System.out.println("var call: "+format.call(now).string());
+
+    // calling a function: variant 2, use var call site
+    // call format in a loop using a call site
+    Arity1CallSite callSite = format.arity1CallSite();
+
+    for(int i=0;i<3;i++){
+      System.out.println("var callsite: "+callSite.call(now).string());
+    }
+
+    // calling a function: variant 3, use runtime call context
+    CallContext callContext = m.getRuntime().createCallContext();
+    System.out.println("runtime call context: "+ callContext.call(format.getValue(), now).string());
+
 
   }
 
