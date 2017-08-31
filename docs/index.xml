@@ -11,12 +11,15 @@
     
     
     <item>
-      <title>Embedding</title>
+      <title>Embedding Guide</title>
       <link>/embedding.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/embedding.html</guid>
-      <description>Embedding Guide TODO</description>
+      <description>Requirements Tweakflow requires Java 8 or later.
+Getting tweakflow You can get the tweakflow jar from the releases page or from maven central:
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.0.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Tweakflow values Whenever the application is exchanging data with tweakflow code, it does so through immutable value objects of class Value. Variable values, function parameters, function return values, everything is a value in tweakflow.
+Creating values The Values class provides static singleton members for certain constants and factory methods for creating values of all types.</description>
     </item>
     
     <item>
@@ -27,7 +30,7 @@
       <guid>/getting-started.html</guid>
       <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 Starting a tweakflow REPL Download the latest release jar. And launch it using:
-java -jar tweakflow-version.jar itf
+java -jar tweakflow-0.0.4.jar itf
 The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
 You should see a prompt similar to this:</description>
     </item>
