@@ -79,6 +79,16 @@ public class TweakFlow {
     return new Runtime(runtimeSet, debugHandler);
   }
 
+  public static ParseResult parse(String exp){
+    ParseUnit parseUnit = new MemoryLocation.Builder()
+        .add("<eval>", exp)
+        .build()
+        .getParseUnit("<eval>");
+
+    return new Parser(parseUnit).parseExpression();
+
+  }
+
   public static Value evaluate(String exp){
     return evaluate(exp, true);
   }
