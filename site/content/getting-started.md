@@ -8,7 +8,7 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 ## Starting a tweakflow REPL
 
-[Download](https://github.com/twineworks/tweakflow/releases/latest the latest release jar. And launch it using:
+[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. And launch it using:
 
 `java -jar tweakflow-{{< releaseTag >}}.jar itf`
 
