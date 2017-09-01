@@ -25,71 +25,96 @@
 package com.twineworks.tweakflow.examples;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
-import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Arity1CallSite;
-import com.twineworks.tweakflow.lang.values.DateTimeValue;
-import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
-import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ModuleEvaluation {
 
-  private static Runtime.Module compileModule(String module){
+  private static Runtime compile(Map<String, String> modules){
 
-    // place standard library and user code module on load path
+    // create a memory location with all modules
+    MemoryLocation.Builder memLocationBuilder = new MemoryLocation.Builder()
+        .allowNativeFunctions(false);
+
+    for (String name : modules.keySet()) {
+      memLocationBuilder.add(name, modules.get(name));
+    }
+
+    MemoryLocation memoryLocation = memLocationBuilder.build();
+
+    // place standard library and user code on load path
     LoadPath loadPath = new LoadPath.Builder()
         .addStdLocation()
-        .add(new MemoryLocation.Builder()
-            .allowNativeFunctions(false)
-            .add("<userModule>", module)
-            .build())
+        .add(memoryLocation)
         .build();
 
-    // compile the module
-    Runtime runtime = TweakFlow.compile(loadPath, "<userModule>");
-    // get user module from runtime
-    return runtime
-        .getModules().get(runtime.unitKey("<userModule>"));
+    // compile the modules
+    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()));
+
   }
 
   public static void main(String[] args) {
 
-    // a module where time_format.format is a formatting function
-    String module = "import time from 'std'\n" +
-        "library time_format {\n" +
-        "  format: time.formatter(\"cccc, d MMMM uuuu HH:mm:ss 'in' VV\")\n" +
+    // a utility module
+    String acmeModule = "import regex, strings from 'std'\n" +
+        "export library product_codes {\n" +
+        "  normalize: (string pn) ->\n" +
+        "  ->> (pn)\n" +
+        "      # remove whitespace\n" +
+        "      (x) -> regex.replacing('\\s', \"\")(x),\n" +
+        "      # remove any dashes\n" +
+        "      (x) -> strings.replace(x, \"-\", \"\"),\n" +
+        "      # split to a list of blocks of up to 4 chars\n" +
+        "      (x) -> regex.splitting('(?<=\\G.{4})')(x),\n" +
+        "      # place dashes between blocks converting to single string\n" +
+        "      (xs) -> strings.join(xs, \"-\"),\n" +
+        "      # upper case all characters\n" +
+        "      strings.upper_case" +
         "}";
 
-    // compile the module
-    Runtime.Module m = compileModule(module);
-    // get a handle on time_format.format which evaluated to a function
-    Runtime.Var format = m.getLibrary("time_format").getVar("format");
+    // the main module
+    // imports from the utility module
+    // its main.main variable is a function that converts product codes into a standard format
+    String mainModule = "import product_codes from 'acme'\n" +
+        "library main {\n" +
+        "  main: (string x) -> product_codes.normalize(x)\n" +
+        "}";
 
-    // evaluate the module so vars get evaluated
-    m.evaluate();
+    // compile the modules
+    HashMap<String, String> modules = new HashMap<>();
+    modules.put("acme", acmeModule);
+    modules.put("main", mainModule);
 
-    // calling a function: variant 1, use var call
-    // get now() as per local timezone
-    Value now = Values.make(new DateTimeValue(ZonedDateTime.now()));
+    Runtime runtime = compile(modules);
 
-    // print the result of calling format with now as argument
-    System.out.println("var call: "+format.call(now).string());
+    // get a handle to main.main
+    Runtime.Module module = runtime.getModules().get(runtime.unitKey("main"));
+    Runtime.Var main = module.getLibrary("main").getVar("main");
 
-    // calling a function: variant 2, use var call site
-    // call format in a loop using a call site
-    Arity1CallSite callSite = format.arity1CallSite();
+    // evaluate, so the function becomes available
+    main.evaluate();
 
-    for(int i=0;i<3;i++){
-      System.out.println("var callsite: "+callSite.call(now).string());
+    // get a callsite to the function
+    Arity1CallSite f = main.arity1CallSite();
+
+    // and keep calling it to normalize product codes
+    // UUIDs stand in for simple to generate 'product codes'
+
+    for (int i=0;i<100;i++) {
+      String code = UUID.randomUUID().toString().substring(0, 12);
+      System.out.println(code +" -> "+f.call(Values.make(code)));
     }
 
-    // calling a function: variant 3, use runtime call context
-    CallContext callContext = m.getRuntime().createCallContext();
-    System.out.println("runtime call context: "+ callContext.call(format.getValue(), now).string());
+
+
 
 
   }
