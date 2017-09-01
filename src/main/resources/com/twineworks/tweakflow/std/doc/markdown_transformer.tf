@@ -55,18 +55,12 @@ library transform {
     '### '..x[:name].."\n\n"
     ..doc_fragment(x)
     ..meta_fragment(x)
-    # ..source_fragment(x)
 
   doc_fragment: (x) -> string
     (if x[:doc] != nil then x[:doc].."\n\n" else "")
 
   meta_fragment: (x) -> string
-    (if x[:meta] != nil then "`````ruby\n"..inspect(x[:meta]).."\n`````".."\n\n" else "")
-
-  source_fragment: (x) -> string
-    "<div class=\"source\">\n"
-    .."`````\n"..x[:source_code].."\n`````".."\n"
-    .."</div>\n\n"
+    (if x[:meta] != nil then "`````tweakflow\n"..inspect(x[:meta]).."\n`````".."\n\n" else "")
 
 
 }
