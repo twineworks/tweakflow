@@ -30,7 +30,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
 
     <organization>
         <name>Twineworks GmbH</name>
