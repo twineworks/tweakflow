@@ -85,7 +85,7 @@ class Doc {
     varDict = varDict.put("doc", Interpreter.evaluateDocExpression(node));
     varDict = varDict.put("meta", Interpreter.evaluateMetaExpression(node));
     varDict = varDict.put("name", Values.make(node.getSymbolName()));
-    varDict = varDict.put("source_code", Values.make(node.getSourceInfo().getSourceCode()));
+    varDict = varDict.put("expression", Values.make(node.getValueExpression().getSourceInfo().getSourceCode()));
     return Values.make(varDict);
 
   }
