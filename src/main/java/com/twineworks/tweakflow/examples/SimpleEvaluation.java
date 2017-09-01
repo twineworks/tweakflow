@@ -25,13 +25,24 @@
 package com.twineworks.tweakflow.examples;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 
 public class SimpleEvaluation {
 
   public static void main(String[] args) {
-    System.out.println(
-        TweakFlow.evaluate("1+2").toString()
-    );
+
+    String[] expressions = {
+        "1+2",
+        "'Hello' .. ' '.. 'World!'",
+        "let {a: 1; b: 2; c: 3} a+b+c",
+        "(x) -> x*x",
+        "((x) -> x*x)(3)",
+        "for i <- [1, 2, 3], i*i"
+    };
+
+    for (String expression : expressions) {
+      System.out.println(expression+"\n=\n"+ ValueInspector.inspect(TweakFlow.evaluate(expression))+"\n");
+    }
   }
 
 }
