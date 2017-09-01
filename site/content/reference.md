@@ -744,9 +744,9 @@ The same module with a full set of annotations at the module, library, and varia
 ```tweakflow
 # module foo.tf
 doc
-​~~~
+~~~
 This is documentation at the module level.
-​~~~
+~~~
 meta {
   :title       "foo"
   :description "Description of the module"
@@ -755,10 +755,8 @@ meta {
 module
 
 # library bar
-doc
-​~~~
-This is documentation for library bar.
-​~~~
+doc 'This is documentation for library bar.'
+
 meta {
   :author "John Doe et al."
   :since  "2.3"
@@ -766,15 +764,14 @@ meta {
 
 library bar {
 
-# function baz
-doc
-​~~~
-This is documentation for function baz.
-​~~~
+  # function baz
+  doc 'This is documentation for function baz.'
+
   meta {
     :author "John Doe"
     :date 2017-03-12T
   }
+
   function baz: (x) -> x*x
 }
 ```
@@ -1429,7 +1426,7 @@ The `any` type is a type is not concrete type of its own, but it is used to indi
 
 ## Expressions
 
-Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.
+Tweakflow expressions evaluate to values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.
 
 ### Nil
 
@@ -3083,7 +3080,14 @@ The operand is cast to boolean and a negation is performed resulting in another 
 `!nil` evaluates to `true`
 
 ```tweakflow
+> !false
+true
+
+> !true
+false
+
 > !"foo"
+false
 ```
 
 #### Boolean and

@@ -9,34 +9,28 @@ menu:
       URL: "/getting-started.html"
       Weight: -700
 
-    - Name: "Reference"
-      URL: "/reference.html"
+    - Name: "Tools"
+      URL: "/tools.html"
       Weight: -600
-
-    - Name: "Standard library"
-      URL: "/modules/std.html"
-      Weight: -500
-
-    # - Name: "Tools"
-    #   URL: "/tools.html"
-    #   Weight: -400
 
     - Name: "Embedding"
       URL: "/embedding.html"
-      Weight: -300
+      Weight: -500
 
-    - Name: "Javadoc"
-      URL: "/apidocs/index.html"
-      Weight: -200
+    - Name: "Standard library"
+      URL: "/modules/std.html"
+      Weight: -400
+
+    - Name: "Language reference"
+      URL: "/reference.html"
+      Weight: -300
 
     - Name: "Source"
       URL: "https://github.com/twineworks/tweakflow/"
-      Weight: -100
-
-
+      Weight: -200
 
 params:
   # shortcode {{< gitRef >}}
-  gitRef: "releases/0.0.4"
+  gitRef: "master"
   # shortcode {{< version >}}
   version: "0.0.4"

@@ -113,7 +113,7 @@ TweakFlow.evaluate("1+2"); // returns 3
 ```
 The scope is empty, which means there is no access to any modules including the standard library. The expression must be entirely self-contained.
 
-To give the expression some context, but not go all the way to maintaining a complete runtime, you might consider embedding a user expression into a let construct that defines some variables.
+To give the expression some context, but not go all the way to maintaining a complete runtime, an application might embed a user expression into a let construct that defines some variables.
 
 The following snippet puts variables `first_name` and `last_name` into scope. The expression is supposed to evaluate to a greeting line.
 ```java
@@ -123,8 +123,7 @@ String exp = "if (first_name && last_name) then \n" +
     "else\n" +
     "'Dear customer'";
 
-// make sure exp parses as an expression
-// only then is it safe to embed
+// make sure exp parses as an expression first
 ParseResult parseResult = TweakFlow.parse(exp);
 
 if (parseResult.isSuccess()){
@@ -132,7 +131,7 @@ if (parseResult.isSuccess()){
   String firstName = "Mary";
   String lastName = "Poppins";
 
-  // generate the full expression to evaluate
+  // construct the full expression to evaluate
   String code = "let {" +
       "  first_name: \""+ LangUtil.escapeString(firstName)+"\";" +
       "  last_name: \""+ LangUtil.escapeString(lastName)+"\";" +
@@ -141,12 +140,12 @@ if (parseResult.isSuccess()){
   TweakFlow.evaluate(code); // returns "Dear Mary Poppins"
 }
 ```
-
-See this [test file](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScope.java) for working examples of expression evaluation.
+### Examples
+See these [tests](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScope.java) for working examples of expression evaluation.
 
 ## Evaluating a set of variables
 
-If the application use-case is to have users define a table of variables, then the [VarTable](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/util/VarTable.java) class helps implementing that efficiently. It creates an in-memory module with a library containing user variables, which helps building a runtime, and relating any compilation errors to offending variables.
+If the application's use-case is to have users define a table of variables, then the [VarTable](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/util/VarTable.java) helper class supports implementing it efficiently. It creates an in-memory module with a library containing user variables, compiles to a runtime, and relates any compilation error to the offending variable. The application can provide a prologue with any imports and aliases it wants to be available in scope.
 
 ```java
 VarTable table = new VarTable.Builder()
@@ -167,9 +166,18 @@ VarTable table = new VarTable.Builder()
 Runtime runtime = table.compile();
 ```
 
-See the corresponding [test file](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java) for samples demonstrating usage and error handling.
+### Examples
 
-The [demo application](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java) uses a var table to ask the formulas for the circumference and area of a rectangle, and then superficially verifying it. A transcript of an application invocation might look like:
+See the class [test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java) for examples  demonstrating usage and error handling.
+
+There is a [demo application](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java) which uses a var table. It asks the user for some expressions and verifies them.
+
+You can run it using:
+```bash
+java -cp tweakflow-{{< version >}}.jar com.twineworks.tweakflow.examples.VarTableEvaluation
+```
+
+An invocation might look like:
 
 ```text
 Given a rectangle with sides of length a and b.
@@ -232,7 +240,7 @@ Runtime runtime = TweakFlow.compile(loadPath, "user_module.tf");
 To interact with a compiled runtime:
 
   - Supply values for any variables declared as `provided`.
-  - Evaluate everything, or selectively just the modules, libraries, or vars the application is interested in.
+  - Evaluate everything, or selectively just specific modules, libraries, or vars.
 
 ```java
 // get the module out of the runtime
@@ -256,15 +264,7 @@ Value userGreeting = greeting.getValue();
 
 The application can continue updating provided variables and any dependent variables are re-evaluated automatically.
 
-```java
-for (Customer c : myCustomerCollection){
-  firstName.update(Values.make(c.getFirstName()));
-  lastName.update(Values.make(c.getLastName()));
-  String userGreeting = greeting.getValue().string();
-}
-```
-
-Every variable update triggers a re-evaluation of dependent variables. The runtime object has `updateVars` methods that atomically update multiple variables at once, which reduces unnecessary evaluation overhead, and avoids inconsistencies.
+Every variable update triggers a re-evaluation of dependent variables. The runtime object has `updateVars` methods that atomically update multiple variables at once, which reduces unnecessary evaluation overhead, and avoids temporary inconsistencies.
 
 ```java
 for (Customer c : myCustomerCollection){
@@ -276,22 +276,22 @@ for (Customer c : myCustomerCollection){
 }
 ```
 
-### Calling user functions
+### Examples
+The [ModuleEvaluation](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java) sample compiles and calls into a set of modules.
+
+This [unit test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVars.java) demonstrates supplying values for provided variables.
+
+## Calling user functions
 Users can provide tweakflow functions to the host application. The application can call them through the runtime using `call` on a runtime var object that evaluated to a function.
 
 ```java
-Runtime.Module m = compileModule(module);
 // get a handle on time_format.format which evaluated to a function
-// that accepts a datetime and outputs a string
-Runtime.Var format = m.getLibrary("time_format").getVar("format");
-
-// evaluate the module so vars get evaluated
-m.evaluate();
+Runtime.Var format = module.getLibrary("time_format").getVar("format");
 
 // get now() as per local timezone
 Value now = Values.make(new DateTimeValue(ZonedDateTime.now()));
 
-// print the result of calling format with now as argument
+// result of calling format with now as argument
 String formattedDate = format.call(now).string();
 ```
 
@@ -301,26 +301,33 @@ In case the application wants to call a function in a tight loop, it is more eff
 // some constant overhead creating the callsite
 Arity1CallSite callSite = format.arity1CallSite();
 
-for(int i=0;i<3;i++){
+for(int i=0;i<1000;i++){
   // less overhead per call when performing multiple calls
   System.out.println("var callsite: "+callSite.call(now).string());
 }
 ```
 
-If the function value is not the current value of a variable, but has been obtained by the application in some other way, the application must obtain a call context from the runtime using `createCallContext`. This is necessary if the function value was a return value, or if the function value was constructed programatically.
+If the function value is not the current value of a variable, but has been obtained by the application in some other way, there is no var handle to relate the call back into the runtime. In these cases the application can obtain a call context from the runtime using `createCallContext` to call into any function value, regardless of its source.
 
 ```java
+Value f = getSomeFunctionValue();
 // calling a function: variant 3, use runtime call context
-CallContext callContext = m.getRuntime().createCallContext();
-System.out.println("runtime call context: "+ callContext.call(format.getValue(), now).string());
+CallContext callContext = runtime.createCallContext();
+System.out.println("runtime call context: "+ callContext.call(f, now));
 ```
 
-The [ModuleEvaluation](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java) sample contains demonstrations of all above techniques.
+### Examples
+The [CallingFunctions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/CallingFunctions.java) sample contains demonstrations of all above techniques.
 
 ## Error handling
-Tweakflow throws [LangExceptions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java) whenever something goes wrong. There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don't hold up. Referencing undefined variables, or defining variables more than once are common compilation error. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax. An exception holds an [error code](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java) and a message describing the error condition. You can get the value that was thrown by calling `toErrorValue`. Calling `getDigestMessage` gets you a detailed error message that includes stack trace information. The exception usually contains a [SourceInfo](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java) object which gives the exact location of the error condition. Note however that source info may be `null`, in case the error happens in a context where no source information is available.
+Tweakflow throws [LangExceptions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java) whenever something goes wrong.
 
-See these [test files](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding) for examples of handling errors.
+There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don't hold up. Referencing undefined variables, or defining variables more than once are common compilation error. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax.
+
+An exception holds an [error code](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java) and a message describing the error condition. You can get the value that was thrown by calling `toErrorValue`. Calling `getDigestMessage` gets you a detailed error message that includes stack trace information. The exception usually contains a [SourceInfo](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java) object which gives the exact location of the error condition. Note however that source info may be `null`, in case the error happens in a context where no source information is available.
+
+### Examples
+See these [test files](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding) for examples of handling errors. Each test file contains specific tests for error handling.
 
 
 

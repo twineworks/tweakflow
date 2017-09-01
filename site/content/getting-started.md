@@ -8,7 +8,16 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 ## Starting a tweakflow REPL
 
-[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. And launch it using:
+[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. You can also obtain it from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/{{< version >}}/). Or use the following dependency:
+
+```xml
+<dependency>
+    <groupId>com.twineworks</groupId>
+    <artifactId>tweakflow</artifactId>
+    <version>{{< version >}}</version>
+</dependency>
+```
+Launch the interactive REPL using:
 
 `java -jar tweakflow-{{< version >}}.jar itf`
 
@@ -26,11 +35,11 @@ The prompt tells you which module context you are in. In our case it is the [std
 
 ## Evaluating expressions
 
-You can now type in expressions, and the REPL will evaluate them, and print the results.
+You can now type in expressions, and the REPL will evaluate them, and print the results. If you embed tweakflow in your application, you can empower your users to  use these kinds of expressions to communicate values back to your app.
 
 Evaluate some number expressions using conventional operators:
 
-```ruby
+```tweakflow
 > 1+3
 4
 > 2*8
@@ -39,7 +48,7 @@ Evaluate some number expressions using conventional operators:
 
 Evaluate boolean expressions:
 
-```ruby
+```tweakflow
 > 1 < 5
 true
 > 2*3 == 6
@@ -50,7 +59,7 @@ false
 
 Evaluate strings and use the string concatenation operator:
 
-```ruby
+```tweakflow
 > "Hello World!"
 "Hello World!"
 > "Hello " .. "World!"
@@ -59,7 +68,7 @@ Evaluate strings and use the string concatenation operator:
 
 Create some lists, and nest them too:
 
-```ruby
+```tweakflow
 > [1, 2, "hello"]
 [1, 2, "hello"]
 > [[1, 2], ["one", "two"]]
@@ -68,7 +77,7 @@ Create some lists, and nest them too:
 
 Create a dictionary:
 
-```ruby
+```tweakflow
 > {:one 1, :two 2}
 {
   :one 1,
@@ -78,14 +87,14 @@ Create a dictionary:
 
 Create a datetime value. If you don't need supply the time, it defaults to midnight UTC time.
 
-```ruby
+```tweakflow
 > 2017-01-23T
 2017-01-23T00:00:00Z@`UTC`
 ```
 
 You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:
 
-```ruby
+```tweakflow
 > 2017-01-23T18:23:11+01:00@`Europe/Berlin`
 2017-01-23T18:23:11+01:00@`Europe/Berlin`
 ```
@@ -94,7 +103,7 @@ You can also fully specify a zoned datetime value, complete with date, time, tim
 
 Let's call some functions from the standard library:
 
-```ruby
+```tweakflow
 > strings.length("foo")
 3
 > data.unique([1,1,2,3,3,2,1,2,3])
@@ -105,14 +114,14 @@ Let's call some functions from the standard library:
 
 You were using positional arguments. Let's add 100 days to a date, and see where we end up. The function [add_period](/modules/std.html#add-period) takes multiple parameters. Let's just supply the start date and days to add using named arguments, and leave the other parameters at their default values.
 
-```ruby
+```tweakflow
 > time.add_period(start: 2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@`UTC`
 ```
 
 You can even start with positional arguments, and switch to named arguments later in the call.
 
-```ruby
+```tweakflow
 > time.add_period(2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@`UTC`
 ```
@@ -121,7 +130,7 @@ You can even start with positional arguments, and switch to named arguments late
 
 The REPL allows you to define ad-hoc variables visible to all expressions in the session. Let's use that ability to assign a name to a function.
 
-```ruby
+```tweakflow
 > square: (x) -> x*x
 function
 > square(5)
@@ -130,7 +139,7 @@ function
 
 You can assign any expression to a variable, and the tweakflow REPL will re-evaluate the expression value each time you type in a new definition.
 
-```ruby
+```tweakflow
 > x: 10
 10
 > y: 2
@@ -145,7 +154,7 @@ You can assign any expression to a variable, and the tweakflow REPL will re-eval
 
 You can check your session variable definitions using `\v`.
 
-```ruby
+```tweakflow
 > \v
 # 4 interactive variables defined
 square: (x) -> x*x
@@ -156,7 +165,7 @@ z: x*y
 
 You can inspect what your session variable values are using `\i`.
 
-```ruby
+```tweakflow
 > \i
 # interactive section
   square: function
@@ -172,7 +181,7 @@ The REPL defines a special variable `$` that it maintains. It is defined as the 
 
 You can include the values of variables in double quoted strings using the `#{varname}` escape sequence.
 
-```ruby
+```tweakflow
 > name: "Joe"
 "Joe"
 > "Hello #{name}"
@@ -185,7 +194,7 @@ There are other escape sequences like `\n` for newlines and `\t` for tabs.
 
 You can define helper variables scoped to an expression using let:
 
-```ruby
+```tweakflow
 > let {sq: (x) -> x*x; five: 5} sq(five)
 25
 ```
@@ -194,7 +203,7 @@ Tweakflow code can be formatted across multiple lines. But the REPL interprets h
 
 If you want to format your expression using multiple lines, you can enter multi-line edit mode using `\e` and the REPL will accept multiple lines as part of a single expression until you enter `\e` again. The REPL indicates you are in multi-line mode by placing a `*` in the prompt. You can rewrite the above example in multi-line mode on the REPL like this:
 
-```ruby
+```tweakflow
 > \e
 let {
   sq: (x) -> x*x
@@ -209,7 +218,7 @@ sq(five)
 
 Every value in tweakflow has an associated type. You can determine the types using `typeof`:
 
-```ruby
+```tweakflow
 > typeof "Hello"
 "string"
 > typeof 2.3
@@ -222,7 +231,7 @@ Every value in tweakflow has an associated type. You can determine the types usi
 
 You can convert between many types automatically. Tweakflow is very conservative about automatic conversion. If there is a greater loss of information than can be expected from the nature of the types, it throws an error.
 
-```ruby
+```tweakflow
 > "foo" as boolean
 true
 > 2.3 as string
@@ -246,7 +255,7 @@ Functions are values. You can assign them to variables and pass them around. In 
 
 Functions are written as `(parameter list) -> return value`. Let's define and call a simple function.
 
-```ruby
+```tweakflow
 > next: (x) -> x+1
 function
 > next(2)
@@ -255,21 +264,21 @@ function
 
 The [data.map](/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
 
-```ruby
+```tweakflow
 > data.map([1, 0, 3, -2], next)
 [2, 1, 4, -1]
 ```
 
 You can write functions inline without naming them. Functions are just values, like strings and numbers.
 
-```ruby
+```tweakflow
 > data.map([1, 0, 3, -2], (x) -> x*x)
 [1, 0, 9, 4]
 ```
 
-Functions can also makes functions that are parameterized to your specifications. The next example asks the standard library to give you a [formatter](/modules/std.html#formatter-1) function to convert numbers to strings.
+Functions can also make functions that are parameterized to your specifications. The next example asks the standard library to give you a [formatter](/modules/std.html#formatter-1) function to convert numbers to strings.
 
-```ruby
+```tweakflow
 > f: math.formatter('0.00', rounding_mode: 'half_up')
 function
 > f(2)
@@ -286,7 +295,7 @@ function
 
 Tweakflow supports a standard `if` construct to perform conditional calculations.
 
-```ruby
+```tweakflow
 > parity: (x) -> if x % 2 == 0 then "even" else "odd"
 function
 > parity(3)
@@ -295,11 +304,15 @@ function
 "even"
 ```
 
-The syntax is: `if condition then then_expression else else_expression`. Both the `then_expression` and the `else_expression` are mandatory, but the `then` and `else` keywords are optional, allowing you to write nested conditions that look like a sequence of tests.
+The syntax is:
+```text
+if condition then then_expression else else_expression
+```
+Both the `then_expression` and the `else_expression` are mandatory, but the `then` and `else` keywords are optional, allowing you to write nested conditions that look like a sequence of tests.
 
 Define a function that returns the sign of a number as `-1`, `0`, or `1` if the number is negative, zero, or positive:
 
-```ruby
+```tweakflow
 > \e
 sgn: (x) ->
   if x > 0 then 1
@@ -321,7 +334,7 @@ Tweakflow supports list comprehensions using `for` synax, allowing you to genera
 
 Create a list of coordinates from given axes:
 
-```ruby
+```tweakflow
 > \e
 for
   x <- ["a", "b", "c"],
@@ -333,7 +346,7 @@ for
 
 Variable definitions create helper variables. They are in scope for all subsequent expressions in the list comprehension.
 
-```ruby
+```tweakflow
 > \e
 for
   x  <- data.range(1, 3),
@@ -348,7 +361,7 @@ Free expressions act as filters. If they evaluate to boolean true, the current e
 
 Create a list of [pythagorean triples](https://en.wikipedia.org/wiki/Pythagorean_triple) trying sides up to the size of 15.
 
-```ruby
+```tweakflow
 > \e
 for
   a <- data.range(1, 15),
@@ -368,7 +381,7 @@ Tweakflow supports matching on value, type and structure of an input value, addi
 
 The next example matches on partial structure. The function `pairs` transforms a list of the form `[a, b, c, d, …]` into a list of pairs `[[a, b], [c, d], ...]`. If the list has an odd number of items, the last item is discarded. If the argument is not a list, the function returns `nil`.
 
-```ruby
+```tweakflow
 > \e
 pairs: (xs) ->
   match xs
@@ -392,59 +405,53 @@ nil
 
 Tweakflow supports throwing and catching errors within expressions. You can `throw` any value you like to represent an error, and if that happens within a `try/catch` block, the block evaluates to the `catch` expression.
 
-The function `ensure_weekend` accepts a date time value `x`, and returns `x` if it falls within a Saturday or Sunday. It throws an error otherwise. The REPL logs that an error has been thrown and mentions the thrown error as `value`.
+The function `ensure_even` accepts a long value `x`, and returns `x` if it is even. It throws an error otherwise. The REPL logs that an error has been thrown and mentions the thrown error as `value`.
 
-```ruby
+```tweakflow
 > \e
-ensure_weekend: (datetime x) ->
-  if time.day_of_week(x) >= 6
+ensure_even: (long x) ->
+  if x % 2 == 0
     x
   else
-    let {
-      day: time.formatter('cccc')(x)
-    }
     throw {
-      :message "x must be a weekend day, but is: #{day}"
-      :day_of_week day
+      :message "x must be even, #{x} is not"
     }
 \e
 function
 
-> ensure_weekend(2016-12-30T) # a Friday
-ERROR: {
+> ensure_even(3)
+ERROR:
   ... snip ...
-  :value {
-    :message "x must be a weekend day, but is: Friday",
-    :day_of_week "Friday"
+  value: {
+    :message "x must be even, 3 is not"
   }
-  ... snip ...  
-}
 
-> ensure_weekend(2016-12-31T) # a Saturday
-2016-12-31T00:00:00Z@`UTC`
-
-> ensure_weekend(2017-01-01T) # a Sunday
-2017-01-01T00:00:00Z@`UTC`
+> ensure_even(2)
+2
 ```
 
-The function `analyze_dates` accepts a list of datetimes, and returns a list where each  datetime that falls on a weekend is retained, and non-weekends are replaced with a custom error message constructed from the error details `ensure_weekend` provides.  
+The function `segregate` accepts a list of items and a function `f`, it returns a map providing a list of items for which `f(item)` threw, and a list of items for which it did not.
 
-```ruby
+```tweakflow
 > \e
-analyze_dates: (xs) ->
+segregate: (xs, f) ->
   let {
-    f: (datetime d) ->
-      try
-        ensure_weekend(d)
-      catch error
-        "Bad "..error[:day_of_week]
+    init: {:ok [], :errors []}
   }
-  data.map(xs, f)
+  data.reduce(xs, init, (state, x) ->
+    try let {_: f(x)}
+      data.update(state, :ok, (ok) -> [...ok, x])
+    catch error
+      data.update(state, :errors, (errors) -> [...errors, x])
+  )
 \e
 function
 
-> analyze_dates([2016-12-30T, 2016-12-31T, 2017-01-01T, 2017-01-02T, 2017-01-03T])
-["Bad Friday", 2016-12-31T00:00:00Z@`UTC`, 2017-01-01T00:00:00Z@`UTC`, "Bad Monday", "Bad Tuesday"]
+> segregate([1, 2, 3, 4, 5, 6, 7, 8], ensure_even)
+{
+  :errors [1, 3, 5, 7],
+  :ok [2, 4, 6, 8]
+}
 ```
 
 ## Debugging
@@ -453,7 +460,7 @@ Sometimes users need help debugging an unexpected result. Tweakflow users can us
 
 Debug itself is an expression that evaluates to the value being debugged. Let's write a function that given a filename, returns the file's extension including the dot. It debugs the value of a temporary variable named `dot_position`.
 
-```ruby
+```tweakflow
 > \e
 extension: (name) ->
   let {
@@ -469,16 +476,15 @@ function
 
 > extension("file")
 -1
-ERROR: {
-  :message "start must not be negative: -1",
-  :code "INDEX_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: start must not be negative: -1
+  ... snip ...
 ```
 
 You can also define a local variable that generates a more speaking output.
 
-```ruby
+```tweakflow
 > \e
 extension: (name) ->
   let {
@@ -495,15 +501,14 @@ function
 
 > extension("file")
 "DEBUG: last position of dot in file: -1"
-ERROR: {
-  :message "start must not be negative: -1",
-  :code "INDEX_OUT_OF_BOUNDS",
-  ...
-}
+ERROR:
+  code: INDEX_OUT_OF_BOUNDS
+  message: start must not be negative: -1
+  ... snip ...
 ```
 
 Above debug output should help sorting out the function to account for the fact that the argument might not contain a dot.
 
 ## Conclusion
 
-You have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the [language reference](/reference.html) for detailed information about the language.
+You now have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the [embedding guide](/embedding.html) to get started. Check out the [language reference](/reference.html) for detailed information about the language. The language reference contains the detailed syntax information, and also describes the module and library system that you can use to allow users to organize any non-trivial calculations into libraries and reusable modules.

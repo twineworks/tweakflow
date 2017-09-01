@@ -6,6 +6,11 @@ title: std.tf
 
 The standard module contains basic functions for general computing tasks.
 
+All samples run in the interactive tweakflow REPL which you can launch using:
+```bash
+java -jar tweakflow-{{< version >}}.jar itf
+```
+
 ## library core
 
 The core library contains utility functions to process values at a basic level.
