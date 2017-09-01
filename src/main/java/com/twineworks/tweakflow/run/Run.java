@@ -201,18 +201,24 @@ public class Run {
       }
       callArgValues = new Value[callArgs.size()];
 
-      for (int i = 0; i < callArgs.size(); i++) {
-        Object callArg = callArgs.get(i);
-        if (callArg instanceof StringArg){
-          StringArg arg = (StringArg) callArg;
-          Value callValue = Values.make(arg.str);
-          callArgValues[i] = callValue;
+      try {
+        for (int i = 0; i < callArgs.size(); i++) {
+          Object callArg = callArgs.get(i);
+          if (callArg instanceof StringArg){
+            StringArg arg = (StringArg) callArg;
+            Value callValue = Values.make(arg.str);
+            callArgValues[i] = callValue;
+          }
+          else if (callArg instanceof EvalArg){
+            EvalArg arg = (EvalArg) callArg;
+            Value callValue = TweakFlow.evaluate(arg.str);
+            callArgValues[i] = callValue;
+          }
         }
-        else if (callArg instanceof EvalArg){
-          EvalArg arg = (EvalArg) callArg;
-          Value callValue = TweakFlow.evaluate(arg.str);
-          callArgValues[i] = callValue;
-        }
+
+      } catch (LangException e){
+        System.err.println(e.getDigestMessage());
+        System.exit(1);
       }
 
     } catch (ArgumentParserException e) {
