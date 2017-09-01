@@ -8,7 +8,7 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 ## Starting a tweakflow REPL
 
-[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. You can also obtain it from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/{{< version >}}/). Or use the following dependency:
+[Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. You can also obtain it from maven central using the following dependency:
 
 ```xml
 <dependency>
