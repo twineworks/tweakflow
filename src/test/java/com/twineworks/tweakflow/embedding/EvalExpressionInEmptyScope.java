@@ -113,7 +113,7 @@ public class EvalExpressionInEmptyScope {
 
     try {
       TweakFlow.evaluate("mary had a little lamb");
-      //                           ^ 'mary' might be a reference, but another reference 'had' cannot follow
+      //                            ^ 'mary' might be a reference, but another reference 'had' cannot follow
     } catch (LangException e){
       assertThat(e.getCode()).isSameAs(LangError.PARSE_ERROR);
       assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:6");
