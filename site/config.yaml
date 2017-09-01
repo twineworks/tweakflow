@@ -36,6 +36,7 @@ menu:
 
 
 params:
-  indexHeadLine: "index headline parameter"
-  # shortcode {{< releaseTag >}}
-  releaseTag: "0.0.4"
+  # shortcode {{< gitRef >}}
+  gitRef: "releases/0.0.4"
+  # shortcode {{< version >}}
+  version: "0.0.4"

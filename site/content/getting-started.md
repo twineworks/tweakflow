@@ -10,7 +10,7 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 [Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. And launch it using:
 
-`java -jar tweakflow-{{< releaseTag >}}.jar itf`
+`java -jar tweakflow-{{< version >}}.jar itf`
 
 The `itf` argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
 
