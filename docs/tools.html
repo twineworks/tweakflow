@@ -55,12 +55,8 @@
               <a class="menu__item-link" href="./getting-started.html">Getting started</a>
             </li>
             
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./reference.html">Reference</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
+            <li class="menu__item active" >
+              <a class="menu__item-link" href="./tools.html">Tools</a>
             </li>
             
             <li class="menu__item" >
@@ -68,7 +64,11 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="./apidocs/index.html">Javadoc</a>
+              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
+            </li>
+            
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./reference.html">Language reference</a>
             </li>
             
             <li class="menu__item" >
@@ -94,9 +94,30 @@
 <ul>
 <li><a href="#language-tools">Language Tools</a>
 <ul>
-<li><a href="#interactive-repl">Interactive REPL</a></li>
-<li><a href="#runner">Runner</a></li>
-<li><a href="#metadata-extraction">Metadata extraction</a></li>
+<li><a href="#interactive-repl">Interactive REPL</a>
+<ul>
+<li><a href="#evaluating-expressions">Evaluating expressions</a></li>
+<li><a href="#multi-line-mode">Multi-line mode</a></li>
+<li><a href="#defining-variables">Defining variables</a></li>
+<li><a href="#inspecting-memory-contents">Inspecting memory contents</a></li>
+<li><a href="#viewing-docs">Viewing docs</a></li>
+<li><a href="#loading-modules">Loading modules</a></li>
+<li><a href="#command-line-arguments">Command line arguments</a></li>
+</ul></li>
+<li><a href="#runner">Runner</a>
+<ul>
+<li><a href="#passing-string-arguments">Passing string arguments</a></li>
+<li><a href="#passing-expression-arguments">Passing expression arguments</a></li>
+<li><a href="#loading-custom-modules">Loading custom modules</a></li>
+</ul></li>
+<li><a href="#metadata-extraction">Metadata extraction</a>
+<ul>
+<li><a href="#command-overview">Command overview</a></li>
+<li><a href="#printing-metadata">Printing metadata</a></li>
+<li><a href="#transforming-metadata">Transforming metadata</a></li>
+<li><a href="#processing-more-than-one-module">Processing more than one module</a></li>
+<li><a href="#saving-the-output">Saving the output</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -110,17 +131,515 @@
 
 <h1 id="language-tools">Language Tools</h1>
 
+<p>The tweakflow jar offers entry points for some language tools that can be executed standalone. An interactive REPL, a runner that evaluates all given modules and calls a main function, and a documentation tool that extracts doc and metadata from modules.</p>
+
 <h2 id="interactive-repl">Interactive REPL</h2>
 
-<p>TODO: describe itf</p>
+<p>To launch the REPL run:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar itf
+</code></pre>
+
+<p>The acronym <code>itf</code> stands for interactive tweakflow. You should see a prompt similar to this:</p>
+
+<pre><code class="language-text">tweakflow interactive shell    \? for help, \q to quit
+std.tf&gt;
+</code></pre>
+
+<p>You can quit out of the REPL by entering <code>\q</code>. To get help, enter <code>\?</code>. The help screen looks similar to this:</p>
+
+<pre><code class="language-text">usage: &gt; COMMAND ...
+
+interactive commands:
+  COMMAND
+    \help (\?)           show usage information
+    \vars (\v)           print interactive variable definitions
+    \edit (\e)           toggle multi-line entry
+    \inspect (\i)        inspect memory space
+    \load_path (\lp)     print load path
+    \pwd                 print working directory
+    \load (\l)           load a set of modules, removes interactive variables
+    \meta (\m)           print meta data
+    \doc (\d)            print doc
+    \time (\t)           measure evaluation time
+    ... snip ...
+</code></pre>
+
+<p>The commands are listed with a short description of what they do. To get more help for a particular command, just type it in with a <code>--help</code> argument.</p>
+
+<p>To get help for the <code>\load</code> command:</p>
+
+<pre><code class="language-text">&gt; \load --help
+usage: &gt; \load module [module ...]
+
+positional arguments:
+  module                 modules to load, first given module's scope is entered, relative paths are searched in load_path
+</code></pre>
+
+<h3 id="evaluating-expressions">Evaluating expressions</h3>
+
+<p>Just type in an expression to have the REPL evaluate it:</p>
+
+<pre><code class="language-tweakflow">&gt; 1+2
+3
+
+&gt; &quot;Hello&quot;.. &quot; &quot; .. &quot;World&quot;
+&quot;Hello World&quot;
+</code></pre>
+
+<p>The prompt shows you which module context you are in. You can reference all names visible in the module you are in. By default this is the standard library context, so you can use standard library functions.</p>
+
+<pre><code class="language-tweakflow">std.tf&gt; data.map([1, 2, 3], (x) -&gt; x*x)
+[1, 4, 9]
+
+std.tf&gt; strings.length(&quot;foo&quot;)
+3
+</code></pre>
+
+<h3 id="multi-line-mode">Multi-line mode</h3>
+
+<p>The REPL accepts single line entry by default. If you want to use an expression that spans multiple lines, open multiline mode using <code>\e</code> and close it again using <code>\e</code>. The REPL indicates with a <code>*</code> in the prompt that it is in multi-line mode.</p>
+
+<pre><code class="language-tweakflow">std.tf&gt; \e
+std.tf* let {
+std.tf*   a: 3
+std.tf*   b: 4
+std.tf* }
+std.tf* a+b
+std.tf* \e
+7
+std.tf&gt;
+</code></pre>
+
+<h3 id="defining-variables">Defining variables</h3>
+
+<p>You can define interactive variables using <code>var_name: expression</code> syntax. You can then reference your variables in your expressions and definitions.</p>
+
+<pre><code class="language-tweakflow">&gt; a: 3
+3
+
+&gt; b: 4
+4
+
+&gt; c: a+b
+7
+</code></pre>
+
+<p>All variables are re-evaluated on each command, so changing a variable definition changes all dependent values.</p>
+
+<pre><code class="language-tweakflow">&gt; x: 3
+3
+
+&gt; y: x
+3
+
+&gt; x: &quot;foo&quot;
+&quot;foo&quot;
+
+&gt; y
+&quot;foo&quot;
+</code></pre>
+
+<p>You can view your interactive variable definitions using the <code>\vars</code> command.</p>
+
+<pre><code class="language-tweakflow">&gt; \vars
+5 interactive variables defined
+a: 3
+b: 4
+c: a+b
+x: &quot;foo&quot;
+y: x
+</code></pre>
+
+<p>You can view their current values using the <code>\inspect</code> command.</p>
+
+<pre><code class="language-tweakflow">&gt; \inspect
+a: 3
+b: 4
+c: 7
+`$`: &quot;foo&quot;
+x: &quot;foo&quot;
+y: &quot;foo&quot;
+</code></pre>
+
+<p>The <code>$</code> variable is internally maintained by the REPL to hold the last evaluation result. You can only view it using <code>\inspect</code>. It cannot be referenced in your expressions.</p>
+
+<h3 id="inspecting-memory-contents">Inspecting memory contents</h3>
+
+<p>You can inspect the content of any loaded module, library or variable. Just pass a reference to the <code>\inspect</code> command. To view the contents of the <code>strings</code> library, for example:</p>
+
+<pre><code class="language-tweakflow">&gt; \i strings
+# library
+  starts_with?: function
+  upper_case: function
+  length: function
+  replace: function
+  concat: function
+  ends_with?: function
+  substring: function
+  index_of: function
+  comparator: function
+  split: function
+  trim: function
+  lower_case: function
+  join: function
+  chars: function
+  last_index_of: function
+</code></pre>
+
+<p>Enter <code>\i --help</code> for more information about the inspect command.</p>
+
+<h3 id="viewing-docs">Viewing docs</h3>
+
+<p>Tweakflow has the ability to annotate all named entities with doc data. You can view any doc data using the <code>\doc</code> command. The standard module, libraries and functions are annotated with markdown documentation.</p>
+
+<pre><code class="language-text">&gt; \doc strings
+The strings library contains basic functions for text processing.
+
+&gt; \doc strings.length
+`(string x) -&gt; long`
+
+Returns the number of unicode codepoints in given string `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+&gt; strings.length(&quot;&quot;)
+0
+
+&gt; strings.length(&quot;foo&quot;)
+3
+
+&gt; strings.length(&quot;你好&quot;)
+2
+```
+</code></pre>
+
+<h3 id="loading-modules">Loading modules</h3>
+
+<p>You can load a different module than the standard library through the <code>\load</code> command. Let&rsquo;s say you have a module file on your disk:</p>
+
+<pre><code class="language-tweakflow"># acme.tf
+
+import data, regex, strings from 'std'
+
+alias strings.replace as replace
+alias data.map as map
+alias data.slices as slices
+alias strings.join as join
+alias strings.upper_case as upper_case
+
+library product_codes {
+
+  remove_whitespace:
+    regex.replacing('\s+', &quot;&quot;) # function that removes any whitespace from a string
+
+  normalize: (string x) -&gt;
+    -&gt;&gt; (x)
+        # remove whitespace, &quot;f-oo bar&quot; -&gt; &quot;f-oobar&quot;
+        (x) -&gt; remove_whitespace(x),
+
+        # remove any dashes # &quot;f-oobar&quot; -&gt; &quot;foobar&quot;
+        (x) -&gt; replace(x, &quot;-&quot;, &quot;&quot;),
+
+        # split to a list of blocks of up to 4 chars &quot;foobar&quot; -&gt; [&quot;foob&quot;, &quot;ar&quot;]
+        (x) -&gt; let {
+                 # &quot;foobar&quot; -&gt; [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]]
+                 blocks: slices(x as list, 4)
+               }
+               # [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]] -&gt; [&quot;foob&quot;, &quot;ar&quot;]
+               map(blocks, (block) -&gt; join(block)),
+
+        # place dashes between blocks converting to single string [&quot;foob&quot;, &quot;ar&quot;] -&gt;   &quot;foob-ar&quot;
+        (blocks) -&gt; join(blocks, &quot;-&quot;),
+
+        # upper case all characters &quot;foob-ar&quot; -&gt; &quot;FOOB-AR&quot;
+        upper_case
+}
+</code></pre>
+
+<p>Load it in the REPL:</p>
+
+<pre><code class="language-tweakflow">&gt; \load acme.tf
+acme.tf&gt;
+</code></pre>
+
+<p>You are now in the context of the acme module, and can reference all names in this module.</p>
+
+<pre><code class="language-tweakflow">acme.tf&gt; product_codes.normalize(&quot;ah-78277-Nz&quot;)
+&quot;AH78-277N-Z&quot;
+</code></pre>
+
+<h3 id="command-line-arguments">Command line arguments</h3>
+
+<p>The REPL accepts a number of command line arguments that influence which modules are initially loaded, and which directories are placed on the load path. To learn more, run:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar itf --help
+</code></pre>
 
 <h2 id="runner">Runner</h2>
 
-<p>TODO: describe tf</p>
+<p>The runner loads a module and calls a main function with some arguments you supply on the command line. It prints the return value back to the console.</p>
+
+<p>Run the following command to view the command line options.</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tf --help
+</code></pre>
+
+<p>The module(s) to load are given as positional arguments. You can pass <code>std</code> to load the standard module.</p>
+
+<p>The main function to call is given using the <code>-m</code> switch in <code>library_name.var_name</code> format. It is a reference in module scope.</p>
+
+<p>Arguments are given in order, using a series of <code>-a</code> and <code>-ea</code> switches. The <code>-a</code> switch takes the argument verbatim and turns it into a tweakflow string. The <code>-ea</code> switch treats the argument as an expression that is evaluated first, before it is passed on to the function.</p>
+
+<h3 id="passing-string-arguments">Passing string arguments</h3>
+
+<p>The following invocation calls <code>strings.length(&quot;foo&quot;)</code>:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tf -m strings.length -a foo std
+3
+</code></pre>
+
+<p>Since the argument is a string, it is passed using the <code>-a</code> switch. Please note that passing the argument using the <code>-ea</code> switch would fail, since <code>foo</code> would simply be a reference to an undefined variable. If you wish to pass strings using <code>-ea</code>, you have to pass a proper literal string as in:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tf -m strings.length -ea &quot;'foo'&quot; std
+3
+</code></pre>
+
+<p>Shell escaping can make it tricky to know exactly what is passed. It is therefore recommended to avoid the complexity and pass strings using <code>-a</code>.</p>
+
+<h3 id="passing-expression-arguments">Passing expression arguments</h3>
+
+<p>The following invocation calls <code>data.map([1, 2, 3, 4], (x) -&gt; x*x)</code>:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tf -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -&gt; x*x' std
+[1, 4, 9, 16]
+</code></pre>
+
+<p>This time both arguments need to be evaluated to a list and function first. Therefore the <code>-ea</code> switch is used both times.</p>
+
+<h3 id="loading-custom-modules">Loading custom modules</h3>
+
+<p>You can load any module on disk. Assuming you have the following module available:</p>
+
+<pre><code class="language-tweakflow"># acme.tf
+
+import data, regex, strings from 'std'
+
+alias strings.replace as replace
+alias data.map as map
+alias data.slices as slices
+alias strings.join as join
+alias strings.upper_case as upper_case
+
+library product_codes {
+
+  remove_whitespace:
+    regex.replacing('\s+', &quot;&quot;) # function that removes any whitespace from a string
+
+  normalize: (string x) -&gt;
+    -&gt;&gt; (x)
+        # remove whitespace, &quot;f-oo bar&quot; -&gt; &quot;f-oobar&quot;
+        (x) -&gt; remove_whitespace(x),
+
+        # remove any dashes # &quot;f-oobar&quot; -&gt; &quot;foobar&quot;
+        (x) -&gt; replace(x, &quot;-&quot;, &quot;&quot;),
+
+        # split to a list of blocks of up to 4 chars &quot;foobar&quot; -&gt; [&quot;foob&quot;, &quot;ar&quot;]
+        (x) -&gt; let {
+                 # &quot;foobar&quot; -&gt; [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]]
+                 blocks: slices(x as list, 4)
+               }
+               # [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]] -&gt; [&quot;foob&quot;, &quot;ar&quot;]
+               map(blocks, (block) -&gt; join(block)),
+
+        # place dashes between blocks converting to single string [&quot;foob&quot;, &quot;ar&quot;] -&gt;   &quot;foob-ar&quot;
+        (blocks) -&gt; join(blocks, &quot;-&quot;),
+
+        # upper case all characters &quot;foob-ar&quot; -&gt; &quot;FOOB-AR&quot;
+        upper_case
+}
+</code></pre>
+
+<p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tf -m product_codes.normalize -a ksh765fg25ff acme.tf
+&quot;KSH7-65FG-25FF&quot;
+</code></pre>
 
 <h2 id="metadata-extraction">Metadata extraction</h2>
 
-<p>TODO: describe tfdoc</p>
+<p>The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The <code>tfdoc</code> utility makes it possible to extract that information in a structured way.</p>
+
+<p>Let&rsquo;s work with the following module file:</p>
+
+<pre><code class="language-tweakflow"># module foo.tf
+doc
+~~~
+This is documentation at the module level.
+~~~
+meta {
+  :title       &quot;foo&quot;
+  :description &quot;Description of the module&quot;
+  :version     &quot;4.2&quot;
+}
+module
+
+# library bar
+doc 'This is documentation for library bar.'
+
+meta {
+  :author &quot;John Doe et al.&quot;
+  :since  &quot;2.3&quot;
+}
+
+library bar {
+
+  # function baz
+  doc 'This is documentation for function baz.'
+
+  meta {
+    :author &quot;John Doe&quot;
+    :date 2017-03-12T
+  }
+
+  function baz: (x) -&gt; x*x
+}
+</code></pre>
+
+<h3 id="command-overview">Command overview</h3>
+
+<p>You can view all command line switches by running the following:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tfdoc --help
+</code></pre>
+
+<p>The next sections provide a walkthrough for the most common options.</p>
+
+<h3 id="printing-metadata">Printing metadata</h3>
+
+<p>The following invokes <code>tfdoc</code>, passing in the module to extract metadata from.</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tfdoc foo.tf
+</code></pre>
+
+<p>By default the <code>tfdoc</code> utility prints the structure of available meta data:</p>
+
+<pre><code class="language-text">{
+  :node &quot;module&quot;,
+  :global false,
+  :path &quot;/path/to/foo.tf&quot;,
+  :meta {
+    :version &quot;4.2&quot;,
+    :title &quot;foo&quot;,
+    :description &quot;Description of the module&quot;
+  },
+  :components [{
+    :node &quot;library&quot;,
+    :meta {
+      :author &quot;John Doe et al.&quot;,
+      :since &quot;2.3&quot;
+    },
+    :name &quot;bar&quot;,
+    :vars [{
+      :node &quot;var&quot;,
+      :meta {
+        :author &quot;John Doe&quot;,
+        :date 2017-03-12T00:00:00Z@UTC
+      },
+      :name &quot;baz&quot;,
+      :doc &quot;This is documentation for function baz.&quot;,
+      :expression &quot;(x) -&gt; x*x&quot;,
+      :type &quot;function&quot;
+    }],
+    :export false,
+    :doc &quot;This is documentation for library bar.&quot;
+  }],
+  :doc &quot;This is documentation at the module level.&quot;,
+  :file &quot;foo.tf&quot;
+}
+</code></pre>
+
+<p>Please note that the output is a valid tweakflow dict value.</p>
+
+<h3 id="transforming-metadata">Transforming metadata</h3>
+
+<p>The <code>tfdoc</code> utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.</p>
+
+<p>A transformer is a special tweakflow module that has a library named <code>transform</code> which in turn has a variable named <code>transform</code>. This variable holds a function accepting above structure as its sole argument. The return value of the function is the output of the transformer.</p>
+
+<p>You supply transformers using the <code>-t</code> switch. If you supply more than one transformer, they are chained such that the output of the first transformer becomes the argument to the second transformer, and so on.</p>
+
+<p>Let&rsquo;s supply a basic transformer that just generates a one-sentence summary of the module.</p>
+
+<pre><code class="language-tweakflow"># transformer.tf
+import data, strings from &quot;std&quot;
+
+alias data.size as size
+alias data.reduce as reduce
+
+library transform {
+
+  transform: (dict x) -&gt; string
+    &quot;Module &quot;
+      ..x[:path]
+      ..&quot; contains &quot;
+      ..libs_in_module(x)
+      ..&quot; libraries, and a total of &quot;
+      ..vars_in_module(x)
+      ..&quot; variables.&quot;
+
+  libs_in_module: (dict m) -&gt; long
+    size(m[:components])
+
+  vars_in_module: (dict m) -&gt; long
+    let {
+      libs: m[:components]
+    }
+    reduce(libs, 0, (a, lib) -&gt; a+vars_in_lib(lib))
+
+  vars_in_lib: (dict lib) -&gt; long
+    size(lib[:vars])
+}
+</code></pre>
+
+<p>Let&rsquo;s run this transformer over the standard library:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tfdoc -t transformer.tf std
+Module std.tf contains 8 libraries, and a total of 159 variables.
+</code></pre>
+
+<p>A more sophisticated transformer might generate markdown, XML, or HTML documentation for the module.</p>
+
+<h3 id="processing-more-than-one-module">Processing more than one module</h3>
+
+<p>You can pass more than one module to <code>tfdoc</code>, and they are processed in order.</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tfdoc -t transformer.tf std foo.tf
+Module std.tf contains 8 libraries, and a total of 159 variables.
+Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
+</code></pre>
+
+<h3 id="saving-the-output">Saving the output</h3>
+
+<p>If you&rsquo;re supplying relative module paths to <code>tfdoc</code>, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is <code>txt</code>.</p>
+
+<p>Assuming foo.tf is in the current directory, run:</p>
+
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.4.jar tfdoc -t transformer.tf --output docs --output-extension md std.tf foo.tf
+</code></pre>
+
+<p>It generates a <code>docs</code> directory, placing the following files in there:</p>
+
+<p><code>docs/std.tf.md</code></p>
+
+<pre><code class="language-text">Module std.tf contains 8 libraries, and a total of 159 variables.
+</code></pre>
+
+<p><code>docs/foo.tf.md</code></p>
+
+<pre><code class="language-text">Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
+</code></pre>
 
       </main>
     </div>

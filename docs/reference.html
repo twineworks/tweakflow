@@ -55,12 +55,8 @@
               <a class="menu__item-link" href="./getting-started.html">Getting started</a>
             </li>
             
-            <li class="menu__item active" >
-              <a class="menu__item-link" href="./reference.html">Reference</a>
-            </li>
-            
             <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
+              <a class="menu__item-link" href="./tools.html">Tools</a>
             </li>
             
             <li class="menu__item" >
@@ -68,7 +64,11 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="./apidocs/index.html">Javadoc</a>
+              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
+            </li>
+            
+            <li class="menu__item active" >
+              <a class="menu__item-link" href="./reference.html">Language reference</a>
             </li>
             
             <li class="menu__item" >
@@ -1010,9 +1010,9 @@ library bar {
 
 <pre><code class="language-tweakflow"># module foo.tf
 doc
-​~~~
+~~~
 This is documentation at the module level.
-​~~~
+~~~
 meta {
   :title       &quot;foo&quot;
   :description &quot;Description of the module&quot;
@@ -1021,10 +1021,8 @@ meta {
 module
 
 # library bar
-doc
-​~~~
-This is documentation for library bar.
-​~~~
+doc 'This is documentation for library bar.'
+
 meta {
   :author &quot;John Doe et al.&quot;
   :since  &quot;2.3&quot;
@@ -1032,15 +1030,14 @@ meta {
 
 library bar {
 
-# function baz
-doc
-​~~~
-This is documentation for function baz.
-​~~~
+  # function baz
+  doc 'This is documentation for function baz.'
+
   meta {
     :author &quot;John Doe&quot;
     :date 2017-03-12T
   }
+
   function baz: (x) -&gt; x*x
 }
 </code></pre>
@@ -1630,7 +1627,7 @@ function
 
 <h4 id="functions-in-java">Functions in Java</h4>
 
-<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
+<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
 
 <table>
 <thead>
@@ -1642,12 +1639,12 @@ function
 
 <tbody>
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
 <td>Implements zero-parameter functions.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
 <td>Implements single-parameter functions.</td>
 </tr>
 
@@ -1657,23 +1654,23 @@ function
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
 <td>Implements functions with three paramters.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
 <td>Implements functions with four parameters</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
 <td>Implements functions with any number of parameters. Arguments are passed as an array of values.</td>
 </tr>
 </tbody>
 </table>
 
-<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.4/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
+<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
 
 <pre><code class="language-tweakflow">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
 function
@@ -1693,7 +1690,7 @@ function
 &quot;3&quot;
 </code></pre>
 
-<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.4/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
+<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/master/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
 
 <h3 id="void">Void</h3>
 
@@ -1707,7 +1704,7 @@ function
 
 <h2 id="expressions">Expressions</h2>
 
-<p>Tweakflow expressions evaluate to values. The most basic of which are literal values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.</p>
+<p>Tweakflow expressions evaluate to values. All data types can be written as literals. Tweakflow also has function calls, conditionals, list comprehensions, pattern matching, type casts, and several operators for many common computations.</p>
 
 <h3 id="nil">Nil</h3>
 
@@ -3323,7 +3320,14 @@ fs:
 
 <p><code>!nil</code> evaluates to <code>true</code></p>
 
-<pre><code class="language-tweakflow">&gt; !&quot;foo&quot;
+<pre><code class="language-tweakflow">&gt; !false
+true
+
+&gt; !true
+false
+
+&gt; !&quot;foo&quot;
+false
 </code></pre>
 
 <h4 id="boolean-and">Boolean and</h4>

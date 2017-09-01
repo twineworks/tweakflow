@@ -17,11 +17,11 @@
       
       <guid>/modules/std.html</guid>
       <description>module std.tf The standard module contains basic functions for general computing tasks.
-library core The core library contains utility functions to process values at a basic level.
+All samples run in the interactive tweakflow REPL which you can launch using:
+java -jar tweakflow-0.0.4.jar itf  library core The core library contains utility functions to process values at a basic level.
 id (any x) -&amp;gt; any
 Identity function. Returns x.
-&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
-Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
+&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string</description>
     </item>
     
   </channel>

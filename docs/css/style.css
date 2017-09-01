@@ -64,7 +64,7 @@ a {
   -webkit-transform: translateY(-10px);
   -ms-transform: translateY(-10px);
   transform: translateY(-10px);
-  margin-right: 1em;
+  margin-right: 0;
 }
 
 .menu__logo-wrapper a {

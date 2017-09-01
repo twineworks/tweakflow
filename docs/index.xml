@@ -29,10 +29,10 @@ Creating values The Values class provides static singleton members for certain c
       
       <guid>/getting-started.html</guid>
       <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
-Starting a tweakflow REPL Download the latest release jar. And launch it using:
+Starting a tweakflow REPL Download the latest release jar. You can also obtain it from maven central. Or use the following dependency:
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.0.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Launch the interactive REPL using:
 java -jar tweakflow-0.0.4.jar itf
-The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
-You should see a prompt similar to this:</description>
+The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.</description>
     </item>
     
     <item>
@@ -75,9 +75,9 @@ Design principles The following sections outline fundamental principles which in
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/tools.html</guid>
-      <description>Language Tools Interactive REPL TODO: describe itf
-Runner TODO: describe tf
-Metadata extraction TODO: describe tfdoc</description>
+      <description>Language Tools The tweakflow jar offers entry points for some language tools that can be executed standalone. An interactive REPL, a runner that evaluates all given modules and calls a main function, and a documentation tool that extracts doc and metadata from modules.
+Interactive REPL To launch the REPL run:
+$ java -jar tweakflow-0.0.4.jar itf  The acronym itf stands for interactive tweakflow. You should see a prompt similar to this:</description>
     </item>
     
     <item>
@@ -87,11 +87,11 @@ Metadata extraction TODO: describe tfdoc</description>
       
       <guid>/modules/std.html</guid>
       <description>module std.tf The standard module contains basic functions for general computing tasks.
-library core The core library contains utility functions to process values at a basic level.
+All samples run in the interactive tweakflow REPL which you can launch using:
+java -jar tweakflow-0.0.4.jar itf  library core The core library contains utility functions to process values at a basic level.
 id (any x) -&amp;gt; any
 Identity function. Returns x.
-&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
-Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
+&amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string</description>
     </item>
     
   </channel>
