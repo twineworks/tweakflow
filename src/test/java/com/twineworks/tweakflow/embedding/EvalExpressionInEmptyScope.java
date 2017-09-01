@@ -25,12 +25,14 @@
 package com.twineworks.tweakflow.embedding;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.util.LangUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
+import static org.assertj.core.api.StrictAssertions.fail;
 
 public class EvalExpressionInEmptyScope {
 
@@ -73,15 +75,69 @@ public class EvalExpressionInEmptyScope {
 
   }
 
-  @Test(expected = LangException.class)
-  public void cannot_evaluate_invalid_expression() throws Exception {
-    TweakFlow.evaluate("mary had a little lamb");
+  @Test
+  public void catches_runtime_error() throws Exception {
+
+    try {
+      TweakFlow.evaluate("1 // 0"); // integer division by 0 not possible
+    } catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.DIVISION_BY_ZERO);
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("1 // 0");
+      return;
+    }
+
+    fail("expected to throw/catch and return");
+
   }
 
-  @Test(expected = LangException.class)
+  @Test
+  public void catches_manual_throw() throws Exception {
+
+    try {
+      TweakFlow.evaluate("throw 'catch me if you can!'");
+    } catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.CUSTOM_ERROR);
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("throw 'catch me if you can!'");
+      assertThat(e.toErrorValue()).isEqualTo(Values.make("catch me if you can!"));
+      return;
+    }
+
+    fail("expected to throw/catch and return");
+
+  }
+
+  @Test
+  public void cannot_evaluate_invalid_expression() throws Exception {
+
+    try {
+      TweakFlow.evaluate("mary had a little lamb");
+      //                           ^ 'mary' might be a reference, but another reference 'had' cannot follow
+    } catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.PARSE_ERROR);
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:6");
+      return;
+    }
+
+    fail("expected to throw/catch and return");
+
+  }
+
+  @Test
   public void cannot_use_standard_library_in_empty_scope() throws Exception {
     String code = "strings.length('foo')";
-    TweakFlow.evaluate(code);
+    //             ^ strings is not defined, standard library is not imported, scope is empty
+    try {
+      TweakFlow.evaluate(code);
+    } catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNRESOLVED_REFERENCE);
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("strings.length");
+      return;
+    }
+
+    fail("expected to throw/catch and return");
   }
 
 }
