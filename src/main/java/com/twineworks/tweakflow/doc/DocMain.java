@@ -144,7 +144,6 @@ public class DocMain {
         Value value = Doc.makeMetaValue(analysisUnit.getUnit());
 
         if (transformers.isEmpty()) {
-          out.append("file: ").append(analysisUnit.getUnit().getSourceInfo().getParseUnit().getPath());
           out.append(ValueInspector.inspect(value));
         } else {
           for (Arity1CallSite transformer : transformers) {
