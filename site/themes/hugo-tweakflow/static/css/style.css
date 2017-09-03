@@ -81,6 +81,7 @@ a {
   float: right;
   display: block;
   margin-top: 13px;
+  margin-bottom: 12px;
 }
 
 .menu__items-list {
@@ -190,6 +191,33 @@ a {
   overflow: auto;
 }
 
+@media (max-width: 900px) {
+  aside {
+    width: 0px;
+    overflow: hidden;
+    visibility: hidden;
+    flex: 0 0 0px !important;
+  }
+
+  menu__items-wrapper {
+    line-height: 37px;
+  }
+
+}
+
+/*@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}*/
+
 aside nav {
   padding-top: 2em;
   padding-bottom: 1em;
@@ -293,7 +321,7 @@ main {
   margin: 0 auto 1.0rem auto;
   padding-top: 2em;
   padding-left: 1em;
-  /*padding-right: 1em;*/
+  padding-right: 1em;
   flex: 0 1 740px;
   /* https://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text */
   min-width: 0;
