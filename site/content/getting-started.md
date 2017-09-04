@@ -6,7 +6,11 @@ title: Getting started
 
 This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 
-## Starting a tweakflow REPL
+## Requirements
+
+Tweakflow requires Java 8 or later.
+
+## Getting tweakflow
 
 [Download](https://github.com/twineworks/tweakflow/releases/latest) the latest release jar. You can also obtain it from maven central using the following dependency:
 
@@ -17,6 +21,8 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
     <version>{{< version >}}</version>
 </dependency>
 ```
+
+## Starting a tweakflow REPL
 Launch the interactive REPL using:
 
 `java -jar tweakflow-{{< version >}}.jar itf`
