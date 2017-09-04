@@ -29,10 +29,9 @@ Creating values The Values class provides static singleton members for certain c
       
       <guid>/getting-started.html</guid>
       <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
-Starting a tweakflow REPL Download the latest release jar. You can also obtain it from maven central using the following dependency:
-&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.0.5&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Launch the interactive REPL using:
-java -jar tweakflow-0.0.5.jar itf
-The itf argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.</description>
+Requirements Tweakflow requires Java 8 or later.
+Getting tweakflow Download the latest release jar. You can also obtain it from maven central using the following dependency:
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.0.5&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Starting a tweakflow REPL Launch the interactive REPL using:</description>
     </item>
     
     <item>

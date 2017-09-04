@@ -94,6 +94,8 @@
 <ul>
 <li><a href="#getting-started-with-tweakflow">Getting started with tweakflow</a>
 <ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#getting-tweakflow">Getting tweakflow</a></li>
 <li><a href="#starting-a-tweakflow-repl">Starting a tweakflow REPL</a></li>
 <li><a href="#evaluating-expressions">Evaluating expressions</a></li>
 <li><a href="#calling-functions">Calling functions</a></li>
@@ -123,7 +125,11 @@
 
 <p>This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.</p>
 
-<h2 id="starting-a-tweakflow-repl">Starting a tweakflow REPL</h2>
+<h2 id="requirements">Requirements</h2>
+
+<p>Tweakflow requires Java 8 or later.</p>
+
+<h2 id="getting-tweakflow">Getting tweakflow</h2>
 
 <p><a href="https://github.com/twineworks/tweakflow/releases/latest">Download</a> the latest release jar. You can also obtain it from maven central using the following dependency:</p>
 
@@ -133,6 +139,8 @@
     &lt;version&gt;0.0.5&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
+
+<h2 id="starting-a-tweakflow-repl">Starting a tweakflow REPL</h2>
 
 <p>Launch the interactive REPL using:</p>
 
@@ -468,24 +476,23 @@ for
 
 <p>Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. The <code>@</code> sign followed by a variable name is used to indicate a captured match scoped to the expression associated with a pattern.</p>
 
-<p>The next example matches on partial structure. The function <code>pairs</code> transforms a list of the form <code>[a, b, c, d, …]</code> into a list of pairs <code>[[a, b], [c, d], ...]</code>. If the list has an odd number of items, the last item is discarded. If the argument is not a list, the function returns <code>nil</code>.</p>
+<p>The next example matches on structure. The function <code>length</code> treats a list of the form <code>[x, y]</code>, and a dict of the form <code>{:x x, :y y}</code> as vectors and returns the vector&rsquo;s length. It returns <code>nil</code> for any other type of input.</p>
 
 <pre><code class="language-tweakflow">&gt; \e
-pairs: (xs) -&gt;
-  match xs
-    [@a, @b, @...tail]  -&gt; [[a, b], ...pairs(tail)]
-    [@]                 -&gt; []
-    []                  -&gt; []
-    default             -&gt; nil
+length: (v) -&gt;
+  match v
+    [@x, @y]       -&gt; math.sqrt(x*x+y*y)
+    {:x @x, :y @y} -&gt; math.sqrt(x*x+y*y)
+    default        -&gt; nil
 \e
 function
-&gt; pairs([1, 2, 3, 4])
-[[1, 2], [3, 4]]
-&gt; pairs([1, 2, 3])
-[[1, 2]]
-&gt; pairs([1])
-[]
-&gt; pairs(&quot;foo&quot;)
+&gt; length([3, 4])
+5.0
+&gt; length({:x 3, :y 4})
+5.0
+&gt; length(&quot;foo&quot;)
+nil
+&gt; length([1, 2, 3])
 nil
 </code></pre>
 
