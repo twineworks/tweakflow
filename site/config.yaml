@@ -21,13 +21,17 @@ menu:
       URL: "/modules/std.html"
       Weight: -400
 
-    - Name: "Language reference"
+    - Name: "Reference"
       URL: "/reference.html"
       Weight: -300
 
+    - Name: "Support"
+      URL: "/support.html"
+      Weight: -200
+
     - Name: "Source"
       URL: "https://github.com/twineworks/tweakflow/"
-      Weight: -200
+      Weight: -100
 
 params:
   # shortcode {{< gitRef >}}
