@@ -6,7 +6,7 @@ toc: false
 # Legal Notice
 ## This website's content is managed by
 
-Twineworks GmbH   
+[Twineworks GmbH](http://twineworks.com)   
 Helmholtzstr. 28   
 10587 Berlin  
 Germany
