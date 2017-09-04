@@ -1,2 +1,120 @@
 # tweakflow
-An embeddable expression language for Java.
+An embeddable expression language for Java. Embed tweakflow in your application to interact with user-supplied expressions.
+
+Tweakflow offers simple expression evaluation as well as user variables, libraries, and modules. Your application can offers varying levels of sophistication depending on user needs.
+
+Tweakflow uses immutable values for everything, and all functions are pure. This leads to repeatable expression evaluation without side effects. Your app remains in control. Unlike other embeddable languages, users cannot use tweakflow to gain access to your app's internals.
+
+## Requirements
+Java 8 or later is required.
+
+## Language features
+
+### A simple computation model
+Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use formulas in your application too.
+
+### Dynamically typed
+Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
+
+### All data is immutable
+All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.
+
+### All functions are pure
+All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application must take care of all non-pure operations like file I/O.
+
+### Automatic dependency tracking
+When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
+
+### Inline documentation and meta-data
+Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.
+
+## Getting started
+Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/).
+
+Start the REPL using:  
+```bash
+$ java -jar tweakflow-version.jar itf
+```
+
+Start typing expressions for the REPL to evaluate:
+```tweakflow
+tweakflow interactive shell    \? for help, \q to quit
+std.tf> 1+2
+3
+
+std.tf> "Hello " .. "World"
+"Hello World"
+
+std.tf> data.map([1, 2, 3], (x) -> x*x)
+[1, 4, 9]
+```
+
+See the [getting started](https://twineworks.github.io/tweakflow/getting-started.html) guide for a short guided tour of language features.
+
+## Embedding
+Evaluating simple expressions is as easy as:
+
+```java
+TweakFlow.evaluate("1+2"); // returns the Value 3
+```
+
+Or it can be more sophisticated, providing users with application variables they can reference. Your app is in control of functions and variables available to user expressions. A corresponding tweakflow module might look like this:
+
+```tweakflow
+# my_module.tf
+# allow users to use core, data, math, and strings libraries from the standard library
+import core, data, math, strings from 'std'
+
+# place customer.first_name and customer.last_name into scope, provided dynamically during runtime
+library customer {
+  provided first_name;
+  provided last_name;
+}
+
+# generated from user input, re-evaluated automatically when customer changes
+library user {
+  greeting: if customer.first_name && customer.last_name
+              "Hello #{customer.first_name} #{customer.last_name}"
+            else
+              "Dear anonymous"
+}
+```
+
+The embedding code for above module:
+
+```java
+Runtime runtime = TweakFlow.compile(loadPath, "my_module.tf");
+// get the module out of the runtime
+Runtime.Module module = runtime.getModules().get(runtime.unitKey("user_module.tf"));
+
+// get a handle to customer.first_name, and customer.last_name provided vars
+Runtime.Var firstName = module.getLibrary("customer").getVar("first_name");
+Runtime.Var lastName = module.getLibrary("customer").getVar("last_name");
+
+// get a handle to greeting expression
+Runtime.Var greeting = module.getLibrary("user").getVar("greeting");
+
+// loop over customer collection and calculate the user-defined greeting
+for (Customer c : myCustomerCollection){
+  runtime.updateVars(
+    firstName, Values.make(c.getFirstName()),
+    lastName, Values.make(c.getLastName())
+  );
+  String userGreeting = greeting.getValue().string();
+}
+```
+
+Your application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
+
+See the [embedding](https://twineworks.github.io/tweakflow/embedding.html) guide for more information and examples.
+
+## Using tweakflow standalone
+Tweakflow is designed to be an expression language embedded in a bigger application. Much like formula languages are embedded in spreadsheet applications. However, for prototyping, development and testing, it can be handy to invoke tweakflow directly.
+
+See the [tools](https://twineworks.github.io/tweakflow/tools.html) guide, for more information on the tweakflow REPL, runner, and documentation tool.
+
+## License
+Tweakflow uses the business friendly [MIT license](https://opensource.org/licenses/MIT).
+
+## Support
+Open source does not mean you're on your own. Tweakflow is developed by [Twineworks GmbH](http://twineworks.com). Twineworks offers commercial support and consulting services. [Contact us](mailto:hi@twineworks.com) if you'd like us to help with a project.
