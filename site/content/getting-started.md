@@ -32,7 +32,7 @@ The `itf` argument tells tweakflow to start an interactive session also known as
 You should see a prompt similar to this:
 
 ```none
-$ java -jar tweakflow-version.jar itf
+$ java -jar tweakflow-{{< version>}}.jar itf
 tweakflow interactive shell    \? for help, \q to quit
 std.tf>
 ```
