@@ -25,6 +25,10 @@
   </url>
   
   <url>
+    <loc>/support.html</loc>
+  </url>
+  
+  <url>
     <loc>/tags.html</loc>
     <priority>0</priority>
   </url>

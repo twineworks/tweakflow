@@ -58,6 +58,15 @@ Germany</description>
     </item>
     
     <item>
+      <title>Support</title>
+      <link>/support.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/support.html</guid>
+      <description>Support Tweakflow is using the business friendly MIT open source license. However, open source does not mean you&amp;rsquo;re on your own. Tweakflow is developed by Twineworks GmbH. Twineworks offers commercial support, training, and consulting services for tweakflow projects. Get in touch if you&amp;rsquo;d like us to support a project.</description>
+    </item>
+    
+    <item>
       <title>The tweakflow language</title>
       <link>/reference.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
