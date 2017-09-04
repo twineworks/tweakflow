@@ -385,25 +385,24 @@ Above example loops over `a` going from 1 to 15, and `b` going from `a` to `15`,
 
 Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. The `@` sign followed by a variable name is used to indicate a captured match scoped to the expression associated with a pattern.
 
-The next example matches on partial structure. The function `pairs` transforms a list of the form `[a, b, c, d, …]` into a list of pairs `[[a, b], [c, d], ...]`. If the list has an odd number of items, the last item is discarded. If the argument is not a list, the function returns `nil`.
+The next example matches on structure. The function `length` treats a list of the form `[x, y]`, and a dict of the form `{:x x, :y y}` as vectors and returns the vector's length. It returns `nil` for any other type of input.
 
 ```tweakflow
 > \e
-pairs: (xs) ->
-  match xs
-    [@a, @b, @...tail]  -> [[a, b], ...pairs(tail)]
-    [@]                 -> []
-    []                  -> []
-    default             -> nil
+length: (v) ->
+  match v
+    [@x, @y]       -> math.sqrt(x*x+y*y)
+    {:x @x, :y @y} -> math.sqrt(x*x+y*y)
+    default        -> nil
 \e
 function
-> pairs([1, 2, 3, 4])
-[[1, 2], [3, 4]]
-> pairs([1, 2, 3])
-[[1, 2]]
-> pairs([1])
-[]
-> pairs("foo")
+> length([3, 4])
+5.0
+> length({:x 3, :y 4})
+5.0
+> length("foo")
+nil
+> length([1, 2, 3])
 nil
 ```
 
