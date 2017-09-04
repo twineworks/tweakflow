@@ -28,6 +28,9 @@ When the application changes an input variable, tweakflow efficiently recalculat
 ### Inline documentation and meta-data
 Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.
 
+### Batteries included
+Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
+
 ## Getting started
 Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/).
 
