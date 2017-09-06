@@ -1,30 +1,6 @@
 # Handle line endings automatically for files detected as text
 # and leave all files detected as binary untouched.
-* text=lf
-
-#
-# The above will handle all files NOT found below
-#
-*.css           text
-*.df            text
-*.htm           text
-*.html          text
-*.java          text
-*.js            text
-*.json          text
-*.jsp           text
-*.jspf          text
-*.jspx          text
-*.md            text
-*.properties    text
-*.sh            text
-*.tf            text
-*.tld           text
-*.txt           text
-*.tag           text
-*.tagx          text
-*.xml           text
-*.yml           text
+* text eol=lf
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
