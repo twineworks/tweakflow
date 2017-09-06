@@ -8,9 +8,6 @@ Tweakflow offers simple expression evaluation as well as user variables, librari
 
 Tweakflow uses immutable values for everything, and all functions are pure. This leads to repeatable expression evaluation without side effects. Your app remains in control. Unlike other embeddable languages, users cannot use tweakflow to gain access to your app's internals.
 
-## Requirements
-Java 8 or later is required.
-
 ## Language features
 
 ### A simple computation model
@@ -34,12 +31,26 @@ Tweakflow supports documentation annotations as well as arbitrary meta-data on v
 ### Batteries included
 Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
-## Getting started
+## Requirements
+Java 8 or later is required.
+
+## Getting the jar
 Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/).
+
+You can use the following maven dependency:
+```xml
+<dependency>
+    <groupId>com.twineworks</groupId>
+    <artifactId>tweakflow</artifactId>
+    <version>0.0.6</version>
+</dependency>
+```
+
+## Getting started
 
 Start the REPL using:  
 ```bash
-$ java -jar tweakflow-version.jar itf
+$ java -jar tweakflow-0.0.6.jar itf
 ```
 
 Start typing expressions for the REPL to evaluate:
