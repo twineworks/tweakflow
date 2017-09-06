@@ -47,15 +47,15 @@ public class EvalModule {
         .addStdLocation()
         .add(new MemoryLocation.Builder()
             .allowNativeFunctions(false)
-            .add("<userModule>", module)
+            .add("userModule", module)
             .build())
         .build();
 
     // compile the module
-    Runtime runtime = TweakFlow.compile(loadPath, "<userModule>");
+    Runtime runtime = TweakFlow.compile(loadPath, "userModule");
     // get user module from runtime
     return runtime
-        .getModules().get(runtime.unitKey("<userModule>"));
+        .getModules().get(runtime.unitKey("userModule"));
   }
 
   @Test
@@ -79,7 +79,7 @@ public class EvalModule {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:1:11");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:11");
       return;
     }
 
@@ -97,7 +97,7 @@ public class EvalModule {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.UNRESOLVED_REFERENCE);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:1:17");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
       // the bad reference in question
       assertThat(sourceInfo.getSourceCode()).isEqualTo("foo");
       return;
@@ -118,7 +118,7 @@ public class EvalModule {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.DIVISION_BY_ZERO);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:1:17");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("1 // 0");
       return;
@@ -139,7 +139,7 @@ public class EvalModule {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.CUSTOM_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:1:17");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("throw {:bad 'error'}");
       // and the value thrown

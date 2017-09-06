@@ -47,15 +47,15 @@ public class CallUserFunction {
         .addStdLocation()
         .add(new MemoryLocation.Builder()
             .allowNativeFunctions(false)
-            .add("<userModule>", module)
+            .add("userModule", module)
             .build())
         .build();
 
     // compile the module
-    Runtime runtime = TweakFlow.compile(loadPath, "<userModule>");
+    Runtime runtime = TweakFlow.compile(loadPath, "userModule");
     // get user module from runtime
     return runtime
-        .getModules().get(runtime.unitKey("<userModule>"));
+        .getModules().get(runtime.unitKey("userModule"));
   }
 
   @Test
@@ -89,7 +89,7 @@ public class CallUserFunction {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.CUSTOM_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:1:24");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:24");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("throw {:bad 'error'}");
       // and the value thrown

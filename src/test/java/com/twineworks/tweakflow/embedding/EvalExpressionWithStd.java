@@ -77,15 +77,15 @@ public class EvalExpressionWithStd {
         .addStdLocation()
         .add(new MemoryLocation.Builder()
             .allowNativeFunctions(false)
-            .add("<userModule>", userModule)
+            .add("userModule", userModule)
             .build())
         .build();
 
     // compile the module
-    Runtime runtime = TweakFlow.compile(loadPath, "<userModule>");
+    Runtime runtime = TweakFlow.compile(loadPath, "userModule");
     // get user variable from runtime
     return runtime
-        .getModules().get(runtime.unitKey("<userModule>"))
+        .getModules().get(runtime.unitKey("userModule"))
         .getLibrary("lib")
         .getVar("x");
   }
@@ -128,7 +128,7 @@ public class EvalExpressionWithStd {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.UNRESOLVED_REFERENCE);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:3:6");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:3:6");
       // the bad reference in question
       assertThat(sourceInfo.getSourceCode()).isEqualTo("foo");
       return;
@@ -149,7 +149,7 @@ public class EvalExpressionWithStd {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.DIVISION_BY_ZERO);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:3:6");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:3:6");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("1 // 0");
       return;
@@ -170,7 +170,7 @@ public class EvalExpressionWithStd {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.CUSTOM_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("<userModule>:3:6");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:3:6");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("throw {:bad 'error'}");
       // and the value thrown
