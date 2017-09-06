@@ -34,7 +34,7 @@ import org.junit.Test;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.assertj.core.api.StrictAssertions.fail;
 
-public class EvalExpressionInEmptyScope {
+public class EvalExpressionInEmptyScopeTest {
 
   @Test
   public void evaluates_expression() throws Exception {

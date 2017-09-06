@@ -38,7 +38,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.assertj.core.api.StrictAssertions.fail;
 
-public class EvalProvidedVars {
+public class EvalProvidedVarsTest {
 
   private Runtime.Module compileModule(String module){
 

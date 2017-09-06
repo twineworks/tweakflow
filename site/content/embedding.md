@@ -141,7 +141,7 @@ if (parseResult.isSuccess()){
 }
 ```
 ### Examples
-See these [tests](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScope.java) for working examples of expression evaluation.
+See these [tests](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScopeTest.java) for working examples of expression evaluation.
 
 ## Evaluating a set of variables
 
@@ -279,7 +279,7 @@ for (Customer c : myCustomerCollection){
 ### Examples
 The [ModuleEvaluation](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java) sample compiles and calls into a set of modules.
 
-This [unit test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVars.java) demonstrates supplying values for provided variables.
+This [unit test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVarsTest.java) demonstrates supplying values for provided variables.
 
 ## Calling user functions
 Users can provide tweakflow functions to the host application. The application can call them through the runtime using `call` on a runtime var object that evaluated to a function.

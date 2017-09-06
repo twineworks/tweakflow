@@ -38,7 +38,7 @@ import org.junit.Test;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.assertj.core.api.StrictAssertions.fail;
 
-public class CallUserFunction {
+public class EvalModuleTest {
 
   private Runtime.Module compileModule(String module){
 
@@ -59,7 +59,7 @@ public class CallUserFunction {
   }
 
   @Test
-  public void calls_user_function() throws Exception {
+  public void evaluates_module_successfully() throws Exception {
 
     String module = "library lib {f: (x) -> x+1}";
     Runtime.Module m = compileModule(module);
@@ -67,29 +67,79 @@ public class CallUserFunction {
     Runtime.Var f = m.getLibrary("lib").getVar("f");
     assertThat(f.getValue().isFunction()).isTrue();
 
-    Value result = f.call(Values.make(1L));
-    assertThat(result).isEqualTo(Values.make(2L));
+  }
+
+  @Test
+  public void evaluates_module_with_parse_error() throws Exception {
+
+    String module = "library {f: (x) -> x+1}";
+    //                       ^ Library name missing. Error.
+    try {
+      Runtime.Module m = compileModule(module);
+    } catch (LangException e){
+      assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+      SourceInfo sourceInfo = e.getSourceInfo();
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:11");
+      return;
+    }
+
+    fail("Expected to catch and return. Should not be here.");
 
   }
 
   @Test
-  public void calls_throwing_user_function() throws Exception {
+  public void evaluates_module_with_compilation_error() throws Exception {
 
-    String exp = "library lib {f: (x) -> throw {:bad 'error'}}";
-    //                                   ^ manual throw
-    Runtime.Module m = compileModule(exp);
-    m.evaluate();
-
+    String exp = "library lib {f: foo}";
+    //                            ^ Unresolved reference to variable foo. Error.
     try {
-      Runtime.Var f = m.getLibrary("lib").getVar("f");
-      assertThat(f.getValue().isFunction()).isTrue();
+      Runtime.Module m = compileModule(exp);
+    } catch (LangException e){
+      assertThat(e.getCode()).isEqualTo(LangError.UNRESOLVED_REFERENCE);
+      SourceInfo sourceInfo = e.getSourceInfo();
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
+      // the bad reference in question
+      assertThat(sourceInfo.getSourceCode()).isEqualTo("foo");
+      return;
+    }
 
-      Value result = f.call(); // throws LangException
+    fail("Expected to catch and return. Should not be here.");
 
+  }
+
+  @Test
+  public void evaluates_module_with_evaluation_error() throws Exception {
+
+    String exp = "library lib {f: 1 // 0}";
+    //                            ^ can't do integer division by 0. Error.
+    try {
+      Runtime.Module x = compileModule(exp);
+      x.evaluate();
+    } catch (LangException e){
+      assertThat(e.getCode()).isEqualTo(LangError.DIVISION_BY_ZERO);
+      SourceInfo sourceInfo = e.getSourceInfo();
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
+      // the throwing expression
+      assertThat(sourceInfo.getSourceCode()).isEqualTo("1 // 0");
+      return;
+    }
+
+    fail("Expected to catch and return. Should not be here.");
+
+  }
+
+  @Test
+  public void evaluates_module_with_manual_throw() throws Exception {
+
+    String exp = "library lib {f: throw {:bad 'error'}}";
+    //            ^ manual throw
+    try {
+      Runtime.Module x = compileModule(exp);
+      x.evaluate();
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.CUSTOM_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:24");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:17");
       // the throwing expression
       assertThat(sourceInfo.getSourceCode()).isEqualTo("throw {:bad 'error'}");
       // and the value thrown
