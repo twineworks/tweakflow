@@ -35,6 +35,6 @@ menu:
 
 params:
   # shortcode {{< gitRef >}}
-  gitRef: "master"
+  gitRef: "releases/0.0.6"
   # shortcode {{< version >}}
-  version: "0.0.5"
+  version: "0.0.6"

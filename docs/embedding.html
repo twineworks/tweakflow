@@ -147,17 +147,17 @@
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.twineworks&lt;/groupId&gt;
     &lt;artifactId&gt;tweakflow&lt;/artifactId&gt;
-    &lt;version&gt;0.0.5&lt;/version&gt;
+    &lt;version&gt;0.0.6&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
 <h2 id="tweakflow-values">Tweakflow values</h2>
 
-<p>Whenever the application is exchanging data with tweakflow code, it does so through immutable value objects of class <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a>. Variable values, function parameters, function return values, everything is a value in tweakflow.</p>
+<p>Whenever the application is exchanging data with tweakflow code, it does so through immutable value objects of class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a>. Variable values, function parameters, function return values, everything is a value in tweakflow.</p>
 
 <h3 id="creating-values">Creating values</h3>
 
-<p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Values.java">Values</a> class provides static singleton members for certain constants and factory methods for creating values of all types.</p>
+<p>The <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Values.java">Values</a> class provides static singleton members for certain constants and factory methods for creating values of all types.</p>
 
 <p>The <code>nil</code> value is represented by the static singleton value <code>Values.NIL</code>. Boolean <code>true</code> and <code>false</code> are represented by singletons <code>Values.TRUE</code> and <code>Values.FALSE</code>.</p>
 
@@ -170,27 +170,27 @@ Value b = Values.make(1);      // a long
 Value c = Values.make(1.2d);   // a double
 </code></pre>
 
-<p>To create a datetime, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DateTimeValue.java">DateTimeValue</a> using one of its constructors, and pass that to <code>Values.make</code>.</p>
+<p>To create a datetime, first create a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/DateTimeValue.java">DateTimeValue</a> using one of its constructors, and pass that to <code>Values.make</code>.</p>
 
 <pre><code class="language-java">Value now = Values.make(
   new DateTimeValue(ZonedDateTime.now())); // a datetime
 </code></pre>
 
-<p>To create a dict, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DictValue.java">DictValue</a>, which is a persistent data structure mapping string keys to value objects. Remember that DictValue objects are immutable and all manipulation methods yield a new object. Pass a DictValue to <code>Values.make</code>, to create a tweakflow dict.</p>
+<p>To create a dict, first create a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/DictValue.java">DictValue</a>, which is a persistent data structure mapping string keys to value objects. Remember that DictValue objects are immutable and all manipulation methods yield a new object. Pass a DictValue to <code>Values.make</code>, to create a tweakflow dict.</p>
 
 <pre><code class="language-java">Value dict = Values.make(new DictValue()
     .put(&quot;foo&quot;, Values.make(&quot;hello&quot;))
     .put(&quot;bar&quot;, Values.make(42L)));
 </code></pre>
 
-<p>To create a list, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ListValue.java">ListValue</a>, which is a persistent data structure. Remember that ListValue objects are immutable and all manipulation methods yield a new object. Pass a ListValue to <code>Values.make</code>, to create a tweakflow list.</p>
+<p>To create a list, first create a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/ListValue.java">ListValue</a>, which is a persistent data structure. Remember that ListValue objects are immutable and all manipulation methods yield a new object. Pass a ListValue to <code>Values.make</code>, to create a tweakflow list.</p>
 
 <pre><code class="language-java">Values list = Values.make(new ListValue()
     .append(Values.make(&quot;hello&quot;))
     .append(Values.make(&quot;world&quot;)));
 </code></pre>
 
-<p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
+<p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
 
 <p>The following snipped creates a function that takes one string parameter named <code>x</code> with default value <code>&quot;hello&quot;</code>, and returns a boolean.</p>
 
@@ -204,7 +204,7 @@ Value c = Values.make(1.2d);   // a double
 
 <h3 id="inspecting-values">Inspecting values</h3>
 
-<p>A <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a> object reports its <code>type</code>, which is one of the singleton objects on <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/types/Types.java">Types</a>. It also has boolean <code>is{TypeName}</code> methods to determine the type.</p>
+<p>A <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a> object reports its <code>type</code>, which is one of the singleton objects on <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/types/Types.java">Types</a>. It also has boolean <code>is{TypeName}</code> methods to determine the type.</p>
 
 <p>Depending on the type of the value, call the method named after the type to retrieve the contained payload object. Strings are retrieved using <code>string</code>, lists are retrieved using <code>list</code>, and so on. Longs and doubles are retrieved using <code>longNum</code> and <code>doubleNum</code> respectively. Method names <code>long</code> and <code>double</code> are not allowed in Java.</p>
 
@@ -225,7 +225,7 @@ else {
 }
 </code></pre>
 
-<p>To get the literal notation of a tweakflow value, use <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ValueInspector.java">ValueInspector.inspect</a>.</p>
+<p>To get the literal notation of a tweakflow value, use <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/ValueInspector.java">ValueInspector.inspect</a>.</p>
 
 <pre><code class="language-java">String dump = ValueInspector.inspect(
     Values.make(new ListValue()
@@ -240,7 +240,7 @@ System.out.println(dump);
 
 <h2 id="evaluating-expressions">Evaluating expressions</h2>
 
-<p>The simplest case of embedding tweakflow is to evaluate independent, self-contained expressions in an empty scope. This is just a call to <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/TweakFlow.java">Tweakflow</a>.evaluate.</p>
+<p>The simplest case of embedding tweakflow is to evaluate independent, self-contained expressions in an empty scope. This is just a call to <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/TweakFlow.java">Tweakflow</a>.evaluate.</p>
 
 <pre><code class="language-java">TweakFlow.evaluate(&quot;1+2&quot;); // returns 3
 </code></pre>
@@ -277,11 +277,11 @@ if (parseResult.isSuccess()){
 
 <h3 id="examples">Examples</h3>
 
-<p>See these <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScopeTest.java">tests</a> for working examples of expression evaluation.</p>
+<p>See these <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScopeTest.java">tests</a> for working examples of expression evaluation.</p>
 
 <h2 id="evaluating-a-set-of-variables">Evaluating a set of variables</h2>
 
-<p>If the application&rsquo;s use-case is to have users define a table of variables, then the <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/util/VarTable.java">VarTable</a> helper class supports implementing it efficiently. It creates an in-memory module with a library containing user variables, compiles to a runtime, and relates any compilation error to the offending variable. The application can provide a prologue with any imports and aliases it wants to be available in scope.</p>
+<p>If the application&rsquo;s use-case is to have users define a table of variables, then the <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/util/VarTable.java">VarTable</a> helper class supports implementing it efficiently. It creates an in-memory module with a library containing user variables, compiles to a runtime, and relates any compilation error to the offending variable. The application can provide a prologue with any imports and aliases it wants to be available in scope.</p>
 
 <pre><code class="language-java">VarTable table = new VarTable.Builder()
     .setPrologue(
@@ -303,13 +303,13 @@ Runtime runtime = table.compile();
 
 <h3 id="examples-1">Examples</h3>
 
-<p>See the class <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java">test</a> for examples  demonstrating usage and error handling.</p>
+<p>See the class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java">test</a> for examples  demonstrating usage and error handling.</p>
 
-<p>There is a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java">demo application</a> which uses a var table. It asks the user for some expressions and verifies them.</p>
+<p>There is a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java">demo application</a> which uses a var table. It asks the user for some expressions and verifies them.</p>
 
 <p>You can run it using:</p>
 
-<pre><code class="language-bash">java -cp tweakflow-0.0.5.jar com.twineworks.tweakflow.examples.VarTableEvaluation
+<pre><code class="language-bash">java -cp tweakflow-0.0.6.jar com.twineworks.tweakflow.examples.VarTableEvaluation
 </code></pre>
 
 <p>An invocation might look like:</p>
@@ -329,7 +329,7 @@ Congratulations. The formulas seem to be correct.
 
 <p>If users need the standard library, or need the ability to define variables, libraries, or even modules themselves, then the application must generate and compile the set of modules involved.</p>
 
-<p>The result is a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/runtime/Runtime.java">runtime</a> object that provides handles to all compiled modules, libraries, and variables. The application can then supply values for any variables it <a href="./reference.html#variables">provides</a>, and evaluate any variables it is interested in.</p>
+<p>The result is a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/runtime/Runtime.java">runtime</a> object that provides handles to all compiled modules, libraries, and variables. The application can then supply values for any variables it <a href="./reference.html#variables">provides</a>, and evaluate any variables it is interested in.</p>
 
 <p>For the purposes of discussion, consider the following module.</p>
 
@@ -357,7 +357,7 @@ library user {
 <li>Compile the modules. Any imports will be searched on the load path.</li>
 </ul>
 
-<p>A module might be a resource, a file, or an in-memory object. The load path contains <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/load/loadpath/LoadPathLocation.java">LoadPathLocations</a> specifying where tweakflow will look for modules. Assuming user_module.tf was generated from user input and is just a string, the application must put it into a memory location, and place that location into the load path.</p>
+<p>A module might be a resource, a file, or an in-memory object. The load path contains <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/load/loadpath/LoadPathLocation.java">LoadPathLocations</a> specifying where tweakflow will look for modules. Assuming user_module.tf was generated from user input and is just a string, the application must put it into a memory location, and place that location into the load path.</p>
 
 <pre><code class="language-java">MemoryLocation memLocation = new MemoryLocation.Builder()
             .add(&quot;user_module.tf&quot;, moduleText)
@@ -412,9 +412,9 @@ Value userGreeting = greeting.getValue();
 
 <h3 id="examples-2">Examples</h3>
 
-<p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java">ModuleEvaluation</a> sample compiles and calls into a set of modules.</p>
+<p>The <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java">ModuleEvaluation</a> sample compiles and calls into a set of modules.</p>
 
-<p>This <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVarsTest.java">unit test</a> demonstrates supplying values for provided variables.</p>
+<p>This <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVarsTest.java">unit test</a> demonstrates supplying values for provided variables.</p>
 
 <h2 id="calling-user-functions">Calling user functions</h2>
 
@@ -451,19 +451,19 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
 
 <h3 id="examples-3">Examples</h3>
 
-<p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/CallingFunctions.java">CallingFunctions</a> sample contains demonstrations of all above techniques.</p>
+<p>The <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/examples/CallingFunctions.java">CallingFunctions</a> sample contains demonstrations of all above techniques.</p>
 
 <h2 id="error-handling">Error handling</h2>
 
-<p>Tweakflow throws <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java">LangExceptions</a> whenever something goes wrong.</p>
+<p>Tweakflow throws <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java">LangExceptions</a> whenever something goes wrong.</p>
 
 <p>There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don&rsquo;t hold up. Referencing undefined variables, or defining variables more than once are common compilation error. Runtime errors occur when tweakflow code throws errors during evaluation using the <a href="./reference.html#throwing-errors">throw</a> syntax.</p>
 
-<p>An exception holds an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java">error code</a> and a message describing the error condition. You can get the value that was thrown by calling <code>toErrorValue</code>. Calling <code>getDigestMessage</code> gets you a detailed error message that includes stack trace information. The exception usually contains a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java">SourceInfo</a> object which gives the exact location of the error condition. Note however that source info may be <code>null</code>, in case the error happens in a context where no source information is available.</p>
+<p>An exception holds an <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java">error code</a> and a message describing the error condition. You can get the value that was thrown by calling <code>toErrorValue</code>. Calling <code>getDigestMessage</code> gets you a detailed error message that includes stack trace information. The exception usually contains a <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java">SourceInfo</a> object which gives the exact location of the error condition. Note however that source info may be <code>null</code>, in case the error happens in a context where no source information is available.</p>
 
 <h3 id="examples-4">Examples</h3>
 
-<p>See these <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding">test files</a> for examples of handling errors. Each test file contains specific tests for error handling.</p>
+<p>See these <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/test/java/com/twineworks/tweakflow/embedding">test files</a> for examples of handling errors. Each test file contains specific tests for error handling.</p>
 
       </main>
     </div>

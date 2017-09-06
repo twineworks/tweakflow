@@ -1631,7 +1631,7 @@ function
 
 <h4 id="functions-in-java">Functions in Java</h4>
 
-<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
+<p>Instead of a body expression, tweakflow functions can specify a Java class that implements the function. The notation is the keyword <code>via</code> followed by a map literal containing the key <code>:class</code> which points to a Java class. The Java class must implement the tag interface <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a>, as well as a exactly one of the following interfaces governing parameter passing.</p>
 
 <table>
 <thead>
@@ -1643,12 +1643,12 @@ function
 
 <tbody>
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java">Arity0UserFunction</a></td>
 <td>Implements zero-parameter functions.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java">Arity1UserFunction</a></td>
 <td>Implements single-parameter functions.</td>
 </tr>
 
@@ -1658,23 +1658,23 @@ function
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
 <td>Implements functions with three paramters.</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java">Arity4UserFunction</a></td>
 <td>Implements functions with four parameters</td>
 </tr>
 
 <tr>
-<td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
+<td><a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java">ArityNUserFunction</a></td>
 <td>Implements functions with any number of parameters. Arguments are passed as an array of values.</td>
 </tr>
 </tbody>
 </table>
 
-<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
+<p>For example, the inner class <a href="https://github.com/twineworks/tweakflow/blob/releases/0.0.6/src/main/java/com/twineworks/tweakflow/std/Strings.java#L43">com.twineworks.tweakflow.std.Strings$concat</a> implements the <code>strings.concat</code> function of the standard library.</p>
 
 <pre><code class="language-tweakflow">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
 function
@@ -1694,7 +1694,7 @@ function
 &quot;3&quot;
 </code></pre>
 
-<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/master/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
+<p>See the standard library functions in <a href="https://github.com/twineworks/tweakflow/tree/releases/0.0.6/src/main/java/com/twineworks/tweakflow/std">std</a> for examples of functions implemented in Java.</p>
 
 <h3 id="void">Void</h3>
 
