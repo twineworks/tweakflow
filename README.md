@@ -1,6 +1,6 @@
 # tweakflow
 
-[![Java 8+](https://img.shields.io/badge/java-8+-4c7e9f.svg)](http://java.oracle.com) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
+[![Java 8+](https://img.shields.io/badge/java-8+-4c7e9f.svg)](http://java.oracle.com) [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
 
 An embeddable expression language for Java. Embed tweakflow in your application to interact with user-supplied expressions.
 
