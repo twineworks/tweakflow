@@ -81,9 +81,9 @@ public class TweakFlow {
 
   public static ParseResult parse(String exp){
     ParseUnit parseUnit = new MemoryLocation.Builder()
-        .add("<eval>", exp)
+        .add("eval", exp)
         .build()
-        .getParseUnit("<eval>");
+        .getParseUnit("eval");
 
     return new Parser(parseUnit).parseExpression();
 
@@ -97,9 +97,9 @@ public class TweakFlow {
 
     ParseUnit parseUnit = new MemoryLocation.Builder()
         .allowNativeFunctions(allowNativeFunctions)
-        .add("<eval>", exp)
+        .add("eval", exp)
         .build()
-        .getParseUnit("<eval>");
+        .getParseUnit("eval");
 
     ParseResult parseResult = new Parser(parseUnit).parseExpression();
 

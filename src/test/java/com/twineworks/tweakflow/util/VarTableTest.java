@@ -96,7 +96,7 @@ c:
   public void custom_module_path_and_library_name() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setModulePath("<user_vars>")
+        .setModulePath("user_vars")
         .setVarLibraryName("alphabet")
         .addVar("a", "1")
         .addVar("b", "2")
@@ -105,7 +105,7 @@ c:
 
     assertThat(table.hasParseErrors()).isFalse();
 
-    assertThat(table.getModulePath()).isEqualTo("<user_vars>");
+    assertThat(table.getModulePath()).isEqualTo("user_vars");
     assertThat(table.getVarLibraryName()).isEqualTo("alphabet");
 
     Runtime runtime = table.compile();

@@ -115,7 +115,7 @@ public class Run {
   private static String[] parseMain(String main){
 
     // get main
-    ParseUnit parseUnit = new MemoryLocation.Builder().add("<main>", main).build().getParseUnit("<main>");
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("main", main).build().getParseUnit("main");
     ParseResult parseResult = new Parser(parseUnit).parseReference();
 
     if (parseResult.isError()){
@@ -134,7 +134,7 @@ public class Run {
   }
 
   public static ExpressionNode parseExp(String exp){
-    ParseUnit parseUnit = new MemoryLocation.Builder().add("<exp>", exp).build().getParseUnit("<exp>");
+    ParseUnit parseUnit = new MemoryLocation.Builder().add("exp", exp).build().getParseUnit("exp");
     ParseResult parseResult = new Parser(parseUnit).parseExpression();
 
     if (parseResult.isError()){

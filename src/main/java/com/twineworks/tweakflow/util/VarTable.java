@@ -44,7 +44,7 @@ public class VarTable {
   public static class Builder implements com.twineworks.tweakflow.util.Builder<VarTable>{
 
     String prologue = "";
-    String modulePath = "<var_table>";
+    String modulePath = "var_table_module";
     String varLibraryName = "var_table";
     LinkedHashMap<String, String> vars = new LinkedHashMap<>();
     LoadPath loadPath = new LoadPath.Builder().addStdLocation().build();

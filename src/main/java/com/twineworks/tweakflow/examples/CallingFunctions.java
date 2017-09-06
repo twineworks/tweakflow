@@ -45,15 +45,15 @@ public class CallingFunctions {
         .addStdLocation()
         .add(new MemoryLocation.Builder()
             .allowNativeFunctions(false)
-            .add("<userModule>", module)
+            .add("userModule", module)
             .build())
         .build();
 
     // compile the module
-    Runtime runtime = TweakFlow.compile(loadPath, "<userModule>");
+    Runtime runtime = TweakFlow.compile(loadPath, "userModule");
     // get user module from runtime
     return runtime
-        .getModules().get(runtime.unitKey("<userModule>"));
+        .getModules().get(runtime.unitKey("userModule"));
   }
 
   public static void main(String[] args) {

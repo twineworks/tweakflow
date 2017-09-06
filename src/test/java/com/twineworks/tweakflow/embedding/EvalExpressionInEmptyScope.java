@@ -82,7 +82,7 @@ public class EvalExpressionInEmptyScope {
       TweakFlow.evaluate("1 // 0"); // integer division by 0 not possible
     } catch (LangException e){
       assertThat(e.getCode()).isSameAs(LangError.DIVISION_BY_ZERO);
-      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("eval:1:1");
       assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("1 // 0");
       return;
     }
@@ -98,7 +98,7 @@ public class EvalExpressionInEmptyScope {
       TweakFlow.evaluate("throw 'catch me if you can!'");
     } catch (LangException e){
       assertThat(e.getCode()).isSameAs(LangError.CUSTOM_ERROR);
-      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("eval:1:1");
       assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("throw 'catch me if you can!'");
       assertThat(e.toErrorValue()).isEqualTo(Values.make("catch me if you can!"));
       return;
@@ -116,7 +116,7 @@ public class EvalExpressionInEmptyScope {
       //                            ^ 'mary' might be a reference, but another reference 'had' cannot follow
     } catch (LangException e){
       assertThat(e.getCode()).isSameAs(LangError.PARSE_ERROR);
-      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:6");
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("eval:1:6");
       return;
     }
 
@@ -132,7 +132,7 @@ public class EvalExpressionInEmptyScope {
       TweakFlow.evaluate(code);
     } catch (LangException e){
       assertThat(e.getCode()).isSameAs(LangError.UNRESOLVED_REFERENCE);
-      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("<eval>:1:1");
+      assertThat(e.getSourceInfo().getFullLocation()).isEqualTo("eval:1:1");
       assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("strings.length");
       return;
     }
