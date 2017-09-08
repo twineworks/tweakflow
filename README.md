@@ -4,7 +4,7 @@
 
 An embeddable expression language for Java. Embed tweakflow in your application to interact with user-supplied expressions.
 
-Tweakflow offers simple expression evaluation as well as user variables, libraries, and modules. Your application can offers varying levels of sophistication depending on user needs.
+Tweakflow offers simple expression evaluation as well as user variables, libraries, and modules. Your application can offer varying levels of sophistication depending on your needs.
 
 Tweakflow uses immutable values for everything, and all functions are pure. This leads to repeatable expression evaluation without side effects. Your app remains in control. Unlike other embeddable languages, users cannot use tweakflow to gain access to your app's internals.
 
