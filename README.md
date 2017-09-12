@@ -39,16 +39,7 @@ Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow
 Java 8 or later is required.
 
 ## Getting the jar
-Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://repo1.maven.org/maven2/com/twineworks/tweakflow/).
-
-You can use the following maven dependency:
-```xml
-<dependency>
-    <groupId>com.twineworks</groupId>
-    <artifactId>tweakflow</artifactId>
-    <version>0.0.6</version>
-</dependency>
-```
+Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow").
 
 ## Getting started
 
