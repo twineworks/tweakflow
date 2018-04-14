@@ -141,10 +141,10 @@
 
 <p>To launch the REPL run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar itf
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar repl
 </code></pre>
 
-<p>The acronym <code>itf</code> stands for interactive tweakflow. You should see a prompt similar to this:</p>
+<p>The acronym <code>repl</code> stands for &lsquo;read evaluate process loop&rsquo;. You should see a prompt similar to this:</p>
 
 <pre><code class="language-text">tweakflow interactive shell    \? for help, \q to quit
 std.tf&gt;
@@ -378,7 +378,7 @@ acme.tf&gt;
 
 <p>The REPL accepts a number of command line arguments that influence which modules are initially loaded, and which directories are placed on the load path. To learn more, run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar itf --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar repl --help
 </code></pre>
 
 <h2 id="runner">Runner</h2>
@@ -387,12 +387,12 @@ acme.tf&gt;
 
 <p>Run the following command to view the command line options.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tf --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar run --help
 </code></pre>
 
 <p>The module(s) to load are given as positional arguments. You can pass <code>std</code> to load the standard module.</p>
 
-<p>The main function to call is given using the <code>-m</code> switch in <code>library_name.var_name</code> format. It is a reference in module scope.</p>
+<p>The main function to call is given using the <code>-m</code> switch in <code>library_name.var_name</code> format. It is a reference in module scope of the first passed module.</p>
 
 <p>Arguments are given in order, using a series of <code>-a</code> and <code>-ea</code> switches. The <code>-a</code> switch takes the argument verbatim and turns it into a tweakflow string. The <code>-ea</code> switch treats the argument as an expression that is evaluated first, before it is passed on to the function.</p>
 
@@ -400,13 +400,13 @@ acme.tf&gt;
 
 <p>The following invocation calls <code>strings.length(&quot;foo&quot;)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tf -m strings.length -a foo std
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar run -m strings.length -a foo std
 3
 </code></pre>
 
 <p>Since the argument is a string, it is passed using the <code>-a</code> switch. Please note that passing the argument using the <code>-ea</code> switch would fail, since <code>foo</code> would simply be a reference to an undefined variable. If you wish to pass strings using <code>-ea</code>, you have to pass a proper literal string as in:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tf -m strings.length -ea &quot;'foo'&quot; std
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar run -m strings.length -ea &quot;'foo'&quot; std
 3
 </code></pre>
 
@@ -416,7 +416,7 @@ acme.tf&gt;
 
 <p>The following invocation calls <code>data.map([1, 2, 3, 4], (x) -&gt; x*x)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tf -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -&gt; x*x' std
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar run -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -&gt; x*x' std
 [1, 4, 9, 16]
 </code></pre>
 
@@ -424,7 +424,7 @@ acme.tf&gt;
 
 <h3 id="loading-custom-modules">Loading custom modules</h3>
 
-<p>You can load any module on disk. Assuming you have the following module available:</p>
+<p>You can load any module on disk. Let&rsquo;s say you have the following module available:</p>
 
 <pre><code class="language-tweakflow"># acme.tf
 
@@ -467,13 +467,13 @@ library product_codes {
 
 <p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tf -m product_codes.normalize -a ksh765fg25ff acme.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
 &quot;KSH7-65FG-25FF&quot;
 </code></pre>
 
 <h2 id="metadata-extraction">Metadata extraction</h2>
 
-<p>The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The <code>tfdoc</code> utility makes it possible to extract that information in a structured way.</p>
+<p>The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The <code>doc</code> utility makes it possible to extract that information in a structured way.</p>
 
 <p>Let&rsquo;s work with the following module file:</p>
 
@@ -515,19 +515,19 @@ library bar {
 
 <p>You can view all command line switches by running the following:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tfdoc --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar doc --help
 </code></pre>
 
 <p>The next sections provide a walkthrough for the most common options.</p>
 
 <h3 id="printing-metadata">Printing metadata</h3>
 
-<p>The following invokes <code>tfdoc</code>, passing in the module to extract metadata from.</p>
+<p>The following invokes <code>doc</code>, passing in the module to extract metadata from.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tfdoc foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar doc foo.tf
 </code></pre>
 
-<p>By default the <code>tfdoc</code> utility prints the structure of available meta data:</p>
+<p>By default the <code>doc</code> utility prints the structure of available meta data:</p>
 
 <pre><code class="language-text">{
   :node &quot;module&quot;,
@@ -568,7 +568,7 @@ library bar {
 
 <h3 id="transforming-metadata">Transforming metadata</h3>
 
-<p>The <code>tfdoc</code> utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.</p>
+<p>The <code>doc</code> utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.</p>
 
 <p>A transformer is a special tweakflow module that has a library named <code>transform</code> which in turn has a variable named <code>transform</code>. This variable holds a function accepting above structure as its sole argument. The return value of the function is the output of the transformer.</p>
 
@@ -609,7 +609,7 @@ library transform {
 
 <p>Let&rsquo;s run this transformer over the standard library:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tfdoc -t transformer.tf std
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar doc -t transformer.tf std
 Module std.tf contains 8 libraries, and a total of 159 variables.
 </code></pre>
 
@@ -617,20 +617,20 @@ Module std.tf contains 8 libraries, and a total of 159 variables.
 
 <h3 id="processing-more-than-one-module">Processing more than one module</h3>
 
-<p>You can pass more than one module to <code>tfdoc</code>, and they are processed in order.</p>
+<p>You can pass more than one module to <code>doc</code>, and they are processed in order.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tfdoc -t transformer.tf std foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar doc -t transformer.tf std foo.tf
 Module std.tf contains 8 libraries, and a total of 159 variables.
 Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
 </code></pre>
 
 <h3 id="saving-the-output">Saving the output</h3>
 
-<p>If you&rsquo;re supplying relative module paths to <code>tfdoc</code>, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is <code>txt</code>.</p>
+<p>If you&rsquo;re supplying relative module paths to <code>doc</code>, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is <code>txt</code>.</p>
 
 <p>Assuming foo.tf is in the current directory, run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.0.6.jar tfdoc -t transformer.tf --output docs --output-extension md std.tf foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.0.7.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf
 </code></pre>
 
 <p>It generates a <code>docs</code> directory, placing the following files in there:</p>
