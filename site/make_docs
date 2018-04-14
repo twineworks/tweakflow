@@ -4,7 +4,7 @@ set -e
 cd $(dirname "$0")/..
 
 echo "* generating documentation for std"
-bin/tfdoc -t doc/markdown_transformer -oe md -o site/content/modules std
+bin/doc -t doc/markdown_transformer -oe md -o site/content/modules std
 echo ""
 echo "* deleting old docs"
 rm -rf docs

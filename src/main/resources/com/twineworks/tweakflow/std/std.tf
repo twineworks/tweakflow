@@ -26,7 +26,7 @@ The standard module contains basic functions for general computing tasks.
 
 All samples run in the interactive tweakflow REPL which you can launch using:
 ```bash
-java -jar tweakflow-{{< version >}}.jar itf
+java -jar tweakflow-{{< version >}}.jar repl
 ```
 ~~~
 

@@ -709,7 +709,7 @@ Name resolution for references generally starts in the scope the reference appea
 
 ### Annotations
 
-Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like tfdoc can extract them to generate project documentation.
+Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like `doc` can extract them to generate project documentation.
 
 Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyword `meta` followed by an expression.
 
@@ -1252,7 +1252,7 @@ Dict as boolean
 
 The empty dict `{}` converts to `false`. Any other dict value converts to `true`.
 
-### Dict as list
+Dict as list
 
 Dicts are converted to lists as a sequence of key-value pairs. An empty dict gives an empty list. Keys and values appear in pairs, but the order of the pairs is not defined.
 

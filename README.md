@@ -43,9 +43,9 @@ Get the latest release jar from [github](https://github.com/twineworks/tweakflow
 
 ## Getting started
 
-Start the REPL using:  
+Start the REPL using:
 ```bash
-$ java -jar tweakflow-0.0.6.jar itf
+$ java -jar tweakflow-0.0.7.jar repl
 ```
 
 Start typing expressions for the REPL to evaluate:

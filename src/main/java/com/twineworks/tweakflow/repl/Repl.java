@@ -48,7 +48,7 @@ public class Repl {
 
   private static ArgumentParser createMainArgumentParser(){
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("itf");
+    ArgumentParser parser = ArgumentParsers.newArgumentParser("repl");
 
     parser.addArgument("-I", "--load_path")
         .required(false)

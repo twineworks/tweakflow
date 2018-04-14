@@ -10,9 +10,9 @@ The tweakflow jar offers entry points for some language tools that can be execut
 
 To launch the REPL run:
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar itf
+$ java -jar tweakflow-{{< version >}}.jar repl
 ```
-The acronym `itf` stands for interactive tweakflow. You should see a prompt similar to this:
+The acronym `repl` stands for 'read evaluate process loop'. You should see a prompt similar to this:
 
 ```text
 tweakflow interactive shell    \? for help, \q to quit
@@ -250,7 +250,7 @@ acme.tf> product_codes.normalize("ah-78277-Nz")
 The REPL accepts a number of command line arguments that influence which modules are initially loaded, and which directories are placed on the load path. To learn more, run:
 
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar itf --help
+$ java -jar tweakflow-{{< version >}}.jar repl --help
 ```
 
 ## Runner
@@ -258,25 +258,25 @@ The runner loads a module and calls a main function with some arguments you supp
 
 Run the following command to view the command line options.
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tf --help
+$ java -jar tweakflow-{{< version >}}.jar run --help
 ```
 
 The module(s) to load are given as positional arguments. You can pass `std` to load the standard module.
 
-The main function to call is given using the `-m` switch in `library_name.var_name` format. It is a reference in module scope.
+The main function to call is given using the `-m` switch in `library_name.var_name` format. It is a reference in module scope of the first passed module.
 
 Arguments are given in order, using a series of `-a` and `-ea` switches. The `-a` switch takes the argument verbatim and turns it into a tweakflow string. The `-ea` switch treats the argument as an expression that is evaluated first, before it is passed on to the function.
 
 ### Passing string arguments
 The following invocation calls `strings.length("foo")`:
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tf -m strings.length -a foo std
+$ java -jar tweakflow-{{< version >}}.jar run -m strings.length -a foo std
 3
 ```
 Since the argument is a string, it is passed using the `-a` switch. Please note that passing the argument using the `-ea` switch would fail, since `foo` would simply be a reference to an undefined variable. If you wish to pass strings using `-ea`, you have to pass a proper literal string as in:
 
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tf -m strings.length -ea "'foo'" std
+$ java -jar tweakflow-{{< version >}}.jar run -m strings.length -ea "'foo'" std
 3
 ```
 Shell escaping can make it tricky to know exactly what is passed. It is therefore recommended to avoid the complexity and pass strings using `-a`.
@@ -284,13 +284,13 @@ Shell escaping can make it tricky to know exactly what is passed. It is therefor
 ### Passing expression arguments
 The following invocation calls `data.map([1, 2, 3, 4], (x) -> x*x)`:
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tf -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -> x*x' std
+$ java -jar tweakflow-{{< version >}}.jar run -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -> x*x' std
 [1, 4, 9, 16]
 ```
 This time both arguments need to be evaluated to a list and function first. Therefore the `-ea` switch is used both times.
 
 ### Loading custom modules
-You can load any module on disk. Assuming you have the following module available:
+You can load any module on disk. Let's say you have the following module available:
 ```tweakflow
 # acme.tf
 
@@ -334,13 +334,13 @@ library product_codes {
 To load it, and run `product_codes.normalize("ksh765fg25ff")`:
 
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tf -m product_codes.normalize -a ksh765fg25ff acme.tf
+$ java -jar tweakflow-{{< version >}}.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
 "KSH7-65FG-25FF"
 ```
 
 ## Metadata extraction
 
-The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The `tfdoc` utility makes it possible to extract that information in a structured way.
+The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The `doc` utility makes it possible to extract that information in a structured way.
 
 Let's work with the following module file:
 ```tweakflow
@@ -381,18 +381,18 @@ library bar {
 ### Command overview
 You can view all command line switches by running the following:
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tfdoc --help
+$ java -jar tweakflow-{{< version >}}.jar doc --help
 ```
 The next sections provide a walkthrough for the most common options.
 
 ### Printing metadata
 
-The following invokes `tfdoc`, passing in the module to extract metadata from.
+The following invokes `doc`, passing in the module to extract metadata from.
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tfdoc foo.tf
+$ java -jar tweakflow-{{< version >}}.jar doc foo.tf
 ```
 
-By default the `tfdoc` utility prints the structure of available meta data:
+By default the `doc` utility prints the structure of available meta data:
 
 ```text
 {
@@ -432,7 +432,7 @@ By default the `tfdoc` utility prints the structure of available meta data:
 Please note that the output is a valid tweakflow dict value.
 
 ### Transforming metadata
-The `tfdoc` utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.
+The `doc` utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.
 
 A transformer is a special tweakflow module that has a library named `transform` which in turn has a variable named `transform`. This variable holds a function accepting above structure as its sole argument. The return value of the function is the output of the transformer.
 
@@ -475,27 +475,27 @@ library transform {
 Let's run this transformer over the standard library:
 
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tfdoc -t transformer.tf std
+$ java -jar tweakflow-{{< version >}}.jar doc -t transformer.tf std
 Module std.tf contains 8 libraries, and a total of 159 variables.
 ```
 
 A more sophisticated transformer might generate markdown, XML, or HTML documentation for the module.
 
 ### Processing more than one module
-You can pass more than one module to `tfdoc`, and they are processed in order.
+You can pass more than one module to `doc`, and they are processed in order.
 
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tfdoc -t transformer.tf std foo.tf
+$ java -jar tweakflow-{{< version >}}.jar doc -t transformer.tf std foo.tf
 Module std.tf contains 8 libraries, and a total of 159 variables.
 Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
 ```
 
 ### Saving the output
-If you're supplying relative module paths to `tfdoc`, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is `txt`.
+If you're supplying relative module paths to `doc`, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is `txt`.
 
 Assuming foo.tf is in the current directory, run:
 ```bash
-$ java -jar tweakflow-{{< version >}}.jar tfdoc -t transformer.tf --output docs --output-extension md std.tf foo.tf
+$ java -jar tweakflow-{{< version >}}.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf
 ```
 
 It generates a `docs` directory, placing the following files in there:

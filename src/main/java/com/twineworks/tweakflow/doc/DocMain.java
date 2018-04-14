@@ -55,7 +55,7 @@ public class DocMain {
 
   private static ArgumentParser createMainArgumentParser() {
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("tfdoc");
+    ArgumentParser parser = ArgumentParsers.newArgumentParser("doc");
 
     parser.addArgument("-I", "--load_path")
         .required(false)

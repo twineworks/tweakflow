@@ -25,14 +25,14 @@ Tweakflow requires Java 8 or later.
 ## Starting a tweakflow REPL
 Launch the interactive REPL using:
 
-`java -jar tweakflow-{{< version >}}.jar itf`
+`java -jar tweakflow-{{< version >}}.jar repl`
 
-The `itf` argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
+The `repl` argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.
 
 You should see a prompt similar to this:
 
 ```none
-$ java -jar tweakflow-{{< version>}}.jar itf
+$ java -jar tweakflow-{{< version>}}.jar repl
 tweakflow interactive shell    \? for help, \q to quit
 std.tf>
 ```

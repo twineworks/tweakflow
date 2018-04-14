@@ -33,7 +33,7 @@ import java.util.Arrays;
 public class Main {
 
   private static void printUsage(){
-    System.out.println("usage: tweakflow [itf | tf | tfdoc] [args]");
+    System.out.println("usage: tweakflow [repl | run | doc] [args]");
   }
 
   public static void main(String[] args){
@@ -42,13 +42,13 @@ public class Main {
     if (args.length == 0){
       printUsage();
     }
-    else if (args[0].equals("itf")){
+    else if (args[0].equals("repl")){
       Repl.main(Arrays.copyOfRange(args, 1, args.length));
     }
-    else if (args[0].equals("tf")){
+    else if (args[0].equals("run")){
       Run.main(Arrays.copyOfRange(args, 1, args.length));
     }
-    else if (args[0].equals("tfdoc")){
+    else if (args[0].equals("doc")){
       DocMain.main(Arrays.copyOfRange(args, 1, args.length));
     }
     else{
