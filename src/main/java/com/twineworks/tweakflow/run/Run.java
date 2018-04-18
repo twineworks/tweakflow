@@ -37,6 +37,7 @@ import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
+import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
@@ -80,13 +81,18 @@ public class Run {
 
   private static ArgumentParser createMainArgumentParser(){
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("tf");
+    ArgumentParser parser = ArgumentParsers.newArgumentParser("run");
 
     parser.addArgument("-I", "--load_path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList())
         .action(Arguments.append());
+
+    parser.addArgument("--escape-result")
+        .setDefault(Boolean.FALSE)
+        .action(Arguments.storeTrue())
+        .type(Boolean.class);
 
     parser.addArgument("-m", "--main")
         .setDefault("main.main")
@@ -162,6 +168,7 @@ public class Run {
     String lib = "main";
     String var = "main";
 
+    boolean escapeResult = false;
     Value[] callArgValues = null;
 
     try {
@@ -187,6 +194,9 @@ public class Run {
       }
 
       loadPath = loadPathBuilder.build();
+
+      // escape result?
+      escapeResult = res.getBoolean("escape_result");
 
       // main
       main = res.getString("main");
@@ -234,7 +244,13 @@ public class Run {
       Runtime.Var mainVar = module.getLibrary(lib).getVar(var);
       Value result = mainVar.call(callArgValues);
 
-      System.out.println(ValueInspector.inspect(result));
+      if (!escapeResult && result.type() == Types.STRING){
+        System.out.println(result.string());
+      }
+      else{
+        System.out.println(ValueInspector.inspect(result));
+      }
+
     }
     catch(LangException e){
       System.err.println(e.getDigestMessage());
