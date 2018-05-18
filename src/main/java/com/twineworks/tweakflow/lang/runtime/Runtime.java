@@ -662,10 +662,6 @@ public class Runtime {
         .collect(Collectors.toList());
   }
 
-  /**
-   *
-   * @return foo
-   */
   public RuntimeSet getRuntimeSet() {
     return runtimeSet;
   }
