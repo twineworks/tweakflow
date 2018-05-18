@@ -332,6 +332,9 @@ public class Interpreter {
   private static Value evaluateExpression(ExpressionNode node, Stack stack, EvaluationContext context){
 
     try {
+      if (Thread.interrupted()){
+        throw new InterruptedException("Interpreter thread interrupted");
+      }
       return node.getOp().eval(stack, context);
     }
     catch(Throwable e){
