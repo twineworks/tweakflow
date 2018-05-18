@@ -168,6 +168,27 @@ public class EvalProvidedVarsTest {
   }
 
   @Test
+  public void recognises_provided_variables_as_referenced() throws Exception {
+
+    String module = "library lib {" +
+        "provided long a; " +
+        "provided long b; " +
+        "f: (x) -> x+a" +
+        "}";
+    Runtime.Module m = compileModule(module);
+
+    // a is referenced in the definition of f
+    Runtime.Var a = m.getLibrary("lib").getVar("a");
+    assertThat(a.isReferenced()).isTrue();
+
+    // b is not referenced anywhere
+    Runtime.Var b = m.getLibrary("lib").getVar("b");
+    assertThat(b.isReferenced()).isFalse();
+
+  }
+
+
+  @Test
   public void provided_var_is_nil_until_value_given() throws Exception {
 
     String module = "library lib {" +

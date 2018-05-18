@@ -493,6 +493,8 @@ public class Runtime {
       return isProvided;
     }
 
+    public boolean isReferenced() {return !dependants.isEmpty();}
+
     public void update(Value value){
       runtime.updateVar(this, value);
     }
@@ -793,7 +795,6 @@ public class Runtime {
     }
 
   }
-
 
   private void updateVar(Runtime.Var var, Value value){
 
