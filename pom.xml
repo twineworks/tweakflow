@@ -47,6 +47,7 @@
         - push to github, wait for https://twineworks.github.io/tweakflow/ to update
         - test links in documentation
           $ ./site/test_docs
+        - upload jar as github release
 
         Details on release process to sonatype:
         https://central.sonatype.org/pages/apache-maven.html
@@ -55,7 +56,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8-SNAPSHOT</version>
 
     <organization>
         <name>Twineworks GmbH</name>
