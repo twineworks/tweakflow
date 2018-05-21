@@ -36,6 +36,7 @@ import java.util.concurrent.TimeoutException;
 
 public class LimitingExecTime {
 
+  @SuppressWarnings("deprecation")
   private static void stopTask(FutureTask task, Thread taskThread) {
     // ask the thread to stop
     task.cancel(true);
