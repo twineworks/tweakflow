@@ -40,7 +40,7 @@ import java.util.Scanner;
  * This class demonstrates providing data to user scripts only when they are needed.
  *
  * Try running main and entering an expression like:
- * (if year_of_birth < 1985 then "old" else "little") .. " " .. first_name .. " " .. year_of_birth % 100
+ * (if year_of_birth &lt; 1985 then "old" else "little") .. " " .. first_name .. " " .. year_of_birth % 100
  *
  */
 public class LazilyProvidedVars {
