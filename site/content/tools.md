@@ -179,7 +179,7 @@ Returns the number of unicode codepoints in given string `x`.
 
 Returns `nil` if `x` is `nil`.
 
-```tweakflow
+​```tweakflow
 > strings.length("")
 0
 
@@ -188,7 +188,7 @@ Returns `nil` if `x` is `nil`.
 
 > strings.length("你好")
 2
-```
+​```
 ````
 
 ### Loading modules
@@ -335,7 +335,7 @@ To load it, and run `product_codes.normalize("ksh765fg25ff")`:
 
 ```bash
 $ java -jar tweakflow-{{< version >}}.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
-KSH7-65FG-25FF
+"KSH7-65FG-25FF"
 ```
 
 ## Metadata extraction

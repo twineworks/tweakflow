@@ -684,7 +684,7 @@ If unspecified, the variable type is `any`, and no implicit casts take place.
 1
 ```
 
-Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`.
+Variable values are either given directly as [expressions](#expressions), or the variables are marked as `provided`. The host application is required to set the values of `provided` variables through the embedding API. Initially, all provided variables have the value `nil`. The host application can determine whether a provided variable is referenced, thus allowing the host application to omit providing values if they are not needed.
 
 Tweakflow uses strict evaluation. All variables of a library are guaranteed to evaluate even if they are not referenced by other expressions.
 

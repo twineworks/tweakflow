@@ -170,6 +170,8 @@ Runtime runtime = table.compile();
 
 See the class [test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java) for examples  demonstrating usage and error handling.
 
+The [LazilyProvidedVars](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java) sample compiles a var table and provides only variables that are actually referenced. 
+
 There is a [demo application](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java) which uses a var table. It asks the user for some expressions and verifies them.
 
 You can run it using:
@@ -188,14 +190,14 @@ And the formula for calculating surface area?
 area: a*b
 Thanks. Checking answer...
 
-Congratulations. The formulas seem to be correct.
+Congratulations. The formulas seem to be correct. 
 ```
 
 ## Evaluating modules
 
 If users need the standard library, or need the ability to define variables, libraries, or even modules themselves, then the application must generate and compile the set of modules involved.
 
-The result is a [runtime](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/runtime/Runtime.java) object that provides handles to all compiled modules, libraries, and variables. The application can then supply values for any variables it [provides](/reference.html#variables), and evaluate any variables it is interested in.
+The result is a [runtime](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/runtime/Runtime.java) object that provides handles to all compiled modules, libraries, and variables. The application then supplies values for any variables it [provides](/reference.html#variables), and evaluates any variables it is interested in. The host application can determine which provided variables are actually referenced, so it can omit providing values that are not needed.
 
 For the purposes of discussion, consider the following module.
 
@@ -235,7 +237,7 @@ LoadPath loadPath = new LoadPath.Builder()
     .build();
 
 Runtime runtime = TweakFlow.compile(loadPath, "user_module.tf");
-```  
+```
 
 To interact with a compiled runtime:
 
@@ -278,6 +280,8 @@ for (Customer c : myCustomerCollection){
 
 ### Examples
 The [ModuleEvaluation](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java) sample compiles and calls into a set of modules.
+
+The [LazilyProvidedVars](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java) sample compiles a var table and provides only variables that are actually referenced by user-supplied expressions.
 
 This [unit test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVarsTest.java) demonstrates supplying values for provided variables.
 
@@ -322,12 +326,18 @@ The [CallingFunctions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >
 ## Error handling
 Tweakflow throws [LangExceptions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java) whenever something goes wrong.
 
-There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don't hold up. Referencing undefined variables, or defining variables more than once are common compilation error. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax.
+There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don't hold up. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax.
 
-An exception holds an [error code](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java) and a message describing the error condition. You can get the value that was thrown by calling `toErrorValue`. Calling `getDigestMessage` gets you a detailed error message that includes stack trace information. The exception usually contains a [SourceInfo](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java) object which gives the exact location of the error condition. Note however that source info may be `null`, in case the error happens in a context where no source information is available.
+An exception holds an [error code](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java) and a message describing the error condition. You can get the value that was thrown by calling `toErrorValue`. Calling `getDigestMessage` returns a detailed error message that includes stack trace information. The exception usually contains a [SourceInfo](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java) object which gives the exact location of the error condition. Note however that source info may be `null`, in case the error happens in a context where no source information is available.
 
 ### Examples
 See these [test files](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/embedding) for examples of handling errors. Each test file contains specific tests for error handling.
+
+## Limiting evaluation time
+
+The host application might wish to limit the evaluation time of user code. A good way to achieve this goal is to evaluate user code in a separate thread. The tweakflow interpreter reacts to thread interruption by throwing an exception. 
+
+The [LimitingExecTime](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LimitingExecTime.java) sample evaluates a set of expressions, each taking exponentially longer to evaluate than the next. Each expression is evaluated within an enforced time limit, so at some point the evaluations start timing out, and the application interrupts the evaluation thread. 
 
 
 
