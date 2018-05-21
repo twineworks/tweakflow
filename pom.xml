@@ -55,7 +55,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.7</version>
 
     <organization>
         <name>Twineworks GmbH</name>
