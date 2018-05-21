@@ -28,6 +28,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+        Making a release:
+        - ensure pom.xml contains SNAPSHOT version
+        - ensure the snapshot release is successful
+          $ mvn clean deploy
+        - ensure version number in ./site/config.yaml matches release tag
+        - render html docs from markdown
+          $ ./site/make_docs
+        - commit doc render
+        - ensure pom.xml contains release version
+        - commit pom
+        - deploy release version
+          $ mvn clean deploy -P release
+        - tag release version
+        - ensure pom.xml contains next SNAPSHOT version
+        - commit
+        - push to github, wait for https://twineworks.github.io/tweakflow/ to update
+        - test links in documentation
+          $ ./site/test_docs
+
+        Details on release process to sonatype:
+        https://central.sonatype.org/pages/apache-maven.html
+
+    -->
+
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
     <version>0.0.7-SNAPSHOT</version>
