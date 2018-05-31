@@ -48,8 +48,10 @@ import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.values.Value;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Entry point for tweakflow evaluation.
@@ -77,6 +79,33 @@ public class TweakFlow {
     if (analysisResult.isError()) throw analysisResult.getException();
     RuntimeSet runtimeSet = new RuntimeSet(analysisResult);
     return new Runtime(runtimeSet, debugHandler);
+  }
+
+  public static Runtime compile(Map<String, String> modules){
+    return compile(modules, new DefaultDebugHandler());
+  }
+
+  public static Runtime compile(Map<String, String> modules, DebugHandler debugHandler){
+
+    // create a memory location with all modules
+    MemoryLocation.Builder memLocationBuilder = new MemoryLocation.Builder()
+        .allowNativeFunctions(false);
+
+    for (String name : modules.keySet()) {
+      memLocationBuilder.add(name, modules.get(name));
+    }
+
+    MemoryLocation memoryLocation = memLocationBuilder.build();
+
+    // place standard library and user code on load path
+    LoadPath loadPath = new LoadPath.Builder()
+        .addStdLocation()
+        .add(memoryLocation)
+        .build();
+
+    // compile the modules
+    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()), debugHandler);
+
   }
 
   public static ParseResult parse(String exp){
