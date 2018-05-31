@@ -452,6 +452,7 @@ public class Runtime {
     private final boolean isProvided;
     private final VarDefNode varDefNode;
     private final Type declaredType;
+    private final String name;
 
     private Var(Runtime runtime, Cell cell) {
 
@@ -460,6 +461,7 @@ public class Runtime {
       this.varDefNode= (VarDefNode) cell.getSymbol().getNode();
       this.isProvided = varDefNode.isDeclaredProvided();
       this.declaredType = varDefNode.getDeclaredType();
+      this.name = varDefNode.getSymbolName();
 
       RuntimeSet runtimeSet = runtime.getRuntimeSet();
       LocalMemorySpace unitSpace = runtimeSet.getGlobalMemorySpace().getUnitSpace();
@@ -501,6 +503,10 @@ public class Runtime {
 
     public Value getValue(){
       return cell.getValue();
+    }
+
+    public String getName() {
+      return name;
     }
 
     public Runtime getRuntime() {
