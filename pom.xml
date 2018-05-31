@@ -270,7 +270,10 @@
                         </goals>
                         <configuration>
 
-                            <minimizeJar>true</minimizeJar>
+                            <!--
+                               Turning minimize on breaks all libraries that refer to classes indirectly.
+                            -->
+                            <minimizeJar>false</minimizeJar>
 
                             <relocations>
                                 <relocation>
