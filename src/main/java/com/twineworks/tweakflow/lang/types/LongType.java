@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.types;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
 import java.util.regex.Pattern;
@@ -154,11 +155,11 @@ final public class LongType implements Type {
         try {
           return Values.make(Long.parseLong(s, 10));
         } catch(NumberFormatException e){
-          throw new LangException(LangError.CAST_ERROR, "Cannot cast "+s+" to long. Number out of bounds.");
+          throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to long. Number out of bounds.");
         }
       }
       else {
-        throw new LangException(LangError.CAST_ERROR, "Cannot cast "+s+" to "+name());
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+name());
       }
 
     }
