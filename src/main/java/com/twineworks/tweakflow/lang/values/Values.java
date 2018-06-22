@@ -24,11 +24,16 @@
 
 package com.twineworks.tweakflow.lang.values;
 
-import com.twineworks.tweakflow.lang.ast.expressions.FunctionNode;
 import com.twineworks.tweakflow.lang.types.Types;
 
 import java.time.Instant;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 final public class Values {
 
@@ -113,6 +118,14 @@ final public class Values {
   }
 
   public static Value make(DateTimeValue dt) {return new Value(Types.DATETIME, dt);}
+
+  public static Value make(Instant instant) {return new Value(Types.DATETIME, new DateTimeValue(instant));}
+
+  public static Value make(LocalDateTime ldt) {return new Value(Types.DATETIME, new DateTimeValue(ldt));}
+
+  public static Value make(OffsetDateTime odt) {return new Value(Types.DATETIME, new DateTimeValue(odt));}
+
+  public static Value make(ZonedDateTime zdt) {return new Value(Types.DATETIME, new DateTimeValue(zdt));}
 
   // convenience factory
 
