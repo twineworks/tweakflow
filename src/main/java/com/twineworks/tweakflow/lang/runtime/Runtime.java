@@ -444,7 +444,7 @@ public class Runtime {
     }
   }
 
-  public static class Var implements Name, DocMeta {
+  public static class Var implements Name, DocMeta, ValueProvider {
 
     private final Cell cell;
     private final Runtime runtime;
@@ -501,6 +501,7 @@ public class Runtime {
       runtime.updateVar(this, value);
     }
 
+    @Override
     public Value getValue(){
       return cell.getValue();
     }
@@ -686,6 +687,31 @@ public class Runtime {
 
   private EvaluationContext getEvaluationContext() {
     return context;
+  }
+
+  public void setVars(Runtime.Var[] vars, Value[] values){
+
+    Objects.requireNonNull(vars, "vars cannot be null");
+    Objects.requireNonNull(values, "values cannot be null");
+
+    if (vars.length != values.length){
+      throw new IllegalArgumentException("vars and values must have same length");
+    }
+
+    HashSet<Cell> dependants = new HashSet<>();
+    for (int i = 0; i < vars.length; i++) {
+      Var var = vars[i];
+      Objects.requireNonNull(var, "index: "+i+" var cannot be null");
+      Value value = values[i];
+      Objects.requireNonNull(value, "index: "+i+" value cannot be null, use Values.NIL instead");
+
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+
+      Value existing = var.cell.getValue();
+      if (value.equals(existing)) continue;
+      var.cell.setValue(value.castTo(var.getDeclaredType()));
+    }
+
   }
 
   public void updateVars(Runtime.Var[] vars, Value[] values){
