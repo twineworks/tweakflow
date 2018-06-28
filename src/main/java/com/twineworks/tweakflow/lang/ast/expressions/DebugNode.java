@@ -101,7 +101,7 @@ public class DebugNode implements ExpressionNode {
 
   @Override
   public Type getValueType() {
-    return valueExpression.getValueType();
+    return valueExpression != null ? valueExpression.getValueType() : debugExpression.getValueType();
   }
 
   @Override
