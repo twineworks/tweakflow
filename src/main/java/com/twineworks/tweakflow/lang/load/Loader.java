@@ -35,16 +35,17 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
+import com.twineworks.tweakflow.lang.load.relative.Resolved;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Loader {
+
 
   private static AnalysisUnit load(LoadPath loadPath, String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
 
@@ -101,8 +102,8 @@ public class Loader {
 
         // relative?
         if (importPath.startsWith(".")){
-          importPath = Paths.get(modulePath).resolveSibling(importPath).normalize().toString();
-          collectResult = load(loadPath, importPath, pathLocation, workSet, true);
+          Resolved resolved = loadPath.resolve(modulePath, pathLocation, importPath);
+          collectResult = load(loadPath, resolved.path, resolved.location, workSet, true);
         }
         else{
           collectResult = load(loadPath, importPath, workSet, collectImports);

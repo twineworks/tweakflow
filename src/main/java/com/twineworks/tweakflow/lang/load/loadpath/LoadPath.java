@@ -26,6 +26,9 @@ package com.twineworks.tweakflow.lang.load.loadpath;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.relative.DefaultResolver;
+import com.twineworks.tweakflow.lang.load.relative.RelativeResolver;
+import com.twineworks.tweakflow.lang.load.relative.Resolved;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.nio.file.Paths;
@@ -39,12 +42,13 @@ public class LoadPath {
   public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPath> {
 
     private final List<LoadPathLocation> locations = new ArrayList<>();
+    private RelativeResolver relativeResolver = new DefaultResolver();
 
     public Builder() { }
 
     @Override
     public LoadPath build() {
-      return new LoadPath(locations);
+      return new LoadPath(locations, relativeResolver);
     }
 
     public LoadPath.Builder add(LoadPathLocation location){
@@ -52,6 +56,10 @@ public class LoadPath {
       return this;
     }
 
+    public LoadPath.Builder withRelativeResolver(RelativeResolver relativeResolver){
+      this.relativeResolver = relativeResolver;
+      return this;
+    }
 
     public LoadPath.Builder addStdLocation(){
       locations.add(
@@ -74,9 +82,20 @@ public class LoadPath {
   }
 
   private final List<LoadPathLocation> locations;
+  private final RelativeResolver relativeResolver;
 
   private LoadPath(List<LoadPathLocation> locations){
     this.locations = Collections.unmodifiableList(locations);
+    this.relativeResolver = new DefaultResolver();
+  }
+
+  private LoadPath(List<LoadPathLocation> locations, RelativeResolver relativeResolver){
+    this.locations = Collections.unmodifiableList(locations);
+    this.relativeResolver = relativeResolver;
+  }
+
+  public Resolved resolve(String modulePath, LoadPathLocation pathLocation, String importPath) {
+    return relativeResolver.resolve(this, modulePath, pathLocation, importPath);
   }
 
   public List<LoadPathLocation> getLocations() {
