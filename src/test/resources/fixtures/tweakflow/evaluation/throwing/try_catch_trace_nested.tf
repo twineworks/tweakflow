@@ -32,9 +32,10 @@ library nested_throw_spec {
                    :error "throwing"
                    :trace {
                                 :code "CUSTOM_ERROR"
-                                :message "CUSTOM_ERROR"
+                                :message "throwing"
                                 :at "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:12:13"
                                 :source 'throw "throwing"'
+                                :line '            throw "throwing"'
                                 :value "throwing"
                                 :stack [
                                          "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:12:13", # throw
@@ -50,6 +51,7 @@ library nested_throw_spec {
                    :message "CUSTOM_ERROR"
                    :at        "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:20:13"
                    :source    "throw caught"
+                   :line      "            throw caught"
                    :value     caught[:cause]
                    :stack     [
                                 "fixtures/tweakflow/evaluation/throwing/try_catch_trace_nested.tf:20:13", # re-throw

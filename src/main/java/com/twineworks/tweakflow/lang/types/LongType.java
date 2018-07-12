@@ -168,7 +168,7 @@ final public class LongType implements Type {
       return (x == Values.TRUE) ? Values.make(1L) : Values.make(0L);
     }
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+name());
   }
 
   @Override

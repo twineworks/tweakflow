@@ -166,7 +166,7 @@ final public class ListType implements Type {
       return Values.make(out.appendAll(charValues));
     }
     else{
-      throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+this.name());
+      throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+this.name());
     }
   }
 

@@ -71,7 +71,14 @@ final public class DictValue {
     return false;
   }
 
-  
+  public java.util.HashMap<String, Value> toHashMap(){
+    java.util.HashMap<String, Value> ret = new java.util.HashMap<>();
+    for (String k : keys()) {
+      ret.put(k, get(k));
+    }
+    return ret;
+  }
+
   public DictValue put(String key, Value value) {
     return new DictValue(map.put(key, value));
   }

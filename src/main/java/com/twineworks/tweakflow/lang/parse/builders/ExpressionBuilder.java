@@ -794,7 +794,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     for (TweakFlowParser.VarDefContext varDefContext : ctx.varDef()) {
       VarDefNode varDef = new VarDefBuilder(parseUnit).visitVarDef(varDefContext);
       if (varDefs.containsKey(varDef.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" already defined", varDef.getSourceInfo());
+        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined mode than once", varDef.getSourceInfo());
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }
@@ -848,7 +848,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       String name = identifier(defContext.identifier().getText());
 
       if (paramMap.containsKey(name)){
-        throw new LangException(LangError.ALREADY_DEFINED, name+" already defined", srcOf(parseUnit, defContext));
+        throw new LangException(LangError.ALREADY_DEFINED, name+" defined more than once", srcOf(parseUnit, defContext));
       }
 
       paramMap.put(name, new ParameterNode()

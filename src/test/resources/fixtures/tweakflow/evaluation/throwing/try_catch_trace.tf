@@ -27,6 +27,7 @@ library throw_spec {
       :code         "CUSTOM_ERROR"
       :value        {:code "test", :message "error"}
       :source       'throw {:code "test", :message "error"}'
+      :line         '  throw_error: () -> throw {:code "test", :message "error"}',
       :at           "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:5:22"
       :stack       ["fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:5:22",  # throw
                     "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:14:11", # lib.throw_error()

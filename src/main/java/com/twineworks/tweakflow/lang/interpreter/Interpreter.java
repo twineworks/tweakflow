@@ -282,7 +282,8 @@ public class Interpreter {
   public static Value evaluateThrowNode(ThrowNode throwNode, Stack stack, EvaluationContext context) {
     Value data = evaluateExpression(throwNode.getExceptionExpression(), stack, context);
     stack.push(new StackEntry(throwNode, stack.peek().getSpace(), stack.peek().getClosures()));
-    throw new LangException(LangError.CUSTOM_ERROR, "CUSTOM_ERROR", stack, throwNode.getSourceInfo())
+    String message = data.isString() ? data.string() : "CUSTOM_ERROR";
+    throw new LangException(LangError.CUSTOM_ERROR, message, stack, throwNode.getSourceInfo())
         .put("value", data);
   }
 

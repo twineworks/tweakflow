@@ -26,10 +26,7 @@ package com.twineworks.tweakflow.lang.types;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.ListValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.values.*;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
@@ -182,7 +179,7 @@ final public class DictType implements Type {
 
     }
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+this.name());
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+this.name());
   }
 
   @Override

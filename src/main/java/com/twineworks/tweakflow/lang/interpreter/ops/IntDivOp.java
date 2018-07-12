@@ -48,7 +48,7 @@ final public class IntDivOp implements ExpressionOp {
     Value left = node.getLeftExpression().getOp().eval(stack, context);
     Value right = node.getRightExpression().getOp().eval(stack, context);
 
-    ensureValidTypes(left, right);
+    ensureValidTypes(left, right, stack);
 
     if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
@@ -84,11 +84,11 @@ final public class IntDivOp implements ExpressionOp {
       }
 
     }
-    throw new LangException(LangError.CAST_ERROR, "Cannot integer-divide types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
   }
 
-  private void ensureValidTypes(Value left, Value right){
+  private void ensureValidTypes(Value left, Value right, Stack stack){
     Type leftType = left.type();
     Type rightType = right.type();
 
@@ -97,7 +97,7 @@ final public class IntDivOp implements ExpressionOp {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+left.type().name()+" and " + right.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 

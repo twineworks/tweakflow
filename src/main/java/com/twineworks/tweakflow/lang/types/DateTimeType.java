@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.DateTimeValue;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
 import java.time.Instant;
@@ -145,7 +146,7 @@ final public class DateTimeType implements Type {
       return Values.make(new DateTimeValue(Instant.ofEpochMilli(x.longNum())));
     }
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x) +" to "+name());
   }
 
   @Override

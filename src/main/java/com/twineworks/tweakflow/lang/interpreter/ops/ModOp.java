@@ -48,7 +48,7 @@ final public class ModOp implements ExpressionOp {
     Value left = node.getLeftExpression().getOp().eval(stack, context);
     Value right = node.getRightExpression().getOp().eval(stack, context);
 
-    ensureValidTypes(left, right);
+    ensureValidTypes(left, right, stack);
 
     if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
@@ -79,7 +79,7 @@ final public class ModOp implements ExpressionOp {
 
   }
 
-  private void ensureValidTypes(Value left, Value right){
+  private void ensureValidTypes(Value left, Value right, Stack stack){
     Type leftType = left.type();
     Type rightType = right.type();
 
@@ -88,7 +88,7 @@ final public class ModOp implements ExpressionOp {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot divide types "+left.type().name()+" and " + right.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot divide types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 

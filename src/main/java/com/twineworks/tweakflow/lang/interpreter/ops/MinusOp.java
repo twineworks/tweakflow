@@ -53,7 +53,7 @@ final public class MinusOp implements ExpressionOp {
     Value left = node.getLeftExpression().getOp().eval(stack, context);
     Value right = node.getRightExpression().getOp().eval(stack, context);
 
-    ensureValidTypes(left, right);
+    ensureValidTypes(left, right, stack);
 
     if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
@@ -82,7 +82,7 @@ final public class MinusOp implements ExpressionOp {
 
   }
 
-  private void ensureValidTypes(Value left, Value right){
+  private void ensureValidTypes(Value left, Value right, Stack stack){
     Type leftType = left.type();
     Type rightType = right.type();
 
@@ -91,7 +91,7 @@ final public class MinusOp implements ExpressionOp {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot subtract types "+left.type().name()+" and " + right.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot subtract types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 

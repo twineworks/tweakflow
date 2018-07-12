@@ -157,5 +157,13 @@ final public class Value implements ValueProvider {
     return this;
   }
 
+  public String humanReadable(){
+    if (isString()) return string();
+    return ValueInspector.inspect(this);
+  }
+
+  public String inspect(){
+    return ValueInspector.inspect(this);
+  }
 
 }

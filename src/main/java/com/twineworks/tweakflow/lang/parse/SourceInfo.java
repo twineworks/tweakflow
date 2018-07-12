@@ -111,6 +111,19 @@ public class SourceInfo {
 
   }
 
+  public String getSourceCodeLine(){
+    String programText = parseUnit.getProgramText();
+    if (programText == null) return null;
+    if (line <= 0) return null;
+    String[] lines = programText.split("\\r?\\n", -1);
+    if (lines.length > line-1){
+      return lines[line-1];
+    }
+    else{
+      return null;
+    }
+  }
+
   public boolean precedes(SourceInfo other){
     return parseUnit == other.parseUnit &&
         (getLine() < other.getLine() || getLine() == other.getLine() && getCharWithinLine() < other.getCharWithinLine());

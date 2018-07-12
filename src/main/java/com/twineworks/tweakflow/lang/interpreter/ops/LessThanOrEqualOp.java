@@ -48,7 +48,7 @@ final public class LessThanOrEqualOp implements ExpressionOp {
     Value left = node.getLeftExpression().getOp().eval(stack, context);
     Value right = node.getRightExpression().getOp().eval(stack, context);
 
-    ensureValidTypes(left, right);
+    ensureValidTypes(left, right, stack);
 
     if (left == Values.NIL) return right == Values.NIL ? Values.TRUE : Values.FALSE;
     if (right == Values.NIL) return Values.FALSE;
@@ -77,7 +77,7 @@ final public class LessThanOrEqualOp implements ExpressionOp {
 
   }
 
-  private void ensureValidTypes(Value left, Value right){
+  private void ensureValidTypes(Value left, Value right, Stack stack){
     Type leftType = left.type();
     Type rightType = right.type();
 
@@ -86,7 +86,7 @@ final public class LessThanOrEqualOp implements ExpressionOp {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot compare types "+left.type().name()+" and " + right.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot compare types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 

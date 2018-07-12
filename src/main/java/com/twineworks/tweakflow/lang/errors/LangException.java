@@ -204,7 +204,6 @@ public class LangException extends RuntimeException {
     trace.append("  message: ").append(getMessage() == null? code.getName() : getMessage()).append("\n");
 
     if (getSourceInfo() != null){
-      trace.append("  at: ").append(getSourceInfo().toString()).append("\n");
 
       String source = getSourceInfo().getSourceCode();
       if (source != null){
@@ -217,6 +216,21 @@ public class LangException extends RuntimeException {
         }
         trace.append("\n");
       }
+
+      String line = getSourceInfo().getSourceCodeLine();
+      if (line != null){
+        trace.append("  line: ");
+        if (line.length() < 250){
+          trace.append(line);
+        }
+        else{
+          trace.append(line.substring(0, 250));
+        }
+        trace.append("\n");
+      }
+
+      trace.append("  at: ").append(getSourceInfo().toString()).append("\n");
+
     }
 
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -283,7 +297,6 @@ public class LangException extends RuntimeException {
     }
 
     if (getSourceInfo() != null){
-      dict = dict.put("at", Values.make(getSourceInfo().toString()));
       String source = getSourceInfo().getSourceCode();
       if (source != null){
         if (source.length() < 250){
@@ -293,6 +306,17 @@ public class LangException extends RuntimeException {
           dict = dict.put("source", Values.make(source.substring(0, 250)));
         }
       }
+      String line = getSourceInfo().getSourceCodeLine();
+      if (line != null){
+        if (line.length() < 250){
+          dict = dict.put("line", Values.make(line));
+        }
+        else{
+          dict = dict.put("line", Values.make(line.substring(0, 250)));
+        }
+      }
+      dict = dict.put("at", Values.make(getSourceInfo().toString()));
+
     }
 
     if (stack != null){

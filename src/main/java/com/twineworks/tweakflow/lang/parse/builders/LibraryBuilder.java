@@ -73,7 +73,7 @@ public class LibraryBuilder extends TweakFlowParserBaseVisitor<Node>{
     for (TweakFlowParser.LibVarContext libVarContext : ctx.libVar()) {
       VarDefNode varDef = new VarDefBuilder(parseUnit).visitLibVar(libVarContext);
       if (varDefs.containsKey(varDef.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" already defined", varDef.getSourceInfo());
+        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined more than once in "+name, varDef.getSourceInfo());
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }

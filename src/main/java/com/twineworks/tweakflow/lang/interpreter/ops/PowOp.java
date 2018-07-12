@@ -52,7 +52,7 @@ final public class PowOp implements ExpressionOp {
     Value base = leftOp.eval(stack, context);
     Value exponent = rightOp.eval(stack, context);
 
-    ensureValidTypes(base, exponent);
+    ensureValidTypes(base, exponent, stack);
 
     if (base == Values.NIL || exponent == Values.NIL) return Values.NIL;
 
@@ -76,11 +76,11 @@ final public class PowOp implements ExpressionOp {
       return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.longNum()));
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+base.type().name()+" to exponent of type " + exponent.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+base.type().name()+" to exponent of type " + exponent.type().name(), stack, node.getSourceInfo());
 
   }
 
-  private void ensureValidTypes(Value left, Value right){
+  private void ensureValidTypes(Value left, Value right, Stack stack){
     Type leftType = left.type();
     Type rightType = right.type();
 
@@ -89,7 +89,7 @@ final public class PowOp implements ExpressionOp {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+left.type().name()+" to exponent of type " + right.type().name());
+    throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+left.type().name()+" to exponent of type " + right.type().name(), stack, node.getSourceInfo());
 
   }
 

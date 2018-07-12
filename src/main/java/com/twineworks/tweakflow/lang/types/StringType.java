@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.types;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
 final public class StringType implements Type {
@@ -156,7 +157,7 @@ final public class StringType implements Type {
       return Values.make(x.dateTime().toString());
     }
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x) +" to "+name());
   }
 
   @Override

@@ -111,6 +111,7 @@ public class EvalExpressionWithStdTest {
       assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
       assertThat(sourceInfo.getFullLocation()).isEqualTo("exp:1:7");
+      assertThat(sourceInfo.getSourceCodeLine()).isEqualTo("{error}");
       return;
     }
 

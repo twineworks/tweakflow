@@ -222,6 +222,18 @@ public class Runtime {
 
     }
 
+    public boolean hasVar(String name){
+
+      Cell entityCell = cell.getCells().gets(name);
+
+      if (entityCell == null){
+        return false;
+      }
+
+      return entityCell.isVar();
+
+    }
+
     public Runtime getRuntime() {
       return runtime;
     }
@@ -409,6 +421,18 @@ public class Runtime {
       }
 
       throw new AssertionError("unexpected cell content");
+
+    }
+
+    public boolean hasVar(String name){
+
+      Cell entityCell = cell.getCells().gets(name);
+
+      if (entityCell == null){
+        return false;
+      }
+
+      return entityCell.isVar();
 
     }
 
@@ -709,7 +733,14 @@ public class Runtime {
 
       Value existing = var.cell.getValue();
       if (value.equals(existing)) continue;
-      var.cell.setValue(value.castTo(var.getDeclaredType()));
+      try {
+        var.cell.setValue(value.castTo(var.getDeclaredType()));
+      }
+      catch (LangException e){
+        e.setSourceInfo(var.varDefNode.getSourceInfo());
+        throw e;
+      }
+
     }
 
   }
