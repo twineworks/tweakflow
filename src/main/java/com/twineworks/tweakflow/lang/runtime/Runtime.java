@@ -525,6 +525,10 @@ public class Runtime {
       runtime.updateVar(this, value);
     }
 
+    public void set(Value value){
+      runtime.setVar(this, value);
+    }
+
     @Override
     public Value getValue(){
       return cell.getValue();
@@ -722,7 +726,6 @@ public class Runtime {
       throw new IllegalArgumentException("vars and values must have same length");
     }
 
-    HashSet<Cell> dependants = new HashSet<>();
     for (int i = 0; i < vars.length; i++) {
       Var var = vars[i];
       Objects.requireNonNull(var, "index: "+i+" var cannot be null");
@@ -875,6 +878,15 @@ public class Runtime {
       stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
       Interpreter.evaluateCell(dependant, stack, getEvaluationContext());
     }
+
+  }
+
+  private void setVar(Runtime.Var var, Value value){
+
+    Objects.requireNonNull(value, "Value cannot be null, use Values.NIL instead");
+    if (!var.isProvided()) throw new UnsupportedOperationException("Only vars declared as provided can change.");
+
+    var.cell.setValue(value.castTo(var.getDeclaredType()));
 
   }
 
