@@ -39,6 +39,10 @@ public class LangUtil {
     return escaped;
   }
 
+  public static String getStringLiteral(String s){
+    return "\""+escapeString(s)+"\"";
+  }
+
   public static String escapeIdentifier(String id){
     if (safeIdentifier.matcher(id).matches()){
       return id;
