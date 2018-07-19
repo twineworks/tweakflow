@@ -24,11 +24,66 @@
 
 package com.twineworks.tweakflow.util;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 public class LangUtil {
 
-  private static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
+  private final static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
+  private final static HashSet<String> keywords = new HashSet<>(Arrays.asList(
+
+      "interactive",
+      "in_scope",
+
+      "global",
+      "module",
+      "import",
+      "export",
+      "as",
+      "from",
+      "alias",
+
+      "meta",
+      "doc",
+      "via",
+
+      "nil",
+      "true",
+      "false",
+      "not",
+      "is",
+      "if",
+      "then",
+      "else",
+      "for",
+      "try",
+      "catch",
+      "throw",
+      "let",
+      "debug",
+      "typeof",
+      "default",
+      "match",
+
+      "provided",
+
+      // data types
+      "function",
+      "string",
+      "boolean",
+      "long",
+      "dict",
+      "list",
+      "double",
+      "datetime",
+      "any",
+      "void",
+
+      "library",
+
+      "Infinity"
+  ));
 
   public static String escapeString(String s){
     String escaped = s
@@ -44,9 +99,15 @@ public class LangUtil {
   }
 
   public static String escapeIdentifier(String id){
+    // known keywords
+    if (keywords.contains(id)){
+      return "`"+id+"`";
+    }
+    // otherwise safe as is?
     if (safeIdentifier.matcher(id).matches()){
       return id;
     }
+
     if (id.contains("`")) throw new IllegalArgumentException("identifier cannot contain ` character");
     return "`"+id+"`";
   }
