@@ -36,8 +36,7 @@ java -jar tweakflow-{{< version >}}.jar repl
 #  :since "1.0.0"
 #}
 
-module
-
+module;
 
 doc
 ~~~
@@ -66,7 +65,7 @@ nil
 ```
 ~~~
 
-  function id: (x) -> x
+  function id: (x) -> x;
 
 doc
 ~~~
@@ -98,7 +97,7 @@ If `x` is not a function, and contains no functions as children `x == core.eval(
 ```
 
 ~~~
-  function inspect: (x) -> string via {:class "com.twineworks.tweakflow.std.Core$inspect"}
+  function inspect: (x) -> string via {:class "com.twineworks.tweakflow.std.Core$inspect"};
 
 doc
 ~~~
@@ -115,7 +114,7 @@ false
 ```
 ~~~
 
-  function present?:(x) -> boolean via {:class "com.twineworks.tweakflow.std.Core$present"}
+  function present?:(x) -> boolean via {:class "com.twineworks.tweakflow.std.Core$present"};
 
 doc
 ~~~
@@ -132,7 +131,7 @@ true
 ```
 ~~~
 
-  function nil?:    (x) -> boolean                  via {:class "com.twineworks.tweakflow.std.Core$isNil"}
+  function nil?:    (x) -> boolean                  via {:class "com.twineworks.tweakflow.std.Core$isNil"};
 
 doc
 ~~~
@@ -154,7 +153,7 @@ Returns a hashcode of `x`. Values that compare as equal are guaranteed to have t
 66614367
 ```
 ~~~
-  function hash:    (x) -> long                     via {:class "com.twineworks.tweakflow.std.Core$hash"}
+  function hash:    (x) -> long                     via {:class "com.twineworks.tweakflow.std.Core$hash"};
 
 doc
 ~~~
@@ -192,7 +191,7 @@ ERROR:
   source: hello
 ```
 ~~~
-  function eval:    (string x) -> via {:class "com.twineworks.tweakflow.std.Core$eval"}
+  function eval:    (string x) -> via {:class "com.twineworks.tweakflow.std.Core$eval"};
 }
 
 
@@ -231,7 +230,7 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 ~~~
-  function concat: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$concat"}
+  function concat: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$concat"};
 
 doc
 ~~~
@@ -252,7 +251,7 @@ Returns `nil` if `x` is `nil`.
 2
 ```
 ~~~
-  function length: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"}
+  function length: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"};
 
 doc
 ~~~
@@ -311,7 +310,7 @@ ERROR:
 ```
 ~~~
 
-  function substring: (string x, long start=0, long end=nil) -> string via {:class "com.twineworks.tweakflow.std.Strings$substring"}
+  function substring: (string x, long start=0, long end=nil) -> string via {:class "com.twineworks.tweakflow.std.Strings$substring"};
 
 doc
 ~~~
@@ -341,7 +340,7 @@ Returns `nil` if any argument is `nil`.
 ```
 ~~~
 
-  function replace: (string x, string search, string replace) -> string via {:class "com.twineworks.tweakflow.std.Strings$searchReplace"}
+  function replace: (string x, string search, string replace) -> string via {:class "com.twineworks.tweakflow.std.Strings$searchReplace"};
 
 doc
 ~~~
@@ -378,7 +377,7 @@ nil
 
 ```
 ~~~
-  function join: (list xs, string s="") -> string via {:class "com.twineworks.tweakflow.std.Strings$join"}
+  function join: (list xs, string s="") -> string via {:class "com.twineworks.tweakflow.std.Strings$join"};
 
 #  function lower_case: (string x) -> string         via {:class "com.twineworks.tweakflow.std.Strings$lowerCase"}
 #  function upper_case: (string x) -> string         via {:class "com.twineworks.tweakflow.std.Strings$upperCase"}
@@ -402,7 +401,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function trim: (string x) -> string via {:class "com.twineworks.tweakflow.std.Strings$trim"}
+  function trim: (string x) -> string via {:class "com.twineworks.tweakflow.std.Strings$trim"};
 
 
 doc
@@ -424,7 +423,7 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 "tıtle" # note the dotless i in turkish language
 ```
 ~~~
-  function lower_case: (string x, string lang="en-US") -> string via {:class "com.twineworks.tweakflow.std.Strings$lower_case"}
+  function lower_case: (string x, string lang="en-US") -> string via {:class "com.twineworks.tweakflow.std.Strings$lower_case"};
 
 doc
 ~~~
@@ -445,7 +444,7 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 "TİTLE" # note the dotted upper case I in turkish language
 ```
 ~~~
-  function upper_case: (string x, string lang="en-US") -> string via {:class "com.twineworks.tweakflow.std.Strings$upper_case"}
+  function upper_case: (string x, string lang="en-US") -> string via {:class "com.twineworks.tweakflow.std.Strings$upper_case"};
 
 doc
 ~~~
@@ -484,7 +483,7 @@ function
 ```
 ~~~
 
-  function comparator: (lang='en-US', case_sensitive=true) -> function via {:class "com.twineworks.tweakflow.std.Strings$comparator"}
+  function comparator: (lang='en-US', case_sensitive=true) -> function via {:class "com.twineworks.tweakflow.std.Strings$comparator"};
 
 doc
 ~~~
@@ -508,7 +507,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function chars: (string x) -> list via {:class "com.twineworks.tweakflow.std.Strings$chars"}
+  function chars: (string x) -> list via {:class "com.twineworks.tweakflow.std.Strings$chars"};
 
 doc
 ~~~
@@ -527,7 +526,7 @@ Returns `nil` if `x` is `nil` or `s` is `nil`.
 ```
 ~~~
 
-  function split: (string x, string s=" ") -> list via {:class "com.twineworks.tweakflow.std.Strings$split"}
+  function split: (string x, string s=" ") -> list via {:class "com.twineworks.tweakflow.std.Strings$split"};
 
 doc
 ~~~
@@ -553,7 +552,7 @@ nil
 ```
 ~~~
 
-  function starts_with?: (string x, string init) -> boolean via {:class "com.twineworks.tweakflow.std.Strings$startsWith"}
+  function starts_with?: (string x, string init) -> boolean via {:class "com.twineworks.tweakflow.std.Strings$startsWith"};
 
 doc
 ~~~
@@ -579,7 +578,7 @@ nil
 ```
 ~~~
 
-  function ends_with?: (string x, string tail) -> boolean via {:class "com.twineworks.tweakflow.std.Strings$endsWith"}
+  function ends_with?: (string x, string tail) -> boolean via {:class "com.twineworks.tweakflow.std.Strings$endsWith"};
 
 doc
 ~~~
@@ -610,7 +609,7 @@ Returns `nil` if any argument is `nil`.
 ```
 ~~~
 
-  function index_of: (string x, string sub, long start=0) -> long via {:class "com.twineworks.tweakflow.std.Strings$indexOf"}
+  function index_of: (string x, string sub, long start=0) -> long via {:class "com.twineworks.tweakflow.std.Strings$indexOf"};
 
 doc
 ~~~
@@ -645,7 +644,7 @@ nil
 ```
 ~~~
 
-  function last_index_of: (string x, string sub, long end=nil) -> long via {:class "com.twineworks.tweakflow.std.Strings$lastIndexOf"}
+  function last_index_of: (string x, string sub, long end=nil) -> long via {:class "com.twineworks.tweakflow.std.Strings$lastIndexOf"};
 
 }
 
@@ -683,7 +682,7 @@ nil
 ```
 ~~~
 
-  function matching: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$matching"}
+  function matching: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$matching"};
 
 doc
 ~~~
@@ -720,7 +719,7 @@ nil
 ```
 ~~~
 
-  function capturing: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$capturing"}
+  function capturing: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$capturing"};
 
 doc
 ~~~
@@ -762,7 +761,7 @@ nil
 ```
 ~~~
 
-  function scanning: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$scanning"}
+  function scanning: (string pattern) -> function via {:class "com.twineworks.tweakflow.std.Regex$scanning"};
 
 
 doc
@@ -816,7 +815,7 @@ nil
 ```
 ~~~
 
-  function splitting: (string pattern, long limit=nil) -> function via {:class "com.twineworks.tweakflow.std.Regex$splitting"}
+  function splitting: (string pattern, long limit=nil) -> function via {:class "com.twineworks.tweakflow.std.Regex$splitting"};
 
 doc
 ~~~
@@ -852,7 +851,7 @@ function
 ```
 ~~~
 
-  function replacing: (string pattern, string replace) -> function via {:class "com.twineworks.tweakflow.std.Regex$replacing"}
+  function replacing: (string pattern, string replace) -> function via {:class "com.twineworks.tweakflow.std.Regex$replacing"};
 
 doc
 ~~~
@@ -880,7 +879,7 @@ function
 ```
 ~~~
 
-  function quote: (string x) -> string via {:class "com.twineworks.tweakflow.std.Regex$quote"}
+  function quote: (string x) -> string via {:class "com.twineworks.tweakflow.std.Regex$quote"};
 
 }
 
@@ -927,7 +926,7 @@ ERROR:
 ```
 ~~~
 
-  function size: (any xs) -> long                               via {:class "com.twineworks.tweakflow.std.Data$size"}
+  function size: (any xs) -> long                               via {:class "com.twineworks.tweakflow.std.Data$size"};
 
 doc
 ~~~
@@ -964,7 +963,7 @@ ERROR:
 ```
 ~~~
 
-  function empty?: (any xs) -> boolean                          via {:class "com.twineworks.tweakflow.std.Data$empty"}
+  function empty?: (any xs) -> boolean                          via {:class "com.twineworks.tweakflow.std.Data$empty"};
 
 doc
 ~~~
@@ -1000,7 +999,7 @@ nil
 ```
 ~~~
 
-  function get: (xs, key, not_found) ->                     via {:class "com.twineworks.tweakflow.std.Data$get"}
+  function get: (xs, key, not_found) ->                     via {:class "com.twineworks.tweakflow.std.Data$get"};
 
 doc
 ~~~
@@ -1050,7 +1049,7 @@ nil
 ```
 ~~~
 
-  function put: (xs, key, value) ->                         via {:class "com.twineworks.tweakflow.std.Data$put"}
+  function put: (xs, key, value) ->                         via {:class "com.twineworks.tweakflow.std.Data$put"};
 
 
 doc
@@ -1098,7 +1097,7 @@ ERROR:
 ```
 ~~~
 
-  function get_in: (any xs, list keys, any not_found) ->    via {:class "com.twineworks.tweakflow.std.Data$getIn"}
+  function get_in: (any xs, list keys, any not_found) ->    via {:class "com.twineworks.tweakflow.std.Data$getIn"};
 
 doc
 ~~~
@@ -1164,7 +1163,7 @@ nil
 ```
 ~~~
 
-  function put_in: (xs, list keys, value) ->                via {:class "com.twineworks.tweakflow.std.Data$putIn"}
+  function put_in: (xs, list keys, value) ->                via {:class "com.twineworks.tweakflow.std.Data$putIn"};
 
 doc
 ~~~
@@ -1199,7 +1198,7 @@ nil
 ```
 ~~~
 
-  function update: (xs, key, function f) ->                 via {:class "com.twineworks.tweakflow.std.Data$update"}
+  function update: (xs, key, function f) ->                 via {:class "com.twineworks.tweakflow.std.Data$update"};
 
 doc
 ~~~
@@ -1258,7 +1257,7 @@ nil
 ```
 ~~~
 
-  function update_in: (xs, list keys, function f) ->        via {:class "com.twineworks.tweakflow.std.Data$updateIn"}
+  function update_in: (xs, list keys, function f) ->        via {:class "com.twineworks.tweakflow.std.Data$updateIn"};
 
 doc
 ~~~
@@ -1296,7 +1295,7 @@ ERROR:
 ```
 ~~~
 
-  function keys: (xs) -> list                               via {:class "com.twineworks.tweakflow.std.Data$keys"}
+  function keys: (xs) -> list                               via {:class "com.twineworks.tweakflow.std.Data$keys"};
 
 doc
 ~~~
@@ -1341,7 +1340,7 @@ true
 ```
 ~~~
 
-  function has?: (xs, key) -> boolean                       via {:class "com.twineworks.tweakflow.std.Data$has"}
+  function has?: (xs, key) -> boolean                       via {:class "com.twineworks.tweakflow.std.Data$has"};
 
 doc
 ~~~
@@ -1378,7 +1377,7 @@ ERROR:
 ```
 ~~~
 
-  function values: (xs) -> list                             via {:class "com.twineworks.tweakflow.std.Data$values"}
+  function values: (xs) -> list                             via {:class "com.twineworks.tweakflow.std.Data$values"};
 
 doc
 ~~~
@@ -1412,7 +1411,7 @@ nil
 ```
 ~~~
 
-  function entries: (dict xs) -> list via {:class "com.twineworks.tweakflow.std.Data$entries"}
+  function entries: (dict xs) -> list via {:class "com.twineworks.tweakflow.std.Data$entries"};
 
 doc
 ~~~
@@ -1434,7 +1433,7 @@ nil
 ```
 ~~~
 
-  function prepend: (x, list xs) -> list                    via {:class "com.twineworks.tweakflow.std.Data$prepend"}
+  function prepend: (x, list xs) -> list                    via {:class "com.twineworks.tweakflow.std.Data$prepend"};
 
 doc
 ~~~
@@ -1455,7 +1454,7 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 ~~~
-  function append: (list xs, x) -> list                     via {:class "com.twineworks.tweakflow.std.Data$append"}
+  function append: (list xs, x) -> list                     via {:class "com.twineworks.tweakflow.std.Data$append"};
 
 doc
 ~~~
@@ -1495,7 +1494,7 @@ nil
   source: data.find([], nil)
 ```
 ~~~
-  function find: (list xs, function p) ->                   via {:class "com.twineworks.tweakflow.std.Data$find"}
+  function find: (list xs, function p) ->                   via {:class "com.twineworks.tweakflow.std.Data$find"};
 
 doc
 ~~~
@@ -1536,7 +1535,7 @@ ERROR:
   source: data.find_index([], nil)
 ```
 ~~~
-  function find_index: (list xs, function p) -> long        via {:class "com.twineworks.tweakflow.std.Data$findIndex"}
+  function find_index: (list xs, function p) -> long        via {:class "com.twineworks.tweakflow.std.Data$findIndex"};
 
 
 doc
@@ -1580,7 +1579,7 @@ ERROR:
 ```
 ~~~
 
-  function insert: (list xs, long i, v) ->                  via {:class "com.twineworks.tweakflow.std.Data$insert"}
+  function insert: (list xs, long i, v) ->                  via {:class "com.twineworks.tweakflow.std.Data$insert"};
 
 doc
 ~~~
@@ -1627,7 +1626,7 @@ ERROR:
 ```
 ~~~
 
-  function delete: (xs, key) ->                             via {:class "com.twineworks.tweakflow.std.Data$delete"}
+  function delete: (xs, key) ->                             via {:class "com.twineworks.tweakflow.std.Data$delete"};
 
 doc
 ~~~
@@ -1666,7 +1665,7 @@ nil
 ```
 ~~~
 
-  function select: (xs, list keys, not_found) ->            via {:class "com.twineworks.tweakflow.std.Data$select"}
+  function select: (xs, list keys, not_found) ->            via {:class "com.twineworks.tweakflow.std.Data$select"};
 
 doc
 ~~~
@@ -1721,7 +1720,7 @@ ERROR:
 ```
 ~~~
 
-  function filter: (xs, function p) ->                      via {:class "com.twineworks.tweakflow.std.Data$filter"}
+  function filter: (xs, function p) ->                      via {:class "com.twineworks.tweakflow.std.Data$filter"};
 
 doc
 ~~~
@@ -1750,7 +1749,7 @@ nil
 ```
 ~~~
 
-  function shuffle: (list xs, seed) -> list                 via {:class "com.twineworks.tweakflow.std.Data$shuffle"}
+  function shuffle: (list xs, seed) -> list                 via {:class "com.twineworks.tweakflow.std.Data$shuffle"};
 
 doc
 ~~~
@@ -1781,7 +1780,7 @@ nil
 ```
 ~~~
 
-  function unique: (list xs) -> list                        via {:class "com.twineworks.tweakflow.std.Data$unique"}
+  function unique: (list xs) -> list                        via {:class "com.twineworks.tweakflow.std.Data$unique"};
 
 doc
 ~~~
@@ -1814,7 +1813,7 @@ nil
 ```
 ~~~
 
-  function range: (long start=0, long end=0) -> list          via {:class "com.twineworks.tweakflow.std.Data$range"}
+  function range: (long start=0, long end=0) -> list          via {:class "com.twineworks.tweakflow.std.Data$range"};
 
 doc
 ~~~
@@ -1851,7 +1850,7 @@ nil
 ```
 ~~~
 
-  function any?: (list xs, function p) -> boolean           via {:class "com.twineworks.tweakflow.std.Data$any"}
+  function any?: (list xs, function p) -> boolean           via {:class "com.twineworks.tweakflow.std.Data$any"};
 
 doc
 ~~~
@@ -1888,7 +1887,7 @@ nil
 ```
 ~~~
 
-  function none?: (list xs, function p) -> boolean          via {:class "com.twineworks.tweakflow.std.Data$none"}
+  function none?: (list xs, function p) -> boolean          via {:class "com.twineworks.tweakflow.std.Data$none"};
 
 doc
 ~~~
@@ -1927,7 +1926,7 @@ nil
 ```
 ~~~
 
-  function all?: (list xs, function p) -> boolean           via {:class "com.twineworks.tweakflow.std.Data$all"}
+  function all?: (list xs, function p) -> boolean           via {:class "com.twineworks.tweakflow.std.Data$all"};
 
 doc
 ~~~
@@ -1956,7 +1955,7 @@ ERROR:
 ```
 ~~~
 
-  function init: (list xs) -> list                          via {:class "com.twineworks.tweakflow.std.Data$init"}
+  function init: (list xs) -> list                          via {:class "com.twineworks.tweakflow.std.Data$init"};
 
 doc
 ~~~
@@ -1984,7 +1983,7 @@ ERROR:
 ```
 ~~~
 
-  function tail: (list xs) -> list                          via {:class "com.twineworks.tweakflow.std.Data$tail"}
+  function tail: (list xs) -> list                          via {:class "com.twineworks.tweakflow.std.Data$tail"};
 
 doc
 ~~~
@@ -2012,7 +2011,7 @@ ERROR:
 ```
 ~~~
 
-  function head: (list xs) -> any                           via {:class "com.twineworks.tweakflow.std.Data$head"}
+  function head: (list xs) -> any                           via {:class "com.twineworks.tweakflow.std.Data$head"};
 
 doc
 ~~~
@@ -2040,7 +2039,7 @@ ERROR:
 ```
 ~~~
 
-  function last: (list xs) -> any                           via {:class "com.twineworks.tweakflow.std.Data$last"}
+  function last: (list xs) -> any                           via {:class "com.twineworks.tweakflow.std.Data$last"};
 
 doc
 ~~~
@@ -2075,7 +2074,7 @@ nil
 ```
 ~~~
 
-  function slice: (list xs, long start=0, long end=nil) -> list via {:class "com.twineworks.tweakflow.std.Data$slice"}
+  function slice: (list xs, long start=0, long end=nil) -> list via {:class "com.twineworks.tweakflow.std.Data$slice"};
 
 doc
 ~~~
@@ -2113,18 +2112,18 @@ ERROR:
 ~~~
 
   function slices: (list xs, long s=1) -> list
-    if xs == nil || s == nil then nil
-    if s <= 0 then throw {:message "s must be positive, was #{s}" :code "ILLEGAL_ARGUMENT"}
-    if empty?(xs) then []
+    if (xs == nil) || (s == nil) then nil else
+    if s <= 0 then throw {:message "s must be positive, was #{s}", :code "ILLEGAL_ARGUMENT"} else
+    if empty?(xs) then [] else
     let {
-      slice_count: math.ceil(size(xs)/s)
-      init: {:xs xs, :slices []}
+      slice_count: math.ceil(size(xs)/s);
+      init: {:xs xs, :slices []};
       iteration: (a) -> {
                   :xs drop(s, a[:xs]),
-                  :slices [...a[:slices], take(s, a[:xs])]
-                 }
+                  :slices [...(a[:slices]), take(s, a[:xs])]
+                 };
     }
-    fun.times(slice_count, init, iteration)[:slices]
+    (fun.times(slice_count, init, iteration)[:slices]);
 
 doc
 ~~~
@@ -2143,7 +2142,7 @@ nil
 ```
 ~~~
 
-  function reverse: (list xs) -> list                       via {:class "com.twineworks.tweakflow.std.Data$reverse"}
+  function reverse: (list xs) -> list                       via {:class "com.twineworks.tweakflow.std.Data$reverse"};
 
 doc
 ~~~
@@ -2180,7 +2179,7 @@ If a == b, f returns 0.
 ```
 ~~~
 
-  function sort: (list xs, function f) -> list              via {:class "com.twineworks.tweakflow.std.Data$sort"}
+  function sort: (list xs, function f) -> list              via {:class "com.twineworks.tweakflow.std.Data$sort"};
 
 doc
 ~~~
@@ -2211,7 +2210,7 @@ ERROR:
 ```
 ~~~
 
-  function repeat: (long n, x) -> list                    via {:class "com.twineworks.tweakflow.std.Data$repeat"}
+  function repeat: (long n, x) -> list                    via {:class "com.twineworks.tweakflow.std.Data$repeat"};
 
 doc
 ~~~
@@ -2246,7 +2245,7 @@ ERROR:
 ```
 ~~~
 
-  function concat: (list lists) -> list                     via {:class "com.twineworks.tweakflow.std.Data$concat"}
+  function concat: (list lists) -> list                     via {:class "com.twineworks.tweakflow.std.Data$concat"};
 
 doc
 ~~~
@@ -2289,7 +2288,7 @@ ERROR:
 ```
 ~~~
 
-  function merge: (list dicts) -> dict                      via {:class "com.twineworks.tweakflow.std.Data$merge"}
+  function merge: (list dicts) -> dict                      via {:class "com.twineworks.tweakflow.std.Data$merge"};
 
 doc
 ~~~
@@ -2322,7 +2321,7 @@ nil
 ```
 ~~~
 
-  function take: (long n, list xs) -> list                  via {:class "com.twineworks.tweakflow.std.Data$take"}
+  function take: (long n, list xs) -> list                  via {:class "com.twineworks.tweakflow.std.Data$take"};
 
 doc
 ~~~
@@ -2356,10 +2355,10 @@ nil
     if xs == nil then nil
 
     let {
-      max: size(xs)
-      count: fun.while((i) -> p(xs[i]) && i < max, 0, math.inc)
+      max: size(xs);
+      count: fun.while((i) -> (p(xs[i]) && (i < max)), 0, math.inc);
     }
-    take(count, xs)
+    (take(count, xs));
 
 doc
 ~~~
@@ -2396,10 +2395,10 @@ nil
     if xs == nil then nil
 
     let {
-      max: size(xs)
-      count: fun.until((i) -> p(xs[i]) || i >= max, 0, math.inc)
+      max: size(xs);
+      count: fun.until((i) -> (p(xs[i]) || (i >= max)), 0, math.inc);
     }
-    take(count, xs)
+    (take(count, xs));
 
 doc
 ~~~
@@ -2431,7 +2430,7 @@ nil
 nil
 ```
 ~~~
-  function drop: (long n, list xs) -> list                  via {:class "com.twineworks.tweakflow.std.Data$drop"}
+  function drop: (long n, list xs) -> list                  via {:class "com.twineworks.tweakflow.std.Data$drop"};
 
 doc
 ~~~
@@ -2461,10 +2460,10 @@ nil
     if xs == nil then nil
 
     let {
-      max: size(xs)
-      count: fun.while((i) -> p(xs[i]) && i < max, 0, math.inc)
+      max: size(xs);
+      count: fun.while((i) -> (p(xs[i]) && (i < max)), 0, math.inc);
     }
-    drop(count, xs)
+    (drop(count, xs));
 
 doc
 ~~~
@@ -2502,10 +2501,10 @@ nil
     # }
 
     let {
-      max: size(xs)
-      count: fun.until((i) -> p(xs[i]) || i >= max, 0, math.inc)
+      max: size(xs);
+      count: fun.until((i) -> (p(xs[i]) || (i >= max)), 0, math.inc);
     }
-    drop(count, xs)
+    (drop(count, xs));
 
 doc
 ~~~
@@ -2543,7 +2542,7 @@ ERROR:
 ```
 ~~~
 
-  function contains?: (xs, x) -> boolean                       via {:class "com.twineworks.tweakflow.std.Data$contains"}
+  function contains?: (xs, x) -> boolean                       via {:class "com.twineworks.tweakflow.std.Data$contains"};
 
 doc
 ~~~
@@ -2575,7 +2574,7 @@ nil
 ```
 ~~~
 
-  function index_of: (list xs, x, long start=0) -> long         via {:class "com.twineworks.tweakflow.std.Data$indexOf"}
+  function index_of: (list xs, x, long start=0) -> long         via {:class "com.twineworks.tweakflow.std.Data$indexOf"};
 
 doc
 ~~~
@@ -2610,7 +2609,7 @@ nil
 ```
 ~~~
 
-  function last_index_of: (list xs, x, long end=nil) -> long   via {:class "com.twineworks.tweakflow.std.Data$lastIndexOf"}
+  function last_index_of: (list xs, x, long end=nil) -> long   via {:class "com.twineworks.tweakflow.std.Data$lastIndexOf"};
 
 doc
 ~~~
@@ -2641,7 +2640,7 @@ nil
 ```
 ~~~
 
-  function key_of: (dict xs, x) -> string                   via {:class "com.twineworks.tweakflow.std.Data$keyOf"}
+  function key_of: (dict xs, x) -> string                   via {:class "com.twineworks.tweakflow.std.Data$keyOf"};
 
 doc
 ~~~
@@ -2671,7 +2670,7 @@ nil
 ~~~
 
   function flatten: (list xs) -> list
-    reduce(xs, [], (a, x) -> if x is list then [...a, ...x] else [...a, x])
+    (reduce(xs, [], (a, x) -> if x is list then [...a, ...x] else [...a, x]));
 
 doc
 ~~~
@@ -2725,7 +2724,7 @@ ERROR:
 ```
 ~~~
 
-  function map: (xs, function f) -> via {:class "com.twineworks.tweakflow.std.Data$map"}
+  function map: (xs, function f) -> via {:class "com.twineworks.tweakflow.std.Data$map"};
 
 doc
 ~~~
@@ -2766,7 +2765,7 @@ ERROR:
 ~~~
 
   function flatmap: (xs, function f) -> list
-    reduce(map(xs, f), [], (a, x) -> if x is list then [...a, ...x] else [...a, x])
+    (reduce(map(xs, f), [], (a, x) -> if x is list then [...a, ...x] else [...a, x]));
 
 doc
 ~~~
@@ -2806,7 +2805,7 @@ ERROR:
 ```
 ~~~
   function mapcat: (xs, function f) -> list
-    reduce(map(xs, f), [], (list a, x) -> if x is list then [...a, ...x] else a)
+    (reduce(map(xs, f), [], (list a, x) -> if x is list then [...a, ...x] else a));
 
 doc
 ~~~
@@ -2835,9 +2834,9 @@ nil
 ~~~
 
   function zip: (list xs, list ys) -> list
-    if xs == nil then nil
-    if ys == nil then nil
-    reduce(xs, [], (z, a, i) -> [...z, [a, ys[i]]])
+    if xs == nil then nil else
+    if ys == nil then nil else
+    (reduce(xs, [], (z, a, i) -> [...z, [a, ys[i]]]));
 
 
 doc
@@ -2888,9 +2887,9 @@ nil
 ~~~
 
   function zip_dict: (list keys, list values) -> dict
-    if keys == nil then nil
-    if values == nil then nil
-    reduce(keys, {}, (a, k, i) -> put(a, k, values[i]))
+    if keys == nil then nil else
+    if values == nil then nil else
+    (reduce(keys, {}, (a, k, i) -> (put(a, k, values[i]))));
 
 doc
 ~~~
@@ -2916,13 +2915,14 @@ nil
 ~~~
 
   function interpose: (list xs, s) -> list
-    if xs == nil then nil
-    reduce(xs, [],          # build a new list
+    if xs == nil then nil else
+    (reduce(xs, [],          # build a new list
       (a, x, i) ->
-        if i == 0
-          [x]               # first item remains as is
+        if i == 0 then
+          [x]
+        else               # first item remains as is
           [...a, s, x]      # follow-up items are preceded with seperator
-    )
+    ));
 
 doc
 ~~~
@@ -2981,7 +2981,7 @@ ERROR:
 ```
 ~~~
 
-  function reduce: (xs, init, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$reduce"}
+  function reduce: (xs, init, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$reduce"};
 
 doc
 ~~~
@@ -3035,7 +3035,7 @@ ERROR:
 ```
 ~~~
 
-  function reduce_until: (xs, init, function p, function f) ->  via {:class "com.twineworks.tweakflow.std.Data$reduce_until"}
+  function reduce_until: (xs, init, function p, function f) ->  via {:class "com.twineworks.tweakflow.std.Data$reduce_until"};
 
 doc
 ~~~
@@ -3089,7 +3089,7 @@ ERROR:
 ```
 ~~~
 
-  function reduce_while: (xs, init, function p, function f) ->  via {:class "com.twineworks.tweakflow.std.Data$reduce_while"}
+  function reduce_while: (xs, init, function p, function f) ->  via {:class "com.twineworks.tweakflow.std.Data$reduce_while"};
 
 }
 
@@ -3104,7 +3104,7 @@ doc
 ~~~
 The instant of time at `1970-01-01T00:00:00Z`
 ~~~
-  datetime epoch: 1970-01-01T00:00:00Z
+  datetime epoch: 1970-01-01T00:00:00Z;
 
 doc
 ~~~
@@ -3133,7 +3133,7 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 ~~~
-  function seconds_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$secondsBetween"}
+  function seconds_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$secondsBetween"};
 
 doc
 ~~~
@@ -3163,7 +3163,7 @@ nil
 ```
 ~~~
 
-  function minutes_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$minutesBetween"}
+  function minutes_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$minutesBetween"};
 
 doc
 ~~~
@@ -3192,7 +3192,7 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 ~~~
-  function hours_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$hoursBetween"}
+  function hours_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$hoursBetween"};
 
 doc
 ~~~
@@ -3222,7 +3222,7 @@ nil
 ```
 ~~~
 
-  function days_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$daysBetween"}
+  function days_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$daysBetween"};
 
 doc
 ~~~
@@ -3252,7 +3252,7 @@ nil
 ```
 ~~~
 
-  function months_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$monthsBetween"}
+  function months_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$monthsBetween"};
 
 doc
 ~~~
@@ -3281,7 +3281,7 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 ~~~
-  function years_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$yearsBetween"}
+  function years_between: (datetime start_inclusive, datetime end_exclusive) -> long via {:class "com.twineworks.tweakflow.std.Time$yearsBetween"};
 
 doc
 ~~~
@@ -3321,7 +3321,7 @@ nil
 ```
 ~~~
 
-  function period_between: (datetime start_inclusive, datetime end_exclusive) -> dict via {:class "com.twineworks.tweakflow.std.Time$periodBetween"}
+  function period_between: (datetime start_inclusive, datetime end_exclusive) -> dict via {:class "com.twineworks.tweakflow.std.Time$periodBetween"};
 
 doc
 ~~~
@@ -3364,7 +3364,7 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 ~~~
-  function duration_between: (datetime start_inclusive, datetime end_exclusive) -> dict via {:class "com.twineworks.tweakflow.std.Time$durationBetween"}
+  function duration_between: (datetime start_inclusive, datetime end_exclusive) -> dict via {:class "com.twineworks.tweakflow.std.Time$durationBetween"};
 
 doc
 ~~~
@@ -3395,7 +3395,7 @@ nil
 ```
 ~~~
 
-  function add_period: (datetime start, long years=0, long months=0, long days=0) -> datetime via {:class "com.twineworks.tweakflow.std.Time$addPeriod"}
+  function add_period: (datetime start, long years=0, long months=0, long days=0) -> datetime via {:class "com.twineworks.tweakflow.std.Time$addPeriod"};
 
 doc
 ~~~
@@ -3426,7 +3426,7 @@ nil
 ```
 ~~~
 
-  function add_duration: (datetime start, long seconds=0, long nano_of_second=0) -> datetime via {:class "com.twineworks.tweakflow.std.Time$addDuration"}
+  function add_duration: (datetime start, long seconds=0, long nano_of_second=0) -> datetime via {:class "com.twineworks.tweakflow.std.Time$addDuration"};
 
 doc
 ~~~
@@ -3448,7 +3448,7 @@ nil
 ```
 ~~~
 
-  function year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$year"}
+  function year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$year"};
 
 doc
 ~~~
@@ -3470,7 +3470,7 @@ nil
 ```
 ~~~
 
-  function month: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$month"}
+  function month: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$month"};
 
 doc
 ~~~
@@ -3492,7 +3492,7 @@ nil
 ```
 ~~~
 
-  function day_of_month: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfMonth"}
+  function day_of_month: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfMonth"};
 
 doc
 ~~~
@@ -3514,7 +3514,7 @@ nil
 ```
 ~~~
 
-  function day_of_year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfYear"}
+  function day_of_year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfYear"};
 
 doc
 ~~~
@@ -3547,7 +3547,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function day_of_week: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfWeek"}
+  function day_of_week: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfWeek"};
 
 doc
 ~~~
@@ -3568,7 +3568,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function hour: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$hour"}
+  function hour: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$hour"};
 
 doc
 ~~~
@@ -3590,7 +3590,7 @@ nil
 ```
 ~~~
 
-  function minute: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$minute"}
+  function minute: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$minute"};
 
 doc
 ~~~
@@ -3612,7 +3612,7 @@ nil
 ```
 ~~~
 
-  function second: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$second"}
+  function second: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$second"};
 
 doc
 ~~~
@@ -3637,7 +3637,7 @@ nil
 ```
 ~~~
 
-  function nano_of_second: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$nanoOfSecond"}
+  function nano_of_second: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$nanoOfSecond"};
 
 doc
 ~~~
@@ -3671,7 +3671,7 @@ nil
 ```
 ~~~
 
-  function week_of_year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$weekOfYear"}
+  function week_of_year: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$weekOfYear"};
 
 doc
 ~~~
@@ -3695,7 +3695,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function offset_seconds: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$offsetSeconds"}
+  function offset_seconds: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$offsetSeconds"};
 
 doc
 ~~~
@@ -3719,7 +3719,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function zone: (datetime x) -> string via {:class "com.twineworks.tweakflow.std.Time$zone"}
+  function zone: (datetime x) -> string via {:class "com.twineworks.tweakflow.std.Time$zone"};
 
 doc
 ~~~
@@ -3750,7 +3750,7 @@ ERROR:
 ```
 ~~~
 
-  function with_year: (datetime x, long year) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withYear"}
+  function with_year: (datetime x, long year) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withYear"};
 
 doc
 ~~~
@@ -3782,7 +3782,7 @@ ERROR:
 ```
 ~~~
 
-  function with_month: (datetime x, long month) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withMonth"}
+  function with_month: (datetime x, long month) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withMonth"};
 
 
 doc
@@ -3814,7 +3814,7 @@ ERROR:
 ```
 ~~~
 
-  function with_day_of_month: (datetime x, long day_of_month) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withDayOfMonth"}
+  function with_day_of_month: (datetime x, long day_of_month) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withDayOfMonth"};
 
 doc
 ~~~
@@ -3845,7 +3845,7 @@ ERROR:
 ```
 ~~~
 
-  function with_hour: (datetime x, long hour) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withHour"}
+  function with_hour: (datetime x, long hour) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withHour"};
 
 doc
 ~~~
@@ -3876,7 +3876,7 @@ ERROR:
 ```
 ~~~
 
-  function with_minute: (datetime x, long hour) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withMinute"}
+  function with_minute: (datetime x, long hour) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withMinute"};
 
 doc
 ~~~
@@ -3907,7 +3907,7 @@ ERROR:
 ```
 ~~~
 
-  function with_second: (datetime x, long second) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withSecond"}
+  function with_second: (datetime x, long second) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withSecond"};
 
 doc
 ~~~
@@ -3938,7 +3938,7 @@ ERROR:
 ```
 ~~~
 
-  function with_nano_of_second: (datetime x, long nano_of_second) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withNanoOfSecond"}
+  function with_nano_of_second: (datetime x, long nano_of_second) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withNanoOfSecond"};
 
 doc
 ~~~
@@ -3972,7 +3972,7 @@ ERROR:
 ```
 ~~~
 
-  function with_zone: (datetime x, string tz) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withTz"}
+  function with_zone: (datetime x, string tz) -> datetime via {:class "com.twineworks.tweakflow.std.Time$withTz"};
 
 
 doc
@@ -4011,7 +4011,7 @@ ERROR:
 ```
 ~~~
 
-  function same_instant_at_zone: (datetime x, string tz) -> datetime via {:class "com.twineworks.tweakflow.std.Time$sameInstantAtZone"}
+  function same_instant_at_zone: (datetime x, string tz) -> datetime via {:class "com.twineworks.tweakflow.std.Time$sameInstantAtZone"};
 
 
 doc
@@ -4036,7 +4036,7 @@ Returns `nil` if `s` is `nil`.
 ~~~
 
   function unix_timestamp: (long s) ->
-    add_duration(epoch, s)
+    (add_duration(epoch, s));
 
 
 doc
@@ -4061,7 +4061,7 @@ Returns `nil` if `s` is `nil`.
 ~~~
 
   function unix_timestamp_ms: (long ms) ->
-    add_duration(epoch, ms // 1000, (ms % 1000) * 1000000)
+    (add_duration(epoch, ms // 1000, (ms % 1000) * 1000000));
 
 doc
 ~~~
@@ -4097,11 +4097,11 @@ Assumes `nil` to precede any non-nil datetime.
       if b == nil then 0 else -1
     if b == nil then 1
     let {
-      d: duration_between(a, b)
+      d: duration_between(a, b);
     }
     if d[:seconds] < 0 then 1
-    if d[:seconds] > 0 || (d[:seconds] == 0 && d[:nano_seconds] > 0) then -1
-    else 0
+    if (d[:seconds] > 0) || ((d[:seconds] == 0) && (d[:nano_seconds] > 0)) then -1
+    else 0;
 
 
 doc
@@ -4148,7 +4148,7 @@ function
 ```
 ~~~
 
-  function formatter: (string pattern="uuuu-MM-dd'T'HH:mm:ssZZZZZ'@`'VV'`'", string lang="en-US") -> function via {:class "com.twineworks.tweakflow.std.Time$formatter"}
+  function formatter: (string pattern="uuuu-MM-dd'T'HH:mm:ssZZZZZ'@`'VV'`'", string lang="en-US") -> function via {:class "com.twineworks.tweakflow.std.Time$formatter"};
 
 
 doc
@@ -4224,7 +4224,7 @@ function
 ```
 ~~~
 
-  function parser: (string pattern="uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']", boolean lenient=false, string lang="en-US", string default_tz="UTC") -> function via {:class "com.twineworks.tweakflow.std.Time$parser"}
+  function parser: (string pattern="uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']", boolean lenient=false, string lang="en-US", string default_tz="UTC") -> function via {:class "com.twineworks.tweakflow.std.Time$parser"};
 
 doc
 ~~~
@@ -4246,7 +4246,7 @@ Returns a list of all known time zone ids.
 ```
 ~~~
 
-  function zones: () -> list via {:class "com.twineworks.tweakflow.std.Time$zones"}
+  function zones: () -> list via {:class "com.twineworks.tweakflow.std.Time$zones"};
 }
 
 doc
@@ -4309,7 +4309,7 @@ ERROR:
 ```
 ~~~
 
-  function abs: (x) ->                                      via {:class "com.twineworks.tweakflow.std.Math$abs"}
+  function abs: (x) ->                                      via {:class "com.twineworks.tweakflow.std.Math$abs"};
 
 doc
 ~~~
@@ -4363,7 +4363,7 @@ function
 
 ```
 ~~~
-  function rand: (any seed) -> double                           via {:class "com.twineworks.tweakflow.std.Math$rand"}
+  function rand: (any seed) -> double                           via {:class "com.twineworks.tweakflow.std.Math$rand"};
 
 doc
 ~~~
@@ -4403,7 +4403,7 @@ ERROR:
 ```
 ~~~
 
-  function inc: (any x) -> any                              via {:class "com.twineworks.tweakflow.std.Math$inc"}
+  function inc: (any x) -> any                              via {:class "com.twineworks.tweakflow.std.Math$inc"};
 
 doc
 ~~~
@@ -4443,7 +4443,7 @@ ERROR:
 ```
 ~~~
 
-  function dec: (x) -> via {:class "com.twineworks.tweakflow.std.Math$dec"}
+  function dec: (x) -> via {:class "com.twineworks.tweakflow.std.Math$dec"};
 
 doc
 ~~~
@@ -4475,8 +4475,8 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 ~~~
   function compare: (a, b) -> long
 
-    if !(a is long || a is double || a == nil) throw "cannot compare non-numeric: "..core.inspect(a)
-    if !(b is long || b is double || b == nil) throw "cannot compare non-numeric: "..core.inspect(b)
+    if !((a is long) || (a is double) || (a == nil)) throw ("cannot compare non-numeric: "..(core.inspect(a)))
+    if !((b is long) || (b is double) || (b == nil)) throw ("cannot compare non-numeric: "..(core.inspect(b)))
 
     # handle nil case
     if a == nil
@@ -4493,7 +4493,7 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
     # handle regular numbers case
     if a < b then -1
     if a > b then 1
-    else 0
+    else 0;
 
 doc
 ~~~
@@ -4527,7 +4527,7 @@ ERROR:
 ```
 ~~~
 
-  function min: (list xs) -> any                            via {:class "com.twineworks.tweakflow.std.Math$min"}
+  function min: (list xs) -> any                            via {:class "com.twineworks.tweakflow.std.Math$min"};
 
 doc
 ~~~
@@ -4561,7 +4561,7 @@ ERROR:
 ```
 ~~~
 
-  function max: (list xs) -> any                            via {:class "com.twineworks.tweakflow.std.Math$max"}
+  function max: (list xs) -> any                            via {:class "com.twineworks.tweakflow.std.Math$max"};
 
 doc
 ~~~
@@ -4583,7 +4583,7 @@ nil
 ```
 ~~~
 
-  function round: (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$round"}
+  function round: (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$round"};
 
 doc
 ~~~
@@ -4605,7 +4605,7 @@ nil
 ```
 ~~~
 
-  function ceil:  (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$ceil"}
+  function ceil:  (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$ceil"};
 
 doc
 ~~~
@@ -4627,7 +4627,7 @@ nil
 ```
 ~~~
 
-  function floor: (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$floor"}
+  function floor: (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$floor"};
 
 doc
 ~~~
@@ -4647,7 +4647,7 @@ false
 ```
 ~~~
 
-  function nan?:  (double x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"}
+  function nan?:  (double x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"};
 
 doc
 ~~~
@@ -4671,7 +4671,7 @@ nil
 ```
 ~~~
 
-  function sqrt:  (double x) -> double x ** 0.5
+  function sqrt:  (double x) -> double (x ** 0.5);
 
 doc
 ~~~
@@ -4693,7 +4693,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function sin: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$sin"}
+  function sin: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$sin"};
 
 doc
 ~~~
@@ -4718,7 +4718,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function cos: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$cos"}
+  function cos: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$cos"};
 
 
 doc
@@ -4741,7 +4741,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function tan: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$tan"}
+  function tan: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$tan"};
 
 doc
 ~~~
@@ -4763,7 +4763,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function asin: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$asin"}
+  function asin: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$asin"};
 
 doc
 ~~~
@@ -4788,7 +4788,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function acos: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$acos"}
+  function acos: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$acos"};
 
 doc
 ~~~
@@ -4810,7 +4810,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function atan: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$atan"}
+  function atan: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$atan"};
 
 
 doc
@@ -4836,7 +4836,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function log: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$log"}
+  function log: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$log"};
 
 
 doc
@@ -4862,7 +4862,7 @@ Returns `nil` if `x` is `nil`.
 ```
 ~~~
 
-  function log10: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$log10"}
+  function log10: (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$log10"};
 
 
 doc
@@ -4887,7 +4887,7 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 ~~~
-  function bit_count: (long x) -> long                      via {:class "com.twineworks.tweakflow.std.Math$bitCount"}
+  function bit_count: (long x) -> long                      via {:class "com.twineworks.tweakflow.std.Math$bitCount"};
 
 
 doc
@@ -4944,7 +4944,7 @@ std.tf> f(648722)
 "६४८,७२२"
 ```
 ~~~
-  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="half_up", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"}
+  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="half_up", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"};
 
 
 doc
@@ -4998,34 +4998,34 @@ function
 ```
 ~~~
 
-  function parser: (string pattern='0.##', dict decimal_symbols=nil, boolean lenient=false) -> function via {:class "com.twineworks.tweakflow.std.Math$parser"}
+  function parser: (string pattern='0.##', dict decimal_symbols=nil, boolean lenient=false) -> function via {:class "com.twineworks.tweakflow.std.Math$parser"};
 
 doc
 ~~~
 The double value that is closer than any other to `e`, the base of the natural logarithms.
 ~~~
-  double e:   2.718281828459045
+  double e:   2.718281828459045;
 
 doc
 ~~~
 The double value that is closer than any other to `pi`, the ratio of the circumference of a circle to its diameter.
 ~~~
 
-  double pi:  3.141592653589793
+  double pi:  3.141592653589793;
 
 doc
 ~~~
 The smallest representable long value: `-9223372036854775808`.
 ~~~
 
-  long min_long: 0x8000000000000000
+  long min_long: 0x8000000000000000;
 
 doc
 ~~~
 The largest representable long value: `9223372036854775807`.
 ~~~
 
-  long max_long: 0x7FFFFFFFFFFFFFFF
+  long max_long: 0x7FFFFFFFFFFFFFFF;
 }
 
 
@@ -5076,7 +5076,7 @@ function
 ```
 ~~~
 
-  function times: (long n, any x, function f) ->                via {:class "com.twineworks.tweakflow.std.Fun$times"}
+  function times: (long n, any x, function f) ->                via {:class "com.twineworks.tweakflow.std.Fun$times"};
 
 doc
 ~~~
@@ -5123,7 +5123,7 @@ function
 
 ```
 ~~~
-  function until: (function p, any x, function f) ->            via {:class "com.twineworks.tweakflow.std.Fun$until"}
+  function until: (function p, any x, function f) ->            via {:class "com.twineworks.tweakflow.std.Fun$until"};
 
 doc
 ~~~
@@ -5171,7 +5171,7 @@ function
 ```
 ~~~
 
-  function while: (function p, x, function f) ->                via {:class "com.twineworks.tweakflow.std.Fun$doWhile"}
+  function while: (function p, x, function f) ->                via {:class "com.twineworks.tweakflow.std.Fun$doWhile"};
 
 doc
 ~~~
@@ -5208,7 +5208,7 @@ Returns `x` if `end` < `start`.
 ```
 ~~~
 
-  function iterate: (long start, long end, x, function f) ->      via {:class "com.twineworks.tweakflow.std.Fun$iterate"}
+  function iterate: (long start, long end, x, function f) ->      via {:class "com.twineworks.tweakflow.std.Fun$iterate"};
 
 doc
 ~~~
@@ -5239,7 +5239,7 @@ function
 ~~~
 
   function thread: (any state, list fs) ->
-    data.reduce(fs, state, (a, f) -> f(a))
+    (data.reduce(fs, state, (a, f) -> (f(a))));
 
   # function thread_splat: (state, list fs) ->
   #   data.reduce(fs, state, (a, f) -> f(...a))
@@ -5271,9 +5271,9 @@ function
 ~~~
 
   function chain: (list fs) -> function
-    if fs == nil then nil
-    if data.size(fs) == 0 then throw "function list cannot be empty"
-    data.reduce(fs, nil, (a, f) -> if a == nil then f else (x) -> f(a(x)))
+    if fs == nil then nil else
+    if data.size(fs) == 0 then throw "function list cannot be empty" else
+    (data.reduce(fs, nil, (a, f) -> if a == nil then f else (x) -> (f(a(x)))));
 
 doc
 ~~~
@@ -5297,9 +5297,9 @@ function
 ~~~
 
   function compose: (list fs) -> function
-    if fs == nil then nil
-    if data.size(fs) == 0 then throw "function list cannot be empty"
-    data.reduce(data.reverse(fs), nil, (a, f) -> if a == nil then f else (x) -> f(a(x)))
+    if fs == nil then nil else
+    if data.size(fs) == 0 then throw "function list cannot be empty" else
+    (data.reduce(data.reverse(fs), nil, (a, f) -> if a == nil then f else (x) -> (f(a(x)))));
 
 doc
 ~~~
@@ -5361,7 +5361,7 @@ Returns `nil` if `f` is `nil`.
 ```
 ~~~
 
-  function signature: (function f) -> dict via {:class "com.twineworks.tweakflow.std.Fun$signature"}
+  function signature: (function f) -> dict via {:class "com.twineworks.tweakflow.std.Fun$signature"};
 
 }
 
@@ -5402,7 +5402,7 @@ Returns `en-US` display names if `lang` is `nil` or unknown.
 }
 ```
 ~~~
-  function languages: (lang='en-US') -> dict via {:class "com.twineworks.tweakflow.std.Locale$languages"}
+  function languages: (lang='en-US') -> dict via {:class "com.twineworks.tweakflow.std.Locale$languages"};
 
 doc
 ~~~
@@ -5462,6 +5462,6 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
 ```
 ~~~
 
-  function decimal_symbols: (lang='en-US') -> dict via {:class "com.twineworks.tweakflow.std.Locale$decimalSymbols"}
+  function decimal_symbols: (lang='en-US') -> dict via {:class "com.twineworks.tweakflow.std.Locale$decimalSymbols"};
 
 }
