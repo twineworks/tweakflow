@@ -26,14 +26,16 @@ package com.twineworks.tweakflow.lang.load.user;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.values.*;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserObjectFactory {
 
+  private static ConcurrentHashMap<String, Class<UserFunction>> userFunctionClasses = new ConcurrentHashMap<>();
+
   public FunctionValue createUserFunction(FunctionSignature functionSignature, Value viaConf) {
     UserFunctionDesc desc = new UserFunctionDesc(viaConf);
-    ensureClassLoaded(desc);
     return new UserFunctionValue(functionSignature, createInstance(desc));
   }
 
@@ -52,19 +54,27 @@ public class UserObjectFactory {
 
     if (desc.getClazz() != null) return;
 
-    try {
-      // TODO: user classloader support in desc
-      Class<?> aClass = this.getClass().getClassLoader().loadClass(desc.getClassName());
-      if (UserFunction.class.isAssignableFrom(aClass)){
-        desc.setClazz((Class<UserFunction>) aClass);
-      }
-      else{
-        throw new LangException(LangError.USER_CLASS_INCOMPATIBLE, "user function classes must implement the UserFunction interface");
+    if (!userFunctionClasses.containsKey(desc.getClassName())){
+      try {
+        // TODO: user classloader support in desc?
+        Class<?> aClass = this.getClass().getClassLoader().loadClass(desc.getClassName());
+        if (UserFunction.class.isAssignableFrom(aClass)){
+          Class<UserFunction> c = (Class<UserFunction>) aClass;
+          userFunctionClasses.put(desc.getClassName(), c);
+        }
+        else{
+          throw new LangException(LangError.USER_CLASS_INCOMPATIBLE, "user function classes must implement the UserFunction interface");
+        }
+
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e.getMessage(), e);
       }
 
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e.getMessage(), e);
     }
+
+    Class<UserFunction> c = userFunctionClasses.get(desc.getClassName());
+    desc.setClazz(c);
+
   }
 
 }
