@@ -28,7 +28,7 @@ library lib
                   throw "error"
                 catch e, trace
                   let {
-                    t0: trace[:stack 0]
+                    t0: trace[:stack, 0]
                   }
                   "caught: #{e} trace: #{t0}"
 

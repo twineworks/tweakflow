@@ -87,16 +87,16 @@ library operator_spec {
 
   h_ad9_al9: hash([9.0]) == hash([9]) == true
 
-  a123_mixed: [1.0 2 3.0] == [1 2.0 3] == true
-  h_a123_mixed: hash([1.0 2 3.0]) == hash([1 2.0 3]) == true
+  a123_mixed: [1.0, 2, 3.0] == [1, 2.0, 3] == true
+  h_a123_mixed: hash([1.0, 2, 3.0]) == hash([1, 2.0, 3]) == true
 
 
   m_m:        {} == {}          == true
   mxl0_mxl0:  {:x 0} == {:x 0}  == true
   mxl0_m:     {:x 0} == {}      == false
 
-  mab_mba:    {:a 1 :b 2} == {:b 2 :a 1}              == true
-  h_mab_mba:  hash({:a 1 :b 2}) == hash({:b 2 :a 1})  == true
+  mab_mba:    {:a 1, :b 2} == {:b 2, :a 1}              == true
+  h_mab_mba:  hash({:a 1, :b 2}) == hash({:b 2, :a 1})  == true
 
   mld:        {:a 1} == {:a 1.0}             == true
   h_mld:      hash({:a 1}) == hash({:a 1.0}) == true
@@ -106,13 +106,13 @@ library operator_spec {
 
   nested_mixed: {:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]}
                 ==
-                {:a [1, 2.0, 3 {:b [0.0], :a 1}]}
+                {:a [1, 2.0, 3, {:b [0.0], :a 1}]}
                 ==
                 true
 
-  h_nested_mixed: hash({:a [1.0, 2, 3.0 {:a 1.0, :b [0]}]})
+  h_nested_mixed: hash({:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]})
                   ==
-                  hash({:a [1, 2.0, 3 {:b [0.0], :a 1}]})
+                  hash({:a [1, 2.0, 3, {:b [0.0], :a 1}]})
                   ==
                   true
 

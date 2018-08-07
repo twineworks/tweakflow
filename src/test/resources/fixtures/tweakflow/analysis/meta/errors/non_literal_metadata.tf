@@ -1,5 +1,5 @@
 meta {
-  :a "foo"
+  :a "foo",
   :b 1+1
 }
 

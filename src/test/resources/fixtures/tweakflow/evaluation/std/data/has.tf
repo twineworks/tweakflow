@@ -5,7 +5,7 @@ alias store.inventory as inv
 alias std.data.has? as has?
 
 library books {
-  moby_dick: inv[:book 2]
+  moby_dick: inv[:book, 2]
 }
 
 library has_key_spec {

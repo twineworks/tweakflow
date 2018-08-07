@@ -2,7 +2,7 @@ import data from "std.tf"
 alias data.map as map
 
 library lib {
-  throw_error: () -> throw {:code "test", :message "error"}
+  throw_error: () -> throw {:code "test", :message "error"};
 }
 
 library throw_spec {
@@ -23,12 +23,12 @@ library throw_spec {
       {:code "test", :message "error"}
     &&
     caught[:trace] == {
-      :message      "CUSTOM_ERROR"
-      :code         "CUSTOM_ERROR"
-      :value        {:code "test", :message "error"}
-      :source       'throw {:code "test", :message "error"}'
-      :line         '  throw_error: () -> throw {:code "test", :message "error"}',
-      :at           "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:5:22"
+      :message      "CUSTOM_ERROR",
+      :code         "CUSTOM_ERROR",
+      :value        {:code "test", :message "error"},
+      :source       'throw {:code "test", :message "error"}',
+      :line         '  throw_error: () -> throw {:code "test", :message "error"};',
+      :at           "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:5:22",
       :stack       ["fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:5:22",  # throw
                     "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:14:11", # lib.throw_error()
                     "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:11:5",  # let
@@ -36,6 +36,6 @@ library throw_spec {
                     "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:8:1",   # library throw_spec
                     "fixtures/tweakflow/evaluation/throwing/try_catch_trace.tf:1:1"]   # module
 
-    }
+    };
 
 }

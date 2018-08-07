@@ -6,8 +6,8 @@ alias std.data.map as map
 
 library books {
   all: inv[:book]
-  moby_dick: inv[:book 2]
-  lotr: inv[:book 3]
+  moby_dick: inv[:book, 2]
+  lotr: inv[:book, 3]
 }
 
 library map_spec {

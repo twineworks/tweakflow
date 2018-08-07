@@ -1,51 +1,45 @@
-import store from "./../../data.tf"
 import * as std from "std.tf"
 
-alias store.inventory as inv
 alias std.core.inspect as inspect
-
-library books {
-  moby_dick: inv[:book 2]
-}
 
 library inspect_spec {
 
   inspect_nil:
-    inspect(nil) == "nil"
+    inspect(nil) == "nil";
 
   inspect_true:
-    inspect(true) == "true"
+    inspect(true) == "true";
 
   inspect_false:
-    inspect(false) == "false"
+    inspect(false) == "false";
 
   inspect_long:
-    inspect(1) == "1"
+    inspect(1) == "1";
 
   inspect_double:
-    inspect(3.14) == "3.14"
+    inspect(3.14) == "3.14";
 
   inspect_nan:
-    inspect(NaN) == "NaN"
+    inspect(NaN) == "NaN";
 
   inspect_infinity:
-    inspect(Infinity) == "Infinity"
+    inspect(Infinity) == "Infinity";
 
   inspect_neg_infinity:
-    inspect(-Infinity) == "-Infinity"
+    inspect(-Infinity) == "-Infinity";
 
   inspect_empty_list:
-    inspect([]) == "[]"
+    inspect([]) == "[]";
 
   inspect_simple_list:
-    inspect([1, 2, 3]) == "[1, 2, 3]"
+    inspect([1, 2, 3]) == "[1, 2, 3]";
 
   inspect_empty_dict:
-    inspect({}) == "{}"
+    inspect({}) == "{}";
 
   inspect_simple_dict:
     let {
-      str: inspect({:k1 "v1", :k2 "v2"})
+      str: inspect({:k1 "v1", :k2 "v2"});
     }
     # item order in maps is not defined
     # so string representation could be in any order
@@ -63,7 +57,7 @@ library inspect_spec {
 
   inspect_dict_escaped_keys:
   let {
-    str: inspect({:`k 1` "v1", :`k 2` "v2"})
+    str: inspect({:`k 1` "v1", :`k 2` "v2"});
   }
   # item order in maps is not defined
   # so string representation could be in any order

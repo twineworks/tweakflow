@@ -36,7 +36,6 @@ import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.*;
 
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,7 +47,7 @@ public class TestHelper {
   public static void assertSpecModule(String path){
 
     LoadPath loadPath = new LoadPath.Builder()
-        .add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build())
+        .addStdLocation()
         .add(new ResourceLocation.Builder().build())
         .build();
 
@@ -56,13 +55,15 @@ public class TestHelper {
     List<String> paths = Collections.singletonList(path);
 
     try {
+      System.out.println("compiling "+System.currentTimeMillis());
       runtime = TweakFlow.compile(loadPath, paths);
+      System.out.println("evaluating "+System.currentTimeMillis());
       runtime.evaluate();
     } catch (LangException e){
       e.printDigestMessageAndStackTrace();
       throw e;
     }
-
+    System.out.println("verifying "+System.currentTimeMillis());
     // find all libraries that have names ending in _spec, and ensure all their cells are boolean true
     MemorySpace moduleSpace = runtime.getRuntimeSet().getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
 
@@ -80,7 +81,7 @@ public class TestHelper {
       }
 
     }
-
+    System.out.println("done "+System.currentTimeMillis());
   }
 
   // convenient stub for testing

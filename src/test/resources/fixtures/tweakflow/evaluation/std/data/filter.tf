@@ -6,7 +6,7 @@ alias store.inventory as inv
 alias std.data.filter as filter
 
 library books {
-  moby_dick: inv[:book 2]
+  moby_dick: inv[:book, 2]
 }
 
 library filter_spec {
@@ -32,7 +32,7 @@ library filter_spec {
   even_index_books:
     filter(inv[:book], (_, i) -> i % 2 == 0)
     ==
-    [inv[:book 0], inv[:book 2]]
+    [inv[:book, 0], inv[:book, 2]]
 
   moby_dick_only_string_entries:                      # filters out price
     filter(books.moby_dick, (x) -> x is string)

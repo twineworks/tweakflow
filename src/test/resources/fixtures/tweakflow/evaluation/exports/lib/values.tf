@@ -1,6 +1,6 @@
 
-export lib.data
+export lib.data;
 
 library lib {
-  data: {:a "hello" :b "world"}
+  data: {:a "hello", :b "world"};
 }

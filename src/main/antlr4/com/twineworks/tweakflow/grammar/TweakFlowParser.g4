@@ -66,7 +66,7 @@ nameDec
 // import definition
 
 importDef 
-  : 'import' importMember (','? importMember)* 'from' modulePath endOfStatement?
+  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement?
   ;
 
 importMember
@@ -303,11 +303,13 @@ dateTimeLiteral
   ;
 
 listLiteral
-   : '[' ((expression|splat) ','? )*  ']'
+   : '['']'
+   | '[' (expression|splat) (',' (expression|splat))* ']'
    ;
 
 dictLiteral
-   : '{' (((stringConstant expression)|(expression expression)|(splat)) ','? )*  '}'
+   : '{' '}'
+   | '{' ((stringConstant expression)|(expression expression)|(splat)) (',' ((stringConstant expression)|(expression expression)|(splat)))*  '}'
    ;
 
 
@@ -356,7 +358,7 @@ identifier
   ;
 
 containerAccessKeySequence
-  : ((expression | splat) ','?)+
+  : ((expression | splat)) (',' (expression | splat))*
   ;
 
 args

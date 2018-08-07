@@ -70,7 +70,7 @@ library operator_spec {
     pythagorean_triangles:
       lib.triangles(20)
       ==
-      [[3 4 5], [5 12 13], [6 8 10], [8 15 17], [9 12 15], [12 16 20], [15 20 25]]
+      [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15], [12, 16, 20], [15, 20, 25]]
 
     predicate_cast_to_boolean: (
       for x <- ["yeah", true, nil, ""],
