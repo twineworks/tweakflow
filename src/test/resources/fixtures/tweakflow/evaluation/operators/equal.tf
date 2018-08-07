@@ -1,4 +1,4 @@
-import * as std from "std.tf"
+import * as std from 'std.tf';
 
 alias std.core.hash as hash
 

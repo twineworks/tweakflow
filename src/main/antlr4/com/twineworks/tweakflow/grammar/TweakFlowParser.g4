@@ -145,7 +145,6 @@ literal
   | booleanLiteral                                          # booleanLiteralExp
   | dateTimeLiteral                                         # dateTimeLiteralExp
   | stringConstant                                          # stringConstantExp
-  | stringInterpolation                                     # stringInterpolationExp
   | longLiteral                                             # longLiteralExp
   | doubleLiteral                                           # doubleLiteralExp
   | listLiteral                                             # listLiteralExp
@@ -263,11 +262,7 @@ nilLiteral
 stringLiteral
   : VSTRING           # stringVerbatim
   | HEREDOC_STRING    # stringHereDoc
-  | STRING_BEGIN (stringText|stringEscapeSequence)* STRING_END # stringQuoted
-  ;
-
-stringInterpolation
-  : STRING_BEGIN (stringText|stringEscapeSequence|stringReferenceInterpolation)* STRING_END
+  | STRING_BEGIN (stringText|stringEscapeSequence|stringReferenceInterpolation)* STRING_END # stringInterpolation
   ;
 
 stringText

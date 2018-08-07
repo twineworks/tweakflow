@@ -1,4 +1,4 @@
-import math, time from "std.tf"
+import math, time from 'std.tf';
 alias math.nan? as nan?
 alias math.min_long as min_long
 alias math.max_long as max_long

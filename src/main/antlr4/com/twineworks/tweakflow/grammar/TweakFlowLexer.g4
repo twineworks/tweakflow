@@ -254,3 +254,6 @@ STRING_END
   : '"' -> popMode
   ;
 
+UNRECOGNIZED
+  : .
+  ;

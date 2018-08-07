@@ -1,4 +1,4 @@
-import time from "std"
+import time from 'std';
 
 library lib {
   f: (x) -> x

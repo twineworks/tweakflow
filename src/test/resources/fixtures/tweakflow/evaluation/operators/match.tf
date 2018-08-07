@@ -1,4 +1,4 @@
-import core, data, math from "std"
+import core, data, math from 'std';
 
 library lib {
   is_list: (x) -> typeof x == "list"
@@ -388,7 +388,7 @@ library dict_pattern_spec {
 
   match_nested_dict_with_capture_mix_key_notations: (
       match {:a {:a 1, :b 2, :c 3}}
-        {'a' {"a" @a, :b @,
+        {'a' {'a' @a, :b @,
 # c: valid constant string as heredoc
 ~~~
 c

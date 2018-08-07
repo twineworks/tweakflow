@@ -104,38 +104,38 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     // replace escape sequence
     return new StringNode(text.replaceAll("''", "'")).setSourceInfo(srcOf(parseUnit, ctx));
   }
-
-  @Override
-  public ExpressionNode visitStringQuoted(TweakFlowParser.StringQuotedContext ctx) {
-
-    SourceInfo sourceInfo = (srcOf(parseUnit, ctx));
-    StringBuilder builder = new StringBuilder();
-
-    // skip opening '"' and closing '"'
-    int i = 1;
-    int n = ctx.getChildCount()-1;
-
-    for (;i<n;i++){
-
-      ParserRuleContext child = (ParserRuleContext) ctx.children.get(i);
-
-      if (child instanceof TweakFlowParser.StringTextContext){
-        builder.append(child.getText());
-
-      }
-      else if (child instanceof TweakFlowParser.StringEscapeSequenceContext){
-        String escapeSequence = child.getText();
-        builder.append(convertEscapeSequence(escapeSequence));
-      }
-      else {
-        throw new AssertionError("Unknown child node in quoted string: "+child.toString());
-      }
-
-    }
-
-    return new StringNode(builder.toString()).setSourceInfo(sourceInfo);
-
-  }
+//
+//  @Override
+//  public ExpressionNode visitStringQuoted(TweakFlowParser.StringQuotedContext ctx) {
+//
+//    SourceInfo sourceInfo = (srcOf(parseUnit, ctx));
+//    StringBuilder builder = new StringBuilder();
+//
+//    // skip opening '"' and closing '"'
+//    int i = 1;
+//    int n = ctx.getChildCount()-1;
+//
+//    for (;i<n;i++){
+//
+//      ParserRuleContext child = (ParserRuleContext) ctx.children.get(i);
+//
+//      if (child instanceof TweakFlowParser.StringTextContext){
+//        builder.append(child.getText());
+//
+//      }
+//      else if (child instanceof TweakFlowParser.StringEscapeSequenceContext){
+//        String escapeSequence = child.getText();
+//        builder.append(convertEscapeSequence(escapeSequence));
+//      }
+//      else {
+//        throw new AssertionError("Unknown child node in quoted string: "+child.toString());
+//      }
+//
+//    }
+//
+//    return new StringNode(builder.toString()).setSourceInfo(sourceInfo);
+//
+//  }
 
   @Override
   public ExpressionNode visitDecLiteral(TweakFlowParser.DecLiteralContext ctx) {
