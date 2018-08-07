@@ -309,7 +309,7 @@ listLiteral
 
 dictLiteral
    : '{' '}'
-   | '{' ((stringConstant expression)|(expression expression)|(splat)) (',' ((stringConstant expression)|(expression expression)|(splat)))*  '}'
+   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  '}'
    ;
 
 
