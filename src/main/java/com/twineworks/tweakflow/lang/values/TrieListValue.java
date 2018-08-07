@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 Twineworks GmbH
+ * Copyright (c) 2018 Twineworks GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,31 +30,31 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 
 import java.util.*;
 
-final public class ListValue implements Iterable<Value> {
+final public class TrieListValue implements Iterable<Value> {
 
   private final TrieList vec;
 
-  private ListValue(TrieList vec) {
+  private TrieListValue(TrieList vec) {
     this.vec = vec;
   }
 
-  public ListValue() {
+  public TrieListValue() {
     this(TrieList.empty());
   }
 
-  public ListValue(List<Value> values) {
+  public TrieListValue(List<Value> values) {
     this.vec = TrieList.empty().addAll(values.toArray());
   }
 
-  public ListValue(Value[] values) {
+  public TrieListValue(Value[] values) {
     this.vec = TrieList.empty().addAll(values);
   }
 
-  private ListValue(Object[] values) {
+  private TrieListValue(Object[] values) {
     this.vec = TrieList.empty().addAll(values);
   }
 
-  public ListValue(Collection<Value> values) {
+  public TrieListValue(Collection<Value> values) {
     this.vec = TrieList.empty().addAll(values.toArray());
   }
 
@@ -68,7 +68,7 @@ final public class ListValue implements Iterable<Value> {
     return Values.NIL;
   }
 
-  public ListValue set(long index, Value value) {
+  public TrieListValue set(long index, Value value) {
 
     if (index > Integer.MAX_VALUE || index < 0L) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot set index "+index);
 
@@ -81,39 +81,39 @@ final public class ListValue implements Iterable<Value> {
       ret = ret.set((int)index, value);
     }
 
-    return new ListValue(ret);
+    return new TrieListValue(ret);
   }
 
   public boolean isEmpty() {
     return vec.isEmpty();
   }
 
-  public ListValue append(Value v) {
-    return new ListValue(vec.add(v));
+  public TrieListValue append(Value v) {
+    return new TrieListValue(vec.add(v));
   }
 
-  public ListValue appendAll(List<? extends Value> values) {
-    return new ListValue(vec.addAll(values.toArray()));
+  public TrieListValue appendAll(List<? extends Value> values) {
+    return new TrieListValue(vec.addAll(values.toArray()));
   }
 
-  public ListValue appendAll(Value[] values) {
-    return new ListValue(vec.addAll(values));
+  public TrieListValue appendAll(Value[] values) {
+    return new TrieListValue(vec.addAll(values));
   }
 
-  public ListValue appendAll(ListValue values) {
-    return new ListValue(vec.addAll(values.vec));
+  public TrieListValue appendAll(TrieListValue values) {
+    return new TrieListValue(vec.addAll(values.vec));
   }
 
-  public ListValue prepend(Value x) {
-    return new ListValue(vec.insert(0, x));
+  public TrieListValue prepend(Value x) {
+    return new TrieListValue(vec.insert(0, x));
   }
 
-  public ListValue padTo(long length, Value withValue) {
+  public TrieListValue padTo(long length, Value withValue) {
     if (length > Integer.MAX_VALUE) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot pad to length "+length);
-    return new ListValue(vec.padTo((int)length, withValue));
+    return new TrieListValue(vec.padTo((int)length, withValue));
   }
   
-  public ListValue insert(long idx, Value value) {
+  public TrieListValue insert(long idx, Value value) {
     if (idx >= Integer.MAX_VALUE) throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot insert at index "+idx);
     TrieList ret = vec;
     if (idx > vec.size()){
@@ -122,49 +122,49 @@ final public class ListValue implements Iterable<Value> {
 
     ret = ret.insert((int)idx, value);
 
-    return new ListValue(ret);
+    return new TrieListValue(ret);
   }
 
-  public ListValue delete(long idx) {
+  public TrieListValue delete(long idx) {
     if (idx >= vec.size()) return this;
     if (idx < 0) return this;
-    return new ListValue(vec.remove((int)idx));
+    return new TrieListValue(vec.remove((int)idx));
   }
 
-  public ListValue take(int n) {
-    return new ListValue(vec.slice(0, Math.min(n+1, vec.size())));
+  public TrieListValue take(int n) {
+    return new TrieListValue(vec.slice(0, Math.min(n+1, vec.size())));
   }
 
-  public ListValue drop(int n) {
-    return new ListValue(vec.slice(Math.min(n+1, vec.size()), vec.size()));
+  public TrieListValue drop(int n) {
+    return new TrieListValue(vec.slice(Math.min(n+1, vec.size()), vec.size()));
   }
 
-  public ListValue init() {
+  public TrieListValue init() {
     if (vec.size() == 0){
       return this;
     }
     if (vec.size() == 1){
-      return new ListValue(TrieList.empty());
+      return new TrieListValue(TrieList.empty());
     }
-    return new ListValue(vec.slice(0, vec.size()-1));
+    return new TrieListValue(vec.slice(0, vec.size()-1));
   }
 
-  public ListValue tail() {
+  public TrieListValue tail() {
     if (vec.size() == 0){
       return this;
     }
     if (vec.size() == 1){
-      return new ListValue(TrieList.empty());
+      return new TrieListValue(TrieList.empty());
     }
-    return new ListValue(vec.slice(1, vec.size()));
+    return new TrieListValue(vec.slice(1, vec.size()));
   }
 
-  public ListValue reverse() {
+  public TrieListValue reverse() {
     TrieList ret = TrieList.empty();
     for(Iterator iterator = vec.reverseIterator(); iterator.hasNext();){
       ret = ret.add(iterator.next());
     }
-    return new ListValue(ret);
+    return new TrieListValue(ret);
   }
 
   public Value head() {
@@ -175,8 +175,8 @@ final public class ListValue implements Iterable<Value> {
     return (Value) vec.get(vec.size()-1);
   }
 
-  public ListValue slice(int startIndex, int endIndex) {
-    return new ListValue(vec.slice(startIndex, endIndex));
+  public TrieListValue slice(int startIndex, int endIndex) {
+    return new TrieListValue(vec.slice(startIndex, endIndex));
   }
 
   public Value indexOf(Value x) {
@@ -205,10 +205,10 @@ final public class ListValue implements Iterable<Value> {
     return vec.contains(value);
   }
 
-  public ListValue sort(Comparator comparator){
+  public TrieListValue sort(Comparator comparator){
     Object[] values = vec.toArray();
     Arrays.sort(values, comparator);
-    return new ListValue(values);
+    return new TrieListValue(values);
   }
 
   public Iterator<Value> iterator() {
@@ -235,8 +235,8 @@ final public class ListValue implements Iterable<Value> {
     if (this == o) return true;
     if (o == null) return false;
 
-    if (!(o instanceof ListValue)) return false;
-    ListValue values = (ListValue) o;
+    if (!(o instanceof TrieListValue)) return false;
+    TrieListValue values = (TrieListValue) o;
     return vec.equals(values.vec);
 
   }
