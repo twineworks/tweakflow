@@ -116,13 +116,13 @@ DT
   : DATE'T'(TIME(OFFSET|(OFFSET TZ))?)?
   ;
 
-fragment DATE: [0-9][0-9][0-9][0-9]'-'[0-9][0-9]'-'[0-9][0-9];
-fragment TIME: [0-9][0-9]':'[0-9][0-9]':'[0-9][0-9]('.'[0-9]+)?;
-fragment OFFSET: (('+'|'-')[0-9][0-9]':'[0-9][0-9])|'Z';
+fragment DATE: DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT;
+fragment TIME: DIGIT DIGIT':'DIGIT DIGIT ':' DIGIT DIGIT ('.'DIGIT+)?;
+fragment OFFSET: (('+'|'-')DIGIT DIGIT':'DIGIT DIGIT)|'Z';
 fragment TZ: '@' (ID | ID_ESCAPED);
 
 INT
-  : [0-9][0-9]*
+  : DIGIT DIGIT*
   ;
 
 HEX
@@ -130,8 +130,9 @@ HEX
          BYTE? BYTE? BYTE? BYTE?
   ;
 
+fragment DIGIT: [0-9];
 fragment BYTE: HEXDIGIT HEXDIGIT;
-fragment HEXDIGIT: [0-9a-fA-F];
+fragment HEXDIGIT: DIGIT|[a-fA-F];
 
 DBL
   : INT? '.' INT EXP?
