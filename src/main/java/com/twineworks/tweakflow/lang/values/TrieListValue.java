@@ -205,6 +205,7 @@ final public class TrieListValue implements Iterable<Value> {
     return vec.contains(value);
   }
 
+  @SuppressWarnings("unchecked")
   public TrieListValue sort(Comparator comparator){
     Object[] values = vec.toArray();
     Arrays.sort(values, comparator);

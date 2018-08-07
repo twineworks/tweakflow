@@ -25,29 +25,34 @@
 package com.twineworks.tweakflow.lang.values;
 
 
-import io.vavr.collection.HashMap;
+import io.usethesource.capsule.Map.Immutable;
+import io.usethesource.capsule.core.PersistentTrieMap;
 
 import java.util.Map;
 
 final public class DictValue {
 
-  private final HashMap<String, Value> map;
+  private final Immutable<String, Value> map;
 
-  private DictValue(HashMap<String, Value> map) {
+  private DictValue(Immutable<String, Value> map) {
     this.map = map;
   }
 
   public DictValue() {
-    this(HashMap.empty());
+    this(PersistentTrieMap.of());
   }
 
   public DictValue(Map<String, Value> in) {
-    map = HashMap.ofAll(in);
+    Immutable<String, Value> m = PersistentTrieMap.of();
+    map = m.__putAll(in);
   }
 
-  @SuppressWarnings("unchecked")
   public DictValue(Map.Entry<String, Value>[] entries){
-    map  = HashMap.ofEntries((Map.Entry[]) entries);
+    Immutable<String, Value> m = PersistentTrieMap.of();
+    for (Map.Entry<String, Value> entry: entries){
+      m = m.__put(entry.getKey(), entry.getValue());
+    }
+    map  = m;
   }
 
   public int size() {
@@ -63,12 +68,7 @@ final public class DictValue {
   }
 
   public boolean containsValue(Value value) {
-    for (String s : map.keySet()) {
-      if (map.get(s).get().equals(value)){
-        return true;
-      }
-    }
-    return false;
+    return map.containsValue(value);
   }
 
   public java.util.HashMap<String, Value> toHashMap(){
@@ -80,53 +80,43 @@ final public class DictValue {
   }
 
   public DictValue put(String key, Value value) {
-    return new DictValue(map.put(key, value));
+    return new DictValue(map.__put(key, value));
   }
 
   public DictValue putAll(Map<String, Value> entries){
-    return new DictValue(HashMap.ofAll(entries).merge(map));
+    return new DictValue(map.__putAll(entries));
   }
 
-  
   public DictValue delete(String key) {
-    return new DictValue(map.remove(key));
+    return new DictValue(map.__remove(key));
   }
 
-  
   public DictValue deleteAll(Iterable<? extends String> keys) {
-    return new DictValue(map.removeAll(keys));
+    Immutable<String, Value> m = this.map;
+    for (String key : keys) {
+      m = m.__remove(key);
+    }
+    return new DictValue(m);
   }
 
   public DictValue putAll(DictValue dict){
-
-    if (dict.getClass() == getClass()){
-      DictValue otherDict = (DictValue) dict;
-      return new DictValue(otherDict.map.merge(this.map));
-    }
-
-    HashMap<String, Value> out = this.map;
-    for (String k : dict.keys()) {
-      out = out.put(k, dict.get(k));
-    }
-    return new DictValue(out);
+    return new DictValue(map.__putAll(dict.map));
   }
 
-  
   public Value get(String key) {
-    return map.get(key).getOrElse(Values.NIL);
+    Value v = map.get(key);
+    if (v == null) return Values.NIL;
+    return v;
   }
 
-  
   public ListValue values() {
-    return new ListValue(map.values().toJavaList());
+    return new ListValue(map.values().toArray());
   }
 
-  
   public Iterable<String> keys() {
     return map.keySet();
   }
 
-  
   public boolean equals(Object o) {
 
     // a dict may not be equal to itself if it contains NaNs or functions
@@ -137,26 +127,12 @@ final public class DictValue {
       DictValue that = (DictValue) o;
       return map.equals(that.map);
     }
-    // another dict value type
-    else if (o instanceof DictValue){
-      DictValue other = (DictValue) o;
-      // another dict implementation, must compare keys and values
-      if (other.size() != this.size()) return false;
-      for (String k : this.keys()) {
-        if (!other.containsKey(k)) return false;
-        Value v = get(k);
-        Value ov = other.get(k);
-        if (!v.equals(ov)) return false;
-      }
-      return true;
-    }
     else{
       return false;
     }
 
   }
 
-  
   public int hashCode() {
     return map.hashCode();
   }

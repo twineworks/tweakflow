@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 Twineworks GmbH
+ * Copyright (c) 2018 Twineworks GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ final public class ListValue implements Iterable<Value> {
     this.vec = TrieList.empty().addAll(values);
   }
 
-  private ListValue(Object[] values) {
+  ListValue(Object[] values) {
     this.vec = TrieList.empty().addAll(values);
   }
 
@@ -205,6 +205,7 @@ final public class ListValue implements Iterable<Value> {
     return vec.contains(value);
   }
 
+  @SuppressWarnings("unchecked")
   public ListValue sort(Comparator comparator){
     Object[] values = vec.toArray();
     Arrays.sort(values, comparator);
