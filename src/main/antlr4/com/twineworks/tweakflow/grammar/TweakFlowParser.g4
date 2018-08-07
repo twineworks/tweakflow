@@ -12,7 +12,7 @@ unit
 // interactive shell
 
 interactive
-  : endOfStatement* 'interactive' interactiveSection* EOF
+  : endOfStatement? 'interactive' interactiveSection* EOF
   ;
 
 interactiveSection
@@ -40,7 +40,7 @@ empty
 // module
 
 module
-  : endOfStatement* moduleHead moduleComponent* EOF
+  : endOfStatement? moduleHead moduleComponent* EOF
   ;
 
 moduleHead
@@ -135,7 +135,6 @@ varDec
   : metaDef provided dataType? identifier
   ;
 
-
 provided
   : 'provided'
   ;
@@ -207,8 +206,8 @@ matchBody
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '->' expression   # patternLine
-  | 'default' '->'  expression                       # defaultLine
+  : matchPattern (',' matchGuard)? '->' expression endOfStatement?  # patternLine
+  | 'default' '->'  expression endOfStatement?                      # defaultLine
   ;
 
 matchGuard
