@@ -85,12 +85,24 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitStringHereDoc(TweakFlowParser.StringHereDocContext ctx) {
     String text = ctx.HEREDOC_STRING().getText();
     // empty heredoc?
-    if (text.matches("~~~\r?\n~~~")){
+    if ("~~~\r\n~~~".equals(text) || "~~~\n~~~".equals(text)){
       text = "";
     }
     else{
-      text = text.replaceFirst("\\A~~~\r?\n", "");
-      text = text.replaceFirst("\r?\n~~~\\z", "");
+
+      if (text.startsWith("~~~\n")){
+        text = text.substring(4);
+      }
+      else if (text.startsWith("~~~\r\n")){
+        text = text.substring(5);
+      }
+
+      if (text.endsWith("\r\n~~~")){
+        text = text.substring(0, text.length()-5);
+      }
+      else if (text.endsWith("\n~~~")){
+        text = text.substring(0, text.length()-4);
+      }
     }
 
     return new StringNode(text).setSourceInfo(srcOf(parseUnit, ctx));
