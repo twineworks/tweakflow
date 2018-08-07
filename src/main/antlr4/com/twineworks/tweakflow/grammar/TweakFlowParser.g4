@@ -317,7 +317,8 @@ functionHead
   ;
 
 paramsList
-  : (paramDef ','?) *
+  :
+  | paramDef (',' paramDef) *
   ;
 
 paramDef
