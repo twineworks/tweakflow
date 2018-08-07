@@ -160,21 +160,11 @@ WHITESPACE
   ;
 
 END_OF_STATEMENT
-  : (LINE_SPACE | NEWLINE | SEMICOLON)* SEMICOLON (LINE_SPACE | NEWLINE | SEMICOLON)*
-  | (LINE_SPACE | NEWLINE | SEMICOLON)* NEWLINE (LINE_SPACE | NEWLINE | SEMICOLON)*
-  ;
-
-fragment SEMICOLON
-  : ';'
+  : ';'+
   ;
 
 fragment NEWLINE
   : '\r'? '\n'
-  ;
-
-fragment LINE_SPACE
-  : '\t'
-  | ' '
   ;
 
 fragment ID: [a-zA-Z_][a-zA-Z_0-9?]*;
