@@ -26,12 +26,12 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.collections.shapemap.ConstShapeMap;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
-import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.interpreter.memory.Spaces;
+import com.twineworks.tweakflow.lang.values.Value;
 
 import java.util.List;
 
@@ -41,6 +41,8 @@ final public class ReferenceOp implements ExpressionOp {
   private final ReferenceNode node;
   private final ReferenceNode.Anchor anchor;
   private final ConstShapeMap.Accessor[] names;
+  private MemorySpace lastSpace;
+  private Cell lastCell;
 
   public ReferenceOp(ReferenceNode node) {
     this.node = node;
@@ -72,7 +74,20 @@ final public class ReferenceOp implements ExpressionOp {
 
     MemorySpace space = stack.peek().getSpace();
 
-    Cell cell = Spaces.resolve(this, space);
+    Cell cell = lastCell;
+    if (lastSpace != space){
+      cell = Spaces.resolve(this, space);
+      lastCell = cell;
+      lastSpace = space;
+    }
+//    Cell cell = Spaces.resolve(this, space);
+//    Cell cell = resolvedCells.get(space);
+
+//    if (cell == null){
+//      cell = Spaces.resolve(this, space);
+//      resolvedCells.put(space, cell);
+//    }
+
     if (cell.isDirty()) evaluateCell(cell, stack, context);
 
     return cell.getValue();
