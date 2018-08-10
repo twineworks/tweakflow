@@ -27,14 +27,15 @@ package com.twineworks.tweakflow.lang.values;
 
 import io.usethesource.capsule.Map.Immutable;
 import io.usethesource.capsule.core.PersistentTrieMap;
+import io.usethesource.capsule.Map.Transient;
 
 import java.util.Map;
 
 final public class DictValue {
 
-  private final Immutable<String, Value> map;
+  final Immutable<String, Value> map;
 
-  private DictValue(Immutable<String, Value> map) {
+  DictValue(Immutable<String, Value> map) {
     this.map = map;
   }
 
@@ -43,8 +44,9 @@ final public class DictValue {
   }
 
   public DictValue(Map<String, Value> in) {
-    Immutable<String, Value> m = PersistentTrieMap.of();
-    map = m.__putAll(in);
+    Transient<String, Value> m = PersistentTrieMap.transientOf();
+    m.__putAll(in);
+    map = m.freeze();
   }
 
   public DictValue(Map.Entry<String, Value>[] entries){
