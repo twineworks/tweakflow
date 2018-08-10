@@ -571,9 +571,11 @@ public class Runtime {
     }
 
     public void evaluate(){
-      Stack stack = new Stack();
-      stack.push(new StackEntry(cell.getSymbol().getNode(), cell.getEnclosingSpace(), Collections.emptyMap()));
-      Interpreter.evaluateCell(cell, stack, runtime.getEvaluationContext());
+      if (cell.isDirty()){
+        Stack stack = new Stack();
+        stack.push(new StackEntry(cell.getSymbol().getNode(), cell.getEnclosingSpace(), Collections.emptyMap()));
+        Interpreter.evaluateCell(cell, stack, runtime.getEvaluationContext());
+      }
     }
 
     @Override
@@ -597,6 +599,55 @@ public class Runtime {
     @Override
     public List<String> getNames(){
       return Collections.emptyList();
+    }
+  }
+
+  public static class UpdateBatch {
+
+    private Var[] vars;
+    private Cell[] dependants;
+    private EvaluationContext context;
+    private Stack stack = new Stack();
+
+    UpdateBatch (Var[] vars, Cell[] dependants, EvaluationContext context){
+      this.vars = vars;
+      this.dependants = dependants;
+      this.context = context;
+    }
+
+    public void update(ValueProvider[] valueProviders){
+
+      for (int i = 0; i < valueProviders.length; i++) {
+        Var var = vars[i];
+        Value value = valueProviders[i].getValue();
+        var.cell.setValue(value.castTo(var.getDeclaredType()));
+      }
+
+      for (Cell dependant : dependants) {
+        dependant.setDirty(true);
+      }
+
+      for (Cell dependant : dependants) {
+        if (dependant.isDirty()){
+          stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+          Interpreter.evaluateCell(dependant, stack, context);
+          stack.pop();
+        }
+      }
+    }
+
+    public void set(ValueProvider[] valueProviders){
+
+      for (int i = 0; i < valueProviders.length; i++) {
+        Var var = vars[i];
+        Value value = valueProviders[i].getValue();
+        var.cell.setValue(value.castTo(var.getDeclaredType()));
+      }
+
+      for (Cell dependant : dependants) {
+        dependant.setDirty(true);
+      }
+
     }
   }
 
@@ -897,6 +948,16 @@ public class Runtime {
     Stack stack = new Stack();
     stack.push(new StackEntry(stubNode, new Cell().setValue(Values.NIL), Collections.emptyMap()));
     return new CallContext(stack, getEvaluationContext());
+  }
+
+  public UpdateBatch createUpdateBatch(Runtime.Var[] vars){
+    HashSet<Cell> dependants = new HashSet<>();
+    for (int i = 0; i < vars.length; i++) {
+      Var var = vars[i];
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+      dependants.addAll(var.dependants);
+    }
+    return new UpdateBatch(vars, dependants.toArray(new Cell[0]), getEvaluationContext());
   }
 
 
