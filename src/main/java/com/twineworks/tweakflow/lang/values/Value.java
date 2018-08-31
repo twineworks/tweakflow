@@ -135,6 +135,10 @@ final public class Value implements ValueProvider {
     return this.type == Types.DOUBLE;
   }
 
+  public boolean isBoolean() {
+    return this.type == Types.BOOLEAN;
+  }
+
   public Value castTo(Type type){
     if (type == this.type || type == Types.ANY || this == Values.NIL) return this;     // no cast necessary
     return type.castFrom(this);
