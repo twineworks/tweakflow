@@ -73,13 +73,13 @@ final public class ReferenceOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
 
     MemorySpace space = stack.peek().getSpace();
-
-    Cell cell = lastCell;
-    if (lastSpace != space){
-      cell = Spaces.resolve(this, space);
-      lastCell = cell;
-      lastSpace = space;
-    }
+    Cell cell = Spaces.resolve(this, space);
+//    Cell cell = lastCell;
+//    if (lastSpace != space){
+//      cell = Spaces.resolve(this, space);
+//      lastCell = cell;
+//      lastSpace = space;
+//    }
 //    Cell cell = Spaces.resolve(this, space);
 //    Cell cell = resolvedCells.get(space);
 

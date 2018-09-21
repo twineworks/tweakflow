@@ -51,7 +51,7 @@ import java.util.*;
 
 public class Interpreter {
 
-  public static void evaluateSpace(MemorySpace space, EvaluationContext context){
+  public static void evaluateSpace(MemorySpace space, EvaluationContext context) {
 
     ConstShapeMap<Cell> cells = space.getCells();
     for (Cell cell : cells.values()) {
@@ -60,7 +60,7 @@ public class Interpreter {
 
   }
 
-  private static void evaluateSpace(MemorySpace space, Stack stack, EvaluationContext context){
+  private static void evaluateSpace(MemorySpace space, Stack stack, EvaluationContext context) {
 
     ConstShapeMap<Cell> cells = space.getCells();
     for (Cell cell : cells.values()) {
@@ -69,14 +69,15 @@ public class Interpreter {
 
   }
 
-  public static void evaluateCell(Cell cell, Stack stack, EvaluationContext context){
+  public static void evaluateCell(Cell cell, Stack stack, EvaluationContext context) {
 
     if (!cell.isDirty()) return;
 
     // variable cell
-    if (cell.isVar()){
+    if (cell.isVar()) {
+
       SymbolNode targetNode = cell.getSymbol().getTargetNode();
-      if (targetNode instanceof VarDefNode){
+      if (targetNode instanceof VarDefNode) {
         VarDefNode varDef = (VarDefNode) targetNode;
         ExpressionNode exp = varDef.getValueExpression();
 
@@ -91,25 +92,25 @@ public class Interpreter {
       }
     }
     // module cell
-    else if (cell.isModule()){
+    else if (cell.isModule()) {
       stack.push(new StackEntry(cell.getSymbol().getTargetNode(), cell, Collections.emptyMap()));
       evaluateSpace(cell, stack, context);
       stack.pop();
     }
     // library cell
-    else if (cell.isLibrary()){
+    else if (cell.isLibrary()) {
       stack.push(new StackEntry(cell.getSymbol().getTargetNode(), cell, Collections.emptyMap()));
       evaluateSpace(cell, stack, context);
       stack.pop();
     }
     // interactive unit
-    else if (cell.isInteractiveUnit()){
+    else if (cell.isInteractiveUnit()) {
       stack.push(new StackEntry(cell.getSymbol().getTargetNode(), cell, Collections.emptyMap()));
       evaluateSpace(cell, stack, context);
       stack.pop();
     }
     // interactive section
-    else if (cell.isInteractiveSection()){
+    else if (cell.isInteractiveSection()) {
       stack.push(new StackEntry(cell.getSymbol().getTargetNode(), cell, Collections.emptyMap()));
       evaluateSpace(cell, stack, context);
       stack.pop();
@@ -117,12 +118,12 @@ public class Interpreter {
 
   }
 
-  private static void closeDeferredClosures(Cell cell, EvaluationContext context){
+  private static void closeDeferredClosures(Cell cell, EvaluationContext context) {
 
     Map<Cell, List<RecursiveDeferredClosure>> deferredClosures = context.getRecursiveDeferredClosures();
     List<RecursiveDeferredClosure> closureList = deferredClosures.get(cell);
 
-    if (closureList != null){
+    if (closureList != null) {
       for (RecursiveDeferredClosure deferredClosureDef : closureList) {
         Map<ReferenceNode, ValueProvider> closures = deferredClosureDef.getClosures();
         ReferenceNode key = deferredClosureDef.getReferenceNode();
@@ -144,7 +145,7 @@ public class Interpreter {
     Type retType = userFunction.getSignature().getReturnType();
 
     Value retValue;
-    switch (callArgs.length){
+    switch (callArgs.length) {
       case 0:
         retValue = ((Arity0UserFunction) f).call(userCallContext).castTo(retType);
         break;
@@ -168,7 +169,7 @@ public class Interpreter {
 
   }
 
-  public static Value evaluateStandardFunctionCall(CallNode node, StandardFunctionValue standardFunction, Arguments arguments, Stack stack, EvaluationContext context){
+  public static Value evaluateStandardFunctionCall(CallNode node, StandardFunctionValue standardFunction, Arguments arguments, Stack stack, EvaluationContext context) {
 
     ConstShapeMap<Cell> args = mapArgumentsIntoCellMap(
         arguments,
@@ -192,7 +193,7 @@ public class Interpreter {
 
   }
 
-  private static Value evaluateStandardFunctionCall(StandardFunctionValue standardFunction, ConstShapeMap<Cell> args, Node at, Stack stack, EvaluationContext context){
+  private static Value evaluateStandardFunctionCall(StandardFunctionValue standardFunction, ConstShapeMap<Cell> args, Node at, Stack stack, EvaluationContext context) {
 
     LocalMemorySpace argSpace = new LocalMemorySpace(
         stack.peek().getSpace(),
@@ -208,7 +209,7 @@ public class Interpreter {
     return retValue;
   }
 
-  public static Value evaluateTryCatchNode(TryCatchNode tryCatchNode, Stack stack, EvaluationContext context){
+  public static Value evaluateTryCatchNode(TryCatchNode tryCatchNode, Stack stack, EvaluationContext context) {
 
     StackEntry entryStackFrame = stack.peek();
     ExpressionNode tryExpression = tryCatchNode.getTryExpression();
@@ -216,20 +217,19 @@ public class Interpreter {
 
     try {
       ret = evaluateExpression(tryExpression, stack, context);
-    } catch (LangException e){
+    } catch (LangException e) {
       // discard stack frames lost in unwinding
-      while(stack.peek() != entryStackFrame) stack.pop();
+      while (stack.peek() != entryStackFrame) stack.pop();
       // process catch
       ExpressionNode catchExpression = tryCatchNode.getCatchExpression();
 
-      if (tryCatchNode.getCaughtException() != null){
+      if (tryCatchNode.getCaughtException() != null) {
         VarDecNode caughtException = tryCatchNode.getCaughtException();
 
         Set<ShapeKey> keys;
-        if (tryCatchNode.getCaughtTrace() != null){
+        if (tryCatchNode.getCaughtTrace() != null) {
           keys = ShapeKey.getAll(tryCatchNode.getCaughtException().getSymbolName(), tryCatchNode.getCaughtTrace().getSymbolName());
-        }
-        else{
+        } else {
           keys = ShapeKey.getAll(tryCatchNode.getCaughtException().getSymbolName());
         }
 
@@ -254,7 +254,7 @@ public class Interpreter {
         bindingsCells.puts(caughtException.getSymbolName(), errorCell);
 
         // add trace?
-        if (tryCatchNode.getCaughtTrace() != null){
+        if (tryCatchNode.getCaughtTrace() != null) {
           VarDecNode caughtTrace = tryCatchNode.getCaughtTrace();
           Cell traceCell = new Cell()
               .setSymbol(catchExpression.getScope().getSymbols().get(caughtTrace.getSymbolName()));
@@ -268,8 +268,7 @@ public class Interpreter {
         stack.push(new StackEntry(catchExpression, bindingsSpace, stack.peek().getClosures()));
         ret = evaluateExpression(catchExpression, stack, context);
         stack.pop();
-      }
-      else{
+      } else {
         ret = evaluateExpression(catchExpression, stack, context);
       }
 
@@ -287,7 +286,7 @@ public class Interpreter {
         .put("value", data);
   }
 
-  public static Value evaluateInEmptyScope(ExpressionNode node){
+  public static Value evaluateInEmptyScope(ExpressionNode node) {
     Stack stack = new Stack();
     stack.push(new StackEntry(
         node,
@@ -297,7 +296,7 @@ public class Interpreter {
     return evaluateExpression(node, stack, new EvaluationContext());
   }
 
-  public static Value evaluateInEmptyScope(ExpressionOp op){
+  public static Value evaluateInEmptyScope(ExpressionOp op) {
     Stack stack = new Stack();
     stack.push(new StackEntry(
         new NilNode(),
@@ -307,7 +306,7 @@ public class Interpreter {
     return op.eval(stack, new EvaluationContext());
   }
 
-  public static Value evaluateMetaExpression(MetaDataNode node){
+  public static Value evaluateMetaExpression(MetaDataNode node) {
     if (!node.hasMeta()) return Values.NIL;
     ExpressionNode meta = node.getMeta().getExpression();
     if (meta.getOp() == null) new OpBuilderVisitor().visit(meta);
@@ -315,14 +314,14 @@ public class Interpreter {
     return evaluateInEmptyScope(meta);
   }
 
-  public static Value evaluateDocExpression(MetaDataNode node){
+  public static Value evaluateDocExpression(MetaDataNode node) {
     if (!node.hasDoc()) return Values.NIL;
     ExpressionNode doc = node.getDoc().getExpression();
     if (doc.getOp() == null) new OpBuilderVisitor().visit(doc);
     return evaluateInEmptyScope(doc);
   }
 
-  public static Value evaluateViaExpression(ViaNode node){
+  public static Value evaluateViaExpression(ViaNode node) {
     if (node.getExpression() == null) return Values.NIL;
     ExpressionNode exp = node.getExpression();
     if (exp.getOp() == null) new OpBuilderVisitor().visit(exp);
@@ -330,20 +329,19 @@ public class Interpreter {
     return evaluateInEmptyScope(exp);
   }
 
-  private static Value evaluateExpression(ExpressionNode node, Stack stack, EvaluationContext context){
+  private static Value evaluateExpression(ExpressionNode node, Stack stack, EvaluationContext context) {
 
     try {
-      if (Thread.interrupted()){
+      if (Thread.interrupted()) {
         throw new InterruptedException("Interpreter thread interrupted");
       }
       return node.getOp().eval(stack, context);
-    }
-    catch(Throwable e){
+    } catch (Throwable e) {
       LangException ex = LangException.wrap(e);
-      if (ex.getSourceInfo() == null){
+      if (ex.getSourceInfo() == null) {
         ex.setSourceInfo(node.getSourceInfo());
       }
-      if (ex.getStack() == null){
+      if (ex.getStack() == null) {
         ex.setStack(stack);
       }
       throw ex;
@@ -351,7 +349,7 @@ public class Interpreter {
 
   }
 
-  public static Value[] evalArguments(Arguments arguments, Stack stack, EvaluationContext context){
+  public static Value[] evalArguments(Arguments arguments, Stack stack, EvaluationContext context) {
     Value[] args = new Value[arguments.getList().size()];
     List<ArgumentNode> list = arguments.getList();
     for (int i = 0, listSize = list.size(); i < listSize; i++) {
@@ -361,7 +359,7 @@ public class Interpreter {
     return args;
   }
 
-  private static Value castArgumentValue(ArgumentNode node, FunctionParameter param, Value rawValue){
+  private static Value castArgumentValue(ArgumentNode node, FunctionParameter param, Value rawValue) {
 
     if (rawValue == Values.NIL) return rawValue;
 
@@ -371,8 +369,8 @@ public class Interpreter {
 
     try {
       return rawValue.castTo(declaredType);
-    } catch (LangException e){
-      if (node != null){
+    } catch (LangException e) {
+      if (node != null) {
         // "cannot cast " + rawValue.type().name() + " to " + param.getDeclaredType().name() + " for parameter " + param.getName(),
         e.setSourceInfo(node.getSourceInfo());
       }
@@ -383,12 +381,16 @@ public class Interpreter {
   @SuppressWarnings("unchecked")
   private static ConstShapeMap<Cell> mapArgumentsIntoCellMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
 
-    if (argumentValues.length <= 3 && arguments.allPositional()){
-      switch (argumentValues.length){
-        case 0: return mapArgumentsIntoCellMap(Collections.emptyList(), signature); // TODO: could be done with dedicated option
-        case 1: return mapArguments1IntoCellMap(argumentValues[0], signature);
-        case 2: return mapArguments2IntoCellMap(argumentValues[0], argumentValues[1], signature);
-        case 3: return mapArguments3IntoCellMap(argumentValues[0], argumentValues[1], argumentValues[2], signature);
+    if (argumentValues.length <= 3 && arguments.allPositional()) {
+      switch (argumentValues.length) {
+        case 0:
+          return mapArgumentsIntoCellMap(Collections.emptyList(), signature); // TODO: could be done with dedicated option
+        case 1:
+          return mapArguments1IntoCellMap(argumentValues[0], signature);
+        case 2:
+          return mapArguments2IntoCellMap(argumentValues[0], argumentValues[1], signature);
+        case 3:
+          return mapArguments3IntoCellMap(argumentValues[0], argumentValues[1], argumentValues[2], signature);
       }
     }
 
@@ -411,7 +413,7 @@ public class Interpreter {
       ArgumentNode argumentNode = list.get(i);
       if (argumentNode.isPositional()) {
 
-        if (processedNamed){
+        if (processedNamed) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
               "Positional argument cannot follow named arguments.",
@@ -419,39 +421,37 @@ public class Interpreter {
           );
         }
         int index = currentPositional;
-        if (index >= parameterList.size()){
+        if (index >= parameterList.size()) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Function has "+parameterList.size()+" arguments, but positional argument nr. "+(index+1)+" was supplied.",
+              "Function has " + parameterList.size() + " arguments, but positional argument nr. " + (index + 1) + " was supplied.",
               argumentNode.getSourceInfo()
           );
         }
         FunctionParameter parameter = parameterList.get(index);
         args.seta(parameter.getShapeAccessor(), new Cell().setValue(castArgumentValue(argumentNode, parameter, argumentValues[i])));
         currentPositional += 1;
-      }
-      else if (argumentNode.isNamed()){
+      } else if (argumentNode.isNamed()) {
 
         processedNamed = true;
         NamedArgumentNode namedArgumentNode = (NamedArgumentNode) argumentNode;
         FunctionParameter parameter = parameterMap.get(namedArgumentNode.getName());
 
-        if (parameter == null){
+        if (parameter == null) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Function does not have parameter named: "+namedArgumentNode.getName(),
+              "Function does not have parameter named: " + namedArgumentNode.getName(),
               null,
               namedArgumentNode.getSourceInfo()
           );
         }
 
         args.seta(parameter.getShapeAccessor(), new Cell().setValue(castArgumentValue(argumentNode, parameter, argumentValues[i])));
-      }
-      else if (argumentNode.isSplat()){
+      } else if (argumentNode.isSplat()) {
         SplatArgumentNode splatArgumentNode = (SplatArgumentNode) argumentNode;
         Value value = argumentValues[i];
 
-        if (value.isDict()){
+        if (value.isDict()) {
 
           processedNamed = true;
           DictValue splatMap = value.dict();
@@ -459,10 +459,10 @@ public class Interpreter {
           for (String s : splatMap.keys()) {
             FunctionParameter parameter = parameterMap.get(s);
 
-            if (parameter == null){
+            if (parameter == null) {
               throw new LangException(
                   LangError.UNEXPECTED_ARGUMENT,
-                  "Function does not have parameter named: "+s,
+                  "Function does not have parameter named: " + s,
                   null,
                   splatArgumentNode.getSourceInfo()
               );
@@ -471,10 +471,9 @@ public class Interpreter {
             args.seta(parameter.getShapeAccessor(), new Cell().setValue(castArgumentValue(argumentNode, parameter, splatMap.get(s))));
           }
 
-        }
-        else if (value.isList()){
+        } else if (value.isList()) {
 
-          if (processedNamed){
+          if (processedNamed) {
             throw new LangException(
                 LangError.UNEXPECTED_ARGUMENT,
                 "List splat provides positional arguments and cannot follow named arguments.",
@@ -485,12 +484,12 @@ public class Interpreter {
 
           ListValue listValue = value.list();
 
-          for (int j=0, size=listValue.size(); j<size; j++){
+          for (int j = 0, size = listValue.size(); j < size; j++) {
             int index = currentPositional;
-            if (index < 0 || index >= parameterList.size()){
+            if (index < 0 || index >= parameterList.size()) {
               throw new LangException(
                   LangError.UNEXPECTED_ARGUMENT,
-                  "Function has "+parameterList.size()+" arguments, but argument nr. "+(index+1)+" was supplied through splat list.",
+                  "Function has " + parameterList.size() + " arguments, but argument nr. " + (index + 1) + " was supplied through splat list.",
                   null,
                   argumentNode.getSourceInfo()
               );
@@ -500,29 +499,25 @@ public class Interpreter {
             currentPositional += 1;
 
           }
-        }
-        else if (value.isNil()){
+        } else if (value.isNil()) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
               "splat argument cannot be nil",
               null,
               splatArgumentNode.getSourceInfo()
           );
-        }
-        else {
+        } else {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "splat argument has unsupported type: "+value.type().name(),
+              "splat argument has unsupported type: " + value.type().name(),
               null,
               splatArgumentNode.getSourceInfo()
           );
 
         }
 
-      }
-
-      else {
-        throw new AssertionError("Unknown argument node type: "+argumentNode.getClass().getName());
+      } else {
+        throw new AssertionError("Unknown argument node type: " + argumentNode.getClass().getName());
       }
     }
 
@@ -532,12 +527,16 @@ public class Interpreter {
   @SuppressWarnings("unchecked")
   private static ConstShapeMap<Value> mapArgumentsIntoValueMap(Arguments arguments, Value[] argumentValues, FunctionSignature signature) {
 
-    if (argumentValues.length <= 3 && arguments.allPositional()){
-      switch (argumentValues.length){
-        case 0: return mapArgumentsIntoValueMap(Collections.emptyList(), signature); // TODO: could be done with dedicated option
-        case 1: return mapArguments1IntoValueMap(argumentValues[0], signature);
-        case 2: return mapArguments2IntoValueMap(argumentValues[0], argumentValues[1], signature);
-        case 3: return mapArguments3IntoValueMap(argumentValues[0], argumentValues[1], argumentValues[2], signature);
+    if (argumentValues.length <= 3 && arguments.allPositional()) {
+      switch (argumentValues.length) {
+        case 0:
+          return mapArgumentsIntoValueMap(Collections.emptyList(), signature); // TODO: could be done with dedicated option
+        case 1:
+          return mapArguments1IntoValueMap(argumentValues[0], signature);
+        case 2:
+          return mapArguments2IntoValueMap(argumentValues[0], argumentValues[1], signature);
+        case 3:
+          return mapArguments3IntoValueMap(argumentValues[0], argumentValues[1], argumentValues[2], signature);
       }
     }
 
@@ -547,9 +546,9 @@ public class Interpreter {
     List<ArgumentNode> list = arguments.getList();
 
     // simple case of positional argument call to unary function?
-    if (list.size() == 1 && parameterList.size() == 1){
+    if (list.size() == 1 && parameterList.size() == 1) {
       ArgumentNode argumentNode = list.get(0);
-      if (argumentNode.isPositional()){
+      if (argumentNode.isPositional()) {
         FunctionParameter parameter = parameterList.get(0);
         args.seta(parameter.getShapeAccessor(), castArgumentValue(argumentNode, parameter, argumentValues[0]));
         return args;
@@ -570,7 +569,7 @@ public class Interpreter {
       ArgumentNode argumentNode = list.get(i);
       if (argumentNode.isPositional()) {
 
-        if (processedNamed){
+        if (processedNamed) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
               "Positional argument cannot follow named arguments.",
@@ -578,39 +577,37 @@ public class Interpreter {
           );
         }
         int index = currentPositional;
-        if (index >= parameterList.size()){
+        if (index >= parameterList.size()) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Function has "+parameterList.size()+" arguments, but positional argument nr. "+(index+1)+" was supplied.",
+              "Function has " + parameterList.size() + " arguments, but positional argument nr. " + (index + 1) + " was supplied.",
               argumentNode.getSourceInfo()
           );
         }
         FunctionParameter parameter = parameterList.get(index);
         args.seta(parameter.getShapeAccessor(), castArgumentValue(argumentNode, parameter, argumentValues[i]));
         currentPositional += 1;
-      }
-      else if (argumentNode.isNamed()){
+      } else if (argumentNode.isNamed()) {
 
         processedNamed = true;
         NamedArgumentNode namedArgumentNode = (NamedArgumentNode) argumentNode;
         FunctionParameter parameter = parameterMap.get(namedArgumentNode.getName());
 
-        if (parameter == null){
+        if (parameter == null) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "Function does not have parameter named: "+namedArgumentNode.getName(),
+              "Function does not have parameter named: " + namedArgumentNode.getName(),
               null,
               namedArgumentNode.getSourceInfo()
           );
         }
 
         args.seta(parameter.getShapeAccessor(), castArgumentValue(argumentNode, parameter, argumentValues[i]));
-      }
-      else if (argumentNode.isSplat()){
+      } else if (argumentNode.isSplat()) {
         SplatArgumentNode splatArgumentNode = (SplatArgumentNode) argumentNode;
         Value value = argumentValues[i];
 
-        if (value.isDict()){
+        if (value.isDict()) {
 
           processedNamed = true;
           DictValue splatMap = value.dict();
@@ -618,10 +615,10 @@ public class Interpreter {
           for (String s : splatMap.keys()) {
             FunctionParameter parameter = parameterMap.get(s);
 
-            if (parameter == null){
+            if (parameter == null) {
               throw new LangException(
                   LangError.UNEXPECTED_ARGUMENT,
-                  "Function does not have parameter named: "+s,
+                  "Function does not have parameter named: " + s,
                   null,
                   splatArgumentNode.getSourceInfo()
               );
@@ -630,10 +627,9 @@ public class Interpreter {
             args.seta(parameter.getShapeAccessor(), castArgumentValue(argumentNode, parameter, splatMap.get(s)));
           }
 
-        }
-        else if (value.isList()){
+        } else if (value.isList()) {
 
-          if (processedNamed){
+          if (processedNamed) {
             throw new LangException(
                 LangError.UNEXPECTED_ARGUMENT,
                 "List splat provides positional arguments and cannot follow named arguments.",
@@ -644,12 +640,12 @@ public class Interpreter {
 
           ListValue listValue = value.list();
 
-          for (int j=0, size=listValue.size(); j<size; j++){
+          for (int j = 0, size = listValue.size(); j < size; j++) {
             int index = currentPositional;
-            if (index < 0 || index >= parameterList.size()){
+            if (index < 0 || index >= parameterList.size()) {
               throw new LangException(
                   LangError.UNEXPECTED_ARGUMENT,
-                  "Function has "+parameterList.size()+" arguments, but argument nr. "+(index+1)+" was supplied through splat list.",
+                  "Function has " + parameterList.size() + " arguments, but argument nr. " + (index + 1) + " was supplied through splat list.",
                   null,
                   argumentNode.getSourceInfo()
               );
@@ -659,29 +655,25 @@ public class Interpreter {
             currentPositional += 1;
 
           }
-        }
-        else if (value.isNil()){
+        } else if (value.isNil()) {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
               "splat argument cannot be nil",
               null,
               splatArgumentNode.getSourceInfo()
           );
-        }
-        else {
+        } else {
           throw new LangException(
               LangError.UNEXPECTED_ARGUMENT,
-              "splat argument has unsupported type: "+value.type().name(),
+              "splat argument has unsupported type: " + value.type().name(),
               null,
               splatArgumentNode.getSourceInfo()
           );
 
         }
 
-      }
-
-      else {
-        throw new AssertionError("Unknown argument node type: "+argumentNode.getClass().getName());
+      } else {
+        throw new AssertionError("Unknown argument node type: " + argumentNode.getClass().getName());
       }
     }
 
@@ -693,14 +685,13 @@ public class Interpreter {
 
     FunctionParameter[] parameters = signature.getParameterArray();
 
-    if (arguments.allPositional() && argumentValues.length == parameters.length){
+    if (arguments.allPositional() && argumentValues.length == parameters.length) {
       // can simply cast arguments in place
-      for (int i=0; i<argumentValues.length; i++){
+      for (int i = 0; i < argumentValues.length; i++) {
         argumentValues[i] = argumentValues[i].castTo(parameters[i].getDeclaredType());
       }
       return argumentValues;
-    }
-    else {
+    } else {
       ConstShapeMap<Value> shapeMap = mapArgumentsIntoValueMap(arguments, argumentValues, signature);
       Value[] args = new Value[parameters.length];
       for (int i = 0; i < parameters.length; i++) {
@@ -717,14 +708,13 @@ public class Interpreter {
 
     FunctionParameter[] parameters = signature.getParameterArray();
 
-    if (argumentValues.length == parameters.length){
+    if (argumentValues.length == parameters.length) {
       // can simply cast arguments in place
-      for (int i=0; i< argumentValues.length; i++){
+      for (int i = 0; i < argumentValues.length; i++) {
         argumentValues[i] = argumentValues[i].castTo(parameters[i].getDeclaredType());
       }
       return argumentValues;
-    }
-    else {
+    } else {
       ConstShapeMap<Value> shapeMap = mapArgumentsIntoValueMap(Arrays.asList(argumentValues), signature);
       Value[] args = new Value[parameters.length];
       for (int i = 0; i < parameters.length; i++) {
@@ -747,10 +737,10 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument lists
-    if (argumentsSize == paramsSize){
+    if (argumentsSize == paramsSize) {
 
       // short circuit single argument calls
-      if (argumentsSize == 1){
+      if (argumentsSize == 1) {
         Value argument = arguments.get(0);
         FunctionParameter parameter = parameterList.get(0);
         args.seta(parameter.getShapeAccessor(), castArgumentValue(null, parameter, argument));
@@ -758,7 +748,7 @@ public class Interpreter {
       }
 
       // short circuit two argument calls
-      if (argumentsSize == 2){
+      if (argumentsSize == 2) {
         Value a1 = arguments.get(0);
         FunctionParameter p1 = parameterList.get(0);
         args.seta(p1.getShapeAccessor(), castArgumentValue(null, p1, a1));
@@ -770,7 +760,7 @@ public class Interpreter {
       }
 
       // short circuit three argument calls
-      if (argumentsSize == 3){
+      if (argumentsSize == 3) {
         Value a1 = arguments.get(0);
         FunctionParameter p1 = parameterList.get(0);
         args.seta(p1.getShapeAccessor(), castArgumentValue(null, p1, a1));
@@ -791,12 +781,12 @@ public class Interpreter {
     if (argumentsSize > parameterList.size()) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
     // args not given are initialized with default ones
-    if (argumentsSize < paramsSize){
+    if (argumentsSize < paramsSize) {
 
       for (int a = argumentsSize; a < paramsSize; a++) {
         FunctionParameter param = parameterList.get(a);
@@ -825,10 +815,10 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument lists
-    if (argumentsSize == paramsSize){
+    if (argumentsSize == paramsSize) {
 
       // short circuit single argument calls
-      if (argumentsSize == 1){
+      if (argumentsSize == 1) {
         Value argument = arguments.get(0);
         FunctionParameter parameter = parameterList.get(0);
         args.seta(parameter.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, parameter, argument)));
@@ -836,7 +826,7 @@ public class Interpreter {
       }
 
       // short circuit two argument calls
-      if (argumentsSize == 2){
+      if (argumentsSize == 2) {
         Value a1 = arguments.get(0);
         FunctionParameter p1 = parameterList.get(0);
         args.seta(p1.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, p1, a1)));
@@ -848,7 +838,7 @@ public class Interpreter {
       }
 
       // short circuit three argument calls
-      if (argumentsSize == 3){
+      if (argumentsSize == 3) {
         Value a1 = arguments.get(0);
         FunctionParameter p1 = parameterList.get(0);
         args.seta(p1.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, p1, a1)));
@@ -869,12 +859,12 @@ public class Interpreter {
     if (argumentsSize > parameterList.size()) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
     // args not given are initialized with default ones
-    if (argumentsSize < paramsSize){
+    if (argumentsSize < paramsSize) {
 
       for (int a = argumentsSize; a < paramsSize; a++) {
         FunctionParameter param = parameterList.get(a);
@@ -902,7 +892,7 @@ public class Interpreter {
     int paramsSize = parameterArray.length;
 
     // short circuit full argument list
-    if (paramsSize == 1){
+    if (paramsSize == 1) {
       FunctionParameter parameter = parameterArray[0];
       args.seta(parameter.getShapeAccessor(), castArgumentValue(null, parameter, arg1));
       return args;
@@ -912,7 +902,7 @@ public class Interpreter {
     if (paramsSize < 1) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -940,7 +930,7 @@ public class Interpreter {
     int paramsSize = parameterArray.length;
 
     // short circuit full argument list
-    if (paramsSize == 1){
+    if (paramsSize == 1) {
       FunctionParameter parameter = parameterArray[0];
       args.seta(parameter.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, parameter, arg1)));
       return args;
@@ -950,7 +940,7 @@ public class Interpreter {
     if (paramsSize < 1) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -978,7 +968,7 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument list
-    if (paramsSize == 2){
+    if (paramsSize == 2) {
       FunctionParameter p1 = parameterList.get(0);
       args.seta(p1.getShapeAccessor(), castArgumentValue(null, p1, arg1));
 
@@ -991,7 +981,7 @@ public class Interpreter {
     if (paramsSize < 2) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -1025,7 +1015,7 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument list
-    if (paramsSize == 2){
+    if (paramsSize == 2) {
       FunctionParameter p1 = parameterList.get(0);
       args.seta(p1.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, p1, arg1)));
 
@@ -1038,7 +1028,7 @@ public class Interpreter {
     if (paramsSize < 2) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -1072,7 +1062,7 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument list
-    if (paramsSize == 3){
+    if (paramsSize == 3) {
       FunctionParameter p1 = parameterList.get(0);
       args.seta(p1.getShapeAccessor(), castArgumentValue(null, p1, arg1));
 
@@ -1088,7 +1078,7 @@ public class Interpreter {
     if (paramsSize < 3) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -1125,7 +1115,7 @@ public class Interpreter {
     int paramsSize = parameterList.size();
 
     // short circuit full argument list
-    if (paramsSize == 3){
+    if (paramsSize == 3) {
       FunctionParameter p1 = parameterList.get(0);
       args.seta(p1.getShapeAccessor(), new Cell().setValue(castArgumentValue(null, p1, arg1)));
 
@@ -1141,7 +1131,7 @@ public class Interpreter {
     if (paramsSize < 3) {
       throw new LangException(
           LangError.UNEXPECTED_ARGUMENT,
-          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize+ 1) + " was supplied."
+          "Function has " + paramsSize + " arguments, but positional argument nr. " + (paramsSize + 1) + " was supplied."
       );
     }
 
@@ -1169,17 +1159,17 @@ public class Interpreter {
     return args;
   }
 
-  static Value performUserCall(Value callableValue, Value[] args, Stack stack, EvaluationContext context){
+  static Value performUserCall(Value callableValue, Value[] args, Stack stack, EvaluationContext context) {
 
-    if (callableValue.type() != Types.FUNCTION){
+    if (callableValue.type() != Types.FUNCTION) {
       throw new LangException(
           LangError.CANNOT_CALL,
-          "Cannot call "+callableValue.toString()+". Not a function.",
+          "Cannot call " + callableValue.toString() + ". Not a function.",
           stack
       );
     }
     FunctionValue function = callableValue.function();
-    if (function.isStandard()){
+    if (function.isStandard()) {
       return evaluateStandardFunctionCall(
           (StandardFunctionValue) function,
           mapArgumentsIntoCellMap(Arrays.asList(args), function.getSignature()),
@@ -1187,8 +1177,7 @@ public class Interpreter {
           stack,
           context
       );
-    }
-    else{
+    } else {
       return evaluateUserFunctionCall(
           (UserFunctionValue) function,
           Interpreter.argumentsForPositionalUserCall(args, function.getSignature()),
