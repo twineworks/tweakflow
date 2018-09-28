@@ -135,6 +135,10 @@ final public class Value implements ValueProvider {
     return this.type == Types.DOUBLE;
   }
 
+  public boolean isDateTime(){
+    return this.type == Types.DATETIME;
+  }
+
   public boolean isBoolean() {
     return this.type == Types.BOOLEAN;
   }
