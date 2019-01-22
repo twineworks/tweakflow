@@ -37,12 +37,12 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 import java.util.BitSet;
 
-public class ParserErrorListener implements ANTLRErrorListener {
+public class DefaultParserErrorListener implements ANTLRErrorListener {
 
   private LangException exception;
   private final ParseUnit parseUnit;
 
-  public ParserErrorListener(ParseUnit parseUnit) {
+  public DefaultParserErrorListener(ParseUnit parseUnit) {
     this.parseUnit = parseUnit;
   }
 

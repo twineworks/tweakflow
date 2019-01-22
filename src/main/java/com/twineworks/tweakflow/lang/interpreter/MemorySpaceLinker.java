@@ -24,8 +24,8 @@
 
 package com.twineworks.tweakflow.lang.interpreter;
 
-import com.twineworks.collections.shapemap.ShapeKey;
 import com.twineworks.collections.shapemap.ConstShapeMap;
+import com.twineworks.collections.shapemap.ShapeKey;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
@@ -38,10 +38,10 @@ import com.twineworks.tweakflow.lang.ast.structure.InteractiveNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.memory.*;
 import com.twineworks.tweakflow.lang.scope.ScopeType;
 import com.twineworks.tweakflow.lang.scope.Scopes;
 import com.twineworks.tweakflow.lang.scope.Symbol;
-import com.twineworks.tweakflow.lang.interpreter.memory.*;
 
 import java.util.Collections;
 import java.util.Map;
@@ -64,22 +64,7 @@ public class MemorySpaceLinker {
       if (unitNode instanceof ModuleNode){
 
         ModuleNode module = (ModuleNode) unitNode;
-
-        // link imports
-        for (ImportMemberNode imp: module.getImportsMap().values()) {
-          Symbol symbol = imp.getSymbol();
-          link(symbol, globalMemorySpace);
-        }
-
-        // link aliases
-        for (AliasNode aliasNode : module.getAliases()) {
-          link(aliasNode.getSymbol(), globalMemorySpace);
-        }
-
-        // link exports
-        for (ExportNode exportNode : module.getExports()) {
-          link(exportNode.getExportedSymbol(), globalMemorySpace);
-        }
+        linkModule(module, globalMemorySpace);
 
       }
 
@@ -98,6 +83,26 @@ public class MemorySpaceLinker {
         }
       }
 
+    }
+
+  }
+
+  private static void linkModule(ModuleNode module, GlobalMemorySpace globalMemorySpace){
+
+    // link imports
+    for (ImportMemberNode imp: module.getImportsMap().values()) {
+      Symbol symbol = imp.getSymbol();
+      link(symbol, globalMemorySpace);
+    }
+
+    // link aliases
+    for (AliasNode aliasNode : module.getAliases()) {
+      link(aliasNode.getSymbol(), globalMemorySpace);
+    }
+
+    // link exports
+    for (ExportNode exportNode : module.getExports()) {
+      link(exportNode.getExportedSymbol(), globalMemorySpace);
     }
 
   }
@@ -190,13 +195,18 @@ public class MemorySpaceLinker {
 
     // the alias might refer to an imported export that is not linked yet
     ReferenceNode source = symbol.getRefNode();
-    ReferenceNode root = (ReferenceNode) new ReferenceNode()
-        .setAnchor(source.getAnchor())
-        .setElements(Collections.singletonList(source.getElements().get(0)))
-        .setScope(source.getScope())
-        .setSourceInfo(source.getSourceInfo());
 
-    link(Scopes.resolve(root), globalMemorySpace);
+    for(int i=0;i<source.getElements().size();i++){
+      ReferenceNode partialRef = (ReferenceNode) new ReferenceNode()
+          .setAnchor(source.getAnchor())
+          .setElements(source.getElements().subList(0, i+1))
+          .setScope(source.getScope())
+          .setSourceInfo(source.getSourceInfo());
+
+      Symbol partial = Scopes.resolve(partialRef);
+      link(partial, globalMemorySpace);
+    }
+
     Cell cell = Spaces.resolve(symbol.getRefNode(), targetModule);
     moduleSpace.getCells().puts(symbol.getName(), cell);
 

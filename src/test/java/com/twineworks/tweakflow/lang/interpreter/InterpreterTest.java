@@ -354,6 +354,13 @@ public class InterpreterTest {
   }
 
   @Test
+  public void evaluates_import_module_reexports() throws Exception {
+
+    String path = "fixtures/tweakflow/evaluation/exports/import_module_reexports.tf";
+    TestHelper.assertSpecModule(path);
+  }
+
+  @Test
   public void evaluates_import_reexports() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/exports/import_reexports.tf";

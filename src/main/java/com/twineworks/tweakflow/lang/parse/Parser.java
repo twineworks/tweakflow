@@ -37,7 +37,7 @@ import com.twineworks.tweakflow.lang.parse.builders.ExpressionBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.UnitBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.VarDefBuilder;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
-import com.twineworks.tweakflow.lang.parse.util.ParserErrorListener;
+import com.twineworks.tweakflow.lang.parse.util.DefaultParserErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -61,7 +61,7 @@ final public class Parser extends TweakFlowParserBaseListener {
     TweakFlowLexer lexer = new TweakFlowLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    ParserErrorListener errorListener = new ParserErrorListener(parseUnit);
+    DefaultParserErrorListener errorListener = new DefaultParserErrorListener(parseUnit);
 
     try {
       // default listeners cause noise on stdout
@@ -123,7 +123,7 @@ final public class Parser extends TweakFlowParserBaseListener {
     TweakFlowLexer lexer = new TweakFlowLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    ParserErrorListener errorListener = new ParserErrorListener(parseUnit);
+    DefaultParserErrorListener errorListener = new DefaultParserErrorListener(parseUnit);
 
     try {
       // default listeners cause noise on stdout
@@ -214,7 +214,7 @@ final public class Parser extends TweakFlowParserBaseListener {
     TweakFlowLexer lexer = new TweakFlowLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    ParserErrorListener errorListener = new ParserErrorListener(parseUnit);
+    DefaultParserErrorListener errorListener = new DefaultParserErrorListener(parseUnit);
 
     try {
       // default listeners cause noise on stdout
@@ -283,7 +283,7 @@ final public class Parser extends TweakFlowParserBaseListener {
     TweakFlowLexer lexer = new TweakFlowLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    ParserErrorListener errorListener = new ParserErrorListener(parseUnit);
+    DefaultParserErrorListener errorListener = new DefaultParserErrorListener(parseUnit);
 
     try {
       // default listeners cause noise on stdout
