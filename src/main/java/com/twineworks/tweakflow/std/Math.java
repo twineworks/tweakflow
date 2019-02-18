@@ -592,7 +592,7 @@ public final class Math {
     private final DecimalFormat formatter;
     private final boolean allowPartial;
 
-    parser_impl(DecimalFormat formatter, boolean allowPartial) {
+    public parser_impl(DecimalFormat formatter, boolean allowPartial) {
       this.formatter = formatter;
       this.allowPartial = allowPartial;
     }
