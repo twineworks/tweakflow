@@ -65,19 +65,31 @@ public class Scopes {
     Scope scope = node.getScope();
     List<String> elements = node.getElements();
 
+
     try {
+      Symbol symbol;
       switch(node.getAnchor()){
         case LOCAL:
-          return resolveInLocal(elements, scope);
+          symbol = resolveInLocal(elements, scope);
+          break;
         case GLOBAL:
-          return resolveInGlobal(elements, scope);
+          symbol = resolveInGlobal(elements, scope);
+          break;
         case MODULE:
-          return resolveInModule(elements, scope);
+          symbol = resolveInModule(elements, scope);
+          break;
         case LIBRARY:
-          return resolveInLibrary(elements, scope);
+          symbol = resolveInLibrary(elements, scope);
+          break;
         default:
           throw new AssertionError("Invalid reference node: unknown or missing anchor "+node.getAnchor());
       }
+
+      if (symbol == null){
+        throw new LangException(LangError.UNRESOLVED_REFERENCE, "Cannot resolve: "+node.getSourceInfo().getSourceCode(), node.getSourceInfo());
+      }
+      return symbol;
+
     } catch (LangException e){
       if (e.getSourceInfo() == null){
         e.setSourceInfo(node.getSourceInfo());
@@ -128,7 +140,8 @@ public class Scopes {
       // illegal reference, there is no module to anchor from
       // this should never happen, as all code has an enclosing module
       if (currentScope == null){
-        throw new AssertionError("Cannot find enclosing module");
+        return null;
+//        throw new AssertionError("Cannot find enclosing module");
       }
     }
 
@@ -174,7 +187,10 @@ public class Scopes {
       throw new IllegalArgumentException("Names to resolve cannot be empty");
     }
 
-    return Scopes.resolveMembers(names, findModuleScope(scope));
+    Scope moduleScope = findModuleScope(scope);
+    if (moduleScope == null) return null;
+
+    return Scopes.resolveMembers(names, moduleScope);
 
   }
 
