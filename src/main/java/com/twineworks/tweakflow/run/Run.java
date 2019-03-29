@@ -81,7 +81,7 @@ public class Run {
 
   private static ArgumentParser createMainArgumentParser(){
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("run");
+    ArgumentParser parser = ArgumentParsers.newFor("run").build();
 
     parser.addArgument("-I", "--load_path")
         .required(false)

@@ -48,7 +48,7 @@ public class Repl {
 
   private static ArgumentParser createMainArgumentParser(){
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("repl");
+    ArgumentParser parser = ArgumentParsers.newFor("repl").build();
 
     parser.addArgument("-I", "--load_path")
         .required(false)
@@ -66,7 +66,7 @@ public class Repl {
   }
 
   private static ArgumentParser createInputParser(){
-    ArgumentParser parser = ArgumentParsers.newArgumentParser(">", false, "-");
+    ArgumentParser parser = ArgumentParsers.newFor(">").addHelp(false).prefixChars("-").build();
     Subparsers subparsers = parser.addSubparsers();
     subparsers.title("interactive commands");
     subparsers.description("").metavar("COMMAND");
