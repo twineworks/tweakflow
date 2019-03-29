@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserObjectFactory {
@@ -43,8 +44,8 @@ public class UserObjectFactory {
     ensureClassLoaded(desc);
     Class<UserFunction> clazz = desc.getClazz();
     try {
-      return clazz.newInstance();
-    } catch (InstantiationException | IllegalAccessException e) {
+      return clazz.getDeclaredConstructor().newInstance();
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
