@@ -55,7 +55,7 @@ public class DocMain {
 
   private static ArgumentParser createMainArgumentParser() {
 
-    ArgumentParser parser = ArgumentParsers.newArgumentParser("doc");
+    ArgumentParser parser = ArgumentParsers.newFor("doc").build();
 
     parser.addArgument("-I", "--load_path")
         .required(false)
