@@ -63,73 +63,96 @@ final public class Values {
     // init interned longs
     LONGS[0] = LONG_ZERO;
     LONGS[1] = LONG_ONE;
-    for(int i=2; i<LONGS.length; i++){
-      LONGS[i] = new Value(Types.LONG, (long)i);
+    for (int i = 2; i < LONGS.length; i++) {
+      LONGS[i] = new Value(Types.LONG, (long) i);
     }
   }
 
-  public static Value make(String s){
+  public static Value make(String s) {
+    if (s == null) return NIL;
     if (s.length() == 0) return EMPTY_STRING;
     return new Value(Types.STRING, s);
   }
 
-  public static Value make(Long n){
-    if (n >= 0 && n < LONGS.length){
+  public static Value make(Long n) {
+    if (n == null) return NIL;
+    if (n >= 0 && n < LONGS.length) {
       return LONGS[n.intValue()];
     }
     return new Value(Types.LONG, n);
   }
 
-  public static Value make(Integer i){
+  public static Value make(Integer i) {
+    if (i == null) return NIL;
     return make(i.longValue());
   }
 
-  public static Value make(Double d){
+  public static Value make(Double d) {
+    if (d == null) return NIL;
     if (Double.isNaN(d)) return NAN;
-    if (Double.isInfinite(d)){
-      if (d == Double.POSITIVE_INFINITY){
+    if (Double.isInfinite(d)) {
+      if (d == Double.POSITIVE_INFINITY) {
         return INFINITY;
-      }
-      else{
+      } else {
         return NEG_INFINITY;
       }
     }
     return new Value(Types.DOUBLE, d);
   }
 
-  public static Value make(Character c){
+  public static Value make(Character c) {
+    if (c == null) return NIL;
     return new Value(Types.STRING, c.toString());
   }
 
-  public static Value make(Boolean b){
+  public static Value make(Boolean b) {
+    if (b == null) return NIL;
     return b ? Values.TRUE : Values.FALSE;
   }
 
-  public static Value make(FunctionValue f){
+  public static Value make(FunctionValue f) {
+    if (f == null) return NIL;
     return new Value(Types.FUNCTION, f);
   }
 
-  public static Value make(ListValue list){
+  public static Value make(ListValue list) {
+    if (list == null) return NIL;
     return new Value(Types.LIST, list);
   }
 
   public static Value make(DictValue map) {
+    if (map == null) return NIL;
     return new Value(Types.DICT, map);
   }
 
-  public static Value make(DateTimeValue dt) {return new Value(Types.DATETIME, dt);}
+  public static Value make(DateTimeValue dt) {
+    if (dt == null) return NIL;
+    return new Value(Types.DATETIME, dt);
+  }
 
-  public static Value make(Instant instant) {return new Value(Types.DATETIME, new DateTimeValue(instant));}
+  public static Value make(Instant instant) {
+    if (instant == null) return NIL;
+    return new Value(Types.DATETIME, new DateTimeValue(instant));
+  }
 
-  public static Value make(LocalDateTime ldt) {return new Value(Types.DATETIME, new DateTimeValue(ldt));}
+  public static Value make(LocalDateTime ldt) {
+    if (ldt == null) return NIL;
+    return new Value(Types.DATETIME, new DateTimeValue(ldt));
+  }
 
-  public static Value make(OffsetDateTime odt) {return new Value(Types.DATETIME, new DateTimeValue(odt));}
+  public static Value make(OffsetDateTime odt) {
+    if (odt == null) return NIL;
+    return new Value(Types.DATETIME, new DateTimeValue(odt));
+  }
 
-  public static Value make(ZonedDateTime zdt) {return new Value(Types.DATETIME, new DateTimeValue(zdt));}
+  public static Value make(ZonedDateTime zdt) {
+    if (zdt == null) return NIL;
+    return new Value(Types.DATETIME, new DateTimeValue(zdt));
+  }
 
   // convenience factory
 
-  public static Value make(Object o){
+  public static Value make(Object o) {
     if (o == null) return NIL;
     if (o instanceof Value) return (Value) o;
     if (o instanceof Boolean) return o == Boolean.TRUE ? Values.TRUE : Values.FALSE;
@@ -145,7 +168,7 @@ final public class Values {
     if (o instanceof DictValue) return make((DictValue) o);
     if (o instanceof List) return makeList((List) o);
 
-    throw new RuntimeException("Cannot make a value from: "+o);
+    throw new RuntimeException("Cannot make a value from: " + o);
   }
 
   public static Value makeDict() {
@@ -159,42 +182,42 @@ final public class Values {
   public static Value makeRange(long from, long to) {
     long size = to - from + 1;
 
-    if (size <= 0){
+    if (size <= 0) {
       return Values.EMPTY_LIST;
     }
 
-    if (size >= Integer.MAX_VALUE){
-      throw new IllegalArgumentException("Cannot make range exceeding: "+Integer.MAX_VALUE+" items");
+    if (size >= Integer.MAX_VALUE) {
+      throw new IllegalArgumentException("Cannot make range exceeding: " + Integer.MAX_VALUE + " items");
     }
 
     ListValue range = new ListValue();
     long idx = from;
-    while (idx <= to){
+    while (idx <= to) {
       range = range.append(make(idx));
       idx++;
     }
     return new Value(Types.LIST, range);
   }
 
-  public static Value makeList(Value ... values){
+  public static Value makeList(Value... values) {
     ListValue list = new ListValue();
     return new Value(Types.LIST, list.appendAll(values));
   }
 
-  public static Value makeDict(Map<String, Value> map){
+  public static Value makeDict(Map<String, Value> map) {
     return new Value(Types.DICT, new DictValue(map));
   }
 
-  public static Value makeDict(Object ... keysAndValues){
+  public static Value makeDict(Object... keysAndValues) {
 
-    if ((keysAndValues.length % 2) != 0){
-      throw new RuntimeException("Must provide a sequence of string keys and corresponding values. Got "+keysAndValues.length+" arguments.");
+    if ((keysAndValues.length % 2) != 0) {
+      throw new RuntimeException("Must provide a sequence of string keys and corresponding values. Got " + keysAndValues.length + " arguments.");
     }
 
     HashMap<String, Value> map = new HashMap<>();
-    for (int i = 0; i < keysAndValues.length; i+=2) {
+    for (int i = 0; i < keysAndValues.length; i += 2) {
       String key = (String) keysAndValues[i];
-      Value value = make(keysAndValues[i+1]);
+      Value value = make(keysAndValues[i + 1]);
       map.put(key, value);
     }
 
@@ -202,7 +225,7 @@ final public class Values {
 
   }
 
-  public static Value makeList(Object ... items){
+  public static Value makeList(Object... items) {
 
     ArrayList<Value> list = new ArrayList<>();
     for (Object item : items) {
@@ -212,7 +235,7 @@ final public class Values {
 
   }
 
-  public static Value makeList(List items){
+  public static Value makeList(List items) {
     ArrayList<Value> list = new ArrayList<>();
     for (Object item : items) {
       list.add(Values.make(item));
@@ -220,7 +243,7 @@ final public class Values {
     return new Value(Types.LIST, new ListValue(list));
   }
 
-  public static Value makeList(Iterable items){
+  public static Value makeList(Iterable items) {
     ArrayList<Value> list = new ArrayList<>();
     for (Object item : items) {
       list.add(Values.make(item));

@@ -61,6 +61,7 @@ public class Runtime {
     List<String> getNames();
     void evaluate();
   }
+
   public static interface Name extends Node { }
   public static interface Unit extends Node { }
 
@@ -398,7 +399,7 @@ public class Runtime {
 
   }
 
-  public static class Library implements Name, DocMeta {
+  public static class Library implements Name, DocMeta, ValueProvider {
 
     private final Cell cell;
     private final Runtime runtime;
@@ -465,6 +466,20 @@ public class Runtime {
     @Override
     public Map<String, Node> getChildren() {
       return runtime.childrenOf(cell);
+    }
+
+    @Override
+    public Value getValue() {
+      // returns a map of all contained variables
+      TransientDictValue d = new TransientDictValue();
+      for (String name : getNames()) {
+        Value v = getVar(name).getValue();
+        if (v == null){
+          v = Values.NIL;
+        }
+        d.put(name, v);
+      }
+      return Values.make(d.persistent());
     }
   }
 
