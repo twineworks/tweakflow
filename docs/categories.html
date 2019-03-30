@@ -2,9 +2,8 @@
 <html class="no-js" lang="en-us" prefix="og: http://ogp.me/ns#">
 
 <head>
-	<meta name="generator" content="Hugo 0.53" />
     <meta charset="utf-8">
-    <title>tweakflow: an expression language for the JVM</title>
+    <title>Categories | tweakflow - an expression language for the JVM</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -86,58 +85,12 @@
     </div>
 
     
-    <div class="homepage-head">
-      <div class="homepage-head__phrase">User-defined calculations for the JVM
-      </div>
-    </div>
-    
 
 </header>
 
-    <div class="content-wrapper">
-      <main class="homepage content" role="main">
-          
-
-<h1 id="rationale">Rationale</h1>
-
-<p>Many applications benefit from user input and configuration based on information the application only knows at runtime. Applications can use tweakflow to expose runtime information, and allow users to define, reference and combine provided variables to express values.</p>
-
-<p>Tweakflow is designed to offer application users a formula-like notation for expressions that is familiar from spreadsheet applications. Tweakflow also supports user-defined functions, libraries, and modules, if more sophistication is needed.</p>
-
-<p>Tweakflow keeps the application in control of the data exchange mechanism with user-supplied expressions. The application controls which code users can call. Applications can expose functions implemented in Java, but users cannot arbitrarily call into application internals.</p>
-
-<h1 id="language-features">Language features</h1>
-
-<h2 id="a-simple-computation-model">A simple computation model</h2>
-
-<p>Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use tweakflow.</p>
-
-<h2 id="dynamically-typed">Dynamically typed</h2>
-
-<p>Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.</p>
-
-<h2 id="all-data-is-immutable">All data is immutable</h2>
-
-<p>All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.</p>
-
-<h2 id="all-functions-are-pure">All functions are pure</h2>
-
-<p>All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application handles all non-pure operations like file I/O.</p>
-
-<h2 id="automatic-dependency-tracking">Automatic dependency tracking</h2>
-
-<p>When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.</p>
-
-<h2 id="runtime-errors-can-be-thrown-and-caught">Runtime errors can be thrown and caught</h2>
-
-<p>Users can throw and catch errors within expressions, allowing them to gracefully handle unexpected or missing input.</p>
-
-<h2 id="embedded-documentation-and-meta-data">Embedded documentation and meta-data</h2>
-
-<p>Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.</p>
-
-        </main>
-    </div>
+    <main class="list-content" role="main">
+        
+    </main>
     
 <footer>
   <div class="footer__copyright">

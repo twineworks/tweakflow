@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on tweakflow - an embeddable expression language for the JVM</title>
+    <title>Categories on tweakflow - an expression language for the JVM</title>
     <link>/categories.html</link>
-    <description>Recent content in Categories on tweakflow - an embeddable expression language for the JVM</description>
+    <description>Recent content in Categories on tweakflow - an expression language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Embedding Guide | tweakflow - an embeddable expression language for the JVM</title>
+    <title>Embedding Guide | tweakflow - an expression language for the JVM</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,8 +31,8 @@
     <meta name="msapplication-config" content="/img/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
-    <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
-    <meta name="application-name" content="tweakflow - an embeddable expression language for the JVM">
+    <meta name="apple-mobile-web-app-title" content="tweakflow - an expression language for the JVM">
+    <meta name="application-name" content="tweakflow - an expression language for the JVM">
 
 </head>
 
@@ -56,7 +56,7 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="./tools.html">Tools</a>
+              <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
             <li class="menu__item active" >
@@ -68,7 +68,7 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="./reference.html">Reference</a>
+              <a class="menu__item-link" href="./tools.html">Tools</a>
             </li>
             
             <li class="menu__item" >
@@ -139,7 +139,7 @@
 
 <h2 id="requirements">Requirements</h2>
 
-<p>Tweakflow requires Java 8 or later.</p>
+<p>Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.</p>
 
 <h2 id="getting-tweakflow">Getting tweakflow</h2>
 
@@ -148,7 +148,7 @@
 <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.twineworks&lt;/groupId&gt;
     &lt;artifactId&gt;tweakflow&lt;/artifactId&gt;
-    &lt;version&gt;0.0.7&lt;/version&gt;
+    &lt;version&gt;0.9.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
@@ -193,7 +193,7 @@ Value c = Values.make(1.2d);   // a double
 
 <p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
 
-<p>The following snipped creates a function that takes one string parameter named <code>x</code> with default value <code>&quot;hello&quot;</code>, and returns a boolean.</p>
+<p>The following snippet creates a function that takes one string parameter named <code>x</code> with default value <code>&quot;hello&quot;</code>, and returns a boolean.</p>
 
 <pre><code class="language-java">Values.make(
     new UserFunctionValue(
@@ -312,7 +312,7 @@ Runtime runtime = table.compile();
 
 <p>You can run it using:</p>
 
-<pre><code class="language-bash">java -cp tweakflow-0.0.7.jar com.twineworks.tweakflow.examples.VarTableEvaluation
+<pre><code class="language-bash">java -cp tweakflow-0.9.0.jar com.twineworks.tweakflow.examples.VarTableEvaluation
 </code></pre>
 
 <p>An invocation might look like:</p>
@@ -325,7 +325,7 @@ And the formula for calculating surface area?
 area: a*b
 Thanks. Checking answer...
 
-Congratulations. The formulas seem to be correct. 
+Congratulations. The formulas seem to be correct.
 </code></pre>
 
 <h2 id="evaluating-modules">Evaluating modules</h2>
@@ -462,7 +462,7 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
 
 <p>Tweakflow throws <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java">LangExceptions</a> whenever something goes wrong.</p>
 
-<p>There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don&rsquo;t hold up. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the <a href="./reference.html#throwing-errors">throw</a> syntax.</p>
+<p>There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics are invalid. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the <a href="./reference.html#throwing-errors">throw</a> syntax.</p>
 
 <p>An exception holds an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java">error code</a> and a message describing the error condition. You can get the value that was thrown by calling <code>toErrorValue</code>. Calling <code>getDigestMessage</code> returns a detailed error message that includes stack trace information. The exception usually contains a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java">SourceInfo</a> object which gives the exact location of the error condition. Note however that source info may be <code>null</code>, in case the error happens in a context where no source information is available.</p>
 
@@ -481,7 +481,7 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
     
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2017</a>
+    © <a href="http://twineworks.com">Twineworks 2019</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Modules on tweakflow - an embeddable expression language for the JVM</title>
+    <title>Modules on tweakflow - an expression language for the JVM</title>
     <link>/modules.html</link>
-    <description>Recent content in Modules on tweakflow - an embeddable expression language for the JVM</description>
+    <description>Recent content in Modules on tweakflow - an expression language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
@@ -18,7 +18,7 @@
       <guid>/modules/std.html</guid>
       <description>module std.tf The standard module contains basic functions for general computing tasks.
 All samples run in the interactive tweakflow REPL which you can launch using:
-java -jar tweakflow-0.0.7.jar repl  library core The core library contains utility functions to process values at a basic level.
+java -jar tweakflow-0.9.0.jar repl  library core The core library contains utility functions to process values at a basic level.
 id (any x) -&amp;gt; any
 Identity function. Returns x.
 &amp;gt; core.id(&amp;quot;foo&amp;quot;) &amp;quot;foo&amp;quot; &amp;gt; core.id({:a &amp;quot;b&amp;quot;}) { :a &amp;quot;b&amp;quot; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string</description>

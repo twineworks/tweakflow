@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>std.tf | tweakflow - an embeddable expression language for the JVM</title>
+    <title>std.tf | tweakflow - an expression language for the JVM</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,8 +31,8 @@
     <meta name="msapplication-config" content="/img/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
-    <meta name="apple-mobile-web-app-title" content="tweakflow - an embeddable expression language for the JVM">
-    <meta name="application-name" content="tweakflow - an embeddable expression language for the JVM">
+    <meta name="apple-mobile-web-app-title" content="tweakflow - an expression language for the JVM">
+    <meta name="application-name" content="tweakflow - an expression language for the JVM">
 
 </head>
 
@@ -56,7 +56,7 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="../tools.html">Tools</a>
+              <a class="menu__item-link" href="../reference.html">Reference</a>
             </li>
             
             <li class="menu__item" >
@@ -68,7 +68,7 @@
             </li>
             
             <li class="menu__item" >
-              <a class="menu__item-link" href="../reference.html">Reference</a>
+              <a class="menu__item-link" href="../tools.html">Tools</a>
             </li>
             
             <li class="menu__item" >
@@ -298,7 +298,7 @@
 
 <p>All samples run in the interactive tweakflow REPL which you can launch using:</p>
 
-<pre><code class="language-bash">java -jar tweakflow-0.0.7.jar repl
+<pre><code class="language-bash">java -jar tweakflow-0.9.0.jar repl
 </code></pre>
 
 <h2 id="library-core">library core</h2>
@@ -2428,7 +2428,7 @@ nil
 
 <p><code>(xs, x) -&gt; boolean</code></p>
 
-<p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if <code>xs</code> contains <code>x</code>, <code>false</code> otherwise.\n
+<p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if <code>xs</code> contains <code>x</code>, <code>false</code> otherwise.
 If <code>xs</code> is a <code>dict</code>, returns <code>true</code> if any entry in <code>xs</code> contains <code>x</code> as a value, <code>false</code> otherwise.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
@@ -2630,7 +2630,7 @@ If <code>f</code> accepts two arguments, <code>x</code> and its index or key are
 
 <p>Returns the resulting list.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.\n
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.
 Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
@@ -2666,7 +2666,7 @@ If <code>f</code> accepts two arguments, <code>x</code> and its index or key are
 
 <p>Returns the resulting list.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.\n
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.
 Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
@@ -4045,7 +4045,7 @@ function
           n: (r*6+1) as long
         }
         {
-          :seed data.append(d[:seed], r*i)
+          :seed data.append(d[:seed], r*i),
           :nums data.append(d[:nums], n)
         }
     )[:nums]
@@ -5059,7 +5059,7 @@ The human readable names are given in the language tag passed as the locale para
     
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2017</a>
+    © <a href="http://twineworks.com">Twineworks 2019</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">
