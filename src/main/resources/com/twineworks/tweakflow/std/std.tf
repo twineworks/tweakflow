@@ -2510,7 +2510,7 @@ doc
 ~~~
 `(xs, x) -> boolean`
 
-If `xs` is a `list`, returns `true` if `xs` contains `x`, `false` otherwise.\n
+If `xs` is a `list`, returns `true` if `xs` contains `x`, `false` otherwise.
 If `xs` is a `dict`, returns `true` if any entry in `xs` contains `x` as a value, `false` otherwise.
 
 Returns `nil` if `xs` is `nil`.
@@ -2737,7 +2737,7 @@ If `f` accepts two arguments, `x` and its index or key are passed.
 
 Returns the resulting list.
 
-Returns `nil` if `xs` is `nil`.\n
+Returns `nil` if `xs` is `nil`.
 Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
@@ -2778,7 +2778,7 @@ If `f` accepts two arguments, `x` and its index or key are passed.
 
 Returns the resulting list.
 
-Returns `nil` if `xs` is `nil`.\n
+Returns `nil` if `xs` is `nil`.
 Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
@@ -4339,7 +4339,7 @@ function
           n: (r*6+1) as long
         }
         {
-          :seed data.append(d[:seed], r*i)
+          :seed data.append(d[:seed], r*i),
           :nums data.append(d[:nums], n)
         }
     )[:nums]
