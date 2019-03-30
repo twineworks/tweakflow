@@ -350,8 +350,8 @@ doc
 This is documentation at the module level.
 ~~~
 meta {
-  :title       "foo"
-  :description "Description of the module"
+  :title       "foo",
+  :description "Description of the module",
   :version     "4.2"
 }
 module
@@ -360,7 +360,7 @@ module
 doc 'This is documentation for library bar.'
 
 meta {
-  :author "John Doe et al."
+  :author "John Doe et al.",
   :since  "2.3"
 }
 
@@ -370,7 +370,7 @@ library bar {
   doc 'This is documentation for function baz.'
 
   meta {
-    :author "John Doe"
+    :author "John Doe",
     :date 2017-03-12T
   }
 

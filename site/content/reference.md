@@ -8,7 +8,8 @@ Tweakflow offers a way for JVM applications to evaluate user-supplied expression
 
 ## Requirements
 
-Tweakflow runs on the JVM. Java 8 or later is required.
+Tweakflow runs on the JVM. Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
+
 
 ## Design principles
 
@@ -28,9 +29,9 @@ The above paradigm is familiar from spreadsheet applications. Spreadsheets allow
 
 ### The host application is in control
 
-Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. This is great for trusted code and admin-level features, but it comes at the cost of potential security problems when exposed to a broad audience of users. Java interop in a scripting language makes it relatively easy to call into application internals not intended to be accessed by user scripts, or to access application data that should not be exposed to the user.
+Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. Tweakflow deliberately does not offer such features.
 
-Tweakflow functions can be written in Java, but they must implement an interface. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application can also set up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what user expressions can call or have access to.
+While Tweakflow functions can be written in Java for performance reasons, they must implement an interface and be on the classpath. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application sets up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what user expressions can call or have access to.
 
 ## Lexical structure
 
@@ -199,7 +200,7 @@ world"
 
 #### Here document strings
 
-The [here document](https://en.wikipedia.org/wiki/Here_document) string notation starts with `~~~\r?\n` and ends with `\r?\n~~~`. All characters in between are preserved as a literal string that does not expand any escape sequences.  
+The [here document](https://en.wikipedia.org/wiki/Here_document) string notation starts with `~~~\r?\n` and ends with `\r?\n~~~`. All characters in between are preserved as a literal string that does not expand any escape sequences.
 
 ```text
 ​~~~
@@ -209,35 +210,35 @@ The [here document](https://en.wikipedia.org/wiki/Here_document) string notation
 
 This style of string is useful when the role of a string is to represent a separate document. It is typically used for documentation or embedded documents.
 
-````tweakflow
+```tweakflow
 > \e
-​~~~
+~~~
 Hello World
-​~~~
+~~~
 \e
 "Hello World"
 
 > \e
-​~~~
-<Contact>  
-  <Name>John Doe</Name>  
-  <Title>CEO</Title>  
-  <Phone>  
-    <Number>555-8401</Number>  
-    <Type>Voice</Type>  
-  </Phone>  
+~~~
+<Contact>
+  <Name>John Doe</Name>
+  <Title>CEO</Title>
+  <Phone>
+    <Number>555-8401</Number>
+    <Type>Voice</Type>
+  </Phone>
 </Contact>
-​~~~
+~~~
 \e
-"<Contact>  
-<Name>John Doe</Name>  
-  <Title>CEO</Title>  
-  <Phone>  
-    <Number>555-8401</Number>  
-    <Type>Voice</Type>  
-  </Phone>  
+"<Contact>
+  <Name>John Doe</Name>
+  <Title>CEO</Title>
+  <Phone>
+    <Number>555-8401</Number>
+    <Type>Voice</Type>
+  </Phone>
 </Contact>"
-````
+```
 
 #### Symbol strings
 
@@ -319,6 +320,215 @@ Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com
 2017-04-30T21:32:11+02:00@`UTC+02:00`
 ```
 
+### List literals
+
+Lists are notated as a sequence of values inside square brackets. Commas are separating entries. The empty list is written as `[]`.
+
+A splat expression can be used to concatenate lists inline.
+
+The formal syntax of a list literal is as follows:
+
+```text
+listLiteral
+   : '['']'
+   | '[' (expression|splat) (',' (expression|splat))* ']'
+   ;
+
+splat
+  : '...' expression
+  ;
+```
+
+A few example lists:
+
+```tweakflow
+> [] # empty list
+[]
+
+> [1, 2, 3] # a basic list
+[1, 2, 3]
+
+> [[1, 2], [3, 4]] # lists can be nested
+[[1, 2], [3, 4]]
+
+> [{:id 1, :name "Johne Doe"}, {:id 2, :name "Jane Doe"}] # lists nest with dicts
+[{
+  :name "Johne Doe",
+  :id 1
+}, {
+  :name "Jane Doe",
+  :id 2
+}]
+```
+
+When a splat expression is encountered, it is evaluated, cast to list and concatenated with any previous list items. A few examples of splats:
+
+```tweakflow
+> [1, 2, ...[3, 4, 5]]
+[1, 2, 3, 4, 5]
+
+> [1, 2, ...{:key "value"}, 3] # the splat dict is cast to a list before concat
+[1, 2, "key", "value", 3]
+
+> prepend: (x, list xs) -> list [x, ...xs]
+function
+> prepend("a", ["b", "c"])
+["a", "b", "c"]
+
+> append: (list xs, x) -> list [...xs, x]
+function
+> append(["x", "y"], "z")
+["x", "y", "z"]
+```
+
+### Dict literals
+
+Dicts are notated as a sequence of key and value pairs inside curly brackets. Keys are implicitly cast to strings. Commas are separating entries. The empty dict is written as `{}`.
+
+A splat expression can be used to merge dicts inline.
+
+The formal syntax of a dict literal is as follows:
+
+```
+dictLiteral
+   : '{' '}'
+   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  '}'
+   ;
+
+splat
+  : '...' expression
+  ;
+```
+
+A few example dicts:
+
+```tweakflow
+> {:code 200, :status "found", :size 1232}
+{
+  :size 1232,
+  :code 200,
+  :status "found"
+}
+
+> {"one" 1, "two" 2}
+{
+  :one 1,
+  :two 2
+}
+
+> {:result "ok", :content_types ["xml", "json"]} # dicts nest with lists
+{
+  :content_types ["xml", "json"],
+  :result "ok"
+}
+
+# dicts nest with other dicts
+> {:people {"1" {:id 1, :name "John Doe"}, "2" {:id 2, :name "Jane Doe"}}}
+{
+  :people {
+    :`1` {
+      :name "John Doe",
+      :id 1
+    },
+    :`2` {
+      :name "Jane Doe",
+      :id 2
+    }
+  }
+}
+```
+
+When a splat expression is encountered, the splat value is cast to dict and merged with the existing dict. The rightmost merged dict values take precedence in case splats contain keys that are already present.
+
+```tweakflow
+> {:code 200, ...{:status "found", :size 1232}}
+{
+  :size 1232,
+  :code 200,
+  :status "found"
+}
+
+# rightmost value for key :status is preserved
+> {:request_id 8273, :status "ok", ...{:code 403, :status "forbidden"}}
+{
+  :request_id 8273,
+  :code 403,
+  :status "forbidden"
+}
+```
+
+### Function literals
+
+Function notation has two parts: function head, and body. The head holds the function signature: parameter list and return type. The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
+
+Formally the syntax is as follows:
+
+```text
+functionLiteral
+  : functionHead (expression|viaDec)
+  ;
+
+functionHead
+  : '(' paramsList ')' '->' dataType?
+  ;
+
+paramsList
+  :
+  | paramDef (',' paramDef) *
+  ;
+
+paramDef
+  : dataType? identifier ('=' expression)?
+  ;
+
+viaDec
+  : 'via' literal
+  ;
+```
+
+A function head specifies a parameter list, and an optional return type. If the return type is omitted `any` is used. Parameter list items are delimited by commas. Each parameter has a name, an optional data type, and an optional default value. If the data type is omitted, `any` is used, if the default value is omitted `nil` is used.
+
+
+Some examples:
+
+```tweakflow
+# A function with no parameters, returning a constant of any type
+> f: () -> 1
+function
+> f()
+1
+
+# A function taking two strings and returning a string
+> f: (string x, string y) -> string    x .. y
+function
+> f("John", "Doe")
+"JohnDoe"
+
+# A function taking a list and returning a list
+> f: (list xs) -> list    data.map(xs, (_, i) -> xs[data.size(xs)-1-i])
+function
+> f([1, 2, 3])
+[3, 2, 1]
+
+# A function taking two doubles, each having a default value, returning a double
+> f: (double x=1.0, double y=0.0) -> double    x+y
+function
+> f(3, 4)
+7.0
+> f()
+1.0
+> f(0)
+0.0
+> f(x: 2, y: 3)
+5.0
+> f(y: 7)
+8.0
+
+> f: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"}
+function
+> f("foo")
+3
+```
 
 ### Identifiers
 
@@ -426,20 +636,21 @@ Formally modules have the following syntax:
 
 ```
 module
-  : moduleHead moduleComponent*
+  : endOfStatement? moduleHead moduleComponent* EOF
   ;
 
 moduleHead
   : nameDec? (importDef | aliasDef | exportDef) *
   ;
 
-nameDec
-  : metaDef 'module'
-  | metaDef 'global' 'module' identifier
-  ;
-
 moduleComponent
   : library
+  | endOfStatement
+  ;
+
+nameDec
+  : metaDef 'module' endOfStatement?
+  | metaDef 'global' 'module' identifier endOfStatement?
   ;
 ```
 
@@ -483,11 +694,11 @@ library app {
 ```
 On the REPL:
 ```tweakflow
-> \load main.tf environments/local.tf # load main with local environment
+> \load main.tf environments/local.tf
 > app.file_path("foo")
 "/home/me/my_project/data/foo_data.csv"
 
-> \load main.tf environments/production.tf # load main with production environment
+> \load main.tf environments/production.tf
 > app.file_path("foo")
 "/var/incoming/data/foo_data.csv"
 ```
@@ -503,8 +714,9 @@ Imported names are placed in module scope.
 Imports have the following syntax:
 
 ```text
+
 importDef
-  : 'import' importMember (','? importMember)* 'from' modulePath
+  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement?
   ;
 
 importMember
@@ -569,7 +781,7 @@ Aliases have the following syntax:
 
 ```text
 aliasDef
-  : 'alias' reference 'as' aliasName
+  : 'alias' reference 'as' aliasName endOfStatement?
   ;
 
 aliasName
@@ -594,7 +806,7 @@ library my_util {
   # s alias used here
   greeting: s.concat(["Hello", " ", "World!"]) 	# "Hello World!"
   # m alias used here
-  mapped: m([1,2,3], (x) -> x*x) 				# [1, 4, 9]
+  mapped: m([1,2,3], (x) -> x*x)   # [1, 4, 9]
 }
 ```
 
@@ -604,7 +816,7 @@ A module defines its public interface using exports. Libraries can be exported i
 
 ```text
 exportDef
-  : 'export' reference ('as' exportName)?
+  : 'export' reference ('as' exportName)? endOfStatement?
   ;
 
 exportName
@@ -635,13 +847,18 @@ import util, str from "./lib.tf"
 
 ### Libraries
 
-A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope.
+A  library is a named collection of variables. The variables typically hold functions, but they can hold any data type. Libraries can be marked as exports as part of their definition, in which case they are exported from the enclosing module using their given name. All contained variables are placed in library scope. They can also be annotated by [docs and metadata](#annotations).
 
 **Syntax**
 
 ```text
 library
-  : metaDef 'export'? 'library' identifier '{' (varDef endOfStatement?)* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement?)* '}'
+  ;
+
+libVar
+  : varDef
+  | varDec
   ;
 ```
 
@@ -660,7 +877,14 @@ A variable is a named entity that holds a value. Variables are placed in [librar
 ```
 varDef
   : metaDef dataType? identifier ':' expression
-  | metaDef 'provided' dataType? identifier
+  ;
+
+varDec
+  : metaDef provided dataType? identifier
+  ;
+
+provided
+  : 'provided'
   ;
 ```
 
@@ -709,11 +933,11 @@ Name resolution for references generally starts in the scope the reference appea
 
 ### Annotations
 
-Modules, libraries, and variables support documentation and metadata annotations. These are just literal values associated with the module, library or variable they annotate. They can be inspected in the REPL. Language processing tools like `doc` can extract them to generate project documentation.
+Modules, libraries, and variables support documentation and metadata annotations. Annotations are literal values associated a module, library or variable. They can be inspected in the REPL. Language processing tools like [doc](/tools.html#metadata-extraction) can extract them to generate project documentation.
 
 Both doc and meta annotations are optional. They can occur in any order before the definition of a module, library or variable. Doc annotations begin with the keyword `doc` followed by an expression. Meta annotations begin with the keyword `meta` followed by an expression.
 
-The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are also not permitted.
+The doc and meta expressions must consist of value literals that evaluate to themselves. They cannot contain any form of computation like  operators or function calls. Function literals are not permitted.
 
 The formal syntax is:
 ```text
@@ -748,8 +972,8 @@ doc
 This is documentation at the module level.
 ~~~
 meta {
-  :title       "foo"
-  :description "Description of the module"
+  :title       "foo",
+  :description "Description of the module",
   :version     "4.2"
 }
 module
@@ -758,7 +982,7 @@ module
 doc 'This is documentation for library bar.'
 
 meta {
-  :author "John Doe et al."
+  :author "John Doe et al.",
   :since  "2.3"
 }
 
@@ -768,7 +992,7 @@ library bar {
   doc 'This is documentation for function baz.'
 
   meta {
-    :author "John Doe"
+    :author "John Doe",
     :date 2017-03-12T
   }
 
@@ -915,10 +1139,10 @@ Strings cast to doubles successfully if they pass the following regular expressi
 (NaN)|                                       # Not a Number
 (Infinity)|                                  # Infinity
 ([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
-                                             # fractional digits, and exponent                                              
+                                             # fractional digits, and exponent
 \.[0-9]+([eE][-+]?[0-9]+)?)                  # decimal dot followed by fractional digits
                                              # and exponent
-)                                             
+)
 [\x00-\x20]*                                 # optional trailing whitespace
 ```
 
@@ -1044,78 +1268,7 @@ For example:
 
 The `list` type holds a finite sequence of values in a defined order. It is equivalent to array types in other languages. They are indexed by long values, starting at index 0. Lists are internally indexed by integers and have a capacity limit of 2^31 = 2.147.483.648 elements.
 
-Lists are notated as a sequence of values inside square brackets. Commas separating entries are optional. The empty list is written as `[]`.
-
-A splat expression can be used to concatenate lists inline.
-
-The formal syntax of a list literal is as follows:
-
-```text
-listLiteral
-   : '[' ((expression|splat) ','? )*  ']'
-   ;
-
-splat
-  : '...' expression
-  ;  
-```
-
-A few example lists:
-
-```tweakflow
-> [1, 2, 3] # a basic list
-[1, 2, 3]
-
-> [1 2 3] # commas are optional
-[1, 2, 3]
-
-> [] # empty list
-[]
-
-> [[1, 2], [3, 4]] # lists can be nested
-[[1, 2], [3, 4]]
-
-> [{:id 1, :name "Johne Doe"}, {:id 2, :name "Jane Doe"}] # lists nest with dicts
-[{
-  :name "Johne Doe",
-  :id 1
-}, {
-  :name "Jane Doe",
-  :id 2
-}]
-```
-
-It is worth noting that [container access](#container-access) has precedence over sequencing items in a list literal, which can lead to unexpected results when nesting list literals. You can disambiguate by placing explicit commas to sequence list items.
-
-```tweakflow
-> [["a", "b"] [0]]   # container access x[0] has precedence over list literal sequence
-["a"]
-
-> [["a", "b"], [0]]  # ambiguity resolved
-[["a", "b"], [0]]
-```
-
-When a splat expression is encountered, it is evaluated, cast to list and concatenated with any previous list items. A few examples of splats:
-
-```tweakflow
-> [1, 2, ...[3, 4, 5]]
-[1, 2, 3, 4, 5]
-
-> [1, 2, ...{:key "value"}, 3] # the splat dict is cast to a list before concat
-[1, 2, "key", "value", 3]
-
-> prepend: (x, list xs) -> list [x, ...xs]
-function
-> prepend("a", ["b", "c"])
-["a", "b", "c"]
-
-> append: (list xs, x) -> list [...xs, x]
-function
-> append(["x", "y"], "z")
-["x", "y", "z"]
-```
-
-The following type casts are supported:
+Lists are notated as [list literals](#list-literals). The following type casts are supported:
 
 List as boolean
 
@@ -1123,17 +1276,17 @@ An empty list `[]` converts to `false`. Any other list value converts to `true`.
 
 List as dict
 
-Lists are converted as sequences of key-value pairs. `["a" 1 "b" 2]` is converted to `{:a 1 :b 2}`. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is `nil` or cannot be cast to string, an error is thrown.
+Lists are converted as sequences of key-value pairs. `["a", 1, "b", 2]` is converted to `{:a 1, :b 2}`. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is `nil` or cannot be cast to string, an error is thrown.
 
 ```tweakflow
-> ["a" 1 "b" 2 "c" 3] as dict
+> ["a", 1, "b", 2, "c", 3] as dict
 {
   :a 1,
   :b 2,
   :c 3
 }
 
-> [1 2 3 4] as dict
+> [1, 2, 3, 4] as dict
 {
   :`1` 2,
   :`3` 4
@@ -1142,109 +1295,34 @@ Lists are converted as sequences of key-value pairs. `["a" 1 "b" 2]` is converte
 > [] as dict
 {}
 
-> ["a" "b" "a" "d"] as dict # rightmost key "a" takes precedence
+> ["a", "b", "a", "d"] as dict # rightmost key "a" takes precedence
 {
   :a "d"
 }
 
-> ["a" nil "b" 1] as dict # nil values are allowed
+> ["a", nil, "b", 1] as dict # nil values are allowed
 {
   :a nil,
   :b 1
 }
 
-> ["a" "b" nil "d"] as dict # nil keys are not allowed
+> ["a", "b", nil, "d"] as dict # nil keys are not allowed
 ERROR:
   code: CAST_ERROR
   message: Cannot cast list to dict with nil key at index: 2
-  at: [interactive]:3:10
-  source: ["a" "b" nil "d"] as dict
+  ...
 
-> [1 2 3] as dict
+> [1, 2, 3] as dict
 ERROR:
   code: CAST_ERROR
   message: Cannot cast list with odd number of items to dict
-  at: [interactive]:3:11
-  source: [1 2 3] as dict
+  ...
 
 ```
 
 ### Dict
 
-The `dict` type is an associative structure that maps string keys are to arbitrary values. Dicts do not support `nil` keys, but `nil` values are permitted. The order of keys in a dict is undefined.
-
-Dicts are notated as a sequence of key and value pairs inside curly brackets. Keys are implicitly cast to strings. Commas separating entries are optional. The empty dict is written as `{}`.
-
-A splat expression can be used to merge dicts inline.
-
-The formal syntax of a dict literal is as follows:
-
-```
-dictLiteral
-   : '{' ((expression expression)|(splat) ','? )*  '}'
-   ;
-
-splat
-  : '...' expression
-  ;
-```
-
-A few example dicts:
-
-```tweakflow
-> {:code 200, :status "found", :size 1232}
-{
-  :size 1232,
-  :code 200,
-  :status "found"
-}
-
-> {"one" 1, "two" 2}
-{
-  :one 1,
-  :two 2
-}
-
-> {:result "ok", :content_types ["xml", "json"]} # dicts nest with lists
-{
-  :content_types ["xml", "json"],
-  :result "ok"
-}
-
-# dicts nest with other dicts
-> {:people {"1" {:id 1, :name "John Doe"}, "2" {:id 2, :name "Jane Doe"}}}
-{
-  :people {
-    :`1` {
-      :name "John Doe",
-      :id 1
-    },
-    :`2` {
-      :name "Jane Doe",
-      :id 2
-    }
-  }
-}
-```
-
-When a splat expression is encountered, the splat value is cast to dict and merged with the existing dict. The rightmost merged dict values take precedence in case splats contain keys that are already present.
-
-```tweakflow
-> {:code 200, ...{:status "found", :size 1232}}
-{
-  :size 1232,
-  :code 200,
-  :status "found"
-}
-
-# rightmost value for key :status is preserved
-> {:request_id 8273, :status "ok", ...{:code 403, :status "forbidden"}}
-{
-  :request_id 8273,
-  :code 403,
-  :status "forbidden"
-}
-```
+The `dict` type is an associative structure that maps string keys are to arbitrary values. Dicts do not support `nil` keys, but `nil` values are permitted. The order of keys in a dict is undefined. Dicts are notated as [dict literals](#dict-literals).
 
 The following type casts are supported:
 
@@ -1260,13 +1338,13 @@ Dicts are converted to lists as a sequence of key-value pairs. An empty dict giv
 > {} as list
 []
 
-> {:a "foo" :b "bar"} as list
+> {:a "foo", :b "bar"} as list
 ["a", "foo", "b", "bar"]
 
-> {:a 1 :b 2}  as list
+> {:a 1, :b 2}  as list
 ["a", 1, "b", 2]
 
-> {:b 1 :a 2}  as list
+> {:b 1, :a 2}  as list
 ["a", 2, "b", 1]
 ```
 
@@ -1274,43 +1352,11 @@ Dicts are converted to lists as a sequence of key-value pairs. An empty dict giv
 
 The `function` type holds callable functions. There is only one data type for functions. It encompasses functions of all signatures.
 
-Function notation has two parts: function head, and body. The head holds the function signature: parameter list and return type. The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
+Functions are notated as [function literals](#function-literals). The body is either an expression that evaluates to the function's return value, or a structure specifying the Java class that is implementing the function.
 
-Formally the syntax is as follows:
-
-```text
-functionLiteral
-  : functionHead (expression|viaDec)
-  ;
-
-functionHead
-  : '(' paramsList ')' '->' dataType?
-  ;
-
-paramsList
-  : (paramDef ','?) *
-  ;
-
-paramDef
-  : dataType? identifier ('=' expression)?
-  ;
-
-viaDec
-  : 'via' literal
-  ;
-```
-
-A function head specifies a parameter list, and an optional return type. If the return type is omitted `any` is used. Parameter list items can be delimited by a comma, or just whitespace. Each parameter has a name, an optional data type, and an optional default value. If the data type is omitted, `any` is used, if the default value is omitted `nil` is used. When a function is invoked, all arguments are implicitly cast to the declared parameter types.
+When a function is invoked, all arguments are implicitly cast to the declared parameter types.
 
 If a function body is an expression, it is evaluated to the return value when the function is called. The return value is implicitly cast to the declared return value of the function.
-
-The following type casts are supported:
-
-Function as boolean
-
-All function values cast to boolean `true`.
-
-Some examples:
 
 ```tweakflow
 # A function with no parameters, returning a constant of any type
@@ -1328,7 +1374,7 @@ function
 # A function taking a list and returning a list
 > f: (list xs) -> list    data.map(xs, (_, i) -> xs[data.size(xs)-1-i])
 function
-> f([1,2,3])
+> f([1, 2, 3])
 [3, 2, 1]
 
 # A function taking two doubles, each having a default value, returning a double
@@ -1354,7 +1400,14 @@ function
 function
 > f("Foo", "Bar")
 ["F", "o", "o", "B", "a", "r"]
+
 ```
+
+The following type casts are supported:
+
+Function as boolean
+
+All function values cast to boolean `true`.
 
 The signature of a function can be inspected calling [fun.signature](/modules/std.html#signature) from the standard library.
 
@@ -1448,7 +1501,7 @@ containerAccess
   ;
 
 containerAccessKeySequence
-  : ((expression | splat) ','?)+
+  : ((expression | splat)) (',' (expression | splat))*
   ;
 
 splat
@@ -1461,7 +1514,7 @@ splat
 Indexes supplied for a list are automatically cast to long values.  If the given index does not exist in the list, the value of the access expression is `nil`. Accessing a `nil` list yields `nil`.
 
 ```tweakflow
-> items: ["a" "b" "c"]
+> items: ["a", "b", "c"]
 ["a", "b", "c"]
 
 > items[0]
@@ -1534,10 +1587,10 @@ Container access expressions can be chained to access nested data.
 ```tweakflow
 > \e
 story: {
-  :name "A Study in Scarlet"
+  :name "A Study in Scarlet",
   :adaptations [
-    {:year 1914 :media "silent film"}
-    {:year 1968 :media "television series"}
+    {:year 1914, :media "silent film"},
+    {:year 1968, :media "television series"}
   ]
 }
 \e
@@ -1577,7 +1630,7 @@ Tweakflow supports placing the keys of chained access inside a single set of squ
 > story[:adaptations][1][:media]
 "television series"
 
-> story[:adaptations 1 :media]
+> story[:adaptations, 1, :media]
 "television series"
 ```
 
@@ -1587,23 +1640,23 @@ It is worth noting that if the traversal yields `nil` at any intermediate point,
 > story[:adaptations][4][:media] # there is no adaptation at index 4
 nil
 
-> story[:adaptations 4 :media]
+> story[:adaptations, 4, :media]
 nil
 ```
 
 The list of keys in the traversal form can be interspersed with splat expressions. The splat expression must be a list containing the keys to access. Each splat expression is expanded, and concatenated with any existing items just as in [list literals](#list).
 
 ```tweakflow
-> path: [:adaptations 1 :media]
+> path: [:adaptations, 1, :media]
 ["adaptations", 1, "media"]
 
 > story[...path]
 "television series"
 
-> story[:adaptations ...[0 :year]]
+> story[:adaptations, ...[0, :year]]
 1914
 
-> story[...[:adaptations] ...[1] ...[:year]]
+> story[...[:adaptations], ...[1], ...[:year]]
 1968
 ```
 
@@ -1686,7 +1739,7 @@ ERROR:
   source: `$`: f(42, "test", "too much")
 ```
 
-Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value `nil` unless explicitly specified in the function definition.
+Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value `nil` unless specified otherwise in the function definition.
 
 ```tweakflow
 > f(12)
@@ -1725,9 +1778,6 @@ Omitted arguments are assigned their default parameter value.
 
 > f(name: "test")
 "0-test"
-
-> f()
-"0-n/a"
 ```
 
 It is an error to supply argument names not present in function parameters:
@@ -1737,8 +1787,7 @@ It is an error to supply argument names not present in function parameters:
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Function does not have parameter named: country
-  at: [interactive]:4:33
-  source: country: "US"
+  ...
 ```
 
 #### Mixed positional and named arguments
@@ -1759,8 +1808,7 @@ It is an error to supply any positional arguments after named arguments.
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Positional argument cannot follow named arguments.
-  at: [interactive]:4:20
-  source: "test"
+  ...
 ```
 
 It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.
@@ -1817,7 +1865,7 @@ Whenever named arguments are allowed, and a splat expression evaluates to a dict
 Below example supplies the `id` and `name` named arguments.
 
 ```tweakflow
-> person: {:id 42, :name "test"}
+>
 {
   :name "test",
   :id 42
@@ -1826,7 +1874,7 @@ Below example supplies the `id` and `name` named arguments.
 "42-test"
 ```
 
-Named arguments can be interspersed with splats. The resulting arguments dict is then merged left to right, with rightmost keys taking precedence in case of duplicates. Below example again effectively passes `42` as `id` and `"test"` as `name`.  
+Named arguments can be interspersed with splats. The resulting arguments dict is then merged left to right, with rightmost keys taking precedence in case of duplicates. Below example again effectively passes `42` as `id` and `"test"` as `name`.
 
 ```tweakflow
 > person: {:id 0, :name "test"}
@@ -1848,8 +1896,7 @@ Splats can be mixed as long as positional splats come first.
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: List splat provides positional arguments and cannot follow named arguments.
-  at: [interactive]:4:31
-  source: ...[42, "testing"]
+  ...
 ```
 
 #### Argument casting
@@ -1864,8 +1911,7 @@ Arguments given in function calls are automatically cast to the declared paramet
 ERROR:
   code: CAST_ERROR
   message: Cannot cast abc to long
-  at: [interactive]:4:10
-  source: f("abc", "def")
+  ...
 ```
 
 #### Return value casting
@@ -1902,7 +1948,7 @@ The syntax is as follows:
 
 ```text
 callChain
-  : '->>' '('threadArg')' expression (',' expression)*      
+  : '->>' '('threadArg')' expression (',' expression)*
   ;
 
 threadArg
@@ -1912,7 +1958,7 @@ threadArg
 
 The symbol `->>` is a mnemonic for a threading needle. `threadArg` is passed into a list of expressions, each expression in the list must evaluate to a callable function. Each function is called with a single argument in order. The return value of each function becomes the first argument of the next function. The return value of the last function becomes the value of the expression as a whole.
 
-As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, dashes must be included to create groups of four characters, and finally all characters must be upper case.
+As an example, consider the normalization of a string value representing a product code: the string must be cleaned of whitespace, any existing dashes must be removed, new dashes must be included to create groups of four characters, and finally all characters must be upper case.
 
 ```tweakflow
 > \e
@@ -2076,8 +2122,8 @@ generator
   ;
 
 varDef
-  : metadef dataType? identifier ':' expression
-  ;  
+  : dataType? identifier ':' expression
+  ;
 
 filter
   : expression
@@ -2120,8 +2166,8 @@ Create a list of [pythagorean triples](https://en.wikipedia.org/wiki/Pythagorean
 for
   a <- data.range(1, 15),
   b <- data.range(a, 15),
-  c: math.sqrt(a*a + b*b),  
-  (c as long) == c, # filter: only pass if is c an integer         
+  c: math.sqrt(a*a + b*b),
+  (c as long) == c, # filter: only pass if is c an integer
   [a, b, c as long]
 \e
 [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15]]
@@ -2145,8 +2191,8 @@ matchBody
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '->' expression
-  | 'default' '->'  expression
+  : matchPattern (',' matchGuard)? '->' expression endOfStatement?
+  | 'default' '->'  expression endOfStatement?
   ;
 
 matchGuard
@@ -2208,7 +2254,7 @@ false
 sequence_pair?: (list xs) ->
   match xs
 #   capture   guard       result
-    [@a, @b], a+1 == b -> true    
+    [@a, @b], a+1 == b -> true
     default -> false
 \e
 function
@@ -2224,7 +2270,7 @@ A value pattern compares against a concrete value. The comparison is done using 
 
 ```text
 matchPattern
-  : expression  capture?                     
+  : expression  capture?
   ;
 
 capture
@@ -2267,7 +2313,7 @@ Predicate patterns are syntactically identical to value patterns, since they are
 
 ```text
 matchPattern
-  : expression  capture?                     
+  : expression  capture?
   ;
 
 capture
@@ -2317,7 +2363,7 @@ Type patterns match on the data type of the matched value. Their syntax is as fo
 
 ```text
 matchPattern
-  : dataType capture?                     
+  : dataType capture?
   ;
 
 capture
@@ -2365,12 +2411,12 @@ Full list patterns match a list in its entirety. It is a sequence of patterns co
 
 ```text
 matchPattern
-  : '[' (matchPattern ',') * matchPattern ']' capture?                                     
+  : '[' (matchPattern ',') * matchPattern ']' capture?
   ;
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.
@@ -2417,7 +2463,7 @@ splatCapture
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 Each pattern in the pattern list must match the items of the matched value in order, after which follows a tail of zero or more items. The tail can be captured into a variable. The optional final capture contains the entire matched list.
@@ -2429,7 +2475,7 @@ The following function recursively checks whether the argument is a list of pair
 valid_list?: (list xs) ->
   match xs
     [] -> true
-    [string @key, @, @...tail], strings.starts_with?(key, "a") -> key_value_list?(tail)
+    [string @key, @, @...tail], strings.starts_with?(key, "a") -> valid_list?(tail)
     default -> false
 \e
 function
@@ -2453,7 +2499,7 @@ The syntax for tail list patterns is a list beginning with a splat expression re
 
 ```text
 matchPattern
-  : '[' splatCapture ',' (matchPattern ',') * matchPattern ']' capture?                    
+  : '[' splatCapture ',' (matchPattern ',') * matchPattern ']' capture?
   ;
 
 splatCapture
@@ -2462,7 +2508,7 @@ splatCapture
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 The initial splat capture matches zero or more items, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The ends of the pattern list and the checked value must coincide. The initial part of the list can be captured into a variable. The optional final capture contains the entire matched list.
@@ -2505,7 +2551,7 @@ splatCapture
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 The initial patterns must match the initial items in the list, the splat capture matches zero or more items following that, after which each pattern in the pattern list must match the items of the matched value in order until the end of the list. The middle part of the list can be captured into a variable. The optional final capture contains the entire matched list.
@@ -2545,7 +2591,7 @@ matchPattern
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the pattern keys, or contains more than the given pattern keys, it does not match. An optional final capture matches the entire matched dict.
@@ -2591,7 +2637,7 @@ splatCapture
 
 capture
   : '@' identifier?
-  ;  
+  ;
 ```
 
 All keys are specified as constants, and their values must match the supplied value patterns. If a dict is missing any of the keys, it does not match. Additional keys are allowed. The optional final capture matches the entire matched dict.
@@ -2610,7 +2656,7 @@ function
 true
 > person?({:name "Mark Twain", :born 1835-11-30T, :profession "author"})
 true
-> person?({:name "Mark Twain" :profession "author"})
+> person?({:name "Mark Twain", :profession "author"})
 false
 > person?({:x 1, :y 2})
 false
@@ -2752,7 +2798,7 @@ catchDeclaration
   :                               # catches discarding error
   | identifier                    # catches error
   | identifier ',' identifier     # catches error and trace
-  ;  
+  ;
 ```
 
 The whole try-catch block is an expression. It evaluates the expression in the try block. If that does not throw it becomes the result of the entire try-catch block. If evaluation of the try block throws, then the error value and trace values are bound to the catch block identifiers in order. The catch expression is evaluated and becomes the result of the try-catch block. If evaluation of the catch block throws, the error is propagated up.
@@ -2868,7 +2914,7 @@ import strings from "std"
 alias strings.length as len # references 'strings' in module scope
 
 # introduces 'utils' in module scope
-library utils {            
+library utils {
   # introduces 'f' in library scope
   f: (x) -> len(x)  # references 'len' from module scope
   # introduces 'g' in library scope
@@ -2893,7 +2939,7 @@ let {
      }
      a       # references inner a
 }
-a .. " / ".. b  
+a .. " / ".. b
 \e
 "outer a / inner a"
 ```
@@ -2906,8 +2952,8 @@ Library scope references must appear inside a library. They limit the resolution
 # libary-refs.tf
 import strings from "std"
 
-library utils {            
-  f: (x) -> strings.length(x)  
+library utils {
+  f: (x) -> strings.length(x)
   g: (x) -> let {
               f: (n) -> n+1
             }
@@ -2965,8 +3011,7 @@ function
 ERROR:
   code: INVALID_REFERENCE_TARGET
   message: Cannot reference LIBRARY. Not a value.
-  at: [interactive]:3:10
-  source: strings
+  ...
 ```
 
 #### Referencing non-value entities
@@ -3159,9 +3204,7 @@ NaN
 ERROR:
   code: CAST_ERROR
   message: Cannot negate type: string
-  at: [interactive]:3:10
-  source: -("foo")
-
+  ...
 ```
 
 #### Addition
@@ -3353,7 +3396,7 @@ Each operand must be either a long or a double. Any other types throw an error.
 
 If any operands are `nil`, the result is `nil`.
 
-If both operands are longs, an integer remainder calculation is performed, and the result is a long. `b` cannot be zero in this case. A division by zero throws an error.  
+If both operands are longs, an integer remainder calculation is performed, and the result is a long. `b` cannot be zero in this case. A division by zero throws an error.
 
 If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to `NaN` when dividing by zero.
 
@@ -3465,7 +3508,7 @@ Datetime values are equal only if their date, time, and timezone components matc
 > time.compare(1970-01-01T01:00:00+01:00, time.epoch)
 0
 # same points in time are not equal
-> 1970-01-01T01:00:00+01:00 == time.epoch       
+> 1970-01-01T01:00:00+01:00 == time.epoch
 false
 # going back to UTC offset of time.epoch, they are equal
 > 1970-01-01T00:00:00+00:00 == time.epoch
@@ -3528,8 +3571,7 @@ true
 ERROR:
   code: CAST_ERROR
   message: cannot compare types string and long
-  at: [interactive]:3:10
-  source: "1" < 1
+  ...
 
 ```
 

@@ -118,12 +118,11 @@ a {
 .homepage-head {
   margin-left: auto;
   margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 1em;
+  padding-right: 1em;
   max-width: 100%;
   width: 740px;
   line-height: normal;
-  padding 1em 10px;
   font-family: 'Lato';
   font-weight: normal;
   position: relative;
@@ -131,10 +130,16 @@ a {
 
 .homepage-head__phrase {
 
-  margin: 1.0em auto;
+  margin: 0 auto 1.0rem auto;
+  padding-top: 2em;
+  /* padding-left: 1em;
+  padding-right: 1em; */
+
+  /* margin: 0 auto 1.0rem auto; */
+  /* margin: 1.0em auto; */
   margin-left: auto;
-  line-height: 1.4em;
-  font-size: 1.3em;
+  line-height: 2.1em;
+  font-size: 1.9em;
   /*color: #fc3430;*/
 }
 

@@ -1,6 +1,6 @@
 # tweakflow
 
-[![Java 8+](https://img.shields.io/badge/java-8+-4c7e9f.svg)](http://java.oracle.com)
+[![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twineworks/tweakflow/badge.svg)](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow")
 [![Travis Build Status](https://travis-ci.org/twineworks/tweakflow.svg?branch=master)](https://travis-ci.org/twineworks/tweakflow)
@@ -36,7 +36,7 @@ Tweakflow supports documentation annotations as well as arbitrary meta-data on v
 Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
 ## Requirements
-Java 8 or later is required.
+Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
 
 ## Getting the jar
 Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow").

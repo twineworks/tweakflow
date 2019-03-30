@@ -1,5 +1,5 @@
 languageCode: "en-us"
-title: "tweakflow - an embeddable expression language for the JVM"
+title: "tweakflow - an expression language for the JVM"
 theme: "hugo-tweakflow"
 uglyurls: true
 relativeURLs: true
@@ -9,8 +9,8 @@ menu:
       URL: "/getting-started.html"
       Weight: -700
 
-    - Name: "Tools"
-      URL: "/tools.html"
+    - Name: "Reference"
+      URL: "/reference.html"
       Weight: -600
 
     - Name: "Embedding"
@@ -21,9 +21,9 @@ menu:
       URL: "/modules/std.html"
       Weight: -400
 
-    - Name: "Reference"
-      URL: "/reference.html"
-      Weight: -300
+    - Name: "Tools"
+      URL: "/tools.html"
+      Weight: -250
 
     - Name: "Support"
       URL: "/support.html"
@@ -37,4 +37,4 @@ params:
   # shortcode {{< gitRef >}}
   gitRef: "master"
   # shortcode {{< version >}}
-  version: "0.0.7"
+  version: "0.9.0"

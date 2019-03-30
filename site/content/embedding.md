@@ -3,7 +3,7 @@ title: Embedding Guide
 ---
 
 ## Requirements
-Tweakflow requires Java 8 or later.
+Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
 
 ## Getting tweakflow
 You can get the tweakflow jar from the [releases page](https://github.com/twineworks/tweakflow/releases) or from maven central:
@@ -57,7 +57,7 @@ Values list = Values.make(new ListValue()
 ```
 To create a function, first create a [UserFunctionValue](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java) which in turn consists of a [FunctionSignature](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java) and an implementation object implementing the  [UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java) tag interface as well as the arity interface matching the function's parameter count. See [Functions in Java](/reference.html#functions-in-java) for details, and the implementation of the standard library function [regex.matching](/modules/std.html#matching) for an [example](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62), which returns a function to the caller.
 
-The following snipped creates a function that takes one string parameter named `x` with default value `"hello"`, and returns a boolean.
+The following snippet creates a function that takes one string parameter named `x` with default value `"hello"`, and returns a boolean.
 ```java
 Values.make(
     new UserFunctionValue(
@@ -170,7 +170,7 @@ Runtime runtime = table.compile();
 
 See the class [test](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java) for examples  demonstrating usage and error handling.
 
-The [LazilyProvidedVars](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java) sample compiles a var table and provides only variables that are actually referenced. 
+The [LazilyProvidedVars](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java) sample compiles a var table and provides only variables that are actually referenced.
 
 There is a [demo application](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java) which uses a var table. It asks the user for some expressions and verifies them.
 
@@ -190,7 +190,7 @@ And the formula for calculating surface area?
 area: a*b
 Thanks. Checking answer...
 
-Congratulations. The formulas seem to be correct. 
+Congratulations. The formulas seem to be correct.
 ```
 
 ## Evaluating modules
@@ -326,7 +326,7 @@ The [CallingFunctions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >
 ## Error handling
 Tweakflow throws [LangExceptions](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java) whenever something goes wrong.
 
-There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics don't hold up. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax.
+There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics are invalid. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the [throw](/reference.html#throwing-errors) syntax.
 
 An exception holds an [error code](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java) and a message describing the error condition. You can get the value that was thrown by calling `toErrorValue`. Calling `getDigestMessage` returns a detailed error message that includes stack trace information. The exception usually contains a [SourceInfo](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java) object which gives the exact location of the error condition. Note however that source info may be `null`, in case the error happens in a context where no source information is available.
 
@@ -335,9 +335,9 @@ See these [test files](https://github.com/twineworks/tweakflow/blob/{{< gitRef >
 
 ## Limiting evaluation time
 
-The host application might wish to limit the evaluation time of user code. A good way to achieve this goal is to evaluate user code in a separate thread. The tweakflow interpreter reacts to thread interruption by throwing an exception. 
+The host application might wish to limit the evaluation time of user code. A good way to achieve this goal is to evaluate user code in a separate thread. The tweakflow interpreter reacts to thread interruption by throwing an exception.
 
-The [LimitingExecTime](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LimitingExecTime.java) sample evaluates a set of expressions, each taking exponentially longer to evaluate than the next. Each expression is evaluated within an enforced time limit, so at some point the evaluations start timing out, and the application interrupts the evaluation thread. 
+The [LimitingExecTime](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/examples/LimitingExecTime.java) sample evaluates a set of expressions, each taking exponentially longer to evaluate than the next. Each expression is evaluated within an enforced time limit, so at some point the evaluations start timing out, and the application interrupts the evaluation thread.
 
 
 

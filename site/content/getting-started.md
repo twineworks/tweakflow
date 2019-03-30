@@ -8,7 +8,7 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 ## Requirements
 
-Tweakflow requires Java 8 or later.
+Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
 
 ## Getting tweakflow
 
@@ -183,7 +183,7 @@ You can inspect what your session variable values are using `\i`.
 
 The REPL defines a special variable `$` that it maintains. It is defined as the most recently entered expression.
 
-## Variable interpolation in strings
+## String interpolation
 
 You can include the values of variables in double quoted strings using the `#{varname}` escape sequence.
 
@@ -195,6 +195,33 @@ You can include the values of variables in double quoted strings using the `#{va
 ```
 
 There are other escape sequences like `\n` for newlines and `\t` for tabs.
+
+## Defining functions
+
+Functions are values. You can assign them to variables and pass them around. In fact, many standard library functions accept functions as parameters, or return them as a result.
+
+Functions are written as `(parameter list) -> return value`. Let's define and call a simple function.
+
+```tweakflow
+> next: (x) -> x+1
+function
+> next(2)
+3
+```
+
+The [data.map](/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
+
+```tweakflow
+> data.map([1, 0, 3, -2], next)
+[2, 1, 4, -1]
+```
+
+You can write functions inline without naming them. Functions are just values, like strings and numbers.
+
+```tweakflow
+> data.map([1, 0, 3, -2], (x) -> x*x)
+[1, 0, 9, 4]
+```
 
 ## Local variables
 
@@ -255,48 +282,6 @@ ERROR: {
 }
 ```
 
-## Defining functions
-
-Functions are values. You can assign them to variables and pass them around. In fact, many standard library functions accept functions as parameters, or return them as a result.
-
-Functions are written as `(parameter list) -> return value`. Let's define and call a simple function.
-
-```tweakflow
-> next: (x) -> x+1
-function
-> next(2)
-3
-```
-
-The [data.map](/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
-
-```tweakflow
-> data.map([1, 0, 3, -2], next)
-[2, 1, 4, -1]
-```
-
-You can write functions inline without naming them. Functions are just values, like strings and numbers.
-
-```tweakflow
-> data.map([1, 0, 3, -2], (x) -> x*x)
-[1, 0, 9, 4]
-```
-
-Functions can also make functions that are parameterized to your specifications. The next example asks the standard library to give you a [formatter](/modules/std.html#formatter-1) function to convert numbers to strings.
-
-```tweakflow
-> f: math.formatter('0.00', rounding_mode: 'half_up')
-function
-> f(2)
-"2.00"
-> f(2.123)
-"2.12"
-> f: math.formatter('0.00', rounding_mode: 'up')
-function
-> f(2.123)
-"2.13"
-```
-
 ## Conditionals
 
 Tweakflow supports a standard `if` construct to perform conditional calculations.
@@ -334,186 +319,9 @@ function
 1
 ```
 
-## List comprehensions
-
-Tweakflow supports list comprehensions using `for` synax, allowing you to generate, transform, combine and filter lists. A list comprehension uses generators to define variables that loop over a list value. They nest if more than one generator is present. Generators have the following syntax: `identifier '<-' list_expression`.
-
-Create a list of coordinates from given axes:
-
-```tweakflow
-> \e
-for
-  x <- ["a", "b", "c"],
-  y <- [1, 2, 3, 4, 5, 6],
-  x .. y
-\e
-["a1", "a2", "a3", "a4", "a5", "a6", "b1", "b2", "b3", "b4", "b5", "b6", "c1", "c2", "c3", "c4", "c5", "c6"]
-```
-
-Variable definitions create helper variables. They are in scope for all subsequent expressions in the list comprehension.
-
-```tweakflow
-> \e
-for
-  x  <- data.range(1, 3),
-  y  <- data.range(x, 3),
-  p: x*y,
-  "#{x} * #{y} = #{p}"
-\e
-["1 * 1 = 1", "1 * 2 = 2", "1 * 3 = 3", "2 * 2 = 4", "2 * 3 = 6", "3 * 3 = 9"]
-```
-
-Free expressions act as filters. If they evaluate to boolean true, the current entry is part of the result list, if they evaluate to boolean false, the current element is omitted.
-
-Create a list of [pythagorean triples](https://en.wikipedia.org/wiki/Pythagorean_triple) trying sides up to the size of 15.
-
-```tweakflow
-> \e
-for
-  a <- data.range(1, 15),
-  b <- data.range(a, 15),
-  c: math.sqrt(a*a + b*b),  
-  (c as long) == c,         
-  [a, b, c as long]
-\e
-[[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [9, 12, 15]]
-```
-
-Above example loops over `a` going from 1 to 15, and `b` going from `a` to `15`, calculates `c`, and filters out any non-integer `c` values. If `c` happens to be an integer, the triple `[a, b, c]` is included in the result list.
-
-## Pattern matching
-
-Tweakflow supports matching on value, type and structure of an input value, additionally supporting a guard expression before a match is accepted. The `@` sign followed by a variable name is used to indicate a captured match scoped to the expression associated with a pattern.
-
-The next example matches on structure. The function `length` treats a list of the form `[x, y]`, and a dict of the form `{:x x, :y y}` as vectors and returns the vector's length. It returns `nil` for any other type of input.
-
-```tweakflow
-> \e
-length: (v) ->
-  match v
-    [@x, @y]       -> math.sqrt(x*x+y*y)
-    {:x @x, :y @y} -> math.sqrt(x*x+y*y)
-    default        -> nil
-\e
-function
-> length([3, 4])
-5.0
-> length({:x 3, :y 4})
-5.0
-> length("foo")
-nil
-> length([1, 2, 3])
-nil
-```
-
-## Throwing and catching errors
-
-Tweakflow supports throwing and catching errors within expressions. You can `throw` any value you like to represent an error, and if that happens within a `try/catch` block, the block evaluates to the `catch` expression.
-
-The function `ensure_even` accepts a long value `x`, and returns `x` if it is even. It throws an error otherwise. The REPL logs that an error has been thrown and mentions the thrown error as `value`.
-
-```tweakflow
-> \e
-ensure_even: (long x) ->
-  if x % 2 == 0
-    x
-  else
-    throw {
-      :message "x must be even, #{x} is not"
-    }
-\e
-function
-
-> ensure_even(3)
-ERROR:
-  ... snip ...
-  value: {
-    :message "x must be even, 3 is not"
-  }
-
-> ensure_even(2)
-2
-```
-
-The function `segregate` accepts a list of items and a function `f`, it returns a map providing a list of items for which `f(item)` threw, and a list of items for which it did not.
-
-```tweakflow
-> \e
-segregate: (xs, f) ->
-  let {
-    init: {:ok [], :errors []}
-  }
-  data.reduce(xs, init, (state, x) ->
-    try let {_: f(x)}
-      data.update(state, :ok, (ok) -> [...ok, x])
-    catch error
-      data.update(state, :errors, (errors) -> [...errors, x])
-  )
-\e
-function
-
-> segregate([1, 2, 3, 4, 5, 6, 7, 8], ensure_even)
-{
-  :errors [1, 3, 5, 7],
-  :ok [2, 4, 6, 8]
-}
-```
-
-## Debugging
-
-Sometimes users need help debugging an unexpected result. Tweakflow users can use the debug construct, to log the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen.
-
-Debug itself is an expression that evaluates to the value being debugged. Let's write a function that given a filename, returns the file's extension including the dot. It debugs the value of a temporary variable named `dot_position`.
-
-```tweakflow
-> \e
-extension: (name) ->
-  let {
-    dot_position: debug strings.last_index_of(name, '.')    
-  }
-  strings.substring(name, dot_position)
-\e
-function
-
-> extension("file.txt")
-4
-".txt"
-
-> extension("file")
--1
-ERROR:
-  code: INDEX_OUT_OF_BOUNDS
-  message: start must not be negative: -1
-  ... snip ...
-```
-
-You can also define a local variable that generates a more speaking output.
-
-```tweakflow
-> \e
-extension: (name) ->
-  let {
-    dot_position: strings.last_index_of(name, '.')
-    _debug: debug "DEBUG: last position of dot in #{name}: #{dot_position}"
-  }
-  strings.substring(name, dot_position)
-\e
-function
-
-> extension("file.txt")
-"DEBUG: last position of dot in file.txt: 4"
-".txt"
-
-> extension("file")
-"DEBUG: last position of dot in file: -1"
-ERROR:
-  code: INDEX_OUT_OF_BOUNDS
-  message: start must not be negative: -1
-  ... snip ...
-```
-
-Above debug output should help sorting out the function to account for the fact that the argument might not contain a dot.
 
 ## Conclusion
 
-You now have a good feeling for the nature of tweakflow expressions. If you would like to know more, check out the [embedding guide](/embedding.html) to get started. Check out the [language reference](/reference.html) for detailed information about the language. The language reference contains the detailed syntax information, and also describes the module and library system that you can use to allow users to organize any non-trivial calculations into libraries and reusable modules.
+You now have a good feeling for the nature of tweakflow expressions. Check out the [language reference](/reference.html) for more detail. It contains formal syntax information, describes advanced features like list comprehensions and pattern matching, and describes the library and module system.
+
+Check out the [embedding guide](/embedding.html) for details on how to include tweakflow in your JVM application.

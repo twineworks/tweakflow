@@ -1,10 +1,10 @@
 ---
-title: "tweakflow: an embeddable expression language for the JVM"
+title: "tweakflow: an expression language for the JVM"
 ---
 
 # Rationale
 
-Many applications can benefit from user input and configuration being based on information the application only knows at runtime. Applications can use tweakflow to expose runtime information, and allow users to define, reference and combine variables to express input values.
+Many applications benefit from user input and configuration based on information the application only knows at runtime. Applications can use tweakflow to expose runtime information, and allow users to define, reference and combine provided variables to express values.
 
 Tweakflow is designed to offer application users a formula-like notation for expressions that is familiar from spreadsheet applications. Tweakflow also supports user-defined functions, libraries, and modules, if more sophistication is needed.
 
@@ -13,7 +13,7 @@ Tweakflow keeps the application in control of the data exchange mechanism with u
 # Language features
 
 ## A simple computation model
-Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use formulas in your application too.
+Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use tweakflow.
 
 ## Dynamically typed
 Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
@@ -22,7 +22,7 @@ Tweakflow is a dynamically typed language. Data types include booleans, strings,
 All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.
 
 ## All functions are pure
-All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application must take care of all non-pure operations like file I/O.
+All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application handles all non-pure operations like file I/O.
 
 ## Automatic dependency tracking
 When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
