@@ -34,5 +34,29 @@ public class CoreTest {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
   }
 
+  @Test
+  public void id() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/id.tf");
+  }
+
+  @Test
+  public void inspect() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/inspect.tf");
+  }
+
+  @Test
+  public void nil() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/nil.tf");
+  }
+
+  @Test
+  public void present() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/present.tf");
+  }
+
+  @Test
+  public void hash() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/hash.tf");
+  }
 
 }

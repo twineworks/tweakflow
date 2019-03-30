@@ -9,17 +9,27 @@ library eval_spec {
       error[:code]
     )
     ==
-    "NATIVE_CODE_RESTRICTED"
+    "NATIVE_CODE_RESTRICTED";
 
   evaluates_constant:
-    core.eval("'hello world'") == "hello world"
+    core.eval("'hello world'") == "hello world";
 
   evaluates_plus_operator:
-    core.eval("1+2") == 3
+    core.eval("1+2") == 3;
 
   evaluates_references:
-    core.eval("let {a: 1; b: 2} [a, b]") == [1, 2]
+    core.eval("let {a: 1; b: 2} [a, b]") == [1, 2];
 
   evaluates_functions:
-    core.eval("let {f: (x) -> x+1} f(4)") == 5
+    core.eval("let {f: (x) -> x+1} f(4)") == 5;
+
+  produces_errors:
+    (
+      try
+        core.eval("x")
+      catch error
+        error[:code]
+    )
+    ==
+    "UNRESOLVED_REFERENCE";
 }
