@@ -93,21 +93,21 @@ public class FunctionSignature {
 
   public Value toValue() {
     if (value == null){
-      DictValue dict = new DictValue();
-      dict = dict.put("return_type", Values.make(returnType.name()));
+      TransientDictValue dict = new TransientDictValue();
+      dict.put("return_type", Values.make(returnType.name()));
       ListValue paramList = new ListValue();
 
       for (FunctionParameter parameter : parameterList) {
-        DictValue paramDict = new DictValue();
-        paramDict = paramDict.put("name", Values.make(parameter.getName()));
-        paramDict = paramDict.put("index", Values.make(parameter.getIndex()));
-        paramDict = paramDict.put("declared_type", Values.make(parameter.getDeclaredType().name()));
-        paramDict = paramDict.put("default_value", parameter.getDefaultValue());
-        paramList = paramList.append(Values.make(paramDict));
+        TransientDictValue paramDict = new TransientDictValue();
+        paramDict.put("name", Values.make(parameter.getName()));
+        paramDict.put("index", Values.make(parameter.getIndex()));
+        paramDict.put("declared_type", Values.make(parameter.getDeclaredType().name()));
+        paramDict.put("default_value", parameter.getDefaultValue());
+        paramList.append(Values.make(paramDict.persistent()));
       }
 
-      dict = dict.put("parameters", Values.make(paramList));
-      value = Values.make(dict);
+      dict.put("parameters", Values.make(paramList));
+      value = Values.make(dict.persistent());
     }
     return value;
   }

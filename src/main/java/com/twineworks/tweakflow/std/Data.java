@@ -882,7 +882,7 @@ public final class Data {
         if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
 
         boolean withKey = paramCount >= 2;
-        DictValue retVal = new DictValue();
+        TransientDictValue retVal = new TransientDictValue();
 
         DictValue map = xs.dict();
         if (withKey){
@@ -890,7 +890,7 @@ public final class Data {
           for (String key : map.keys()) {
             Value x = map.get(key);
             if (pcs.call(x, Values.make(key)).castTo(Types.BOOLEAN) == Values.TRUE){
-              retVal = retVal.put(key, x);
+              retVal.put(key, x);
             }
           }
         }
@@ -899,12 +899,12 @@ public final class Data {
           for (String key : map.keys()) {
             Value x = map.get(key);
             if (pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE){
-              retVal = retVal.put(key, x);
+              retVal.put(key, x);
             }
           }
         }
 
-        return Values.make(retVal);
+        return Values.make(retVal.persistent());
 
       }
       else {
@@ -1286,15 +1286,15 @@ public final class Data {
       else if (xs.isDict()){
 
         boolean withKey = f.function().getSignature().getParameterList().size() >= 2;
-        DictValue retVal = new DictValue();
-
+//        DictValue retVal = new DictValue();
+        TransientDictValue retVal = new TransientDictValue();
         DictValue map = xs.dict();
         if (withKey){
           Arity2CallSite fcs = context.createArity2CallSite(f);
           for (String key : map.keys()) {
             Value x = map.get(key);
             Value mapped = fcs.call(x, Values.make(key));
-            retVal = retVal.put(key, mapped);
+            retVal.put(key, mapped);
           }
 
         }
@@ -1304,12 +1304,12 @@ public final class Data {
             Arity1CallSite fcs = context.createArity1CallSite(f);
             Value x = map.get(key);
             Value mapped = fcs.call(x);
-            retVal = retVal.put(key, mapped);
+            retVal.put(key, mapped);
           }
 
         }
 
-        return Values.make(retVal);
+        return Values.make(retVal.persistent());
 
       }
       else {

@@ -24,13 +24,16 @@
 
 package com.twineworks.tweakflow.doc;
 
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.ComponentNode;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
-import com.twineworks.tweakflow.lang.values.*;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.values.ListValue;
+import com.twineworks.tweakflow.lang.values.TransientDictValue;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 import java.nio.file.Paths;
 
@@ -38,55 +41,55 @@ class Doc {
 
   private static Value makeMetaValue(ModuleNode node){
 
-    DictValue moduleDict = new DictValue();
-    moduleDict = moduleDict.put("node", Values.make("module"));
-    moduleDict = moduleDict.put("path", Values.make(node.getSourceInfo().getParseUnit().getPath()));
-    moduleDict = moduleDict.put("file", Values.make(Paths.get(node.getSourceInfo().getParseUnit().getPath()).getFileName().toString()));
-    moduleDict = moduleDict.put("doc", Interpreter.evaluateDocExpression(node));
-    moduleDict = moduleDict.put("meta", Interpreter.evaluateMetaExpression(node));
-    moduleDict = moduleDict.put("global", node.isGlobal() ? Values.TRUE : Values.FALSE);
+    TransientDictValue moduleDict = new TransientDictValue();
+    moduleDict.put("node", Values.make("module"));
+    moduleDict.put("path", Values.make(node.getSourceInfo().getParseUnit().getPath()));
+    moduleDict.put("file", Values.make(Paths.get(node.getSourceInfo().getParseUnit().getPath()).getFileName().toString()));
+    moduleDict.put("doc", Interpreter.evaluateDocExpression(node));
+    moduleDict.put("meta", Interpreter.evaluateMetaExpression(node));
+    moduleDict.put("global", node.isGlobal() ? Values.TRUE : Values.FALSE);
 
     if (node.isGlobal()){
-      moduleDict = moduleDict.put("global_name", Values.make(node.getGlobalName()));
+      moduleDict.put("global_name", Values.make(node.getGlobalName()));
     }
 
     ListValue components = new ListValue();
     for (ComponentNode componentNode : node.getComponents()) {
       components = components.append(makeMetaValue(componentNode));
     }
-    moduleDict = moduleDict.put("components", Values.make(components));
-    return Values.make(moduleDict);
+    moduleDict.put("components", Values.make(components));
+    return Values.make(moduleDict.persistent());
 
   }
 
   private static Value makeMetaValue(LibraryNode node){
 
-    DictValue libDict = new DictValue();
-    libDict = libDict.put("node", Values.make("library"));
-    libDict = libDict.put("doc", Interpreter.evaluateDocExpression(node));
-    libDict = libDict.put("meta", Interpreter.evaluateMetaExpression(node));
-    libDict = libDict.put("export", node.isExport() ? Values.TRUE : Values.FALSE);
-    libDict = libDict.put("name", Values.make(node.getSymbolName()));
+    TransientDictValue libDict = new TransientDictValue();
+    libDict.put("node", Values.make("library"));
+    libDict.put("doc", Interpreter.evaluateDocExpression(node));
+    libDict.put("meta", Interpreter.evaluateMetaExpression(node));
+    libDict.put("export", node.isExport() ? Values.TRUE : Values.FALSE);
+    libDict.put("name", Values.make(node.getSymbolName()));
 
     ListValue vars = new ListValue();
     for (VarDefNode varNode : node.getVars().getMap().values()) {
       vars = vars.append(makeMetaValue(varNode));
     }
-    libDict = libDict.put("vars", Values.make(vars));
-    return Values.make(libDict);
+    libDict.put("vars", Values.make(vars));
+    return Values.make(libDict.persistent());
 
   }
 
   private static Value makeMetaValue(VarDefNode node){
 
-    DictValue varDict = new DictValue();
-    varDict = varDict.put("node", Values.make("var"));
-    varDict = varDict.put("type", Values.make(node.getDeclaredType().name()));
-    varDict = varDict.put("doc", Interpreter.evaluateDocExpression(node));
-    varDict = varDict.put("meta", Interpreter.evaluateMetaExpression(node));
-    varDict = varDict.put("name", Values.make(node.getSymbolName()));
-    varDict = varDict.put("expression", Values.make(node.getValueExpression().getSourceInfo().getSourceCode()));
-    return Values.make(varDict);
+    TransientDictValue varDict = new TransientDictValue();
+    varDict.put("node", Values.make("var"));
+    varDict.put("type", Values.make(node.getDeclaredType().name()));
+    varDict.put("doc", Interpreter.evaluateDocExpression(node));
+    varDict.put("meta", Interpreter.evaluateMetaExpression(node));
+    varDict.put("name", Values.make(node.getSymbolName()));
+    varDict.put("expression", Values.make(node.getValueExpression().getSourceInfo().getSourceCode()));
+    return Values.make(varDict.persistent());
 
   }
 

@@ -24,15 +24,16 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.DictEntryNode;
 import com.twineworks.tweakflow.lang.ast.expressions.DictNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.values.TransientDictValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
@@ -63,7 +64,7 @@ final public class ConstantKeysDictOp implements ExpressionOp {
     int i=0;
     ArrayList<Map.Entry<String, Value>> nonConstEntriesList = new ArrayList<>(size);
     ArrayList<ExpressionOp> nonConstOpsList = new ArrayList<>(size);
-    DictValue c = new DictValue();
+    TransientDictValue c = new TransientDictValue();
 
     for (DictEntryNode entryNode : dictNode.getEntries()) {
       ExpressionNode keyExp = entryNode.getKey();
@@ -86,7 +87,7 @@ final public class ConstantKeysDictOp implements ExpressionOp {
 
       if (v != null){
         entries[i].setValue(v);
-        c = c.put(key, v);
+        c.put(key, v);
       }
       else{
         nonConstEntriesList.add(entries[i]);
@@ -98,7 +99,7 @@ final public class ConstantKeysDictOp implements ExpressionOp {
     nonConstSize = nonConst;
     nonConstEntries = nonConstEntriesList.toArray(new Map.Entry[0]);
     nonConstValueOps = nonConstOpsList.toArray(new ExpressionOp[0]);
-    constEntries = c;
+    constEntries = c.persistent();
     constSize = constEntries.size();
   }
 

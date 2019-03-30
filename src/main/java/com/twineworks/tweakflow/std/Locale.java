@@ -39,7 +39,7 @@ public final class Locale {
     @Override
     public Value call(UserCallContext context, Value localeForDisplayNames) {
 
-      DictValue dict = new DictValue();
+      TransientDictValue dict = new TransientDictValue();
 
       java.util.Locale locale;
       if (localeForDisplayNames == Values.NIL){
@@ -53,10 +53,10 @@ public final class Locale {
       for (java.util.Locale loc : availableLocales) {
         String tag = loc.toLanguageTag();
         String displayName = loc.getDisplayName(locale);
-        dict = dict.put(tag, Values.make(displayName));
+        dict.put(tag, Values.make(displayName));
       }
 
-      return Values.make(dict);
+      return Values.make(dict.persistent());
     }
   }
 
@@ -66,7 +66,7 @@ public final class Locale {
     @Override
     public Value call(UserCallContext context, Value lang) {
 
-      DictValue dict = new DictValue();
+      TransientDictValue dict = new TransientDictValue();
 
       java.util.Locale locale;
       if (lang == Values.NIL){
@@ -78,14 +78,14 @@ public final class Locale {
 
       DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(locale);
 
-      dict = dict.put("exponent_separator", Values.make(symbols.getExponentSeparator()));
-      dict = dict.put("grouping_separator", Values.make(symbols.getGroupingSeparator()));
-      dict = dict.put("decimal_separator", Values.make(symbols.getDecimalSeparator()));
-      dict = dict.put("nan", Values.make(symbols.getNaN()));
-      dict = dict.put("infinity", Values.make(symbols.getInfinity()));
-      dict = dict.put("minus_sign", Values.make(symbols.getMinusSign()));
-      dict = dict.put("zero_digit", Values.make(symbols.getZeroDigit()));
-      return Values.make(dict);
+      dict.put("exponent_separator", Values.make(symbols.getExponentSeparator()));
+      dict.put("grouping_separator", Values.make(symbols.getGroupingSeparator()));
+      dict.put("decimal_separator", Values.make(symbols.getDecimalSeparator()));
+      dict.put("nan", Values.make(symbols.getNaN()));
+      dict.put("infinity", Values.make(symbols.getInfinity()));
+      dict.put("minus_sign", Values.make(symbols.getMinusSign()));
+      dict.put("zero_digit", Values.make(symbols.getZeroDigit()));
+      return Values.make(dict.persistent());
     }
   }
 

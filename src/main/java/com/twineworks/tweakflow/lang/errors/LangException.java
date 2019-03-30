@@ -26,10 +26,7 @@ package com.twineworks.tweakflow.lang.errors;
 
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.ValueInspector;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -273,57 +270,57 @@ public class LangException extends RuntimeException {
     //    printStackTrace();
 
     // custom properties
-    DictValue dict = new DictValue();
+    TransientDictValue dict = new TransientDictValue();
     for (Map.Entry<String, Object> entry : properties.entrySet()) {
       try {
         if (entry.getValue() instanceof Value){
-          dict = dict.put(entry.getKey(), (Value) entry.getValue());
+          dict.put(entry.getKey(), (Value) entry.getValue());
         }
         else{
-          dict = dict.put(entry.getKey(), Values.make(entry.getValue()));
+          dict.put(entry.getKey(), Values.make(entry.getValue()));
         }
       }
       catch (RuntimeException ignore){
       }
     }
 
-    dict = dict.put("code", Values.make(code.getName()));
+    dict.put("code", Values.make(code.getName()));
 
     if (getMessage() != null){
-      dict = dict.put("message", Values.make(getMessage()));
+      dict.put("message", Values.make(getMessage()));
     }
     else{
-      dict = dict.put("message", Values.make(code.getName()));
+      dict.put("message", Values.make(code.getName()));
     }
 
     if (getSourceInfo() != null){
       String source = getSourceInfo().getSourceCode();
       if (source != null){
         if (source.length() < 250){
-          dict = dict.put("source", Values.make(source));
+          dict.put("source", Values.make(source));
         }
         else{
-          dict = dict.put("source", Values.make(source.substring(0, 250)));
+          dict.put("source", Values.make(source.substring(0, 250)));
         }
       }
       String line = getSourceInfo().getSourceCodeLine();
       if (line != null){
         if (line.length() < 250){
-          dict = dict.put("line", Values.make(line));
+          dict.put("line", Values.make(line));
         }
         else{
-          dict = dict.put("line", Values.make(line.substring(0, 250)));
+          dict.put("line", Values.make(line.substring(0, 250)));
         }
       }
-      dict = dict.put("at", Values.make(getSourceInfo().toString()));
+      dict.put("at", Values.make(getSourceInfo().toString()));
 
     }
 
     if (stack != null){
-      dict = dict.put("stack", stack.toValue());
+      dict.put("stack", stack.toValue());
     }
 
-    return Values.make(dict);
+    return Values.make(dict.persistent());
   }
 
   public Map<String, Object> getProperties() {

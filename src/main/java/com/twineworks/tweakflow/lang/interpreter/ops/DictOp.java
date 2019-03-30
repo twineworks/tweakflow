@@ -24,17 +24,17 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.expressions.DictEntryNode;
 import com.twineworks.tweakflow.lang.ast.expressions.DictNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.TransientDictValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ final public class DictOp implements ExpressionOp {
 
     List<DictEntryNode> entries = node.getEntries();
 
-    DictValue map = new DictValue();
+    TransientDictValue map = new TransientDictValue();
     for (DictEntryNode entryNode : entries) {
       ExpressionNode keyExp = entryNode.getKey();
       Value key = keyExp.getOp().eval(stack, context);
@@ -60,9 +60,9 @@ final public class DictOp implements ExpressionOp {
       ExpressionNode valueExp = entryNode.getValue();
       Value value = valueExp.getOp().eval(stack, context);
 
-      map = map.put(key.string(), value);
+      map.put(key.string(), value);
     }
-    return Values.make(map);
+    return Values.make(map.persistent());
 
   }
 
