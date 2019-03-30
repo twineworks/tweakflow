@@ -58,7 +58,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 
     <organization>
         <name>Twineworks GmbH</name>
@@ -280,7 +280,7 @@
                             <!--
                                Turning minimize on breaks all libraries that refer to classes indirectly.
                             -->
-                            <minimizeJar>true</minimizeJar>
+                            <minimizeJar>false</minimizeJar>
 
                             <relocations>
                                 <relocation>
