@@ -132,11 +132,12 @@ final public class ListValue implements Iterable<Value> {
   }
 
   public ListValue take(int n) {
-    return new ListValue(vec.slice(0, Math.min(n+1, vec.size())));
+    return new ListValue(vec.slice(0, Math.min(n, vec.size())));
   }
 
   public ListValue drop(int n) {
-    return new ListValue(vec.slice(Math.min(n+1, vec.size()), vec.size()));
+    if (n == 0) return this;
+    return new ListValue(vec.slice(Math.min(n, vec.size()), vec.size()));
   }
 
   public ListValue init() {
