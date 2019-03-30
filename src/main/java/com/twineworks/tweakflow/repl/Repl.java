@@ -200,11 +200,11 @@ public class Repl {
       }
       else if (trimInput.startsWith("\\")){
         // time command?
-        if (trimInput.startsWith("\\t ")){
+        if (trimInput.startsWith("\\t ") && !trimInput.matches("\\\\t\\s+--help")){
           measureEval = true;
           input = trimInput.substring(3);
         }
-        else if (trimInput.startsWith("\\time ")){
+        else if (trimInput.startsWith("\\time ") && !trimInput.matches("\\\\time\\s+--help")){
           measureEval = true;
           input = trimInput.substring(6);
         }
