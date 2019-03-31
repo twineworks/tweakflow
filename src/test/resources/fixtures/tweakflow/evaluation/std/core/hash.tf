@@ -32,7 +32,7 @@ library eval_spec {
     hash([]) === 1;
 
   of_empty_dict:
-    debug hash({}) === 0;
+    hash({}) === 0;
 
   of_equal_nums:
     hash(1) === hash(1.0);

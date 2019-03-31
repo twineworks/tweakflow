@@ -34,4 +34,14 @@ public class StringsTest {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/length.tf");
   }
 
+  @Test
+  public void concat() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/concat.tf");
+  }
+
+  @Test
+  public void substring() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/substring.tf");
+  }
+
 }

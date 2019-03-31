@@ -29,6 +29,7 @@ import com.twineworks.collections.shapemap.ShapeKey;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.ast.expressions.FunctionNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
@@ -55,7 +56,18 @@ public class TestHelper {
     List<String> paths = Collections.singletonList(path);
 
     try {
-      runtime = TweakFlow.compile(loadPath, paths);
+      runtime = TweakFlow.compile(loadPath, paths, new DebugHandler() {
+        // convenient logger
+        @Override
+        public void debug(Value v) {
+          if (v.isString()){
+            System.err.println(v.string());
+          }
+          else{
+            System.err.println(ValueInspector.inspect(v));
+          }
+        }
+      });
       runtime.evaluate();
     } catch (LangException e){
       e.printDigestMessageAndStackTrace();
