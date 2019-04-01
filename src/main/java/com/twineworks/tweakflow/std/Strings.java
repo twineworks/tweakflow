@@ -33,7 +33,6 @@ import java.text.Collator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -100,11 +99,44 @@ public final class Strings {
   // (string x) -> string
   public static final class trim implements UserFunction, Arity1UserFunction {
 
+    int firstNonWhitespace(String s){
+
+      int size = s.codePointCount(0, s.length());
+      for(int i=0;i<size;i++){
+        if (!Character.isWhitespace(s.codePointAt(i))){
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    int lastNonWhitespace(String s){
+
+      int size = s.codePointCount(0, s.length());
+      for(int i=size-1;i>=0;i--){
+        if (!Character.isWhitespace(s.codePointAt(i))){
+          return i;
+        }
+      }
+      return -1;
+    }
+
     @Override
     public Value call(UserCallContext context, Value x) {
       String str = x.string();
       if (str == null) return Values.NIL;
-      return Values.make(str.trim());
+      int first = firstNonWhitespace(str);
+      if (first == -1) return Values.EMPTY_STRING;
+
+      int last = lastNonWhitespace(str);
+      if (last == -1){
+        str = str.substring(str.offsetByCodePoints(0, first));
+      }
+      else{
+        str = str.substring(str.offsetByCodePoints(0, first), str.offsetByCodePoints(0, last+1));
+      }
+
+      return Values.make(str);
     }
   }
 
@@ -115,6 +147,56 @@ public final class Strings {
     public Value call(UserCallContext context, Value x) {
       if (x.isNil()) return Values.NIL;
       return x.castTo(Types.LIST);
+    }
+  }
+
+  // (string x) -> list
+  public static final class codePoints implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x.isNil()) return Values.NIL;
+      String s = x.string();
+      int[] ints = s.codePoints().toArray();
+      ListValue v = new ListValue();
+      for (int i : ints) {
+        v = v.append(Values.make(i));
+      }
+      return Values.make(v);
+
+    }
+  }
+
+  // (list xs) -> string
+  public static final class ofCodePoints implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs) {
+      if (xs.isNil()) return Values.NIL;
+      ListValue xsList = xs.list();
+      if (xsList.isEmpty()) return Values.EMPTY_STRING;
+
+      int[] codePoints = new int[xsList.size()];
+      int i = 0;
+      for (Value v : xsList) {
+
+        if (v == Values.NIL) {
+          throw new LangException(LangError.NIL_ERROR, "illegal nil code point at index: "+i);
+        }
+        if (!v.isLongNum()){
+          v = v.castTo(Types.LONG);
+        }
+        try {
+          int c = java.lang.Math.toIntExact(v.longNum());
+          codePoints[i] = c;
+        } catch (ArithmeticException e){
+          throw LangException.wrap(e, LangError.ILLEGAL_ARGUMENT);
+        }
+        i++;
+      }
+
+      return Values.make(new String(codePoints, 0, codePoints.length));
+
     }
   }
 
@@ -158,12 +240,17 @@ public final class Strings {
       if (x == Values.NIL) return Values.NIL;
       if (sep == Values.NIL) return Values.NIL;
 
-      ListValue ret = new ListValue();
-      StringTokenizer tokenizer = new StringTokenizer(x.string(), sep.string(), false);
-      while(tokenizer.hasMoreTokens()){
-        ret = ret.append(Values.make(tokenizer.nextToken()));
+      String str = x.string();
+      if (str.isEmpty()) return Values.makeList(Values.EMPTY_STRING);
+
+      if (!str.contains(sep.string())){
+        return Values.makeList(str);
       }
-      return Values.make(ret);
+
+      String separator = Pattern.quote(sep.string());
+
+      String[] parts = str.split(separator, -1);
+      return Values.makeList((Object[]) parts);
 
     }
   }
@@ -375,6 +462,49 @@ public final class Strings {
       }
 
       return Values.make(xStr.indexOf(subStr, idx));
+    }
+  }
+
+  // function charAt: (string x, long i) -> string
+  public static final class charAt implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value i) {
+
+      if (x == Values.NIL) return Values.NIL;
+      if (i == Values.NIL) return Values.NIL;
+
+      String xStr = x.string();
+      long xIdx = i.longNum();
+
+      int len = xStr.codePointCount(0, xStr.length());
+      if (xIdx < 0 || xIdx >= len) return Values.NIL;
+      int idx = (int) xIdx;
+      int from = xStr.offsetByCodePoints(0, idx);
+      int to = xStr.offsetByCodePoints(0, idx+1);
+      return Values.make(xStr.substring(from, to));
+
+    }
+  }
+
+  // function code_point_at: (string x, long i) -> long
+  public static final class codePointAt implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value i) {
+
+      if (x == Values.NIL) return Values.NIL;
+      if (i == Values.NIL) return Values.NIL;
+
+      String xStr = x.string();
+      long xIdx = i.longNum();
+
+      int len = xStr.codePointCount(0, xStr.length());
+      if (xIdx < 0 || xIdx >= len) return Values.NIL;
+      int idx = (int) xIdx;
+      int from = xStr.offsetByCodePoints(0, idx);
+      return Values.make(xStr.codePointAt(from));
+
     }
   }
 

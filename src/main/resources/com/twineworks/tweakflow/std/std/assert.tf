@@ -40,9 +40,9 @@ library assert {
                    .. at,
                    false
     catch error
-      expect(error, f)
+      expect(error, f, _stack_offset: 5)
 
-  function expect: (x, f) ->
+  function expect: (x, f, _stack_offset=3) ->
     let {
       result: f(x);
       semantic: result[0];
@@ -52,7 +52,7 @@ library assert {
     if !success
       let {
         # get caller information from forced trace
-        call_loc: try throw "err" catch _, trace trace[:stack, 3];
+        call_loc: try throw "err" catch _, trace trace[:stack, _stack_offset];
         at: util.linkable_trace_line(call_loc);
       }
       debug
@@ -84,16 +84,18 @@ export library to {
     ["to not be", x !== expected, expected]
 
   be_nil: () -> (x) ->
-    ["to be nil", x === nil, nil]
+    ["to be nil", x === nil, "x === nil"]
 
   not_be_nil: () -> (x) ->
-    ["to not be nil", x !== nil, nil]
+    ["to not be nil", x !== nil, "x !=== nil"]
 
   be_true: () -> (x) ->
-    ["to be true", x === true, true]
+    ["to be true", x === true, "x === true"]
 
   be_false: () -> (x) ->
-    ["to be false", x === false, false]
+    ["to be false", x === false, "x === false"]
 
+  be_function: () -> (x) ->
+    ["to be function", x is function, "x is function"]
 
 }

@@ -318,7 +318,7 @@ doc
 
 Returns a string where each occurrence of `search` in `x` is replaced with `replace`.
 The replacement happens from left to right,
-so `search.replace('ooo', 'oo', 'g')` results in `'go'` rather than `'og'`.
+so `strings.replace('ooo', 'oo', 'g')` results in `'go'` rather than `'og'`.
 
 Returns `nil` if any argument is `nil`.
 
@@ -489,7 +489,7 @@ doc
 ~~~
 `(string x) -> list`
 
-Returns a list of unicode codepoints that make up given string `x`.
+Returns a list of characters that make up given string `x`.
 
 Returns `nil` if `x` is `nil`.
 
@@ -511,9 +511,64 @@ nil
 
 doc
 ~~~
+`(string x) -> list`
+
+Returns a list of unicode code point numbers that make up given string `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> strings.code_points("foo")
+[102, 111, 111]
+
+> strings.code_points("你好")
+[20320, 22909]
+
+> strings.code_points("")
+[]
+
+> strings.code_points(nil)
+nil
+```
+~~~
+  function code_points: (string x) -> list via {:class "com.twineworks.tweakflow.std.Strings$codePoints"};
+
+
+doc
+~~~
+`(list xs) -> string`
+
+Returns string consisting of given `xs`. The `xs` are are longs representing unicode code point numbers.
+Any non-long code point numbers in `xs` are cast to long.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if any of the `xs` cannot be cast to long, or the value does not represent a
+valid code point.
+
+```tweakflow
+> strings.of_code_points([102, 111, 111])
+"foo"
+
+> strings.of_code_points([0x4F60, 0x597D, 0x01D11E])
+"你好𝄞"
+
+> strings.of_code_points([])
+""
+
+> strings.of_code_points(nil)
+nil
+```
+~~~
+  function of_code_points: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$ofCodePoints"};
+
+
+doc
+~~~
 `(string x, string s=" ") -> list`
 
 Returns a list of strings obtained by splitting `x` using separator `s`.
+The separator `s` is treated like a regular string, it is not a regular expression.
 
 Returns `nil` if `x` is `nil` or `s` is `nil`.
 
@@ -523,6 +578,12 @@ Returns `nil` if `x` is `nil` or `s` is `nil`.
 
 > strings.split("a,b,c", ",")
 ["a", "b", "c"]
+
+> strings.split("foo", ",")
+["foo"]
+
+> strings.split(",foo,,bar,", ",")
+["", "foo", "", "bar", ""]
 ```
 ~~~
 
@@ -535,6 +596,8 @@ doc
 Returns `true` if `x` starts with the substring `init`.\
 Returns `false` otherwise.
 
+Returns `true` for any non-nil `x` if `init` is the empty string.
+
 Returns `nil` if `x` is `nil` or `init` is `nil`.
 
 ```tweakflow
@@ -543,6 +606,9 @@ true
 
 > strings.starts_with?("yellow", "blue")
 false
+
+> strings.starts_with?("yellow", "")
+true
 
 > strings.starts_with?(nil, "blue")
 nil
@@ -561,6 +627,8 @@ doc
 Returns `true` if `x` ends with the substring `tail`.\
 Returns `false` otherwise.
 
+Returns `true` for any non-nil `x` if `tail` is the empty string.
+
 Returns `nil` if `x` is `nil` or `tail` is `nil`.
 
 ```tweakflow
@@ -569,6 +637,9 @@ true
 
 > strings.ends_with?("yellow", "high")
 false
+
+> strings.ends_with?("yellow", "")
+true
 
 > strings.ends_with?(nil, "blue")
 nil
@@ -646,8 +717,53 @@ nil
 
   function last_index_of: (string x, string sub, long end=nil) -> long via {:class "com.twineworks.tweakflow.std.Strings$lastIndexOf"};
 
-}
+doc
+~~~
+`(string x, long i) -> string`
 
+Returns `i`th character in string `x`.
+
+Returns `nil` if `x` is `nil`, `i` is `nil`, or `i` is out of bounds: `i<0`, `i>=length(x)`.
+
+```tweakflow
+> strings.char_at("elementary", 0)
+"e"
+
+> strings.char_at("你好", 1)
+"好"
+
+> strings.char_at(nil, 0)
+nil
+```
+~~~
+
+  function char_at: (string x, long i) -> string via {:class "com.twineworks.tweakflow.std.Strings$charAt"};
+
+
+doc
+~~~
+`(string x, long i) -> long`
+
+Returns `i`th character code point in string `x`.
+
+Returns `nil` if `x` is `nil`, `i` is `nil`, or `i` is out of bounds: `i<0`, `i>=length(x)`.
+
+```tweakflow
+> strings.code_point_at("abc", 0)
+97 # "a"
+
+> strings.code_point_at("你好", 0)
+"a"
+
+> strings.code_point_at(nil, 0)
+nil
+```
+~~~
+
+  function code_point_at: (string x, long i) -> long via {:class "com.twineworks.tweakflow.std.Strings$codePointAt"};
+
+
+}
 
 doc
 ~~~

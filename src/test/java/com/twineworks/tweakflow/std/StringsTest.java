@@ -44,4 +44,84 @@ public class StringsTest {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/substring.tf");
   }
 
+  @Test
+  public void replace() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/replace.tf");
+  }
+
+  @Test
+  public void join() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/join.tf");
+  }
+
+  @Test
+  public void trim() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/trim.tf");
+  }
+
+  @Test
+  public void lower_case() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/lower_case.tf");
+  }
+
+  @Test
+  public void upper_case() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/upper_case.tf");
+  }
+
+  @Test
+  public void chars() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/chars.tf");
+  }
+
+  @Test
+  public void split() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/split.tf");
+  }
+
+  @Test
+  public void comparator() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/comparator.tf");
+  }
+
+  @Test
+  public void starts_with() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/starts_with.tf");
+  }
+
+  @Test
+  public void ends_with() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/ends_with.tf");
+  }
+
+  @Test
+  public void index_of() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/index_of.tf");
+  }
+
+  @Test
+  public void last_index_of() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/last_index_of.tf");
+  }
+
+  @Test
+  public void char_at() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/char_at.tf");
+  }
+
+  @Test
+  public void code_point_at() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/code_point_at.tf");
+  }
+
+  @Test
+  public void code_points() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/code_points.tf");
+  }
+
+  @Test
+  public void of_code_points() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/strings/of_code_points.tf");
+  }
+
 }

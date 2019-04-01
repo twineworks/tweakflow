@@ -119,11 +119,15 @@
 <li><a href="#upper-case">upper_case</a></li>
 <li><a href="#comparator">comparator</a></li>
 <li><a href="#chars">chars</a></li>
+<li><a href="#code-points">code_points</a></li>
+<li><a href="#of-code-points">of_code_points</a></li>
 <li><a href="#split">split</a></li>
 <li><a href="#starts-with">starts_with?</a></li>
 <li><a href="#ends-with">ends_with?</a></li>
 <li><a href="#index-of">index_of</a></li>
 <li><a href="#last-index-of">last_index_of</a></li>
+<li><a href="#char-at">char_at</a></li>
+<li><a href="#code-point-at">code_point_at</a></li>
 </ul></li>
 <li><a href="#library-regex">library regex</a>
 <ul>
@@ -541,7 +545,7 @@ ERROR:
 
 <p>Returns a string where each occurrence of <code>search</code> in <code>x</code> is replaced with <code>replace</code>.
 The replacement happens from left to right,
-so <code>search.replace('ooo', 'oo', 'g')</code> results in <code>'go'</code> rather than <code>'og'</code>.</p>
+so <code>strings.replace('ooo', 'oo', 'g')</code> results in <code>'go'</code> rather than <code>'og'</code>.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -688,7 +692,7 @@ function
 
 <p><code>(string x) -&gt; list</code></p>
 
-<p>Returns a list of unicode codepoints that make up given string <code>x</code>.</p>
+<p>Returns a list of characters that make up given string <code>x</code>.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
@@ -705,11 +709,58 @@ function
 nil
 </code></pre>
 
+<h3 id="code-points">code_points</h3>
+
+<p><code>(string x) -&gt; list</code></p>
+
+<p>Returns a list of unicode code point numbers that make up given string <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.code_points(&quot;foo&quot;)
+[102, 111, 111]
+
+&gt; strings.code_points(&quot;你好&quot;)
+[20320, 22909]
+
+&gt; strings.code_points(&quot;&quot;)
+[]
+
+&gt; strings.code_points(nil)
+nil
+</code></pre>
+
+<h3 id="of-code-points">of_code_points</h3>
+
+<p><code>(list xs) -&gt; string</code></p>
+
+<p>Returns string consisting of given <code>xs</code>. The <code>xs</code> are are longs representing unicode code point numbers.
+Any non-long code point numbers in <code>xs</code> are cast to long.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
+
+<p>Throws an error if any of the <code>xs</code> cannot be cast to long, or the value does not represent a
+valid code point.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.of_code_points([102, 111, 111])
+&quot;foo&quot;
+
+&gt; strings.of_code_points([0x4F60, 0x597D, 0x01D11E])
+&quot;你好𝄞&quot;
+
+&gt; strings.of_code_points([])
+&quot;&quot;
+
+&gt; strings.of_code_points(nil)
+nil
+</code></pre>
+
 <h3 id="split">split</h3>
 
 <p><code>(string x, string s=&quot; &quot;) -&gt; list</code></p>
 
-<p>Returns a list of strings obtained by splitting <code>x</code> using separator <code>s</code>.</p>
+<p>Returns a list of strings obtained by splitting <code>x</code> using separator <code>s</code>.
+The separator <code>s</code> is treated like a regular string, it is not a regular expression.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>s</code> is <code>nil</code>.</p>
 
@@ -718,6 +769,12 @@ nil
 
 &gt; strings.split(&quot;a,b,c&quot;, &quot;,&quot;)
 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+
+&gt; strings.split(&quot;foo&quot;, &quot;,&quot;)
+[&quot;foo&quot;]
+
+&gt; strings.split(&quot;,foo,,bar,&quot;, &quot;,&quot;)
+[&quot;&quot;, &quot;foo&quot;, &quot;&quot;, &quot;bar&quot;, &quot;&quot;]
 </code></pre>
 
 <h3 id="starts-with">starts_with?</h3>
@@ -727,6 +784,8 @@ nil
 <p>Returns <code>true</code> if <code>x</code> starts with the substring <code>init</code>.<br />
 Returns <code>false</code> otherwise.</p>
 
+<p>Returns <code>true</code> for any non-nil <code>x</code> if <code>init</code> is the empty string.</p>
+
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>init</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; strings.starts_with?(&quot;yellow&quot;, &quot;yell&quot;)
@@ -734,6 +793,9 @@ true
 
 &gt; strings.starts_with?(&quot;yellow&quot;, &quot;blue&quot;)
 false
+
+&gt; strings.starts_with?(&quot;yellow&quot;, &quot;&quot;)
+true
 
 &gt; strings.starts_with?(nil, &quot;blue&quot;)
 nil
@@ -749,6 +811,8 @@ nil
 <p>Returns <code>true</code> if <code>x</code> ends with the substring <code>tail</code>.<br />
 Returns <code>false</code> otherwise.</p>
 
+<p>Returns <code>true</code> for any non-nil <code>x</code> if <code>tail</code> is the empty string.</p>
+
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>tail</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; strings.ends_with?(&quot;yellow&quot;, &quot;low&quot;)
@@ -756,6 +820,9 @@ true
 
 &gt; strings.ends_with?(&quot;yellow&quot;, &quot;high&quot;)
 false
+
+&gt; strings.ends_with?(&quot;yellow&quot;, &quot;&quot;)
+true
 
 &gt; strings.ends_with?(nil, &quot;blue&quot;)
 nil
@@ -819,6 +886,42 @@ If <code>end</code> is <code>nil</code>, it is interpreted as the last index of 
 nil
 
 &gt; strings.last_index_of(nil, &quot;e&quot;)
+nil
+</code></pre>
+
+<h3 id="char-at">char_at</h3>
+
+<p><code>(string x, long i) -&gt; string</code></p>
+
+<p>Returns <code>i</code>th character in string <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>, <code>i</code> is <code>nil</code>, or <code>i</code> is out of bounds: <code>i&lt;0</code>, <code>i&gt;=length(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.char_at(&quot;elementary&quot;, 0)
+&quot;e&quot;
+
+&gt; strings.char_at(&quot;你好&quot;, 1)
+&quot;好&quot;
+
+&gt; strings.char_at(nil, 0)
+nil
+</code></pre>
+
+<h3 id="code-point-at">code_point_at</h3>
+
+<p><code>(string x, long i) -&gt; long</code></p>
+
+<p>Returns <code>i</code>th character code point in string <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>, <code>i</code> is <code>nil</code>, or <code>i</code> is out of bounds: <code>i&lt;0</code>, <code>i&gt;=length(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.code_point_at(&quot;abc&quot;, 0)
+97 # &quot;a&quot;
+
+&gt; strings.code_point_at(&quot;你好&quot;, 0)
+&quot;a&quot;
+
+&gt; strings.code_point_at(nil, 0)
 nil
 </code></pre>
 

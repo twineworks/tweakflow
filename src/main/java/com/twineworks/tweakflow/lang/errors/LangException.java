@@ -125,7 +125,7 @@ public class LangException extends RuntimeException {
 
     // wrap otherwise
     if (code == null){
-      return new LangException(reason, LangError.UNKNOWN_ERROR, stack);
+      return new LangException(reason, LangError.defaultFor(reason), stack);
     }
     else{
       return new LangException(reason, code, stack);
@@ -148,7 +148,7 @@ public class LangException extends RuntimeException {
 
     // wrap otherwise
     if (code == null){
-      return new LangException(reason, LangError.UNKNOWN_ERROR);
+      return new LangException(reason, LangError.defaultFor(reason));
     }
     else{
       return new LangException(reason, code);

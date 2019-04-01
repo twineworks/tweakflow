@@ -59,4 +59,10 @@ public enum LangError implements ErrorCode {
     return this.name();
   }
 
+  public static LangError defaultFor(Throwable err){
+
+    if (err instanceof IllegalArgumentException) return ILLEGAL_ARGUMENT;
+
+    return UNKNOWN_ERROR;
+  }
 }

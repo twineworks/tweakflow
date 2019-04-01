@@ -41,6 +41,9 @@ library substring_spec {
   respects_code_point_2:
     expect(substring("你好", 1, 2), to.be("好"));
 
+  respects_code_point_beyond_bmp:
+    expect(substring("你好 𝄞 你好", 1, 6), to.be("好 𝄞 你"));
+
   with_start_sub_zero:
     expect_error(
       () -> substring("foo", -1),
