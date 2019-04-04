@@ -331,7 +331,7 @@ The formal syntax of a list literal is as follows:
 ```text
 listLiteral
    : '['']'
-   | '[' (expression|splat) (',' (expression|splat))* ']'
+   | '[' (expression|splat) (',' (expression|splat))* ','? ']'
    ;
 
 splat
@@ -392,7 +392,7 @@ The formal syntax of a dict literal is as follows:
 ```
 dictLiteral
    : '{' '}'
-   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  '}'
+   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  ','? '}'
    ;
 
 splat

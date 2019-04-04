@@ -298,12 +298,12 @@ dateTimeLiteral
 
 listLiteral
    : '['']'
-   | '[' (expression|splat) (',' (expression|splat))* ']'
+   | '[' (expression|splat) (',' (expression|splat))* ','? ']'
    ;
 
 dictLiteral
    : '{' '}'
-   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  '}'
+   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))* ','? '}'
    ;
 
 

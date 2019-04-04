@@ -624,7 +624,7 @@ Hello World
 
 <pre><code class="language-text">listLiteral
    : '['']'
-   | '[' (expression|splat) (',' (expression|splat))* ']'
+   | '[' (expression|splat) (',' (expression|splat))* ','? ']'
    ;
 
 splat
@@ -682,7 +682,7 @@ function
 
 <pre><code>dictLiteral
    : '{' '}'
-   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  '}'
+   | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  ','? '}'
    ;
 
 splat
