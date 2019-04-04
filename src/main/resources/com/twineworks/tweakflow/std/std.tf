@@ -379,9 +379,6 @@ nil
 ~~~
   function join: (list xs, string s="") -> string via {:class "com.twineworks.tweakflow.std.Strings$join"};
 
-#  function lower_case: (string x) -> string         via {:class "com.twineworks.tweakflow.std.Strings$lowerCase"}
-#  function upper_case: (string x) -> string         via {:class "com.twineworks.tweakflow.std.Strings$upperCase"}
-
 doc
 ~~~
 `(string x) -> string`
@@ -777,7 +774,7 @@ doc
 ~~~
 `(string pattern) -> function`
 
-Returns a predicate function `f` accepting one string argument, that checks if the argument matches the given `pattern` completely.
+Returns a predicate function `f` accepting one string argument `x` that checks if the argument matches the given `pattern` completely.
 Calling `f` with a `nil` argument returns `nil`.
 
 Throws an error if `pattern` is `nil` or not a valid regular expression.
@@ -804,11 +801,13 @@ doc
 ~~~
 `(string pattern) -> function`
 
-Returns a function `f` accepting one string argument and returning a list of captured groups in the pattern.
+Returns a function `f` accepting one string argument `x` and returning a list of captured groups in the pattern.
 
-In case `pattern` matches the argument entirely, index `0` contains the input string, and subsequent indexes contain
-the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
+In case `pattern` matches the argument entirely, index `0` contains the input string, and subsequent indexes contain the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
+
 If a group is optional, and is not matched by the input string, its value in the list is `nil`.
+
+If a capturing group is inside a quantifier, only the last matched string is captured.
 
 In case `pattern` does not match the argument entirely, `f` returns an empty list.
 
@@ -841,11 +840,9 @@ doc
 ~~~
 `(string pattern) -> function`
 
-Returns a function `f` accepting one string argument `x` and returning a list of captured groups for each successive match
-of the pattern in `x`.
+Returns a function `f` accepting one string argument `x` and returning a list of captured groups for each successive match of the pattern in `x`.
 
-Each match generates a list with the following properties: Index `0` contains the matched input string, and subsequent indexes contain
-the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
+Each match generates a list with the following properties: Index `0` contains the matched input string, and subsequent indexes contain the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
 If a group is optional, and is not matched by the input string, its value in the list is `nil`.
 
 In case `pattern` does not match `x`, `f` returns an empty list.

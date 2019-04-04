@@ -100,7 +100,7 @@ public final class Regex {
       Matcher matcher = pattern.matcher(str);
       ListValue groups = new ListValue();
 
-      if (matcher.find() && matcher.end() == str.length()){
+      if (matcher.find() && matcher.start() == 0 && matcher.end() == str.length()){
         int groupCount = matcher.groupCount();
 
         for (int i=0; i<=groupCount; i++){

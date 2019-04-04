@@ -934,7 +934,7 @@ Pattern syntax is that of the <a href="https://docs.oracle.com/javase/8/docs/api
 
 <p><code>(string pattern) -&gt; function</code></p>
 
-<p>Returns a predicate function <code>f</code> accepting one string argument, that checks if the argument matches the given <code>pattern</code> completely.
+<p>Returns a predicate function <code>f</code> accepting one string argument <code>x</code> that checks if the argument matches the given <code>pattern</code> completely.
 Calling <code>f</code> with a <code>nil</code> argument returns <code>nil</code>.</p>
 
 <p>Throws an error if <code>pattern</code> is <code>nil</code> or not a valid regular expression.</p>
@@ -956,11 +956,13 @@ nil
 
 <p><code>(string pattern) -&gt; function</code></p>
 
-<p>Returns a function <code>f</code> accepting one string argument and returning a list of captured groups in the pattern.</p>
+<p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list of captured groups in the pattern.</p>
 
-<p>In case <code>pattern</code> matches the argument entirely, index <code>0</code> contains the input string, and subsequent indexes contain
-the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
-If a group is optional, and is not matched by the input string, its value in the list is <code>nil</code>.</p>
+<p>In case <code>pattern</code> matches the argument entirely, index <code>0</code> contains the input string, and subsequent indexes contain the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.</p>
+
+<p>If a group is optional, and is not matched by the input string, its value in the list is <code>nil</code>.</p>
+
+<p>If a capturing group is inside a quantifier, only the last matched string is captured.</p>
 
 <p>In case <code>pattern</code> does not match the argument entirely, <code>f</code> returns an empty list.</p>
 
@@ -989,11 +991,9 @@ nil
 
 <p><code>(string pattern) -&gt; function</code></p>
 
-<p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list of captured groups for each successive match
-of the pattern in <code>x</code>.</p>
+<p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list of captured groups for each successive match of the pattern in <code>x</code>.</p>
 
-<p>Each match generates a list with the following properties: Index <code>0</code> contains the matched input string, and subsequent indexes contain
-the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
+<p>Each match generates a list with the following properties: Index <code>0</code> contains the matched input string, and subsequent indexes contain the matched groups. Group indexes correspond to the sequence of opening group parentheses of capturing groups in the pattern.
 If a group is optional, and is not matched by the input string, its value in the list is <code>nil</code>.</p>
 
 <p>In case <code>pattern</code> does not match <code>x</code>, <code>f</code> returns an empty list.</p>

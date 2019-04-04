@@ -35,6 +35,16 @@ public class RegexTest {
   }
 
   @Test
+  public void scanning() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/scanning.tf");
+  }
+
+  @Test
+  public void splitting() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/splitting.tf");
+  }
+
+  @Test
   public void capturing() throws Exception {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/capturing.tf");
   }
@@ -42,6 +52,11 @@ public class RegexTest {
   @Test
   public void replacing() throws Exception {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/replacing.tf");
+  }
+
+  @Test
+  public void quote() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/quote.tf");
   }
 
 }
