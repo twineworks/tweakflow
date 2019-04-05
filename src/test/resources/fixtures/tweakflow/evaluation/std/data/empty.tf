@@ -4,7 +4,7 @@ import expect, expect_error, to from "std/assert.tf";
 alias data.empty? as empty?;
 
 
-library size_spec {
+library empty_spec {
 
   empty_list:
     expect(empty?([]), to.be_true());
