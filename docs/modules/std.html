@@ -1471,7 +1471,7 @@ nil
 
 <p><code>(xs) -&gt; list</code></p>
 
-<p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of keys present in the structure.</p>
+<p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of keys present in the structure. If <code>xs</code> is a list present indexes are returned in order. If <code>xs</code> is a dict, the order of returned keys is undefined.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
@@ -1546,7 +1546,7 @@ true
 
 <p><code>(xs) -&gt; list</code></p>
 
-<p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of values present in the structure.</p>
+<p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of values present in the structure. Returns <code>xs</code> if <code>xs</code> is a list . If <code>xs</code> is a dict, the order of returned values is undefined.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 

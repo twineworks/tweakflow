@@ -1376,7 +1376,7 @@ doc
 ~~~
 `(xs) -> list `
 
-Given a `list` or `dict` of `xs`, returns a list of keys present in the structure.
+Given a `list` or `dict` of `xs`, returns a list of keys present in the structure. If `xs` is a list present indexes are returned in order. If `xs` is a dict, the order of returned keys is undefined.
 
 Returns `nil` if `xs` is `nil`.
 
@@ -1459,7 +1459,7 @@ doc
 ~~~
 `(xs) -> list `
 
-Given a `list` or `dict` of `xs`, returns a list of values present in the structure.
+Given a `list` or `dict` of `xs`, returns a list of values present in the structure. Returns `xs` if `xs` is a list . If `xs` is a dict, the order of returned values is undefined.
 
 Returns `nil` if `xs` is `nil`.
 
