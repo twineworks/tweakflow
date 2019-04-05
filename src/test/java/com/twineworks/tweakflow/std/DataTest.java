@@ -35,6 +35,11 @@ public class DataTest {
   }
 
   @Test
+  public void empty() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/empty.tf");
+  }
+
+  @Test
   public void get_in() throws Exception {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
   }
