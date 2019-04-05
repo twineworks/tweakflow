@@ -1,9 +1,38 @@
-import core, fun, data, regex, strings from 'std.tf';
+import core, fun, data, regex, strings, math, time from 'std.tf';
 
 export assert.expect as expect;
 export assert.expect_error as expect_error;
 
+alias data.size as size;
+alias data.delete as delete;
+alias data.reduce_until as reduce_until;
+alias core.hash as hash;
+
 library util {
+
+  permutations?: (list xs, list ys) ->
+    size(xs) === size(ys) &&
+    let {
+      state: {:xs xs, :ys ys};
+      check: reduce_until(
+        xs,
+        state,
+        (state) -> state[:abort],
+        (state, x, i) ->
+          let {
+            idx: data.index_of(state[:ys], x);
+            abort: idx === -1;
+          }
+          if abort
+            {:abort true}
+          else
+            {
+              :xs delete(state[:xs], i),
+              :ys delete(state[:ys], idx)
+            }
+      );
+    }
+    !check[:abort] && check[:ys] === [];
 
   path_sep: "/";
 
@@ -69,33 +98,40 @@ library assert {
 export library to {
 
   have_code: (expected) -> (err) ->
-    ["to have code", err[:code] == expected, expected]
+    ["to have code", err[:code] == expected, expected];
 
   equal: (expected) -> (x) ->
-    ["to equal", (x == expected), expected]
+    ["to equal", (x == expected), expected];
 
   not_equal: (expected) -> (x) ->
-    ["to not equal", (x != expected), expected]
+    ["to not equal", (x != expected), expected];
 
   be: (expected) -> (x) ->
-    ["to be", x === expected, expected]
+    ["to be", x === expected, expected];
+
+  be_permutation_of: (list expected) -> (x) ->
+    [
+      "to be permutation of",
+      x is list && util.permutations?(expected, x),
+      expected
+    ];
 
   not_be: (expected) -> (x) ->
-    ["to not be", x !== expected, expected]
+    ["to not be", x !== expected, expected];
 
   be_nil: () -> (x) ->
-    ["to be nil", x === nil, "x === nil"]
+    ["to be nil", x === nil, "x === nil"];
 
   not_be_nil: () -> (x) ->
-    ["to not be nil", x !== nil, "x !=== nil"]
+    ["to not be nil", x !== nil, "x !=== nil"];
 
   be_true: () -> (x) ->
-    ["to be true", x === true, "x === true"]
+    ["to be true", x === true, "x === true"];
 
   be_false: () -> (x) ->
-    ["to be false", x === false, "x === false"]
+    ["to be false", x === false, "x === false"];
 
   be_function: () -> (x) ->
-    ["to be function", x is function, "x is function"]
+    ["to be function", x is function, "x is function"];
 
 }

@@ -16,7 +16,13 @@ library keys_spec {
     expect(keys({}), to.be([]));
 
   simple_dict:
-    expect(keys({:a 1, :b 2}), to.be([:a, :b]));
+    expect(keys({:a 1, :b 2}), to.be_permutation_of([:a, :b]));
+
+  medium_dict:
+    expect(
+      keys({:alpha 1, :beta 2, :gamma 3, :delta 4, :epsilon 5, :eta 6, :theta 7}),
+      to.be_permutation_of([:alpha, :beta, :gamma, :delta, :epsilon, :eta, :theta])
+    );
 
   of_nil:
     expect(keys(nil), to.be_nil());
