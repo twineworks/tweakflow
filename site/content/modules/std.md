@@ -1332,7 +1332,7 @@ ERROR:
 
 `(dict xs) -> list`
 
-Returns a `list` where each element is a `dict`. For each key `k` in `xs` there is a correpsonding element `{:key k, :value xs[k]}` in the `list`.
+Returns a `list` where each element is a `dict`. For each key `k` in `xs` there is a correpsonding element `{:key k, :value xs[k]}` in the `list`. The order of items in the `list` is undefined.
 
 Returns `nil` if `xs` is `nil`.
 
