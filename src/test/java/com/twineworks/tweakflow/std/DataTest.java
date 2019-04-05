@@ -68,6 +68,11 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> update_in() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/update_in.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> filter() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
   }
