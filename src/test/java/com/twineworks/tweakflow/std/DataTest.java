@@ -30,6 +30,11 @@ import org.junit.Test;
 public class DataTest {
 
   @Test
+  public void size() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/size.tf");
+  }
+
+  @Test
   public void get_in() throws Exception {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
   }
