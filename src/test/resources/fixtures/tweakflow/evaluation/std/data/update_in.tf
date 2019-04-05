@@ -27,6 +27,9 @@ library update_in_spec {
   extend_list:
     expect(update_in([1,2,3], [5], (x) -> if x == nil "a" else "wrong"), to.be([1, 2, 3, nil, nil, "a"]));
 
+  nest_list:
+    expect(update_in([1,2,3], [5, 2], (x) -> if x == nil "a" else "wrong"), to.be([1, 2, 3, nil, nil, [nil, nil, "a"]]));
+
   nested_extend_list:
     expect(update_in([[1,2,3]], [0, 5], (x) -> if x == nil "a" else "wrong"), to.be([[1, 2, 3, nil, nil, "a"]]));
 
@@ -47,6 +50,9 @@ library update_in_spec {
 
   extend_dict:
     expect(update_in({:a "foo", :b "bar"}, [:c], (x) -> if x == nil "baz" else "wrong"), to.be({:a "foo", :b "bar", :c "baz"}));
+
+  nest_dict:
+    expect(update_in({:a "foo", :b "bar"}, [:c, :d], (x) -> if x == nil "baz" else "wrong"), to.be({:a "foo", :b "bar", :c {:d "baz"}}));
 
   nested_extend_dict:
     expect(

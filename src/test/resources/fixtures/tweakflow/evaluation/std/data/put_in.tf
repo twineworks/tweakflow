@@ -27,6 +27,9 @@ library put_in_spec {
   extend_list:
     expect(put_in([1,2,3], [5], "a"), to.be([1, 2, 3, nil, nil, "a"]));
 
+  nest_list:
+    expect(put_in([1,2,3], [5, 2], "a"), to.be([1, 2, 3, nil, nil, [nil, nil, "a"]]));
+
   nested_extend_list:
     expect(put_in([[1,2,3]], [0, 5], "a"), to.be([[1, 2, 3, nil, nil, "a"]]));
 
@@ -47,6 +50,9 @@ library put_in_spec {
 
   extend_dict:
     expect(put_in({:a "foo", :b "bar"}, [:c], "baz"), to.be({:a "foo", :b "bar", :c "baz"}));
+
+  nest_dict:
+    expect(put_in({:a "foo", :b "bar"}, [:c, :d], "baz"), to.be({:a "foo", :b "bar", :c {:d "baz"}}));
 
   nested_extend_dict:
     expect(
