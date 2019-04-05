@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.operators;
 
 import com.twineworks.tweakflow.TestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class OperatorTest {
 

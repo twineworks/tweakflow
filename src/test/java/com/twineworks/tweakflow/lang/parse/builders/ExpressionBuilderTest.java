@@ -29,7 +29,7 @@ import com.twineworks.tweakflow.lang.ast.expressions.NilNode;
 import com.twineworks.tweakflow.lang.ast.expressions.StringNode;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -25,63 +25,71 @@
 package com.twineworks.tweakflow.std;
 
 import com.twineworks.tweakflow.TestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 public class DataTest {
 
   @Test
-  public void size() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/size.tf");
+  public Collection<DynamicTest> size() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/size.tf");
   }
 
   @Test
-  public void empty() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/empty.tf");
+  public Collection<DynamicTest> empty() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/empty.tf");
   }
 
   @Test
-  public void get_in() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
+  public Collection<DynamicTest> get_in() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/get_in.tf");
   }
 
   @Test
-  public void get() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/get.tf");
+  public Collection<DynamicTest> get() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/get.tf");
   }
 
   @Test
-  public void put() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/put.tf");
+  public Collection<DynamicTest> put() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/put.tf");
   }
 
   @Test
-  public void filter() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
+  public Collection<DynamicTest> put_in() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/put_in.tf");
   }
 
   @Test
-  public void map() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/map.tf");
+  public Collection<DynamicTest> filter() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
   }
 
   @Test
-  public void has() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
+  public Collection<DynamicTest> map() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/map.tf");
   }
 
   @Test
-  public void sort() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/sort.tf");
+  public Collection<DynamicTest> has() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
   }
 
   @Test
-  public void reduce() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/reduce.tf");
+  public Collection<DynamicTest> sort() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/sort.tf");
   }
 
   @Test
-  public void inspect() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/inspect.tf");
+  public Collection<DynamicTest> reduce() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/reduce.tf");
+  }
+
+  @Test
+  public Collection<DynamicTest> inspect() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/inspect.tf");
   }
 
 

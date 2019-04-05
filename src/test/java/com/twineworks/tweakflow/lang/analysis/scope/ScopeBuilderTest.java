@@ -37,7 +37,7 @@ import com.twineworks.tweakflow.lang.scope.Scope;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 import com.twineworks.tweakflow.lang.scope.SymbolTarget;
 import com.twineworks.tweakflow.lang.types.Types;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 

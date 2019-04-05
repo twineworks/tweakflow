@@ -45,7 +45,7 @@ import com.twineworks.tweakflow.lang.values.FunctionValue;
 import com.twineworks.tweakflow.lang.values.StandardFunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;

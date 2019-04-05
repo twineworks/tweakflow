@@ -25,38 +25,41 @@
 package com.twineworks.tweakflow.std;
 
 import com.twineworks.tweakflow.TestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+
+import java.util.Collection;
 
 public class CoreTest {
 
-  @Test
-  public void eval() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
+  @TestFactory
+  public Collection<DynamicTest> eval() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/eval.tf");
   }
 
-  @Test
-  public void id() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/id.tf");
+  @TestFactory
+  public Collection<DynamicTest> id() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/id.tf");
   }
 
-  @Test
-  public void inspect() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/inspect.tf");
+  @TestFactory
+  public Collection<DynamicTest> inspect() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/inspect.tf");
   }
 
-  @Test
-  public void nil() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/nil.tf");
+  @TestFactory
+  public Collection<DynamicTest> nil() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/nil.tf");
   }
 
-  @Test
-  public void present() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/present.tf");
+  @TestFactory
+  public Collection<DynamicTest> present() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/present.tf");
   }
 
-  @Test
-  public void hash() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/core/hash.tf");
+  @TestFactory
+  public Collection<DynamicTest> hash() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/core/hash.tf");
   }
 
 }

@@ -26,7 +26,7 @@ package com.twineworks.tweakflow.lang.types;
 
 import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

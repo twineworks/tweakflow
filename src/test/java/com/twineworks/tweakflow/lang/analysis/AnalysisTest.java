@@ -32,7 +32,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 import com.twineworks.tweakflow.lang.types.Types;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 

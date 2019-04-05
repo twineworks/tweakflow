@@ -28,7 +28,8 @@ import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,47 +47,61 @@ public class FunctionTypeTest {
     assertThat(Types.FUNCTION.canAttemptCastFrom(Types.ANY)).isTrue();
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_boolean() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.BOOLEAN)).isFalse();
-    Types.FUNCTION.castFrom(Values.TRUE);
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.BOOLEAN)).isFalse();
+      Types.FUNCTION.castFrom(Values.TRUE);
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_double() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DOUBLE)).isFalse();
-    Types.FUNCTION.castFrom(Values.make(0.0d));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DOUBLE)).isFalse();
+      Types.FUNCTION.castFrom(Values.make(0.0d));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_list() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.LIST)).isFalse();
-    Types.FUNCTION.castFrom(Values.makeList());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.LIST)).isFalse();
+      Types.FUNCTION.castFrom(Values.makeList());
+    });
 
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_long() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.LONG)).isFalse();
-    Types.FUNCTION.castFrom(Values.make(1L));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.LONG)).isFalse();
+      Types.FUNCTION.castFrom(Values.make(1L));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_datetime() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DATETIME)).isFalse();
-    Types.FUNCTION.castFrom(Values.EPOCH);
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DATETIME)).isFalse();
+      Types.FUNCTION.castFrom(Values.EPOCH);
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_dict() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DICT)).isFalse();
-    Types.FUNCTION.castFrom(Values.makeDict());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.DICT)).isFalse();
+      Types.FUNCTION.castFrom(Values.makeDict());
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_string() throws Exception {
-    assertThat(Types.FUNCTION.canAttemptCastFrom(Types.STRING)).isFalse();
-    Types.FUNCTION.castFrom(Values.make(""));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.FUNCTION.canAttemptCastFrom(Types.STRING)).isFalse();
+      Types.FUNCTION.castFrom(Values.make(""));
+    });
   }
 
   @Test

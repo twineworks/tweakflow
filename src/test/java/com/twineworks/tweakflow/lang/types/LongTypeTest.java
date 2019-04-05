@@ -28,7 +28,8 @@ import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,35 +68,42 @@ public class LongTypeTest {
     assertThat(Types.LONG.castFrom(Values.make("0"))).isEqualTo(Values.make(0L));
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_function() throws Exception {
-    assertThat(Types.LONG.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.LONG.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.LONG.canAttemptCastFrom(Types.FUNCTION)).isFalse();
+      Types.LONG.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_list() throws Exception {
-    assertThat(Types.LONG.canAttemptCastFrom(Types.LIST)).isFalse();
-    Types.LONG.castFrom(Values.makeList());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.LONG.canAttemptCastFrom(Types.LIST)).isFalse();
+      Types.LONG.castFrom(Values.makeList());
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_dict() throws Exception {
-    assertThat(Types.LONG.canAttemptCastFrom(Types.DICT)).isFalse();
-    Types.LONG.castFrom(Values.makeDict());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.LONG.canAttemptCastFrom(Types.DICT)).isFalse();
+      Types.LONG.castFrom(Values.makeDict());
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_datetime() throws Exception {
-    assertThat(Types.LONG.canAttemptCastFrom(Types.DATETIME)).isFalse();
-    Types.LONG.castFrom(Values.EPOCH);
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.LONG.canAttemptCastFrom(Types.DATETIME)).isFalse();
+      Types.LONG.castFrom(Values.EPOCH);
+    });
   }
 
   @Test
   public void casts_from_void() throws Exception {
     assertThat(Types.LONG.canAttemptCastFrom(Types.VOID)).isTrue();
     assertThat(Types.LONG.castFrom(Values.NIL)).isSameAs(Values.NIL);
-
   }  
   
 }

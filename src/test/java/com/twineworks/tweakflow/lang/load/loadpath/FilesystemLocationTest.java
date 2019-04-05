@@ -30,7 +30,8 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.assertj.core.api.StrictAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
@@ -167,10 +168,12 @@ public class FilesystemLocationTest {
     assertThat(loc.getParseUnit("../on_path/module.tf")).isNotNull();
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void confined_unit_refuses_off_path_file() throws Exception {
-    FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
-    loc.getParseUnit("../off_path/module.tf");
+    Assertions.assertThrows(LangException.class, () -> {
+      FilesystemLocation loc = new FilesystemLocation.Builder(Paths.get(assetDir)).build();
+      loc.getParseUnit("../off_path/module.tf");
+    });
   }
 
   @Test

@@ -29,7 +29,8 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
@@ -111,10 +112,12 @@ public class ResourceLocationTest {
     assertThat(loc.getParseUnit("../on_path/module.tf")).isNotNull();
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void refuses_unit_off_path_file() throws Exception {
-    ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
-    loc.getParseUnit("../off_path/module.tf");
+    Assertions.assertThrows(LangException.class, () -> {
+      ResourceLocation loc = new ResourceLocation.Builder().path(Paths.get(assetDir)).build();
+      loc.getParseUnit("../off_path/module.tf");
+    });
   }
 
   @Test

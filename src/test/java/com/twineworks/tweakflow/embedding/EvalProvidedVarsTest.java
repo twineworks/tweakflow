@@ -31,7 +31,8 @@ import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -205,36 +206,39 @@ public class EvalProvidedVarsTest {
 
   }
 
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void cannot_update_regular_var() throws Exception {
-    String module = "library lib {" +
-        "long a: 0 " +
-        "}";
+    Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+      String module = "library lib {" +
+          "long a: 0 " +
+          "}";
 
-    Runtime.Module m = compileModule(module);
-    m.evaluate();
+      Runtime.Module m = compileModule(module);
+      m.evaluate();
 
-    Runtime.Var a = m.getLibrary("lib").getVar("a");
-    assertThat(a.getValue()).isEqualTo(Values.make(0L));
+      Runtime.Var a = m.getLibrary("lib").getVar("a");
+      assertThat(a.getValue()).isEqualTo(Values.make(0L));
 
-    // this throws
-    a.update(Values.make(1L));
+      // this throws
+      a.update(Values.make(1L));
+    });
 
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void cannot_update_var_to_null() throws Exception {
-    String module = "library lib {" +
-        "provided a;" +
-        "}";
+    Assertions.assertThrows(NullPointerException.class, () -> {
+      String module = "library lib {" +
+          "provided a;" +
+          "}";
 
-    Runtime.Module m = compileModule(module);
-    m.evaluate();
+      Runtime.Module m = compileModule(module);
+      m.evaluate();
 
-    Runtime.Var a = m.getLibrary("lib").getVar("a");
+      Runtime.Var a = m.getLibrary("lib").getVar("a");
 
-    // this throws
-    a.update(null);
-
+      // this throws
+      a.update(null);
+    });
   }
 }

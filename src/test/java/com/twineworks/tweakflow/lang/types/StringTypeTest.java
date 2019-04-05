@@ -28,7 +28,8 @@ import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,22 +68,28 @@ public class StringTypeTest {
     assertThat(Types.STRING.castFrom(Values.make(0.0d))).isEqualTo(Values.make("0.0"));
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_function() throws Exception {
-    assertThat(Types.STRING.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.STRING.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.STRING.canAttemptCastFrom(Types.FUNCTION)).isFalse();
+      Types.STRING.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_list() throws Exception {
-    assertThat(Types.STRING.canAttemptCastFrom(Types.LIST)).isFalse();
-    Types.STRING.castFrom(Values.makeList());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.STRING.canAttemptCastFrom(Types.LIST)).isFalse();
+      Types.STRING.castFrom(Values.makeList());
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_dict() throws Exception {
-    assertThat(Types.STRING.canAttemptCastFrom(Types.DICT)).isFalse();
-    Types.STRING.castFrom(Values.makeDict());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.STRING.canAttemptCastFrom(Types.DICT)).isFalse();
+      Types.STRING.castFrom(Values.makeDict());
+    });
   }
 
   public void casts_from_datetime() throws Exception {

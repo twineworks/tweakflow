@@ -28,7 +28,8 @@ import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,10 +42,12 @@ public class DateTimeTypeTest {
     assertThat(Types.DATETIME.castFrom(x)).isSameAs(x);
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_double() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.DOUBLE)).isFalse();
-    Types.DATETIME.castFrom(Values.make(1.0d));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.DOUBLE)).isFalse();
+      Types.DATETIME.castFrom(Values.make(1.0d));
+    });
   }
 
   @Test
@@ -52,41 +55,49 @@ public class DateTimeTypeTest {
     assertThat(Types.DATETIME.canAttemptCastFrom(Types.ANY)).isTrue();
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void dannot_cast_from_boolean() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.BOOLEAN)).isFalse();
-    Types.DATETIME.castFrom(Values.TRUE);
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.BOOLEAN)).isFalse();
+      Types.DATETIME.castFrom(Values.TRUE);
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_string() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.STRING)).isFalse();
-    Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02"));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.STRING)).isFalse();
+      Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02"));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_function() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.FUNCTION)).isFalse();
-    Types.DATETIME.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.FUNCTION)).isFalse();
+      Types.DATETIME.castFrom(TestHelper.makeConstantFunctionStub(Values.TRUE));
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_list() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.LIST)).isFalse();
-    Types.DATETIME.castFrom(Values.makeList());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.LIST)).isFalse();
+      Types.DATETIME.castFrom(Values.makeList());
+    });
   }
 
-  @Test(expected = LangException.class)
+  @Test
   public void cannot_cast_from_dict() throws Exception {
-    assertThat(Types.DATETIME.canAttemptCastFrom(Types.DICT)).isFalse();
-    Types.DATETIME.castFrom(Values.makeDict());
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.DICT)).isFalse();
+      Types.DATETIME.castFrom(Values.makeDict());
+    });
   }
 
   @Test
   public void casts_from_void() throws Exception {
     assertThat(Types.DATETIME.canAttemptCastFrom(Types.VOID)).isTrue();
     assertThat(Types.DATETIME.castFrom(Values.NIL)).isSameAs(Values.NIL);
-
-  }  
-  
+  }
 }

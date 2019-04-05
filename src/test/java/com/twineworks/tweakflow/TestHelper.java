@@ -36,16 +36,15 @@ import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.*;
+import org.junit.jupiter.api.DynamicTest;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Fail.fail;
 
 public class TestHelper {
 
-  public static void assertSpecModule(String path){
+  public static Collection<DynamicTest> dynamicTestsSpecModule(String path) {
 
     LoadPath loadPath = new LoadPath.Builder()
         .addStdLocation()
@@ -60,16 +59,68 @@ public class TestHelper {
         // convenient logger
         @Override
         public void debug(Value v) {
-          if (v.isString()){
+          if (v.isString()) {
             System.err.println(v.string());
-          }
-          else{
+          } else {
             System.err.println(ValueInspector.inspect(v));
           }
         }
       });
       runtime.evaluate();
-    } catch (LangException e){
+    } catch (LangException e) {
+      e.printDigestMessageAndStackTrace();
+      throw e;
+    }
+
+    // find all libraries that have names ending in _spec, and ensure all their cells are boolean true
+    MemorySpace moduleSpace = runtime.getRuntimeSet().getGlobalMemorySpace().getUnitSpace().getCells().gets(path);
+
+    ArrayList<DynamicTest> tests = new ArrayList<>();
+
+    // library space is present
+    ConstShapeMap<Cell> libCells = moduleSpace.getCells();
+    for (ShapeKey s : libCells.keySet()) {
+      if (!s.sym.endsWith("_spec")) continue;
+      Cell lib = libCells.get(s);
+      ConstShapeMap<Cell> vars = lib.getCells();
+      for (ShapeKey varName : vars.keySet()) {
+        Value value = vars.get(varName).getValue();
+        tests.add(DynamicTest.dynamicTest(s + "." + varName, () -> {
+          if (value != Values.TRUE) {
+            fail(s + "." + varName + " is:\n" + ValueInspector.inspect(value) + "\nexpected:\ntrue");
+          }
+        }));
+      }
+    }
+
+    return tests;
+
+  }
+
+  public static void assertSpecModule(String path) {
+
+    LoadPath loadPath = new LoadPath.Builder()
+        .addStdLocation()
+        .add(new ResourceLocation.Builder().build())
+        .build();
+
+    Runtime runtime;
+    List<String> paths = Collections.singletonList(path);
+
+    try {
+      runtime = TweakFlow.compile(loadPath, paths, new DebugHandler() {
+        // convenient logger
+        @Override
+        public void debug(Value v) {
+          if (v.isString()) {
+            System.err.println(v.string());
+          } else {
+            System.err.println(ValueInspector.inspect(v));
+          }
+        }
+      });
+      runtime.evaluate();
+    } catch (LangException e) {
       e.printDigestMessageAndStackTrace();
       throw e;
     }
@@ -85,8 +136,8 @@ public class TestHelper {
       ConstShapeMap<Cell> vars = lib.getCells();
       for (ShapeKey varName : vars.keySet()) {
         Value value = vars.get(varName).getValue();
-        if (value != Values.TRUE){
-          fail(s+"."+varName+" is:\n"+ ValueInspector.inspect(value)+"\nexpected:\ntrue");
+        if (value != Values.TRUE) {
+          fail(s + "." + varName + " is:\n" + ValueInspector.inspect(value) + "\nexpected:\ntrue");
         }
       }
 

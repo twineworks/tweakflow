@@ -25,38 +25,41 @@
 package com.twineworks.tweakflow.std;
 
 import com.twineworks.tweakflow.TestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+
+import java.util.Collection;
 
 public class RegexTest {
 
-  @Test
-  public void matching() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/matching.tf");
+  @TestFactory
+  public Collection<DynamicTest> matching() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/matching.tf");
   }
 
-  @Test
-  public void scanning() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/scanning.tf");
+  @TestFactory
+  public Collection<DynamicTest> scanning() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/scanning.tf");
   }
 
-  @Test
-  public void splitting() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/splitting.tf");
+  @TestFactory
+  public Collection<DynamicTest> splitting() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/splitting.tf");
   }
 
-  @Test
-  public void capturing() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/capturing.tf");
+  @TestFactory
+  public Collection<DynamicTest> capturing() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/capturing.tf");
   }
 
-  @Test
-  public void replacing() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/replacing.tf");
+  @TestFactory
+  public Collection<DynamicTest> replacing() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/replacing.tf");
   }
 
-  @Test
-  public void quote() throws Exception {
-    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/regex/quote.tf");
+  @TestFactory
+  public Collection<DynamicTest> quote() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/regex/quote.tf");
   }
 
 }
