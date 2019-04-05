@@ -78,6 +78,11 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> has() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> filter() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
   }
@@ -85,11 +90,6 @@ public class DataTest {
   @TestFactory
   public Collection<DynamicTest> map() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/map.tf");
-  }
-
-  @TestFactory
-  public Collection<DynamicTest> has() throws Exception {
-    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/has.tf");
   }
 
   @TestFactory

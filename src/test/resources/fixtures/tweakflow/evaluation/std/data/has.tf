@@ -1,25 +1,48 @@
-import store from "./../../data.tf"
-import * as std from "std.tf"
+import data from "std";
+import expect, expect_error, to from "std/assert.tf";
 
-alias store.inventory as inv
-alias std.data.has? as has?
+alias data.has? as has?;
 
-library books {
-  moby_dick: inv[:book, 2]
-}
 
-library has_key_spec {
+library has?_spec {
 
-  found_key:
-    has?(books.moby_dick, :author) == true
+  missing_list:
+    expect(has?([0, nil, 3], 3), to.be_false());
 
-  missing_key:
-    has?(books.moby_dick, :missing) == false
+  simple_list:
+    expect(has?([1,nil,3], 0), to.be_true());
 
-  looking_for_nil:
-    has?({:a "foo"}, nil) == false
+  nil_entry_list:
+    expect(has?([1,nil,3], 1), to.be_true());
 
-  looking_in_nil:
-    has?(nil, :key) == nil
+  missing_dict:
+    expect(has?({:a 1, :b 2}, :c), to.be_false());
 
-}
+  simple_dict:
+    expect(has?({:a 1, :b 2}, :b), to.be_true());
+
+  nil_entry_dict:
+    expect(has?({:a 1, :b nil}, :b), to.be_true());
+
+  of_nil:
+    expect(has?(nil, :a), to.be_nil());
+
+  invalid_xs_type:
+    expect_error(
+      () -> has?("foo", 0),
+      to.have_code("ILLEGAL_ARGUMENT")
+    );
+
+  invalid_key_type_list:
+    expect_error(
+      () -> has?([], "foo"),
+      to.have_code("CAST_ERROR")
+    );
+
+  invalid_key_type_dict:
+    expect_error(
+      () -> has?({}, []),
+      to.have_code("CAST_ERROR")
+    );
+
+  }
