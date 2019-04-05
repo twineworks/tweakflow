@@ -50,6 +50,11 @@ public class DataTest {
   }
 
   @Test
+  public void put() throws Exception {
+    TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/put.tf");
+  }
+
+  @Test
   public void filter() throws Exception {
     TestHelper.assertSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
   }
