@@ -1149,7 +1149,7 @@ public final class Data {
         ListValue list = xs.list();
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE;
           if (satisfied) return Values.TRUE;
         }
       }
@@ -1158,7 +1158,7 @@ public final class Data {
         ListValue list = xs.list();
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE;
           if (satisfied) return Values.TRUE;
         }
       }
@@ -1188,7 +1188,7 @@ public final class Data {
         ListValue list = xs.list();
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE;
           if (!satisfied) return Values.FALSE;
         }
       }
@@ -1198,7 +1198,7 @@ public final class Data {
         ListValue list = xs.list();
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE;
           if (!satisfied) return Values.FALSE;
         }
       }
@@ -1228,7 +1228,7 @@ public final class Data {
 
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE;
           if (satisfied) return Values.FALSE;
         }
       }
@@ -1238,7 +1238,7 @@ public final class Data {
 
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
           Value x = list.get(i);
-          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN).bool();
+          Boolean satisfied = pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE;
           if (satisfied) return Values.FALSE;
         }
       }
@@ -1474,14 +1474,14 @@ public final class Data {
       if (p.isNil()) return Values.NIL;
       if (xs.isNil()) return Values.NIL;
 
-      Value ret = init;
-      Arity1CallSite pcs = context.createArity1CallSite(p);
-
       if (!xs.isList() && !xs.isDict()){
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "reduce_until is not defined for type "+xs.type().name());
       }
 
-      boolean done = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+      Value ret = init;
+      Arity1CallSite pcs = context.createArity1CallSite(p);
+
+      boolean done = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
       if (done) return ret;
 
       if (xs.isList()){
@@ -1494,7 +1494,7 @@ public final class Data {
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
             Value x = list.get(i);
             ret = fcs.call(ret, x, Values.make(i));
-            done = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            done = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (done) return ret;
           }
         }
@@ -1503,7 +1503,7 @@ public final class Data {
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
             Value x = list.get(i);
             ret = fcs.call(ret, x);
-            done = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            done = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (done) return ret;
           }
         }
@@ -1521,7 +1521,7 @@ public final class Data {
           for (String key : map.keys()) {
             Value x = map.get(key);
             ret = fcs.call(ret, x, Values.make(key));
-            done = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            done = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (done) return ret;
           }
         }
@@ -1529,7 +1529,7 @@ public final class Data {
           Arity2CallSite fcs = context.createArity2CallSite(f);
           for (Value x : map.values()) {
             ret = fcs.call(ret, x);
-            done = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            done = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (done) return ret;
           }
         }
@@ -1566,7 +1566,7 @@ public final class Data {
           Arity3CallSite fcs = context.createArity3CallSite(f);
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
 
-            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (!keepGoing) return ret;
 
             Value x = list.get(i);
@@ -1578,7 +1578,7 @@ public final class Data {
           Arity2CallSite fcs = context.createArity2CallSite(f);
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
 
-            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (!keepGoing) return ret;
 
             Value x = list.get(i);
@@ -1598,7 +1598,7 @@ public final class Data {
           Arity3CallSite fcs = context.createArity3CallSite(f);
           for (String key : map.keys()) {
 
-            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (!keepGoing) return ret;
 
             Value x = map.get(key);
@@ -1610,7 +1610,7 @@ public final class Data {
           Arity2CallSite fcs = context.createArity2CallSite(f);
           for (Value x: map.values()) {
 
-            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN).bool();
+            keepGoing = pcs.call(ret).castTo(Types.BOOLEAN) == Values.TRUE;
             if (!keepGoing) return ret;
 
             ret = fcs.call(ret, x);
