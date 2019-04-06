@@ -2322,8 +2322,9 @@ nil
 
 `(xs, x) -> boolean`
 
-If `xs` is a `list`, returns `true` if `xs` contains `x`, `false` otherwise.
-If `xs` is a `dict`, returns `true` if any entry in `xs` contains `x` as a value, `false` otherwise.
+If `xs` is a `list`, returns `true` if for any element `e` of `xs` `x === e` evaluates to `true`, `false` otherwise.
+
+If `xs` is a `dict`, returns `true` if for any value `v` in `xs` `v === e` evaluates to `true`, `false` otherwise.
 
 Returns `nil` if `xs` is `nil`.
 
@@ -2342,6 +2343,14 @@ true
 > data.contains?({:a 1, :b 2, :c 3}, 4)
 false
 
+# NaN never compares as equal
+> data.contains?([NaN], NaN)
+false
+
+# functions never compare as equal
+> let {f: () -> true;} data.contains?([f], f)
+false
+
 > data.contains?(nil, 0)
 nil
 
@@ -2349,15 +2358,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: contains? is not defined for type string
-  at: [interactive]:14:10
-  source: data.contains?("foo", "bar")
+  ...
 ```
 
 ### index_of
 
 `(list xs, x, long start=0) -> long`
 
-If `xs` contains `x` at or after index `start` returns the index of the earliest such occurrence. Returns -1 otherwise.
+If `xs` contains `x` at or after index `start` returns the index of the earliest such occurrence. Returns `-1` if `x` is not an element of `xs`. Each element of `xs` is compared to `x` using the `===` operator.
 
 Returns `nil` if `xs` is `nil`.\
 Returns `nil` if `start` is `nil`.
@@ -2365,6 +2373,10 @@ Returns `nil` if `start` is `nil`.
 ```tweakflow
 > data.index_of([1,2,3], 2)
 1
+
+# 2 !== 2.0
+> data.index_of([1,2,3], 2.0)
+-1
 
 > data.index_of([1,2,3], 4)
 -1
@@ -2374,6 +2386,14 @@ Returns `nil` if `start` is `nil`.
 
 > data.index_of([1,2,3,1,2,3], 3, 4)
 5
+
+# NaN === NaN is false
+> data.index_of([NaN], NaN)
+-1
+
+# f === f is false for functions
+> let {f: () -> true;} data.index_of([f], f)
+-1
 
 > data.index_of(nil, 2)
 nil
@@ -2386,7 +2406,8 @@ nil
 
 `(list xs, x, long end=nil) -> long`
 
-If `xs` contains `x` at or before index `end` returns the index of the last such occurence. Returns -1 otherwise.
+If `xs` contains `x` at or before index `end` returns the index of the last such occurrence. Returns `-1` if `x` is not an element of `xs`. Each element of `xs` is compared to `x` using the `===` operator.
+
 If `end` is `nil`, it is interpreted as the last index of `xs`.
 
 Returns `nil` if `xs` is `nil`.
@@ -2410,6 +2431,18 @@ Returns `nil` if `xs` is `nil`.
 > data.last_index_of([1,2,3,1,2,3], 3, 1)
 -1
 
+# 2 !== 2.0
+> data.last_index_of([1,2,3], 2.0)
+-1
+
+# NaN === NaN is false
+> data.last_index_of([NaN], NaN)
+-1
+
+# f === f is false for functions
+> let {f: () -> true;} data.last_index_of([f], f)
+-1
+
 > data.last_index_of(nil, 2)
 nil
 ```
@@ -2420,6 +2453,7 @@ nil
 
 If `xs` contains an entry with value `x`, returns the key of that entry.
 If there are multiple such entries, it is undefined which of the keys is returned.
+Each value in `xs` is compared to `x` using the `===` operator.
 
 Returns `nil` if `xs` does not contain an entry with value `x`.
 
@@ -2438,6 +2472,14 @@ nil
 > data.key_of({:foo 1, :doo 1}, 1)
 "doo"
 
+# NaN === NaN is false
+> data.key_of({:foo NaN}, NaN)
+nil
+
+# f === f is false, functions do not compare as equal
+> let {f: () -> true;} data.key_of({:f f}, f)
+nil
+
 > data.key_of(nil, 1)
 nil
 ```
@@ -2449,7 +2491,7 @@ nil
 Builds a result list iterating over all elements `x` in `xs`. If `x` is a list, it is concatenated to the result list.
 Otherwise the element is appended to the list. Returns the result list.
 
-Returns nil if `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
 
 ```tweakflow
 > data.flatten([[1, 2, 3], 4, 5, [6, 7, 8]])
@@ -2458,8 +2500,8 @@ Returns nil if `xs` is `nil`.
 > data.flatten([1, 2, 3])
 [1, 2, 3]
 
-> data.flatten([1, nil, []])
-[1, nil]
+> data.flatten([1, nil, [], "foo"])
+[1, nil, "foo"]
 
 > data.flatten([[[1]], [[2]]])
 [[1], [2]]
@@ -2474,15 +2516,17 @@ nil
 
 If `xs` is a `list`, returns a `list` of all `x` in `xs` mapped through `f`.
 If `f` accepts one argument, `x` is passed.
-If `f` accepts two arguments, `x` and the index of `x` are passed.
+If `f` accepts two arguments, `x` and its index are passed.
 
 If `xs` is a `dict`, returns a `dict` of all entries mapped through `f`.
-If `f` accepts one argument, each entrie's value is passed.
-If `f` accepts two arguments, each entries's value and the key are passed.
+If `f` accepts one argument, each entry's value is passed.
+If `f` accepts two arguments, each entry's value and key are passed.
 
 Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`;
 
 ```tweakflow
 > data.map([1,2,3], (x) -> x*x)

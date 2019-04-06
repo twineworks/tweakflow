@@ -198,7 +198,7 @@ final public class ListValue implements Iterable<Value> {
 
   public Value lastIndexOf(Value x, long end) {
     if (end >= Integer.MAX_VALUE) return Values.LONG_NEG_ONE;
-    return Values.make(vec.lastIndexOf(x, (int)end));
+    return Values.make(vec.lastIndexOf(x, Math.min(vec.size()-1, (int)end)));
   }
 
   public int size() {

@@ -262,5 +262,29 @@ public class DataTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/inspect.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> contains() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/contains.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> index_of() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/index_of.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> last_index_of() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/last_index_of.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> key_of() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/key_of.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> flatten() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/flatten.tf");
+  }
 
 }

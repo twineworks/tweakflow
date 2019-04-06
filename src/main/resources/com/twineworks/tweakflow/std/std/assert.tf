@@ -119,6 +119,13 @@ export library to {
       expected
     ];
 
+  be_one_of: (list expected) -> (x) ->
+    [
+      "to be one of",
+      data.contains?(expected, x),
+      expected
+    ];
+
   not_be: (expected) -> (x) ->
     ["to not be", x !== expected, expected];
 

@@ -422,6 +422,9 @@ public final class Data {
     public Value call(UserCallContext context, Value xs, Value x) {
       if (xs.isNil()) return Values.NIL;
 
+      // non-comparables are never reported in contains
+      if (x.isFunction() || x.isDoubleNum() && x.doubleNum().isNaN()) return Values.FALSE;
+
       // map navigation
       if (xs.type() == Types.DICT) {
         DictValue map = xs.dict();
@@ -929,6 +932,7 @@ public final class Data {
       }
 
       if (startLong >= xsList.size()) return Values.LONG_NEG_ONE;
+      if (x.isFunction() || x.isDoubleNum() && x.doubleNum().isNaN()) return Values.LONG_NEG_ONE;
 
       return Values.make(xsList.indexOf(x, startLong));
     }
@@ -943,6 +947,9 @@ public final class Data {
       if (xs == Values.NIL){
         return Values.NIL;
       }
+
+      // non comparables never found
+      if (x.isFunction() || x.isDoubleNum() && x.doubleNum().isNaN()) return Values.NIL;
 
       DictValue dict = xs.dict();
       for (String s : dict.keys()) {
@@ -968,13 +975,19 @@ public final class Data {
         return Values.NIL;
       }
 
+      if (xsList.size() == 0){
+        return Values.LONG_NEG_ONE;
+      }
+
+      if (x.isFunction() || x.isDoubleNum() && x.doubleNum().isNaN()) return Values.LONG_NEG_ONE;
+
       int endInt;
       if (endLong == null){
-        endInt = xsList.size();
+        endInt = xsList.size()-1;
       }
       else{
         if (endLong < 0) return Values.LONG_NEG_ONE;
-        endInt = (int) java.lang.Math.min(endLong, xsList.size());
+        endInt = (int) java.lang.Math.min(endLong, xsList.size()-1);
       }
 
       return Values.make(xsList.lastIndexOf(x, endInt));
@@ -1462,12 +1475,15 @@ public final class Data {
     @Override
     public Value call(UserCallContext context, Value xs, Value f) {
 
-      if (f == Values.NIL) return Values.NIL;
       if (xs == Values.NIL) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least one argument");
 
       if (xs.isList()){
 
-        boolean withIndex = f.function().getSignature().getParameterList().size() >= 2;
+        boolean withIndex = paramCount >= 2;
         ListValue retVal = new ListValue();
 
         ListValue list = xs.list();
@@ -1494,8 +1510,8 @@ public final class Data {
       }
       else if (xs.isDict()){
 
-        boolean withKey = f.function().getSignature().getParameterList().size() >= 2;
-//        DictValue retVal = new DictValue();
+        boolean withKey = paramCount >= 2;
+
         TransientDictValue retVal = new TransientDictValue();
         DictValue map = xs.dict();
         if (withKey){

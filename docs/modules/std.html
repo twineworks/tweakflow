@@ -2536,8 +2536,9 @@ nil
 
 <p><code>(xs, x) -&gt; boolean</code></p>
 
-<p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if <code>xs</code> contains <code>x</code>, <code>false</code> otherwise.
-If <code>xs</code> is a <code>dict</code>, returns <code>true</code> if any entry in <code>xs</code> contains <code>x</code> as a value, <code>false</code> otherwise.</p>
+<p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if for any element <code>e</code> of <code>xs</code> <code>x === e</code> evaluates to <code>true</code>, <code>false</code> otherwise.</p>
+
+<p>If <code>xs</code> is a <code>dict</code>, returns <code>true</code> if for any value <code>v</code> in <code>xs</code> <code>v === e</code> evaluates to <code>true</code>, <code>false</code> otherwise.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
@@ -2555,6 +2556,14 @@ true
 &gt; data.contains?({:a 1, :b 2, :c 3}, 4)
 false
 
+# NaN never compares as equal
+&gt; data.contains?([NaN], NaN)
+false
+
+# functions never compare as equal
+&gt; let {f: () -&gt; true;} data.contains?([f], f)
+false
+
 &gt; data.contains?(nil, 0)
 nil
 
@@ -2562,21 +2571,24 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: contains? is not defined for type string
-  at: [interactive]:14:10
-  source: data.contains?(&quot;foo&quot;, &quot;bar&quot;)
+  ...
 </code></pre>
 
 <h3 id="index-of-1">index_of</h3>
 
 <p><code>(list xs, x, long start=0) -&gt; long</code></p>
 
-<p>If <code>xs</code> contains <code>x</code> at or after index <code>start</code> returns the index of the earliest such occurrence. Returns -1 otherwise.</p>
+<p>If <code>xs</code> contains <code>x</code> at or after index <code>start</code> returns the index of the earliest such occurrence. Returns <code>-1</code> if <code>x</code> is not an element of <code>xs</code>. Each element of <code>xs</code> is compared to <code>x</code> using the <code>===</code> operator.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.<br />
 Returns <code>nil</code> if <code>start</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; data.index_of([1,2,3], 2)
 1
+
+# 2 !== 2.0
+&gt; data.index_of([1,2,3], 2.0)
+-1
 
 &gt; data.index_of([1,2,3], 4)
 -1
@@ -2586,6 +2598,14 @@ Returns <code>nil</code> if <code>start</code> is <code>nil</code>.</p>
 
 &gt; data.index_of([1,2,3,1,2,3], 3, 4)
 5
+
+# NaN === NaN is false
+&gt; data.index_of([NaN], NaN)
+-1
+
+# f === f is false for functions
+&gt; let {f: () -&gt; true;} data.index_of([f], f)
+-1
 
 &gt; data.index_of(nil, 2)
 nil
@@ -2598,8 +2618,9 @@ nil
 
 <p><code>(list xs, x, long end=nil) -&gt; long</code></p>
 
-<p>If <code>xs</code> contains <code>x</code> at or before index <code>end</code> returns the index of the last such occurence. Returns -1 otherwise.
-If <code>end</code> is <code>nil</code>, it is interpreted as the last index of <code>xs</code>.</p>
+<p>If <code>xs</code> contains <code>x</code> at or before index <code>end</code> returns the index of the last such occurrence. Returns <code>-1</code> if <code>x</code> is not an element of <code>xs</code>. Each element of <code>xs</code> is compared to <code>x</code> using the <code>===</code> operator.</p>
+
+<p>If <code>end</code> is <code>nil</code>, it is interpreted as the last index of <code>xs</code>.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
@@ -2621,6 +2642,18 @@ If <code>end</code> is <code>nil</code>, it is interpreted as the last index of 
 &gt; data.last_index_of([1,2,3,1,2,3], 3, 1)
 -1
 
+# 2 !== 2.0
+&gt; data.last_index_of([1,2,3], 2.0)
+-1
+
+# NaN === NaN is false
+&gt; data.last_index_of([NaN], NaN)
+-1
+
+# f === f is false for functions
+&gt; let {f: () -&gt; true;} data.last_index_of([f], f)
+-1
+
 &gt; data.last_index_of(nil, 2)
 nil
 </code></pre>
@@ -2630,7 +2663,8 @@ nil
 <p><code>(dict xs, x) -&gt; string</code></p>
 
 <p>If <code>xs</code> contains an entry with value <code>x</code>, returns the key of that entry.
-If there are multiple such entries, it is undefined which of the keys is returned.</p>
+If there are multiple such entries, it is undefined which of the keys is returned.
+Each value in <code>xs</code> is compared to <code>x</code> using the <code>===</code> operator.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> does not contain an entry with value <code>x</code>.</p>
 
@@ -2648,6 +2682,14 @@ nil
 &gt; data.key_of({:foo 1, :doo 1}, 1)
 &quot;doo&quot;
 
+# NaN === NaN is false
+&gt; data.key_of({:foo NaN}, NaN)
+nil
+
+# f === f is false, functions do not compare as equal
+&gt; let {f: () -&gt; true;} data.key_of({:f f}, f)
+nil
+
 &gt; data.key_of(nil, 1)
 nil
 </code></pre>
@@ -2659,7 +2701,7 @@ nil
 <p>Builds a result list iterating over all elements <code>x</code> in <code>xs</code>. If <code>x</code> is a list, it is concatenated to the result list.
 Otherwise the element is appended to the list. Returns the result list.</p>
 
-<p>Returns nil if <code>xs</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; data.flatten([[1, 2, 3], 4, 5, [6, 7, 8]])
 [1, 2, 3, 4, 5, 6, 7, 8]
@@ -2667,8 +2709,8 @@ Otherwise the element is appended to the list. Returns the result list.</p>
 &gt; data.flatten([1, 2, 3])
 [1, 2, 3]
 
-&gt; data.flatten([1, nil, []])
-[1, nil]
+&gt; data.flatten([1, nil, [], &quot;foo&quot;])
+[1, nil, &quot;foo&quot;]
 
 &gt; data.flatten([[[1]], [[2]]])
 [[1], [2]]
@@ -2683,15 +2725,17 @@ nil
 
 <p>If <code>xs</code> is a <code>list</code>, returns a <code>list</code> of all <code>x</code> in <code>xs</code> mapped through <code>f</code>.
 If <code>f</code> accepts one argument, <code>x</code> is passed.
-If <code>f</code> accepts two arguments, <code>x</code> and the index of <code>x</code> are passed.</p>
+If <code>f</code> accepts two arguments, <code>x</code> and its index are passed.</p>
 
 <p>If <code>xs</code> is a <code>dict</code>, returns a <code>dict</code> of all entries mapped through <code>f</code>.
-If <code>f</code> accepts one argument, each entrie&rsquo;s value is passed.
-If <code>f</code> accepts two arguments, each entries&rsquo;s value and the key are passed.</p>
+If <code>f</code> accepts one argument, each entry&rsquo;s value is passed.
+If <code>f</code> accepts two arguments, each entry&rsquo;s value and key are passed.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>f</code> is <code>nil</code>;</p>
 
 <pre><code class="language-tweakflow">&gt; data.map([1,2,3], (x) -&gt; x*x)
 [1, 4, 9]
