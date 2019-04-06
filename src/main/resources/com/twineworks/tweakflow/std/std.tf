@@ -2857,17 +2857,20 @@ doc
 ~~~
 `(xs, function f) -> list`
 
-Maps each `x` of `xs` through `f`, concatenating the results if they are lists, appending them otherwise.
+Expects `xs` to be a `list` or a `dict`. Builds a result list by mapping each `x` of `xs`
+through `f`. If a mapped value is a list, it is concatenated at the end of the result list.
+Non-lists are appended to the result list.
 
 If `f` accepts a single argument, `x` is passed.
 If `f` accepts two arguments, `x` and its index or key are passed.
 
-Returns the resulting list.
+Returns the result list.
 
 Returns `nil` if `xs` is `nil`.
-Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
 
 ```tweakflow
 > data.flatmap([1, 2, 3], (x) -> data.repeat(x, x))
@@ -2879,15 +2882,11 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 > data.flatmap(nil, (x) -> x)
 nil
 
-> data.flatmap([1, 2, 3], nil)
-nil
-
 > data.flatmap("foo", (x) -> x)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.flatmap("foo", (x) -> x)
+  ...
 ```
 ~~~
 
@@ -2898,17 +2897,20 @@ doc
 ~~~
 `(xs, function f) -> list`
 
-Maps each `x` of `xs` through `f`, concatenating the results if they are lists, ignoring them otherwise.
+Expects `xs` to be a `list` or a `dict`. Builds a result list by mapping each `x` of `xs`
+through `f`. If a mapped value is a list, it is concatenated at the end of the result list.
+Non-lists are discarded.
 
 If `f` accepts a single argument, `x` is passed.
 If `f` accepts two arguments, `x` and its index or key are passed.
 
-Returns the resulting list.
+Returns the result list.
 
 Returns `nil` if `xs` is `nil`.
-Returns `nil` if `f` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
 
 ```tweakflow
 > data.mapcat([1, 2, 3], (x) -> data.repeat(x, x))
@@ -2920,15 +2922,11 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 > data.mapcat(nil, (x) -> x)
 nil
 
-> data.mapcat([1, 2, 3], nil)
-nil
-
 > data.mapcat("foo", (x) -> x)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.mapcat("foo", (x) -> x)
+  ...
 ```
 ~~~
   function mapcat: (xs, function f) -> list
@@ -2976,6 +2974,8 @@ is the index of the key in `keys`.
 In case there are duplicate keys in `keys`, the last index of a key provides the corresponding value.
 
 Returns `nil` if `keys` or `values` are `nil`.
+
+Throws an error if any key cannot be cast to string.
 
 ```tweakflow
 > data.zip_dict(["a", "b", "c"], [1, 2, 3])
@@ -3055,16 +3055,22 @@ doc
 ~~~
 `(xs, init, function f) -> any`
 
-Accumulates all `x` in `list` or `dict` `xs` to a single value using `f`, and starting with `init`.
+Expects `xs` to be a `list` or a `dict`.
 
-If `f` accepts two arguments, the accumulated value and `x` are passed.
-If `f` accepts three arguments, the accumulated value, `x`, and the index or key of `x` are passed.
+Sets the initial accumulator value to `init`, iterates through all `xs`, and calls `f` for each `x`.
 
-`f` returns the new accumulated value.
+If `f` accepts two arguments, the current accumulator value and `x` are passed.
+If `f` accepts three arguments, the current accumulator value, `x`, and the index or key of `x` are passed.
 
-Returns `nil` if `xs` is `nil` or `f` is `nil`.
+After each call the return value of `f` becomes the new accumulator value.
+
+Returns final accumulator value after iteration over `xs` is completed.
+
+Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
 
 ```tweakflow
 > data.reduce([1,2,3], 0, (a, x) -> a+x)
@@ -3096,15 +3102,11 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 > data.reduce(nil, 0, (a, x) -> x)
 nil
 
-> data.reduce([1, 2, 3], 0, nil)
-nil
-
-> data.reduce("foo", 0, (x) -> x)
+> data.reduce("foo", 0, (a, x) -> a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce("foo", 0, (x) -> x)
+  ...
 ```
 ~~~
 
@@ -3114,19 +3116,26 @@ doc
 ~~~
 `(xs, init, function p, function f) -> any`
 
-Accumulates all `x` in `list` or `dict` `xs` to a single value using `f`, and starting with `init`.
+Expects `xs` to be a `list` or a `dict`.
 
-If `f` accepts two arguments, the accumulated value and `x` are passed.
-If `f` accepts three arguments, the accumulated value, `x`, and the index or key of `x` are passed.
+Sets the initial accumulator value to `init`, and iterates through all `xs`.
 
-`f` returns the new accumulated value.
+For each `x`, calls predicate function `p` passing in the current accumulator value.
+If the return value of `p` casts to boolean `true`, aborts iteration and returns the current
+accumulator value immediately. Otherwise continues the reduction process by calling `f`.
 
-Stops the process, if predicate function `p` returns a value that casts to `boolean` `true`
-for the current accumulated value.
+If `f` accepts two arguments, the current accumulator value and `x` are passed.
+If `f` accepts three arguments, the current accumulator value, `x`, and the index or key of `x` are passed.
 
-Returns `nil` if `xs`, `f`, or `p` are `nil`.
+After each call the return value of `f` becomes the new accumulator value.
+
+Returns final accumulator value after iteration over `xs` is completed.
+
+Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `p` is `nil` or `f` is `nil`.
 
 ```tweakflow
 
@@ -3147,18 +3156,10 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 > data.reduce_until(nil, 0, (a) -> true, (a, x) -> x)
 nil
 
-> data.reduce_until([1, 2, 3], 0, nil, (a, x) -> a)
-nil
-
-> data.reduce_until([1, 2, 3], 0, (a) -> true, nil)
-nil
-
 > data.reduce_until("foo", 0, (a) -> true, (a, x) -> a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_until is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce_until("foo", 0, (a) -> true, (a, x) -> a)
 ```
 ~~~
 
@@ -3168,19 +3169,26 @@ doc
 ~~~
 `(xs, init, function p, function f) -> any`
 
-Accumulates all `x` in `list` or `dict` `xs` to a single value using `f`, and starting with `init`.
+Expects `xs` to be a `list` or a `dict`.
 
-If `f` accepts two arguments, the accumulated value and `x` are passed.
-If `f` accepts three arguments, the accumulated value, `x`, and the index or key of `x` are passed.
+Sets the initial accumulator value to `init`, and iterates through all `xs`.
 
-`f` returns the new accumulated value.
+For each `x`, calls predicate function `p` passing in the current accumulator value.
+If the return value of `p` casts to boolean `true`, continues the reduction process by calling `f`.
+Otherwise aborts iteration and returns the current accumulator value immediately.
 
-Stops the process, if predicate function `p` returns a value that casts to `boolean` `false`
-for the current accumulated value.
+If `f` accepts two arguments, the current accumulator value and `x` are passed.
+If `f` accepts three arguments, the current accumulator value, `x`, and the index or key of `x` are passed.
 
-Returns `nil` if `xs`, `f`, or `p` are `nil`.
+After each call the return value of `f` becomes the new accumulator value.
+
+Returns final accumulator value after iteration over `xs` is completed.
+
+Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `p` is `nil` or `f` is `nil`.
 
 ```tweakflow
 
@@ -3201,18 +3209,10 @@ Throws an error if `xs` is neither a `list` nor a `dict`.
 > data.reduce_while(nil, 0, (a) -> true, (a, x) -> x)
 nil
 
-> data.reduce_while([1, 2, 3], 0, nil, (a, x) -> a)
-nil
-
-> data.reduce_while([1, 2, 3], 0, (a) -> true, nil)
-nil
-
 > data.reduce_while("foo", 0, (a) -> true, (a, x) -> a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_while is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce_while("foo", 0, (a) -> true, (a, x) -> a)
 ```
 ~~~
 

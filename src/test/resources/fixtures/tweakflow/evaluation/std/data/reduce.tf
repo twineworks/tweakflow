@@ -1,5 +1,6 @@
 import store as s from "./../../data.tf";
 import * as std from "std.tf";
+import expect, expect_error, to from "std/assert.tf";
 
 alias s.inventory as inv;
 alias std.data.reduce as reduce;
@@ -64,9 +65,24 @@ library reduce_spec {
       ]
     };
 
-  reduces_nil_value:
-    reduce(nil, 0, (x) -> x) == nil;
+  sum:
+    expect(reduce([1,2,3,4], 0, (a, x) -> a+x), to.be(10));
 
-  reduces_nil_function:
-    reduce([0,1], 0, nil) == nil;
+  initial_value:
+    expect(reduce([], "foo", (a, x) -> a .. x), to.be("foo"));
+
+  of_nil:
+    expect(reduce(nil, 0, (a, x) -> x), to.be_nil());
+
+  nil_f:
+    expect_error(
+      () -> reduce([0,1], 0, nil),
+       to.have_code("NIL_ERROR")
+    );
+
+  bad_f:
+    expect_error(
+      () -> reduce([0,1], 0, (x) -> x), # f must accept 2 or more args
+       to.have_code("ILLEGAL_ARGUMENT")
+    );
 }

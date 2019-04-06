@@ -287,4 +287,39 @@ public class DataTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/flatten.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> flatmap() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/flatmap.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> mapcat() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/mapcat.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> zip() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/zip.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> zip_dict() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/zip_dict.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> interpose() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/interpose.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> reduce_until() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/reduce_until.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> reduce_while() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/reduce_while.tf");
+  }
+
 }

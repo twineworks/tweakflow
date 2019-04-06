@@ -1632,14 +1632,18 @@ public final class Data {
     @Override
     public Value call(UserCallContext context, Value xs, Value init, Value f) {
 
-      if (f.isNil()) return Values.NIL;
-      if (xs.isNil()) return Values.NIL;
+      if (xs == Values.NIL) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount < 2) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least two arguments");
+
 
       Value ret = init;
 
       if (xs.isList()){
 
-        boolean withIndex = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withIndex = paramCount >= 3;
 
         ListValue list = xs.list();
 
@@ -1663,7 +1667,7 @@ public final class Data {
       }
       else if (xs.isDict()){
 
-        boolean withKey = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withKey = paramCount >= 3;
 
         DictValue map = xs.dict();
 
@@ -1695,13 +1699,17 @@ public final class Data {
     @Override
     public Value call(UserCallContext context, Value xs, Value init, Value p, Value f) {
 
-      if (f.isNil()) return Values.NIL;
-      if (p.isNil()) return Values.NIL;
       if (xs.isNil()) return Values.NIL;
 
-      if (!xs.isList() && !xs.isDict()){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "reduce_until is not defined for type "+xs.type().name());
-      }
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount < 2) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least two arguments");
+
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "p cannot be nil");
+
+      int pParamCount = p.function().getSignature().getParameterList().size();
+      if (pParamCount < 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "p must accept at least one argument");
 
       Value ret = init;
       Arity1CallSite pcs = context.createArity1CallSite(p);
@@ -1711,7 +1719,7 @@ public final class Data {
 
       if (xs.isList()){
 
-        boolean withIndex = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withIndex = paramCount >= 3;
         ListValue list = xs.list();
 
         if (withIndex){
@@ -1738,7 +1746,7 @@ public final class Data {
       }
       else if (xs.isDict()){
 
-        boolean withKey = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withKey = paramCount >= 3;
         DictValue map = xs.dict();
 
         if (withKey){
@@ -1774,9 +1782,17 @@ public final class Data {
     @Override
     public Value call(UserCallContext context, Value xs, Value init, Value p, Value f) {
 
-      if (f.isNil()) return Values.NIL;
-      if (p.isNil()) return Values.NIL;
       if (xs.isNil()) return Values.NIL;
+
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount < 2) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least two arguments");
+
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "p cannot be nil");
+
+      int pParamCount = p.function().getSignature().getParameterList().size();
+      if (pParamCount < 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "p must accept at least one argument");
 
       Value ret = init;
       boolean keepGoing;
@@ -1784,7 +1800,7 @@ public final class Data {
       Arity1CallSite pcs = context.createArity1CallSite(p);
       if (xs.isList()){
 
-        boolean withIndex = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withIndex = paramCount >= 3;
         ListValue list = xs.list();
 
         if (withIndex){
@@ -1816,7 +1832,7 @@ public final class Data {
       }
       else if (xs.isDict()){
 
-        boolean withKey = f.function().getSignature().getParameterList().size() >= 3;
+        boolean withKey = paramCount >= 3;
         DictValue map = xs.dict();
 
         if (withKey){

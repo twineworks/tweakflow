@@ -2775,17 +2775,20 @@ ERROR:
 
 <p><code>(xs, function f) -&gt; list</code></p>
 
-<p>Maps each <code>x</code> of <code>xs</code> through <code>f</code>, concatenating the results if they are lists, appending them otherwise.</p>
+<p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>. Builds a result list by mapping each <code>x</code> of <code>xs</code>
+through <code>f</code>. If a mapped value is a list, it is concatenated at the end of the result list.
+Non-lists are appended to the result list.</p>
 
 <p>If <code>f</code> accepts a single argument, <code>x</code> is passed.
 If <code>f</code> accepts two arguments, <code>x</code> and its index or key are passed.</p>
 
-<p>Returns the resulting list.</p>
+<p>Returns the result list.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.
-Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; data.flatmap([1, 2, 3], (x) -&gt; data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
@@ -2796,32 +2799,31 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 &gt; data.flatmap(nil, (x) -&gt; x)
 nil
 
-&gt; data.flatmap([1, 2, 3], nil)
-nil
-
 &gt; data.flatmap(&quot;foo&quot;, (x) -&gt; x)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.flatmap(&quot;foo&quot;, (x) -&gt; x)
+  ...
 </code></pre>
 
 <h3 id="mapcat">mapcat</h3>
 
 <p><code>(xs, function f) -&gt; list</code></p>
 
-<p>Maps each <code>x</code> of <code>xs</code> through <code>f</code>, concatenating the results if they are lists, ignoring them otherwise.</p>
+<p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>. Builds a result list by mapping each <code>x</code> of <code>xs</code>
+through <code>f</code>. If a mapped value is a list, it is concatenated at the end of the result list.
+Non-lists are discarded.</p>
 
 <p>If <code>f</code> accepts a single argument, <code>x</code> is passed.
 If <code>f</code> accepts two arguments, <code>x</code> and its index or key are passed.</p>
 
-<p>Returns the resulting list.</p>
+<p>Returns the result list.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.
-Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; data.mapcat([1, 2, 3], (x) -&gt; data.repeat(x, x))
 [1, 2, 2, 3, 3, 3]
@@ -2832,15 +2834,11 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 &gt; data.mapcat(nil, (x) -&gt; x)
 nil
 
-&gt; data.mapcat([1, 2, 3], nil)
-nil
-
 &gt; data.mapcat(&quot;foo&quot;, (x) -&gt; x)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.mapcat(&quot;foo&quot;, (x) -&gt; x)
+  ...
 </code></pre>
 
 <h3 id="zip">zip</h3>
@@ -2877,6 +2875,8 @@ is the index of the key in <code>keys</code>.</p>
 <p>In case there are duplicate keys in <code>keys</code>, the last index of a key provides the corresponding value.</p>
 
 <p>Returns <code>nil</code> if <code>keys</code> or <code>values</code> are <code>nil</code>.</p>
+
+<p>Throws an error if any key cannot be cast to string.</p>
 
 <pre><code class="language-tweakflow">&gt; data.zip_dict([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], [1, 2, 3])
 {
@@ -2937,16 +2937,22 @@ nil
 
 <p><code>(xs, init, function f) -&gt; any</code></p>
 
-<p>Accumulates all <code>x</code> in <code>list</code> or <code>dict</code> <code>xs</code> to a single value using <code>f</code>, and starting with <code>init</code>.</p>
+<p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
 
-<p>If <code>f</code> accepts two arguments, the accumulated value and <code>x</code> are passed.
-If <code>f</code> accepts three arguments, the accumulated value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
+<p>Sets the initial accumulator value to <code>init</code>, iterates through all <code>xs</code>, and calls <code>f</code> for each <code>x</code>.</p>
 
-<p><code>f</code> returns the new accumulated value.</p>
+<p>If <code>f</code> accepts two arguments, the current accumulator value and <code>x</code> are passed.
+If <code>f</code> accepts three arguments, the current accumulator value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code> or <code>f</code> is <code>nil</code>.</p>
+<p>After each call the return value of <code>f</code> becomes the new accumulator value.</p>
+
+<p>Returns final accumulator value after iteration over <code>xs</code> is completed.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; data.reduce([1,2,3], 0, (a, x) -&gt; a+x)
 6
@@ -2977,34 +2983,37 @@ If <code>f</code> accepts three arguments, the accumulated value, <code>x</code>
 &gt; data.reduce(nil, 0, (a, x) -&gt; x)
 nil
 
-&gt; data.reduce([1, 2, 3], 0, nil)
-nil
-
-&gt; data.reduce(&quot;foo&quot;, 0, (x) -&gt; x)
+&gt; data.reduce(&quot;foo&quot;, 0, (a, x) -&gt; a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce(&quot;foo&quot;, 0, (x) -&gt; x)
+  ...
 </code></pre>
 
 <h3 id="reduce-until">reduce_until</h3>
 
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 
-<p>Accumulates all <code>x</code> in <code>list</code> or <code>dict</code> <code>xs</code> to a single value using <code>f</code>, and starting with <code>init</code>.</p>
+<p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
 
-<p>If <code>f</code> accepts two arguments, the accumulated value and <code>x</code> are passed.
-If <code>f</code> accepts three arguments, the accumulated value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
+<p>Sets the initial accumulator value to <code>init</code>, and iterates through all <code>xs</code>.</p>
 
-<p><code>f</code> returns the new accumulated value.</p>
+<p>For each <code>x</code>, calls predicate function <code>p</code> passing in the current accumulator value.
+If the return value of <code>p</code> casts to boolean <code>true</code>, aborts iteration and returns the current
+accumulator value immediately. Otherwise continues the reduction process by calling <code>f</code>.</p>
 
-<p>Stops the process, if predicate function <code>p</code> returns a value that casts to <code>boolean</code> <code>true</code>
-for the current accumulated value.</p>
+<p>If <code>f</code> accepts two arguments, the current accumulator value and <code>x</code> are passed.
+If <code>f</code> accepts three arguments, the current accumulator value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code>, <code>f</code>, or <code>p</code> are <code>nil</code>.</p>
+<p>After each call the return value of <code>f</code> becomes the new accumulator value.</p>
+
+<p>Returns final accumulator value after iteration over <code>xs</code> is completed.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>p</code> is <code>nil</code> or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">
 # sum up integers, until sum exceeds 10
@@ -3024,37 +3033,36 @@ for the current accumulated value.</p>
 &gt; data.reduce_until(nil, 0, (a) -&gt; true, (a, x) -&gt; x)
 nil
 
-&gt; data.reduce_until([1, 2, 3], 0, nil, (a, x) -&gt; a)
-nil
-
-&gt; data.reduce_until([1, 2, 3], 0, (a) -&gt; true, nil)
-nil
-
 &gt; data.reduce_until(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_until is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce_until(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 </code></pre>
 
 <h3 id="reduce-while">reduce_while</h3>
 
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 
-<p>Accumulates all <code>x</code> in <code>list</code> or <code>dict</code> <code>xs</code> to a single value using <code>f</code>, and starting with <code>init</code>.</p>
+<p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
 
-<p>If <code>f</code> accepts two arguments, the accumulated value and <code>x</code> are passed.
-If <code>f</code> accepts three arguments, the accumulated value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
+<p>Sets the initial accumulator value to <code>init</code>, and iterates through all <code>xs</code>.</p>
 
-<p><code>f</code> returns the new accumulated value.</p>
+<p>For each <code>x</code>, calls predicate function <code>p</code> passing in the current accumulator value.
+If the return value of <code>p</code> casts to boolean <code>true</code>, continues the reduction process by calling <code>f</code>.
+Otherwise aborts iteration and returns the current accumulator value immediately.</p>
 
-<p>Stops the process, if predicate function <code>p</code> returns a value that casts to <code>boolean</code> <code>false</code>
-for the current accumulated value.</p>
+<p>If <code>f</code> accepts two arguments, the current accumulator value and <code>x</code> are passed.
+If <code>f</code> accepts three arguments, the current accumulator value, <code>x</code>, and the index or key of <code>x</code> are passed.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code>, <code>f</code>, or <code>p</code> are <code>nil</code>.</p>
+<p>After each call the return value of <code>f</code> becomes the new accumulator value.</p>
+
+<p>Returns final accumulator value after iteration over <code>xs</code> is completed.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>p</code> is <code>nil</code> or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">
 # sum up integers, until sum exceeds 10
@@ -3074,18 +3082,10 @@ for the current accumulated value.</p>
 &gt; data.reduce_while(nil, 0, (a) -&gt; true, (a, x) -&gt; x)
 nil
 
-&gt; data.reduce_while([1, 2, 3], 0, nil, (a, x) -&gt; a)
-nil
-
-&gt; data.reduce_while([1, 2, 3], 0, (a) -&gt; true, nil)
-nil
-
 &gt; data.reduce_while(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_while is not defined for type string
-  at: [interactive]:14:10
-  source: data.reduce_while(&quot;foo&quot;, 0, (a) -&gt; true, (a, x) -&gt; a)
 </code></pre>
 
 <h2 id="library-time">library time</h2>
