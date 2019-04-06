@@ -1,3 +1,3 @@
 library lib {
-  list boolean_to_list: true
+  list boolean_to_list: true;
 }

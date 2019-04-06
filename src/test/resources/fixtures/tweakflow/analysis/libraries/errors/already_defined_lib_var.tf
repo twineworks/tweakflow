@@ -1,7 +1,7 @@
 
 library main {
-  a: "foo"
-  b: "bar"
-  a: "redefined"
+  a: "foo";
+  b: "bar";
+  a: "redefined";
 }
 

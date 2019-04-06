@@ -793,8 +793,7 @@ The following module uses aliases.
 
 ```tweakflow
 # file: aliases.tf
-import * as std from "std"
-
+import * as std from "std";
 # s can be used as shortcut to std.strings
 alias std.strings as s
 # map can be used as shortcut to std.data.map
@@ -828,8 +827,7 @@ Below example exports the strings standard library under the name `str`, and a l
 
 ```tweakflow
 # lib.tf
-import * as std from "std"
-
+import * as std from "std";
 export std.strings as str
 export common as util
 
@@ -2908,8 +2906,7 @@ An example file with comments highlighting scope changes and references:
 # scopes.tf
 
 # introduces 'strings' in module scope
-import strings from "std"
-
+import strings from "std";
 # introduces 'len' in module scope
 alias strings.length as len # references 'strings' in module scope
 
@@ -2950,8 +2947,7 @@ Library scope references must appear inside a library. They limit the resolution
 
 ```tweakflow
 # libary-refs.tf
-import strings from "std"
-
+import strings from "std";
 library utils {
   f: (x) -> strings.length(x)
   g: (x) -> let {
@@ -3020,8 +3016,7 @@ References in aliases and exports may point to any kind of entity. Aliases provi
 
 ```tweakflow
 # file aliases.tf
-import * as std from "std"
-
+import * as std from "std";
 alias std.strings as str # local alias for imported library
 
 library util {

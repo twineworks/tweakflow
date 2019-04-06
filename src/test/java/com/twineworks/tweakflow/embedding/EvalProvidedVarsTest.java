@@ -64,7 +64,7 @@ public class EvalProvidedVarsTest {
 
     String module = "library lib {" +
         "provided long a; " +
-        "f: (x) -> x+a" +
+        "f: (x) -> x+a;" +
         "}";
     Runtime.Module m = compileModule(module);
     Runtime.Var a = m.getLibrary("lib").getVar("a");
@@ -100,7 +100,7 @@ public class EvalProvidedVarsTest {
     String module = "library lib {" +
         "provided long a; " +
         "provided long b; " +
-        "long c: if a != b then throw 'expected a and b to be equal' else a*b" +
+        "long c: if a != b then throw 'expected a and b to be equal' else a*b;" +
         "}";
     Runtime.Module m = compileModule(module);
     Runtime.Var a = m.getLibrary("lib").getVar("a");
@@ -151,7 +151,7 @@ public class EvalProvidedVarsTest {
 
     String module = "library lib {" +
         "provided long a; " +
-        "f: (x) -> x+a" +
+        "f: (x) -> x+a;" +
         "}";
     Runtime.Module m = compileModule(module);
 
@@ -174,7 +174,7 @@ public class EvalProvidedVarsTest {
     String module = "library lib {" +
         "provided long a; " +
         "provided long b; " +
-        "f: (x) -> x+a" +
+        "f: (x) -> x+a;" +
         "}";
     Runtime.Module m = compileModule(module);
 
@@ -210,7 +210,7 @@ public class EvalProvidedVarsTest {
   public void cannot_update_regular_var() throws Exception {
     Assertions.assertThrows(UnsupportedOperationException.class, () -> {
       String module = "library lib {" +
-          "long a: 0 " +
+          "long a: 0; " +
           "}";
 
       Runtime.Module m = compileModule(module);

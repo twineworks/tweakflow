@@ -1,5 +1,5 @@
-import data from "std.tf"
-alias data.map as map
+import data from "std.tf";
+alias data.map as map;
 
 library lib {
   throw_error: () -> throw {:code "test", :message "error"};
@@ -17,7 +17,7 @@ library throw_spec {
             :error error,
             :trace trace
           }
-
+      ;
     }
     caught[:error] ==
       {:code "test", :message "error"}

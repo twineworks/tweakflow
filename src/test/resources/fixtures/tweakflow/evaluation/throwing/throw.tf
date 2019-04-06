@@ -1,5 +1,5 @@
 
 library lib
 {
-  error: throw "error"
+  error: throw "error";
 }

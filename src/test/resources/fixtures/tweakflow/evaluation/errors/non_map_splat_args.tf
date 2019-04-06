@@ -1,4 +1,4 @@
 library lib {
-  f: (x) -> x
-  a: f(..."a")
+  f: (x) -> x;
+  a: f(..."a");
 }

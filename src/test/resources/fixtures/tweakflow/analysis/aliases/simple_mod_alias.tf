@@ -1,3 +1,3 @@
-global module mod
+global module mod;
 
-alias $mod as m
+alias $mod as m;

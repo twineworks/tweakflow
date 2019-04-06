@@ -20,8 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import core, data, strings from "std"
-
+import core, data, strings from "std";
 alias data.map as map
 alias strings.join as join
 alias core.inspect as inspect

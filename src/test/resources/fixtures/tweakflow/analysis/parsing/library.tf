@@ -1,6 +1,6 @@
 meta {}
 
-module
+module;
 
 meta {
   :version "1.0.0"

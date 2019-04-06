@@ -442,8 +442,7 @@ Let's supply a basic transformer that just generates a one-sentence summary of t
 
 ```tweakflow
 # transformer.tf
-import data, strings from "std"
-
+import data, strings from "std";
 alias data.size as size
 alias data.reduce as reduce
 

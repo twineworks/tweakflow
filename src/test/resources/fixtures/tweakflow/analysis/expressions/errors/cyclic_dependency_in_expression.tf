@@ -1,8 +1,8 @@
 
 library lib {
 
-  a: b
-  b: a
+  a: b;
+  b: a;
 
 }
 

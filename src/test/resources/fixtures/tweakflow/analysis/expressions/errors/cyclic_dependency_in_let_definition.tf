@@ -2,8 +2,8 @@
 library lib {
 
   a:  let {
-        f: a
+        f: a;
       }
-      nil
+      nil;
 }
 

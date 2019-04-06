@@ -3,5 +3,5 @@ library lib {
 }
 
 library main {
-  a: lib
+  a: lib;
 }

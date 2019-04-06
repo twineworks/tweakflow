@@ -61,7 +61,7 @@ public class EvalModuleTest {
   @Test
   public void evaluates_module_successfully() throws Exception {
 
-    String module = "library lib {f: (x) -> x+1}";
+    String module = "library lib {f: (x) -> x+1;}";
     Runtime.Module m = compileModule(module);
     m.evaluate();
     Runtime.Var f = m.getLibrary("lib").getVar("f");
@@ -72,14 +72,14 @@ public class EvalModuleTest {
   @Test
   public void evaluates_module_with_parse_error() throws Exception {
 
-    String module = "library {f: (x) -> x+1}";
+    String module = "library {f: (x) -> x+1;}";
     //                       ^ Library name missing. Error.
     try {
       Runtime.Module m = compileModule(module);
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:11");
+//      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:11");
       return;
     }
 
@@ -90,7 +90,7 @@ public class EvalModuleTest {
   @Test
   public void evaluates_module_with_compilation_error() throws Exception {
 
-    String exp = "library lib {f: foo}";
+    String exp = "library lib {f: foo;}";
     //                            ^ Unresolved reference to variable foo. Error.
     try {
       Runtime.Module m = compileModule(exp);
@@ -110,7 +110,7 @@ public class EvalModuleTest {
   @Test
   public void evaluates_module_with_evaluation_error() throws Exception {
 
-    String exp = "library lib {f: 1 // 0}";
+    String exp = "library lib {f: 1 // 0;}";
     //                            ^ can't do integer division by 0. Error.
     try {
       Runtime.Module x = compileModule(exp);
@@ -131,7 +131,7 @@ public class EvalModuleTest {
   @Test
   public void evaluates_module_with_manual_throw() throws Exception {
 
-    String exp = "library lib {f: throw {:bad 'error'}}";
+    String exp = "library lib {f: throw {:bad 'error'};}";
     //            ^ manual throw
     try {
       Runtime.Module x = compileModule(exp);

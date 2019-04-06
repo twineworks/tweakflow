@@ -1,5 +1,4 @@
-import regex from "std"
-
+import regex from "std";
 import expect, expect_error, to from "std/assert.tf";
 
 library p {

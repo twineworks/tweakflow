@@ -1,5 +1,5 @@
-import data from "std.tf"
-alias data.map as map
+import data from "std.tf";
+alias data.map as map;
 
 library nested_throw_spec {
 
@@ -15,7 +15,7 @@ library nested_throw_spec {
               caught: {
                 :error error,
                 :trace trace
-              }
+              };
             }
             throw caught
 
@@ -24,7 +24,7 @@ library nested_throw_spec {
             :cause cause,
             :trace trace
           }
-
+      ;
     }
     caught ==
     {

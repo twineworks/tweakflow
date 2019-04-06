@@ -1,11 +1,11 @@
-import store as s from "./../../data.tf"
-import * as std from "std.tf"
+import store as s from "./../../data.tf";
+import * as std from "std.tf";
 
-alias s.inventory as inv
-alias std.data.reduce as reduce
+alias s.inventory as inv;
+alias std.data.reduce as reduce;
 
 library books {
-  all: inv[:book]
+  all: inv[:book];
 }
 
 library helper {
@@ -16,7 +16,7 @@ library helper {
         items_in_group:   if groups[group] then groups[group] else [];
       }
       {...groups, group [...items_in_group, item]}
-    )
+    );
 }
 
 library reduce_spec {
@@ -27,7 +27,7 @@ library reduce_spec {
     books.all[0, :price] +
     books.all[1, :price] +
     books.all[2, :price] +
-    books.all[3, :price]
+    books.all[3, :price];
 
   index_books_by_category:
     helper.group_by(books.all, (x) -> x[:category])
@@ -43,7 +43,7 @@ library reduce_spec {
         books.all[3]
       ]
 
-    }
+    };
 
   index_books_by_price_range:
     helper.group_by(books.all,
@@ -62,11 +62,11 @@ library reduce_spec {
         books.all[0],
         books.all[2]
       ]
-    }
+    };
 
   reduces_nil_value:
-    reduce(nil, 0, (x) -> x) == nil
+    reduce(nil, 0, (x) -> x) == nil;
 
   reduces_nil_function:
-    reduce([0,1], 0, nil) == nil
+    reduce([0,1], 0, nil) == nil;
 }

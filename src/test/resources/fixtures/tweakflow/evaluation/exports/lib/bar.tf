@@ -1,4 +1,4 @@
 export library bar {
-  c: "c"
-  d: "d"
+  c: "c";
+  d: "d";
 }

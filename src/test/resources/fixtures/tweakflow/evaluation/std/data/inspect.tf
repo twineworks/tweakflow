@@ -1,6 +1,6 @@
-import * as std from "std.tf"
+import * as std from "std.tf";
 
-alias std.core.inspect as inspect
+alias std.core.inspect as inspect;
 
 library inspect_spec {
 
@@ -53,7 +53,7 @@ library inspect_spec {
 '{
   :k2 "v2",
   :k1 "v1"
-}'
+}';
 
   inspect_dict_escaped_keys:
   let {
@@ -71,6 +71,6 @@ library inspect_spec {
 '{
   :`k 2` "v2",
   :`k 1` "v1"
-}'
+}';
 
 }

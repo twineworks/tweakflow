@@ -1,6 +1,6 @@
-import a from "./mutual_a.tf"
+import a from "./mutual_a.tf";
 
 export library b {
-  b0: 1
-  b1: a.a0
+  b0: 1;
+  b1: a.a0;
 }

@@ -125,10 +125,10 @@ c:
   public void prologue_and_variables() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setPrologue("import core, data, strings from 'std'")
+        .setPrologue("import core, data, strings from 'std';")
         .addVar("a", "strings.length('foo')")
         .addVar("b", "let {\n" +
-            "  x: 3\n" +
+            "  x: 3;\n" +
             "}\n" +
             "a+x")
         .addVar("c", "a+b")
@@ -217,7 +217,7 @@ a+b
   public void reports_compilation_error_in_first_variable() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setPrologue("import core, data from 'std'")
+        .setPrologue("import core, data from 'std';")
         .addVar("a", "core.ids")  // core.ids -> unresolved reference
         .addVar("b", "1")
         .addVar("c", "2")
@@ -245,7 +245,7 @@ a+b
   public void reports_compilation_error_in_mid_variable() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setPrologue("import core, data from 'std'")
+        .setPrologue("import core, data from 'std';")
         .addVar("a", "1")
         .addVar("b", "core.ids") // core.ids -> unresolved reference
         .addVar("c", "2")
@@ -273,7 +273,7 @@ a+b
   public void reports_compilation_error_in_last_variable() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setPrologue("import core, data from 'std'")
+        .setPrologue("import core, data from 'std';")
         .addVar("a", "1")
         .addVar("b", "2")
         .addVar("c", "core.ids") // core.ids -> unresolved reference
@@ -301,7 +301,7 @@ a+b
   public void reports_compilation_error_in_prologue() throws Exception {
 
     VarTable table = new VarTable.Builder()
-        .setPrologue("import missing from 'std'")
+        .setPrologue("import missing from 'std';")
         .addVar("a", "1")
         .addVar("b", "2")
         .build();

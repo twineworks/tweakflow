@@ -6,6 +6,6 @@ library lib
   }
 
   doc "var x doc string"
-  string x: "value"
+  string x: "value";
 
 }

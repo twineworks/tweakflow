@@ -1,5 +1,5 @@
 
-import * as zoobar from "./lib/zoobar.tf"
+import * as zoobar from "./lib/zoobar.tf";
 alias zoobar.foo as foo;
 alias zoobar.bar as bar;
 

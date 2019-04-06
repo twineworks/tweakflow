@@ -1,5 +1,4 @@
-import core from "std"
-
+import core from "std";
 alias core.inspect as inspect;
 
 library eval_spec {
@@ -36,7 +35,7 @@ library eval_spec {
     inspect(() -> 1) === "function";
 
   inspects_datetime:
-    inspect(1970-01-01T00:00:00Z@UTC) === "1970-01-01T00:00:00Z@UTC"
+    inspect(1970-01-01T00:00:00Z@UTC) === "1970-01-01T00:00:00Z@UTC";
 
   inspects_default_nil:
     inspect() === "nil";

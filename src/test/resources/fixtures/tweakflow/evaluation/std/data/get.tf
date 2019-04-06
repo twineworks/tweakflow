@@ -1,9 +1,9 @@
-import store from "./../../data.tf"
-import data from "std"
+import store from "./../../data.tf";
+import data from "std";
 import expect, expect_error, to from "std/assert.tf";
 
-alias data.get as get
-alias store.inventory as inv
+alias data.get as get;
+alias store.inventory as inv;
 
 library get_spec {
 

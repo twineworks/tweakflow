@@ -1,5 +1,5 @@
 
-alias lib as a_lib
+alias lib as a_lib;
 
 library lib {
 }

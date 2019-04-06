@@ -1,3 +1,3 @@
 export library lib_a {
-  a: "a"
+  a: "a";
 }

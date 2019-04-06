@@ -1,12 +1,12 @@
-import store from "./../../data.tf"
-import data, math from "std.tf"
+import store from "./../../data.tf";
+import data, math from "std.tf";
 
-alias store.inventory as inv
-alias data.sort as sort
-alias math.compare as compare
+alias store.inventory as inv;
+alias data.sort as sort;
+alias math.compare as compare;
 
 library books {
-  all: inv[:book]
+  all: inv[:book];
 }
 
 library map_spec {

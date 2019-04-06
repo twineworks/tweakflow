@@ -38,6 +38,16 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> prepend() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/prepend.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> append() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/append.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> empty() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/empty.tf");
   }

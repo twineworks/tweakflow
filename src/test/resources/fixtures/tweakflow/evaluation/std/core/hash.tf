@@ -1,5 +1,4 @@
-import core from "std"
-
+import core from "std";
 alias core.hash as hash;
 
 library eval_spec {

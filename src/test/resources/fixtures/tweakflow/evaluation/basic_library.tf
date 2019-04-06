@@ -1,4 +1,4 @@
 library lib
 {
-  a: 1
+  a: 1;
 }

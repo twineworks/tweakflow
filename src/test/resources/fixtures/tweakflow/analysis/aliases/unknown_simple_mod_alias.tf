@@ -1,3 +1,3 @@
-global module mod
+global module mod;
 
-alias huh as m
+alias huh as m;

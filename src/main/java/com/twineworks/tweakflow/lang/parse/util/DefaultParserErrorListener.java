@@ -59,10 +59,10 @@ public class DefaultParserErrorListener implements ANTLRErrorListener {
     if (message == null){
       message = "parse error at line: "+line;
     }
-    else {
-      // replace parser internal error message details
-      message = message.replaceAll(" expecting.*", "");
-    }
+//    else {
+//      // replace parser internal error message details
+//      message = message.replaceAll(" expecting.*", "");
+//    }
     message = "line: "+line+" "+message;
     exception = new LangException(LangError.PARSE_ERROR, message, new SourceInfo(parseUnit, line, charIndex+1, -1,-1));
   }

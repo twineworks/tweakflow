@@ -1,6 +1,6 @@
 
 export library main {
-  a: "foo"
-  b: "bar"
-  c: d
+  a: "foo";
+  b: "bar";
+  c: d;
 }

@@ -40,7 +40,7 @@ empty
 // module
 
 module
-  : endOfStatement? moduleHead moduleComponent* EOF
+  : moduleHead moduleComponent* EOF
   ;
 
 moduleHead
@@ -59,14 +59,14 @@ endOfStatement
 // name declaration of module
 
 nameDec
-  : metaDef 'module' endOfStatement?
-  | metaDef 'global' 'module' identifier endOfStatement?
+  : metaDef 'module' endOfStatement
+  | metaDef 'global' 'module' identifier endOfStatement
   ;
 
 // import definition
 
 importDef 
-  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement?
+  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement
   ;
 
 importMember
@@ -100,7 +100,7 @@ modulePath
 
 // alias definitions
 aliasDef
-  : 'alias' reference 'as' aliasName endOfStatement?
+  : 'alias' reference 'as' aliasName endOfStatement
   ;
 
 aliasName
@@ -109,7 +109,7 @@ aliasName
 
 // export definitions
 exportDef
-  : 'export' reference ('as' exportName)? endOfStatement?
+  : 'export' reference ('as' exportName)? endOfStatement
   ;
 
 exportName
@@ -119,7 +119,7 @@ exportName
 // library
 
 library
-  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement?)* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement)* '}'
   ;
 
 libVar
@@ -195,19 +195,19 @@ expression
   | 'match' expression matchBody                            # matchExp
   | 'for' forHead ',' expression                            # forExp
   | 'if' expression 'then'? expression 'else'? expression   # ifExp
-  | 'let' '{' (varDef endOfStatement?)* '}' expression                        # letExp
+  | 'let' '{' (varDef endOfStatement)* '}' expression                        # letExp
   | 'try' expression 'catch' catchDeclaration expression    # tryCatchExp
   | 'throw' expression                                      # throwErrorExp
   | 'debug' expression (',' expression)?                    # debugExp
   ;
 
 matchBody
-  : matchLine+
+  : matchLine (',' matchLine)*
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '->' expression endOfStatement?  # patternLine
-  | 'default' '->'  expression endOfStatement?                      # defaultLine
+  : matchPattern (',' matchGuard)? '->' expression                  # patternLine
+  | 'default' '->'  expression                                      # defaultLine
   ;
 
 matchGuard
@@ -395,9 +395,9 @@ metaDef
   ;
 
 meta
-  : 'meta' literal endOfStatement?
+  : 'meta' literal
   ;
 
 doc
-  : 'doc' literal endOfStatement?
+  : 'doc' literal
   ;

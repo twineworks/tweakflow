@@ -1,3 +1,3 @@
 library lib {
-  b: 2
+  b: 2;
 }

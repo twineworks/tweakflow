@@ -1,13 +1,13 @@
 library lib {
 
-  a: let {long x: 1} x
+  a: let {long x: 1;} x;
   f: (long x) -> long
      let {
-       long x_squared: x**2
+       long x_squared: x**2;
      }
-     x_squared + x_squared
+     x_squared + x_squared;
 
-  g: f(3) # 9+9 = 18
+  g: f(3); # 9+9 = 18
 
   make: (string x) ->
       let {
@@ -15,14 +15,14 @@ library lib {
              (x) -> -x
            else
              (x) -> x
-
+        ;
       }
-      f
+      f;
 
-  id:   make()
-  inv:  make("inverse")
+  id:   make();
+  inv:  make("inverse");
 
-  pos_one: id(1)
-  neg_one: inv(1)
+  pos_one: id(1);
+  neg_one: inv(1);
 
 }

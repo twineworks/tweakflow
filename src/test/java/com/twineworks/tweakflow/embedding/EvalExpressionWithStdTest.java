@@ -58,7 +58,7 @@ public class EvalExpressionWithStdTest {
 
   private Runtime.Var compileUserExpression(String exp){
 
-    String moduleTemplate = "import core, data, strings from 'std'\n" +
+    String moduleTemplate = "import core, data, strings from 'std';\n" +
         "library lib {\n" +
         "  x: /* exp */ ; # placeholder for user expression\n" +
         "}";

@@ -1,6 +1,6 @@
 
 library lib {
-  a: "foo"
-  f: (string x=a) -> x
+  a: "foo";
+  f: (string x=a) -> x;
 }
 

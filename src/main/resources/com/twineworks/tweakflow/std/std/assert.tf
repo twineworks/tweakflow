@@ -71,6 +71,8 @@ library assert {
     catch error
       expect(error, f, _stack_offset: 5)
 
+    ;
+
   function expect: (x, f, _stack_offset=3) ->
     let {
       result: f(x);
@@ -92,6 +94,7 @@ library assert {
         false
     else
       true
+    ;
 
 }
 

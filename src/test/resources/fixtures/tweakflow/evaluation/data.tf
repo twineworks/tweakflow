@@ -32,5 +32,5 @@ export library store {
       :color "red",
       :price 19.95
     }
-  }
+  };
 }

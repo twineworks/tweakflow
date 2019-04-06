@@ -14,7 +14,7 @@ library lib
   e11: "-\n-";
   e12: true;
   e13: false;
-  e14: () -> true # constant function returning true;
+  e14: () -> true; # constant function returning true
   e15: (double x = 0.0, double y = 0.0) -> list [x, y];
   e16: (list xs) -> any via "native";
   e17: 2e-1;

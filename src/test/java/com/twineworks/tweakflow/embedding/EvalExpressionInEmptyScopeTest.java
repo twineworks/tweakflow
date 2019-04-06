@@ -45,8 +45,8 @@ public class EvalExpressionInEmptyScopeTest {
   public void evaluates_complex_expression() throws Exception {
 
     String code = "let {" +
-        "  a: 'hello'" +
-        "  b: 'world'" +
+        "  a: 'hello';" +
+        "  b: 'world';" +
         "} a .. ' ' .. b";
 
     assertThat(TweakFlow.evaluate(code)).isEqualTo(Values.make("hello world"));

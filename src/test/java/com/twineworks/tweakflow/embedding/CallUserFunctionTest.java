@@ -61,7 +61,7 @@ public class CallUserFunctionTest {
   @Test
   public void calls_user_function() throws Exception {
 
-    String module = "library lib {f: (x) -> x+1}";
+    String module = "library lib {f: (x) -> x+1;}";
     Runtime.Module m = compileModule(module);
     m.evaluate();
     Runtime.Var f = m.getLibrary("lib").getVar("f");
@@ -75,7 +75,7 @@ public class CallUserFunctionTest {
   @Test
   public void calls_throwing_user_function() throws Exception {
 
-    String exp = "library lib {f: (x) -> throw {:bad 'error'}}";
+    String exp = "library lib {f: (x) -> throw {:bad 'error'};}";
     //                                   ^ manual throw
     Runtime.Module m = compileModule(exp);
     m.evaluate();

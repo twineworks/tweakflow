@@ -1,7 +1,7 @@
 
 library main {
   a: match "foo"
-    "foo"   ->  1
-    default ->  2
-    "bar"   ->  3
+    "foo"   ->  1,
+    default ->  2,
+    "bar"   ->  3;
 }

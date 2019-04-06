@@ -1,5 +1,5 @@
 
 library main {
-  f: (a, a) -> a
+  f: (a, a) -> a;
 }
 

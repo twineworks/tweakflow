@@ -1,4 +1,4 @@
 export library foo {
-  a: "a"
-  b: "b"
+  a: "a";
+  b: "b";
 }

@@ -3,4 +3,4 @@ meta {
   :b 1+1
 }
 
-module
+module;
