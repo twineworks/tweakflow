@@ -2443,9 +2443,12 @@ doc
 ~~~
 `(function p, list xs) -> list`
 
-Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to `boolean` `true`.
+Returns a list containing leading elements `x` of `xs` for which the predicate function `p` returns a value that casts to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 
@@ -2458,31 +2461,23 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.take_while((x) -> x % 2 == 0, [1, 2, 3, 4])
 []
 
-> data.take_while(nil, [1, 2, 3])
-nil
-
 > data.take_while((x) -> true, nil)
 nil
 ```
 ~~~
-
   function take_while: (function p, list xs) -> list
-    if p == nil then nil
-    if xs == nil then nil
-
-    let {
-      max: size(xs);
-      count: fun.while((i) -> (p(xs[i]) && (i < max)), 0, math.inc);
-    }
-    (take(count, xs));
+    via {:class "com.twineworks.tweakflow.std.Data$take_while"};
 
 doc
 ~~~
 `(function p, list xs) -> list`
 
-Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to `boolean` `false`.
+Returns a list containing leading elements `x` of `xs` for which the predicate function `p` returns a value that does not cast to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 
@@ -2498,23 +2493,12 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.take_until((x) -> x > 10, [1, 2, 3, 4])
 [1, 2, 3, 4]
 
-> data.take_until(nil, [1, 2, 3])
-nil
-
-> data.take_until((x) -> true, nil)
+> data.take_until((x) -> false, nil)
 nil
 ```
 ~~~
-
-  take_until: (function p, list xs) -> list
-    if p == nil then nil
-    if xs == nil then nil
-
-    let {
-      max: size(xs);
-      count: fun.until((i) -> (p(xs[i]) || (i >= max)), 0, math.inc);
-    }
-    (take(count, xs));
+  function take_until: (function p, list xs) -> list
+    via {:class "com.twineworks.tweakflow.std.Data$take_until"};
 
 doc
 ~~~
@@ -2552,9 +2536,12 @@ doc
 ~~~
 `(function p, list xs) -> list`
 
-Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)` casts to `boolean` `true`.
+Returns a sublist of elements of `xs` skipping leading elements `x` for which the predicate function `p` returns a value that casts to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 > data.drop_while((x) -> x <= 2, [1, 2, 3, 4])
@@ -2566,28 +2553,22 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.drop_while((x) -> false, nil)
 nil
 
-> data.drop_while(nil, ["a", "b", "c"])
-nil
 ```
 ~~~
 
   function drop_while: (function p, list xs) -> list
-    if p == nil then nil
-    if xs == nil then nil
-
-    let {
-      max: size(xs);
-      count: fun.while((i) -> (p(xs[i]) && (i < max)), 0, math.inc);
-    }
-    (drop(count, xs));
+    via {:class "com.twineworks.tweakflow.std.Data$drop_while"};
 
 doc
 ~~~
 `(function p, list xs) -> list`
 
-Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)` casts to `boolean` `false`.
+Returns a sublist of elements of `xs` skipping leading elements `x` for which the predicate function `p` returns a value that does not cast to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 > data.drop_until((x) -> x > 2, [1, 2, 3, 4])
@@ -2602,25 +2583,11 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.drop_until((x) -> false, nil)
 nil
 
-> data.drop_until(nil, ["a", "b", "c"])
-nil
 ```
 ~~~
 
   function drop_until: (function p, list xs) -> list
-    if p == nil then nil
-    if xs == nil then nil
-
-    # let {
-    #   start: size(xs)-1
-    #   count: fun.until((i) -> p(xs[i]) && i >= 0, start, math.dec)
-    # }
-
-    let {
-      max: size(xs);
-      count: fun.until((i) -> (p(xs[i]) || (i >= max)), 0, math.inc);
-    }
-    (drop(count, xs));
+    via {:class "com.twineworks.tweakflow.std.Data$drop_until"};
 
 doc
 ~~~

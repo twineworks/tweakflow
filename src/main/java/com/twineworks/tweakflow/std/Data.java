@@ -668,6 +668,100 @@ public final class Data {
     }
   }
 
+  // function take_while: (function p, list xs)
+  public static final class take_while implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value p, Value xs) {
+      if (xs == Values.NIL) return Values.NIL;
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      ArrayList<Value> out = new ArrayList<>();
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE) {
+            out.add(x);
+          }
+          else{
+            break;
+          }
+        }
+      }
+      else{
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE) {
+            out.add(x);
+          }
+          else{
+            break;
+          }
+        }
+      }
+
+      return Values.make(new ListValue(out));
+
+    }
+  }
+
+  // function take_until: (function p, list xs)
+  public static final class take_until implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value p, Value xs) {
+      if (xs == Values.NIL) return Values.NIL;
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      ArrayList<Value> out = new ArrayList<>();
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) != Values.TRUE) {
+            out.add(x);
+          }
+          else{
+            break;
+          }
+        }
+      }
+      else{
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x).castTo(Types.BOOLEAN) != Values.TRUE) {
+            out.add(x);
+          }
+          else{
+            break;
+          }
+        }
+      }
+
+      return Values.make(new ListValue(out));
+
+    }
+  }
+
   // function drop: (long n, list xs)
   public static final class drop implements UserFunction, Arity2UserFunction {
 
@@ -681,6 +775,106 @@ public final class Data {
       if (num >= list.size()) return Values.EMPTY_LIST;
       if (num <= 0) return xs;
       return Values.make(list.drop((int)num));
+    }
+  }
+
+  // function drop_while: (function p, list xs)
+  public static final class drop_while implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value p, Value xs) {
+      if (xs == Values.NIL) return Values.NIL;
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      int index = -1;
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE) {
+            index = i;
+          }
+          else{
+            break;
+          }
+        }
+      }
+      else{
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE) {
+            index = i;
+          }
+          else{
+            break;
+          }
+        }
+      }
+
+      if (index == -1) return xs;
+      if (index == list.size()-1) return Values.EMPTY_LIST;
+
+      return Values.make(list.drop(index+1));
+
+    }
+  }
+
+  // function drop_until: (function p, list xs)
+  public static final class drop_until implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value p, Value xs) {
+      if (xs == Values.NIL) return Values.NIL;
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      int index = -1;
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) != Values.TRUE) {
+            index = i;
+          }
+          else{
+            break;
+          }
+        }
+      }
+      else{
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          if (pcs.call(x).castTo(Types.BOOLEAN) != Values.TRUE) {
+            index = i;
+          }
+          else{
+            break;
+          }
+        }
+      }
+
+      if (index == -1) return xs;
+      if (index == list.size()-1) return Values.EMPTY_LIST;
+
+      return Values.make(list.drop(index+1));
+
     }
   }
 

@@ -228,6 +228,31 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> take_while() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/take_while.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> take_until() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/take_until.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> drop() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/drop.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> drop_while() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/drop_while.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> drop_until() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/drop_until.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> reduce() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/reduce.tf");
   }

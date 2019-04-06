@@ -2029,6 +2029,8 @@ If a < b, f returns a negative number.\
 If a > b, f returns a positive number.\
 If a == b, f returns 0.
 
+Returns `nil` if any argument is `nil`.
+
 ```tweakflow
 > data.sort([1, 4, 5, 3, 6, 7], math.compare)
 [1, 3, 4, 5, 6, 7]
@@ -2186,9 +2188,12 @@ nil
 
 `(function p, list xs) -> list`
 
-Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to `boolean` `true`.
+Returns a list containing leading elements `x` of `xs` for which the predicate function `p` returns a value that casts to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 
@@ -2201,9 +2206,6 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.take_while((x) -> x % 2 == 0, [1, 2, 3, 4])
 []
 
-> data.take_while(nil, [1, 2, 3])
-nil
-
 > data.take_while((x) -> true, nil)
 nil
 ```
@@ -2212,9 +2214,12 @@ nil
 
 `(function p, list xs) -> list`
 
-Returns a list containing leading elements `x` of `xs` for which `p(x)` casts to `boolean` `false`.
+Returns a list containing leading elements `x` of `xs` for which the predicate function `p` returns a value that does not cast to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 
@@ -2230,10 +2235,7 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.take_until((x) -> x > 10, [1, 2, 3, 4])
 [1, 2, 3, 4]
 
-> data.take_until(nil, [1, 2, 3])
-nil
-
-> data.take_until((x) -> true, nil)
+> data.take_until((x) -> false, nil)
 nil
 ```
 
@@ -2271,9 +2273,12 @@ nil
 
 `(function p, list xs) -> list`
 
-Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)` casts to `boolean` `true`.
+Returns a sublist of elements of `xs` skipping leading elements `x` for which the predicate function `p` returns a value that casts to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 > data.drop_while((x) -> x <= 2, [1, 2, 3, 4])
@@ -2285,17 +2290,18 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.drop_while((x) -> false, nil)
 nil
 
-> data.drop_while(nil, ["a", "b", "c"])
-nil
 ```
 
 ### drop_until
 
 `(function p, list xs) -> list`
 
-Returns a list of elements in `xs` skipping leading elements `x` for which `p(x)` casts to `boolean` `false`.
+Returns a sublist of elements of `xs` skipping leading elements `x` for which the predicate function `p` returns a value that does not cast to boolean `true`.
+If `p` accepts one argument, `x` is passed.  If `p` accepts two arguments, `x` and the index of `x` are passed.
 
-Returns `nil` if `p` is `nil` or `xs` is `nil`.
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
 
 ```tweakflow
 > data.drop_until((x) -> x > 2, [1, 2, 3, 4])
@@ -2310,8 +2316,6 @@ Returns `nil` if `p` is `nil` or `xs` is `nil`.
 > data.drop_until((x) -> false, nil)
 nil
 
-> data.drop_until(nil, ["a", "b", "c"])
-nil
 ```
 
 ### contains?
