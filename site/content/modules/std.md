@@ -1563,7 +1563,7 @@ ERROR:
 `(xs, list keys, not_found) ->`
 
 Given a `list` or `dict` `xs`, returns a collection of the same type, with elements at all `keys` from `xs`.
-If `xs` does not have any of the `keys`, `not_found` is included in the result instead.
+If any `key` is not present in `xs`, `not_found` is included in the result instead.
 
 Returns `nil` if `xs` is `nil` or `keys` is `nil`.
 
@@ -1676,7 +1676,8 @@ nil
 
 `(list xs) -> list `
 
-Returns a list with all duplicates in `xs` removed. Values are considered duplicates when they compare as equal.
+Returns a list with all duplicates in `xs` removed. Values are considered duplicates when they compare as equal
+using the `===` operator.
 
 Returns `nil` if `xs` is `nil`.
 
@@ -1685,7 +1686,7 @@ Returns `nil` if `xs` is `nil`.
 [1, 2, 3]
 
 > data.unique([1.0, 1, 2.0, 2, 3.0, 3])
-[1.0, 2.0, 3.0]
+[1.0, 1, 2.0, 2, 3.0, 3]
 
 > data.unique(["foo", "bar", "foo"])
 ["foo", "bar"]

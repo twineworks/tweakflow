@@ -58,7 +58,7 @@ library assert {
 
   function expect_error: (x, f) ->
     try
-      x() && let {
+      (x() || true) && let {
                     # get caller information from forced trace
                     call_loc: try throw "err" catch _, trace trace[:stack, 2];
                     at: util.linkable_trace_line(call_loc);
@@ -133,6 +133,9 @@ export library to {
 
   be_false: () -> (x) ->
     ["to be false", x === false, "x === false"];
+
+  be_NaN: () -> (x) ->
+    ["to be false", math.nan?(x), "math.nan?(x)"];
 
   be_function: () -> (x) ->
     ["to be function", x is function, "x is function"];

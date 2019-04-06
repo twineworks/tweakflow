@@ -38,6 +38,31 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> select() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/select.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> insert() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/insert.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> delete() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/delete.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> find() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/find.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> find_index() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/find_index.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> prepend() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/prepend.tf");
   }
@@ -45,6 +70,41 @@ public class DataTest {
   @TestFactory
   public Collection<DynamicTest> append() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/append.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> init() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/init.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> tail() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/tail.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> head() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/head.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> last() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/last.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> slice() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/slice.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> slices() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/slices.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> reverse() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/reverse.tf");
   }
 
   @TestFactory
@@ -103,8 +163,38 @@ public class DataTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> any() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/any.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> all() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/all.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> none() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/none.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> filter() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/filter.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> shuffle() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/shuffle.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> unique() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/unique.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> range() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/range.tf");
   }
 
   @TestFactory
@@ -115,6 +205,26 @@ public class DataTest {
   @TestFactory
   public Collection<DynamicTest> sort() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/sort.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> repeat() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/repeat.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> concat() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/concat.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> merge() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/merge.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> take() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/data/take.tf");
   }
 
   @TestFactory

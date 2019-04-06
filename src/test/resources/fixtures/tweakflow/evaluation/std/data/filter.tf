@@ -1,63 +1,75 @@
-import store from "./../../data.tf";
+import data from "std";
+import expect, expect_error, to from "std/assert.tf";
 
-import * as std from "std.tf";
-
-alias store.inventory as inv;
-alias std.data.filter as filter;
-
-library books {
-  moby_dick: inv[:book, 2];
-}
+alias data.filter as filter;
 
 library filter_spec {
 
-  book_price_above_10:
+  empty_list:
+    expect(filter([], (_) -> true), to.be([]));
 
-    filter(inv[:book], (x) -> x[:price] > 10)
-    ==
-    [
-      { :category "fiction",
-        :author   "Evelyn Waugh",
-        :title    "Sword of Honour",
-        :price    12.99
-      },
-      { :category "fiction",
-        :author   "J. R. R. Tolkien",
-        :title    "The Lord of the Rings",
-        :isbn     "0-395-19395-8",
-        :price    22.99
-      }
-    ];
+  keep_all_list:
+    expect(filter([1,2,3], (_) -> true), to.be([1,2,3]));
 
-  even_index_books:
-    filter(inv[:book], (_, i) -> i % 2 == 0)
-    ==
-    [inv[:book, 0], inv[:book, 2]];
+  keep_some_list:
+    expect(filter([1,2,3], (x) -> x % 2 == 1), to.be([1,3]));
 
-  moby_dick_only_string_entries:                      # filters out price
-    filter(books.moby_dick, (x) -> x is string)
-    ==
-    { :category "fiction",
-      :author   "Herman Melville",
-      :title    "Moby Dick",
-      :isbn     "0-553-21311-3"
-    };
+  keep_some_via_index_list:
+    expect(filter([1,2,3], (_, i) -> i % 2 == 1), to.be([2]));
 
-  moby_dick_only_double_entries:                     # keeps only price
-    filter(books.moby_dick, (x) -> x is double)
-    ==
-    {:price 8.99};
+  drop_all_list:
+    expect(filter([1,2,3], (_) -> false), to.be([]));
+
+  keep_all_list_with_cast:
+    expect(filter([1,2,3], (_) -> "foo"), to.be([1,2,3]));
+
+  drop_all_list_with_cast:
+    expect(filter([1,2,3], (_) -> ""), to.be([]));
+
+  keep_some_list_with_cast:
+    expect(filter([1,2,3], (x) -> if x % 2 == 1 then "yo" else ""), to.be([1,3]));
 
 
-  moby_dick_only_keys_starting_with_a:
-    filter(books.moby_dick, (_, k) -> (k as list)[0] == "a")
-    ==
-    {:author "Herman Melville"};
+  empty_dict:
+    expect(filter({}, (_) -> true), to.be({}));
 
-  filters_nil:
-    filter(nil, (x) -> true) == nil;
+  keep_all_dict:
+    expect(filter({:a 1, :b 2}, (_) -> true), to.be({:a 1, :b 2}));
 
-  filters_using_nil:
-    try filter([0,1], nil) catch "error" == "error";
+  drop_all_dict:
+    expect(filter({:a 1, :b 2}, (_) -> false), to.be({}));
 
+  keep_some_dict:
+    expect(filter({:a 1, :b 2}, (x) -> x == 2), to.be({:b 2}));
+
+  keep_some_via_index_dict:
+    expect(filter({:a 1, :b 2}, (_, k) -> k == :b), to.be({:b 2}));
+
+  keep_some_dict_with_cast:
+    expect(filter({:a 1, :b 2}, (x) -> if x == 2 then "keep" else []), to.be({:b 2}));
+
+
+  of_nil:
+    expect(filter(nil), to.be_nil());
+
+  of_nil_p_nil:
+    expect(filter(nil, nil), to.be_nil());
+
+  of_only_p_nil:
+    expect_error(
+      () -> filter([], nil),
+      to.have_code("NIL_ERROR")
+    );
+
+  of_invalid_p_too_few_args:
+    expect_error(
+      () -> filter([], () -> true), # p should accept 1 or 2 args
+      to.have_code("ILLEGAL_ARGUMENT")
+    );
+
+  of_non_collection:
+    expect_error(
+      () -> filter("foo", (_) -> true),
+      to.have_code("ILLEGAL_ARGUMENT")
+    );
 }

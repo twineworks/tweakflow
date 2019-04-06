@@ -1803,7 +1803,7 @@ ERROR:
 <p><code>(xs, list keys, not_found) -&gt;</code></p>
 
 <p>Given a <code>list</code> or <code>dict</code> <code>xs</code>, returns a collection of the same type, with elements at all <code>keys</code> from <code>xs</code>.
-If <code>xs</code> does not have any of the <code>keys</code>, <code>not_found</code> is included in the result instead.</p>
+If any <code>key</code> is not present in <code>xs</code>, <code>not_found</code> is included in the result instead.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code> or <code>keys</code> is <code>nil</code>.</p>
 
@@ -1913,7 +1913,8 @@ nil
 
 <p><code>(list xs) -&gt; list</code></p>
 
-<p>Returns a list with all duplicates in <code>xs</code> removed. Values are considered duplicates when they compare as equal.</p>
+<p>Returns a list with all duplicates in <code>xs</code> removed. Values are considered duplicates when they compare as equal
+using the <code>===</code> operator.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
 
@@ -1921,7 +1922,7 @@ nil
 [1, 2, 3]
 
 &gt; data.unique([1.0, 1, 2.0, 2, 3.0, 3])
-[1.0, 2.0, 3.0]
+[1.0, 1, 2.0, 2, 3.0, 3]
 
 &gt; data.unique([&quot;foo&quot;, &quot;bar&quot;, &quot;foo&quot;])
 [&quot;foo&quot;, &quot;bar&quot;]

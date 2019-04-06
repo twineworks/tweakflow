@@ -21,18 +21,19 @@
 # SOFTWARE.
 
 import core, data, strings from "std";
-alias data.map as map
-alias strings.join as join
-alias core.inspect as inspect
+
+alias data.map as map;
+alias strings.join as join;
+alias core.inspect as inspect;
 
 library transform {
 
   transform: (dict x) -> string
     match x[:node]
-      'module'  -> module_to_markdown(x)
-      'library' -> lib_to_markdown(x)
-      'var'     -> var_to_markdown(x)
-      default   -> core.inspect(x)
+      'module'  -> module_to_markdown(x),
+      'library' -> lib_to_markdown(x),
+      'var'     -> var_to_markdown(x),
+      default   -> core.inspect(x);
 
   module_to_markdown: (dict x) -> string
     "---\n"
@@ -42,24 +43,24 @@ library transform {
     ..'# module '..x[:file].."\n\n"
     ..doc_fragment(x)
     ..meta_fragment(x)
-    ..join(map(x[:components], transform)).."\n"
+    ..join(map(x[:components], transform)).."\n";
 
   lib_to_markdown: (dict x) -> string
     '## library '..x[:name].."\n\n"
     ..doc_fragment(x)
     ..meta_fragment(x)
-    ..join(map(x[:vars], transform)).."\n"
+    ..join(map(x[:vars], transform)).."\n";
 
   var_to_markdown: (dict x) -> string
     '### '..x[:name].."\n\n"
     ..doc_fragment(x)
-    ..meta_fragment(x)
+    ..meta_fragment(x);
 
   doc_fragment: (x) -> string
-    (if x[:doc] != nil then x[:doc].."\n\n" else "")
+    (if x[:doc] != nil then x[:doc].."\n\n" else "");
 
   meta_fragment: (x) -> string
-    (if x[:meta] != nil then "`````tweakflow\n"..inspect(x[:meta]).."\n`````".."\n\n" else "")
+    (if x[:meta] != nil then "`````tweakflow\n"..inspect(x[:meta]).."\n`````".."\n\n" else "");
 
 
 }

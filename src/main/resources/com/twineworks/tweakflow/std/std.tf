@@ -1746,7 +1746,7 @@ doc
 `(xs, list keys, not_found) ->`
 
 Given a `list` or `dict` `xs`, returns a collection of the same type, with elements at all `keys` from `xs`.
-If `xs` does not have any of the `keys`, `not_found` is included in the result instead.
+If any `key` is not present in `xs`, `not_found` is included in the result instead.
 
 Returns `nil` if `xs` is `nil` or `keys` is `nil`.
 
@@ -1868,7 +1868,8 @@ doc
 ~~~
 `(list xs) -> list `
 
-Returns a list with all duplicates in `xs` removed. Values are considered duplicates when they compare as equal.
+Returns a list with all duplicates in `xs` removed. Values are considered duplicates when they compare as equal
+using the `===` operator.
 
 Returns `nil` if `xs` is `nil`.
 
@@ -1877,7 +1878,7 @@ Returns `nil` if `xs` is `nil`.
 [1, 2, 3]
 
 > data.unique([1.0, 1, 2.0, 2, 3.0, 3])
-[1.0, 2.0, 3.0]
+[1.0, 1, 2.0, 2, 3.0, 3]
 
 > data.unique(["foo", "bar", "foo"])
 ["foo", "bar"]
@@ -2267,6 +2268,8 @@ The comparator function accepts two arguments: a and b. \
 If a < b, f returns a negative number.\
 If a > b, f returns a positive number.\
 If a == b, f returns 0.
+
+Returns `nil` if any argument is `nil`.
 
 ```tweakflow
 > data.sort([1, 4, 5, 3, 6, 7], math.compare)

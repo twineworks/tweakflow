@@ -507,9 +507,9 @@ public final class Data {
         ListValue list = xs.list();
         Long idx = key.castTo(Types.LONG).longNum();
 
-        // need to be sure index is within bounds
+        // if index out of bounds, it's not in the list
         if (idx < 0 || idx > Integer.MAX_VALUE) {
-          throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "cannot delete index "+idx);
+          return xs;
         }
 
         return Values.make(list.delete(idx.intValue()));
@@ -1035,13 +1035,28 @@ public final class Data {
       ListValue list = xs.list();
       if (list.size() < 2) return xs;
 
-      // put everything into a linked hash set, to retrieve unique results in order
-      LinkedHashSet<Value> set = new LinkedHashSet<>(list.size());
+      ArrayList<Value> out = new ArrayList<>();
+      HashSet<Value> set = new HashSet<>(list.size());
 
       for (Value value : list) {
-        set.add(value);
+
+        // non-comparable -> never equal to anything
+        boolean nonComparable = (value.isFunction() || value.isDoubleNum() && value.doubleNum().isNaN());
+        if (nonComparable){
+          out.add(value);
+          continue;
+        }
+        // at this point values are comparable to each other
+        if (set.contains(value)){
+          continue;
+        }
+        else{
+          set.add(value);
+          out.add(value);
+        }
+
       }
-      return Values.make(new ListValue(set));
+      return Values.make(new ListValue(out));
 
     }
   }

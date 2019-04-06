@@ -1062,8 +1062,7 @@ aliasName
 <p>The following module uses aliases.</p>
 
 <pre><code class="language-tweakflow"># file: aliases.tf
-import * as std from &quot;std&quot;
-
+import * as std from &quot;std&quot;;
 # s can be used as shortcut to std.strings
 alias std.strings as s
 # map can be used as shortcut to std.data.map
@@ -1095,8 +1094,7 @@ exportName
 <p>Below example exports the strings standard library under the name <code>str</code>, and a local library <code>common</code> under the name <code>util</code> .</p>
 
 <pre><code class="language-tweakflow"># lib.tf
-import * as std from &quot;std&quot;
-
+import * as std from &quot;std&quot;;
 export std.strings as str
 export common as util
 
@@ -3166,8 +3164,7 @@ nil
 <pre><code class="language-tweakflow"># scopes.tf
 
 # introduces 'strings' in module scope
-import strings from &quot;std&quot;
-
+import strings from &quot;std&quot;;
 # introduces 'len' in module scope
 alias strings.length as len # references 'strings' in module scope
 
@@ -3206,8 +3203,7 @@ a .. &quot; / &quot;.. b
 <p>Library scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
 
 <pre><code class="language-tweakflow"># libary-refs.tf
-import strings from &quot;std&quot;
-
+import strings from &quot;std&quot;;
 library utils {
   f: (x) -&gt; strings.length(x)
   g: (x) -&gt; let {
@@ -3271,8 +3267,7 @@ ERROR:
 <p>References in aliases and exports may point to any kind of entity. Aliases provide local names for imported libraries and functions. For example:</p>
 
 <pre><code class="language-tweakflow"># file aliases.tf
-import * as std from &quot;std&quot;
-
+import * as std from &quot;std&quot;;
 alias std.strings as str # local alias for imported library
 
 library util {

@@ -161,6 +161,9 @@ final public class ListValue implements Iterable<Value> {
   }
 
   public ListValue reverse() {
+
+    if (vec.isEmpty()) return this;
+
     TrieList ret = TrieList.empty();
     for(Iterator iterator = vec.reverseIterator(); iterator.hasNext();){
       ret = ret.add(iterator.next());
