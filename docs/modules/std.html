@@ -528,15 +528,11 @@ nil
 ERROR:
   code: NIL_ERROR
   message: start must not be nil
-  at: [interactive]:14:10
-  source: strings.substring(&quot;hello world&quot;, nil)
 
 &gt; strings.substring(&quot;hello world&quot;, -4)
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: start must not be negative: -4
-  at: [interactive]:14:10
-  source: strings.substring(&quot;hello world&quot;, -4)
 </code></pre>
 
 <h3 id="replace">replace</h3>
@@ -1161,8 +1157,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: size is not defined for type string
-  at: [interactive]:14:10
-  source: data.size(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="empty">empty?</h3>
@@ -1194,8 +1188,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: empty? is not defined for type string
-  at: [interactive]:14:10
-  source: data.empty?(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="get">get</h3>
@@ -1315,8 +1307,6 @@ nil
 ERROR:
   code: CAST_ERROR
   message: Cannot cast c to long
-  at: [interactive]:14:10
-  source: data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], &quot;default&quot;)
 </code></pre>
 
 <h3 id="put-in">put_in</h3>
@@ -1496,8 +1486,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: keys is not defined for type string
-  at: [interactive]:14:10
-  source: data.keys(&quot;foo&quot;)
 
 </code></pre>
 
@@ -1535,8 +1523,6 @@ true
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: has? is not defined for type string
-  at: [interactive]:14:10
-  source: data.has?(&quot;foo&quot;, 1)
 
 &gt; data.has?(&quot;foo&quot; as list, 1)
 true
@@ -1571,8 +1557,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: values is not defined for type string
-  at: [interactive]:14:10
-  source: data.values(&quot;foo&quot;)
 </code></pre>
 
 <h3 id="entries">entries</h3>
@@ -1674,8 +1658,6 @@ nil
 &gt; data.find([], nil)
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.find([], nil)
 </code></pre>
 
 <h3 id="find-index">find_index</h3>
@@ -1712,8 +1694,6 @@ nil
 ERROR:
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.find_index([], nil)
 </code></pre>
 
 <h3 id="insert">insert</h3>
@@ -1743,15 +1723,11 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: cannot insert at index -2
-  at: [interactive]:14:10
-  source: data.insert([], -2, &quot;a&quot;)
 
 &gt; data.insert([], nil, &quot;a&quot;)
 ERROR:
   code: NIL_ERROR
   message: cannot insert at nil index
-  at: [interactive]:14:10
-  source: data.insert([], nil, &quot;a&quot;)
 
 </code></pre>
 
@@ -1794,8 +1770,6 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: cannot delete index -2
-  at: [interactive]:14:10
-  source: data.delete([], -2)
 </code></pre>
 
 <h3 id="select">select</h3>
@@ -1873,15 +1847,11 @@ nil
 ERROR:
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.filter([], nil)
 
 &gt; data.filter(1, (x) -&gt; true)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: filter is not defined for type long
-  at: [interactive]:14:10
-  source: data.filter(1, (x) -&gt; true)
 </code></pre>
 
 <h3 id="shuffle">shuffle</h3>
@@ -2087,9 +2057,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.init([])
-
 </code></pre>
 
 <h3 id="tail">tail</h3>
@@ -2112,8 +2079,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.tail([])
 </code></pre>
 
 <h3 id="head">head</h3>
@@ -2136,8 +2101,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.head([])
 </code></pre>
 
 <h3 id="last">last</h3>
@@ -2160,8 +2123,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.last([])
 </code></pre>
 
 <h3 id="slice">slice</h3>
@@ -2300,8 +2261,6 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: Cannot repeat -2 times
-  at: [interactive]:14:10
-  source: data.repeat(-2, &quot;foo&quot;)
 </code></pre>
 
 <h3 id="concat-1">concat</h3>
@@ -2331,8 +2290,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot concat type string
-  at: [interactive]:14:10
-  source: data.concat([&quot;foo&quot;, &quot;bar&quot;])
 </code></pre>
 
 <h3 id="merge">merge</h3>
@@ -2370,8 +2327,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot merge type string
-  at: [interactive]:14:10
-  source: data.merge([&quot;foo&quot;, &quot;bar&quot;])
 </code></pre>
 
 <h3 id="take">take</h3>
@@ -2767,8 +2722,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.map(&quot;foo&quot;, (x) -&gt; x)
 </code></pre>
 
 <h3 id="flatmap">flatmap</h3>
@@ -3601,7 +3554,7 @@ nil
 
 <p><code>(datetime x) -&gt; long</code></p>
 
-<p>Returns the week of year for given datetime <code>x</code>. The ISO-8601 definition is used, where a week starts on Monday and the first week has a minimum of 4 days.</p>
+<p>Returns the week of year for given datetime <code>x</code>. The ISO-8601 definition of weeks is used, where a week starts on Monday and the first week of a year has a minimum of 4 days.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
@@ -3673,14 +3626,18 @@ nil
 
 <p><code>(datetime x, long year) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the year field set to <code>year</code>.</p>
+<p>Returns the datetime <code>x</code> with the year field set to <code>year</code>. If the day-of-month is invalid for the
+resulting datetime, it will be changed to the last valid day of the month.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
-<p>Throws an error if no datetime can be constructed with given year.</p>
+<p>Throws an error if year is out of bounds of -999999999 - 999999999.</p>
 
 <pre><code class="language-tweakflow">&gt; time.with_year(time.epoch, 2007)
 2007-01-01T00:00:00Z@UTC
+
+&gt; time.with_year(2016-02-29T, 2019)
+2019-02-28T00:00:00Z@UTC
 
 &gt; time.with_year(time.epoch, nil)
 nil
@@ -3692,15 +3649,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
-  at: [interactive]:14:10
-  source: time.with_year(time.epoch, 1000000000)
 </code></pre>
 
 <h3 id="with-month">with_month</h3>
 
 <p><code>(datetime x, long month) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the month field set to <code>month</code>.</p>
+<p>Returns the datetime <code>x</code> with the month field set to <code>month</code>.
+If the day-of-month is invalid for the resulting datetime, it will be changed to the last valid day of the month.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -3708,6 +3664,9 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; time.with_month(time.epoch, 6)
 1970-06-01T00:00:00Z@UTC
+
+&gt; time.with_month(2016-03-31T, 2)
+2016-02-29T00:00:00Z@UTC
 
 &gt; time.with_month(time.epoch, nil)
 nil
@@ -3719,9 +3678,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MonthOfYear (valid values 1 - 12): 13
-  at: [interactive]:14:10
-  source: time.with_month(time.epoch, 13)
-
 </code></pre>
 
 <h3 id="with-day-of-month">with_day_of_month</h3>
@@ -3737,6 +3693,15 @@ ERROR:
 <pre><code class="language-tweakflow">&gt; time.with_day_of_month(time.epoch, 23)
 1970-01-23T00:00:00Z@UTC
 
+&gt; time.with_day_of_month(2016-02-01T, 29)
+2016-02-29T00:00:00Z@UTC
+
+&gt; time.with_day_of_month(2010-02-01T, 29)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid date 'February 29' as '2010' is not a leap year
+  ...
+
 &gt; time.with_day_of_month(time.epoch, nil)
 nil
 
@@ -3747,15 +3712,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
-  at: [interactive]:14:10
-  source: time.with_day_of_month(time.epoch, 33)
 </code></pre>
 
 <h3 id="with-hour">with_hour</h3>
 
 <p><code>(datetime x, long hour) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the hour field set to <code>hour</code>.</p>
+<p>Returns the datetime <code>x</code> with the hour field set to <code>hour</code>.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -3763,6 +3727,10 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; time.with_hour(time.epoch, 4)
 1970-01-01T04:00:00Z@UTC
+
+# 2:30 is in a 1h DST gap, it technically did not exist
+&gt; time.with_hour(2019-03-31T01:30:00+01:00@`Europe/Berlin`, 2)
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
 
 &gt; time.with_hour(time.epoch, nil)
 nil
@@ -3774,15 +3742,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for HourOfDay (valid values 0 - 23): 25
-  at: [interactive]:14:10
-  source: time.with_hour(time.epoch, 25)
 </code></pre>
 
 <h3 id="with-minute">with_minute</h3>
 
 <p><code>(datetime x, long minute) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the minute field set to <code>minute</code>.</p>
+<p>Returns the datetime <code>x</code> with the minute field set to <code>minute</code>.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -3801,15 +3768,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
-  at: [interactive]:14:10
-  source: time.with_minute(time.epoch, 78)
 </code></pre>
 
 <h3 id="with-second">with_second</h3>
 
 <p><code>(datetime x, long second) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the second field set to <code>second</code>.</p>
+<p>Returns the datetime <code>x</code> with the second field set to <code>second</code>.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -3828,15 +3794,14 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
-  at: [interactive]:14:10
-  source: time.with_second(time.epoch, 78)
 </code></pre>
 
 <h3 id="with-nano-of-second">with_nano_of_second</h3>
 
 <p><code>(datetime x, long nano_of_second) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the nano_of_second field set to <code>nano_of_second</code>.</p>
+<p>Returns the datetime <code>x</code> with the nano_of_second field set to <code>nano_of_second</code>.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.</p>
 
 <p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
 
@@ -3855,25 +3820,27 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
-  at: [interactive]:14:10
-  source: time.with_nano_of_second(time.epoch, 1000000000)
 </code></pre>
 
 <h3 id="with-zone">with_zone</h3>
 
 <p><code>(datetime x, string tz) -&gt; datetime</code></p>
 
-<p>Returns the datetime <code>x</code> with the time zone field set to <code>tz</code>.</p>
+<p>Returns the datetime <code>x</code> with the time zone field set to <code>tz</code>.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 
-<p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
-
-<p>Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.
+Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; time.with_zone(time.epoch, &quot;Europe/Berlin&quot;)
 1970-01-01T00:00:00+01:00@`Europe/Berlin`
 
 &gt; time.with_zone(time.epoch, &quot;GMT+08:00&quot;)
 1970-01-01T00:00:00+08:00@`GMT+08:00`
+
+&gt; time.with_zone(time.epoch, 'America/New_York')
+  1970-01-01T00:00:00-05:00@`America/New_York`
 
 &gt; time.with_zone(time.epoch, nil)
 nil
@@ -3885,8 +3852,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-  at: [interactive]:14:10
-  source: time.with_zone(time.epoch, &quot;---&quot;)
 </code></pre>
 
 <h3 id="same-instant-at-zone">same_instant_at_zone</h3>
@@ -3919,8 +3884,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-  at: [interactive]:14:10
-  source: time.same_instant_at_zone(time.epoch, &quot;---&quot;)
 </code></pre>
 
 <h3 id="unix-timestamp">unix_timestamp</h3>
@@ -3999,7 +3962,7 @@ Assumes <code>nil</code> to precede any non-nil datetime.</p>
 <p>Returns a function <code>f</code> that accepts a single datetime parameter <code>x</code>, and returns a string representation of <code>x</code> using the
 supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">pattern</a> and language tag.</p>
 
-<p><code>f</code> returns <code>nil</code> if passed <code>nil</code> as an argument.</p>
+<p><code>f</code> returns <code>nil</code> if <code>nil</code> is passed as an argument.</p>
 
 <p>Throws an error if any argument is <code>nil</code>.<br />
 Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">pattern</a> for the DateTimeFormatter of the Java language.</p>
@@ -4033,19 +3996,24 @@ function
 
 <pre><code>(
   string pattern=&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;,
-  boolean lenient=false,
   string lang=&quot;en-US&quot;,
-  string default_tz=&quot;UTC&quot;
+  string default_tz=&quot;UTC&quot;,
+  boolean lenient=false
 ) -&gt; function
 </code></pre>
 
 <p>Returns a function <code>f</code> that accepts a single string paramter <code>x</code> and returns a parsed datetime value as specified by the supplied
 <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">pattern</a> and language tag.</p>
 
+<p><code>f</code> returns <code>nil</code> when <code>nil</code> is passed as an argument.</p>
+
 <p>If <code>lenient</code> is false, <code>f</code> throws an error on strings that parse to invalid dates.<br />
 If <code>lenient</code> is true, the parser will attempt to correct invalid datetime values. A date of January 32nd will parse as February 1st, for example.</p>
 
 <p>The default time zone is used unless the pattern parses both a time component and a time zone in which case the parsed values are used.</p>
+
+<p>Throws an error if any argument is <code>nil</code>.<br />
+Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">pattern</a> for the DateTimeFormatter of the Java language.</p>
 
 <pre><code class="language-tweakflow">&gt; f: time.parser(&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;)
 function
@@ -4064,8 +4032,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19
-  at: [interactive]:14:10
-  source: f(&quot;2017-04-23T21:43:11 Europe/Berlin&quot;)
 
 # strict parser
 &gt; f: time.parser('uuuu-MM-dd')
@@ -4076,8 +4042,6 @@ function
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
-  at: [interactive]:14:10
-  source: f(&quot;2015-03-32&quot;)
 
 # lenient parser
 &gt; f: time.parser('uuuu-MM-dd', true)
@@ -4155,8 +4119,6 @@ NaN
 ERROR:
   code: NUMBER_OUT_OF_BOUNDS
   message: cannot represent magnitude as long
-  at: [interactive]:14:10
-  source: math.abs(math.min_long)
 
 &gt; math.abs(math.min_long as double)
 9.223372036854776E18
@@ -4168,8 +4130,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot determine magnitude of type string
-  at: [interactive]:14:10
-  source: math.abs(&quot;hello&quot;)
 </code></pre>
 
 <h3 id="rand">rand</h3>
@@ -4255,8 +4215,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot increment type list
-  at: [interactive]:14:10
-  source: math.inc([])
 </code></pre>
 
 <h3 id="dec">dec</h3>
@@ -4291,8 +4249,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot decrement type list
-  at: [interactive]:14:10
-  source: math.dec([])
 </code></pre>
 
 <h3 id="compare-1">compare</h3>
@@ -4348,8 +4304,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-  at: [interactive]:14:10
-  source: math.min([&quot;foo&quot;])
 </code></pre>
 
 <h3 id="max">max</h3>
@@ -4378,8 +4332,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-  at: [interactive]:14:10
-  source: math.max([&quot;foo&quot;])
 </code></pre>
 
 <h3 id="round">round</h3>
@@ -4731,8 +4683,6 @@ If <code>lenient</code> is <code>true</code> then partial matches of <code>x</co
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Partial match not allowed. Parsing ended at index: 6
-  at: [interactive]:14:10
-  source: f(&quot;203.23kg&quot;)
 
 # lenient parser
 &gt; f: math.parser('0.##', nil, true)

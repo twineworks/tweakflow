@@ -298,15 +298,11 @@ nil
 ERROR:
   code: NIL_ERROR
   message: start must not be nil
-  at: [interactive]:14:10
-  source: strings.substring("hello world", nil)
 
 > strings.substring("hello world", -4)
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: start must not be negative: -4
-  at: [interactive]:14:10
-  source: strings.substring("hello world", -4)
 ```
 ~~~
 
@@ -1034,8 +1030,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: size is not defined for type string
-  at: [interactive]:14:10
-  source: data.size("foo")
 ```
 ~~~
 
@@ -1071,8 +1065,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: empty? is not defined for type string
-  at: [interactive]:14:10
-  source: data.empty?("foo")
 ```
 ~~~
 
@@ -1205,8 +1197,6 @@ nil
 ERROR:
   code: CAST_ERROR
   message: Cannot cast c to long
-  at: [interactive]:14:10
-  source: data.get_in({:a [1,2,3], :b [4,5,6]}, [:b :c], "default")
 ```
 ~~~
 
@@ -1402,8 +1392,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: keys is not defined for type string
-  at: [interactive]:14:10
-  source: data.keys("foo")
 
 ```
 ~~~
@@ -1445,8 +1433,6 @@ true
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: has? is not defined for type string
-  at: [interactive]:14:10
-  source: data.has?("foo", 1)
 
 > data.has?("foo" as list, 1)
 true
@@ -1485,8 +1471,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: values is not defined for type string
-  at: [interactive]:14:10
-  source: data.values("foo")
 ```
 ~~~
 
@@ -1603,8 +1587,6 @@ nil
 > data.find([], nil)
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.find([], nil)
 ```
 ~~~
   function find: (list xs, function p) ->                   via {:class "com.twineworks.tweakflow.std.Data$find"};
@@ -1644,8 +1626,6 @@ nil
 ERROR:
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.find_index([], nil)
 ```
 ~~~
   function find_index: (list xs, function p) -> long        via {:class "com.twineworks.tweakflow.std.Data$findIndex"};
@@ -1679,15 +1659,11 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: cannot insert at index -2
-  at: [interactive]:14:10
-  source: data.insert([], -2, "a")
 
 > data.insert([], nil, "a")
 ERROR:
   code: NIL_ERROR
   message: cannot insert at nil index
-  at: [interactive]:14:10
-  source: data.insert([], nil, "a")
 
 ```
 ~~~
@@ -1734,8 +1710,6 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: cannot delete index -2
-  at: [interactive]:14:10
-  source: data.delete([], -2)
 ```
 ~~~
 
@@ -1821,15 +1795,11 @@ nil
 ERROR:
   code: NIL_ERROR
   message: predicate function cannot be nil
-  at: [interactive]:14:10
-  source: data.filter([], nil)
 
 > data.filter(1, (x) -> true)
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: filter is not defined for type long
-  at: [interactive]:14:10
-  source: data.filter(1, (x) -> true)
 ```
 ~~~
 
@@ -2063,9 +2033,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.init([])
-
 ```
 ~~~
 
@@ -2092,8 +2059,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.tail([])
 ```
 ~~~
 
@@ -2120,8 +2085,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.head([])
 ```
 ~~~
 
@@ -2148,8 +2111,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-  at: [interactive]:14:10
-  source: data.last([])
 ```
 ~~~
 
@@ -2321,8 +2282,6 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: Cannot repeat -2 times
-  at: [interactive]:14:10
-  source: data.repeat(-2, "foo")
 ```
 ~~~
 
@@ -2356,8 +2315,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot concat type string
-  at: [interactive]:14:10
-  source: data.concat(["foo", "bar"])
 ```
 ~~~
 
@@ -2399,8 +2356,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot merge type string
-  at: [interactive]:14:10
-  source: data.merge(["foo", "bar"])
 ```
 ~~~
 
@@ -2846,8 +2801,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-  at: [interactive]:14:10
-  source: data.map("foo", (x) -> x)
 ```
 ~~~
 
@@ -3772,7 +3725,7 @@ doc
 ~~~
 `(datetime x) -> long`
 
-Returns the week of year for given datetime `x`. The ISO-8601 definition is used, where a week starts on Monday and the first week has a minimum of 4 days.
+Returns the week of year for given datetime `x`. The ISO-8601 definition of weeks is used, where a week starts on Monday and the first week of a year has a minimum of 4 days.
 
 Returns `nil` if `x` is `nil`.
 
@@ -3854,15 +3807,19 @@ doc
 ~~~
 `(datetime x, long year) -> datetime`
 
-Returns the datetime `x` with the year field set to `year`.
+Returns the datetime `x` with the year field set to `year`. If the day-of-month is invalid for the
+resulting datetime, it will be changed to the last valid day of the month.
 
 Returns `nil` if any argument is `nil`.
 
-Throws an error if no datetime can be constructed with given year.
+Throws an error if year is out of bounds of -999999999 - 999999999.
 
 ```tweakflow
 > time.with_year(time.epoch, 2007)
 2007-01-01T00:00:00Z@UTC
+
+> time.with_year(2016-02-29T, 2019)
+2019-02-28T00:00:00Z@UTC
 
 > time.with_year(time.epoch, nil)
 nil
@@ -3874,8 +3831,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
-  at: [interactive]:14:10
-  source: time.with_year(time.epoch, 1000000000)
 ```
 ~~~
 
@@ -3886,6 +3841,7 @@ doc
 `(datetime x, long month) -> datetime`
 
 Returns the datetime `x` with the month field set to `month`.
+If the day-of-month is invalid for the resulting datetime, it will be changed to the last valid day of the month.
 
 Returns `nil` if any argument is `nil`.
 
@@ -3894,6 +3850,9 @@ Throws an error if no datetime can be constructed with given month.
 ```tweakflow
 > time.with_month(time.epoch, 6)
 1970-06-01T00:00:00Z@UTC
+
+> time.with_month(2016-03-31T, 2)
+2016-02-29T00:00:00Z@UTC
 
 > time.with_month(time.epoch, nil)
 nil
@@ -3905,9 +3864,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MonthOfYear (valid values 1 - 12): 13
-  at: [interactive]:14:10
-  source: time.with_month(time.epoch, 13)
-
 ```
 ~~~
 
@@ -3928,6 +3884,15 @@ Throws an error if no datetime can be constructed with given `day_of_month`.
 > time.with_day_of_month(time.epoch, 23)
 1970-01-23T00:00:00Z@UTC
 
+> time.with_day_of_month(2016-02-01T, 29)
+2016-02-29T00:00:00Z@UTC
+
+> time.with_day_of_month(2010-02-01T, 29)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: Invalid date 'February 29' as '2010' is not a leap year
+  ...
+
 > time.with_day_of_month(time.epoch, nil)
 nil
 
@@ -3938,8 +3903,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
-  at: [interactive]:14:10
-  source: time.with_day_of_month(time.epoch, 33)
 ```
 ~~~
 
@@ -3950,6 +3913,7 @@ doc
 `(datetime x, long hour) -> datetime`
 
 Returns the datetime `x` with the hour field set to `hour`.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
 
 Returns `nil` if any argument is `nil`.
 
@@ -3958,6 +3922,10 @@ Throws an error if no datetime can be constructed with given `hour`.
 ```tweakflow
 > time.with_hour(time.epoch, 4)
 1970-01-01T04:00:00Z@UTC
+
+# 2:30 is in a 1h DST gap, it technically did not exist
+> time.with_hour(2019-03-31T01:30:00+01:00@`Europe/Berlin`, 2)
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
 
 > time.with_hour(time.epoch, nil)
 nil
@@ -3969,8 +3937,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for HourOfDay (valid values 0 - 23): 25
-  at: [interactive]:14:10
-  source: time.with_hour(time.epoch, 25)
 ```
 ~~~
 
@@ -3981,6 +3947,7 @@ doc
 `(datetime x, long minute) -> datetime`
 
 Returns the datetime `x` with the minute field set to `minute`.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
 
 Returns `nil` if any argument is `nil`.
 
@@ -4000,8 +3967,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
-  at: [interactive]:14:10
-  source: time.with_minute(time.epoch, 78)
 ```
 ~~~
 
@@ -4012,6 +3977,7 @@ doc
 `(datetime x, long second) -> datetime`
 
 Returns the datetime `x` with the second field set to `second`.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
 
 Returns `nil` if any argument is `nil`.
 
@@ -4031,8 +3997,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
-  at: [interactive]:14:10
-  source: time.with_second(time.epoch, 78)
 ```
 ~~~
 
@@ -4043,6 +4007,7 @@ doc
 `(datetime x, long nano_of_second) -> datetime`
 
 Returns the datetime `x` with the nano_of_second field set to `nano_of_second`.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
 
 Returns `nil` if any argument is `nil`.
 
@@ -4062,8 +4027,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
-  at: [interactive]:14:10
-  source: time.with_nano_of_second(time.epoch, 1000000000)
 ```
 ~~~
 
@@ -4074,9 +4037,10 @@ doc
 `(datetime x, string tz) -> datetime`
 
 Returns the datetime `x` with the time zone field set to `tz`.
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.
 
 Returns `nil` if any argument is `nil`.
-
 Throws an error if no datetime can be constructed with given `tz`.
 
 ```tweakflow
@@ -4085,6 +4049,9 @@ Throws an error if no datetime can be constructed with given `tz`.
 
 > time.with_zone(time.epoch, "GMT+08:00")
 1970-01-01T00:00:00+08:00@`GMT+08:00`
+
+> time.with_zone(time.epoch, 'America/New_York')
+  1970-01-01T00:00:00-05:00@`America/New_York`
 
 > time.with_zone(time.epoch, nil)
 nil
@@ -4096,8 +4063,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-  at: [interactive]:14:10
-  source: time.with_zone(time.epoch, "---")
 ```
 ~~~
 
@@ -4135,8 +4100,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-  at: [interactive]:14:10
-  source: time.same_instant_at_zone(time.epoch, "---")
 ```
 ~~~
 
@@ -4245,7 +4208,7 @@ doc
 Returns a function `f` that accepts a single datetime parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns) and language tag.
 
-`f` returns `nil` if passed `nil` as an argument.
+`f` returns `nil` if `nil` is passed as an argument.
 
 Throws an error if any argument is `nil`.\
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns) for the DateTimeFormatter of the Java language.
@@ -4285,19 +4248,23 @@ doc
 ```
 (
   string pattern="uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']",
-  boolean lenient=false,
   string lang="en-US",
-  string default_tz="UTC"
+  string default_tz="UTC",
+  boolean lenient=false
 ) -> function
 ```
-
 Returns a function `f` that accepts a single string paramter `x` and returns a parsed datetime value as specified by the supplied
 [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns) and language tag.
+
+`f` returns `nil` when `nil` is passed as an argument.
 
 If `lenient` is false, `f` throws an error on strings that parse to invalid dates.\
 If `lenient` is true, the parser will attempt to correct invalid datetime values. A date of January 32nd will parse as February 1st, for example.
 
 The default time zone is used unless the pattern parses both a time component and a time zone in which case the parsed values are used.
+
+Throws an error if any argument is `nil`.\
+Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns) for the DateTimeFormatter of the Java language.
 
 ```tweakflow
 > f: time.parser("uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']")
@@ -4317,8 +4284,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Text '2017-04-23T21:43:11 Europe/Berlin' could not be parsed, unparsed text found at index 19
-  at: [interactive]:14:10
-  source: f("2017-04-23T21:43:11 Europe/Berlin")
 
 # strict parser
 > f: time.parser('uuuu-MM-dd')
@@ -4329,8 +4294,6 @@ function
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
-  at: [interactive]:14:10
-  source: f("2015-03-32")
 
 # lenient parser
 > f: time.parser('uuuu-MM-dd', true)
@@ -4353,7 +4316,7 @@ function
 ```
 ~~~
 
-  function parser: (string pattern="uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']", boolean lenient=false, string lang="en-US", string default_tz="UTC") -> function via {:class "com.twineworks.tweakflow.std.Time$parser"};
+  function parser: (string pattern="uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']", string lang="en-US", string default_tz="UTC", boolean lenient=false) -> function via {:class "com.twineworks.tweakflow.std.Time$parser"};
 
 doc
 ~~~
@@ -4420,8 +4383,6 @@ NaN
 ERROR:
   code: NUMBER_OUT_OF_BOUNDS
   message: cannot represent magnitude as long
-  at: [interactive]:14:10
-  source: math.abs(math.min_long)
 
 > math.abs(math.min_long as double)
 9.223372036854776E18
@@ -4433,8 +4394,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot determine magnitude of type string
-  at: [interactive]:14:10
-  source: math.abs("hello")
 ```
 ~~~
 
@@ -4527,8 +4486,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot increment type list
-  at: [interactive]:14:10
-  source: math.inc([])
 ```
 ~~~
 
@@ -4567,8 +4524,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot decrement type list
-  at: [interactive]:14:10
-  source: math.dec([])
 ```
 ~~~
 
@@ -4651,8 +4606,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-  at: [interactive]:14:10
-  source: math.min(["foo"])
 ```
 ~~~
 
@@ -4685,8 +4638,6 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-  at: [interactive]:14:10
-  source: math.max(["foo"])
 ```
 ~~~
 
@@ -5109,8 +5060,6 @@ Throws an error if `pattern` or `decimal_symbols` is invalid.
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Partial match not allowed. Parsing ended at index: 6
-  at: [interactive]:14:10
-  source: f("203.23kg")
 
 # lenient parser
 > f: math.parser('0.##', nil, true)

@@ -41,7 +41,7 @@ import java.util.TimeZone;
 
 public final class Time {
 
-  private static Value periodToDict(Period period){
+  private static Value periodToDict(Period period) {
     return Values.makeDict(
         "years", Values.make(period.getYears()),
         "months", Values.make(period.getMonths()),
@@ -49,11 +49,23 @@ public final class Time {
     );
   }
 
-  private static Value durationToDict(Duration duration){
+  private static Value durationToDict(Duration duration) {
     return Values.makeDict(
         "seconds", Values.make(duration.getSeconds()),
         "nano_seconds", Values.make(duration.getNano())
     );
+  }
+
+  public static boolean isValidTimeZone(final String timeZone) {
+    final String DEFAULT_GMT_TIMEZONE = "GMT";
+    if (timeZone.equals(DEFAULT_GMT_TIMEZONE)) {
+      return true;
+    } else {
+      // if custom time zone is invalid,
+      // time zone id returned is always "GMT" by default
+      String id = TimeZone.getTimeZone(timeZone).getID();
+      return !id.equals(DEFAULT_GMT_TIMEZONE);
+    }
   }
 
   // function years_between: (datetime start_inclusive, datetime end_exclusive) -> long
@@ -71,7 +83,6 @@ public final class Time {
       return Values.make(ChronoUnit.YEARS.between(start.getZoned(), end.getZoned()));
     }
   }
-
 
   // function months_between: (datetime start_inclusive, datetime end_exclusive) -> long
   public static final class monthsBetween implements UserFunction, Arity2UserFunction {
@@ -207,11 +218,16 @@ public final class Time {
 
       DateTimeValue startTime = start.dateTime();
 
-      return Values.make(new DateTimeValue(
-          startTime.getZoned()
-              .plusYears(yearsLong)
-              .plusMonths(monthsLong)
-              .plusDays(daysLong)));
+      try {
+        return Values.make(new DateTimeValue(
+            startTime.getZoned()
+                .plusYears(yearsLong)
+                .plusMonths(monthsLong)
+                .plusDays(daysLong)));
+
+      } catch (DateTimeException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
+      }
     }
   }
 
@@ -230,10 +246,15 @@ public final class Time {
 
       DateTimeValue startTime = start.dateTime();
 
-      return Values.make(new DateTimeValue(
-          startTime.getZoned()
-              .plusSeconds(secondsLong)
-              .plusNanos(nanosLong)));
+      try {
+        return Values.make(new DateTimeValue(
+            startTime.getZoned()
+                .plusSeconds(secondsLong)
+                .plusNanos(nanosLong)));
+
+      } catch (DateTimeException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
+      }
     }
   }
 
@@ -368,11 +389,11 @@ public final class Time {
     @Override
     public Value call(UserCallContext context, Value pattern, Value lang) {
 
-      if (pattern == Values.NIL){
+      if (pattern == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "pattern cannot be nil");
       }
 
-      if (lang == Values.NIL){
+      if (lang == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "language tag cannot be nil");
       }
 
@@ -386,9 +407,8 @@ public final class Time {
                     Types.STRING),
                 new formatter_impl(formatter)));
 
-      }
-      catch (IllegalArgumentException e){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid datetime format pattern: "+e.getMessage());
+      } catch (IllegalArgumentException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid datetime format pattern: " + e.getMessage());
       }
 
     }
@@ -411,15 +431,13 @@ public final class Time {
 
       try {
         dt = new DateTimeValue(ZonedDateTime.parse(x.string(), formatter));
-      } catch (DateTimeParseException e1){
+      } catch (DateTimeParseException e1) {
         try {
           dt = new DateTimeValue(LocalDateTime.parse(x.string(), formatter).atZone(formatter.getZone()));
-        }
-        catch (DateTimeParseException e2){
+        } catch (DateTimeParseException e2) {
           try {
             dt = new DateTimeValue(LocalDate.parse(x.string(), formatter).atStartOfDay().atZone(formatter.getZone()));
-          }
-          catch (DateTimeParseException e3){
+          } catch (DateTimeParseException e3) {
             throw new LangException(LangError.ILLEGAL_ARGUMENT, e3.getMessage());
           }
         }
@@ -429,43 +447,41 @@ public final class Time {
     }
   }
 
-  // (string pattern, string lang, boolean lenient, string default_tz) -> function
+  // (string pattern, string lang, string default_tz, boolean lenient) -> function
   public static final class parser implements UserFunction, Arity4UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value pattern, Value lenient, Value lang, Value default_tz) {
+    public Value call(UserCallContext context, Value pattern, Value lang, Value default_tz, Value lenient) {
 
-      if (pattern == Values.NIL){
+      if (pattern == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "pattern cannot be nil");
       }
 
-      if (lang == Values.NIL){
+      if (lang == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "language tag cannot be nil");
       }
 
-      if (lenient == Values.NIL){
+      if (lenient == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "lenient flag cannot be nil");
       }
 
-      if (default_tz == Values.NIL){
+      if (default_tz == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "default_tz cannot be nil");
       }
 
       try {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern.string(), java.util.Locale.forLanguageTag(lang.string()));
 
-        if (lenient == Values.TRUE){
+        if (lenient == Values.TRUE) {
           formatter = formatter.withResolverStyle(ResolverStyle.LENIENT);
-        }
-        else {
+        } else {
           formatter = formatter.withResolverStyle(ResolverStyle.STRICT);
         }
 
         try {
           formatter = formatter.withZone(ZoneId.of(default_tz.string()));
-        }
-        catch (DateTimeException e){
-          throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid time zone: "+e.getMessage());
+        } catch (DateTimeException e) {
+          throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid time zone: " + e.getMessage());
         }
 
         return Values.make(
@@ -475,9 +491,8 @@ public final class Time {
                     Types.DATETIME),
                 new parser_impl(formatter)));
 
-      }
-      catch (IllegalArgumentException e){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid datetime format pattern: "+e.getMessage());
+      } catch (IllegalArgumentException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid datetime format pattern: " + e.getMessage());
       }
 
     }
@@ -509,14 +524,14 @@ public final class Time {
       if (year == Values.NIL) return Values.NIL;
 
       Long y = year.longNum();
-      if ((long) y.intValue() != y){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "year value out of range: "+y);
+      if ((long) y.intValue() != y) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "year value out of range: " + y);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withYear(y.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -533,14 +548,14 @@ public final class Time {
       if (month == Values.NIL) return Values.NIL;
 
       Long m = month.longNum();
-      if ((long) m.intValue() != m){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "month value out of range: "+m);
+      if ((long) m.intValue() != m) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "month value out of range: " + m);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withMonth(m.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -557,14 +572,14 @@ public final class Time {
       if (day_of_month == Values.NIL) return Values.NIL;
 
       Long d = day_of_month.longNum();
-      if ((long) d.intValue() != d){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "day_of_month value out of range: "+d);
+      if ((long) d.intValue() != d) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "day_of_month value out of range: " + d);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withDayOfMonth(d.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -581,14 +596,14 @@ public final class Time {
       if (hour == Values.NIL) return Values.NIL;
 
       Long d = hour.longNum();
-      if ((long) d.intValue() != d){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "hour value out of range: "+d);
+      if ((long) d.intValue() != d) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "hour value out of range: " + d);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withHour(d.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -605,14 +620,14 @@ public final class Time {
       if (minute == Values.NIL) return Values.NIL;
 
       Long m = minute.longNum();
-      if ((long) m.intValue() != m){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "minute value out of range: "+m);
+      if ((long) m.intValue() != m) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "minute value out of range: " + m);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withMinute(m.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -629,14 +644,14 @@ public final class Time {
       if (second == Values.NIL) return Values.NIL;
 
       Long m = second.longNum();
-      if ((long) m.intValue() != m){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "second value out of range: "+m);
+      if ((long) m.intValue() != m) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "second value out of range: " + m);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withSecond(m.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -653,14 +668,14 @@ public final class Time {
       if (nano_of_second == Values.NIL) return Values.NIL;
 
       Long n = nano_of_second.longNum();
-      if ((long) n.intValue() != n){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "nano_of_second value out of range: "+n);
+      if ((long) n.intValue() != n) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "nano_of_second value out of range: " + n);
       }
       DateTimeValue t = x.dateTime();
 
       try {
         return Values.make(new DateTimeValue(t.getZoned().withNano(n.intValue())));
-      } catch (DateTimeException e){
+      } catch (DateTimeException e) {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
       }
 
@@ -679,12 +694,11 @@ public final class Time {
       DateTimeValue t = x.dateTime();
       String tzId = tz.string();
 
-      if (isValidTimeZone(tzId)){
+      if (isValidTimeZone(tzId)) {
         TimeZone timeZone = TimeZone.getTimeZone(tzId);
         return Values.make(new DateTimeValue(t.getZoned().withZoneSameLocal(timeZone.toZoneId())));
-      }
-      else{
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: "+tzId);
+      } else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: " + tzId);
       }
 
     }
@@ -702,29 +716,13 @@ public final class Time {
       DateTimeValue t = x.dateTime();
       String tzId = tz.string();
 
-      if (isValidTimeZone(tzId)){
+      if (isValidTimeZone(tzId)) {
         TimeZone timeZone = TimeZone.getTimeZone(tzId);
         return Values.make(new DateTimeValue(t.getZoned().withZoneSameInstant(timeZone.toZoneId())));
-      }
-      else{
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: "+tzId);
+      } else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: " + tzId);
       }
 
     }
-  }
-
-  public static boolean isValidTimeZone(final String timeZone) {
-    final String DEFAULT_GMT_TIMEZONE = "GMT";
-    if (timeZone.equals(DEFAULT_GMT_TIMEZONE)) {
-      return true;
-    } else {
-      // if custom time zone is invalid,
-      // time zone id returned is always "GMT" by default
-      String id = TimeZone.getTimeZone(timeZone).getID();
-      if (!id.equals(DEFAULT_GMT_TIMEZONE)) {
-        return true;
-      }
-    }
-    return false;
   }
 }

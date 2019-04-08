@@ -67,5 +67,159 @@ public class TimeTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/years_between.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> period_between() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/period_between.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> duration_between() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/duration_between.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> add_period() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/add_period.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> add_duration() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/add_duration.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> year() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/year.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> month() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/month.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> day_of_month() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/day_of_month.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> day_of_year() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/day_of_year.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> day_of_week() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/day_of_week.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> hour() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/hour.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> minute() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/minute.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> second() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/second.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> nano_of_second() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/nano_of_second.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> week_of_year() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/week_of_year.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> offset_seconds() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/offset_seconds.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> zone() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/zone.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_year() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_year.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_month() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_month.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_day_of_month() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_day_of_month.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_hour() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_hour.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_minute() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_minute.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_second() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_second.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_nano_of_second() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_nano_of_second.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> with_zone() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/with_zone.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> same_instant_at_zone() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/same_instant_at_zone.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> unix_timestamp() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/unix_timestamp.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> unix_timestamp_ms() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/unix_timestamp_ms.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> compare() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/compare.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> formatter() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/formatter.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> parser() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/parser.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> zones() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/zones.tf");
+  }
 
 }
