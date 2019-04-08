@@ -2895,6 +2895,8 @@ The time library provides functions for processing datetime values.
 
 ### epoch
 
+`datetime`
+
 The instant of time at `1970-01-01T00:00:00Z`
 
 ### seconds_between

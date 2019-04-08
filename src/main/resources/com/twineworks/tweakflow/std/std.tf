@@ -3229,6 +3229,8 @@ export library time {
 
 doc
 ~~~
+`datetime`
+
 The instant of time at `1970-01-01T00:00:00Z`
 ~~~
   datetime epoch: 1970-01-01T00:00:00Z;
