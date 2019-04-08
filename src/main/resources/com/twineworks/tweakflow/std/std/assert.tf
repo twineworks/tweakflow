@@ -112,6 +112,12 @@ export library to {
   be: (expected) -> (x) ->
     ["to be", x === expected, expected];
 
+  be_greater_than: (expected) -> (x) ->
+    ["to be greater than", x > expected, "x > #{expected}"];
+
+  be_less_than: (expected) -> (x) ->
+    ["to be less than", x < expected, "x < #{expected}"];
+
   be_between: (expected_low, expected_high) -> (x) ->
     ["to be between", expected_low <= x && x < expected_high, "#{expected_low} <= x < #{expected_high}"];
 

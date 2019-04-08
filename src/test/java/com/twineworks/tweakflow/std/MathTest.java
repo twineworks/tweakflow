@@ -97,4 +97,25 @@ public class MathTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/cos.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> tan() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/tan.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> asin() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/asin.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> acos() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/acos.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> atan() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/atan.tf");
+  }
+
+
 }
