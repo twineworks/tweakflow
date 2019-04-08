@@ -81,7 +81,7 @@ public final class Locale {
       dict.put("exponent_separator", Values.make(symbols.getExponentSeparator()));
       dict.put("grouping_separator", Values.make(symbols.getGroupingSeparator()));
       dict.put("decimal_separator", Values.make(symbols.getDecimalSeparator()));
-      dict.put("nan", Values.make(symbols.getNaN()));
+      dict.put("NaN", Values.make(symbols.getNaN()));
       dict.put("infinity", Values.make(symbols.getInfinity()));
       dict.put("minus_sign", Values.make(symbols.getMinusSign()));
       dict.put("zero_digit", Values.make(symbols.getZeroDigit()));

@@ -140,7 +140,11 @@ public final class Math {
       // only one element?
       if (list.size() == 1) {
         Value v = list.get(0);
-        if (v.isNil() || v.isLongNum() || v.isDoubleNum()){
+        if (v.isNil() || v.isLongNum()){
+          return v;
+        }
+        else if (v.isDoubleNum()){
+          if (v.doubleNum().isNaN()) return Values.NIL;
           return v;
         }
         else{
@@ -160,6 +164,9 @@ public final class Math {
       else if (min.isDoubleNum()) {
         longMode = false;
         doubleMin = min.doubleNum();
+        if (Double.isNaN(doubleMin)){
+          return Values.NIL;
+        }
       }
       else if (min.isNil()){
         return Values.NIL;
@@ -182,6 +189,7 @@ public final class Math {
           else if (v.isDoubleNum()){
             doubleMin = longMin;
             double num = v.doubleNum();
+            if (Double.isNaN(num)) return Values.NIL;
             if (num < doubleMin){
               doubleMin = num;
               min = v;
@@ -203,6 +211,7 @@ public final class Math {
           }
           else if (v.isDoubleNum()){
             double num = v.doubleNum();
+            if (Double.isNaN(num)) return Values.NIL;
             if (num < doubleMin){
               doubleMin = num;
               min = v;
@@ -232,7 +241,11 @@ public final class Math {
       // only one element?
       if (list.size() == 1) {
         Value v = list.get(0);
-        if (v.isNil() || v.isLongNum() || v.isDoubleNum()){
+        if (v.isNil() || v.isLongNum()){
+          return v;
+        }
+        else if (v.isDoubleNum()){
+          if (v.doubleNum().isNaN()) return Values.NIL;
           return v;
         }
         else{
@@ -252,6 +265,7 @@ public final class Math {
       else if (max.isDoubleNum()) {
         longMode = false;
         doubleMax = max.doubleNum();
+        if (Double.isNaN(doubleMax)) return Values.NIL;
       }
       else if (max.isNil()){
         return Values.NIL;
@@ -275,6 +289,7 @@ public final class Math {
           else if (v.isDoubleNum()){
             doubleMax = longMax;
             double num = v.doubleNum();
+            if (Double.isNaN(num)) return Values.NIL;
             if (num > doubleMax){
               doubleMax = num;
               max = v;
@@ -297,6 +312,7 @@ public final class Math {
           }
           else if (v.isDoubleNum()){
             double num = v.doubleNum();
+            if (Double.isNaN(num)) return Values.NIL;
             if (num > doubleMax){
               doubleMax = num;
               max = v;
@@ -319,22 +335,7 @@ public final class Math {
     public Value call(UserCallContext context, Value x) {
 
       if (x == Values.NIL) return Values.NIL;
-
-      if (x.isLongNum()) return x;
-
-      double d;
-      if (x.isDoubleNum()){
-        d = x.doubleNum();
-      }
-      else{
-        d = x.castTo(Types.DOUBLE).doubleNum();
-      }
-
-      if (Double.isNaN(d) || Double.isInfinite(d)) return Values.make(d);
-
-      return Values.make(
-          (double) java.lang.Math.round(d)
-      );
+      return Values.make(java.lang.Math.round(x.doubleNum()));
 
     }
   }
@@ -346,14 +347,8 @@ public final class Math {
     public Value call(UserCallContext context, Value x) {
       if (x.isNil()) return Values.NIL;
 
-      if (x.isLongNum()) return x;
-
-      if (x.isDoubleNum()) return Values.make(
-          java.lang.Math.ceil(x.doubleNum())
-      );
-
       return Values.make(
-          java.lang.Math.ceil(x.castTo(Types.DOUBLE).doubleNum())
+          java.lang.Math.ceil(x.doubleNum())
       );
     }
   }
@@ -365,14 +360,8 @@ public final class Math {
     public Value call(UserCallContext context, Value x) {
       if (x.isNil()) return Values.NIL;
 
-      if (x.isLongNum()) return x;
-
-      if (x.isDoubleNum()) return Values.make(
-          java.lang.Math.floor(x.doubleNum())
-      );
-
       return Values.make(
-          java.lang.Math.floor(x.castTo(Types.DOUBLE).doubleNum())
+          java.lang.Math.floor(x.doubleNum())
       );
     }
   }
@@ -384,6 +373,19 @@ public final class Math {
     public Value call(UserCallContext context, Value x) {
       if (x.isNil()) return Values.FALSE;
       return Double.isNaN(x.doubleNum()) ? Values.TRUE : Values.FALSE;
+    }
+  }
+
+  // sqrt: (x) ->
+  public static final class sqrt implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x.isNil()) return Values.NIL;
+
+      return Values.make(
+          java.lang.Math.sqrt(x.doubleNum())
+      );
     }
   }
 

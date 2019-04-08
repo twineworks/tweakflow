@@ -1,6 +1,6 @@
 import math, time from "std.tf";
 
-alias math.nan? as nan?;
+alias math.NaN? as NaN?;
 
 library lib {
   f: (x) -> x;

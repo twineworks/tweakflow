@@ -4401,12 +4401,14 @@ ERROR:
 
 doc
 ~~~
-`(any seed) -> double `
+`(any seed) -> double`
 
 Returns a pseudo-random double between `0.0` inclusive and `1.0` exclusive, based on given `seed`.
 This function is pure and deterministically returns the same number for the same `seed`.
 
 To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next `seed`.
+
+`nil` is a valid `seed` value.
 
 ```tweakflow
 > dice_roll: (any seed) -> (math.rand(seed) *6 +1) as long
@@ -4420,15 +4422,18 @@ function
 
 > \e
   dice_rolls: (long count, any seed) ->
-    fun.iterate(1, count,
-      {:seed [seed], :nums []},
-      (d, i) -> let {
-          r: math.rand(d[:seed])
-          n: (r*6+1) as long
+    fun.iterate(
+      1, count,                   # loop 1-count times
+      {:seed [seed], :nums []},   # initial state
+      (state, i) ->
+        # accumulate seed list and number list and return new state
+        let {
+          r: math.rand(state[:seed]);
+          n: (r*6+1) as long;
         }
         {
-          :seed data.append(d[:seed], r*i),
-          :nums data.append(d[:nums], n)
+          :seed [...state[:seed], r*i],
+          :nums [...state[:nums], n]
         }
     )[:nums]
 \e
@@ -4437,14 +4442,14 @@ function
 > dice_rolls(3, "foo")
 [5, 1, 5]
 
-> dice_rolls(20, "foo")
-[5, 1, 5, 3, 3, 5, 6, 6, 5, 3, 3, 6, 1, 2, 1, 5, 4, 5, 3, 6]
+> dice_rolls(10, "foo")
+[5, 1, 5, 3, 3, 5, 6, 6, 5, 3]
 
 > dice_rolls(3, "bar")
 [6, 1, 1]
 
-> dice_rolls(20, "bar")
-[6, 1, 1, 3, 6, 4, 3, 5, 6, 5, 3, 5, 1, 1, 1, 5, 4, 2, 3, 1]
+> dice_rolls(10, "bar")
+[6, 1, 1, 3, 6, 4, 3, 5, 6, 5]
 
 > math.rand(nil)
 0.730967787376657
@@ -4462,9 +4467,11 @@ Increments `x` by one.
 If `x` is a double, returns x+1.0. \
 If `x` is a long, returns x+1. \
 
+Does not guard against overflow of long values.
+
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is not a numeric type.
+Throws an error if `x` is neither a `long` nor a `double`.
 
 ```tweakflow
 > math.inc(2.0)
@@ -4500,9 +4507,11 @@ Decrements `x` by one.
 If `x` is a double, returns x-1.0. \
 If `x` is a long, returns x-1. \
 
+Does not guard against undeflow of long values.
+
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is not a numeric type.
+Throws an error if `x` is neither a `long` nor a `double`.
 
 ```tweakflow
 > math.dec(2.0)
@@ -4559,8 +4568,8 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 ~~~
   function compare: (a, b) -> long
 
-    if !((a is long) || (a is double) || (a == nil)) throw ("cannot compare non-numeric: "..(core.inspect(a)))
-    if !((b is long) || (b is double) || (b == nil)) throw ("cannot compare non-numeric: "..(core.inspect(b)))
+    if !((a is long) || (a is double) || (a == nil)) throw ({:code "ILLEGAL_ARGUMENT", :message "cannot compare non-numeric: "..(core.inspect(a))})
+    if !((b is long) || (b is double) || (b == nil)) throw ({:code "ILLEGAL_ARGUMENT", :message "cannot compare non-numeric: "..(core.inspect(b))})
 
     # handle nil case
     if a == nil
@@ -4569,10 +4578,10 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
     if b == nil then 1
 
     # handle nan case
-    if nan?(a)
-      if nan?(b) then 0 else -1
+    if NaN?(a)
+      if NaN?(b) then 0 else -1
 
-    if nan?(b) then 1
+    if NaN?(b) then 1
 
     # handle regular numbers case
     if a < b then -1
@@ -4583,11 +4592,11 @@ doc
 ~~~
 `(list xs) -> any`
 
-Given a list of numeric `xs`, returns the smallest `x`.
+Given a list of numeric `xs`, returns the smallest `x`.\
 
-Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil`.
+Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is non-numeric.
+Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
 
 ```tweakflow
 > math.min([1,2,3])
@@ -4617,9 +4626,9 @@ doc
 
 Given a list of numeric `xs`, returns the largest `x`.
 
-Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil`.
+Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is non-numeric.
+Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
 
 ```tweakflow
 > math.max([1,2,3])
@@ -4645,32 +4654,44 @@ ERROR:
 
 doc
 ~~~
-`(double x) -> double`
+`(double x) -> long`
 
-Given a double `x`, returns `x` rounded to the closest integral value.
+Given a double `x`, returns `x` rounded to the closest long value. Ties are rounded up.
 
+Returns `0` if `x` is `NaN`.\
+Returns `math.min_long` if `x` is `-Infinity` or less than or equal to `math.min_long`.\
+Returns `math.max_long` if `x` is `Infinity` or greater than or equal to `math.max_long`.\
 Returns `nil` if `x` is `nil`.
 
 ```tweakflow
 > math.round(2.3)
-2.0
+2
+
+> math.round(2.5)
+3
 
 > math.round(-2.3)
--2.0
+-2
+
+> math.round(-2.5)
+-2
 
 > math.round(nil)
 nil
 ```
 ~~~
 
-  function round: (double x) -> double                      via {:class "com.twineworks.tweakflow.std.Math$round"};
+  function round: (double x) -> long                      via {:class "com.twineworks.tweakflow.std.Math$round"};
 
 doc
 ~~~
 `(double x) -> double`
 
-Given a double `x`, returns `x` to the next larger integral value.
+Given a double `x`, returns the smallest double value greater than or equal to `x` that is a mathematical integer.
 
+Returns `-Infinity` if `x` is `-Infinity`.\
+Returns `Infinity` if `x` is `Infinity`.\
+Returns `NaN` if `x` is `NaN`.\
 Returns `nil` if `x` is `nil`.
 
 ```tweakflow
@@ -4691,8 +4712,11 @@ doc
 ~~~
 `(double x) -> double`
 
-Given a double `x`, returns `x` to the next smaller integral value.
+Given a double `x`, returns the largest double value smaller than or equal to `x` that is a mathematical integer.
 
+Returns `-Infinity` if `x` is `-Infinity`.\
+Returns `Infinity` if `x` is `Infinity`.\
+Returns `NaN` if `x` is `NaN`.\
 Returns `nil` if `x` is `nil`.
 
 ```tweakflow
@@ -4716,18 +4740,18 @@ doc
 Given a double `x`, returns `true` if `x` is NaN, returns `false` otherwise.
 
 ```tweakflow
-> math.nan?(2.3)
+> math.NaN?(2.3)
 false
 
-> math.nan?(NaN)
+> math.NaN?(NaN)
 true
 
-> math.nan?(nil)
+> math.NaN?(nil)
 false
 ```
 ~~~
 
-  function nan?:  (double x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"};
+  function NaN?:  (double x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"};
 
 doc
 ~~~
@@ -4735,8 +4759,8 @@ doc
 
 Given a double `x`, returns the square root of `x`.
 
-Returns `NaN` if `x` is negative.
-
+Returns `NaN` if `x` is negative.\
+Returns `Infinity` if `x` is `Infinity`.\
 Returns `nil` if `x` is `nil`.
 
 ```tweakflow
@@ -4751,7 +4775,7 @@ nil
 ```
 ~~~
 
-  function sqrt:  (double x) -> double (x ** 0.5);
+  function sqrt:  (double x) -> double via {:class "com.twineworks.tweakflow.std.Math$sqrt"};
 
 doc
 ~~~
@@ -4976,7 +5000,7 @@ doc
 (
   string pattern='0.##',
   dict decimal_symbols=nil,
-  string rounding_mode="half_up",
+  string rounding_mode="half_even",
   boolean always_show_decimal_separator=false
 ) -> function
 ```
@@ -5024,7 +5048,7 @@ std.tf> f(648722)
 "६४८,७२२"
 ```
 ~~~
-  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="half_up", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"};
+  function formatter: (string pattern='0.##', dict decimal_symbols=nil, string rounding_mode="half_even", boolean always_show_decimal_separator=false) -> function via {:class "com.twineworks.tweakflow.std.Math$formatter"};
 
 
 doc
@@ -5082,14 +5106,14 @@ doc
 ~~~
 The double value that is closer than any other to `e`, the base of the natural logarithms.
 ~~~
-  double e:   2.718281828459045;
+  double e:   2.7182818284590452354;
 
 doc
 ~~~
 The double value that is closer than any other to `pi`, the ratio of the circumference of a circle to its diameter.
 ~~~
 
-  double pi:  3.141592653589793;
+  double pi:  3.14159265358979323846;
 
 doc
 ~~~
@@ -5499,7 +5523,7 @@ The dict contains the following keys:
 | zero_digit          | The character representing the zero digit. The subsequent 9 character values are treated as digits 1-9. |
 | minus_sign          | The character representing the minus sign.             |
 | infinity            | The string representing infinity.                      |
-| nan                 | The string representing NaN (Not a Number) values.     |
+| NaN                 | The string representing NaN (Not a Number) values.     |
 
 Returns `en-US` decimal symbols if `lang` is `nil`.
 
@@ -5512,7 +5536,7 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
   :exponent_separator "E",
   :zero_digit "0",
   :decimal_separator ".",
-  :nan "�"
+  :NaN "�"
 }
 
 > locale.decimal_symbols('fr')
@@ -5523,7 +5547,7 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
   :exponent_separator "E",
   :zero_digit "0",
   :decimal_separator ",",
-  :nan "�"
+  :NaN "�"
 }
 
 > locale.decimal_symbols('hi-IN')
@@ -5534,7 +5558,7 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
   :exponent_separator "E",
   :zero_digit "०",
   :decimal_separator ".",
-  :nan "�"
+  :NaN "�"
 }
 
 ```

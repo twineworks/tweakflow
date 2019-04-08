@@ -1,6 +1,6 @@
 import math, time from "std.tf";
 
-alias math.nan? as nan?;
+alias math.NaN? as NaN?;
 alias math.min_long as min_long;
 alias math.max_long as max_long;
 
@@ -47,14 +47,14 @@ library operator_spec {
   inf_ninf:   Infinity * -Infinity == -Infinity;
   ninf_ninf: -Infinity * -Infinity == Infinity;
 
-  inf_d0:  nan?(Infinity * 0.0)   == true;
-  ninf_d0: nan?(-Infinity * 0.0)  == true;
-  d0_inf:  nan?(0.0 * Infinity)   == true;
-  d0_ninf: nan?(0.0 * -Infinity)  == true;
+  inf_d0:  NaN?(Infinity * 0.0)   == true;
+  ninf_d0: NaN?(-Infinity * 0.0)  == true;
+  d0_inf:  NaN?(0.0 * Infinity)   == true;
+  d0_ninf: NaN?(0.0 * -Infinity)  == true;
 
-  nan_nan:    nan?(NaN * NaN) == true;
-  nan_d0:     nan?(NaN * 0.0) == true;
-  d0_nan:     nan?(0.0 * NaN) == true;
+  nan_nan:    NaN?(NaN * NaN) == true;
+  nan_d0:     NaN?(NaN * 0.0) == true;
+  d0_nan:     NaN?(0.0 * NaN) == true;
 
   nil_bar: try     nil * "bar"    catch "error" == "error";
   foo_nil: try   "foo" * nil      catch "error" == "error";

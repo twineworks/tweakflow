@@ -101,7 +101,7 @@ library assert {
 export library to {
 
   have_code: (expected) -> (err) ->
-    ["to have code", err[:code] == expected, expected];
+    ["to have code", err is dict && err[:code] == expected, expected];
 
   equal: (expected) -> (x) ->
     ["to equal", (x == expected), expected];
@@ -111,6 +111,12 @@ export library to {
 
   be: (expected) -> (x) ->
     ["to be", x === expected, expected];
+
+  be_between: (expected_low, expected_high) -> (x) ->
+    ["to be between", expected_low <= x && x < expected_high, "#{expected_low} <= x < #{expected_high}"];
+
+  be_close_to: (double expected, double precision=1e-15) -> (x) ->
+    ["to be close to", math.abs(expected-x) <= precision, "abs(#{expected} - x) <= #{precision}"];
 
   be_permutation_of: (list expected) -> (x) ->
     [
@@ -142,7 +148,7 @@ export library to {
     ["to be false", x === false, "x === false"];
 
   be_NaN: () -> (x) ->
-    ["to be false", math.nan?(x), "math.nan?(x)"];
+    ["to be NaN", math.NaN?(x), "math.NaN?(x)"];
 
   be_function: () -> (x) ->
     ["to be function", x is function, "x is function"];

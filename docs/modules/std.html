@@ -251,7 +251,7 @@
 <li><a href="#round">round</a></li>
 <li><a href="#ceil">ceil</a></li>
 <li><a href="#floor">floor</a></li>
-<li><a href="#nan">nan?</a></li>
+<li><a href="#nan">NaN?</a></li>
 <li><a href="#sqrt">sqrt</a></li>
 <li><a href="#sin">sin</a></li>
 <li><a href="#cos">cos</a></li>
@@ -4141,6 +4141,8 @@ This function is pure and deterministically returns the same number for the same
 
 <p>To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next <code>seed</code>.</p>
 
+<p><code>nil</code> is a valid <code>seed</code> value.</p>
+
 <pre><code class="language-tweakflow">&gt; dice_roll: (any seed) -&gt; (math.rand(seed) *6 +1) as long
 function
 
@@ -4152,15 +4154,18 @@ function
 
 &gt; \e
   dice_rolls: (long count, any seed) -&gt;
-    fun.iterate(1, count,
-      {:seed [seed], :nums []},
-      (d, i) -&gt; let {
-          r: math.rand(d[:seed])
-          n: (r*6+1) as long
+    fun.iterate(
+      1, count,                   # loop 1-count times
+      {:seed [seed], :nums []},   # initial state
+      (state, i) -&gt;
+        # accumulate seed list and number list and return new state
+        let {
+          r: math.rand(state[:seed]);
+          n: (r*6+1) as long;
         }
         {
-          :seed data.append(d[:seed], r*i),
-          :nums data.append(d[:nums], n)
+          :seed [...state[:seed], r*i],
+          :nums [...state[:nums], n]
         }
     )[:nums]
 \e
@@ -4169,14 +4174,14 @@ function
 &gt; dice_rolls(3, &quot;foo&quot;)
 [5, 1, 5]
 
-&gt; dice_rolls(20, &quot;foo&quot;)
-[5, 1, 5, 3, 3, 5, 6, 6, 5, 3, 3, 6, 1, 2, 1, 5, 4, 5, 3, 6]
+&gt; dice_rolls(10, &quot;foo&quot;)
+[5, 1, 5, 3, 3, 5, 6, 6, 5, 3]
 
 &gt; dice_rolls(3, &quot;bar&quot;)
 [6, 1, 1]
 
-&gt; dice_rolls(20, &quot;bar&quot;)
-[6, 1, 1, 3, 6, 4, 3, 5, 6, 5, 3, 5, 1, 1, 1, 5, 4, 2, 3, 1]
+&gt; dice_rolls(10, &quot;bar&quot;)
+[6, 1, 1, 3, 6, 4, 3, 5, 6, 5]
 
 &gt; math.rand(nil)
 0.730967787376657
@@ -4192,9 +4197,11 @@ function
 <p>If <code>x</code> is a double, returns x+1.0. <br />
 If <code>x</code> is a long, returns x+1. </p>
 
+<p>Does not guard against overflow of long values.</p>
+
 <p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
 
-<p>Throws an error if <code>x</code> is not a numeric type.</p>
+<p>Throws an error if <code>x</code> is neither a <code>long</code> nor a <code>double</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.inc(2.0)
 3.0
@@ -4226,9 +4233,11 @@ ERROR:
 <p>If <code>x</code> is a double, returns x-1.0. <br />
 If <code>x</code> is a long, returns x-1. </p>
 
+<p>Does not guard against undeflow of long values.</p>
+
 <p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
 
-<p>Throws an error if <code>x</code> is not a numeric type.</p>
+<p>Throws an error if <code>x</code> is neither a <code>long</code> nor a <code>double</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.dec(2.0)
 1.0
@@ -4284,9 +4293,9 @@ Returns 0 if a == b.</p>
 
 <p>Given a list of numeric <code>xs</code>, returns the smallest <code>x</code>.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code> or <code>NaN</code>.</p>
 
-<p>Throws an error if any <code>x</code> is non-numeric.</p>
+<p>Throws an error if any <code>x</code> is anything other than a <code>long</code>, <code>double</code>, or <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.min([1,2,3])
 1
@@ -4312,9 +4321,9 @@ ERROR:
 
 <p>Given a list of numeric <code>xs</code>, returns the largest <code>x</code>.</p>
 
-<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code> or <code>NaN</code>.</p>
 
-<p>Throws an error if any <code>x</code> is non-numeric.</p>
+<p>Throws an error if any <code>x</code> is anything other than a <code>long</code>, <code>double</code>, or <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.max([1,2,3])
 3
@@ -4336,17 +4345,26 @@ ERROR:
 
 <h3 id="round">round</h3>
 
-<p><code>(double x) -&gt; double</code></p>
+<p><code>(double x) -&gt; long</code></p>
 
-<p>Given a double <code>x</code>, returns <code>x</code> rounded to the closest integral value.</p>
+<p>Given a double <code>x</code>, returns <code>x</code> rounded to the closest long value. Ties are rounded up.</p>
 
-<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+<p>Returns <code>0</code> if <code>x</code> is <code>NaN</code>.<br />
+Returns <code>math.min_long</code> if <code>x</code> is <code>-Infinity</code> or less than or equal to <code>math.min_long</code>.<br />
+Returns <code>math.max_long</code> if <code>x</code> is <code>Infinity</code> or greater than or equal to <code>math.max_long</code>.<br />
+Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.round(2.3)
-2.0
+2
+
+&gt; math.round(2.5)
+3
 
 &gt; math.round(-2.3)
--2.0
+-2
+
+&gt; math.round(-2.5)
+-2
 
 &gt; math.round(nil)
 nil
@@ -4356,9 +4374,12 @@ nil
 
 <p><code>(double x) -&gt; double</code></p>
 
-<p>Given a double <code>x</code>, returns <code>x</code> to the next larger integral value.</p>
+<p>Given a double <code>x</code>, returns the smallest double value greater than or equal to <code>x</code> that is a mathematical integer.</p>
 
-<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+<p>Returns <code>-Infinity</code> if <code>x</code> is <code>-Infinity</code>.<br />
+Returns <code>Infinity</code> if <code>x</code> is <code>Infinity</code>.<br />
+Returns <code>NaN</code> if <code>x</code> is <code>NaN</code>.<br />
+Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.ceil(2.3)
 3.0
@@ -4374,9 +4395,12 @@ nil
 
 <p><code>(double x) -&gt; double</code></p>
 
-<p>Given a double <code>x</code>, returns <code>x</code> to the next smaller integral value.</p>
+<p>Given a double <code>x</code>, returns the largest double value smaller than or equal to <code>x</code> that is a mathematical integer.</p>
 
-<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+<p>Returns <code>-Infinity</code> if <code>x</code> is <code>-Infinity</code>.<br />
+Returns <code>Infinity</code> if <code>x</code> is <code>Infinity</code>.<br />
+Returns <code>NaN</code> if <code>x</code> is <code>NaN</code>.<br />
+Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.floor(2.3)
 2.0
@@ -4388,19 +4412,19 @@ nil
 nil
 </code></pre>
 
-<h3 id="nan">nan?</h3>
+<h3 id="nan">NaN?</h3>
 
 <p><code>(double x) -&gt; boolean</code></p>
 
 <p>Given a double <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
 
-<pre><code class="language-tweakflow">&gt; math.nan?(2.3)
+<pre><code class="language-tweakflow">&gt; math.NaN?(2.3)
 false
 
-&gt; math.nan?(NaN)
+&gt; math.NaN?(NaN)
 true
 
-&gt; math.nan?(nil)
+&gt; math.NaN?(nil)
 false
 </code></pre>
 
@@ -4410,9 +4434,9 @@ false
 
 <p>Given a double <code>x</code>, returns the square root of <code>x</code>.</p>
 
-<p>Returns <code>NaN</code> if <code>x</code> is negative.</p>
-
-<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+<p>Returns <code>NaN</code> if <code>x</code> is negative.<br />
+Returns <code>Infinity</code> if <code>x</code> is <code>Infinity</code>.<br />
+Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.sqrt(9.0)
 3.0
@@ -4606,7 +4630,7 @@ nil
 <pre><code>(
   string pattern='0.##',
   dict decimal_symbols=nil,
-  string rounding_mode=&quot;half_up&quot;,
+  string rounding_mode=&quot;half_even&quot;,
   boolean always_show_decimal_separator=false
 ) -&gt; function
 </code></pre>
@@ -5115,7 +5139,7 @@ The human readable names are given in the language tag passed as the locale para
 </tr>
 
 <tr>
-<td align="left">nan</td>
+<td align="left">NaN</td>
 <td align="left">The string representing NaN (Not a Number) values.</td>
 </tr>
 </tbody>
@@ -5131,7 +5155,7 @@ The human readable names are given in the language tag passed as the locale para
   :exponent_separator &quot;E&quot;,
   :zero_digit &quot;0&quot;,
   :decimal_separator &quot;.&quot;,
-  :nan &quot;�&quot;
+  :NaN &quot;�&quot;
 }
 
 &gt; locale.decimal_symbols('fr')
@@ -5142,7 +5166,7 @@ The human readable names are given in the language tag passed as the locale para
   :exponent_separator &quot;E&quot;,
   :zero_digit &quot;0&quot;,
   :decimal_separator &quot;,&quot;,
-  :nan &quot;�&quot;
+  :NaN &quot;�&quot;
 }
 
 &gt; locale.decimal_symbols('hi-IN')
@@ -5153,7 +5177,7 @@ The human readable names are given in the language tag passed as the locale para
   :exponent_separator &quot;E&quot;,
   :zero_digit &quot;०&quot;,
   :decimal_separator &quot;.&quot;,
-  :nan &quot;�&quot;
+  :NaN &quot;�&quot;
 }
 
 </code></pre>
