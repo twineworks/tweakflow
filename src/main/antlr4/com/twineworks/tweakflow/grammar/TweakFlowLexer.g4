@@ -222,10 +222,6 @@ LINE_COMMENT
 
 mode StringMode;
 
-STRING_TEXT
-  : ~('"'|'\\'|'#')+
-  ;
-
 STRING_ESCAPE_SEQUENCE
   : '\\\\'
   | '\\"'
@@ -239,6 +235,11 @@ STRING_ESCAPE_SEQUENCE
 
 STRING_REFERENCE_INTERPOLATION
   : '#{'('$'|'global::'|'module::'|'::'|'library::')?IDENTIFIER('.' IDENTIFIER)*'}'
+  ;
+
+STRING_TEXT
+  : ~('"'|'\\'|'#')+
+  | '#'~'{'
   ;
 
 STRING_END
