@@ -5153,8 +5153,8 @@ Subsequent calls to `f` receive as argument the result of the previous call.
 
 Returns the result of the last call to `f`, or `x` if `n` is `0`.
 
-Returns `nil` if `n` is negative or `nil`.
-Returns `nil` if `f` is `nil`.
+Returns `nil` if `n` `nil`.\
+Throws an error if `n` is negative or `f` is `nil`.
 
 ```tweakflow
 > double_up: (x) -> 2*x
@@ -5193,13 +5193,11 @@ Calls `f` repeatedly with one argument. The first call of `f` receives `x` as ar
 Subsequent calls to `f` receive as argument the result of the previous call.
 
 Before each call to `f`, the argument is tested by predicate function `p`.
-If `p` returns `true`, execution completes and the tested argument is returned.
+If `p` returns a value that casts to boolean `true`, execution completes and the tested argument is returned.
 
-Returns the first argument for which `p` evaluates to `true`.
+Returns the first argument for which `p` returns a value that casts to boolean `true`.
 
-Returns `nil` if `p` is `nil`.
-Returns `nil` if `f` is `nil`.
-
+Throws an error if `p` is `nil` or `f` is `nil`.
 
 ```tweakflow
 # keep doubling up 1 until the result exceeds 60,000
@@ -5213,10 +5211,10 @@ Returns `nil` if `f` is `nil`.
 > \e
   next: (x) ->
     let {
-      n: data.size(x[:nums])+1
+      n: data.size(x[:nums])+1;
     }
     {
-      :nums data.append(x[:nums], n),
+      :nums [...x[:nums], n],
       :sum x[:sum]+n
     }
 \e
@@ -5240,13 +5238,11 @@ Calls `f` repeatedly with one argument. The first call of `f` receives `x` as ar
 Subsequent calls to `f` receive as argument the result of the previous call.
 
 Before each call to `f`, the argument is tested by predicate function `p`.
-If `p` returns `false`, execution completes and the tested argument is returned.
+If `p` returns a value that does not cast to boolean `true`, execution completes and the tested argument is returned.
 
-Returns the first argument for which `p` evaluates to `false`.
+Returns the first argument for which `p` returns a value that does not cast to boolean `true`.
 
-Returns `nil` if `p` is `nil`.\
-Returns `nil` if `f` is `nil`.
-
+Throws an error if `p` is `nil` or `f` is `nil`.
 
 ```tweakflow
 # keep doubling up 1 while the result is smaller than 60,000
@@ -5260,10 +5256,10 @@ Returns `nil` if `f` is `nil`.
 > \e
   next: (x) ->
     let {
-      n: data.size(x[:nums])+1
+      n: data.size(x[:nums])+1;
     }
     {
-      :nums data.append(x[:nums], n),
+      :nums [...x[:nums], n],
       :sum x[:sum]+n
     }
 \e
@@ -5289,29 +5285,17 @@ Subsequent calls to `f` receive as first argument the result of the previous cal
 
 The second argument is an index starting at `start` and ending inclusively at `end`.
 
-Returns the result of the last call to `f`.
-
-Returns `nil` if `start`, `end`, or `f` are `nil`.
-
+Returns the result of the last call to `f`.\
 Returns `x` if `end` < `start`.
+
+Returns `nil` if `start` is `nil` or `end` is `nil`.
+
+Throws an error if `f` is `nil`.
 
 ```tweakflow
 # add natural numbers 1 to 10
 > fun.iterate(1, 10, 0, (sum, i) -> sum+i)
 55
-
-# make a triangle string
-> fun.iterate(1, 8, "\n", (str, i) -> str .. strings.join(data.repeat(i, "*")) .. "\n")
-"
-*
-**
-***
-****
-*****
-******
-*******
-********
-"
 ```
 ~~~
 
@@ -5325,7 +5309,8 @@ Calls functions from given `fs` in sequence, passing `state` as the argument to 
 and the result of the previous call to subsequent calls. Returns result of final call.
 
 Returns `state` if `fs` is empty.
-Returns `nil` if `fs` is nil.
+
+Throws an error if `fs` is nil.
 
 ```tweakflow
 > \e
@@ -5346,7 +5331,10 @@ function
 ~~~
 
   function thread: (any state, list fs) ->
-    (data.reduce(fs, state, (a, f) -> (f(a))));
+    if fs == nil
+      throw {:code "NIL_ERROR", :message "fs cannot be nil"}
+    else
+      (data.reduce(fs, state, (a, f) -> (f(a))));
 
   # function thread_splat: (state, list fs) ->
   #   data.reduce(fs, state, (a, f) -> f(...a))
@@ -5365,8 +5353,8 @@ Given a list of functions `fs`, returns a composite function that calls all func
 
 `fun.chain([f, g])(x) == g(f(x))`
 
-Returns `nil` if `fs` is `nil`.
-Throws an error if `fs` is empty.
+Returns `core.id` identity function if `fs` is empty.\
+Throws an error if `fs` is `nil`.
 
 ```tweakflow
 > f: fun.chain([(x) -> x+10, (x) -> x*2]) # add 10, then double result
@@ -5378,8 +5366,8 @@ function
 ~~~
 
   function chain: (list fs) -> function
-    if fs == nil then nil else
-    if data.size(fs) == 0 then throw "function list cannot be empty" else
+    if fs == nil then throw {:code "NIL_ERROR", :message "fs cannot be nil"}
+    if data.size(fs) == 0 then core.id
     (data.reduce(fs, nil, (a, f) -> if a == nil then f else (x) -> (f(a(x)))));
 
 doc
@@ -5391,8 +5379,8 @@ with conventional mathematical notation.
 
 `fun.compose([f, g])(x) == f(g(x))`
 
-Returns `nil` if `fs` is `nil`.
-Throws an error if `fs` is empty.
+Returns `core.id` identity function if `fs` is empty.\
+Throws an error if `fs` is `nil`.
 
 ```tweakflow
 > f: fun.compose([(x) -> x+10, (x) -> x*2]) # double result, then add 10
@@ -5404,8 +5392,8 @@ function
 ~~~
 
   function compose: (list fs) -> function
-    if fs == nil then nil else
-    if data.size(fs) == 0 then throw "function list cannot be empty" else
+    if fs == nil then throw {:code "NIL_ERROR", :message "fs cannot be nil"}
+    if data.size(fs) == 0 then core.id
     (data.reduce(data.reverse(fs), nil, (a, f) -> if a == nil then f else (x) -> (f(a(x)))));
 
 doc

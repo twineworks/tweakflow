@@ -4758,8 +4758,8 @@ Subsequent calls to <code>f</code> receive as argument the result of the previou
 
 <p>Returns the result of the last call to <code>f</code>, or <code>x</code> if <code>n</code> is <code>0</code>.</p>
 
-<p>Returns <code>nil</code> if <code>n</code> is negative or <code>nil</code>.
-Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>n</code> <code>nil</code>.<br />
+Throws an error if <code>n</code> is negative or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; double_up: (x) -&gt; 2*x
 function
@@ -4793,12 +4793,11 @@ function
 Subsequent calls to <code>f</code> receive as argument the result of the previous call.</p>
 
 <p>Before each call to <code>f</code>, the argument is tested by predicate function <code>p</code>.
-If <code>p</code> returns <code>true</code>, execution completes and the tested argument is returned.</p>
+If <code>p</code> returns a value that casts to boolean <code>true</code>, execution completes and the tested argument is returned.</p>
 
-<p>Returns the first argument for which <code>p</code> evaluates to <code>true</code>.</p>
+<p>Returns the first argument for which <code>p</code> returns a value that casts to boolean <code>true</code>.</p>
 
-<p>Returns <code>nil</code> if <code>p</code> is <code>nil</code>.
-Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
+<p>Throws an error if <code>p</code> is <code>nil</code> or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow"># keep doubling up 1 until the result exceeds 60,000
 &gt; fun.until((x) -&gt; x&gt;60000, 1, (x) -&gt; x*2)
@@ -4811,10 +4810,10 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 &gt; \e
   next: (x) -&gt;
     let {
-      n: data.size(x[:nums])+1
+      n: data.size(x[:nums])+1;
     }
     {
-      :nums data.append(x[:nums], n),
+      :nums [...x[:nums], n],
       :sum x[:sum]+n
     }
 \e
@@ -4836,12 +4835,11 @@ function
 Subsequent calls to <code>f</code> receive as argument the result of the previous call.</p>
 
 <p>Before each call to <code>f</code>, the argument is tested by predicate function <code>p</code>.
-If <code>p</code> returns <code>false</code>, execution completes and the tested argument is returned.</p>
+If <code>p</code> returns a value that does not cast to boolean <code>true</code>, execution completes and the tested argument is returned.</p>
 
-<p>Returns the first argument for which <code>p</code> evaluates to <code>false</code>.</p>
+<p>Returns the first argument for which <code>p</code> returns a value that does not cast to boolean <code>true</code>.</p>
 
-<p>Returns <code>nil</code> if <code>p</code> is <code>nil</code>.<br />
-Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
+<p>Throws an error if <code>p</code> is <code>nil</code> or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow"># keep doubling up 1 while the result is smaller than 60,000
 &gt; fun.while((x) -&gt; x&lt;60000, 1, (x) -&gt; x*2)
@@ -4854,10 +4852,10 @@ Returns <code>nil</code> if <code>f</code> is <code>nil</code>.</p>
 &gt; \e
   next: (x) -&gt;
     let {
-      n: data.size(x[:nums])+1
+      n: data.size(x[:nums])+1;
     }
     {
-      :nums data.append(x[:nums], n),
+      :nums [...x[:nums], n],
       :sum x[:sum]+n
     }
 \e
@@ -4880,28 +4878,16 @@ Subsequent calls to <code>f</code> receive as first argument the result of the p
 
 <p>The second argument is an index starting at <code>start</code> and ending inclusively at <code>end</code>.</p>
 
-<p>Returns the result of the last call to <code>f</code>.</p>
+<p>Returns the result of the last call to <code>f</code>.<br />
+Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
 
-<p>Returns <code>nil</code> if <code>start</code>, <code>end</code>, or <code>f</code> are <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>start</code> is <code>nil</code> or <code>end</code> is <code>nil</code>.</p>
 
-<p>Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
+<p>Throws an error if <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow"># add natural numbers 1 to 10
 &gt; fun.iterate(1, 10, 0, (sum, i) -&gt; sum+i)
 55
-
-# make a triangle string
-&gt; fun.iterate(1, 8, &quot;\n&quot;, (str, i) -&gt; str .. strings.join(data.repeat(i, &quot;*&quot;)) .. &quot;\n&quot;)
-&quot;
-*
-**
-***
-****
-*****
-******
-*******
-********
-&quot;
 </code></pre>
 
 <h3 id="thread">thread</h3>
@@ -4911,8 +4897,9 @@ Subsequent calls to <code>f</code> receive as first argument the result of the p
 <p>Calls functions from given <code>fs</code> in sequence, passing <code>state</code> as the argument to the first function,
 and the result of the previous call to subsequent calls. Returns result of final call.</p>
 
-<p>Returns <code>state</code> if <code>fs</code> is empty.
-Returns <code>nil</code> if <code>fs</code> is nil.</p>
+<p>Returns <code>state</code> if <code>fs</code> is empty.</p>
+
+<p>Throws an error if <code>fs</code> is nil.</p>
 
 <pre><code class="language-tweakflow">&gt; \e
   rev_str: (str) -&gt; fun.thread(
@@ -4938,8 +4925,8 @@ function
 
 <p><code>fun.chain([f, g])(x) == g(f(x))</code></p>
 
-<p>Returns <code>nil</code> if <code>fs</code> is <code>nil</code>.
-Throws an error if <code>fs</code> is empty.</p>
+<p>Returns <code>core.id</code> identity function if <code>fs</code> is empty.<br />
+Throws an error if <code>fs</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; f: fun.chain([(x) -&gt; x+10, (x) -&gt; x*2]) # add 10, then double result
 function
@@ -4957,8 +4944,8 @@ with conventional mathematical notation.</p>
 
 <p><code>fun.compose([f, g])(x) == f(g(x))</code></p>
 
-<p>Returns <code>nil</code> if <code>fs</code> is <code>nil</code>.
-Throws an error if <code>fs</code> is empty.</p>
+<p>Returns <code>core.id</code> identity function if <code>fs</code> is empty.<br />
+Throws an error if <code>fs</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; f: fun.compose([(x) -&gt; x+10, (x) -&gt; x*2]) # double result, then add 10
 function

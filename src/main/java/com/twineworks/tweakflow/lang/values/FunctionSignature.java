@@ -103,7 +103,7 @@ public class FunctionSignature {
         paramDict.put("index", Values.make(parameter.getIndex()));
         paramDict.put("declared_type", Values.make(parameter.getDeclaredType().name()));
         paramDict.put("default_value", parameter.getDefaultValue());
-        paramList.append(Values.make(paramDict.persistent()));
+        paramList = paramList.append(Values.make(paramDict.persistent()));
       }
 
       dict.put("parameters", Values.make(paramList));
