@@ -131,6 +131,17 @@ export library to {
       expected
     ];
 
+  be_superset_of: (dict expected) -> (x) ->
+    [
+      "to be superset of",
+      x is dict &&
+        data.all?(
+          data.keys(expected),
+          (k) -> data.has?(x, k) && x[k] === expected[k]
+        ),
+      expected
+    ];
+
   be_one_of: (list expected) -> (x) ->
     [
       "to be one of",
