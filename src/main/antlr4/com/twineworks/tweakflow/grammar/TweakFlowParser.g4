@@ -279,12 +279,14 @@ stringReferenceInterpolation
 longLiteral
   : INT     # decLiteral
   | '-' INT # decLiteral
+  | '+' INT # decLiteral
   | HEX # hexLiteral
   ;
 
 doubleLiteral
   : DBL
   | '-' DBL
+  | '+' DBL
   ;
 
 booleanLiteral

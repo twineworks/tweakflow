@@ -42,7 +42,6 @@ import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.scope.ScopeType;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.FunctionValue;
-import com.twineworks.tweakflow.lang.values.StandardFunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Test;
@@ -196,11 +195,6 @@ public class InterpreterTest {
 
     VarDefNode varDefNode = (VarDefNode) a.getSymbol().getNode();
 
-//    Value meta = varDefNode.getMeta().getExpression().getCompileTimeConstant();
-//    Value doc = varDefNode.getDoc().getExpression().getCompileTimeConstant();
-//
-//    assertThat(meta).isEqualTo(Values.makeDict("version", "0.0.1", "revision", -1L));
-//    assertThat(doc).isEqualTo(Values.make("a doc string for `a`"));
 
   }
 
@@ -218,99 +212,87 @@ public class InterpreterTest {
     Cell lib = moduleSpace.getCells().gets("lib");
     ConstShapeMap<Cell> vars = lib.getCells();
 
-    // e0: nil
-    Cell e0 = vars.gets("e0");
-    assertThat(e0.getValue()).isSameAs(Values.NIL);
+    // nothing: nil
+    Cell nothing = vars.gets("nothing");
+    assertThat(nothing.getValue()).isSameAs(Values.NIL);
 
-    // e1: "string value"
-    Cell e1 = vars.gets("e1");
-    assertThat(e1.getValue()).isEqualTo(Values.make("string value"));
+    // str: "string value"
+    Cell str = vars.gets("str");
+    assertThat(str.getValue()).isEqualTo(Values.make("string value"));
 
-    // e2: 1
-    Cell e2 = vars.gets("e2");
-    assertThat(e2.getValue()).isEqualTo(Values.make(1L));
+    // long_1: 1
+    Cell long_1 = vars.gets("long_1");
+    assertThat(long_1.getValue()).isEqualTo(Values.make(1L));
 
-    // e3: 0x01
-    Cell e3 = vars.gets("e3");
-    assertThat(e3.getValue()).isEqualTo(Values.make(1L));
+    // hex_1:    0x01;
+    Cell hex_1 = vars.gets("hex_1");
+    assertThat(hex_1.getValue()).isEqualTo(Values.make(1L));
 
-    // e4: []
-    Cell e4 = vars.gets("e4");
-    assertThat(e4.getValue()).isEqualTo(Values.makeList());
+    // empty_list: [];
+    Cell empty_list = vars.gets("empty_list");
+    assertThat(empty_list.getValue()).isEqualTo(Values.makeList());
 
-    // e5: [1 2 3]
-    Cell e5 = vars.gets("e5");
-    assertThat(e5.getValue()).isEqualTo(Values.makeList(1L, 2L, 3L));
+    // simple_list: [1, 2, 3];
+    Cell simple_list = vars.gets("simple_list");
+    assertThat(simple_list.getValue()).isEqualTo(Values.makeList(1L, 2L, 3L));
 
-    // e6: [1, "a", ["x","y"]]
-    Cell e6 = vars.gets("e6");
-    assertThat(e6.getValue()).isEqualTo(Values.makeList(1L, "a", Values.makeList("x", "y")));
+    // nested_list: [1, "a", ["x","y"]]
+    Cell nested_list = vars.gets("nested_list");
+    assertThat(nested_list.getValue()).isEqualTo(Values.makeList(1L, "a", Values.makeList("x", "y")));
 
-    // e7: {}
-    Cell e7 = vars.gets("e7");
-    assertThat(e7.getValue()).isEqualTo(Values.makeDict());
+    // empty_dict: {}
+    Cell empty_dict = vars.gets("empty_dict");
+    assertThat(empty_dict.getValue()).isEqualTo(Values.makeDict());
 
-    // e8: {:key "value"}
-    Cell e8 = vars.gets("e8");
-    assertThat(e8.getValue()).isEqualTo(Values.makeDict("key", "value"));
+    // basic_dict: {:key "value"}
+    Cell basic_dict = vars.gets("basic_dict");
+    assertThat(basic_dict.getValue()).isEqualTo(Values.makeDict("key", "value"));
 
-    // e9: {:key1 "value1" :key2 "value2"}
-    Cell e9 = vars.gets("e9");
-    assertThat(e9.getValue()).isEqualTo(Values.makeDict("key1", "value1", "key2", "value2"));
+    // simple_dict: {:key1 "value1" :key2 "value2"}
+    Cell simple_dict = vars.gets("simple_dict");
+    assertThat(simple_dict.getValue()).isEqualTo(Values.makeDict("key1", "value1", "key2", "value2"));
 
-    // e10: {"k" "v", "sub" {:key "value"}}
-    Cell e10 = vars.gets("e10");
-    assertThat(e10.getValue()).isEqualTo(Values.makeDict("k", "v", "sub", Values.makeDict("key", "value")));
+    // nested_dict: {"k" "v", "sub" {:key "value"}}
+    Cell nested_dict = vars.gets("nested_dict");
+    assertThat(nested_dict.getValue()).isEqualTo(Values.makeDict("k", "v", "sub", Values.makeDict("key", "value")));
 
-    // e11: "-\n-"
-    Cell e11 = vars.gets("e11");
-    assertThat(e11.getValue()).isEqualTo(Values.make("-\n-"));
+    // string_escape: "-\n-"
+    Cell string_escape = vars.gets("string_escape");
+    assertThat(string_escape.getValue()).isEqualTo(Values.make("-\n-"));
 
-    // e12: true
-    Cell e12 = vars.gets("e12");
-    assertThat(e12.getValue()).isSameAs(Values.TRUE);
+    // bool_t: true
+    Cell bool_t = vars.gets("bool_t");
+    assertThat(bool_t.getValue()).isSameAs(Values.TRUE);
 
-    // e13: false
-    Cell e13 = vars.gets("e13");
-    assertThat(e13.getValue()).isSameAs(Values.FALSE);
+    // bool_f: false
+    Cell bool_f = vars.gets("bool_f");
+    assertThat(bool_f.getValue()).isSameAs(Values.FALSE);
 
-    // e14: () -> true # constant function returning true
-    Cell e14 = vars.gets("e14");
-    assertThat(e14.getValue().type()).isSameAs(Types.FUNCTION);
-    StandardFunctionValue e14_f = (StandardFunctionValue) e14.getValue().value();
-//    assertThat(e14_f.getBody().getCompileTimeConstant()).isSameAs(Values.TRUE);
+    // f_const: () -> true # constant function returning true
+    Cell f_const = vars.gets("f_const");
+    assertThat(f_const.getValue().type()).isSameAs(Types.FUNCTION);
 
-    // e15: (long x = 0, long y = 0) -> list [x y]
-    Cell e15 = vars.gets("e15");
-    assertThat(e15.getValue().type()).isSameAs(Types.FUNCTION);
-    assertThat(e15.getValue().value()).isNotNull();
-    FunctionValue e15_f = (FunctionValue) e15.getValue().value();
-    assertThat(e15_f.getSignature().getReturnType()).isSameAs(Types.LIST);
+    // f_args: (long x = 0, long y = 0) -> list [x y]
+    Cell f_args = vars.gets("f_args");
+    assertThat(f_args.getValue().type()).isSameAs(Types.FUNCTION);
+    assertThat(f_args.getValue().value()).isNotNull();
+    FunctionValue f_args_body = (FunctionValue) f_args.getValue().value();
+    assertThat(f_args_body.getSignature().getReturnType()).isSameAs(Types.LIST);
 
-    // e16: if true then "yes" else "no"
-    Cell e16 = vars.gets("e16");
-    assertThat(e16.getValue().type()).isSameAs(Types.STRING);
-    assertThat(e16.getValue().value()).isEqualTo("yes");
+    // dbl_1: 1.0
+    Cell dbl_1 = vars.gets("dbl_1");
+    assertThat(dbl_1.getValue().type()).isSameAs(Types.DOUBLE);
+    assertThat(dbl_1.getValue()).isEqualTo(Values.make(1.0d));
 
-    // e17: if false then "yes" else "no"
-    Cell e17 = vars.gets("e17");
-    assertThat(e17.getValue().type()).isSameAs(Types.STRING);
-    assertThat(e17.getValue().value()).isEqualTo("no");
+    // dbl_20: 2e1;
+    Cell dbl_20 = vars.gets("dbl_20");
+    assertThat(dbl_20.getValue().type()).isSameAs(Types.DOUBLE);
+    assertThat(dbl_20.getValue()).isEqualTo(Values.make(20.0d));
 
-    // e18: "foo" is string
-    Cell e18 = vars.gets("e18");
-    assertThat(e18.getValue().type()).isSameAs(Types.BOOLEAN);
-    assertThat(e18.getValue()).isSameAs(Values.TRUE);
-
-    // e19: 1.0
-    Cell e19 = vars.gets("e19");
-    assertThat(e19.getValue().type()).isSameAs(Types.DOUBLE);
-    assertThat(e19.getValue()).isEqualTo(Values.make(1.0d));
-
-    // e20: 2e1
-    Cell e20 = vars.gets("e20");
-    assertThat(e20.getValue().type()).isSameAs(Types.DOUBLE);
-    assertThat(e20.getValue()).isEqualTo(Values.make(20.0d));
+    // epoch: 1970-01-01T00:00:00Z@UTC;
+    Cell epoch = vars.gets("epoch");
+    assertThat(epoch.getValue().type()).isSameAs(Types.DATETIME);
+    assertThat(epoch.getValue()).isEqualTo(Values.EPOCH);
 
   }
 
@@ -820,6 +802,22 @@ public class InterpreterTest {
     Cell modulo = vars.gets("modulo");
     assertThat(modulo.getValue()).isEqualTo(Values.make(1L));
 
+    // unary_plus:       +2;
+    Cell unary_plus = vars.gets("unary_plus");
+    assertThat(unary_plus.getValue()).isEqualTo(Values.make(2L));
+
+    // unary_sum:        +1++2;
+    Cell unary_sum = vars.gets("unary_sum");
+    assertThat(unary_sum.getValue()).isEqualTo(Values.make(3L));
+
+    // unary_mult:       +3*+3;
+    Cell unary_mult = vars.gets("unary_mult");
+    assertThat(unary_mult.getValue()).isEqualTo(Values.make(9L));
+
+    // unary_minus:       +3-+3;
+    Cell unary_minus = vars.gets("unary_minus");
+    assertThat(unary_minus.getValue()).isEqualTo(Values.make(0L));
+
     // get_in:           {:a ["x" "y" "z"] :b nil}[:a 1] # "y"
     Cell get_in = vars.gets("get_in");
     assertThat(get_in.getValue()).isEqualTo(Values.make("y"));
@@ -839,6 +837,21 @@ public class InterpreterTest {
     // list_comp:        for x <- [1,2], y <- [3,4], x*y  # [3, 4, 6, 8]
     Cell list_comp = vars.gets("list_comp");
     assertThat(list_comp.getValue()).isEqualTo(Values.makeList(3L, 4L, 6L, 8L));
+
+    // if_true: if true then "yes" else "no"
+    Cell if_true = vars.gets("if_true");
+    assertThat(if_true.getValue().type()).isSameAs(Types.STRING);
+    assertThat(if_true.getValue().value()).isEqualTo("yes");
+
+    // if_false: if false then "yes" else "no"
+    Cell if_false = vars.gets("if_false");
+    assertThat(if_false.getValue().type()).isSameAs(Types.STRING);
+    assertThat(if_false.getValue().value()).isEqualTo("no");
+
+    // type_check: "foo" is string
+    Cell type_check = vars.gets("type_check");
+    assertThat(type_check.getValue().type()).isSameAs(Types.BOOLEAN);
+    assertThat(type_check.getValue()).isSameAs(Values.TRUE);
 
   }
 

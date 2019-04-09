@@ -26,7 +26,6 @@ package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.NamedArgumentNode;
-import com.twineworks.tweakflow.lang.ast.args.ParameterNode;
 import com.twineworks.tweakflow.lang.ast.args.PositionalArgumentNode;
 import com.twineworks.tweakflow.lang.ast.args.SplatArgumentNode;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
@@ -34,7 +33,6 @@ import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
 import com.twineworks.tweakflow.lang.ast.imports.ModuleImportNode;
 import com.twineworks.tweakflow.lang.ast.imports.NameImportNode;
-import com.twineworks.tweakflow.lang.ast.meta.ViaNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.DefaultPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.ExpressionPatternNode;
@@ -46,15 +44,35 @@ import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import com.twineworks.tweakflow.lang.types.Types;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static com.twineworks.tweakflow.lang.ast.NodeStructureAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParserTest {
+
+  private HashMap<String, Map<String, VarDefNode>> moduleCache = new HashMap<>();
+
+  private synchronized Map<String, VarDefNode> getVars(String ofModule) {
+    if (!moduleCache.containsKey(ofModule)){
+      Parser p = new Parser(
+          new ResourceParseUnit(new ResourceLocation.Builder().build(), ofModule)
+      );
+      ParseResult result = p.parseUnit();
+
+      if (result.isError()){
+        result.getException().printDigestMessageAndStackTrace();
+      }
+      // parse is successful
+      assertThat(result.isSuccess()).isTrue();
+
+      // get the variable map
+      Map<String, VarDefNode> varMap = ((ModuleNode) result.getNode()).getLibraries().get(0).getVars().getMap();
+      moduleCache.put(ofModule, varMap);
+    }
+    return moduleCache.get(ofModule);
+
+  }
 
   @Test
   public void parses_empty_module() throws Exception {
@@ -174,7 +192,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -187,7 +204,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -200,7 +216,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -213,7 +228,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -226,7 +240,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -239,7 +252,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -252,7 +264,6 @@ public class ParserTest {
     );
     ParseResult result = p.parseUnit();
 
-    // parse is successful
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
@@ -363,16 +374,9 @@ public class ParserTest {
   @Test
   public void parses_vardef_metadata() throws Exception {
 
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/vardef.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    // parse is successful
-    assertThat(result.isSuccess()).isTrue();
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/vardef.tf");
 
     // vardef exists
-    Map<String, VarDefNode> varDefMap = ((ModuleNode) result.getNode()).getLibraries().get(0).getVars().getMap();
     assertThat(varDefMap.containsKey("x"));
 
     // vardef has correct name
@@ -393,19 +397,7 @@ public class ParserTest {
   @Test
   public void parses_typed_vardefs() throws Exception {
 
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/typed_vardefs.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    if (result.isError()){
-      result.getException().printDigestMessageAndStackTrace();
-    }
-
-    // parse is successful
-    assertThat(result.isSuccess()).isTrue();
-
-    Map<String, VarDefNode> varDefMap = ((ModuleNode) result.getNode()).getLibraries().get(0).getVars().getMap();
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/typed_vardefs.tf");
 
     VarDefNode m = varDefMap.get("m");
     assertThat(m.getDeclaredType().isAny()).isTrue();
@@ -440,807 +432,406 @@ public class ParserTest {
   }
 
   @Test
-  public void parses_literal_expressions() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/literal_expressions.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    if (result.isError()){
-      result.getException().printDigestMessageAndStackTrace();
-    }
-    // parse is successful
-    assertThat(result.isSuccess()).isTrue();
-
-    // get the variable map
-    Map<String, VarDefNode> varDefMap = ((ModuleNode) result.getNode()).getLibraries().get(0).getVars().getMap();
-
-    // e0: nil
-    ExpressionNode e0 = varDefMap.get("e0").getValueExpression();
-    assertThat(e0).isInstanceOf(NilNode.class);
-
-    // e1: "string value"
-    ExpressionNode e1 = varDefMap.get("e1").getValueExpression();
-    assertThat(e1).isInstanceOf(StringNode.class);
-    StringNode e1_value = (StringNode) e1;
-    assertThat(e1_value.getStringVal()).isEqualTo("string value");
-
-    // e2: 1
-    ExpressionNode e2 = varDefMap.get("e2").getValueExpression();
-    assertThat(e2).isInstanceOf(LongNode.class);
-    LongNode e2_value = (LongNode) e2;
-    assertThat(e2_value.getLongNum()).isEqualTo(1L);
-
-    // e3: 0x01
-    ExpressionNode e3 = varDefMap.get("e3").getValueExpression();
-    assertThat(e3).isInstanceOf(LongNode.class);
-    LongNode e3_value = (LongNode) e3;
-    assertThat(e3_value.getLongNum()).isEqualTo(1L);
-
-    // e4: []
-    ExpressionNode e4 = varDefMap.get("e4").getValueExpression();
-    assertThat(e4).isInstanceOf(ListNode.class);
-    ListNode e4_value = (ListNode) e4;
-    assertThat(e4_value.getElements()).hasSize(0);
-
-    // e5: [1 2 3]
-    ExpressionNode e5 = varDefMap.get("e5").getValueExpression();
-    assertThat(e5).isInstanceOf(ListNode.class);
-    ListNode e5_value = (ListNode) e5;
-    assertThat(e5_value.getElements()).hasSize(3);
-
-    LongNode e5_1 = (LongNode) e5_value.getElements().get(0);
-    assertThat(e5_1.getLongNum()).isEqualTo(1L);
-
-    LongNode e5_2 = (LongNode) e5_value.getElements().get(1);
-    assertThat(e5_2.getLongNum()).isEqualTo(2L);
-
-    LongNode e5_3 = (LongNode) e5_value.getElements().get(2);
-    assertThat(e5_3.getLongNum()).isEqualTo(3L);
-
-    // e6: [1, "a", ["x","y"]]
-    ExpressionNode e6 = varDefMap.get("e6").getValueExpression();
-    assertThat(e6).isInstanceOf(ListNode.class);
-    ListNode e6_value = (ListNode) e6;
-    assertThat(e6_value.getElements()).hasSize(3);
-
-    LongNode e6_1 = (LongNode) e6_value.getElements().get(0);
-    assertThat(e6_1.getLongNum()).isEqualTo(1L);
-
-    StringNode e6_2 = (StringNode) e6_value.getElements().get(1);
-    assertThat(e6_2.getStringVal()).isEqualTo("a");
-
-    ListNode e6_3 = (ListNode) e6_value.getElements().get(2);
-    assertThat(e6_3.getElements()).hasSize(2);
-
-    StringNode e6_3_1 = (StringNode) e6_3.getElements().get(0);
-    assertThat(e6_3_1.getStringVal()).isEqualTo("x");
-
-    StringNode e6_3_2 = (StringNode) e6_3.getElements().get(1);
-    assertThat(e6_3_2.getStringVal()).isEqualTo("y");
-
-    // e7: {}
-    ExpressionNode e7 = varDefMap.get("e7").getValueExpression();
-    assertThat(e7).isInstanceOf(DictNode.class);
-    DictNode e7_value = (DictNode) e7;
-    assertThat(e7_value.getEntries()).hasSize(0);
-
-    // e8: {:key "value"}
-    ExpressionNode e8 = varDefMap.get("e8").getValueExpression();
-    assertThat(e8).isInstanceOf(DictNode.class);
-    DictNode e8_value = (DictNode) e8;
-    assertThat(e8_value.getEntries()).hasSize(1);
-
-    // :key is parsed into a string key
-    DictEntryNode e8_1 = e8_value.getEntries().get(0);
-    assertThat(e8_1.getKey()).isInstanceOf(StringNode.class);
-    StringNode e8_1_k = (StringNode) e8_1.getKey();
-    assertThat(e8_1_k.getStringVal()).isEqualTo("key");
-
-    assertThat(e8_1.getValue()).isInstanceOf(StringNode.class);
-    StringNode e8_1_v = (StringNode) e8_1.getValue();
-    assertThat(e8_1_v.getStringVal()).isEqualTo("value");
-
-    // e9: {:key1 "value1" :key2 "value2"}
-    ExpressionNode e9 = varDefMap.get("e9").getValueExpression();
-    assertThat(e9).isInstanceOf(DictNode.class);
-    DictNode e9_value = (DictNode) e9;
-    assertThat(e9_value.getEntries()).hasSize(2);
-
-    DictEntryNode e9_1 = e9_value.getEntries().get(0);
-    assertThat(e9_1.getKey()).isInstanceOf(StringNode.class);
-    StringNode e9_1_k = (StringNode) e9_1.getKey();
-    assertThat(e9_1_k.getStringVal()).isEqualTo("key1");
-
-    assertThat(e9_1.getValue()).isInstanceOf(StringNode.class);
-    StringNode e9_1_v = (StringNode) e9_1.getValue();
-    assertThat(e9_1_v.getStringVal()).isEqualTo("value1");
-
-    DictEntryNode e9_2 = e9_value.getEntries().get(1);
-    assertThat(e9_2.getKey()).isInstanceOf(StringNode.class);
-    StringNode e9_2_k = (StringNode) e9_2.getKey();
-    assertThat(e9_2_k.getStringVal()).isEqualTo("key2");
-
-    assertThat(e9_2.getValue()).isInstanceOf(StringNode.class);
-    StringNode e9_2_v = (StringNode) e9_2.getValue();
-    assertThat(e9_2_v.getStringVal()).isEqualTo("value2");
-
-    // e10: {"k" "v", "sub" {:key "value"}}
-    ExpressionNode e10 = varDefMap.get("e10").getValueExpression();
-    assertThat(e10).isInstanceOf(DictNode.class);
-    DictNode e10_value = (DictNode) e10;
-    assertThat(e10_value.getEntries()).hasSize(2);
-
-    DictEntryNode e10_1 = e10_value.getEntries().get(0);
-    assertThat(e10_1.getKey()).isInstanceOf(StringNode.class);
-    StringNode e10_1_k = (StringNode) e10_1.getKey();
-    assertThat(e10_1_k.getStringVal()).isEqualTo("k");
-
-    assertThat(e10_1.getValue()).isInstanceOf(StringNode.class);
-    StringNode e10_1_v = (StringNode) e10_1.getValue();
-    assertThat(e10_1_v.getStringVal()).isEqualTo("v");
-
-    DictEntryNode e10_2 = e10_value.getEntries().get(1);
-    assertThat(e10_2.getKey()).isInstanceOf(StringNode.class);
-    StringNode e10_2_k = (StringNode) e10_2.getKey();
-    assertThat(e10_2_k.getStringVal()).isEqualTo("sub");
-
-    assertThat(e10_2.getValue()).isInstanceOf(DictNode.class);
-    DictNode e10_2_v = (DictNode) e10_2.getValue();
-    assertThat(e10_2_v.getEntries()).hasSize(1);
-
-    DictEntryNode e10_2_v_1 = e10_2_v.getEntries().get(0);
-    assertThat(e10_2_v_1.getKey()).isInstanceOf(StringNode.class);
-    StringNode e10_2_v_1_k = (StringNode) e10_2_v_1.getKey();
-    assertThat(e10_2_v_1_k.getStringVal()).isEqualTo("key");
-    assertThat(e10_2_v_1.getValue()).isInstanceOf(StringNode.class);
-    StringNode e10_2_v_1_v = (StringNode) e10_2_v_1.getValue();
-    assertThat(e10_2_v_1_v.getStringVal()).isEqualTo("value");
-
-    // e11: "-\n-"
-    ExpressionNode e11 = varDefMap.get("e11").getValueExpression();
-    assertThat(e11).isInstanceOf(StringNode.class);
-    StringNode e11_value = (StringNode) e11;
-    assertThat(e11_value.getStringVal()).isEqualTo("-\n-");
-
-    // e12: true
-    ExpressionNode e12 = varDefMap.get("e12").getValueExpression();
-    assertThat(e12).isInstanceOf(BooleanNode.class);
-    BooleanNode e12_value = (BooleanNode) e12;
-    assertThat(e12_value.getBoolVal()).isEqualTo(Boolean.TRUE);
-
-    // e13: false
-    ExpressionNode e13 = varDefMap.get("e13").getValueExpression();
-    assertThat(e13).isInstanceOf(BooleanNode.class);
-    BooleanNode e13_value = (BooleanNode) e13;
-    assertThat(e13_value.getBoolVal()).isEqualTo(Boolean.FALSE);
-
-    // e14: () -> true # constant function returning true
-    ExpressionNode e14 = varDefMap.get("e14").getValueExpression();
-    assertThat(e14).isInstanceOf(FunctionNode.class);
-    FunctionNode e14_f = (FunctionNode) e14;
-    assertThat(e14_f.getDeclaredReturnType()).isEqualTo(Types.ANY);
-    assertThat(e14_f.getParameters().getMap()).isEmpty();
-    assertThat(e14_f.getExpression()).isInstanceOf(BooleanNode.class);
-    BooleanNode e14_f_value = (BooleanNode) e14_f.getExpression();
-    assertThat(e14_f_value.getBoolVal()).isTrue();
-
-    // e15: (double x = 0, double y = 0) -> [x y]
-    ExpressionNode e15 = varDefMap.get("e15").getValueExpression();
-    assertThat(e15).isInstanceOf(FunctionNode.class);
-    FunctionNode e15_f = (FunctionNode) e15;
-    assertThat(e15_f.getDeclaredReturnType()).isEqualTo(Types.LIST);
-
-    assertThat(e15_f.getExpression()).isInstanceOf(ListNode.class);
-    ListNode e15_f_e = (ListNode) e15_f.getExpression();
-    assertThat(e15_f_e.getElements()).hasSize(2);
-    assertThat(e15_f_e.getElements().get(0)).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e15_f_e_0 = (ReferenceNode) e15_f_e.getElements().get(0);
-    assertThat(e15_f_e_0.getElements().get(0)).isEqualTo("x");
-
-    ReferenceNode e15_f_e_1 = (ReferenceNode) e15_f_e.getElements().get(1);
-    assertThat(e15_f_e_1.getElements().get(0)).isEqualTo("y");
-
-    assertThat(e15_f.getParameters().getMap()).hasSize(2);
-
-    Iterator<String> iterator = e15_f.getParameters().getMap().keySet().iterator();
-    String x = iterator.next();
-    assertThat(x).isEqualTo("x");
-    String y = iterator.next();
-    assertThat(y).isEqualTo("y");
-
-    ParameterNode e15_p_x = e15_f.getParameters().getMap().get(x);
-    assertThat(e15_p_x.getDeclaredType()).isEqualTo(Types.DOUBLE);
-    assertThat(e15_p_x.getIndex()).isEqualTo(0);
-    assertThat(e15_p_x.getSymbolName()).isEqualTo("x");
-    assertThat(e15_p_x.getDefaultValue()).isInstanceOf(DoubleNode.class);
-    DoubleNode e15_p_x_v = (DoubleNode) e15_p_x.getDefaultValue();
-    assertThat(e15_p_x_v.getDoubleNum()).isEqualTo(0.0d);
-
-    ParameterNode e15_p_y = e15_f.getParameters().getMap().get(y);
-    assertThat(e15_p_y.getDeclaredType()).isEqualTo(Types.DOUBLE);
-    assertThat(e15_p_y.getIndex()).isEqualTo(1);
-    assertThat(e15_p_y.getSymbolName()).isEqualTo("y");
-    assertThat(e15_p_y.getDefaultValue()).isInstanceOf(DoubleNode.class);
-    DoubleNode e15_p_y_v = (DoubleNode) e15_p_y.getDefaultValue();
-    assertThat(e15_p_y_v.getDoubleNum()).isEqualTo(0.0d);
-
-    // e16: (list xs) -> any via "native"
-    ExpressionNode e16 = varDefMap.get("e16").getValueExpression();
-    assertThat(e16).isInstanceOf(FunctionNode.class);
-    FunctionNode e16_f = (FunctionNode) e16;
-    assertThat(e16_f.getDeclaredReturnType()).isEqualTo(Types.ANY);
-    assertThat(e16_f.getParameters().getMap()).hasSize(1);
-
-    ParameterNode e16_p_xs = e16_f.getParameters().getMap().get("xs");
-    assertThat(e16_p_xs.getSymbolName()).isEqualTo("xs");
-    assertThat(e16_p_xs.getDeclaredType()).isEqualTo(Types.LIST);
-
-    ViaNode e16_f_via = e16_f.getVia();
-    assertThat(e16_f_via).isNotNull();
-
-    assertThat(e16_f_via.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e16_f_via_str = (StringNode) e16_f_via.getExpression();
-    assertThat(e16_f_via_str.getStringVal()).isEqualTo("native");
-
-    // e17: 2e-1
-    ExpressionNode e17 = varDefMap.get("e17").getValueExpression();
-    assertThat(e17).isInstanceOf(DoubleNode.class);
-    DoubleNode e17_value = (DoubleNode) e17;
-    assertThat(e17_value.getDoubleNum()).isEqualTo(0.2d);
-
-    // e18: 3.1315
-    // e19: 0.31315e1
-    // e20: .31315e1
-    // e21: 31315e-4
-
-    // all of the above must parse to the same number
-    ExpressionNode e18 = varDefMap.get("e18").getValueExpression();
-    ExpressionNode e19 = varDefMap.get("e19").getValueExpression();
-    ExpressionNode e20 = varDefMap.get("e20").getValueExpression();
-    ExpressionNode e21 = varDefMap.get("e21").getValueExpression();
-
-    assertThat(e18).hasSameStructureAs(e19);
-    assertThat(e18).hasSameStructureAs(e20);
-    assertThat(e18).hasSameStructureAs(e21);
-
-    assertThat(e18.getValueType()).isSameAs(Types.DOUBLE);
-    assertThat(e18).isInstanceOf(DoubleNode.class);
-    assertThat(((DoubleNode)e18).getDoubleNum()).isEqualTo(3.1315);
-
-    // e22: 'single quoted ''string'''
-    ExpressionNode e22 = varDefMap.get("e22").getValueExpression();
-    assertThat(e22).isInstanceOf(StringNode.class);
-    StringNode e22_value = (StringNode) e22;
-    assertThat(e22_value.getStringVal()).isEqualTo("single quoted 'string'");
-
-    // e23: "string with\nescape sequence"
-    ExpressionNode e23 = varDefMap.get("e23").getValueExpression();
-    assertThat(e23).isInstanceOf(StringNode.class);
-    StringNode e23_value = (StringNode) e23;
-    assertThat(e23_value.getStringVal()).isEqualTo("string with\nescape sequence");
-
-    // e24: 'single quoted
-    // multi
-    // line
-    // string'
-    ExpressionNode e24 = varDefMap.get("e24").getValueExpression();
-    assertThat(e24).isInstanceOf(StringNode.class);
-    StringNode e24_value = (StringNode) e24;
-    assertThat(e24_value.getStringVal()).isEqualTo("single quoted\nmulti\nline\nstring");
-
-    // e25: "double quoted
-    // multi
-    // line
-    // string"
-    ExpressionNode e25 = varDefMap.get("e25").getValueExpression();
-    assertThat(e25).isInstanceOf(StringNode.class);
-    StringNode e25_value = (StringNode) e25;
-    assertThat(e25_value.getStringVal()).isEqualTo("double quoted\nmulti\nline\nstring");
-
-    // e26: ''
-    ExpressionNode e26 = varDefMap.get("e26").getValueExpression();
-    assertThat(e26).isInstanceOf(StringNode.class);
-    StringNode e26_value = (StringNode) e26;
-    assertThat(e26_value.getStringVal()).isEmpty();
-
-    // e27: ""
-    ExpressionNode e27 = varDefMap.get("e27").getValueExpression();
-    assertThat(e27).isInstanceOf(StringNode.class);
-    StringNode e27_value = (StringNode) e27;
-    assertThat(e27_value.getStringVal()).isEmpty();
-
-    // e28: Infinity
-    ExpressionNode e28 = varDefMap.get("e28").getValueExpression();
-    assertThat(e28).isInstanceOf(DoubleNode.class);
-    DoubleNode e28_value = (DoubleNode) e28;
-    assertThat(e28_value.getDoubleNum()).isEqualTo(Double.POSITIVE_INFINITY);
-
-    // e29: NaN
-    ExpressionNode e29 = varDefMap.get("e29").getValueExpression();
-    assertThat(e29).isInstanceOf(DoubleNode.class);
-    DoubleNode e29_value = (DoubleNode) e29;
-    assertThat(e29_value.getDoubleNum()).isEqualTo(Double.NaN);
-
-    // e30: {:`escaped key` "value"}
-    ExpressionNode e30 = varDefMap.get("e30").getValueExpression();
-    assertThat(e30).isInstanceOf(DictNode.class);
-    DictNode e30_value = (DictNode) e30;
-    assertThat(e30_value.getEntries()).hasSize(1);
-    DictEntryNode e30_entry_0 = e30_value.getEntries().get(0);
-
-    StringNode e30_entry_0_key = (StringNode) e30_entry_0.getKey();
-    assertThat(e30_entry_0_key.getStringVal()).isEqualTo("escaped key");
-
-    StringNode e30_entry_0_value = (StringNode) e30_entry_0.getValue();
-    assertThat(e30_entry_0_value.getStringVal()).isEqualTo("value");
-
-    // e31:
-    // ~~~
-    // Here ~~~ String
-    // ~~~
-    ExpressionNode e31 = varDefMap.get("e31").getValueExpression();
-    assertThat(e31).isInstanceOf(StringNode.class);
-    StringNode e31_value = (StringNode) e31;
-    assertThat(e31_value.getStringVal()).isEqualTo("Here ~~~ String");
-
-    // e32: 2017-03-17T16:04:02 # local date, implied UTC, second precision
-    ExpressionNode e32 = varDefMap.get("e32").getValueExpression();
-    assertThat(e32).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e32_value = (DateTimeNode) e32;
-    assertThat(e32_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneOffset.UTC)
-    );
-
-    // e33: 2017-03-17T16:04:02.123456789    # local date, implied UTC, nano-second precision
-    ExpressionNode e33 = varDefMap.get("e33").getValueExpression();
-    assertThat(e33).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e33_value = (DateTimeNode) e33;
-    assertThat(e33_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 123_456_789, ZoneOffset.UTC)
-    );
-
-    // e34: 2017-03-17T16:04:02+01:00@`Europe/Berlin` # local date in Berlin, second precision
-    ExpressionNode e34 = varDefMap.get("e34").getValueExpression();
-    assertThat(e34).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e34_value = (DateTimeNode) e34;
-    assertThat(e34_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneId.of("Europe/Berlin"))
-    );
-
-    // e35: 2017-03-17T16:04:02.123+01:00@`Europe/Berlin` # local date in Berlin, milli-second precision
-    ExpressionNode e35 = varDefMap.get("e35").getValueExpression();
-    assertThat(e35).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e35_value = (DateTimeNode) e35;
-    assertThat(e35_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 123_000_000, ZoneId.of("Europe/Berlin"))
-    );
-
-    // e36: 2017-03-17T16:04:02Z                 # UTC time, second precision
-    ExpressionNode e36 = varDefMap.get("e36").getValueExpression();
-    assertThat(e36).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e36_value = (DateTimeNode) e36;
-    assertThat(e36_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneOffset.UTC)
-    );
-
-    // e37: 2017-03-17T16:04:02+02:00            # UTC+2 time, implied time zone
-    ExpressionNode e37 = varDefMap.get("e37").getValueExpression();
-    assertThat(e37).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e37_value = (DateTimeNode) e37;
-    assertThat(e37_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneOffset.ofHours(2))
-    );
-
-    // e38: 2017-03-17T                          # local date, implied UTC, implied time midnight
-    ExpressionNode e38 = varDefMap.get("e38").getValueExpression();
-    assertThat(e38).isInstanceOf(DateTimeNode.class);
-    DateTimeNode e38_value = (DateTimeNode) e38;
-    assertThat(e38_value.getDateTime().getZoned()).isEqualTo(
-        ZonedDateTime.of(2017, 3, 17, 0, 0, 0, 0, ZoneOffset.UTC)
-    );
-  }
-
-  @Test
   public void parses_semantic_expressions() throws Exception {
 
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/semantic_expressions.tf")
-    );
-    ParseResult result = p.parseUnit();
 
-    // parse is successful
-    assertThat(result.isSuccess()).isTrue();
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/semantic_expressions.tf");
 
-    // get the variable map
-    Map<String, VarDefNode> varDefMap = ((ModuleNode) result.getNode()).getLibraries().get(0).getVars().getMap();
+    // nest_exp: (1)
+    ExpressionNode nest_exp = varDefMap.get("nest_exp").getValueExpression();
+    assertThat(nest_exp).isInstanceOf(LongNode.class);
+    LongNode next_exp_value = (LongNode) nest_exp;
+    assertThat(next_exp_value.getLongNum()).isEqualTo(1L);
 
-    // e0: (1)
-    ExpressionNode e0 = varDefMap.get("e0").getValueExpression();
-    assertThat(e0).isInstanceOf(LongNode.class);
-    LongNode e0_value = (LongNode) e0;
-    assertThat(e0_value.getLongNum()).isEqualTo(1L);
+    // bindings: let {a: 1} true
+    ExpressionNode bindingsNode = varDefMap.get("bindings").getValueExpression();
+    assertThat(bindingsNode).isInstanceOf(LetNode.class);
+    LetNode bindingsLetNode = (LetNode) bindingsNode;
 
-    // e1: let {a: 1} true
-    ExpressionNode e1 = varDefMap.get("e1").getValueExpression();
-    assertThat(e1).isInstanceOf(LetNode.class);
-    LetNode e1_let = (LetNode) e1;
-
-    LinkedHashMap<String, VarDefNode> bindings = e1_let.getBindings().getVars().getMap();
+    LinkedHashMap<String, VarDefNode> bindings = bindingsLetNode.getBindings().getVars().getMap();
     assertThat(bindings).hasSize(1);
     assertThat(bindings.get("a").getDeclaredType()).isEqualTo(Types.ANY);
     assertThat(bindings.get("a").getSymbolName()).isEqualTo("a");
 
-    BooleanNode e1_value = (BooleanNode) e1_let.getExpression();
-    assertThat(e1_value.getBoolVal()).isEqualTo(Boolean.TRUE);
+    BooleanNode bindingsValue = (BooleanNode) bindingsLetNode.getExpression();
+    assertThat(bindingsValue.getBoolVal()).isEqualTo(Boolean.TRUE);
 
-    // e2: try 0 catch e false
-    ExpressionNode e2 = varDefMap.get("e2").getValueExpression();
-    assertThat(e2).isInstanceOf(TryCatchNode.class);
-    TryCatchNode e2_try = (TryCatchNode) e2;
-    assertThat(e2_try.getCaughtException().getSymbolName()).isEqualTo("e");
-    assertThat(e2_try.getCaughtTrace()).isNull();
+    // try_catch_e: try 0 catch e false
+    ExpressionNode try_catch_e = varDefMap.get("try_catch_e").getValueExpression();
+    assertThat(try_catch_e).isInstanceOf(TryCatchNode.class);
+    TryCatchNode try_catch_e_node = (TryCatchNode) try_catch_e;
+    assertThat(try_catch_e_node.getCaughtException().getSymbolName()).isEqualTo("e");
+    assertThat(try_catch_e_node.getCaughtTrace()).isNull();
 
-    assertThat(e2_try.getTryExpression()).isInstanceOf(LongNode.class);
-    LongNode e2_try_exp = (LongNode) e2_try.getTryExpression();
-    assertThat(e2_try_exp.getLongNum()).isEqualTo(0L);
+    assertThat(try_catch_e_node.getTryExpression()).isInstanceOf(LongNode.class);
+    LongNode try_catch_e_try_exp = (LongNode) try_catch_e_node.getTryExpression();
+    assertThat(try_catch_e_try_exp.getLongNum()).isEqualTo(0L);
 
-    assertThat(e2_try.getCatchExpression()).isInstanceOf(BooleanNode.class);
-    BooleanNode e2_try_catch = (BooleanNode) e2_try.getCatchExpression();
-    assertThat(e2_try_catch.getBoolVal()).isFalse();
+    assertThat(try_catch_e_node.getCatchExpression()).isInstanceOf(BooleanNode.class);
+    BooleanNode try_catch_e_catch = (BooleanNode) try_catch_e_node.getCatchExpression();
+    assertThat(try_catch_e_catch.getBoolVal()).isFalse();
 
-    // e3: try 0 catch false
-    ExpressionNode e3 = varDefMap.get("e3").getValueExpression();
-    assertThat(e3).isInstanceOf(TryCatchNode.class);
-    TryCatchNode e3_try = (TryCatchNode) e3;
-    assertThat(e3_try.getCaughtException()).isNull();
-    assertThat(e3_try.getCaughtTrace()).isNull();
+    // try_catch: try 0 catch false
+    ExpressionNode try_catch = varDefMap.get("try_catch").getValueExpression();
+    assertThat(try_catch).isInstanceOf(TryCatchNode.class);
+    TryCatchNode try_catch_node = (TryCatchNode) try_catch;
+    assertThat(try_catch_node.getCaughtException()).isNull();
+    assertThat(try_catch_node.getCaughtTrace()).isNull();
 
-    assertThat(e3_try.getTryExpression()).isInstanceOf(LongNode.class);
-    LongNode e3_try_exp = (LongNode) e3_try.getTryExpression();
-    assertThat(e3_try_exp.getLongNum()).isEqualTo(0L);
+    assertThat(try_catch_node.getTryExpression()).isInstanceOf(LongNode.class);
+    LongNode try_catch_try_exp = (LongNode) try_catch_node.getTryExpression();
+    assertThat(try_catch_try_exp.getLongNum()).isEqualTo(0L);
 
-    assertThat(e3_try.getCatchExpression()).isInstanceOf(BooleanNode.class);
-    BooleanNode e3_try_catch = (BooleanNode) e3_try.getCatchExpression();
-    assertThat(e3_try_catch.getBoolVal()).isFalse();
+    assertThat(try_catch_node.getCatchExpression()).isInstanceOf(BooleanNode.class);
+    BooleanNode try_catch_catch = (BooleanNode) try_catch_node.getCatchExpression();
+    assertThat(try_catch_catch.getBoolVal()).isFalse();
 
-    // e4: throw nil
-    ExpressionNode e4 = varDefMap.get("e4").getValueExpression();
-    assertThat(e4).isInstanceOf(ThrowNode.class);
-    ThrowNode e4_throw = (ThrowNode) e4;
-    assertThat(e4_throw.getExceptionExpression()).isInstanceOf(NilNode.class);
+    // throw_nil: throw nil
+    ExpressionNode throw_nil = varDefMap.get("throw_nil").getValueExpression();
+    assertThat(throw_nil).isInstanceOf(ThrowNode.class);
+    ThrowNode throw_nil_node = (ThrowNode) throw_nil;
+    assertThat(throw_nil_node.getExceptionExpression()).isInstanceOf(NilNode.class);
 
-    // e5: "0001" as long
-    ExpressionNode e5 = varDefMap.get("e5").getValueExpression();
-    assertThat(e5).isInstanceOf(CastNode.class);
-    CastNode e5_cast = (CastNode) e5;
-    assertThat(e5_cast.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e5_cast_exp = (StringNode) e5_cast.getExpression();
-    assertThat(e5_cast_exp.getStringVal()).isEqualTo("0001");
+    // cast_str_as_long: "0001" as long
+    ExpressionNode cast_str_as_long = varDefMap.get("cast_str_as_long").getValueExpression();
+    assertThat(cast_str_as_long).isInstanceOf(CastNode.class);
+    CastNode cast_str_as_long_cast = (CastNode) cast_str_as_long;
+    assertThat(cast_str_as_long_cast.getExpression()).isInstanceOf(StringNode.class);
+    StringNode cast_str_as_long_exp = (StringNode) cast_str_as_long_cast.getExpression();
+    assertThat(cast_str_as_long_exp.getStringVal()).isEqualTo("0001");
+    assertThat(cast_str_as_long_cast.getTargetType()).isEqualTo(Types.LONG);
 
-    assertThat(e5_cast.getTargetType()).isEqualTo(Types.LONG);
+    // if_then_else: if true then 1 else 0
+    ExpressionNode if_then_else_node = varDefMap.get("if_then_else").getValueExpression();
+    assertThat(if_then_else_node).isInstanceOf(IfNode.class);
+    IfNode if_then_else = (IfNode) if_then_else_node;
 
-    // e6: if true then 1 else 0
-    ExpressionNode e6 = varDefMap.get("e6").getValueExpression();
-    assertThat(e6).isInstanceOf(IfNode.class);
-    IfNode e6_if = (IfNode) e6;
+    assertThat(if_then_else.getCondition()).isInstanceOf(BooleanNode.class);
+    BooleanNode if_then_else_cond = (BooleanNode) if_then_else.getCondition();
+    assertThat(if_then_else_cond.getBoolVal()).isTrue();
 
-    assertThat(e6_if.getCondition()).isInstanceOf(BooleanNode.class);
-    BooleanNode e6_if_cond = (BooleanNode) e6_if.getCondition();
-    assertThat(e6_if_cond.getBoolVal()).isTrue();
+    assertThat(if_then_else.getThenExpression()).isInstanceOf(LongNode.class);
+    LongNode if_then_else_then = (LongNode) if_then_else.getThenExpression();
+    assertThat(if_then_else_then.getLongNum()).isEqualTo(1L);
 
-    assertThat(e6_if.getThenExpression()).isInstanceOf(LongNode.class);
-    LongNode e6_if_then = (LongNode) e6_if.getThenExpression();
-    assertThat(e6_if_then.getLongNum()).isEqualTo(1L);
+    assertThat(if_then_else.getElseExpression()).isInstanceOf(LongNode.class);
+    LongNode if_then_else_else = (LongNode) if_then_else.getElseExpression();
+    assertThat(if_then_else_else.getLongNum()).isEqualTo(0L);
 
-    assertThat(e6_if.getElseExpression()).isInstanceOf(LongNode.class);
-    LongNode e6_if_else = (LongNode) e6_if.getElseExpression();
-    assertThat(e6_if_else.getLongNum()).isEqualTo(0L);
+    // if_else: if true 1 else 0
+    ExpressionNode if_else_node = varDefMap.get("if_else").getValueExpression();
+    assertThat(if_else_node).isInstanceOf(IfNode.class);
+    IfNode if_else = (IfNode) if_else_node;
 
-    // e7: if true 1 else 0
-    ExpressionNode e7 = varDefMap.get("e7").getValueExpression();
-    assertThat(e7).isInstanceOf(IfNode.class);
-    IfNode e7_if = (IfNode) e7;
+    assertThat(if_else.getCondition()).isInstanceOf(BooleanNode.class);
+    BooleanNode if_else_if_cond = (BooleanNode) if_else.getCondition();
+    assertThat(if_else_if_cond.getBoolVal()).isTrue();
 
-    assertThat(e7_if.getCondition()).isInstanceOf(BooleanNode.class);
-    BooleanNode e7_if_cond = (BooleanNode) e7_if.getCondition();
-    assertThat(e7_if_cond.getBoolVal()).isTrue();
+    assertThat(if_else.getThenExpression()).isInstanceOf(LongNode.class);
+    LongNode if_else_if_then = (LongNode) if_else.getThenExpression();
+    assertThat(if_else_if_then.getLongNum()).isEqualTo(1L);
 
-    assertThat(e7_if.getThenExpression()).isInstanceOf(LongNode.class);
-    LongNode e7_if_then = (LongNode) e7_if.getThenExpression();
-    assertThat(e7_if_then.getLongNum()).isEqualTo(1L);
+    assertThat(if_else.getElseExpression()).isInstanceOf(LongNode.class);
+    LongNode if_else_if_else = (LongNode) if_else.getElseExpression();
+    assertThat(if_else_if_else.getLongNum()).isEqualTo(0L);
 
-    assertThat(e7_if.getElseExpression()).isInstanceOf(LongNode.class);
-    LongNode e7_if_else = (LongNode) e7_if.getElseExpression();
-    assertThat(e7_if_else.getLongNum()).isEqualTo(0L);
+    // try_catch_e_t: try 0 catch e, trace nil # try evaluating 0, catch exception and trace and return nil
 
-    // e9: try 0 catch e, trace nil # try evaluating 0, catch exception and trace and return nil
+    ExpressionNode try_catch_e_t_node = varDefMap.get("try_catch_e_t").getValueExpression();
+    assertThat(try_catch_e_t_node).isInstanceOf(TryCatchNode.class);
+    TryCatchNode try_catch_e_t = (TryCatchNode) try_catch_e_t_node;
+    assertThat(try_catch_e_t.getCaughtException().getSymbolName()).isEqualTo("e");
+    assertThat(try_catch_e_t.getCaughtTrace().getSymbolName()).isEqualTo("trace");
 
-    ExpressionNode e9 = varDefMap.get("e9").getValueExpression();
-    assertThat(e9).isInstanceOf(TryCatchNode.class);
-    TryCatchNode e9_try = (TryCatchNode) e9;
-    assertThat(e9_try.getCaughtException().getSymbolName()).isEqualTo("e");
-    assertThat(e9_try.getCaughtTrace().getSymbolName()).isEqualTo("trace");
+    assertThat(try_catch_e_t.getTryExpression()).isInstanceOf(LongNode.class);
+    LongNode try_catch_e_t_try_exp = (LongNode) try_catch_e_t.getTryExpression();
+    assertThat(try_catch_e_t_try_exp.getLongNum()).isEqualTo(0L);
 
-    assertThat(e9_try.getTryExpression()).isInstanceOf(LongNode.class);
-    LongNode e9_try_exp = (LongNode) e9_try.getTryExpression();
-    assertThat(e9_try_exp.getLongNum()).isEqualTo(0L);
+    assertThat(try_catch_e_t.getCatchExpression()).isInstanceOf(NilNode.class);
 
-    assertThat(e9_try.getCatchExpression()).isInstanceOf(NilNode.class);
+    // type_check: "foo" is string
+    ExpressionNode type_check_node = varDefMap.get("type_check").getValueExpression();
+    assertThat(type_check_node).isInstanceOf(IsNode.class);
+    IsNode type_check = (IsNode) type_check_node;
+    assertThat(type_check.getCompareType()).isEqualTo(Types.STRING);
+    assertThat(type_check.getExpression()).isInstanceOf(StringNode.class);
+    StringNode type_check_exp = (StringNode) type_check.getExpression();
+    assertThat(type_check_exp.getStringVal()).isEqualTo("foo");
 
-    // e10: "foo" is string        # type check
-    ExpressionNode e10 = varDefMap.get("e10").getValueExpression();
-    assertThat(e10).isInstanceOf(IsNode.class);
-    IsNode e10_is = (IsNode) e10;
-    assertThat(e10_is.getCompareType()).isEqualTo(Types.STRING);
-    assertThat(e10_is.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e10_is_exp = (StringNode) e10_is.getExpression();
-    assertThat(e10_is_exp.getStringVal()).isEqualTo("foo");
-
-    // e11: import_name.lib.x      # reference string
-    ExpressionNode e11 = varDefMap.get("e11").getValueExpression();
-    assertThat(e11).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e11_ref = (ReferenceNode) e11;
-    assertThat(e11_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> elements = e11_ref.getElements();
+    // reference: import_name.lib.x
+    ExpressionNode reference_node = varDefMap.get("reference").getValueExpression();
+    assertThat(reference_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode reference = (ReferenceNode) reference_node;
+    assertThat(reference.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
+    List<String> elements = reference.getElements();
     assertThat(elements).hasSize(3);
     assertThat(elements).containsExactly("import_name", "lib", "x");
 
-    // e12: f()
-    ExpressionNode e12 = varDefMap.get("e12").getValueExpression();
-    assertThat(e12).isInstanceOf(CallNode.class);
-    CallNode e12_call = (CallNode) e12;
-    assertThat(e12_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e12_call.getArguments().getList()).isEmpty();
+    // f_call: f()
+    ExpressionNode f_call_node = varDefMap.get("f_call").getValueExpression();
+    assertThat(f_call_node).isInstanceOf(CallNode.class);
+    CallNode f_call = (CallNode) f_call_node;
+    assertThat(f_call.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call.getArguments().getList()).isEmpty();
 
-    // e13: f(1)
-    ExpressionNode e13 = varDefMap.get("e13").getValueExpression();
-    assertThat(e13).isInstanceOf(CallNode.class);
-    CallNode e13_call = (CallNode) e13;
-    assertThat(e13_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e13_call.getArguments().getList()).hasSize(1);
-    PositionalArgumentNode e13_argument_0 = (PositionalArgumentNode) e13_call.getArguments().getList().get(0);
-    assertThat(e13_argument_0.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e13_argument_0_v = (LongNode) e13_argument_0.getExpression();
-    assertThat(e13_argument_0_v.getLongNum()).isEqualTo(1);
+    // f_call_1: f(1)
+    ExpressionNode f_call_1_node = varDefMap.get("f_call_1").getValueExpression();
+    assertThat(f_call_1_node).isInstanceOf(CallNode.class);
+    CallNode f_call_1 = (CallNode) f_call_1_node;
+    assertThat(f_call_1.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_1.getArguments().getList()).hasSize(1);
+    PositionalArgumentNode f_call_1_arg_0 = (PositionalArgumentNode) f_call_1.getArguments().getList().get(0);
+    assertThat(f_call_1_arg_0.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_arg_0_v = (LongNode) f_call_1_arg_0.getExpression();
+    assertThat(f_call_1_arg_0_v.getLongNum()).isEqualTo(1);
 
-    // e14: f(:a 1)
-    ExpressionNode e14 = varDefMap.get("e14").getValueExpression();
-    assertThat(e14).isInstanceOf(CallNode.class);
-    CallNode e14_call = (CallNode) e14;
-    assertThat(e14_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e14_call.getArguments().getList()).hasSize(1);
-    NamedArgumentNode e14_argument_a = (NamedArgumentNode) e14_call.getArguments().getList().get(0);
-    assertThat(e14_argument_a.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e14_argument_a_v = (LongNode) e14_argument_a.getExpression();
-    assertThat(e14_argument_a_v.getLongNum()).isEqualTo(1);
+    // f_call_a1: f(:a 1)
+    ExpressionNode f_call_a1_node = varDefMap.get("f_call_a1").getValueExpression();
+    assertThat(f_call_a1_node).isInstanceOf(CallNode.class);
+    CallNode f_call_a1 = (CallNode) f_call_a1_node;
+    assertThat(f_call_a1.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_a1.getArguments().getList()).hasSize(1);
+    NamedArgumentNode f_call_a1_a = (NamedArgumentNode) f_call_a1.getArguments().getList().get(0);
+    assertThat(f_call_a1_a.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_a1_a_v = (LongNode) f_call_a1_a.getExpression();
+    assertThat(f_call_a1_a_v.getLongNum()).isEqualTo(1);
 
-    // e15: f(1, 2)
-    ExpressionNode e15 = varDefMap.get("e15").getValueExpression();
-    assertThat(e15).isInstanceOf(CallNode.class);
-    CallNode e15_call = (CallNode) e15;
-    assertThat(e15_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e15_call.getArguments().getList()).hasSize(2);
+    // f_call_1_2: f(1, 2)
+    ExpressionNode f_call_1_2_node = varDefMap.get("f_call_1_2").getValueExpression();
+    assertThat(f_call_1_2_node).isInstanceOf(CallNode.class);
+    CallNode f_call_1_2 = (CallNode) f_call_1_2_node;
+    assertThat(f_call_1_2.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_1_2.getArguments().getList()).hasSize(2);
 
-    PositionalArgumentNode e15_argument_0 = (PositionalArgumentNode) e15_call.getArguments().getList().get(0);
-    assertThat(e15_argument_0.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e15_argument_0_v = (LongNode) e15_argument_0.getExpression();
-    assertThat(e15_argument_0_v.getLongNum()).isEqualTo(1);
+    PositionalArgumentNode f_call_1_2_arg_0 = (PositionalArgumentNode) f_call_1_2.getArguments().getList().get(0);
+    assertThat(f_call_1_2_arg_0.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_2_arg_0_v = (LongNode) f_call_1_2_arg_0.getExpression();
+    assertThat(f_call_1_2_arg_0_v.getLongNum()).isEqualTo(1);
 
-    PositionalArgumentNode e15_argument_1 = (PositionalArgumentNode) e15_call.getArguments().getList().get(1);
-    assertThat(e15_argument_1.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e15_argument_1_v = (LongNode) e15_argument_1.getExpression();
-    assertThat(e15_argument_1_v.getLongNum()).isEqualTo(2);
+    PositionalArgumentNode f_call_1_2_arg_1 = (PositionalArgumentNode) f_call_1_2.getArguments().getList().get(1);
+    assertThat(f_call_1_2_arg_1.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_2_arg_1_v = (LongNode) f_call_1_2_arg_1.getExpression();
+    assertThat(f_call_1_2_arg_1_v.getLongNum()).isEqualTo(2);
 
-    // e16: f(:a 1, :b 2)
-    ExpressionNode e16 = varDefMap.get("e16").getValueExpression();
-    assertThat(e16).isInstanceOf(CallNode.class);
-    CallNode e16_call = (CallNode) e16;
-    assertThat(e16_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e16_call.getArguments().getList()).hasSize(2);
+    // f_call_a1_b2: f(:a 1, :b 2)
+    ExpressionNode f_call_a1_b2_node = varDefMap.get("f_call_a1_b2").getValueExpression();
+    assertThat(f_call_a1_b2_node).isInstanceOf(CallNode.class);
+    CallNode f_call_a1_b2 = (CallNode) f_call_a1_b2_node;
+    assertThat(f_call_a1_b2.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_a1_b2.getArguments().getList()).hasSize(2);
 
-    NamedArgumentNode e16_argument_a = (NamedArgumentNode) e16_call.getArguments().getList().get(0);
-    assertThat(e16_argument_a.getName()).isEqualTo("a");
-    assertThat(e16_argument_a.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e16_argument_a_v = (LongNode) e16_argument_a.getExpression();
-    assertThat(e16_argument_a_v.getLongNum()).isEqualTo(1);
+    NamedArgumentNode f_call_a1_b2_arg_a = (NamedArgumentNode) f_call_a1_b2.getArguments().getList().get(0);
+    assertThat(f_call_a1_b2_arg_a.getName()).isEqualTo("a");
+    assertThat(f_call_a1_b2_arg_a.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_a1_b2_arg_a_v = (LongNode) f_call_a1_b2_arg_a.getExpression();
+    assertThat(f_call_a1_b2_arg_a_v.getLongNum()).isEqualTo(1);
 
-    NamedArgumentNode e16_argument_b = (NamedArgumentNode) e16_call.getArguments().getList().get(1);
-    assertThat(e16_argument_b.getName()).isEqualTo("b");
-    assertThat(e16_argument_b.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e16_argument_b_v = (LongNode) e16_argument_b.getExpression();
-    assertThat(e16_argument_b_v.getLongNum()).isEqualTo(2);
+    NamedArgumentNode f_call_a1_b2_arg_b = (NamedArgumentNode) f_call_a1_b2.getArguments().getList().get(1);
+    assertThat(f_call_a1_b2_arg_b.getName()).isEqualTo("b");
+    assertThat(f_call_a1_b2_arg_b.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_a1_b2_arg_b_v = (LongNode) f_call_a1_b2_arg_b.getExpression();
+    assertThat(f_call_a1_b2_arg_b_v.getLongNum()).isEqualTo(2);
 
-    // e17: f(1, 2, :c 3)
-    ExpressionNode e17 = varDefMap.get("e17").getValueExpression();
-    assertThat(e17).isInstanceOf(CallNode.class);
-    CallNode e17_call = (CallNode) e17;
-    assertThat(e17_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e17_call.getArguments().getList()).hasSize(3);
+    // f_call_1_2_c3: f(1, 2, :c 3)
+    ExpressionNode f_call_1_2_c3_node = varDefMap.get("f_call_1_2_c3").getValueExpression();
+    assertThat(f_call_1_2_c3_node).isInstanceOf(CallNode.class);
+    CallNode f_call_1_2_c3 = (CallNode) f_call_1_2_c3_node;
+    assertThat(f_call_1_2_c3.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_1_2_c3.getArguments().getList()).hasSize(3);
 
-    PositionalArgumentNode e17_argument_0 = (PositionalArgumentNode) e17_call.getArguments().getList().get(0);
-    assertThat(e17_argument_0.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e17_argument_0_v = (LongNode) e17_argument_0.getExpression();
-    assertThat(e17_argument_0_v.getLongNum()).isEqualTo(1);
+    PositionalArgumentNode f_call_1_2_c3_arg_0 = (PositionalArgumentNode) f_call_1_2_c3.getArguments().getList().get(0);
+    assertThat(f_call_1_2_c3_arg_0.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_2_c3_arg_0_v = (LongNode) f_call_1_2_c3_arg_0.getExpression();
+    assertThat(f_call_1_2_c3_arg_0_v.getLongNum()).isEqualTo(1);
 
-    PositionalArgumentNode e17_argument_1 = (PositionalArgumentNode) e17_call.getArguments().getList().get(1);
-    assertThat(e17_argument_1.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e17_argument_1_v = (LongNode) e17_argument_1.getExpression();
-    assertThat(e17_argument_1_v.getLongNum()).isEqualTo(2);
+    PositionalArgumentNode f_call_1_2_c3_arg_1 = (PositionalArgumentNode) f_call_1_2_c3.getArguments().getList().get(1);
+    assertThat(f_call_1_2_c3_arg_1.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_2_c3_arg_1_v = (LongNode) f_call_1_2_c3_arg_1.getExpression();
+    assertThat(f_call_1_2_c3_arg_1_v.getLongNum()).isEqualTo(2);
 
-    NamedArgumentNode e17_argument_c = (NamedArgumentNode) e17_call.getArguments().getList().get(2);
-    assertThat(e17_argument_c.getName()).isEqualTo("c");
-    assertThat(e17_argument_c.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e17_argument_c_v = (LongNode) e17_argument_c.getExpression();
-    assertThat(e17_argument_c_v.getLongNum()).isEqualTo(3);
+    NamedArgumentNode f_call_1_2_c3_arg_c = (NamedArgumentNode) f_call_1_2_c3.getArguments().getList().get(2);
+    assertThat(f_call_1_2_c3_arg_c.getName()).isEqualTo("c");
+    assertThat(f_call_1_2_c3_arg_c.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_2_c3_arg_c_v = (LongNode) f_call_1_2_c3_arg_c.getExpression();
+    assertThat(f_call_1_2_c3_arg_c_v.getLongNum()).isEqualTo(3);
 
-    // e18: f(1, ...{:a 1})
-    ExpressionNode e18 = varDefMap.get("e18").getValueExpression();
-    assertThat(e18).isInstanceOf(CallNode.class);
-    CallNode e18_call = (CallNode) e18;
-    assertThat(e18_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e18_call.getArguments().getList()).hasSize(2);
+    // f_call_1_sp_a1: f(1, ...{:a 1})
+    ExpressionNode f_call_1_sp_a1_node = varDefMap.get("f_call_1_sp_a1").getValueExpression();
+    assertThat(f_call_1_sp_a1_node).isInstanceOf(CallNode.class);
+    CallNode f_call_1_sp_a1 = (CallNode) f_call_1_sp_a1_node;
+    assertThat(f_call_1_sp_a1.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_1_sp_a1.getArguments().getList()).hasSize(2);
 
-    PositionalArgumentNode e18_argument_0 = (PositionalArgumentNode) e18_call.getArguments().getList().get(0);
-    assertThat(e18_argument_0.getExpression()).isInstanceOf(LongNode.class);
-    LongNode e18_argument_0_v = (LongNode) e18_argument_0.getExpression();
-    assertThat(e18_argument_0_v.getLongNum()).isEqualTo(1);
+    PositionalArgumentNode f_call_1_sp_a1_arg_0 = (PositionalArgumentNode) f_call_1_sp_a1.getArguments().getList().get(0);
+    assertThat(f_call_1_sp_a1_arg_0.getExpression()).isInstanceOf(LongNode.class);
+    LongNode f_call_1_sp_a1_arg_0_v = (LongNode) f_call_1_sp_a1_arg_0.getExpression();
+    assertThat(f_call_1_sp_a1_arg_0_v.getLongNum()).isEqualTo(1);
 
-    SplatArgumentNode e18_argument_1 = (SplatArgumentNode) e18_call.getArguments().getList().get(1);
-    assertThat(e18_argument_1.getExpression()).isInstanceOf(DictNode.class);
-    DictNode e18_argument_1_v = (DictNode) e18_argument_1.getExpression();
-    assertThat(e18_argument_1_v.getEntries()).hasSize(1);
+    SplatArgumentNode f_call_1_sp_a1_arg_1 = (SplatArgumentNode) f_call_1_sp_a1.getArguments().getList().get(1);
+    assertThat(f_call_1_sp_a1_arg_1.getExpression()).isInstanceOf(DictNode.class);
+    DictNode f_call_1_sp_a1_arg_1_v = (DictNode) f_call_1_sp_a1_arg_1.getExpression();
+    assertThat(f_call_1_sp_a1_arg_1_v.getEntries()).hasSize(1);
 
-    // e20: library::e0            # library reference
-    ExpressionNode e20 = varDefMap.get("e20").getValueExpression();
-    assertThat(e20).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e20_ref = (ReferenceNode) e20;
-    assertThat(e20_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LIBRARY);
-    List<String> e20_elements = e20_ref.getElements();
-    assertThat(e20_elements).hasSize(1);
-    assertThat(e20_elements).containsExactly("e0");
+    // lib_ref: library::e0            # library reference
+    ExpressionNode lib_ref_node = varDefMap.get("lib_ref").getValueExpression();
+    assertThat(lib_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode lib_ref = (ReferenceNode) lib_ref_node;
+    assertThat(lib_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LIBRARY);
+    List<String> lib_ref_elements = lib_ref.getElements();
+    assertThat(lib_ref_elements).hasSize(1);
+    assertThat(lib_ref_elements).containsExactly("e0");
 
-    // e21: ::lib.e0               # module reference
-    ExpressionNode e21 = varDefMap.get("e21").getValueExpression();
-    assertThat(e21).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e21_ref = (ReferenceNode) e21;
-    assertThat(e21_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.MODULE);
-    List<String> e21_elements = e21_ref.getElements();
-    assertThat(e21_elements).hasSize(2);
-    assertThat(e21_elements).containsExactly("lib", "e0");
+    // mod_short_ref: ::lib.e0               # module reference
+    ExpressionNode mod_short_ref_node = varDefMap.get("mod_short_ref").getValueExpression();
+    assertThat(mod_short_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode mod_short_ref = (ReferenceNode) mod_short_ref_node;
+    assertThat(mod_short_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.MODULE);
+    List<String> mod_short_ref_elements = mod_short_ref.getElements();
+    assertThat(mod_short_ref_elements).hasSize(2);
+    assertThat(mod_short_ref_elements).containsExactly("lib", "e0");
 
-    // e22: module::lib.e0         # module reference
-    ExpressionNode e22 = varDefMap.get("e22").getValueExpression();
-    assertThat(e22).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e22_ref = (ReferenceNode) e22;
-    assertThat(e22_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.MODULE);
-    List<String> e22_elements = e22_ref.getElements();
-    assertThat(e22_elements).hasSize(2);
-    assertThat(e22_elements).containsExactly("lib", "e0");
+    // mod_ref: module::lib.e0         # module reference
+    ExpressionNode mod_ref_node = varDefMap.get("mod_ref").getValueExpression();
+    assertThat(mod_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode mod_ref = (ReferenceNode) mod_ref_node;
+    assertThat(mod_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.MODULE);
+    List<String> mod_ref_elements = mod_ref.getElements();
+    assertThat(mod_ref_elements).hasSize(2);
+    assertThat(mod_ref_elements).containsExactly("lib", "e0");
 
-//    e25: $global_var            # global reference
-    ExpressionNode e25 = varDefMap.get("e25").getValueExpression();
-    assertThat(e25).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e25_ref = (ReferenceNode) e25;
-    assertThat(e25_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.GLOBAL);
-    List<String> e25_elements = e25_ref.getElements();
-    assertThat(e25_elements).hasSize(1);
-    assertThat(e25_elements).containsExactly("global_var");
+//    global_short_ref: $global_var            # global reference
+    ExpressionNode global_short_ref_node = varDefMap.get("global_short_ref").getValueExpression();
+    assertThat(global_short_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode global_short_ref = (ReferenceNode) global_short_ref_node;
+    assertThat(global_short_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.GLOBAL);
+    List<String> global_short_ref_elements = global_short_ref.getElements();
+    assertThat(global_short_ref_elements).hasSize(1);
+    assertThat(global_short_ref_elements).containsExactly("global_var");
 
-//    e26: global::global_var     # global reference
-    ExpressionNode e26 = varDefMap.get("e26").getValueExpression();
-    assertThat(e26).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e26_ref = (ReferenceNode) e26;
-    assertThat(e26_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.GLOBAL);
-    List<String> e26_elements = e26_ref.getElements();
-    assertThat(e26_elements).hasSize(1);
-    assertThat(e26_elements).containsExactly("global_var");
+//    global_ref: global::global_var     # global reference
+    ExpressionNode global_ref_node = varDefMap.get("global_ref").getValueExpression();
+    assertThat(global_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode global_ref = (ReferenceNode) global_ref_node;
+    assertThat(global_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.GLOBAL);
+    List<String> global_ref_elements = global_ref.getElements();
+    assertThat(global_ref_elements).hasSize(1);
+    assertThat(global_ref_elements).containsExactly("global_var");
 
-//    e27: e0                     # local reference
-    ExpressionNode e27 = varDefMap.get("e27").getValueExpression();
-    assertThat(e27).isInstanceOf(ReferenceNode.class);
-    ReferenceNode e27_ref = (ReferenceNode) e27;
-    assertThat(e27_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> e27_elements = e27_ref.getElements();
-    assertThat(e27_elements).hasSize(1);
-    assertThat(e27_elements).containsExactly("e0");
+//    local_ref: e0                     # local reference
+    ExpressionNode local_ref_node = varDefMap.get("local_ref").getValueExpression();
+    assertThat(local_ref_node).isInstanceOf(ReferenceNode.class);
+    ReferenceNode local_ref = (ReferenceNode) local_ref_node;
+    assertThat(local_ref.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
+    List<String> local_ref_elements = local_ref.getElements();
+    assertThat(local_ref_elements).hasSize(1);
+    assertThat(local_ref_elements).containsExactly("e0");
 
-//  e29: "string ${e0}"         # string reference interpolation
-    ExpressionNode e29 = varDefMap.get("e29").getValueExpression();
-    assertThat(e29).isInstanceOf(StringConcatNode.class);
+//  string_inter: "string ${e0}"         # string reference interpolation
+    ExpressionNode string_inter_node = varDefMap.get("string_inter").getValueExpression();
+    assertThat(string_inter_node).isInstanceOf(StringConcatNode.class);
+    StringConcatNode string_inter = (StringConcatNode) string_inter_node;
+    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
+    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
+    assertThat(string_inter_left.getStringVal()).isEqualTo("string ");
 
-    // e30: f(:a, :b)
-    ExpressionNode e30 = varDefMap.get("e30").getValueExpression();
-    assertThat(e30).isInstanceOf(CallNode.class);
-    CallNode e30_call = (CallNode) e30;
-    assertThat(e30_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e30_call.getArguments().getList()).hasSize(2);
+    assertThat(string_inter.getRightExpression()).isInstanceOf(ReferenceNode.class);
+    ReferenceNode string_inter_right = (ReferenceNode) string_inter.getRightExpression();
+    assertThat(string_inter_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
+    List<String> string_inter_right_elements = string_inter_right.getElements();
+    assertThat(string_inter_right_elements).hasSize(1);
+    assertThat(string_inter_right_elements).containsExactly("e0");
 
-    PositionalArgumentNode e30_argument_0 = (PositionalArgumentNode) e30_call.getArguments().getList().get(0);
-    assertThat(e30_argument_0.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e30_argument_0_v = (StringNode) e30_argument_0.getExpression();
-    assertThat(e30_argument_0_v.getStringVal()).isEqualTo("a");
+    // f_call_a_b: f(:a, :b)
+    ExpressionNode f_call_a_b_node = varDefMap.get("f_call_a_b").getValueExpression();
+    assertThat(f_call_a_b_node).isInstanceOf(CallNode.class);
+    CallNode f_call_a_b = (CallNode) f_call_a_b_node;
+    assertThat(f_call_a_b.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_a_b.getArguments().getList()).hasSize(2);
 
-    PositionalArgumentNode e30_argument_1 = (PositionalArgumentNode) e30_call.getArguments().getList().get(1);
-    assertThat(e30_argument_1.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e30_argument_1_v = (StringNode) e30_argument_1.getExpression();
-    assertThat(e30_argument_1_v.getStringVal()).isEqualTo("b");
+    PositionalArgumentNode f_call_a_b_arg_0 = (PositionalArgumentNode) f_call_a_b.getArguments().getList().get(0);
+    assertThat(f_call_a_b_arg_0.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_call_a_b_arg_0_v = (StringNode) f_call_a_b_arg_0.getExpression();
+    assertThat(f_call_a_b_arg_0_v.getStringVal()).isEqualTo("a");
 
-    // e31: f(:a, :b "foo")
-    ExpressionNode e31 = varDefMap.get("e31").getValueExpression();
-    assertThat(e31).isInstanceOf(CallNode.class);
-    CallNode e31_call = (CallNode) e31;
-    assertThat(e31_call.getExpression()).isInstanceOf(ReferenceNode.class);
-    assertThat(e31_call.getArguments().getList()).hasSize(2);
+    PositionalArgumentNode f_call_a_b_arg_1 = (PositionalArgumentNode) f_call_a_b.getArguments().getList().get(1);
+    assertThat(f_call_a_b_arg_1.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_call_a_b_arg_1_v = (StringNode) f_call_a_b_arg_1.getExpression();
+    assertThat(f_call_a_b_arg_1_v.getStringVal()).isEqualTo("b");
 
-    PositionalArgumentNode e31_argument_0 = (PositionalArgumentNode) e31_call.getArguments().getList().get(0);
-    assertThat(e31_argument_0.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e31_argument_0_v = (StringNode) e31_argument_0.getExpression();
-    assertThat(e31_argument_0_v.getStringVal()).isEqualTo("a");
+    // f_call_a_bfoo: f(:a, :b "foo")
+    ExpressionNode f_call_a_bfoo_node = varDefMap.get("f_call_a_bfoo").getValueExpression();
+    assertThat(f_call_a_bfoo_node).isInstanceOf(CallNode.class);
+    CallNode f_call_a_bfoo = (CallNode) f_call_a_bfoo_node;
+    assertThat(f_call_a_bfoo.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_call_a_bfoo.getArguments().getList()).hasSize(2);
 
-    NamedArgumentNode e31_argument_b = (NamedArgumentNode) e31_call.getArguments().getList().get(1);
-    assertThat(e31_argument_b.getName()).isEqualTo("b");
-    assertThat(e31_argument_b.getExpression()).isInstanceOf(StringNode.class);
-    StringNode e31_argument_b_v = (StringNode) e31_argument_b.getExpression();
-    assertThat(e31_argument_b_v.getStringVal()).isEqualTo("foo");
+    PositionalArgumentNode f_call_a_bfoo_arg_0 = (PositionalArgumentNode) f_call_a_bfoo.getArguments().getList().get(0);
+    assertThat(f_call_a_bfoo_arg_0.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_call_a_bfoo_arg_0_v = (StringNode) f_call_a_bfoo_arg_0.getExpression();
+    assertThat(f_call_a_bfoo_arg_0_v.getStringVal()).isEqualTo("a");
+
+    NamedArgumentNode f_call_a_bfoo_arg_b = (NamedArgumentNode) f_call_a_bfoo.getArguments().getList().get(1);
+    assertThat(f_call_a_bfoo_arg_b.getName()).isEqualTo("b");
+    assertThat(f_call_a_bfoo_arg_b.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_call_a_bfoo_arg_b_v = (StringNode) f_call_a_bfoo_arg_b.getExpression();
+    assertThat(f_call_a_bfoo_arg_b_v.getStringVal()).isEqualTo("foo");
 
     // e32: ->> (8)
     //   (n) -> n*4
     //   (n) -> n+3
     //   (n) -> n*n
 
-    ExpressionNode e32 = varDefMap.get("e32").getValueExpression();
-    assertThat(e32).isInstanceOf(CallNode.class);
+    ExpressionNode thread = varDefMap.get("thread").getValueExpression();
+    assertThat(thread).isInstanceOf(CallNode.class);
 
-    // e32_expected: ((n) -> n*n)(((n) -> n+3)(((n) -> n*4)(8)))
-    ExpressionNode e32_expected = varDefMap.get("e32_expected").getValueExpression();
-    assertThat(e32).hasSameStructureAs(e32_expected);
+    // thread_expected: ((n) -> n*n)(((n) -> n+3)(((n) -> n*4)(8)))
+    ExpressionNode thread_expected = varDefMap.get("thread_expected").getValueExpression();
+    assertThat(thread).hasSameStructureAs(thread_expected);
 
-    //    e33: match 42
+    //    match_42: match 42
     //        10:      "ten"
     //        20:      "twenty"
     //        42:      "the answer to everything"
     //        default: "unknown"
-    ExpressionNode e33 = varDefMap.get("e33").getValueExpression();
-    assertThat(e33).isInstanceOf(MatchNode.class);
+    ExpressionNode match_42_node = varDefMap.get("match_42").getValueExpression();
+    assertThat(match_42_node).isInstanceOf(MatchNode.class);
 
-    MatchNode e33_match = (MatchNode) e33;
-    assertThat(e33_match.getSubject() instanceof LongNode);
-    assertThat(((LongNode) e33_match.getSubject()).getLongNum()).isEqualTo(42L);
-    List<MatchLineNode> e33_match_lines = e33_match.getMatchLines().getElements();
+    MatchNode match_42 = (MatchNode) match_42_node;
+    assertThat(match_42.getSubject() instanceof LongNode);
+    assertThat(((LongNode) match_42.getSubject()).getLongNum()).isEqualTo(42L);
+    List<MatchLineNode> match_42_lines = match_42.getMatchLines().getElements();
 
-    assertThat(e33_match_lines).hasSize(4);
+    assertThat(match_42_lines).hasSize(4);
 
-    MatchLineNode e33_line_0 = e33_match_lines.get(0);
-    assertThat(e33_line_0.getPattern() instanceof ExpressionPatternNode);
-    ExpressionPatternNode e33_line_0_pattern = (ExpressionPatternNode) e33_line_0.getPattern();
-    assertThat(e33_line_0_pattern.getExpression() instanceof LongNode);
-    assertThat(((LongNode) e33_line_0_pattern.getExpression()).getLongNum()).isEqualTo(10L);
-    assertThat(e33_line_0.getExpression() instanceof StringNode);
-    assertThat(((StringNode) e33_line_0.getExpression()).getStringVal()).isEqualTo("ten");
+    MatchLineNode match_42_line_0 = match_42_lines.get(0);
+    assertThat(match_42_line_0.getPattern() instanceof ExpressionPatternNode);
+    ExpressionPatternNode match_42_line_0_pattern = (ExpressionPatternNode) match_42_line_0.getPattern();
+    assertThat(match_42_line_0_pattern.getExpression() instanceof LongNode);
+    assertThat(((LongNode) match_42_line_0_pattern.getExpression()).getLongNum()).isEqualTo(10L);
+    assertThat(match_42_line_0.getExpression() instanceof StringNode);
+    assertThat(((StringNode) match_42_line_0.getExpression()).getStringVal()).isEqualTo("ten");
 
-    MatchLineNode e33_line_1 = e33_match_lines.get(1);
-    assertThat(e33_line_1.getPattern() instanceof ExpressionPatternNode);
-    ExpressionPatternNode e33_line_1_pattern = (ExpressionPatternNode) e33_line_1.getPattern();
-    assertThat(e33_line_1_pattern.getExpression() instanceof LongNode);
-    assertThat(((LongNode) e33_line_1_pattern.getExpression()).getLongNum()).isEqualTo(20L);
-    assertThat(e33_line_1.getExpression() instanceof StringNode);
-    assertThat(((StringNode) e33_line_1.getExpression()).getStringVal()).isEqualTo("twenty");
+    MatchLineNode match_42_line_1 = match_42_lines.get(1);
+    assertThat(match_42_line_1.getPattern() instanceof ExpressionPatternNode);
+    ExpressionPatternNode match_42_line_1_pattern = (ExpressionPatternNode) match_42_line_1.getPattern();
+    assertThat(match_42_line_1_pattern.getExpression() instanceof LongNode);
+    assertThat(((LongNode) match_42_line_1_pattern.getExpression()).getLongNum()).isEqualTo(20L);
+    assertThat(match_42_line_1.getExpression() instanceof StringNode);
+    assertThat(((StringNode) match_42_line_1.getExpression()).getStringVal()).isEqualTo("twenty");
 
-    MatchLineNode e33_line_2 = e33_match_lines.get(2);
-    assertThat(e33_line_2.getPattern() instanceof ExpressionPatternNode);
-    ExpressionPatternNode e33_line_2_pattern = (ExpressionPatternNode) e33_line_2.getPattern();
-    assertThat(e33_line_2_pattern.getExpression() instanceof LongNode);
-    assertThat(((LongNode)e33_line_2_pattern.getExpression()).getLongNum()).isEqualTo(42L);
-    assertThat(e33_line_2.getExpression() instanceof StringNode);
-    assertThat(((StringNode) e33_line_2.getExpression()).getStringVal()).isEqualTo("the answer to everything");
+    MatchLineNode match_42_line_2 = match_42_lines.get(2);
+    assertThat(match_42_line_2.getPattern() instanceof ExpressionPatternNode);
+    ExpressionPatternNode match_42_line_2_pattern = (ExpressionPatternNode) match_42_line_2.getPattern();
+    assertThat(match_42_line_2_pattern.getExpression() instanceof LongNode);
+    assertThat(((LongNode)match_42_line_2_pattern.getExpression()).getLongNum()).isEqualTo(42L);
+    assertThat(match_42_line_2.getExpression() instanceof StringNode);
+    assertThat(((StringNode) match_42_line_2.getExpression()).getStringVal()).isEqualTo("the answer to everything");
 
-    MatchLineNode e33_line_3 = e33_match_lines.get(3);
-    assertThat(e33_line_3.getPattern() instanceof ExpressionPatternNode);
-    DefaultPatternNode e33_line_3_pattern = (DefaultPatternNode) e33_line_3.getPattern();
-    assertThat(e33_line_3.getExpression() instanceof StringNode);
-    assertThat(((StringNode) e33_line_3.getExpression()).getStringVal()).isEqualTo("unknown");
+    MatchLineNode match_42_line_3 = match_42_lines.get(3);
+    assertThat(match_42_line_3.getPattern() instanceof ExpressionPatternNode);
+    DefaultPatternNode match_42_line_3_pattern = (DefaultPatternNode) match_42_line_3.getPattern();
+    assertThat(match_42_line_3.getExpression() instanceof StringNode);
+    assertThat(((StringNode) match_42_line_3.getExpression()).getStringVal()).isEqualTo("unknown");
 
   }
 

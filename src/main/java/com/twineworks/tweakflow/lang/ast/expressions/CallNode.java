@@ -59,10 +59,6 @@ public class CallNode extends AExpressionNode implements ExpressionNode {
 
   @Override
   public Type getValueType() {
-//    if (expression.isCompileTimeConstant()){
-//      FunctionValue function = expression.getCompileTimeConstant().function();
-//      return function.getSignature().getReturnType();
-//    }
     // this call does not know which function is called
     // until runtime
     return Types.ANY;

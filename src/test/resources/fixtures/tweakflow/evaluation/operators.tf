@@ -32,9 +32,17 @@ export library lib
   power:            2**10;
   divide:           16/2;
   modulo:           16 % 3; # 16=3*5+1 -> 1
+  unary_plus:       +2;
+  unary_sum:        +1++2;
+  unary_mult:       +3*+3;
+  unary_minus:      +3-+3;
   get_in:           {:a ["x", "y", "z"], :b nil}[:a, 1];  # "y"
   get_in_nil:       [1, 2, 3][100];                     # nil
   list_concat:      [...[1, 2, 3], ...[4, 5, 6]];          # [1 2 3 4 5 6]
   map_merge:        {...{:a 1, :b 2}, ...{:a 2, :c 2}};  # {:a 2 :b 2 :c 2}
   list_comp:        for x <- [1, 2], y <- [3, 4], x*y;  # [3, 4, 6, 8]
+  if_true:          if true then "yes" else "no";
+  if_false:         if false then "yes" else "no";
+  type_check:       "foo" is string;
+
 }
