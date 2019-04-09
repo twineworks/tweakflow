@@ -95,59 +95,59 @@ public final class Locale {
 
     // exponent separator
     Value vExponentSeparator = dict.get("exponent_separator");
-    if (vExponentSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "exponent_separator must not be nil");
+    if (vExponentSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:exponent_separator] must not be nil");
     String exponentSeparator = vExponentSeparator.castTo(Types.STRING).string();
-    if (exponentSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "exponent_separator must not be empty");
+    if (exponentSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:exponent_separator] must not be empty");
 
     symbols.setExponentSeparator(exponentSeparator);
 
     // grouping separator
     Value vGroupingSeparator = dict.get("grouping_separator");
-    if (vGroupingSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "grouping_separator must not be nil");
+    if (vGroupingSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:grouping_separator] must not be nil");
     String groupingSeparator = vGroupingSeparator.castTo(Types.STRING).string();
-    if (groupingSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "grouping_separator must not be empty");
-    if (groupingSeparator.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "grouping_separator must consist of exactly one character from the BMP (Basic Multilingual Plane)");
+    if (groupingSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:grouping_separator] must not be empty");
+    if (groupingSeparator.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:grouping_separator] must consist of exactly one character from the BMP (Basic Multilingual Plane)");
 
     symbols.setGroupingSeparator(groupingSeparator.charAt(0));
 
     // grouping separator
     Value vDecimalSeparator = dict.get("decimal_separator");
-    if (vDecimalSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_separator must not be nil");
+    if (vDecimalSeparator == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:decimal_separator] must not be nil");
     String decimalSeparator = vDecimalSeparator.castTo(Types.STRING).string();
-    if (decimalSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_separator must not be empty");
-    if (decimalSeparator.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_separator must consist of exactly one character from the BMP (Basic Multilingual Plane)");
+    if (decimalSeparator.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:decimal_separator] must not be empty");
+    if (decimalSeparator.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:decimal_separator] must consist of exactly one character from the BMP (Basic Multilingual Plane)");
 
     symbols.setDecimalSeparator(decimalSeparator.charAt(0));
 
     // nan
-    Value vNan = dict.get("nan");
-    if (vNan == Values.NIL) throw new LangException(LangError.NIL_ERROR, "nan must not be nil");
+    Value vNan = dict.get("NaN");
+    if (vNan == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:NaN] must not be nil");
     String nan = vNan.castTo(Types.STRING).string();
-    if (nan.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "nan must not be empty");
+    if (nan.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:NaN] must not be empty");
     symbols.setNaN(nan);
 
     // infinity
     Value vInfinity = dict.get("infinity");
-    if (vInfinity == Values.NIL) throw new LangException(LangError.NIL_ERROR, "infinity must not be nil");
+    if (vInfinity == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:infinity] must not be nil");
     String infinity = vInfinity.castTo(Types.STRING).string();
-    if (infinity.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "infinity must not be empty");
+    if (infinity.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:infinity] must not be empty");
     symbols.setInfinity(infinity);
 
     // minus sign
     Value vMinusSign = dict.get("minus_sign");
-    if (vMinusSign == Values.NIL) throw new LangException(LangError.NIL_ERROR, "minus_sign must not be nil");
+    if (vMinusSign == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:minus_sign] must not be nil");
     String minusSign = vMinusSign.castTo(Types.STRING).string();
-    if (minusSign.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "minus_sign must not be empty");
-    if (minusSign.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "minus_sign must consist of exactly one character from the BMP (Basic Multilingual Plane)");
+    if (minusSign.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:minus_sign] must not be empty");
+    if (minusSign.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:minus_sign] must consist of exactly one character from the BMP (Basic Multilingual Plane)");
 
     symbols.setMinusSign(minusSign.charAt(0));
 
     // zero digit
     Value vZeroDigit = dict.get("zero_digit");
-    if (vZeroDigit == Values.NIL) throw new LangException(LangError.NIL_ERROR, "zero_digit must not be nil");
+    if (vZeroDigit == Values.NIL) throw new LangException(LangError.NIL_ERROR, "decimal_symbols[:zero_digit] must not be nil");
     String zeroDigit = vZeroDigit.castTo(Types.STRING).string();
-    if (zeroDigit.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "zero_digit must not be empty");
-    if (zeroDigit.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "zero_digit must consist of exactly one character from the BMP (Basic Multilingual Plane)");
+    if (zeroDigit.length() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:zero_digit] must not be empty");
+    if (zeroDigit.length() > 1) throw new LangException(LangError.ILLEGAL_ARGUMENT, "decimal_symbols[:zero_digit] must consist of exactly one character from the BMP (Basic Multilingual Plane)");
 
     symbols.setZeroDigit(zeroDigit.charAt(0));
 

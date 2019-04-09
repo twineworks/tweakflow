@@ -5011,13 +5011,17 @@ supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFo
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
 [always_show_decimal_separator](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-) flag.
 
-If `decimal_symbols` is `nil` (the default), 'en-US' decimal symbols are used.
+If `decimal_symbols` is `nil` (the default), 'en-US' decimal symbols are used.\
+`rounding_mode` is provided as a case-insensitive name of one of the [rounding modes](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html) defined by the
+Java language.
 
 `f` returns `nil` if passed `nil` as an argument.
 `f` throws an error if `x` is neither a `double`, nor a `long` value.
 
+Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
+Throws an error if `decimal_symbols` is invalid.\
 Throws an error if `rounding_mode` is `nil`.\
-Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.
+Throws an error if `always_show_decimal_separator` is `nil`.
 
 ```tweakflow
 > f: math.formatter()
@@ -5061,8 +5065,8 @@ doc
 ) -> function
 ```
 
-Returns a function `f` that accepts a single string paramter `x` and returns a parsed numeric value as specified by the supplied
-[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and `decimal_symbols`.
+Returns a function `f` that accepts a single string parameter `x` and returns a parsed numeric value as specified by the supplied
+[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and [decimal_symbols](#decimal-symbols).
 
 Uses `en-US` decimal symbols if `decimal_symbols` is `nil`.
 
@@ -5071,8 +5075,9 @@ If `lenient` is `true` then partial matches of `x` return the number that result
 
 `f` returns `nil` if `x` is `nil`.
 
-Throws an error if `pattern` or `decimal_symbols` is invalid.
-
+Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
+Throws an error if `decimal_symbols` is invalid.\
+Throws an error if `lenient` is `nil`.
 
 ```tweakflow
 > f: math.parser()

@@ -117,5 +117,49 @@ public class MathTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/atan.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> log() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/log.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> log10() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/log10.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> bit_count() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/bit_count.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> formatter() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/formatter.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> parser() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/parser.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> e() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/e.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> pi() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/pi.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> min_long() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/min_long.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> max_long() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/math/max_long.tf");
+  }
 
 }

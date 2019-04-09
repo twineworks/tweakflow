@@ -4641,13 +4641,17 @@ supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFor
 <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a>, and
 <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-">always_show_decimal_separator</a> flag.</p>
 
-<p>If <code>decimal_symbols</code> is <code>nil</code> (the default), &lsquo;en-US&rsquo; decimal symbols are used.</p>
+<p>If <code>decimal_symbols</code> is <code>nil</code> (the default), &lsquo;en-US&rsquo; decimal symbols are used.<br />
+<code>rounding_mode</code> is provided as a case-insensitive name of one of the <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding modes</a> defined by the
+Java language.</p>
 
 <p><code>f</code> returns <code>nil</code> if passed <code>nil</code> as an argument.
 <code>f</code> throws an error if <code>x</code> is neither a <code>double</code>, nor a <code>long</code> value.</p>
 
-<p>Throws an error if <code>rounding_mode</code> is <code>nil</code>.<br />
-Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.</p>
+<p>Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.<br />
+Throws an error if <code>decimal_symbols</code> is invalid.<br />
+Throws an error if <code>rounding_mode</code> is <code>nil</code>.<br />
+Throws an error if <code>always_show_decimal_separator</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; f: math.formatter()
 function
@@ -4686,8 +4690,8 @@ std.tf&gt; f(648722)
 ) -&gt; function
 </code></pre>
 
-<p>Returns a function <code>f</code> that accepts a single string paramter <code>x</code> and returns a parsed numeric value as specified by the supplied
-<a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> and <code>decimal_symbols</code>.</p>
+<p>Returns a function <code>f</code> that accepts a single string parameter <code>x</code> and returns a parsed numeric value as specified by the supplied
+<a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> and <a href="#decimal-symbols">decimal_symbols</a>.</p>
 
 <p>Uses <code>en-US</code> decimal symbols if <code>decimal_symbols</code> is <code>nil</code>.</p>
 
@@ -4696,7 +4700,9 @@ If <code>lenient</code> is <code>true</code> then partial matches of <code>x</co
 
 <p><code>f</code> returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
-<p>Throws an error if <code>pattern</code> or <code>decimal_symbols</code> is invalid.</p>
+<p>Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.<br />
+Throws an error if <code>decimal_symbols</code> is invalid.<br />
+Throws an error if <code>lenient</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; f: math.parser()
 
