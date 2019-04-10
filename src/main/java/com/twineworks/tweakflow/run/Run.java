@@ -86,7 +86,7 @@ public class Run {
     parser.addArgument("-I", "--load_path")
         .required(false)
         .type(String.class)
-        .setDefault(new ArrayList())
+        .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
     parser.addArgument("--escape-result")

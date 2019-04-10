@@ -263,6 +263,16 @@ public class AnalysisTest {
   }
 
   @Test
+  public void fails_on_redefined_function_curry_arg() throws Exception {
+
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/already_defined_function_curry_arg.tf");
+
+    assertThat(result.isError()).isTrue();
+    assertThat(result.getException().getCode()).isSameAs(LangError.ALREADY_DEFINED);
+
+  }
+
+  @Test
   public void fails_on_redefined_import() throws Exception {
 
     AnalysisResult result = analyze("fixtures/tweakflow/analysis/imports/errors/already_defined_import.tf");

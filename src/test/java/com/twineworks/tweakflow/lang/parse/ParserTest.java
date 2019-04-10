@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.NamedArgumentNode;
 import com.twineworks.tweakflow.lang.ast.args.PositionalArgumentNode;
 import com.twineworks.tweakflow.lang.ast.args.SplatArgumentNode;
+import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
@@ -566,6 +567,32 @@ public class ParserTest {
     List<String> elements = reference.getElements();
     assertThat(elements).hasSize(3);
     assertThat(elements).containsExactly("import_name", "lib", "x");
+
+    // f_curry_a: f(a="foo")
+    ExpressionNode f_curry_a_node = varDefMap.get("f_curry_a").getValueExpression();
+    assertThat(f_curry_a_node).isInstanceOf(CurryNode.class);
+    CurryNode f_curry_a = (CurryNode) f_curry_a_node;
+    assertThat(f_curry_a.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_curry_a.getArguments().getList()).hasSize(1);
+    CurryArgumentNode f_curry_a_arg_a = f_curry_a.getArguments().getList().get(0);
+    assertThat(f_curry_a_arg_a.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_curry_a_arg_a_v = (StringNode) f_curry_a_arg_a.getExpression();
+    assertThat(f_curry_a_arg_a_v.getStringVal()).isEqualTo("foo");
+
+    // f_curry_a_b: f(a="foo", b="bar")
+    ExpressionNode f_curry_a_b_node = varDefMap.get("f_curry_a_b").getValueExpression();
+    assertThat(f_curry_a_b_node).isInstanceOf(CurryNode.class);
+    CurryNode f_curry_a_b = (CurryNode) f_curry_a_b_node;
+    assertThat(f_curry_a_b.getExpression()).isInstanceOf(ReferenceNode.class);
+    assertThat(f_curry_a_b.getArguments().getList()).hasSize(2);
+    CurryArgumentNode f_curry_a_b_arg_a = f_curry_a_b.getArguments().getList().get(0);
+    assertThat(f_curry_a_b_arg_a.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_curry_a_b_arg_a_v = (StringNode) f_curry_a_b_arg_a.getExpression();
+    assertThat(f_curry_a_b_arg_a_v.getStringVal()).isEqualTo("foo");
+    CurryArgumentNode f_curry_a_b_arg_b = f_curry_a_b.getArguments().getList().get(1);
+    assertThat(f_curry_a_b_arg_b.getExpression()).isInstanceOf(StringNode.class);
+    StringNode f_curry_a_b_arg_b_v = (StringNode) f_curry_a_b_arg_b.getExpression();
+    assertThat(f_curry_a_b_arg_b_v.getStringVal()).isEqualTo("bar");
 
     // f_call: f()
     ExpressionNode f_call_node = varDefMap.get("f_call").getValueExpression();

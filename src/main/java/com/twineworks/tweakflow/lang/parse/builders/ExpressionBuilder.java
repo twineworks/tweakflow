@@ -28,6 +28,8 @@ import com.twineworks.tweakflow.grammar.TweakFlowLexer;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.args.*;
+import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
+import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.meta.ViaNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
@@ -825,7 +827,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     for (TweakFlowParser.VarDefContext varDefContext : ctx.varDef()) {
       VarDefNode varDef = new VarDefBuilder(parseUnit).visitVarDef(varDefContext);
       if (varDefs.containsKey(varDef.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined mode than once", varDef.getSourceInfo());
+        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined more than once", varDef.getSourceInfo());
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }
@@ -1274,6 +1276,66 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   // arguments are not an expression
   // hence visitArgs cannot participate in typed visitor pattern directly
+  private CurryArguments makeCurryArgs(TweakFlowParser.CurryArgsContext ctx) {
+
+    ArrayList<CurryArgumentNode> args = new ArrayList<>();
+    HashMap<String, CurryArgumentNode> argMap = new HashMap<>();
+
+    if (ctx.children != null){
+
+      for (ParseTree child : ctx.children) {
+
+        CurryArgumentNode arg;
+
+        if (child instanceof TweakFlowParser.NamedCurryArgContext){
+          TweakFlowParser.NamedCurryArgContext nArg = (TweakFlowParser.NamedCurryArgContext) child;
+          arg = new CurryArgumentNode()
+              .setSourceInfo(srcOf(parseUnit, nArg))
+              .setExpression(visit(nArg.expression()))
+              .setName(identifier(nArg.identifier().getText()));
+
+          if (argMap.containsKey(arg.getName())){
+            throw new LangException(LangError.ALREADY_DEFINED, arg.getName()+" defined more than once", arg.getSourceInfo());
+          }
+          else{
+            argMap.put(arg.getName(), arg);
+          }
+        }
+        else if (child instanceof TerminalNode && child.getText().equals(",")){ // skip ',' separators
+          continue;
+        }
+        else {
+          throw new AssertionError("unknown curry argument type: "+child);
+        }
+        args.add(arg);
+
+      }
+    }
+
+    return new CurryArguments()
+        .setSourceInfo(srcOf(parseUnit, ctx))
+        .setList(args);
+
+  }
+
+  @Override
+  public ExpressionNode visitKeyLiteral(TweakFlowParser.KeyLiteralContext ctx) {
+    return new StringNode(key(ctx)).setSourceInfo(srcOf(parseUnit, ctx));
+  }
+
+  @Override
+  public ExpressionNode visitCallExp(TweakFlowParser.CallExpContext ctx) {
+
+    ExpressionNode expression = visit(ctx.expression());
+
+    return new CallNode()
+        .setExpression(expression)
+        .setArguments(makeArgs(ctx.args()))
+        .setSourceInfo(srcOf(parseUnit, ctx));
+  }
+
+  // arguments are not an expression
+  // hence visitArgs cannot participate in typed visitor pattern directly
   private Arguments makeArgs(TweakFlowParser.ArgsContext ctx) {
 
     ArrayList<ArgumentNode> args = new ArrayList<>();
@@ -1325,21 +1387,14 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   }
 
-  @Override
-  public ExpressionNode visitKeyLiteral(TweakFlowParser.KeyLiteralContext ctx) {
-    return new StringNode(key(ctx)).setSourceInfo(srcOf(parseUnit, ctx));
-  }
 
   @Override
-  public ExpressionNode visitCallExp(TweakFlowParser.CallExpContext ctx) {
-
+  public ExpressionNode visitCurryExp(TweakFlowParser.CurryExpContext ctx) {
     ExpressionNode expression = visit(ctx.expression());
 
-    return new CallNode()
+    return new CurryNode()
         .setExpression(expression)
-        .setArguments(makeArgs(ctx.args()))
+        .setArguments(makeCurryArgs(ctx.curryArgs()))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
-
-
 }

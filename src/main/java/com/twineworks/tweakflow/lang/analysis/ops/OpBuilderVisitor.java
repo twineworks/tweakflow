@@ -86,6 +86,12 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
   }
 
   @Override
+  public ExpressionNode visit(CurryNode node) {
+    super.visit(node);
+    return node.setOp(new CurryOp(node));
+  }
+
+  @Override
   public ExpressionNode visit(LessThanNode node) {
     super.visit(node);
     return node.setOp(new LessThanOp(node));

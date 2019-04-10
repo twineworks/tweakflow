@@ -222,6 +222,13 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
   }
 
   @Override
+  public ExpressionNode visit(CurryNode node) {
+    super.visit(node);
+    foldConstantOp(node);
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(FunctionNode node) {
     super.visit(node);
     foldConstantOp(node);

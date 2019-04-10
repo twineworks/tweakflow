@@ -44,10 +44,13 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.FunctionValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static com.twineworks.util.ShapeMapAssert.assertThat;
@@ -367,6 +370,12 @@ public class InterpreterTest {
   public void evaluates_function_calls() throws Exception {
     String path = "fixtures/tweakflow/evaluation/function_calls.tf";
     TestHelper.assertSpecModule(path);
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> evaluates_function_curry() throws Exception {
+    String path = "fixtures/tweakflow/evaluation/function_curry.tf";
+    return TestHelper.dynamicTestsSpecModule(path);
   }
 
   @Test
@@ -1044,6 +1053,21 @@ public class InterpreterTest {
 
     fail("expected LangException");
 
+  }
+
+  @Test
+  public void fails_on_extra_curry_args() throws Exception {
+
+    String path = "fixtures/tweakflow/evaluation/errors/extra_curry_args.tf";
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.UNEXPECTED_ARGUMENT);
+      return;
+    }
+
+    fail("expected LangException");
   }
 
   @Test

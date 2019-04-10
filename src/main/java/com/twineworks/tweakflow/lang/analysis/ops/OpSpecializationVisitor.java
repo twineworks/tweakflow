@@ -80,6 +80,12 @@ public class OpSpecializationVisitor extends AExpressionDescendingVisitor implem
   }
 
   @Override
+  public ExpressionNode visit(CurryNode node) {
+    super.visit(node);
+    return specialize(node);
+  }
+
+  @Override
   public ExpressionNode visit(LessThanNode node) {
     super.visit(node);
     return specialize(node);
@@ -441,6 +447,7 @@ public class OpSpecializationVisitor extends AExpressionDescendingVisitor implem
     super.visit(node);
     return specialize(node);
   }
+
 
 
 }

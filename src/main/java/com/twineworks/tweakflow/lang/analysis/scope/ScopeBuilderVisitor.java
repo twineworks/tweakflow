@@ -29,6 +29,8 @@ import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.ForHeadElementNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.*;
+import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
+import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
@@ -696,7 +698,31 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
+  public ExpressionNode visit(CurryNode node) {
+    if (node.getScope() != null) return node;
+    node.setScope(scopes.peek());
+    super.visit(node);
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(CallNode node) {
+    if (node.getScope() != null) return node;
+    node.setScope(scopes.peek());
+    super.visit(node);
+    return node;
+  }
+
+  @Override
+  public CurryArguments visit(CurryArguments node) {
+    if (node.getScope() != null) return node;
+    node.setScope(scopes.peek());
+    super.visit(node);
+    return node;
+  }
+
+  @Override
+  public CurryArgumentNode visit(CurryArgumentNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);
