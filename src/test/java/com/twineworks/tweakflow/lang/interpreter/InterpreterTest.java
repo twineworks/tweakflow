@@ -1071,6 +1071,36 @@ public class InterpreterTest {
   }
 
   @Test
+  public void fails_on_non_function_curry() throws Exception {
+
+    String path = "fixtures/tweakflow/evaluation/errors/non_function_curry.tf";
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.CANNOT_CURRY);
+      return;
+    }
+
+    fail("expected LangException");
+  }
+
+  @Test
+  public void fails_on_non_function_call() throws Exception {
+
+    String path = "fixtures/tweakflow/evaluation/errors/non_function_call.tf";
+    try {
+      evaluateWithStd(path);
+    }
+    catch (LangException e){
+      assertThat(e.getCode()).isSameAs(LangError.CANNOT_CALL);
+      return;
+    }
+
+    fail("expected LangException");
+  }
+
+  @Test
   public void fails_on_extra_named_args() throws Exception {
 
     String path = "fixtures/tweakflow/evaluation/errors/extra_named_args.tf";

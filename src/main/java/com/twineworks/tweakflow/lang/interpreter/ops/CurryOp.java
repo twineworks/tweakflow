@@ -53,12 +53,12 @@ final public class CurryOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value callableValue = callableOp.eval(stack, context);
-    if (callableValue.type() != Types.FUNCTION) {
-      throw new LangException(LangError.CANNOT_CURRY, "Cannot curry " + callableValue.toString() + ". Not a function.", stack, node.getSourceInfo());
+    Value f = callableOp.eval(stack, context);
+    if (f.type() != Types.FUNCTION) {
+      throw new LangException(LangError.CANNOT_CURRY, "Cannot curry " + f.toString() + ". Not a function.", stack, node.getSourceInfo());
     }
 
-    FunctionValue function = callableValue.function();
+    FunctionValue function = f.function();
     FunctionSignature signature = function.getSignature();
 
     ArrayList<FunctionParameter> newParams = new ArrayList<>();
@@ -66,13 +66,14 @@ final public class CurryOp implements ExpressionOp {
 
     // ensure every curried param is present in host
     for (String name : curriedArgs.keySet()) {
-      if (!fParams.containsKey(name)){
-        throw new LangException(LangError.UNEXPECTED_ARGUMENT, "Cannot curry undeclared parameter "+name+".", stack, node.getSourceInfo());
+      if (!fParams.containsKey(name)) {
+        throw new LangException(LangError.UNEXPECTED_ARGUMENT, "Cannot curry undeclared parameter " + name + ".", stack, node.getSourceInfo());
       }
     }
 
     Value[] fixedArgs = new Value[signature.getParameterList().size()];
-    int[] argsMap = new int[signature.getParameterList().size()-curriedArgs.size()];
+    int[] argsMap = new int[signature.getParameterList().size() - curriedArgs.size()];
+    Arrays.fill(argsMap, -1);
 
     // inherit any params from host that are not curried, in order
     List<FunctionParameter> parameterList = signature.getParameterList();
@@ -82,8 +83,7 @@ final public class CurryOp implements ExpressionOp {
 
       if (curriedArgs.containsKey(p.getName())) {
         fixedArgs[i] = curriedArgs.get(p.getName()).eval(stack, context);
-      }
-      else{
+      } else {
         newParams.add(new FunctionParameter(j, p.getName(), p.getDeclaredType(), p.getDefaultValue()));
         fixedArgs[i] = p.getDefaultValue();
         argsMap[j] = i;
@@ -96,9 +96,66 @@ final public class CurryOp implements ExpressionOp {
         signature.getReturnType()
     );
 
-    UserFunctionValue curried = new UserFunctionValue(curriedSignature, new curry_impl(callableValue, fixedArgs, argsMap));
 
-    return Values.make(curried);
+    UserFunction curriedFunction = null;
+    // f(x=a) -> g()
+    if (fixedArgs.length == 1 && newParams.size() == 0) {
+      curriedFunction = new curry_impl_1_total_0_fixed(f, fixedArgs[0]);
+    } else if (fixedArgs.length == 2) {
+      if (newParams.size() == 1) {
+        // f(x=a,y) -> g(y)
+        if (argsMap[0] == 1) {
+          curriedFunction = new curry_impl_2_total_0_fixed(f, fixedArgs[0]);
+        }
+        // f(x,y=a) -> g(x)
+        else if (argsMap[0] == 0) {
+          curriedFunction = new curry_impl_2_total_1_fixed(f, fixedArgs[1]);
+        }
+      }
+      if (newParams.size() == 0) {
+        // f(x=a,y=a) -> g()
+        curriedFunction = new curry_impl_2_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
+      }
+    } else if (fixedArgs.length == 3) {
+      if (newParams.size() == 2) {
+        // f(x=a,y,z) -> g(y,z)
+        if (argsMap[0] == 1 && argsMap[1] == 2) {
+          curriedFunction = new curry_impl_3_total_0_fixed(f, fixedArgs[0]);
+        }
+        // f(x,y=a,z) -> g(x,z)
+        else if (argsMap[0] == 0 && argsMap[1] == 2) {
+          curriedFunction = new curry_impl_3_total_1_fixed(f, fixedArgs[1]);
+        }
+        // f(x,y,z=a) -> g(x,y)
+        else if (argsMap[0] == 0 && argsMap[1] == 1) {
+          curriedFunction = new curry_impl_3_total_2_fixed(f, fixedArgs[2]);
+        }
+      } else if (newParams.size() == 1) {
+        // f(x=a,y=a,z) -> g(z)
+        if (argsMap[0] == 2) {
+          curriedFunction = new curry_impl_3_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
+        }
+        // f(x=a,y,z=a) -> g(y)
+        else if (argsMap[0] == 1) {
+          curriedFunction = new curry_impl_3_total_0_2_fixed(f, fixedArgs[0], fixedArgs[2]);
+        }
+        // f(x,y=a,z=a) -> g(x)
+        else if (argsMap[0] == 0) {
+          curriedFunction = new curry_impl_3_total_1_2_fixed(f, fixedArgs[1], fixedArgs[2]);
+        }
+      }
+      else if (newParams.size() == 0) {
+        // f(x=a,y=a,z=a) -> g()
+        curriedFunction = new curry_impl_3_total_0_1_2_fixed(f, fixedArgs[0], fixedArgs[1], fixedArgs[2]);
+      }
+    }
+
+
+    if (curriedFunction == null) {
+      curriedFunction = new curry_impl_generic(f, fixedArgs, argsMap);
+    }
+
+    return Values.make(new UserFunctionValue(curriedSignature, curriedFunction));
 
   }
 
@@ -121,23 +178,270 @@ final public class CurryOp implements ExpressionOp {
     return new CurryOp(node);
   }
 
-  private static final class curry_impl implements UserFunction, Arity0UserFunction, Arity1UserFunction, Arity2UserFunction, Arity3UserFunction, ArityNUserFunction {
+
+  private static final class curry_impl_1_total_0_fixed implements UserFunction, Arity0UserFunction {
+
+    private final Value f;
+    private final Value fixedArg;
+    private Arity1CallSite cs;
+
+    curry_impl_1_total_0_fixed(Value f, Value fixedArg) {
+      this.f = f;
+      this.fixedArg = fixedArg;
+    }
+
+    @Override
+    public Value call(UserCallContext context) {
+      if (cs == null) {
+        cs = context.createArity1CallSite(f);
+      }
+      return cs.call(fixedArg);
+    }
+
+  }
+
+  private static final class curry_impl_2_total_0_fixed implements UserFunction, Arity1UserFunction {
+
+    private final Value f;
+    private final Value fixedArg;
+    private Arity2CallSite cs;
+
+    curry_impl_2_total_0_fixed(Value f, Value fixedArg) {
+      this.f = f;
+      this.fixedArg = fixedArg;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0) {
+      if (cs == null) {
+        cs = context.createArity2CallSite(f);
+      }
+      return cs.call(fixedArg, arg0);
+    }
+
+  }
+
+  private static final class curry_impl_2_total_1_fixed implements UserFunction, Arity1UserFunction {
+
+    private final Value f;
+    private final Value fixedArg;
+    private Arity2CallSite cs;
+
+    curry_impl_2_total_1_fixed(Value f, Value fixedArg) {
+      this.f = f;
+      this.fixedArg = fixedArg;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0) {
+      if (cs == null) {
+        cs = context.createArity2CallSite(f);
+      }
+      return cs.call(arg0, fixedArg);
+    }
+
+  }
+
+  private static final class curry_impl_2_total_0_1_fixed implements UserFunction, Arity0UserFunction {
+
+    private final Value f;
+    private final Value fixedArg0;
+    private final Value fixedArg1;
+    private Arity2CallSite cs;
+
+    curry_impl_2_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
+      this.f = f;
+      this.fixedArg0 = fixedArg0;
+      this.fixedArg1 = fixedArg1;
+    }
+
+    @Override
+    public Value call(UserCallContext context) {
+      if (cs == null) {
+        cs = context.createArity2CallSite(f);
+      }
+      return cs.call(fixedArg0, fixedArg1);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_0_fixed implements UserFunction, Arity2UserFunction {
+
+    private final Value f;
+    private final Value fixedArg0;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_0_fixed(Value f, Value fixedArg0) {
+      this.f = f;
+      this.fixedArg0 = fixedArg0;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0, Value arg1) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(fixedArg0, arg0, arg1);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_1_fixed implements UserFunction, Arity2UserFunction {
+
+    private final Value f;
+    private final Value fixedArg1;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_1_fixed(Value f, Value fixedArg1) {
+      this.f = f;
+      this.fixedArg1 = fixedArg1;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0, Value arg1) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(arg0, fixedArg1, arg1);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_2_fixed implements UserFunction, Arity2UserFunction {
+
+    private final Value f;
+    private final Value fixedArg2;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_2_fixed(Value f, Value fixedArg2) {
+      this.f = f;
+      this.fixedArg2 = fixedArg2;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0, Value arg1) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(arg0, arg1, fixedArg2);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_0_1_fixed implements UserFunction, Arity1UserFunction {
+
+    private final Value f;
+    private final Value fixedArg0;
+    private final Value fixedArg1;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
+      this.f = f;
+      this.fixedArg0 = fixedArg0;
+      this.fixedArg1 = fixedArg1;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(fixedArg0, fixedArg1, arg0);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_1_2_fixed implements UserFunction, Arity1UserFunction {
+
+    private final Value f;
+    private final Value fixedArg1;
+    private final Value fixedArg2;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_1_2_fixed(Value f, Value fixedArg1, Value fixedArg2) {
+      this.f = f;
+      this.fixedArg1 = fixedArg1;
+      this.fixedArg2 = fixedArg2;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(arg0, fixedArg1, fixedArg2);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_0_2_fixed implements UserFunction, Arity1UserFunction {
+
+    private final Value f;
+    private final Value fixedArg0;
+    private final Value fixedArg2;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_0_2_fixed(Value f, Value fixedArg0, Value fixedArg2) {
+      this.f = f;
+      this.fixedArg0 = fixedArg0;
+      this.fixedArg2 = fixedArg2;
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value arg0) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(fixedArg0, arg0, fixedArg2);
+    }
+
+  }
+
+  private static final class curry_impl_3_total_0_1_2_fixed implements UserFunction, Arity0UserFunction {
+
+    private final Value f;
+    private final Value fixedArg0;
+    private final Value fixedArg1;
+    private final Value fixedArg2;
+    private Arity3CallSite cs;
+
+    curry_impl_3_total_0_1_2_fixed(Value f, Value fixedArg0, Value fixedArg1, Value fixedArg2) {
+      this.f = f;
+      this.fixedArg0 = fixedArg0;
+      this.fixedArg1 = fixedArg1;
+      this.fixedArg2 = fixedArg2;
+    }
+
+    @Override
+    public Value call(UserCallContext context) {
+      if (cs == null) {
+        cs = context.createArity3CallSite(f);
+      }
+      return cs.call(fixedArg0, fixedArg1, fixedArg2);
+    }
+
+  }
+
+  private static final class curry_impl_generic implements UserFunction, Arity0UserFunction, Arity1UserFunction, Arity2UserFunction, Arity3UserFunction, Arity4UserFunction, ArityNUserFunction {
 
     private final Value f;
     private final ThreadLocal<Value[]> fixedArgs;
     private final int[] argsMap;
 
-    curry_impl(Value f, Value[] fixedArgs, int[] argsMap) {
+    curry_impl_generic(Value f, Value[] fixedArgs, int[] argsMap) {
       this.f = f;
       this.argsMap = argsMap;
       Value[] args = new Value[fixedArgs.length];
       System.arraycopy(fixedArgs, 0, args, 0, fixedArgs.length);
       this.fixedArgs = ThreadLocal.withInitial(() -> args);
+
     }
+
 
     @Override
     public Value call(UserCallContext context) {
-      return context.call(f, fixedArgs.get());
+      Value[] args = fixedArgs.get();
+      return context.call(f, args);
     }
 
     @Override
@@ -157,7 +461,7 @@ final public class CurryOp implements ExpressionOp {
       int idx1 = argsMap[1];
       args[idx0] = arg0;
       args[idx1] = arg1;
-      Value ret = context.call(f, args);
+      Value  ret = context.call(f, args);
       args[idx0] = null;
       args[idx1] = null;
       return ret;
@@ -180,6 +484,25 @@ final public class CurryOp implements ExpressionOp {
     }
 
     @Override
+    public Value call(UserCallContext context, Value arg0, Value arg1, Value arg2, Value arg3) {
+      Value[] args = fixedArgs.get();
+      int idx0 = argsMap[0];
+      int idx1 = argsMap[1];
+      int idx2 = argsMap[2];
+      int idx3 = argsMap[3];
+      args[idx0] = arg0;
+      args[idx1] = arg1;
+      args[idx2] = arg2;
+      args[idx3] = arg3;
+      Value ret = context.call(f, args);
+      args[idx0] = null;
+      args[idx1] = null;
+      args[idx2] = null;
+      args[idx3] = null;
+      return ret;
+    }
+
+    @Override
     public Value callVariadic(UserCallContext context, Value... cArgs) {
 
       Value[] args = fixedArgs.get();
@@ -192,6 +515,7 @@ final public class CurryOp implements ExpressionOp {
       }
       return ret;
     }
+
   }
 
 
