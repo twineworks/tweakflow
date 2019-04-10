@@ -198,9 +198,28 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitDateTimeLiteralExp(TweakFlowParser.DateTimeLiteralExpContext ctx) {
 
     // 2017-03-17T16:04:02.123456789+01:00@`Europe/Berlin`
+
     String str = ctx.getText();
-    // date part are first 10 digits
-    String date = str.substring(0,10);
+    int idxT = str.indexOf('T');
+
+    // date part are first digits up to T
+    String date = str.substring(0,idxT);
+    boolean isNeg = date.startsWith("-");
+
+    // temporarily strip off the leading - for processing convenience
+    if (isNeg) {
+      date = date.substring(1);
+    }
+
+    String[] parts = date.split("-");
+    int year = Integer.parseInt(parts[0], 10);
+    int month = Integer.parseInt(parts[1], 10);
+    int dayOfMonth = Integer.parseInt(parts[2], 10);
+
+    if (isNeg){
+      year = -year;
+    }
+
     // hh:mm:ss
     String clockTime = "00:00:00";
     String fractionalSeconds = "0";
@@ -209,20 +228,19 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     int len = str.length();
 
-
     // optional parts
-    if (len > 11) {
-      clockTime = str.substring(11, 19);
+    if (len > idxT+1) {
+      clockTime = str.substring(idxT+1, idxT+9);
     }
 
-    if (len > 20) {
+    if (len > idxT+9) {
 
       // fractional seconds
       StringBuilder fractionalSecondsBuilder = new StringBuilder();
-      int i = 19;
+      int i = idxT+9;
       if (str.charAt(i) == '.'){
         // keep collecting fractional digits
-        i = 20;
+        i = idxT+10;
         char c = str.charAt(i);
         while(c >= '0' && c <= '9'){
           fractionalSecondsBuilder.append(c);
@@ -232,7 +250,6 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         }
       }
       fractionalSeconds = fractionalSecondsBuilder.toString();
-
 
       // offset & timezone
       if (i < len){
@@ -267,7 +284,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     try {
       // create a zoned time, using strict rules for all parts
-      LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+      LocalDate localDate = LocalDate.of(year, month, dayOfMonth);
       LocalTime localTime = LocalTime.parse(clockTime+"."+fractionalSeconds, DateTimeFormatter.ISO_LOCAL_TIME);
       LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
       ZonedDateTime zonedDateTime = ZonedDateTime.ofStrict(localDateTime, ZoneOffset.of(offset), ZoneId.of(tz));

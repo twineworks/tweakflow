@@ -81,6 +81,20 @@ public class ParserDatetimeLiteralsTest {
   }
 
   @Test
+  void neg_utc_imp_s() {
+
+//    neg_utc_imp_s:    -2017-03-17T16:04:02;                 # implied UTC, second precision
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_utc_imp_s").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-2017, 3, 17, 16, 4, 2, 0, ZoneOffset.UTC)
+    );
+  }
+
+  @Test
   void utc_imp_ns() {
 
 //    uts_imp_ns:   2017-03-17T16:04:02.123456789;       # implied UTC, nano-second precision
@@ -91,6 +105,20 @@ public class ParserDatetimeLiteralsTest {
     DateTimeNode node = (DateTimeNode) expNode;
     assertThat(node.getDateTime().getZoned()).isEqualTo(
         ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 123456789, ZoneOffset.UTC)
+    );
+  }
+
+  @Test
+  void neg_utc_imp_ns() {
+
+//    neg_utc_imp_ns:   -2017-03-17T16:04:02.123456789;       # implied UTC, nano-second precision
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_utc_imp_ns").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-2017, 3, 17, 16, 4, 2, 123456789, ZoneOffset.UTC)
     );
   }
 
@@ -123,6 +151,34 @@ public class ParserDatetimeLiteralsTest {
   }
 
   @Test
+  void deep_time_ms() {
+
+//    deep_time_ms: 999992017-03-17T16:04:02.123;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("deep_time_ms").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(999992017, 3, 17, 16, 4, 2, 123000000, ZoneId.of("UTC"))
+    );
+  }
+
+  @Test
+  void neg_deep_time_ms() {
+
+//  neg_deep_time_ms: -999992017-03-17T16:04:02.123;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_deep_time_ms").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-999992017, 3, 17, 16, 4, 2, 123000000, ZoneId.of("UTC"))
+    );
+  }
+
+  @Test
   void utc_s() {
 
 //    utc_s:        2017-03-17T16:04:02Z;                 # UTC time, second precision
@@ -133,6 +189,20 @@ public class ParserDatetimeLiteralsTest {
     DateTimeNode node = (DateTimeNode) expNode;
     assertThat(node.getDateTime().getZoned()).isEqualTo(
         ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneOffset.UTC)
+    );
+  }
+
+  @Test
+  void neg_utc_s() {
+
+//  neg_utc_s:        -2017-03-17T16:04:02Z;                 # UTC time, second precision
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_utc_s").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-2017, 3, 17, 16, 4, 2, 0, ZoneOffset.UTC)
     );
   }
 
@@ -151,6 +221,20 @@ public class ParserDatetimeLiteralsTest {
   }
 
   @Test
+  void neg_utc_plus_2() {
+
+    // neg_utc_plus_2:   -2017-03-17T16:04:02+02:00;            # UTC+2 time, implied time zone
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_utc_plus_2").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-2017, 3, 17, 16, 4, 2, 0, ZoneOffset.ofHours(2))
+    );
+  }
+
+  @Test
   void utc_midnight() {
 
 //    utc_midnight: 2017-03-17T;                          # implied UTC, implied time midnight
@@ -163,5 +247,19 @@ public class ParserDatetimeLiteralsTest {
         ZonedDateTime.of(2017, 3, 17, 0, 0, 0, 0, ZoneOffset.UTC)
     );
   }
+  @Test
+  void neg_utc_midnight() {
+
+//  neg_utc_midnight: -2017-03-17T;                          # implied UTC, implied time midnight
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("neg_utc_midnight").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(-2017, 3, 17, 0, 0, 0, 0, ZoneOffset.UTC)
+    );
+  }
+
 
 }

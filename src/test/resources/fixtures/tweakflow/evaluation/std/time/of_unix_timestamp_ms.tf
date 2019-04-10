@@ -20,10 +20,10 @@ library of_unix_timestamp_ms_spec {
   of_neg_1496933995123:
     expect(of_unix_timestamp_ms(-1496933995123), to.be(1922-07-26T09:00:04.877Z@UTC));
 
-#  of_max_long:
-#    expect(of_unix_timestamp_ms(math.max_long), to.be(292278994-08-17T07:12:55.807Z@UTC));
+  of_max_long:
+    expect(of_unix_timestamp_ms(math.max_long), to.be(292278994-08-17T07:12:55.807Z@UTC));
 
-#  of_min_long:
-#    expect(of_unix_timestamp_ms(math.min_long), to.be(-292275055-05-16T16:47:04.192Z@UTC));
+  of_min_long:
+    expect(of_unix_timestamp_ms(math.min_long), to.be(-292275055-05-16T16:47:04.192Z@UTC));
 
 }
