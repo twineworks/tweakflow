@@ -38,6 +38,16 @@ public class TimeTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> of() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/of.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> at() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/at.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> seconds_between() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/seconds_between.tf");
   }
@@ -192,6 +202,7 @@ public class TimeTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/same_instant_at_zone.tf");
   }
 
+
   @TestFactory
   public Collection<DynamicTest> unix_timestamp() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/unix_timestamp.tf");
@@ -200,6 +211,16 @@ public class TimeTest {
   @TestFactory
   public Collection<DynamicTest> unix_timestamp_ms() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/unix_timestamp_ms.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> of_unix_timestamp() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/of_unix_timestamp.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> of_unix_timestamp_ms() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/time/of_unix_timestamp_ms.tf");
   }
 
   @TestFactory

@@ -12,23 +12,12 @@ library unix_timestamp_spec {
     expect(unix_timestamp(nil), to.be_nil());
 
   of_epoch:
-    expect(unix_timestamp(0), to.be(t.epoch));
+    expect(unix_timestamp(t.epoch), to.be(0));
 
   of_1496933995:
-    expect(unix_timestamp(1496933995), to.be(2017-06-08T14:59:55Z@UTC));
+    expect(unix_timestamp(2017-06-08T14:59:55Z@UTC), to.be(1496933995));
 
   of_neg_1496933995:
-    expect(unix_timestamp(-1496933995), to.be(1922-07-26T09:00:05Z@UTC));
+    expect(unix_timestamp(1922-07-26T09:00:05Z@UTC), to.be(-1496933995));
 
-  of_overflow:
-    expect_error(
-      () -> unix_timestamp(math.max_long),
-      to.have_code("ILLEGAL_ARGUMENT")
-    );
-
-  of_underflow:
-    expect_error(
-      () -> unix_timestamp(math.min_long),
-      to.have_code("ILLEGAL_ARGUMENT")
-    );
 }

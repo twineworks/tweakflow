@@ -201,6 +201,8 @@
 <li><a href="#library-time">library time</a>
 <ul>
 <li><a href="#epoch">epoch</a></li>
+<li><a href="#of">of</a></li>
+<li><a href="#at">at</a></li>
 <li><a href="#seconds-between">seconds_between</a></li>
 <li><a href="#minutes-between">minutes_between</a></li>
 <li><a href="#hours-between">hours_between</a></li>
@@ -234,6 +236,8 @@
 <li><a href="#same-instant-at-zone">same_instant_at_zone</a></li>
 <li><a href="#unix-timestamp">unix_timestamp</a></li>
 <li><a href="#unix-timestamp-ms">unix_timestamp_ms</a></li>
+<li><a href="#of-unix-timestamp">of_unix_timestamp</a></li>
+<li><a href="#of-unix-timestamp-ms">of_unix_timestamp_ms</a></li>
 <li><a href="#compare">compare</a></li>
 <li><a href="#formatter">formatter</a></li>
 <li><a href="#parser">parser</a></li>
@@ -3051,6 +3055,76 @@ ERROR:
 
 <p>The instant of time at <code>1970-01-01T00:00:00Z</code></p>
 
+<h3 id="of">of</h3>
+
+<pre><code class="language-tweakflow">(
+  long year=1970,
+  long month=1,
+  long day_of_month=1,
+  long hour=0,
+  long minute=0,
+  long second=0,
+  long nano_of_second=0,
+  string tz=&quot;UTC&quot;
+) -&gt; datetime
+</code></pre>
+
+<p>Returns a datetime with components set to the given arguments.</p>
+
+<p>If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; time.of()
+1970-01-01T00:00:00Z@UTC
+
+&gt; time.of(2019, 04, 10, tz: &quot;Europe/Berlin&quot;)
+2019-04-10T00:00:00+02:00@`Europe/Berlin`
+
+&gt; time.of(2019, 04, 10, 16, 23, 11, 999000000, &quot;America/New_York&quot;)
+2019-04-10T16:23:11.999-04:00@`America/New_York`
+
+# DST gap
+&gt; time.of(2019, 03, 31, 2, 30, tz: &quot;Europe/Berlin&quot;)
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
+
+&gt; time.of(nil)
+nil
+</code></pre>
+
+<h3 id="at">at</h3>
+
+<pre><code class="language-tweakflow">(
+  datetime base,
+  long hour=0,
+  long minute=0,
+  long second=0,
+  long nano_of_second=0
+) -&gt; datetime
+</code></pre>
+
+<p>Returns datetime base with time components set to the given arguments.</p>
+
+<p>If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; time.at(time.epoch, 23, 12, 10)
+1970-01-01T23:12:10Z@UTC
+
+&gt; time.at(2019-04-10T00:00:00+02:00@`Europe/Berlin`, 6, 30)
+2019-04-10T06:30:00+02:00@`Europe/Berlin`
+
+# DST gap
+&gt; time.at(2019-03-31T00:00:00+01:00@`Europe/Berlin`, 2, 30)
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
+
+&gt; time.at(nil)
+nil
+</code></pre>
+
 <h3 id="seconds-between">seconds_between</h3>
 
 <p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
@@ -3888,6 +3962,44 @@ ERROR:
 
 <h3 id="unix-timestamp">unix_timestamp</h3>
 
+<p><code>(datetime x) -&gt; long</code></p>
+
+<p>Returns a long representing the number of seconds since epoch for the given <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">
+&gt; time.unix_timestamp(time.epoch)
+0
+
+&gt; time.unix_timestamp(2017-06-08T14:59:55Z@UTC)
+1496933995
+
+&gt; time.unix_timestamp(1922-07-26T09:00:05Z@UTC)
+-1496933995
+</code></pre>
+
+<h3 id="unix-timestamp-ms">unix_timestamp_ms</h3>
+
+<p><code>(datetime x) -&gt; long</code></p>
+
+<p>Returns a long representing the number of milliseconds since epoch for the given <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">
+&gt; time.unix_timestamp_ms(time.epoch)
+0
+
+&gt; time.unix_timestamp_ms(2017-06-08T14:59:55.123Z@UTC)
+1496933995123
+
+&gt; time.unix_timestamp_ms(1922-07-26T09:00:04.877Z@UTC)
+-1496933995123
+</code></pre>
+
+<h3 id="of-unix-timestamp">of_unix_timestamp</h3>
+
 <p><code>(long s) -&gt; datetime</code></p>
 
 <p>Returns a datetime representing epoch + <code>s</code> seconds in time zone <code>UTC</code>.</p>
@@ -3895,32 +4007,32 @@ ERROR:
 <p>Returns <code>nil</code> if <code>s</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">
-&gt; time.unix_timestamp(0)
+&gt; time.of_unix_timestamp(0)
 1970-01-01T00:00:00Z@UTC
 
-&gt; time.unix_timestamp(1496933995)
+&gt; time.of_unix_timestamp(1496933995)
 2017-06-08T14:59:55Z@UTC
 
-&gt; time.unix_timestamp(-1496933995)
+&gt; time.of_unix_timestamp(-1496933995)
 1922-07-26T09:00:05Z@UTC
 </code></pre>
 
-<h3 id="unix-timestamp-ms">unix_timestamp_ms</h3>
+<h3 id="of-unix-timestamp-ms">of_unix_timestamp_ms</h3>
 
 <p><code>(long ms) -&gt; datetime</code></p>
 
 <p>Returns a datetime representing epoch + <code>ms</code> milliseconds in time zone <code>UTC</code>.</p>
 
-<p>Returns <code>nil</code> if <code>s</code> is <code>nil</code>.</p>
+<p>Returns <code>nil</code> if <code>ms</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">
-&gt; time.unix_timestamp_ms(0)
+&gt; time.of_unix_timestamp_ms(0)
 1970-01-01T00:00:00Z@UTC
 
-&gt; time.unix_timestamp_ms(1496933995763)
+&gt; time.of_unix_timestamp_ms(1496933995763)
 2017-06-08T14:59:55.763Z@UTC
 
-&gt; time.unix_timestamp_ms(-1496933995763)
+&gt; time.of_unix_timestamp_ms(-1496933995763)
 1922-07-26T09:00:04.237Z@UTC
 </code></pre>
 

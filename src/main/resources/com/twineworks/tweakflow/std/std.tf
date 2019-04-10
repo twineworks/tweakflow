@@ -3190,6 +3190,91 @@ The instant of time at `1970-01-01T00:00:00Z`
 
 doc
 ~~~
+
+```tweakflow
+(
+  long year=1970,
+  long month=1,
+  long day_of_month=1,
+  long hour=0,
+  long minute=0,
+  long second=0,
+  long nano_of_second=0,
+  string tz="UTC"
+) -> datetime
+```
+
+Returns a datetime with components set to the given arguments.
+
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.
+
+Returns `nil` if any argument is `nil`.
+
+```tweakflow
+> time.of()
+1970-01-01T00:00:00Z@UTC
+
+> time.of(2019, 04, 10, tz: "Europe/Berlin")
+2019-04-10T00:00:00+02:00@`Europe/Berlin`
+
+> time.of(2019, 04, 10, 16, 23, 11, 999000000, "America/New_York")
+2019-04-10T16:23:11.999-04:00@`America/New_York`
+
+# DST gap
+> time.of(2019, 03, 31, 2, 30, tz: "Europe/Berlin")
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
+
+> time.of(nil)
+nil
+```
+~~~
+  function of: (long year=1970, long month=1, long day_of_month=1, long hour=0, long minute=0, long second=0, long nano_of_second=0, string tz="UTC") -> datetime via {:class "com.twineworks.tweakflow.std.Time$of"};
+
+doc
+~~~
+
+```tweakflow
+(
+  datetime base,
+  long hour=0,
+  long minute=0,
+  long second=0,
+  long nano_of_second=0
+) -> datetime
+```
+
+Returns datetime base with time components set to the given arguments.
+
+If resulting datetime is in a DST gap, the datetime is adjusted forward by the length of the gap.
+If resulting datetime is in a DST overlap, the earlier valid offset is used.
+
+Returns `nil` if any argument is `nil`.
+
+```tweakflow
+> time.at(time.epoch, 23, 12, 10)
+1970-01-01T23:12:10Z@UTC
+
+> time.at(2019-04-10T00:00:00+02:00@`Europe/Berlin`, 6, 30)
+2019-04-10T06:30:00+02:00@`Europe/Berlin`
+
+# DST gap
+> time.at(2019-03-31T00:00:00+01:00@`Europe/Berlin`, 2, 30)
+2019-03-31T03:30:00+02:00@`Europe/Berlin`
+
+> time.at(nil)
+nil
+```
+~~~
+  function at: (datetime base, long hour=0, long minute=0, long second=0, long nano_of_second=0) -> datetime
+    ->> (base)
+        (x) -> with_hour(x, hour),
+        (x) -> with_minute(x, minute),
+        (x) -> with_second(x, second),
+        (x) -> with_nano_of_second(x, nano_of_second);
+
+doc
+~~~
 `(datetime start_inclusive, datetime end_exclusive) -> long`
 
 Returns the number of full seconds between given datetimes.
@@ -4105,6 +4190,51 @@ ERROR:
 
   function same_instant_at_zone: (datetime x, string tz) -> datetime via {:class "com.twineworks.tweakflow.std.Time$sameInstantAtZone"};
 
+doc
+~~~
+`(datetime x) -> long`
+
+Returns a long representing the number of seconds since epoch for the given `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+
+> time.unix_timestamp(time.epoch)
+0
+
+> time.unix_timestamp(2017-06-08T14:59:55Z@UTC)
+1496933995
+
+> time.unix_timestamp(1922-07-26T09:00:05Z@UTC)
+-1496933995
+```
+~~~
+
+  function unix_timestamp: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$unixTimestamp"};
+
+doc
+~~~
+`(datetime x) -> long`
+
+Returns a long representing the number of milliseconds since epoch for the given `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+
+> time.unix_timestamp_ms(time.epoch)
+0
+
+> time.unix_timestamp_ms(2017-06-08T14:59:55.123Z@UTC)
+1496933995123
+
+> time.unix_timestamp_ms(1922-07-26T09:00:04.877Z@UTC)
+-1496933995123
+```
+~~~
+
+  function unix_timestamp_ms: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$unixTimestampMs"};
 
 doc
 ~~~
@@ -4116,18 +4246,18 @@ Returns `nil` if `s` is `nil`.
 
 ```tweakflow
 
-> time.unix_timestamp(0)
+> time.of_unix_timestamp(0)
 1970-01-01T00:00:00Z@UTC
 
-> time.unix_timestamp(1496933995)
+> time.of_unix_timestamp(1496933995)
 2017-06-08T14:59:55Z@UTC
 
-> time.unix_timestamp(-1496933995)
+> time.of_unix_timestamp(-1496933995)
 1922-07-26T09:00:05Z@UTC
 ```
 ~~~
 
-  function unix_timestamp: (long s) ->
+  function of_unix_timestamp: (long s) ->
     (add_duration(epoch, s));
 
 
@@ -4137,22 +4267,22 @@ doc
 
 Returns a datetime representing epoch + `ms` milliseconds in time zone `UTC`.
 
-Returns `nil` if `s` is `nil`.
+Returns `nil` if `ms` is `nil`.
 
 ```tweakflow
 
-> time.unix_timestamp_ms(0)
+> time.of_unix_timestamp_ms(0)
 1970-01-01T00:00:00Z@UTC
 
-> time.unix_timestamp_ms(1496933995763)
+> time.of_unix_timestamp_ms(1496933995763)
 2017-06-08T14:59:55.763Z@UTC
 
-> time.unix_timestamp_ms(-1496933995763)
+> time.of_unix_timestamp_ms(-1496933995763)
 1922-07-26T09:00:04.237Z@UTC
 ```
 ~~~
 
-  function unix_timestamp_ms: (long ms) ->
+  function of_unix_timestamp_ms: (long ms) ->
     (add_duration(epoch, ms // 1000, (ms % 1000) * 1000000));
 
 doc

@@ -56,10 +56,19 @@ public class DateTimeTypeTest {
   }
 
   @Test
-  public void dannot_cast_from_boolean() throws Exception {
+  public void cannot_cast_from_boolean() throws Exception {
     Assertions.assertThrows(LangException.class, () -> {
       assertThat(Types.DATETIME.canAttemptCastFrom(Types.BOOLEAN)).isFalse();
       Types.DATETIME.castFrom(Values.TRUE);
+    });
+  }
+
+
+  @Test
+  public void cannot_cast_from_long() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      assertThat(Types.DATETIME.canAttemptCastFrom(Types.LONG)).isFalse();
+      Types.DATETIME.castFrom(Values.LONG_ZERO);
     });
   }
 

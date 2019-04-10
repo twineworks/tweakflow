@@ -57,14 +57,41 @@ public final class Time {
   }
 
   public static boolean isValidTimeZone(final String timeZone) {
-    final String DEFAULT_GMT_TIMEZONE = "GMT";
-    if (timeZone.equals(DEFAULT_GMT_TIMEZONE)) {
-      return true;
-    } else {
-      // if custom time zone is invalid,
-      // time zone id returned is always "GMT" by default
-      String id = TimeZone.getTimeZone(timeZone).getID();
-      return !id.equals(DEFAULT_GMT_TIMEZONE);
+
+    try {
+      ZoneId id = ZoneId.of(timeZone);
+      return id != null;
+    }
+    catch(DateTimeException  e){
+      return false;
+    }
+
+//    final String DEFAULT_GMT_TIMEZONE = "GMT";
+//    if (timeZone.equals(DEFAULT_GMT_TIMEZONE)) {
+//      return true;
+//    } else {
+//      // if custom time zone is invalid,
+//      // time zone id returned is always "GMT" by default
+//      String id = TimeZone.getTimeZone(timeZone).getID();
+//      return !id.equals(DEFAULT_GMT_TIMEZONE);
+//    }
+  }
+
+  // function unix_timestamp(datetime x) -> long
+  public static final class unixTimestamp implements UserFunction, Arity1UserFunction {
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x == Values.NIL) return Values.NIL;
+      return Values.make(x.dateTime().getInstant().toEpochMilli()/1000L);
+    }
+  }
+
+  // function unix_timestamp(datetime x) -> long
+  public static final class unixTimestampMs implements UserFunction, Arity1UserFunction {
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x == Values.NIL) return Values.NIL;
+      return Values.make(x.dateTime().getInstant().toEpochMilli());
     }
   }
 
@@ -695,8 +722,8 @@ public final class Time {
       String tzId = tz.string();
 
       if (isValidTimeZone(tzId)) {
-        TimeZone timeZone = TimeZone.getTimeZone(tzId);
-        return Values.make(new DateTimeValue(t.getZoned().withZoneSameLocal(timeZone.toZoneId())));
+        ZoneId timeZone = ZoneId.of(tzId);
+        return Values.make(new DateTimeValue(t.getZoned().withZoneSameLocal(timeZone)));
       } else {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: " + tzId);
       }
@@ -717,12 +744,105 @@ public final class Time {
       String tzId = tz.string();
 
       if (isValidTimeZone(tzId)) {
-        TimeZone timeZone = TimeZone.getTimeZone(tzId);
-        return Values.make(new DateTimeValue(t.getZoned().withZoneSameInstant(timeZone.toZoneId())));
+        ZoneId timeZone = ZoneId.of(tzId);
+        return Values.make(new DateTimeValue(t.getZoned().withZoneSameInstant(timeZone)));
       } else {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown time zone id: " + tzId);
       }
 
     }
   }
+
+  // (long year=1970, long month=1, long day_of_month=1, long hour=0, long minute=0, long second=0, long nano_of_second=0, string tz="UTC") -> datetime
+  public static final class of implements UserFunction, ArityNUserFunction {
+
+    @Override
+    public Value callVariadic(UserCallContext context, Value... args) {
+
+      Value year = args[0];
+      if (year == Values.NIL) return Values.NIL;
+
+      Long y = year.longNum();
+      if ((long) y.intValue() != y) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "year value out of range: " + y);
+      }
+
+
+      Value month = args[1];
+      if (month == Values.NIL) return Values.NIL;
+
+      Long m = month.longNum();
+      if ((long) m.intValue() != m) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "month value out of range: " + m);
+      }
+
+
+
+      Value day_of_month = args[2];
+
+      if (day_of_month == Values.NIL) return Values.NIL;
+
+      Long d = day_of_month.longNum();
+      if ((long) d.intValue() != d) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "day_of_month value out of range: " + d);
+      }
+
+
+      Value hour = args[3];
+
+      if (hour == Values.NIL) return Values.NIL;
+
+      Long h = hour.longNum();
+      if ((long) h.intValue() != h) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "hour value out of range: " + h);
+      }
+
+
+
+      Value minute = args[4];
+
+      if (minute == Values.NIL) return Values.NIL;
+
+      Long mi = minute.longNum();
+      if ((long) mi.intValue() != mi) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "minute value out of range: " + mi);
+      }
+
+
+      Value second = args[5];
+
+      if (second == Values.NIL) return Values.NIL;
+
+      Long s = second.longNum();
+      if ((long) s.intValue() != s) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "second value out of range: " + s);
+      }
+
+
+      Value nano_of_second = args[6];
+
+      if (nano_of_second == Values.NIL) return Values.NIL;
+
+      Long n = nano_of_second.longNum();
+      if ((long) n.intValue() != n) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "nano_of_second value out of range: " + n);
+      }
+
+      Value tz = args[7];
+      if (tz == Values.NIL) return Values.NIL;
+      if (!isValidTimeZone(tz.string())) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "unknown tz: " + tz);
+      }
+
+      try {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(y.intValue(), m.intValue(), d.intValue(), h.intValue(), mi.intValue(), s.intValue(), n.intValue(), ZoneId.of(tz.string()));
+        return Values.make(new DateTimeValue(zonedDateTime));
+      } catch (DateTimeException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, e.getMessage());
+      }
+
+    }
+  }
+
+
 }
