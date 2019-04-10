@@ -37,7 +37,7 @@ public class EvaluationContext {
   private final Map<Cell, List<RecursiveDeferredClosure>> recursiveDeferredClosures;
 
   public EvaluationContext() {
-    this.debugHandler = new DefaultDebugHandler();
+    this.debugHandler = new SimpleDebugHandler();
     this.recursiveDeferredClosures = new IdentityHashMap<>();
   }
 

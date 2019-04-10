@@ -195,10 +195,10 @@ expression
   | 'match' expression matchBody                            # matchExp
   | 'for' forHead ',' expression                            # forExp
   | 'if' expression 'then'? expression 'else'? expression   # ifExp
-  | 'let' '{' (varDef endOfStatement)* '}' expression                        # letExp
+  | 'let' '{' (varDef endOfStatement)* '}' expression       # letExp
   | 'try' expression 'catch' catchDeclaration expression    # tryCatchExp
   | 'throw' expression                                      # throwErrorExp
-  | 'debug' expression (',' expression)?                    # debugExp
+  | 'debug' '(' expression (',' expression)* ')'            # debugExp
   ;
 
 matchBody

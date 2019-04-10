@@ -27,5 +27,5 @@ package com.twineworks.tweakflow.lang.interpreter;
 import com.twineworks.tweakflow.lang.values.Value;
 
 public interface DebugHandler {
-  void debug(Value v);
+  void debug(Value... vs);
 }

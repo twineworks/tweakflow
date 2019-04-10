@@ -28,7 +28,7 @@ import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.SimpleDebugHandler;
 import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
@@ -237,7 +237,7 @@ public class Run {
     }
 
     try {
-      Runtime runtime = TweakFlow.compile(loadPath, modules, new DefaultDebugHandler());
+      Runtime runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
       runtime.evaluate();
       Map<String, Runtime.Module> runtimeModules = runtime.getModules();
       Runtime.Module module = runtimeModules.get(runtime.unitKey(modules.get(0)));

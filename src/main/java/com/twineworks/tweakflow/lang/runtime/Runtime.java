@@ -670,7 +670,7 @@ public class Runtime {
   private final EvaluationContext context;
 
   public Runtime(RuntimeSet runtimeSet) {
-    this(runtimeSet, new DefaultDebugHandler());
+    this(runtimeSet, new SimpleDebugHandler());
   }
 
   public Runtime(RuntimeSet runtimeSet, DebugHandler debugHandler) {

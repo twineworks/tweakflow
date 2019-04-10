@@ -24,41 +24,30 @@
 
 package com.twineworks.tweakflow.lang.ast.expressions;
 
-import com.twineworks.tweakflow.lang.interpreter.ops.ExpressionOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
+import com.twineworks.tweakflow.lang.interpreter.ops.ExpressionOp;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
 import com.twineworks.tweakflow.lang.types.Type;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DebugNode implements ExpressionNode {
 
-  private ExpressionNode debugExpression;
-  private ExpressionNode valueExpression;
+  private ArrayList<ExpressionNode> expressions;
   private SourceInfo sourceInfo;
   private Scope scope;
   private ExpressionOp op;
 
-  public ExpressionNode getDebugExpression() {
-    return debugExpression;
-  }
-
-  public DebugNode setDebugExpression(ExpressionNode debugExpression) {
-    this.debugExpression = debugExpression;
+  public DebugNode setExpressions(ArrayList<ExpressionNode> expressions) {
+    this.expressions = expressions;
     return this;
   }
 
-  public ExpressionNode getValueExpression() {
-    return valueExpression;
-  }
-
-  public DebugNode setValueExpression(ExpressionNode valueExpression) {
-    this.valueExpression = valueExpression;
-    return this;
+  public ArrayList<ExpressionNode> getExpressions() {
+    return expressions;
   }
 
   @Override
@@ -74,13 +63,7 @@ public class DebugNode implements ExpressionNode {
 
   @Override
   public List<? extends Node> getChildren() {
-    if (valueExpression != null){
-      return Arrays.asList(debugExpression, valueExpression);
-    }
-    else {
-      return Collections.singletonList(debugExpression);
-    }
-
+    return expressions;
   }
 
   @Override
@@ -101,7 +84,7 @@ public class DebugNode implements ExpressionNode {
 
   @Override
   public Type getValueType() {
-    return valueExpression != null ? valueExpression.getValueType() : debugExpression.getValueType();
+    return expressions.get(expressions.size()-1).getValueType();
   }
 
   @Override

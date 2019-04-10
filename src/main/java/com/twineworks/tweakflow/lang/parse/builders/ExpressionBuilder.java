@@ -377,12 +377,14 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   @Override
   public ExpressionNode visitDebugExp(TweakFlowParser.DebugExpContext ctx) {
 
-    ExpressionNode debugExpression = visit(ctx.expression(0));
-    ExpressionNode valueExpression = ctx.expression().size() > 1 ? visit(ctx.expression(1)) : null;
+    ArrayList<ExpressionNode> nodes = new ArrayList<>(ctx.expression().size());
+    for (TweakFlowParser.ExpressionContext expressionContext : ctx.expression()) {
+      ExpressionNode n = visit(expressionContext);
+      nodes.add(n);
+    }
 
     return new DebugNode()
-        .setDebugExpression(debugExpression)
-        .setValueExpression(valueExpression)
+        .setExpressions(nodes)
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 

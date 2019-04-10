@@ -36,7 +36,7 @@ import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolverVisitor;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilderVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
-import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.SimpleDebugHandler;
 import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.interpreter.RuntimeSet;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
@@ -63,7 +63,7 @@ import java.util.Map;
 public class TweakFlow {
 
   public static Runtime compile(LoadPath loadPath, String path){
-    return compile(loadPath, path, new DefaultDebugHandler());
+    return compile(loadPath, path, new SimpleDebugHandler());
   }
 
   public static Runtime compile(LoadPath loadPath, String path, DebugHandler debugHandler){
@@ -71,7 +71,7 @@ public class TweakFlow {
   }
 
   public static Runtime compile(LoadPath loadPath, List<String> paths){
-    return compile(loadPath, paths, new DefaultDebugHandler());
+    return compile(loadPath, paths, new SimpleDebugHandler());
   }
 
   public static Runtime compile(LoadPath loadPath, List<String> paths, DebugHandler debugHandler){
@@ -82,7 +82,7 @@ public class TweakFlow {
   }
 
   public static Runtime compile(Map<String, String> modules){
-    return compile(modules, new DefaultDebugHandler());
+    return compile(modules, new SimpleDebugHandler());
   }
 
   public static Runtime compile(Map<String, String> modules, DebugHandler debugHandler){

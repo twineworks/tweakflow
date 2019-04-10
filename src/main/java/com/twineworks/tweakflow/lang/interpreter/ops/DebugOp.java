@@ -24,29 +24,46 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
+import com.twineworks.tweakflow.lang.ast.expressions.DebugNode;
+import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
-import com.twineworks.tweakflow.lang.ast.expressions.DebugNode;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 final public class DebugOp implements ExpressionOp {
 
   private final DebugNode node;
-  private final ExpressionOp debugOp;
-  private final ExpressionOp valueOp;
+  private final ArrayList<ExpressionOp> debugOps;
+  private final Value[] debugValues;
 
   public DebugOp(DebugNode node) {
     this.node = node;
-    debugOp = node.getDebugExpression().getOp();
-    valueOp = (node.getValueExpression() != null) ? node.getValueExpression().getOp() : null;
+    ArrayList<ExpressionNode> exp = node.getExpressions();
+    debugValues = new Value[exp.size()];
+
+    this.debugOps = new ArrayList<>(exp.size());
+    for (ExpressionNode expressionNode : exp) {
+      debugOps.add(expressionNode.getOp());
+    }
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value debugValue = debugOp.eval(stack, context);
-    context.getDebugHandler().debug(debugValue);
-    return (valueOp == null) ? debugValue : valueOp.eval(stack, context);
+    Value debugValue = Values.NIL;
+
+    for (int i = 0; i < debugOps.size(); i++) {
+      ExpressionOp debugOp = debugOps.get(i);
+      debugValue = debugOp.eval(stack, context);
+      debugValues[i] = debugValue;
+    }
+    context.getDebugHandler().debug(debugValues);
+    Arrays.fill(debugValues, null);
+    return debugValue;
 
   }
 

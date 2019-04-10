@@ -27,7 +27,7 @@ package com.twineworks.tweakflow.util;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.DebugHandler;
-import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.SimpleDebugHandler;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -48,7 +48,7 @@ public class VarTable {
     String varLibraryName = "var_table";
     LinkedHashMap<String, String> vars = new LinkedHashMap<>();
     LoadPath loadPath = new LoadPath.Builder().addStdLocation().build();
-    DebugHandler debugHandler = new DefaultDebugHandler();
+    DebugHandler debugHandler = new SimpleDebugHandler();
 
     public Builder setVarLibraryName(String varLibraryName){
       Objects.requireNonNull(varLibraryName, "varLibraryName path cannot be null");

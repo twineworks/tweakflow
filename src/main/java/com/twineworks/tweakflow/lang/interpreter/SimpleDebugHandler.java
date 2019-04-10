@@ -27,9 +27,36 @@ package com.twineworks.tweakflow.lang.interpreter;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 
-public class DefaultDebugHandler implements DebugHandler {
+import java.io.PrintStream;
+
+public class SimpleDebugHandler implements DebugHandler {
+
+  private final PrintStream out;
+  private final boolean quoteStrings;
+
+  public SimpleDebugHandler() {
+    this(System.out, false);
+  }
+
+  public SimpleDebugHandler(boolean quoteStrings) {
+    this(System.out, quoteStrings);
+  }
+
+  public SimpleDebugHandler(PrintStream out, boolean quoteStrings) {
+    this.out = out;
+    this.quoteStrings = quoteStrings;
+  }
+
   @Override
-  public void debug(Value v) {
-    System.out.println(ValueInspector.inspect(v));
+  public void debug(Value... vs) {
+    if (vs == null) return;
+    for (int i = 0; i < vs.length; i++) {
+      Value v = vs[i];
+      if (i > 0) out.print(" ");
+      out.print(v.isString() && !quoteStrings ? v.string() : ValueInspector.inspect(v));
+      if (i == vs.length-1){
+        out.println();
+      }
+    }
   }
 }

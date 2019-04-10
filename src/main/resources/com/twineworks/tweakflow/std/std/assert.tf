@@ -63,11 +63,11 @@ library assert {
                     call_loc: try throw "err" catch _, trace trace[:stack, 2];
                     at: util.linkable_trace_line(call_loc);
                  }
-                 debug
+                 debug (
                    "Assertion Error\n\n"
                    .. "expected error, but no error was thrown\n\n"
-                   .. at,
-                   false
+                   .. at
+                 ) && false
     catch error
       expect(error, f, _stack_offset: 5)
 
@@ -86,12 +86,12 @@ library assert {
         call_loc: try throw "err" catch _, trace trace[:stack, _stack_offset];
         at: util.linkable_trace_line(call_loc);
       }
-      debug
+      debug (
         "Assertion Error\n\n"
         .. "expected: ".. core.inspect(x) .. "\n"
         .. "#{semantic}: " .. core.inspect(expected) .. "\n\n"
-        .. at,
-        false
+        .. at
+      ) && false
     else
       true
     ;

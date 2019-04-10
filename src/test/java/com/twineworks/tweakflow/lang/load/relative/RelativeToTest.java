@@ -25,7 +25,7 @@
 package com.twineworks.tweakflow.lang.load.relative;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
-import com.twineworks.tweakflow.lang.interpreter.DefaultDebugHandler;
+import com.twineworks.tweakflow.lang.interpreter.SimpleDebugHandler;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -68,7 +68,7 @@ public class RelativeToTest {
         .build();
 
     // compile the modules
-    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()), new DefaultDebugHandler());
+    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()), new SimpleDebugHandler());
 
   }
 
