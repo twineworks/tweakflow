@@ -29,7 +29,6 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationResult;
-import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
@@ -63,8 +62,6 @@ public class ReplState {
   // evaluation results and convenient derivatives
   private EvaluationResult evaluationResult;
   private Runtime runtime;
-  private MemorySpace moduleSpace;
-  private MemorySpace interactiveSpace;
 
   // exit indicator
   private boolean shouldQuit = false;
@@ -256,7 +253,7 @@ public class ReplState {
     // interactive unit for scope of loaded module
     builder
         .append("interactive\n")
-        .append("  in_scope ").append(LangUtil.escapeIdentifier(mainModuleKey)).append("\n");
+        .append("  in_scope ").append(LangUtil.escapeIdentifier(mainModuleKey)).append(" {\n");
 
     // add defined variables
     Map<String, String> varDefs = getVarDefs();
@@ -278,6 +275,7 @@ public class ReplState {
           .append("\n");
     }
 
+    builder.append("}");
     return builder.toString();
 
   }

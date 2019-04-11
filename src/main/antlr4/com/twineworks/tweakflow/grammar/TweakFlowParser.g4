@@ -12,15 +12,15 @@ unit
 // interactive shell
 
 interactive
-  : endOfStatement? 'interactive' interactiveSection* EOF
+  : 'interactive' interactiveSection* EOF
   ;
 
 interactiveSection
-  : 'in_scope' reference (varDef endOfStatement?)* endOfStatement?
+  : 'in_scope' reference '{' (varDef endOfStatement)* '}'
   ;
 
 interactiveInput
-  : varDef EOF
+  : varDef endOfStatement? EOF
   | expression EOF
   | empty
   ;

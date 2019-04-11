@@ -56,6 +56,8 @@ public class InteractiveInputCommand {
     else if (parseResult.getNode() instanceof VarDefNode){
       VarDefNode varDefNode = (VarDefNode) parseResult.getNode();
       String varName = varDefNode.getSymbolName();
+      // if there was a trailing ; remove it
+      input = varDefNode.getSourceInfo().getSourceCode();
       return new VarDefCommand().perform(varName, input, terminal, state, measure);
     }
     // nothing but a comment and whitespace entered?
