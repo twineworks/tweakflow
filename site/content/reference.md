@@ -1905,6 +1905,68 @@ function
 "foo"
 ```
 
+### Partial function application
+You can create a new function from an existing function by binding values to a subset of the original function's parameters. This process is called [partial function application](https://en.wikipedia.org/wiki/Partial_application).
+
+The resulting function's signature contains only parameters that were left unbound.
+
+The syntax is as follows:
+
+```text
+partialApplication
+  : expression '(' partialArgs ')'
+  ;
+
+partialArgs
+  : (namedPartialArg) (',' (namedPartialArg))*
+  ;
+
+namedPartialArg
+  : identifier '=' expression
+  ;
+```
+
+As an example consider a function that checks whether an list contains only long values.
+The function is created by binding a predicate function to the parameter `p` of [data.all?](/modules/std.html#all).
+
+```tweakflow
+> fun.signature(data.all?)
+{
+  :return_type "boolean",
+  :parameters [{
+    :name "xs",
+    :index 0,
+    :default_value nil,
+    :declared_type "list"
+  }, {
+    :name "p",
+    :index 1,
+    :default_value nil,
+    :declared_type "function"
+  }]
+}
+
+> all_longs?: data.all?(p=(x) -> x is long)
+function
+
+> fun.signature(all_longs?)
+{
+  :return_type "boolean",
+  :parameters [{
+    :name "xs",
+    :index 0,
+    :default_value nil,
+    :declared_type "list"
+  }]
+}
+
+> all_longs?([1, 2, 3])
+true
+
+> all_longs?([1, "a", 3])
+false
+```
+
 ### Call chaining
 
 A computation might consist of a linear series of function calls feeding their output into the next function's input. Tweakflow supports a special syntax for that situation.

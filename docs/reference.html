@@ -179,6 +179,7 @@
 <li><a href="#argument-casting">Argument casting</a></li>
 <li><a href="#return-value-casting">Return value casting</a></li>
 </ul></li>
+<li><a href="#partial-function-application">Partial function application</a></li>
 <li><a href="#call-chaining">Call chaining</a></li>
 <li><a href="#local-variables">Local variables</a></li>
 <li><a href="#conditional-evaluation">Conditional evaluation</a></li>
@@ -2160,6 +2161,67 @@ function
 []
 &gt; id(&quot;foo&quot;)
 &quot;foo&quot;
+</code></pre>
+
+<h3 id="partial-function-application">Partial function application</h3>
+
+<p>You can create a new function from an existing function by binding values to a subset of the original function&rsquo;s parameters. This process is called <a href="https://en.wikipedia.org/wiki/Partial_application">partial function application</a>.</p>
+
+<p>The resulting function&rsquo;s signature contains only parameters that were left unbound.</p>
+
+<p>The syntax is as follows:</p>
+
+<pre><code class="language-text">partialApplication
+  : expression '(' partialArgs ')'
+  ;
+
+partialArgs
+  : (namedPartialArg) (',' (namedPartialArg))*
+  ;
+
+namedPartialArg
+  : identifier '=' expression
+  ;
+</code></pre>
+
+<p>As an example consider a function that checks whether an list contains only long values.
+The function is created by binding a predicate function to the parameter <code>p</code> of <a href="./modules/std.html#all">data.all?</a>.</p>
+
+<pre><code class="language-tweakflow">&gt; fun.signature(data.all?)
+{
+  :return_type &quot;boolean&quot;,
+  :parameters [{
+    :name &quot;xs&quot;,
+    :index 0,
+    :default_value nil,
+    :declared_type &quot;list&quot;
+  }, {
+    :name &quot;p&quot;,
+    :index 1,
+    :default_value nil,
+    :declared_type &quot;function&quot;
+  }]
+}
+
+&gt; all_longs?: data.all?(p=(x) -&gt; x is long)
+function
+
+&gt; fun.signature(all_longs?)
+{
+  :return_type &quot;boolean&quot;,
+  :parameters [{
+    :name &quot;xs&quot;,
+    :index 0,
+    :default_value nil,
+    :declared_type &quot;list&quot;
+  }]
+}
+
+&gt; all_longs?([1, 2, 3])
+true
+
+&gt; all_longs?([1, &quot;a&quot;, 3])
+false
 </code></pre>
 
 <h3 id="call-chaining">Call chaining</h3>
