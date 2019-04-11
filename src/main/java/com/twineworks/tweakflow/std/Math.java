@@ -72,6 +72,77 @@ public final class Math {
     }
   }
 
+  // compare: (a, b) -> long
+  public static final class compare implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value a, Value b) {
+
+      if (a == b) return Values.LONG_ZERO; // short circuit for identity
+
+      if (!a.isDoubleNum() && !a.isLongNum() && !(a == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(a));
+      if (!b.isDoubleNum() && !b.isLongNum() && !(b == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(b));
+
+      // nil case
+      // a == nil && b != nil
+      if (a == Values.NIL){
+        return Values.LONG_NEG_ONE;
+      }
+      // a != nil && b == nil
+      if (b == Values.NIL){
+        return Values.LONG_ONE;
+      }
+
+      // a == NaN && b != NaN
+      if (a == Values.NAN){
+        return Values.LONG_NEG_ONE;
+      }
+      // a != NaN && b == NaN
+      if (b == Values.NAN){
+        return Values.LONG_ONE;
+      }
+
+      if (a.isDoubleNum()){
+
+        // both double case
+        if (b.isDoubleNum()){
+          double ad = a.doubleNum();
+          double bd = b.doubleNum();
+          if (ad < bd) return Values.LONG_NEG_ONE;
+          if (ad > bd) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
+        // b long
+        double ad = a.doubleNum();
+        long bl = b.longNum();
+        if (ad < bl) return Values.LONG_NEG_ONE;
+        if (ad > bl) return Values.LONG_ONE;
+        return Values.LONG_ZERO;
+      }
+
+      // both long case
+      if (b.isLongNum()){
+        long al = a.longNum();
+        long bl = b.longNum();
+        if (al == bl) return Values.LONG_ZERO;
+        if (al < bl) return Values.LONG_NEG_ONE;
+        return Values.LONG_ONE;
+      }
+      else{
+        // only one possibility left
+        // a long b double
+        long al = a.longNum();
+        double bd = b.doubleNum();
+        if (al < bd) return Values.LONG_NEG_ONE;
+        if (al > bd) return Values.LONG_ONE;
+        return Values.LONG_ZERO;
+
+      }
+
+
+    }
+  }
+
   // inc: (x)
   public static final class inc implements UserFunction, Arity1UserFunction {
 

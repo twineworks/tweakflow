@@ -4696,27 +4696,7 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 [nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
 ```
 ~~~
-  function compare: (a, b) -> long
-
-    if !((a is long) || (a is double) || (a == nil)) throw ({:code "ILLEGAL_ARGUMENT", :message "cannot compare non-numeric: "..(core.inspect(a))})
-    if !((b is long) || (b is double) || (b == nil)) throw ({:code "ILLEGAL_ARGUMENT", :message "cannot compare non-numeric: "..(core.inspect(b))})
-
-    # handle nil case
-    if a == nil
-      if b == nil then 0 else -1
-
-    if b == nil then 1
-
-    # handle nan case
-    if NaN?(a)
-      if NaN?(b) then 0 else -1
-
-    if NaN?(b) then 1
-
-    # handle regular numbers case
-    if a < b then -1
-    if a > b then 1
-    else 0;
+  function compare: (a, b) -> long via {:class "com.twineworks.tweakflow.std.Math$compare"};
 
 doc
 ~~~
