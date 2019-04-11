@@ -77,6 +77,7 @@ Create some lists, and nest them too:
 ```tweakflow
 > [1, 2, "hello"]
 [1, 2, "hello"]
+
 > [[1, 2], ["one", "two"]]
 [[1, 2], ["one", "two"]]
 ```
@@ -112,8 +113,10 @@ Let's call some functions from the standard library:
 ```tweakflow
 > strings.length("foo")
 3
+
 > data.unique([1,1,2,3,3,2,1,2,3])
 [1, 2, 3]
+
 > strings.index_of("banana", "nan")
 2
 ```
@@ -139,6 +142,7 @@ The REPL allows you to define ad-hoc variables visible to all expressions in the
 ```tweakflow
 > square: (x) -> x*x
 function
+
 > square(5)
 25
 ```
@@ -148,12 +152,16 @@ You can assign any expression to a variable, and the tweakflow REPL will re-eval
 ```tweakflow
 > x: 10
 10
+
 > y: 2
 2
+
 > z: x*y
 20
+
 > y: 4
 4
+
 > z
 40
 ```
@@ -205,6 +213,7 @@ Functions are written as `(parameter list) -> return value`. Let's define and ca
 ```tweakflow
 > next: (x) -> x+1
 function
+
 > next(2)
 3
 ```
@@ -228,7 +237,7 @@ You can write functions inline without naming them. Functions are just values, l
 You can define helper variables scoped to an expression using let:
 
 ```tweakflow
-> let {sq: (x) -> x*x; five: 5} sq(five)
+> let {sq: (x) -> x*x; five: 5;} sq(five)
 25
 ```
 
@@ -239,8 +248,8 @@ If you want to format your expression using multiple lines, you can enter multi-
 ```tweakflow
 > \e
 let {
-  sq: (x) -> x*x
-  five: 5
+  sq: (x) -> x*x;
+  five: 5;
 }
 sq(five)
 \e
@@ -254,10 +263,13 @@ Every value in tweakflow has an associated type. You can determine the types usi
 ```tweakflow
 > typeof "Hello"
 "string"
+
 > typeof 2.3
 "double"
+
 > typeof []
 "list"
+
 > typeof (x) -> x*x
 "function"
 ```
@@ -267,12 +279,16 @@ You can convert between many types automatically. Tweakflow is very conservative
 ```tweakflow
 > "foo" as boolean
 true
+
 > 2.3 as string
 "2.3"
+
 > "2.3" as double
 2.3
+
 > 2.3 as long
 2
+
 > "2.3kg" as double
 ERROR: {
   :message "Cannot cast 2.3kg to double",
@@ -289,8 +305,10 @@ Tweakflow supports a standard `if` construct to perform conditional calculations
 ```tweakflow
 > parity: (x) -> if x % 2 == 0 then "even" else "odd"
 function
+
 > parity(3)
 "odd"
+
 > parity(2)
 "even"
 ```

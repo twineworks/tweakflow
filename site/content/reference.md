@@ -45,11 +45,12 @@ The `nil` literal represents the singleton [nil value](#nil).
 
 ### Long literals
 
-Decimal digits are read as 64-bit signed integers of type `long`. A prefix of `-` indicates a negative value.
+Decimal digits are read as 64-bit signed integers of type `long`. A prefix of `-` or `+` indicates a negative or positive value respectively.
 
 ```tweakflow
 42
 -2
++3
 ```
 
 Long literals can also be written in hexadecimal form. They are notated as `0x` followed by up to  8 bytes. Each byte consists of two hexadecimal digits from `[0-9a-fA-F]`. The bytes are given in  big-endian order, meaning that the most significant byte is written first. If less than 8 bytes are provided, missing leading bytes are filled up with zeros. The resulting bit pattern is interpreted as a [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) signed 64-bit integer, exactly like a Java long value.
@@ -165,13 +166,13 @@ A double-quoted string begins and ends with a double quote character `"`. Line b
 | --------------- | ---------------------------------------- |
 | `\\`            | `\` backslash                            |
 | `\"`            | `"` double quote                         |
-| `\t`            | `⇥` tab character                        |
-| `\#`            | `#` hash character                       |
+| `\t`            | `⇥` tab character
 | `\n`            | `⏎` newline character                    |
 | `\r`            | `⏎` carriage return character            |
 | `\u[byte]{2}`   | unicode character from the [basic multilingual plane](https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane) given by the two-byte address |
 | `\U[byte]{4}`   | any unicode character given by the full four-byte address |
 | `#{reference}`  | value given by the reference when cast to string |
+| `\#{`           | `#{` literal hash character followed by curly brace |
 
 To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of a variable reference, escape the hash character that opens the sequence, so it is interpreted literally.
 
@@ -242,7 +243,7 @@ Hello World
 
 #### Symbol strings
 
-Tweakflow allows symbol notation for strings. It can be useful to distinguish strings used as keys in dicts or as enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a `:`. Their name is their value.
+Tweakflow allows symbol notation for strings. It can be useful to visually distinguish strings filling the semantic role of keys or enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a `:`. Their name is their value.
 
 A symbol string is written as:
 
@@ -270,8 +271,10 @@ Symbol strings are regular strings. They are merely a notational convenience to 
   :two 2,
   :three 3
 }
+
 > nums[:one]
 1
+
 > nums["two"]
 2
 
@@ -281,11 +284,17 @@ Symbol strings are regular strings. They are merely a notational convenience to 
 
 ### Datetime literals
 
-Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form `[year]-[month]-[day]T`  with year given as four digits, month and day give as two digits each.
+Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form `[year]-[month]-[day]T`  with year given as four to nine digits, month and day given as two digits each. The year may carry a `-` or `+` prefix.
 
 ```tweakflow
-> 2017-04-30T
-2017-04-30T00:00:00Z@UTC
+> 2019-04-30T
+2019-04-30T00:00:00Z@UTC
+
+> -0001-01-01T
+-0001-01-01T00:00:00Z@UTC
+
+> +999999-03-12T
++999999-03-12T00:00:00Z@UTC
 ```
 
 The basic form is extended to specify the local time in 24 hour format as `[hours]:[minutes]:[seconds](.[fraction_of_seconds])?` with two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.
@@ -372,11 +381,13 @@ When a splat expression is encountered, it is evaluated, cast to list and concat
 
 > prepend: (x, list xs) -> list [x, ...xs]
 function
+
 > prepend("a", ["b", "c"])
 ["a", "b", "c"]
 
 > append: (list xs, x) -> list [...xs, x]
 function
+
 > append(["x", "y"], "z")
 ["x", "y", "z"]
 ```
@@ -551,37 +562,12 @@ The following example uses both variants of the syntax. The variable `%name%` ha
 ```tweakflow
 > \e
 let {
-  greeting: "Hello"
-  `%name%`: "Joe"
+  greeting: "Hello";
+  `%name%`: "Joe";
 }
 greeting .. " " .. `%name%`
 \e
 "Hello Joe"
-```
-
-### End-of-statement markers
-
-Tweakflow allows to explicitly mark the end of a statement with a semicolon or newline. Any definition statements  for modules, libraries, imports, aliases, exports, and variables can be separated by any number of newlines or semicolons.
-
-Tweakflow is structured to not be ambiguous in the absence of end-of-statement markers, and as such any end-of-statement markers are entirely optional. The markers are useful to improve readability. They are parsed as whitespace and discarded. Consecutive end-of-statement markers are read as one.
-
-Below example has variable definitions separated by end-of-statement markers. Both semicolon and newline are used to clearly separate the variable definitions:
-
-```tweakflow
-> \e
-let {
-  a: 1;
-  b: 2;
-} a+b
-\e
-3
-```
-
-Equivalent, but arguably less readable notation with variable definitions lacking end-of-statement separation:
-
-```tweakflow
-> let { a: 1 b: 2 } a+b
-3
 ```
 
 ### Comments
@@ -636,7 +622,7 @@ Formally modules have the following syntax:
 
 ```
 module
-  : endOfStatement? moduleHead moduleComponent* EOF
+  : moduleHead moduleComponent* EOF
   ;
 
 moduleHead
@@ -645,12 +631,11 @@ moduleHead
 
 moduleComponent
   : library
-  | endOfStatement
   ;
 
 nameDec
-  : metaDef 'module' endOfStatement?
-  | metaDef 'global' 'module' identifier endOfStatement?
+  : metaDef 'module' ';'
+  | metaDef 'global' 'module' identifier ';'
   ;
 ```
 
@@ -668,19 +653,19 @@ The following set of files constitute configuration variants, available globally
 
 ```tweakflow
 # environments/local.tf
-global module env
+global module env;
 
 export library conf {
-  string data_path: "/home/me/my_project/data/"
+  string data_path: "/home/me/my_project/data/";
 }
 ```
 
 ```tweakflow
 # environments/production.tf
-global module env
+global module env;
 
 export library conf {
-  string data_path: "/var/incoming/data/"
+  string data_path: "/var/incoming/data/";
 }
 ```
 
@@ -689,7 +674,7 @@ This file uses environment configuration through the global reference `$env`.
 ```tweakflow
 # main.tf
 library app {
-  file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv"
+  file_path: (string prefix) -> $env.conf.data_path .. prefix .. "_data.csv";
 }
 ```
 On the REPL:
@@ -716,7 +701,7 @@ Imports have the following syntax:
 ```text
 
 importDef
-  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement?
+  : 'import' importMember (',' importMember)* 'from' modulePath ';'
   ;
 
 importMember
@@ -758,19 +743,19 @@ Two modules may import each other's exports. However, an import must ultimately 
 Module `"./util/strings.tf"` is imported as a whole below. Any exported name `x` is available as `utils.x` locally.
 
 ```tweakflow
-import * as utils from "./util/strings.tf"
+import * as utils from "./util/strings.tf";
 ```
 
 A specific library `conversion_lib` is imported from `"./util/strings.tf"` below. Its local name remains `conversion_lib`.
 
 ```tweakflow
-import conversion_lib from "./util/strings.tf"
+import conversion_lib from "./util/strings.tf";
 ```
 
 Specific entities are imported individually below. The import statement references two exported libraries from module `"./util/strings.tf"`, making them available under local names `str` and `conv`.
 
 ```tweakflow
-import string_lib as str, conversion_lib as conv from "./util/strings.tf"
+import string_lib as str, conversion_lib as conv from "./util/strings.tf";
 ```
 
 #### Aliases
@@ -781,7 +766,7 @@ Aliases have the following syntax:
 
 ```text
 aliasDef
-  : 'alias' reference 'as' aliasName endOfStatement?
+  : 'alias' reference 'as' aliasName ';'
   ;
 
 aliasName
@@ -794,18 +779,23 @@ The following module uses aliases.
 ```tweakflow
 # file: aliases.tf
 import * as std from "std";
+
 # s can be used as shortcut to std.strings
-alias std.strings as s
+alias std.strings as s;
+
 # map can be used as shortcut to std.data.map
-alias std.data.map as map
+alias std.data.map as map;
+
 # aliases can be aliased again
-alias map as m
+alias map as m;
 
 library my_util {
+
   # s alias used here
-  greeting: s.concat(["Hello", " ", "World!"]) 	# "Hello World!"
+  greeting: s.concat(["Hello", " ", "World!"]); 	# "Hello World!"
+
   # m alias used here
-  mapped: m([1,2,3], (x) -> x*x)   # [1, 4, 9]
+  mapped: m([1,2,3], (x) -> x*x);   # [1, 4, 9]
 }
 ```
 
@@ -815,7 +805,7 @@ A module defines its public interface using exports. Libraries can be exported i
 
 ```text
 exportDef
-  : 'export' reference ('as' exportName)? endOfStatement?
+  : 'export' reference ('as' exportName)? ';'
   ;
 
 exportName
@@ -828,8 +818,8 @@ Below example exports the strings standard library under the name `str`, and a l
 ```tweakflow
 # lib.tf
 import * as std from "std";
-export std.strings as str
-export common as util
+export std.strings as str;
+export common as util;
 
 library common {
   ...
@@ -840,7 +830,7 @@ The following file imports both the `str` and the `util` export.
 
 ```tweakflow
 # main.tf
-import util, str from "./lib.tf"
+import util, str from "./lib.tf";
 ```
 
 ### Libraries
@@ -851,7 +841,7 @@ A  library is a named collection of variables. The variables typically hold func
 
 ```text
 library
-  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement?)* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar ';')* '}'
   ;
 
 libVar
@@ -864,8 +854,8 @@ Below is an exported library holding some functions.
 
 ```tweakflow
 export library nums {
-  function square: (x) 	-> x**2
-  function root: (x) 	-> x**0.5
+  function square: (x) 	-> x**2;
+  function root: (x) 	-> x**0.5;
 }
 ```
 
@@ -944,20 +934,18 @@ metaDef
   ;
 
 meta
-  : 'meta' literal endOfStatement?
+  : 'meta' literal
   ;
 
 doc
-  : 'doc' literal endOfStatement?
+  : 'doc' literal
   ;
 ```
 The following module contains a single library with a single function:
 
 ```tweakflow
-module
-
 library bar {
-  function baz: (x) -> x*x
+  function baz: (x) -> x*x;
 }
 ```
 
@@ -974,7 +962,7 @@ meta {
   :description "Description of the module",
   :version     "4.2"
 }
-module
+module;
 
 # library bar
 doc 'This is documentation for library bar.'
@@ -994,7 +982,7 @@ library bar {
     :date 2017-03-12T
   }
 
-  function baz: (x) -> x*x
+  function baz: (x) -> x*x;
 }
 ```
 
@@ -1062,21 +1050,6 @@ The long number is converted to to closest double value possible.
 Long as string
 
 The long is converted to a decimal number with a potential leading minus sign.
-
-Long as datetime
-
-The long is interpreted as the number of milliseconds passed since `time.epoch` in UTC.
-
-```tweakflow
-> 0 as datetime
-1970-01-01T00:00:00Z@UTC
-
-> 1501757830000 as datetime
-2017-08-03T10:57:10Z@UTC
-
-> -1501757830000 as datetime
-1922-05-31T13:02:50Z@UTC
-```
 
 ### Double
 
@@ -1733,8 +1706,6 @@ Passing more than the declared number of positional arguments is an error.
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: cannot call function with 3 arguments
-  at: [interactive]:4:5
-  source: `$`: f(42, "test", "too much")
 ```
 
 Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value `nil` unless specified otherwise in the function definition.
@@ -1785,7 +1756,6 @@ It is an error to supply argument names not present in function parameters:
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Function does not have parameter named: country
-  ...
 ```
 
 #### Mixed positional and named arguments
@@ -1806,7 +1776,6 @@ It is an error to supply any positional arguments after named arguments.
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Positional argument cannot follow named arguments.
-  ...
 ```
 
 It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.
@@ -1863,7 +1832,7 @@ Whenever named arguments are allowed, and a splat expression evaluates to a dict
 Below example supplies the `id` and `name` named arguments.
 
 ```tweakflow
->
+> person: {:id 42, :name "test"}
 {
   :name "test",
   :id 42
@@ -1894,7 +1863,6 @@ Splats can be mixed as long as positional splats come first.
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: List splat provides positional arguments and cannot follow named arguments.
-  ...
 ```
 
 #### Argument casting
@@ -1909,7 +1877,6 @@ Arguments given in function calls are automatically cast to the declared paramet
 ERROR:
   code: CAST_ERROR
   message: Cannot cast abc to long
-  ...
 ```
 
 #### Return value casting
@@ -1987,7 +1954,7 @@ The formal syntax is as follows:
 
 ```text
 let
-  :'let' '{' (varDef endOfStatement?)* '}' expression
+  :'let' '{' (varDef ';')* '}' expression
   ;
 
 varDef
@@ -1998,14 +1965,14 @@ varDef
 Examples:
 
 ```tweakflow
-> let {a: 1; b: 2} a + b
+> let {a: 1; b: 2;} a + b
 3
 
 > \e
   can_vote: (datetime born, datetime at) ->
     let {
-      age: time.years_between(born, at)
-      is_eighteen: age >= 18
+      age: time.years_between(born, at);
+      is_eighteen: age >= 18;
     }
     is_eighteen
 \e
@@ -2025,11 +1992,11 @@ Local variables shadow any existing variables:
 ```tweakflow
 > \e
 let {
-  x: "foo"
+  x: "foo";
   y: let {
-       x: "bar"
+       x: "bar";
      }
-     x # "bar"
+     x; # "bar"
 }
 x .. y # "foo".."bar"
 \e
@@ -2185,12 +2152,12 @@ match:
   ;
 
 matchBody
-  : matchLine+
+  : matchLine (',' matchLine)*
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '->' expression endOfStatement?
-  | 'default' '->'  expression endOfStatement?
+  : matchPattern (',' matchGuard)? '->' expression
+  | 'default' '->'  expression
   ;
 
 matchGuard
@@ -2198,7 +2165,7 @@ matchGuard
   ;
 ```
 
-A match expression consists of the `match` keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the `default` line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.
+A match expression consists of the `match` keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the `default` line, which provides the default evaluation value in case no other lines match. If a match expression has a default line, it must appear last.
 
 The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to `true` the match evaluates to the line's result expression. If the guard expression evaluates to `false` or `nil`,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a `default` line, the match evaluates to the default value. If there is no `default` line, the match evaluates to `nil`.
 
@@ -2237,7 +2204,7 @@ Existence matches are not very useful for matching simple values, but they are u
 > \e
 pair?: (list xs) ->
   match xs
-    [@, @]  -> true
+    [@, @]  -> true,
     default -> false
 \e
 function
@@ -2252,7 +2219,7 @@ false
 sequence_pair?: (list xs) ->
   match xs
 #   capture   guard       result
-    [@a, @b], a+1 == b -> true
+    [@a, @b], a+1 == b -> true,
     default -> false
 \e
 function
@@ -2268,7 +2235,7 @@ A value pattern compares against a concrete value. The comparison is done using 
 
 ```text
 matchPattern
-  : expression  capture?
+  : expression capture?
   ;
 
 capture
@@ -2282,10 +2249,10 @@ An optional capture pattern is allowed after the expression, to capture the matc
 > \e
 low_prime?: (long x) ->
   match x
-    2 -> true
-    3 -> true
-    5 -> true
-    7 -> true
+    2 -> true,
+    3 -> true,
+    5 -> true,
+    7 -> true,
     default -> false
 \e
 function
@@ -2311,7 +2278,7 @@ Predicate patterns are syntactically identical to value patterns, since they are
 
 ```text
 matchPattern
-  : expression  capture?
+  : expression capture?
   ;
 
 capture
@@ -2334,9 +2301,9 @@ function
 > \e
 leap_year?: (long x) ->
   match x
-    div_by_400? -> true
-    div_by_100? -> false
-    div_by_4?   -> true
+    div_by_400? -> true,
+    div_by_100? -> false,
+    div_by_4?   -> true,
     default     -> false
 \e
 function
@@ -2377,9 +2344,9 @@ As an example, consider the `int?` function, which returns true if the argument 
 > \e
 int?: (x) ->
   match x
-    long                      -> true
-    double, (x as long) == x  -> true
-    string                    -> try int?(x as double) catch false
+    long                      -> true,
+    double, (x as long) == x  -> true,
+    string                    -> try int?(x as double) catch false,
     default                   -> false
 \e
 function
@@ -2420,13 +2387,13 @@ capture
 Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.
 
 ```tweakflow
-> num?: (x) -> (x is long) || (x is double && !math.nan?(x) && math.abs(x) != Infinity)
+> num?: (x) -> (x is long) || (x is double && !math.NaN?(x) && math.abs(x) != Infinity)
 function
 > \e
 vector2d?: (list xs) ->
   match xs
     # match 2-element list, use num? as predicate for each item
-    [num?, num?] -> true
+    [num?, num?] -> true,
     default -> false
 \e
 function
@@ -2472,8 +2439,8 @@ The following function recursively checks whether the argument is a list of pair
 > \e
 valid_list?: (list xs) ->
   match xs
-    [] -> true
-    [string @key, @, @...tail], strings.starts_with?(key, "a") -> valid_list?(tail)
+    [] -> true,
+    [string @key, @, @...tail], strings.starts_with?(key, "a") -> valid_list?(tail),
     default -> false
 \e
 function
@@ -2517,7 +2484,7 @@ The following function checks whether a list's last element is a non-nil datetim
 > \e
 ends_in_datetime?: (list xs) ->
   match xs
-    [@..., datetime] -> true
+    [@..., datetime] -> true,
     default -> false
 \e
 > ends_in_datetime?(["a", "b"])
@@ -2560,7 +2527,7 @@ The following function checks that a list starts with a non-nil string and ends 
 > \e
 measures?: (list xs) ->
   match xs
-    [string, @...nums, datetime], data.all?(nums, (x) -> x is long && x >= 0 && x <= 100) -> true
+    [string, @...nums, datetime], data.all?(nums, (x) -> x is long && x >= 0 && x <= 100) -> true,
     default -> false
 \e
 function
@@ -2600,7 +2567,7 @@ The following function tests whether the supplied dict is a vector with non-nil 
 > \e
 vector_dict?: (dict v) ->
   match v
-    {:x double, :y double} -> true
+    {:x double, :y double} -> true,
     default -> false
 \e
 function
@@ -2646,7 +2613,7 @@ The following function checks if the given dict contains a "name" key with a str
 > \e
 person?: (dict x) ->
   match x
-    {:name string, :born datetime, @...} -> true
+    {:name string, :born datetime, @...} -> true,
     default -> false
 \e
 function
@@ -2668,7 +2635,7 @@ The following function checks if the given dict contains a "name" key with a str
 > \e
 person?: (dict x) ->
   match x
-    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -> true
+    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -> true,
     default -> false
 \e
 function
@@ -2698,7 +2665,7 @@ List and dict patterns nest naturally. The following function returns the most r
 > \e
 latest_book: (dict person) ->
   match person
-    {:profession "author", :books [@..., @latest_book]} -> latest_book
+    {:profession "author", :books [@..., @latest_book]} -> latest_book,
     default -> nil
 \e
 function
@@ -2717,7 +2684,7 @@ latest_book_with_nr: (dict person) ->
      :profession "author",
      :books [@..., @latest_book] @books
     } ->
-      "The latest book is book nr. ".. data.size(books) .. ": " .. latest_book
+      "The latest book is book nr. ".. data.size(books) .. ": " .. latest_book,
     default -> nil
 \e
 function
@@ -2744,7 +2711,7 @@ As an example, consider the following add function, which throws on binary overf
 > \e
 add: (long x=0, long y=0) ->
   let {
-    long sum: x + y
+    long sum: x + y;
   }
   if x > 0 and y > 0 and sum <= 0
     throw {:code "overflow", :message "binary overflow adding #{x} and #{y}"}
@@ -2907,21 +2874,29 @@ An example file with comments highlighting scope changes and references:
 
 # introduces 'strings' in module scope
 import strings from "std";
+
 # introduces 'len' in module scope
-alias strings.length as len # references 'strings' in module scope
+# references 'strings' in module scope
+alias strings.length as len;
 
 # introduces 'utils' in module scope
 library utils {
+
   # introduces 'f' in library scope
-  f: (x) -> len(x)  # references 'len' from module scope
+  # references 'len' from module scope
+  f: (x) -> len(x);
+
   # introduces 'g' in library scope
-  g: (x) -> f(x) + 1 # references 'f' in library scope
+  # references 'f' in library scope
+  g: (x) -> f(x) + 1;
 }
 
 # introduces 'foo' in module scope
 library foo {
+
   # introduces 'f' in library scope
-  f: (x) -> utils.f(x) # references 'utils' from module scope
+  # references 'utils' from module scope
+  f: (x) -> utils.f(x);
 }
 ```
 
@@ -2930,11 +2905,11 @@ An example nesting local scopes:
 ```tweakflow
 > \e
 let {
-  a: "outer a"
+  a: "outer a";
   b: let {
-      a: "inner a"
+      a: "inner a";
      }
-     a       # references inner a
+     a;       # references inner a
 }
 a .. " / ".. b
 \e
@@ -2947,13 +2922,15 @@ Library scope references must appear inside a library. They limit the resolution
 
 ```tweakflow
 # libary-refs.tf
+
 import strings from "std";
+
 library utils {
-  f: (x) -> strings.length(x)
+  f: (x) -> strings.length(x);
   g: (x) -> let {
-              f: (n) -> n+1
+              f: (n) -> n+1;
             }
-            f(library::f(x)) # f(utils.f(x))
+            f(library::f(x)); # f(utils.f(x))
 }
 ```
 
@@ -2971,11 +2948,14 @@ Module scope references limit the resolution process of the initial identifier t
 
 ```tweakflow
 # module-refs.tf
-import strings as s from "std" # introduce 's' in module scope
+
+# introduce 's' in module scope
+import strings as s from "std";
 
 library utils {
-  s: "variable s"
-  f: (x) -> ::s.length(x) # reference 's' in module scope
+  s: "variable s";
+  # reference 's' in module scope
+  f: (x) -> ::s.length(x);
 }
 ```
 
@@ -3007,7 +2987,6 @@ function
 ERROR:
   code: INVALID_REFERENCE_TARGET
   message: Cannot reference LIBRARY. Not a value.
-  ...
 ```
 
 #### Referencing non-value entities
@@ -3017,10 +2996,13 @@ References in aliases and exports may point to any kind of entity. Aliases provi
 ```tweakflow
 # file aliases.tf
 import * as std from "std";
-alias std.strings as str # local alias for imported library
+
+# local alias for imported library
+alias std.strings as str;
 
 library util {
-  len: str.length        # uses aliased library name
+  # uses aliased library name
+  len: str.length;
 }
 ```
 
@@ -3039,10 +3021,10 @@ Circular references are not allowed. Aliases, imports, and variables must not re
 ```tweakflow
 > \e
 let {
-  a: d
-  b: a
-  c: b
-  d: c
+  a: d;
+  b: a;
+  c: b;
+  d: c;
 } [a, b, c, d]
 \e
 ERROR:
@@ -3199,7 +3181,6 @@ NaN
 ERROR:
   code: CAST_ERROR
   message: Cannot negate type: string
-  ...
 ```
 
 #### Addition
@@ -3377,8 +3358,6 @@ Both operands are cast to long before division is performed. The result of the d
 ERROR:
   code: DIVISION_BY_ZERO
   message: division by zero
-  at: [interactive]:3:10
-  source: 10 // 0
 ```
 
 #### Division remainder
@@ -3655,7 +3634,7 @@ true
 
 Syntax: `a===b`
 
-Evaluates to `true` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
+Evaluates to `true` if a is equal to b as per the semantics of the [equality](#equality) operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
 
 ```tweakflow
 > 0 === -0
@@ -3805,9 +3784,6 @@ Supported type casts are listed for each type in their respective section of [da
   :a "b",
   :c "d"
 }
-
-> 1234567890123 as datetime # long to datetime
-2009-02-13T23:31:30.123Z@UTC
 
 > 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
 {
@@ -4017,50 +3993,52 @@ All operators an constructs are left-associative. When chaining operators of the
 | Pattern matching                     | `match xs [@,@] -> true`                |
 | List comprehension                   | `for x <- [1, 2, 3], x*x`               |
 | Conditional evaluation               | `if sleepy then sleep(8) else party(4)` |
-| Local variables                      | `let {a: 1; b: 2} a+b`                  |
+| Local variables                      | `let {a: 1; b: 2;} a+b`                  |
 | Try / catch                          | `try sleep(:long) catch "tired"`        |
 | Throw                                | `throw "cannot do this"`                |
-| Debug                                | `debug "DEBUG x: #{x}"`                 |
+| Debug                                | `debug("DEBUG x:", x)`                 |
 
 ### Debugging
 
 The debug construct is used to inspect the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:
 
 ```text
-'debug' expression (',' expression)?
+'debug' '(' expression (',' expression)* ')'
 ```
 
 Debug itself is an expression.
 
 If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.
 
-If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.
+If multiple expressions are supplied to debug, all are passed to the host application for debugging, and the last given expression is what the debug expression evaluates to.
 
 As an example, the following function has some conditional branches, and is debugging which branches are taken.
 
 ```tweakflow
 > \e
-sgn: (long x) ->
-  debug "DEBUG: calculating sign of x: #{x}",
-  if x > 0 then debug "DEBUG: x is positive", 1
-  if x < 0 then debug "DEBUG: x is negative", -1
-  else debug "DEBUG: x is zero or nil", 0
+sgn: (long x) -> long
+  let {
+    _: debug("DEBUG: calculating sign of x:", x);
+  }
+  if x > 0 then debug("DEBUG: x is positive", 1)
+  if x < 0 then debug("DEBUG: x is negative", -1)
+  else debug("DEBUG: x is zero or nil", 0)
 \e
 function
 
 > sgn(10)
-"DEBUG: calculating sign of x: 10"
-"DEBUG: x is positive"
+DEBUG: calculating sign of x: 10
+DEBUG: x is positive 1
 1
 
 > sgn(-10)
-"DEBUG: calculating sign of x: -10"
-"DEBUG: x is negative"
+DEBUG: calculating sign of x: -10
+DEBUG: x is negative -1
 -1
 
 > sgn(0)
-"DEBUG: calculating sign of x: 0"
-"DEBUG: x is zero or nil"
+DEBUG: calculating sign of x: 0
+DEBUG: x is zero or nil 0
 0
 ```
 

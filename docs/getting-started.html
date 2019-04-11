@@ -191,6 +191,7 @@ false
 
 <pre><code class="language-tweakflow">&gt; [1, 2, &quot;hello&quot;]
 [1, 2, &quot;hello&quot;]
+
 &gt; [[1, 2], [&quot;one&quot;, &quot;two&quot;]]
 [[1, 2], [&quot;one&quot;, &quot;two&quot;]]
 </code></pre>
@@ -222,8 +223,10 @@ false
 
 <pre><code class="language-tweakflow">&gt; strings.length(&quot;foo&quot;)
 3
+
 &gt; data.unique([1,1,2,3,3,2,1,2,3])
 [1, 2, 3]
+
 &gt; strings.index_of(&quot;banana&quot;, &quot;nan&quot;)
 2
 </code></pre>
@@ -246,6 +249,7 @@ false
 
 <pre><code class="language-tweakflow">&gt; square: (x) -&gt; x*x
 function
+
 &gt; square(5)
 25
 </code></pre>
@@ -254,12 +258,16 @@ function
 
 <pre><code class="language-tweakflow">&gt; x: 10
 10
+
 &gt; y: 2
 2
+
 &gt; z: x*y
 20
+
 &gt; y: 4
 4
+
 &gt; z
 40
 </code></pre>
@@ -307,6 +315,7 @@ z: x*y
 
 <pre><code class="language-tweakflow">&gt; next: (x) -&gt; x+1
 function
+
 &gt; next(2)
 3
 </code></pre>
@@ -327,7 +336,7 @@ function
 
 <p>You can define helper variables scoped to an expression using let:</p>
 
-<pre><code class="language-tweakflow">&gt; let {sq: (x) -&gt; x*x; five: 5} sq(five)
+<pre><code class="language-tweakflow">&gt; let {sq: (x) -&gt; x*x; five: 5;} sq(five)
 25
 </code></pre>
 
@@ -337,8 +346,8 @@ function
 
 <pre><code class="language-tweakflow">&gt; \e
 let {
-  sq: (x) -&gt; x*x
-  five: 5
+  sq: (x) -&gt; x*x;
+  five: 5;
 }
 sq(five)
 \e
@@ -351,10 +360,13 @@ sq(five)
 
 <pre><code class="language-tweakflow">&gt; typeof &quot;Hello&quot;
 &quot;string&quot;
+
 &gt; typeof 2.3
 &quot;double&quot;
+
 &gt; typeof []
 &quot;list&quot;
+
 &gt; typeof (x) -&gt; x*x
 &quot;function&quot;
 </code></pre>
@@ -363,12 +375,16 @@ sq(five)
 
 <pre><code class="language-tweakflow">&gt; &quot;foo&quot; as boolean
 true
+
 &gt; 2.3 as string
 &quot;2.3&quot;
+
 &gt; &quot;2.3&quot; as double
 2.3
+
 &gt; 2.3 as long
 2
+
 &gt; &quot;2.3kg&quot; as double
 ERROR: {
   :message &quot;Cannot cast 2.3kg to double&quot;,
@@ -384,8 +400,10 @@ ERROR: {
 
 <pre><code class="language-tweakflow">&gt; parity: (x) -&gt; if x % 2 == 0 then &quot;even&quot; else &quot;odd&quot;
 function
+
 &gt; parity(3)
 &quot;odd&quot;
+
 &gt; parity(2)
 &quot;even&quot;
 </code></pre>

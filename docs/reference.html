@@ -124,7 +124,6 @@
 <li><a href="#dict-literals">Dict literals</a></li>
 <li><a href="#function-literals">Function literals</a></li>
 <li><a href="#identifiers">Identifiers</a></li>
-<li><a href="#end-of-statement-markers">End-of-statement markers</a></li>
 <li><a href="#comments">Comments</a>
 <ul>
 <li><a href="#line-comments">Line comments</a></li>
@@ -307,10 +306,11 @@
 
 <h3 id="long-literals">Long literals</h3>
 
-<p>Decimal digits are read as 64-bit signed integers of type <code>long</code>. A prefix of <code>-</code> indicates a negative value.</p>
+<p>Decimal digits are read as 64-bit signed integers of type <code>long</code>. A prefix of <code>-</code> or <code>+</code> indicates a negative or positive value respectively.</p>
 
 <pre><code class="language-tweakflow">42
 -2
++3
 </code></pre>
 
 <p>Long literals can also be written in hexadecimal form. They are notated as <code>0x</code> followed by up to  8 bytes. Each byte consists of two hexadecimal digits from <code>[0-9a-fA-F]</code>. The bytes are given in  big-endian order, meaning that the most significant byte is written first. If less than 8 bytes are provided, missing leading bytes are filled up with zeros. The resulting bit pattern is interpreted as a <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two&rsquo;s complement</a> signed 64-bit integer, exactly like a Java long value.</p>
@@ -445,11 +445,6 @@ Line 3&quot;
 </tr>
 
 <tr>
-<td><code>\#</code></td>
-<td><code>#</code> hash character</td>
-</tr>
-
-<tr>
 <td><code>\n</code></td>
 <td><code>⏎</code> newline character</td>
 </tr>
@@ -472,6 +467,11 @@ Line 3&quot;
 <tr>
 <td><code>#{reference}</code></td>
 <td>value given by the reference when cast to string</td>
+</tr>
+
+<tr>
+<td><code>\#{</code></td>
+<td><code>#{</code> literal hash character followed by curly brace</td>
 </tr>
 </tbody>
 </table>
@@ -542,7 +542,7 @@ Hello World
 
 <h4 id="symbol-strings">Symbol strings</h4>
 
-<p>Tweakflow allows symbol notation for strings. It can be useful to distinguish strings used as keys in dicts or as enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a <code>:</code>. Their name is their value.</p>
+<p>Tweakflow allows symbol notation for strings. It can be useful to visually distinguish strings filling the semantic role of keys or enumeration items from data strings. Symbol strings follow identifier notation rules, but are prepended with a <code>:</code>. Their name is their value.</p>
 
 <p>A symbol string is written as:</p>
 
@@ -568,8 +568,10 @@ Hello World
   :two 2,
   :three 3
 }
+
 &gt; nums[:one]
 1
+
 &gt; nums[&quot;two&quot;]
 2
 
@@ -579,10 +581,16 @@ Hello World
 
 <h3 id="datetime-literals">Datetime literals</h3>
 
-<p>Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form <code>[year]-[month]-[day]T</code>  with year given as four digits, month and day give as two digits each.</p>
+<p>Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form <code>[year]-[month]-[day]T</code>  with year given as four to nine digits, month and day given as two digits each. The year may carry a <code>-</code> or <code>+</code> prefix.</p>
 
-<pre><code class="language-tweakflow">&gt; 2017-04-30T
-2017-04-30T00:00:00Z@UTC
+<pre><code class="language-tweakflow">&gt; 2019-04-30T
+2019-04-30T00:00:00Z@UTC
+
+&gt; -0001-01-01T
+-0001-01-01T00:00:00Z@UTC
+
+&gt; +999999-03-12T
++999999-03-12T00:00:00Z@UTC
 </code></pre>
 
 <p>The basic form is extended to specify the local time in 24 hour format as <code>[hours]:[minutes]:[seconds](.[fraction_of_seconds])?</code> with two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.</p>
@@ -663,11 +671,13 @@ splat
 
 &gt; prepend: (x, list xs) -&gt; list [x, ...xs]
 function
+
 &gt; prepend(&quot;a&quot;, [&quot;b&quot;, &quot;c&quot;])
 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
 
 &gt; append: (list xs, x) -&gt; list [...xs, x]
 function
+
 &gt; append([&quot;x&quot;, &quot;y&quot;], &quot;z&quot;)
 [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]
 </code></pre>
@@ -833,35 +843,12 @@ function
 
 <pre><code class="language-tweakflow">&gt; \e
 let {
-  greeting: &quot;Hello&quot;
-  `%name%`: &quot;Joe&quot;
+  greeting: &quot;Hello&quot;;
+  `%name%`: &quot;Joe&quot;;
 }
 greeting .. &quot; &quot; .. `%name%`
 \e
 &quot;Hello Joe&quot;
-</code></pre>
-
-<h3 id="end-of-statement-markers">End-of-statement markers</h3>
-
-<p>Tweakflow allows to explicitly mark the end of a statement with a semicolon or newline. Any definition statements  for modules, libraries, imports, aliases, exports, and variables can be separated by any number of newlines or semicolons.</p>
-
-<p>Tweakflow is structured to not be ambiguous in the absence of end-of-statement markers, and as such any end-of-statement markers are entirely optional. The markers are useful to improve readability. They are parsed as whitespace and discarded. Consecutive end-of-statement markers are read as one.</p>
-
-<p>Below example has variable definitions separated by end-of-statement markers. Both semicolon and newline are used to clearly separate the variable definitions:</p>
-
-<pre><code class="language-tweakflow">&gt; \e
-let {
-  a: 1;
-  b: 2;
-} a+b
-\e
-3
-</code></pre>
-
-<p>Equivalent, but arguably less readable notation with variable definitions lacking end-of-statement separation:</p>
-
-<pre><code class="language-tweakflow">&gt; let { a: 1 b: 2 } a+b
-3
 </code></pre>
 
 <h3 id="comments">Comments</h3>
@@ -913,7 +900,7 @@ spans multiple lines
 <p>Formally modules have the following syntax:</p>
 
 <pre><code>module
-  : endOfStatement? moduleHead moduleComponent* EOF
+  : moduleHead moduleComponent* EOF
   ;
 
 moduleHead
@@ -922,12 +909,11 @@ moduleHead
 
 moduleComponent
   : library
-  | endOfStatement
   ;
 
 nameDec
-  : metaDef 'module' endOfStatement?
-  | metaDef 'global' 'module' identifier endOfStatement?
+  : metaDef 'module' ';'
+  | metaDef 'global' 'module' identifier ';'
   ;
 </code></pre>
 
@@ -944,18 +930,18 @@ nameDec
 <p>The following set of files constitute configuration variants, available globally as <code>env</code>.</p>
 
 <pre><code class="language-tweakflow"># environments/local.tf
-global module env
+global module env;
 
 export library conf {
-  string data_path: &quot;/home/me/my_project/data/&quot;
+  string data_path: &quot;/home/me/my_project/data/&quot;;
 }
 </code></pre>
 
 <pre><code class="language-tweakflow"># environments/production.tf
-global module env
+global module env;
 
 export library conf {
-  string data_path: &quot;/var/incoming/data/&quot;
+  string data_path: &quot;/var/incoming/data/&quot;;
 }
 </code></pre>
 
@@ -963,7 +949,7 @@ export library conf {
 
 <pre><code class="language-tweakflow"># main.tf
 library app {
-  file_path: (string prefix) -&gt; $env.conf.data_path .. prefix .. &quot;_data.csv&quot;
+  file_path: (string prefix) -&gt; $env.conf.data_path .. prefix .. &quot;_data.csv&quot;;
 }
 </code></pre>
 
@@ -990,7 +976,7 @@ library app {
 
 <pre><code class="language-text">
 importDef
-  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement?
+  : 'import' importMember (',' importMember)* 'from' modulePath ';'
   ;
 
 importMember
@@ -1031,17 +1017,17 @@ modulePath
 
 <p>Module <code>&quot;./util/strings.tf&quot;</code> is imported as a whole below. Any exported name <code>x</code> is available as <code>utils.x</code> locally.</p>
 
-<pre><code class="language-tweakflow">import * as utils from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import * as utils from &quot;./util/strings.tf&quot;;
 </code></pre>
 
 <p>A specific library <code>conversion_lib</code> is imported from <code>&quot;./util/strings.tf&quot;</code> below. Its local name remains <code>conversion_lib</code>.</p>
 
-<pre><code class="language-tweakflow">import conversion_lib from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import conversion_lib from &quot;./util/strings.tf&quot;;
 </code></pre>
 
 <p>Specific entities are imported individually below. The import statement references two exported libraries from module <code>&quot;./util/strings.tf&quot;</code>, making them available under local names <code>str</code> and <code>conv</code>.</p>
 
-<pre><code class="language-tweakflow">import string_lib as str, conversion_lib as conv from &quot;./util/strings.tf&quot;
+<pre><code class="language-tweakflow">import string_lib as str, conversion_lib as conv from &quot;./util/strings.tf&quot;;
 </code></pre>
 
 <h4 id="aliases">Aliases</h4>
@@ -1051,7 +1037,7 @@ modulePath
 <p>Aliases have the following syntax:</p>
 
 <pre><code class="language-text">aliasDef
-  : 'alias' reference 'as' aliasName endOfStatement?
+  : 'alias' reference 'as' aliasName ';'
   ;
 
 aliasName
@@ -1063,18 +1049,23 @@ aliasName
 
 <pre><code class="language-tweakflow"># file: aliases.tf
 import * as std from &quot;std&quot;;
+
 # s can be used as shortcut to std.strings
-alias std.strings as s
+alias std.strings as s;
+
 # map can be used as shortcut to std.data.map
-alias std.data.map as map
+alias std.data.map as map;
+
 # aliases can be aliased again
-alias map as m
+alias map as m;
 
 library my_util {
+
   # s alias used here
-  greeting: s.concat([&quot;Hello&quot;, &quot; &quot;, &quot;World!&quot;]) 	# &quot;Hello World!&quot;
+  greeting: s.concat([&quot;Hello&quot;, &quot; &quot;, &quot;World!&quot;]); 	# &quot;Hello World!&quot;
+
   # m alias used here
-  mapped: m([1,2,3], (x) -&gt; x*x)   # [1, 4, 9]
+  mapped: m([1,2,3], (x) -&gt; x*x);   # [1, 4, 9]
 }
 </code></pre>
 
@@ -1083,7 +1074,7 @@ library my_util {
 <p>A module defines its public interface using exports. Libraries can be exported inline when defined, or explicitly in an export statement. An export statement refers to a name and makes it available for other modules to import. You can optionally specify an export name, that is only visible to other modules when importing, but not within the exporting module itself. Exporting an imported or aliased name is allowed.</p>
 
 <pre><code class="language-text">exportDef
-  : 'export' reference ('as' exportName)? endOfStatement?
+  : 'export' reference ('as' exportName)? ';'
   ;
 
 exportName
@@ -1095,8 +1086,8 @@ exportName
 
 <pre><code class="language-tweakflow"># lib.tf
 import * as std from &quot;std&quot;;
-export std.strings as str
-export common as util
+export std.strings as str;
+export common as util;
 
 library common {
   ...
@@ -1106,7 +1097,7 @@ library common {
 <p>The following file imports both the <code>str</code> and the <code>util</code> export.</p>
 
 <pre><code class="language-tweakflow"># main.tf
-import util, str from &quot;./lib.tf&quot;
+import util, str from &quot;./lib.tf&quot;;
 </code></pre>
 
 <h3 id="libraries">Libraries</h3>
@@ -1116,7 +1107,7 @@ import util, str from &quot;./lib.tf&quot;
 <p><strong>Syntax</strong></p>
 
 <pre><code class="language-text">library
-  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement?)* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar ';')* '}'
   ;
 
 libVar
@@ -1128,8 +1119,8 @@ libVar
 <p>Below is an exported library holding some functions.</p>
 
 <pre><code class="language-tweakflow">export library nums {
-  function square: (x) 	-&gt; x**2
-  function root: (x) 	-&gt; x**0.5
+  function square: (x) 	-&gt; x**2;
+  function root: (x) 	-&gt; x**0.5;
 }
 </code></pre>
 
@@ -1208,20 +1199,18 @@ false
   ;
 
 meta
-  : 'meta' literal endOfStatement?
+  : 'meta' literal
   ;
 
 doc
-  : 'doc' literal endOfStatement?
+  : 'doc' literal
   ;
 </code></pre>
 
 <p>The following module contains a single library with a single function:</p>
 
-<pre><code class="language-tweakflow">module
-
-library bar {
-  function baz: (x) -&gt; x*x
+<pre><code class="language-tweakflow">library bar {
+  function baz: (x) -&gt; x*x;
 }
 </code></pre>
 
@@ -1237,7 +1226,7 @@ meta {
   :description &quot;Description of the module&quot;,
   :version     &quot;4.2&quot;
 }
-module
+module;
 
 # library bar
 doc 'This is documentation for library bar.'
@@ -1257,7 +1246,7 @@ library bar {
     :date 2017-03-12T
   }
 
-  function baz: (x) -&gt; x*x
+  function baz: (x) -&gt; x*x;
 }
 </code></pre>
 
@@ -1324,20 +1313,6 @@ foo.tf&gt; \meta bar.baz
 <p>Long as string</p>
 
 <p>The long is converted to a decimal number with a potential leading minus sign.</p>
-
-<p>Long as datetime</p>
-
-<p>The long is interpreted as the number of milliseconds passed since <code>time.epoch</code> in UTC.</p>
-
-<pre><code class="language-tweakflow">&gt; 0 as datetime
-1970-01-01T00:00:00Z@UTC
-
-&gt; 1501757830000 as datetime
-2017-08-03T10:57:10Z@UTC
-
-&gt; -1501757830000 as datetime
-1922-05-31T13:02:50Z@UTC
-</code></pre>
 
 <h3 id="double">Double</h3>
 
@@ -2003,8 +1978,6 @@ function
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: cannot call function with 3 arguments
-  at: [interactive]:4:5
-  source: `$`: f(42, &quot;test&quot;, &quot;too much&quot;)
 </code></pre>
 
 <p>Passing less than the declared number of positional arguments results in the missing arguments being supplied through default values of the missing parameters. All parameters of a function have the default value <code>nil</code> unless specified otherwise in the function definition.</p>
@@ -2051,7 +2024,6 @@ nil
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Function does not have parameter named: country
-  ...
 </code></pre>
 
 <h4 id="mixed-positional-and-named-arguments">Mixed positional and named arguments</h4>
@@ -2070,7 +2042,6 @@ ERROR:
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: Positional argument cannot follow named arguments.
-  ...
 </code></pre>
 
 <p>It is possible to specify a parameter in both positional and named arguments. The rightmost specified value is used.</p>
@@ -2122,7 +2093,7 @@ ERROR:
 
 <p>Below example supplies the <code>id</code> and <code>name</code> named arguments.</p>
 
-<pre><code class="language-tweakflow">&gt;
+<pre><code class="language-tweakflow">&gt; person: {:id 42, :name &quot;test&quot;}
 {
   :name &quot;test&quot;,
   :id 42
@@ -2151,7 +2122,6 @@ ERROR:
 ERROR:
   code: UNEXPECTED_ARGUMENT
   message: List splat provides positional arguments and cannot follow named arguments.
-  ...
 </code></pre>
 
 <h4 id="argument-casting">Argument casting</h4>
@@ -2165,7 +2135,6 @@ ERROR:
 ERROR:
   code: CAST_ERROR
   message: Cannot cast abc to long
-  ...
 </code></pre>
 
 <h4 id="return-value-casting">Return value casting</h4>
@@ -2239,7 +2208,7 @@ function
 <p>The formal syntax is as follows:</p>
 
 <pre><code class="language-text">let
-  :'let' '{' (varDef endOfStatement?)* '}' expression
+  :'let' '{' (varDef ';')* '}' expression
   ;
 
 varDef
@@ -2249,14 +2218,14 @@ varDef
 
 <p>Examples:</p>
 
-<pre><code class="language-tweakflow">&gt; let {a: 1; b: 2} a + b
+<pre><code class="language-tweakflow">&gt; let {a: 1; b: 2;} a + b
 3
 
 &gt; \e
   can_vote: (datetime born, datetime at) -&gt;
     let {
-      age: time.years_between(born, at)
-      is_eighteen: age &gt;= 18
+      age: time.years_between(born, at);
+      is_eighteen: age &gt;= 18;
     }
     is_eighteen
 \e
@@ -2275,11 +2244,11 @@ true
 
 <pre><code class="language-tweakflow">&gt; \e
 let {
-  x: &quot;foo&quot;
+  x: &quot;foo&quot;;
   y: let {
-       x: &quot;bar&quot;
+       x: &quot;bar&quot;;
      }
-     x # &quot;bar&quot;
+     x; # &quot;bar&quot;
 }
 x .. y # &quot;foo&quot;..&quot;bar&quot;
 \e
@@ -2425,12 +2394,12 @@ for
   ;
 
 matchBody
-  : matchLine+
+  : matchLine (',' matchLine)*
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '-&gt;' expression endOfStatement?
-  | 'default' '-&gt;'  expression endOfStatement?
+  : matchPattern (',' matchGuard)? '-&gt;' expression
+  | 'default' '-&gt;'  expression
   ;
 
 matchGuard
@@ -2438,7 +2407,7 @@ matchGuard
   ;
 </code></pre>
 
-<p>A match expression consists of the <code>match</code> keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the <code>default</code> line, which provides the default evaluation value in case no other lines match. A match expression can only have one default line.</p>
+<p>A match expression consists of the <code>match</code> keyword, the value to match, an one or more match lines. A match line consists of a pattern, an optional guard expression, and a result expression. Alternatively, a match line can be the <code>default</code> line, which provides the default evaluation value in case no other lines match. If a match expression has a default line, it must appear last.</p>
 
 <p>The match expression is evaluated by testing the value to match against each non-default match line in order. If the pattern of the line matches and there is no guard expression, the result expression is evaluated, and becomes the evaluation value of the whole match. If there is a match guard expression, it is evaluated first and cast to boolean. If it evaluates to <code>true</code> the match evaluates to the line&rsquo;s result expression. If the guard expression evaluates to <code>false</code> or <code>nil</code>,  the match line does not match, and the algorithm proceeds to test the next match line. After all match lines are tested, and none matches, there are two possibilities: If there is a <code>default</code> line, the match evaluates to the default value. If there is no <code>default</code> line, the match evaluates to <code>nil</code>.</p>
 
@@ -2474,7 +2443,7 @@ true
 <pre><code class="language-tweakflow">&gt; \e
 pair?: (list xs) -&gt;
   match xs
-    [@, @]  -&gt; true
+    [@, @]  -&gt; true,
     default -&gt; false
 \e
 function
@@ -2489,7 +2458,7 @@ false
 sequence_pair?: (list xs) -&gt;
   match xs
 #   capture   guard       result
-    [@a, @b], a+1 == b -&gt; true
+    [@a, @b], a+1 == b -&gt; true,
     default -&gt; false
 \e
 function
@@ -2504,7 +2473,7 @@ false
 <p>A value pattern compares against a concrete value. The comparison is done using the <code>==</code> operator. The syntax is:</p>
 
 <pre><code class="language-text">matchPattern
-  : expression  capture?
+  : expression capture?
   ;
 
 capture
@@ -2517,10 +2486,10 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 low_prime?: (long x) -&gt;
   match x
-    2 -&gt; true
-    3 -&gt; true
-    5 -&gt; true
-    7 -&gt; true
+    2 -&gt; true,
+    3 -&gt; true,
+    5 -&gt; true,
+    7 -&gt; true,
     default -&gt; false
 \e
 function
@@ -2545,7 +2514,7 @@ false
 <p>Predicate patterns are syntactically identical to value patterns, since they are merely a special case of the match expression evaluating to a function.</p>
 
 <pre><code class="language-text">matchPattern
-  : expression  capture?
+  : expression capture?
   ;
 
 capture
@@ -2567,9 +2536,9 @@ function
 &gt; \e
 leap_year?: (long x) -&gt;
   match x
-    div_by_400? -&gt; true
-    div_by_100? -&gt; false
-    div_by_4?   -&gt; true
+    div_by_400? -&gt; true,
+    div_by_100? -&gt; false,
+    div_by_4?   -&gt; true,
     default     -&gt; false
 \e
 function
@@ -2608,9 +2577,9 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 int?: (x) -&gt;
   match x
-    long                      -&gt; true
-    double, (x as long) == x  -&gt; true
-    string                    -&gt; try int?(x as double) catch false
+    long                      -&gt; true,
+    double, (x as long) == x  -&gt; true,
+    string                    -&gt; try int?(x as double) catch false,
     default                   -&gt; false
 \e
 function
@@ -2649,13 +2618,13 @@ capture
 
 <p>Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.</p>
 
-<pre><code class="language-tweakflow">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.nan?(x) &amp;&amp; math.abs(x) != Infinity)
+<pre><code class="language-tweakflow">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.NaN?(x) &amp;&amp; math.abs(x) != Infinity)
 function
 &gt; \e
 vector2d?: (list xs) -&gt;
   match xs
     # match 2-element list, use num? as predicate for each item
-    [num?, num?] -&gt; true
+    [num?, num?] -&gt; true,
     default -&gt; false
 \e
 function
@@ -2699,8 +2668,8 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 valid_list?: (list xs) -&gt;
   match xs
-    [] -&gt; true
-    [string @key, @, @...tail], strings.starts_with?(key, &quot;a&quot;) -&gt; valid_list?(tail)
+    [] -&gt; true,
+    [string @key, @, @...tail], strings.starts_with?(key, &quot;a&quot;) -&gt; valid_list?(tail),
     default -&gt; false
 \e
 function
@@ -2742,7 +2711,7 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 ends_in_datetime?: (list xs) -&gt;
   match xs
-    [@..., datetime] -&gt; true
+    [@..., datetime] -&gt; true,
     default -&gt; false
 \e
 &gt; ends_in_datetime?([&quot;a&quot;, &quot;b&quot;])
@@ -2783,7 +2752,7 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 measures?: (list xs) -&gt;
   match xs
-    [string, @...nums, datetime], data.all?(nums, (x) -&gt; x is long &amp;&amp; x &gt;= 0 &amp;&amp; x &lt;= 100) -&gt; true
+    [string, @...nums, datetime], data.all?(nums, (x) -&gt; x is long &amp;&amp; x &gt;= 0 &amp;&amp; x &lt;= 100) -&gt; true,
     default -&gt; false
 \e
 function
@@ -2821,7 +2790,7 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 vector_dict?: (dict v) -&gt;
   match v
-    {:x double, :y double} -&gt; true
+    {:x double, :y double} -&gt; true,
     default -&gt; false
 \e
 function
@@ -2865,7 +2834,7 @@ capture
 <pre><code class="language-tweakflow">&gt; \e
 person?: (dict x) -&gt;
   match x
-    {:name string, :born datetime, @...} -&gt; true
+    {:name string, :born datetime, @...} -&gt; true,
     default -&gt; false
 \e
 function
@@ -2886,7 +2855,7 @@ false
 <pre><code class="language-tweakflow">&gt; \e
 person?: (dict x) -&gt;
   match x
-    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -&gt; true
+    {:name string, :born datetime, @...rest}, (rest[:job] is string || rest[:profession] is string) -&gt; true,
     default -&gt; false
 \e
 function
@@ -2915,7 +2884,7 @@ false
 &gt; \e
 latest_book: (dict person) -&gt;
   match person
-    {:profession &quot;author&quot;, :books [@..., @latest_book]} -&gt; latest_book
+    {:profession &quot;author&quot;, :books [@..., @latest_book]} -&gt; latest_book,
     default -&gt; nil
 \e
 function
@@ -2933,7 +2902,7 @@ latest_book_with_nr: (dict person) -&gt;
      :profession &quot;author&quot;,
      :books [@..., @latest_book] @books
     } -&gt;
-      &quot;The latest book is book nr. &quot;.. data.size(books) .. &quot;: &quot; .. latest_book
+      &quot;The latest book is book nr. &quot;.. data.size(books) .. &quot;: &quot; .. latest_book,
     default -&gt; nil
 \e
 function
@@ -2958,7 +2927,7 @@ function
 <pre><code class="language-tweakflow">&gt; \e
 add: (long x=0, long y=0) -&gt;
   let {
-    long sum: x + y
+    long sum: x + y;
   }
   if x &gt; 0 and y &gt; 0 and sum &lt;= 0
     throw {:code &quot;overflow&quot;, :message &quot;binary overflow adding #{x} and #{y}&quot;}
@@ -3165,21 +3134,29 @@ nil
 
 # introduces 'strings' in module scope
 import strings from &quot;std&quot;;
+
 # introduces 'len' in module scope
-alias strings.length as len # references 'strings' in module scope
+# references 'strings' in module scope
+alias strings.length as len;
 
 # introduces 'utils' in module scope
 library utils {
+
   # introduces 'f' in library scope
-  f: (x) -&gt; len(x)  # references 'len' from module scope
+  # references 'len' from module scope
+  f: (x) -&gt; len(x);
+
   # introduces 'g' in library scope
-  g: (x) -&gt; f(x) + 1 # references 'f' in library scope
+  # references 'f' in library scope
+  g: (x) -&gt; f(x) + 1;
 }
 
 # introduces 'foo' in module scope
 library foo {
+
   # introduces 'f' in library scope
-  f: (x) -&gt; utils.f(x) # references 'utils' from module scope
+  # references 'utils' from module scope
+  f: (x) -&gt; utils.f(x);
 }
 </code></pre>
 
@@ -3187,11 +3164,11 @@ library foo {
 
 <pre><code class="language-tweakflow">&gt; \e
 let {
-  a: &quot;outer a&quot;
+  a: &quot;outer a&quot;;
   b: let {
-      a: &quot;inner a&quot;
+      a: &quot;inner a&quot;;
      }
-     a       # references inner a
+     a;       # references inner a
 }
 a .. &quot; / &quot;.. b
 \e
@@ -3203,13 +3180,15 @@ a .. &quot; / &quot;.. b
 <p>Library scope references must appear inside a library. They limit the resolution process of the initial identifier to the containing library&rsquo;s scope.  They are prefixed with the <code>library::</code> anchor.</p>
 
 <pre><code class="language-tweakflow"># libary-refs.tf
+
 import strings from &quot;std&quot;;
+
 library utils {
-  f: (x) -&gt; strings.length(x)
+  f: (x) -&gt; strings.length(x);
   g: (x) -&gt; let {
-              f: (n) -&gt; n+1
+              f: (n) -&gt; n+1;
             }
-            f(library::f(x)) # f(utils.f(x))
+            f(library::f(x)); # f(utils.f(x))
 }
 </code></pre>
 
@@ -3225,11 +3204,14 @@ library-refs.tf&gt; utils.g(&quot;abc&quot;)
 <p>Module scope references limit the resolution process of the initial identifier to module scope. They are prefixed with the <code>::</code> or <code>module::</code> anchors.</p>
 
 <pre><code class="language-tweakflow"># module-refs.tf
-import strings as s from &quot;std&quot; # introduce 's' in module scope
+
+# introduce 's' in module scope
+import strings as s from &quot;std&quot;;
 
 library utils {
-  s: &quot;variable s&quot;
-  f: (x) -&gt; ::s.length(x) # reference 's' in module scope
+  s: &quot;variable s&quot;;
+  # reference 's' in module scope
+  f: (x) -&gt; ::s.length(x);
 }
 </code></pre>
 
@@ -3259,7 +3241,6 @@ function
 ERROR:
   code: INVALID_REFERENCE_TARGET
   message: Cannot reference LIBRARY. Not a value.
-  ...
 </code></pre>
 
 <h4 id="referencing-non-value-entities">Referencing non-value entities</h4>
@@ -3268,10 +3249,13 @@ ERROR:
 
 <pre><code class="language-tweakflow"># file aliases.tf
 import * as std from &quot;std&quot;;
-alias std.strings as str # local alias for imported library
+
+# local alias for imported library
+alias std.strings as str;
 
 library util {
-  len: str.length        # uses aliased library name
+  # uses aliased library name
+  len: str.length;
 }
 </code></pre>
 
@@ -3288,10 +3272,10 @@ aliases.tf&gt; util.len(&quot;foo&quot;)
 
 <pre><code class="language-tweakflow">&gt; \e
 let {
-  a: d
-  b: a
-  c: b
-  d: c
+  a: d;
+  b: a;
+  c: b;
+  d: c;
 } [a, b, c, d]
 \e
 ERROR:
@@ -3461,7 +3445,6 @@ NaN
 ERROR:
   code: CAST_ERROR
   message: Cannot negate type: string
-  ...
 </code></pre>
 
 <h4 id="addition">Addition</h4>
@@ -3733,8 +3716,6 @@ nil
 ERROR:
   code: DIVISION_BY_ZERO
   message: division by zero
-  at: [interactive]:3:10
-  source: 10 // 0
 </code></pre>
 
 <h4 id="division-remainder">Division remainder</h4>
@@ -4087,7 +4068,7 @@ true
 
 <p>Syntax: <code>a===b</code></p>
 
-<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
+<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the <a href="#equality">equality</a> operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
 
 <pre><code class="language-tweakflow">&gt; 0 === -0
 true
@@ -4229,9 +4210,6 @@ false
   :a &quot;b&quot;,
   :c &quot;d&quot;
 }
-
-&gt; 1234567890123 as datetime # long to datetime
-2009-02-13T23:31:30.123Z@UTC
 
 &gt; 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
 {
@@ -4595,7 +4573,7 @@ nil
 
 <tr>
 <td>Local variables</td>
-<td><code>let {a: 1; b: 2} a+b</code></td>
+<td><code>let {a: 1; b: 2;} a+b</code></td>
 </tr>
 
 <tr>
@@ -4610,7 +4588,7 @@ nil
 
 <tr>
 <td>Debug</td>
-<td><code>debug &quot;DEBUG x: #{x}&quot;</code></td>
+<td><code>debug(&quot;DEBUG x:&quot;, x)</code></td>
 </tr>
 </tbody>
 </table>
@@ -4619,39 +4597,41 @@ nil
 
 <p>The debug construct is used to inspect the value of any expression. The host application decides what happens with debugged values. The REPL just prints them to screen. The syntax is:</p>
 
-<pre><code class="language-text">'debug' expression (',' expression)?
+<pre><code class="language-text">'debug' '(' expression (',' expression)* ')'
 </code></pre>
 
 <p>Debug itself is an expression.</p>
 
 <p>If a single expression is supplied, it is passed to the host application for debugging, and it is also what the whole debug evaluates to.</p>
 
-<p>If two expressions are supplied to debug, the first one is passed to the host application for debugging, and the second is what the debug expression evaluates to.</p>
+<p>If multiple expressions are supplied to debug, all are passed to the host application for debugging, and the last given expression is what the debug expression evaluates to.</p>
 
 <p>As an example, the following function has some conditional branches, and is debugging which branches are taken.</p>
 
 <pre><code class="language-tweakflow">&gt; \e
-sgn: (long x) -&gt;
-  debug &quot;DEBUG: calculating sign of x: #{x}&quot;,
-  if x &gt; 0 then debug &quot;DEBUG: x is positive&quot;, 1
-  if x &lt; 0 then debug &quot;DEBUG: x is negative&quot;, -1
-  else debug &quot;DEBUG: x is zero or nil&quot;, 0
+sgn: (long x) -&gt; long
+  let {
+    _: debug(&quot;DEBUG: calculating sign of x:&quot;, x);
+  }
+  if x &gt; 0 then debug(&quot;DEBUG: x is positive&quot;, 1)
+  if x &lt; 0 then debug(&quot;DEBUG: x is negative&quot;, -1)
+  else debug(&quot;DEBUG: x is zero or nil&quot;, 0)
 \e
 function
 
 &gt; sgn(10)
-&quot;DEBUG: calculating sign of x: 10&quot;
-&quot;DEBUG: x is positive&quot;
+DEBUG: calculating sign of x: 10
+DEBUG: x is positive 1
 1
 
 &gt; sgn(-10)
-&quot;DEBUG: calculating sign of x: -10&quot;
-&quot;DEBUG: x is negative&quot;
+DEBUG: calculating sign of x: -10
+DEBUG: x is negative -1
 -1
 
 &gt; sgn(0)
-&quot;DEBUG: calculating sign of x: 0&quot;
-&quot;DEBUG: x is zero or nil&quot;
+DEBUG: calculating sign of x: 0
+DEBUG: x is zero or nil 0
 0
 </code></pre>
 
