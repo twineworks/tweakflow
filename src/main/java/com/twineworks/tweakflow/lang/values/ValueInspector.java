@@ -102,7 +102,7 @@ public class ValueInspector {
       DictValue dict = v.dict();
       for (String key : dict.keys()) {
         Value value = dict.get(key);
-        out.append(inheritedIndent).append(indentationUnit).append(":").append(LangUtil.escapeIdentifier(key));
+        out.append(inheritedIndent).append(indentationUnit).append(":").append(LangUtil.escapeKey(key));
         out.append(" ");
         inspect(out, value, "", inheritedIndent+indentationUnit, indentationUnit, expandFunctions);
         if (i < size){
