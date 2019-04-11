@@ -27,8 +27,8 @@ library lib
   f_call_1_sp_a1:   f(1, ...{:a 1});          # call f with arg0=1 arg1=splat(:a 1)
   f_call_a_b:       f(:a, :b);                # call f with arg0="a", arg1="b"
   f_call_a_bfoo:    f(:a, b: "foo");          # call f with arg0="a", b="foo"
-  f_curry_a:        f(a="foo");               # curry f with a="foo"
-  f_curry_a_b:      f(a="foo", b="bar");      # curry f with a="foo", b="bar"
+  f_partial_a:      f(a="foo");               # partial f with a="foo"
+  f_partial_a_b:    f(a="foo", b="bar");      # partial f with a="foo", b="bar"
   thread: ->> (8)
            (n) -> n*4,
            (n) -> n+3,

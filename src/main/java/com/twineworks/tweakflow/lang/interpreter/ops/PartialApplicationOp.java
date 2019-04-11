@@ -24,8 +24,8 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
-import com.twineworks.tweakflow.lang.ast.expressions.CurryNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.expressions.PartialApplicationNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
@@ -35,17 +35,17 @@ import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.*;
 
-final public class CurryOp implements ExpressionOp {
+final public class PartialApplicationOp implements ExpressionOp {
 
-  private final CurryNode node;
+  private final PartialApplicationNode node;
   private final ExpressionOp callableOp;
   private final HashMap<String, ExpressionOp> curriedArgs;
 
-  public CurryOp(CurryNode node) {
+  public PartialApplicationOp(PartialApplicationNode node) {
     this.node = node;
     callableOp = node.getExpression().getOp();
     curriedArgs = new HashMap<>();
-    for (CurryArgumentNode arg : node.getArguments().getList()) {
+    for (PartialArgumentNode arg : node.getArguments().getList()) {
       curriedArgs.put(arg.getName(), arg.getExpression().getOp());
     }
   }
@@ -55,7 +55,7 @@ final public class CurryOp implements ExpressionOp {
 
     Value f = callableOp.eval(stack, context);
     if (f.type() != Types.FUNCTION) {
-      throw new LangException(LangError.CANNOT_CURRY, "Cannot curry " + f.toString() + ". Not a function.", stack, node.getSourceInfo());
+      throw new LangException(LangError.CANNOT_PARTIALLY_APPLY, "Cannot partially apply " + f.toString() + ". Not a function.", stack, node.getSourceInfo());
     }
 
     FunctionValue function = f.function();
@@ -67,7 +67,7 @@ final public class CurryOp implements ExpressionOp {
     // ensure every curried param is present in host
     for (String name : curriedArgs.keySet()) {
       if (!fParams.containsKey(name)) {
-        throw new LangException(LangError.UNEXPECTED_ARGUMENT, "Cannot curry undeclared parameter " + name + ".", stack, node.getSourceInfo());
+        throw new LangException(LangError.UNEXPECTED_ARGUMENT, "Cannot partially apply undeclared parameter " + name + ".", stack, node.getSourceInfo());
       }
     }
 
@@ -97,65 +97,65 @@ final public class CurryOp implements ExpressionOp {
     );
 
 
-    UserFunction curriedFunction = null;
+    UserFunction partialFunction = null;
     // f(x=a) -> g()
     if (fixedArgs.length == 1 && newParams.size() == 0) {
-      curriedFunction = new curry_impl_1_total_0_fixed(f, fixedArgs[0]);
+      partialFunction = new partial_impl_1_total_0_fixed(f, fixedArgs[0]);
     } else if (fixedArgs.length == 2) {
       if (newParams.size() == 1) {
         // f(x=a,y) -> g(y)
         if (argsMap[0] == 1) {
-          curriedFunction = new curry_impl_2_total_0_fixed(f, fixedArgs[0]);
+          partialFunction = new partial_impl_2_total_0_fixed(f, fixedArgs[0]);
         }
         // f(x,y=a) -> g(x)
         else if (argsMap[0] == 0) {
-          curriedFunction = new curry_impl_2_total_1_fixed(f, fixedArgs[1]);
+          partialFunction = new partial_impl_2_total_1_fixed(f, fixedArgs[1]);
         }
       }
       if (newParams.size() == 0) {
         // f(x=a,y=a) -> g()
-        curriedFunction = new curry_impl_2_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
+        partialFunction = new partial_impl_2_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
       }
     } else if (fixedArgs.length == 3) {
       if (newParams.size() == 2) {
         // f(x=a,y,z) -> g(y,z)
         if (argsMap[0] == 1 && argsMap[1] == 2) {
-          curriedFunction = new curry_impl_3_total_0_fixed(f, fixedArgs[0]);
+          partialFunction = new partial_impl_3_total_0_fixed(f, fixedArgs[0]);
         }
         // f(x,y=a,z) -> g(x,z)
         else if (argsMap[0] == 0 && argsMap[1] == 2) {
-          curriedFunction = new curry_impl_3_total_1_fixed(f, fixedArgs[1]);
+          partialFunction = new partial_impl_3_total_1_fixed(f, fixedArgs[1]);
         }
         // f(x,y,z=a) -> g(x,y)
         else if (argsMap[0] == 0 && argsMap[1] == 1) {
-          curriedFunction = new curry_impl_3_total_2_fixed(f, fixedArgs[2]);
+          partialFunction = new partial_impl_3_total_2_fixed(f, fixedArgs[2]);
         }
       } else if (newParams.size() == 1) {
         // f(x=a,y=a,z) -> g(z)
         if (argsMap[0] == 2) {
-          curriedFunction = new curry_impl_3_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
+          partialFunction = new partial_impl_3_total_0_1_fixed(f, fixedArgs[0], fixedArgs[1]);
         }
         // f(x=a,y,z=a) -> g(y)
         else if (argsMap[0] == 1) {
-          curriedFunction = new curry_impl_3_total_0_2_fixed(f, fixedArgs[0], fixedArgs[2]);
+          partialFunction = new partial_impl_3_total_0_2_fixed(f, fixedArgs[0], fixedArgs[2]);
         }
         // f(x,y=a,z=a) -> g(x)
         else if (argsMap[0] == 0) {
-          curriedFunction = new curry_impl_3_total_1_2_fixed(f, fixedArgs[1], fixedArgs[2]);
+          partialFunction = new partial_impl_3_total_1_2_fixed(f, fixedArgs[1], fixedArgs[2]);
         }
       }
       else if (newParams.size() == 0) {
         // f(x=a,y=a,z=a) -> g()
-        curriedFunction = new curry_impl_3_total_0_1_2_fixed(f, fixedArgs[0], fixedArgs[1], fixedArgs[2]);
+        partialFunction = new partial_impl_3_total_0_1_2_fixed(f, fixedArgs[0], fixedArgs[1], fixedArgs[2]);
       }
     }
 
 
-    if (curriedFunction == null) {
-      curriedFunction = new curry_impl_generic(f, fixedArgs, argsMap);
+    if (partialFunction == null) {
+      partialFunction = new partial_impl_generic(f, fixedArgs, argsMap);
     }
 
-    return Values.make(new UserFunctionValue(curriedSignature, curriedFunction));
+    return Values.make(new UserFunctionValue(curriedSignature, partialFunction));
 
   }
 
@@ -170,22 +170,22 @@ final public class CurryOp implements ExpressionOp {
 
   @Override
   public ExpressionOp specialize() {
-    return new CurryOp(node);
+    return new PartialApplicationOp(node);
   }
 
   @Override
   public ExpressionOp refresh() {
-    return new CurryOp(node);
+    return new PartialApplicationOp(node);
   }
 
 
-  private static final class curry_impl_1_total_0_fixed implements UserFunction, Arity0UserFunction {
+  private static final class partial_impl_1_total_0_fixed implements UserFunction, Arity0UserFunction {
 
     private final Value f;
     private final Value fixedArg;
     private Arity1CallSite cs;
 
-    curry_impl_1_total_0_fixed(Value f, Value fixedArg) {
+    partial_impl_1_total_0_fixed(Value f, Value fixedArg) {
       this.f = f;
       this.fixedArg = fixedArg;
     }
@@ -200,13 +200,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_2_total_0_fixed implements UserFunction, Arity1UserFunction {
+  private static final class partial_impl_2_total_0_fixed implements UserFunction, Arity1UserFunction {
 
     private final Value f;
     private final Value fixedArg;
     private Arity2CallSite cs;
 
-    curry_impl_2_total_0_fixed(Value f, Value fixedArg) {
+    partial_impl_2_total_0_fixed(Value f, Value fixedArg) {
       this.f = f;
       this.fixedArg = fixedArg;
     }
@@ -221,13 +221,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_2_total_1_fixed implements UserFunction, Arity1UserFunction {
+  private static final class partial_impl_2_total_1_fixed implements UserFunction, Arity1UserFunction {
 
     private final Value f;
     private final Value fixedArg;
     private Arity2CallSite cs;
 
-    curry_impl_2_total_1_fixed(Value f, Value fixedArg) {
+    partial_impl_2_total_1_fixed(Value f, Value fixedArg) {
       this.f = f;
       this.fixedArg = fixedArg;
     }
@@ -242,14 +242,14 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_2_total_0_1_fixed implements UserFunction, Arity0UserFunction {
+  private static final class partial_impl_2_total_0_1_fixed implements UserFunction, Arity0UserFunction {
 
     private final Value f;
     private final Value fixedArg0;
     private final Value fixedArg1;
     private Arity2CallSite cs;
 
-    curry_impl_2_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
+    partial_impl_2_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
       this.f = f;
       this.fixedArg0 = fixedArg0;
       this.fixedArg1 = fixedArg1;
@@ -265,13 +265,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_0_fixed implements UserFunction, Arity2UserFunction {
+  private static final class partial_impl_3_total_0_fixed implements UserFunction, Arity2UserFunction {
 
     private final Value f;
     private final Value fixedArg0;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_0_fixed(Value f, Value fixedArg0) {
+    partial_impl_3_total_0_fixed(Value f, Value fixedArg0) {
       this.f = f;
       this.fixedArg0 = fixedArg0;
     }
@@ -286,13 +286,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_1_fixed implements UserFunction, Arity2UserFunction {
+  private static final class partial_impl_3_total_1_fixed implements UserFunction, Arity2UserFunction {
 
     private final Value f;
     private final Value fixedArg1;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_1_fixed(Value f, Value fixedArg1) {
+    partial_impl_3_total_1_fixed(Value f, Value fixedArg1) {
       this.f = f;
       this.fixedArg1 = fixedArg1;
     }
@@ -307,13 +307,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_2_fixed implements UserFunction, Arity2UserFunction {
+  private static final class partial_impl_3_total_2_fixed implements UserFunction, Arity2UserFunction {
 
     private final Value f;
     private final Value fixedArg2;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_2_fixed(Value f, Value fixedArg2) {
+    partial_impl_3_total_2_fixed(Value f, Value fixedArg2) {
       this.f = f;
       this.fixedArg2 = fixedArg2;
     }
@@ -328,14 +328,14 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_0_1_fixed implements UserFunction, Arity1UserFunction {
+  private static final class partial_impl_3_total_0_1_fixed implements UserFunction, Arity1UserFunction {
 
     private final Value f;
     private final Value fixedArg0;
     private final Value fixedArg1;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
+    partial_impl_3_total_0_1_fixed(Value f, Value fixedArg0, Value fixedArg1) {
       this.f = f;
       this.fixedArg0 = fixedArg0;
       this.fixedArg1 = fixedArg1;
@@ -351,14 +351,14 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_1_2_fixed implements UserFunction, Arity1UserFunction {
+  private static final class partial_impl_3_total_1_2_fixed implements UserFunction, Arity1UserFunction {
 
     private final Value f;
     private final Value fixedArg1;
     private final Value fixedArg2;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_1_2_fixed(Value f, Value fixedArg1, Value fixedArg2) {
+    partial_impl_3_total_1_2_fixed(Value f, Value fixedArg1, Value fixedArg2) {
       this.f = f;
       this.fixedArg1 = fixedArg1;
       this.fixedArg2 = fixedArg2;
@@ -374,14 +374,14 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_0_2_fixed implements UserFunction, Arity1UserFunction {
+  private static final class partial_impl_3_total_0_2_fixed implements UserFunction, Arity1UserFunction {
 
     private final Value f;
     private final Value fixedArg0;
     private final Value fixedArg2;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_0_2_fixed(Value f, Value fixedArg0, Value fixedArg2) {
+    partial_impl_3_total_0_2_fixed(Value f, Value fixedArg0, Value fixedArg2) {
       this.f = f;
       this.fixedArg0 = fixedArg0;
       this.fixedArg2 = fixedArg2;
@@ -397,7 +397,7 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_3_total_0_1_2_fixed implements UserFunction, Arity0UserFunction {
+  private static final class partial_impl_3_total_0_1_2_fixed implements UserFunction, Arity0UserFunction {
 
     private final Value f;
     private final Value fixedArg0;
@@ -405,7 +405,7 @@ final public class CurryOp implements ExpressionOp {
     private final Value fixedArg2;
     private Arity3CallSite cs;
 
-    curry_impl_3_total_0_1_2_fixed(Value f, Value fixedArg0, Value fixedArg1, Value fixedArg2) {
+    partial_impl_3_total_0_1_2_fixed(Value f, Value fixedArg0, Value fixedArg1, Value fixedArg2) {
       this.f = f;
       this.fixedArg0 = fixedArg0;
       this.fixedArg1 = fixedArg1;
@@ -422,13 +422,13 @@ final public class CurryOp implements ExpressionOp {
 
   }
 
-  private static final class curry_impl_generic implements UserFunction, Arity0UserFunction, Arity1UserFunction, Arity2UserFunction, Arity3UserFunction, Arity4UserFunction, ArityNUserFunction {
+  private static final class partial_impl_generic implements UserFunction, Arity0UserFunction, Arity1UserFunction, Arity2UserFunction, Arity3UserFunction, Arity4UserFunction, ArityNUserFunction {
 
     private final Value f;
     private final ThreadLocal<Value[]> fixedArgs;
     private final int[] argsMap;
 
-    curry_impl_generic(Value f, Value[] fixedArgs, int[] argsMap) {
+    partial_impl_generic(Value f, Value[] fixedArgs, int[] argsMap) {
       this.f = f;
       this.argsMap = argsMap;
       Value[] args = new Value[fixedArgs.length];

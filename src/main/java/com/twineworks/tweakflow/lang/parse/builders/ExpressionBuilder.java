@@ -28,8 +28,8 @@ import com.twineworks.tweakflow.grammar.TweakFlowLexer;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.meta.ViaNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
@@ -1276,20 +1276,20 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   // arguments are not an expression
   // hence visitArgs cannot participate in typed visitor pattern directly
-  private CurryArguments makeCurryArgs(TweakFlowParser.CurryArgsContext ctx) {
+  private PartialArguments makePartialArgs(TweakFlowParser.PartialArgsContext ctx) {
 
-    ArrayList<CurryArgumentNode> args = new ArrayList<>();
-    HashMap<String, CurryArgumentNode> argMap = new HashMap<>();
+    ArrayList<PartialArgumentNode> args = new ArrayList<>();
+    HashMap<String, PartialArgumentNode> argMap = new HashMap<>();
 
     if (ctx.children != null){
 
       for (ParseTree child : ctx.children) {
 
-        CurryArgumentNode arg;
+        PartialArgumentNode arg;
 
-        if (child instanceof TweakFlowParser.NamedCurryArgContext){
-          TweakFlowParser.NamedCurryArgContext nArg = (TweakFlowParser.NamedCurryArgContext) child;
-          arg = new CurryArgumentNode()
+        if (child instanceof TweakFlowParser.NamedPartialArgContext){
+          TweakFlowParser.NamedPartialArgContext nArg = (TweakFlowParser.NamedPartialArgContext) child;
+          arg = new PartialArgumentNode()
               .setSourceInfo(srcOf(parseUnit, nArg))
               .setExpression(visit(nArg.expression()))
               .setName(identifier(nArg.identifier().getText()));
@@ -1305,14 +1305,14 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
           continue;
         }
         else {
-          throw new AssertionError("unknown curry argument type: "+child);
+          throw new AssertionError("unknown partial argument type: "+child);
         }
         args.add(arg);
 
       }
     }
 
-    return new CurryArguments()
+    return new PartialArguments()
         .setSourceInfo(srcOf(parseUnit, ctx))
         .setList(args);
 
@@ -1389,12 +1389,12 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
 
   @Override
-  public ExpressionNode visitCurryExp(TweakFlowParser.CurryExpContext ctx) {
+  public ExpressionNode visitPartialExp(TweakFlowParser.PartialExpContext ctx) {
     ExpressionNode expression = visit(ctx.expression());
 
-    return new CurryNode()
+    return new PartialApplicationNode()
         .setExpression(expression)
-        .setArguments(makeCurryArgs(ctx.curryArgs()))
+        .setArguments(makePartialArgs(ctx.partialArgs()))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 }

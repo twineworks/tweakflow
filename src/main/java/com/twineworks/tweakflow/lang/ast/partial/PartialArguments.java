@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.ast.curry;
+package com.twineworks.tweakflow.lang.ast.partial;
 
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
@@ -34,14 +34,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CurryArguments implements Node {
+public class PartialArguments implements Node {
 
-  private List<CurryArgumentNode> list = new ArrayList<>();
+  private List<PartialArgumentNode> list = new ArrayList<>();
   private HashMap<String, ExpressionNode> map;
   private SourceInfo sourceInfo;
   private Scope scope;
 
-  public List<CurryArgumentNode> getList() {
+  public List<PartialArgumentNode> getList() {
     return list;
   }
 
@@ -49,7 +49,7 @@ public class CurryArguments implements Node {
     return map;
   }
 
-  public CurryArguments setList(List<CurryArgumentNode> list) {
+  public PartialArguments setList(List<PartialArgumentNode> list) {
     this.list = list;
     cook();
     return this;
@@ -61,7 +61,7 @@ public class CurryArguments implements Node {
   }
 
   @Override
-  public CurryArguments setSourceInfo(SourceInfo sourceInfo) {
+  public PartialArguments setSourceInfo(SourceInfo sourceInfo) {
     this.sourceInfo = sourceInfo;
     return this;
   }
@@ -77,19 +77,19 @@ public class CurryArguments implements Node {
   }
 
   @Override
-  public CurryArguments setScope(Scope scope) {
+  public PartialArguments setScope(Scope scope) {
     this.scope = scope;
     return this;
   }
 
   @Override
-  public CurryArguments accept(Visitor visitor) {
+  public PartialArguments accept(Visitor visitor) {
     return visitor.visit(this);
   }
 
   private void cook(){
     map = new HashMap<>();
-    for (CurryArgumentNode node : list) {
+    for (PartialArgumentNode node : list) {
       map.put(node.getName(), node.getExpression());
     }
   }

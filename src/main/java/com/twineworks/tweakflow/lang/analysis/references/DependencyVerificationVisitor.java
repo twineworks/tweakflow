@@ -28,7 +28,7 @@ import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisi
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.ast.expressions.CallNode;
-import com.twineworks.tweakflow.lang.ast.expressions.CurryNode;
+import com.twineworks.tweakflow.lang.ast.expressions.PartialApplicationNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionType;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
@@ -176,7 +176,7 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
   }
 
   @Override
-  public CurryNode visit(CurryNode node) {
+  public PartialApplicationNode visit(PartialApplicationNode node) {
 
     visit(node.getExpression());
 
@@ -187,7 +187,7 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
       if (ref.getReferencedSymbol().getTarget() != SymbolTarget.VAR){
         throw new LangException(
             LangError.INVALID_REFERENCE_TARGET,
-            "Cannot curry "+ref.getReferencedSymbol().getTarget().name()+". Not a value.",
+            "Cannot partially apply "+ref.getReferencedSymbol().getTarget().name()+". Not a value.",
             node.getSourceInfo()
         );
       }

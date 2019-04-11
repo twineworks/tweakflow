@@ -29,8 +29,8 @@ import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.ForHeadElementNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
@@ -698,7 +698,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
-  public ExpressionNode visit(CurryNode node) {
+  public ExpressionNode visit(PartialApplicationNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);
@@ -714,7 +714,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
-  public CurryArguments visit(CurryArguments node) {
+  public PartialArguments visit(PartialArguments node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);
@@ -722,7 +722,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
-  public CurryArgumentNode visit(CurryArgumentNode node) {
+  public PartialArgumentNode visit(PartialArgumentNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());
     super.visit(node);

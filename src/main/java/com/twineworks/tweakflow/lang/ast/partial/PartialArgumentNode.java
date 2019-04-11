@@ -22,60 +22,87 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.ast.expressions;
+package com.twineworks.tweakflow.lang.ast.partial;
 
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
-import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.lang.types.Types;
+import com.twineworks.tweakflow.lang.ast.args.ArgumentNode;
+import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.parse.SourceInfo;
+import com.twineworks.tweakflow.lang.scope.Scope;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class CurryNode extends AExpressionNode implements ExpressionNode {
+public class PartialArgumentNode implements ArgumentNode {
 
-  private CurryArguments arguments = new CurryArguments();
+  private String name;
   private ExpressionNode expression;
+  private SourceInfo sourceInfo;
+  private Scope scope;
 
-  public ExpressionNode getExpression() {
-    return expression;
+  public String getName() {
+    return name;
   }
 
-  public CurryNode setExpression(ExpressionNode expression) {
-    this.expression = expression;
+  public PartialArgumentNode setName(String name) {
+    this.name = name;
+    return this;
+  }
+
+  @Override
+  public SourceInfo getSourceInfo() {
+    return sourceInfo;
+  }
+
+  @Override
+  public PartialArgumentNode setSourceInfo(SourceInfo sourceInfo) {
+    this.sourceInfo = sourceInfo;
     return this;
   }
 
   @Override
   public List<? extends Node> getChildren() {
-    return Arrays.asList(expression, arguments);
+    return Collections.singletonList(expression);
   }
 
   @Override
-  public ExpressionNode accept(Visitor visitor) {
-    return visitor.visit(this);
+  public Scope getScope() {
+    return scope;
   }
 
   @Override
-  public Type getValueType() {
-    // this call does not know which function is called
-    // until runtime
-    return Types.ANY;
-  }
-
-  @Override
-  public ExpressionType getExpressionType() {
-    return ExpressionType.CALL;
-  }
-
-  public CurryArguments getArguments() {
-    return arguments;
-  }
-
-  public CurryNode setArguments(CurryArguments arguments) {
-    this.arguments = arguments;
+  public PartialArgumentNode setScope(Scope scope) {
+    this.scope = scope;
     return this;
   }
 
+  @Override
+  public ArgumentNode accept(Visitor visitor) {
+    return visitor.visit(this);
+  }
+
+  public ExpressionNode getExpression() {
+    return expression;
+  }
+
+  @Override
+  public boolean isPositional() {
+    return false;
+  }
+
+  @Override
+  public boolean isSplat() {
+    return false;
+  }
+
+  @Override
+  public boolean isNamed() {
+    return true;
+  }
+
+  public PartialArgumentNode setExpression(ExpressionNode expression) {
+    this.expression = expression;
+    return this;
+  }
 }

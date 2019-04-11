@@ -1,6 +1,6 @@
 
 library main {
   f: (a, b) -> a;
-  curry: f(a=1, a=1);
+  partial: f(a=1, a=1);
 }
 

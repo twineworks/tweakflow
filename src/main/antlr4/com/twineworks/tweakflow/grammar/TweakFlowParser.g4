@@ -155,7 +155,7 @@ expression
   : literal                                                 # literalExp
   | reference                                               # referenceExp
   | expression'('args')'                                    # callExp
-  | expression'('curryArgs')'                               # curryExp
+  | expression'('partialArgs')'                             # partialExp
   | '->>' '('threadArg')' expression (',' expression)*      # threadExp
   | expression'['containerAccessKeySequence']'              # containerAccessExp
   | '(' expression ')'                                      # nestedExp
@@ -359,11 +359,11 @@ containerAccessKeySequence
   : ((expression | splat)) (',' (expression | splat))*
   ;
 
-curryArgs
-  : (namedCurryArg) (',' (namedCurryArg))*
+partialArgs
+  : (namedPartialArg) (',' (namedPartialArg))*
   ;
 
-namedCurryArg
+namedPartialArg
   : identifier '=' expression
   ;
 

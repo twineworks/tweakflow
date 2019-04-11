@@ -263,9 +263,9 @@ public class AnalysisTest {
   }
 
   @Test
-  public void fails_on_redefined_function_curry_arg() throws Exception {
+  public void fails_on_redefined_function_partial_arg() throws Exception {
 
-    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/already_defined_function_curry_arg.tf");
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/expressions/errors/already_defined_function_partial_arg.tf");
 
     assertThat(result.isError()).isTrue();
     assertThat(result.getException().getCode()).isSameAs(LangError.ALREADY_DEFINED);

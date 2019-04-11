@@ -29,8 +29,8 @@ import com.twineworks.tweakflow.lang.ast.ForHeadElementNode;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportMemberNode;
@@ -80,7 +80,7 @@ public interface Visitor {
   ExpressionNode visit(ExpressionNode node);
   ExpressionNode visit(BooleanNode node);
   ExpressionNode visit(CallNode node);
-  ExpressionNode visit(CurryNode node);
+  ExpressionNode visit(PartialApplicationNode node);
   ExpressionNode visit(CastNode node);
   ExpressionNode visit(FunctionNode node);
   ExpressionNode visit(DateTimeNode node);
@@ -163,7 +163,7 @@ public interface Visitor {
   Parameters visit(Parameters node);
   ParameterNode visit(ParameterNode node);
 
-  CurryArguments visit(CurryArguments node);
-  CurryArgumentNode visit(CurryArgumentNode node);
+  PartialArguments visit(PartialArguments node);
+  PartialArgumentNode visit(PartialArgumentNode node);
 
 }

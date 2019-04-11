@@ -15,7 +15,7 @@ library f {
   abcdef: (a=0, b=1, c=2, d=3, e=4, f=5) -> dict {:a a, :b b, :c c, :d d, :e e, :f f};
 }
 
-library curry_spec {
+library partial_spec {
 
   a_1:
     let {

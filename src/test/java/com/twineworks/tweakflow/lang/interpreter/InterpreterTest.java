@@ -389,8 +389,8 @@ public class InterpreterTest {
   }
 
   @TestFactory
-  public Collection<DynamicTest> evaluates_function_curry() throws Exception {
-    String path = "fixtures/tweakflow/evaluation/function_curry.tf";
+  public Collection<DynamicTest> evaluates_function_partial() throws Exception {
+    String path = "fixtures/tweakflow/evaluation/function_partial.tf";
     return TestHelper.dynamicTestsSpecModule(path);
   }
 
@@ -1072,9 +1072,9 @@ public class InterpreterTest {
   }
 
   @Test
-  public void fails_on_extra_curry_args() throws Exception {
+  public void fails_on_extra_partial_args() throws Exception {
 
-    String path = "fixtures/tweakflow/evaluation/errors/extra_curry_args.tf";
+    String path = "fixtures/tweakflow/evaluation/errors/extra_partial_args.tf";
     try {
       evaluateWithStd(path);
     }
@@ -1087,14 +1087,14 @@ public class InterpreterTest {
   }
 
   @Test
-  public void fails_on_non_function_curry() throws Exception {
+  public void fails_on_non_function_partial() throws Exception {
 
-    String path = "fixtures/tweakflow/evaluation/errors/non_function_curry.tf";
+    String path = "fixtures/tweakflow/evaluation/errors/non_function_partial.tf";
     try {
       evaluateWithStd(path);
     }
     catch (LangException e){
-      assertThat(e.getCode()).isSameAs(LangError.CANNOT_CURRY);
+      assertThat(e.getCode()).isSameAs(LangError.CANNOT_PARTIALLY_APPLY);
       return;
     }
 

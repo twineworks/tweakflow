@@ -22,87 +22,60 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.ast.curry;
+package com.twineworks.tweakflow.lang.ast.expressions;
 
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
-import com.twineworks.tweakflow.lang.ast.args.ArgumentNode;
-import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.parse.SourceInfo;
-import com.twineworks.tweakflow.lang.scope.Scope;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
+import com.twineworks.tweakflow.lang.types.Type;
+import com.twineworks.tweakflow.lang.types.Types;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
-public class CurryArgumentNode implements ArgumentNode {
+public class PartialApplicationNode extends AExpressionNode implements ExpressionNode {
 
-  private String name;
+  private PartialArguments arguments = new PartialArguments();
   private ExpressionNode expression;
-  private SourceInfo sourceInfo;
-  private Scope scope;
-
-  public String getName() {
-    return name;
-  }
-
-  public CurryArgumentNode setName(String name) {
-    this.name = name;
-    return this;
-  }
-
-  @Override
-  public SourceInfo getSourceInfo() {
-    return sourceInfo;
-  }
-
-  @Override
-  public CurryArgumentNode setSourceInfo(SourceInfo sourceInfo) {
-    this.sourceInfo = sourceInfo;
-    return this;
-  }
-
-  @Override
-  public List<? extends Node> getChildren() {
-    return Collections.singletonList(expression);
-  }
-
-  @Override
-  public Scope getScope() {
-    return scope;
-  }
-
-  @Override
-  public CurryArgumentNode setScope(Scope scope) {
-    this.scope = scope;
-    return this;
-  }
-
-  @Override
-  public ArgumentNode accept(Visitor visitor) {
-    return visitor.visit(this);
-  }
 
   public ExpressionNode getExpression() {
     return expression;
   }
 
-  @Override
-  public boolean isPositional() {
-    return false;
-  }
-
-  @Override
-  public boolean isSplat() {
-    return false;
-  }
-
-  @Override
-  public boolean isNamed() {
-    return true;
-  }
-
-  public CurryArgumentNode setExpression(ExpressionNode expression) {
+  public PartialApplicationNode setExpression(ExpressionNode expression) {
     this.expression = expression;
     return this;
   }
+
+  @Override
+  public List<? extends Node> getChildren() {
+    return Arrays.asList(expression, arguments);
+  }
+
+  @Override
+  public ExpressionNode accept(Visitor visitor) {
+    return visitor.visit(this);
+  }
+
+  @Override
+  public Type getValueType() {
+    // this call does not know which function is called
+    // until runtime
+    return Types.ANY;
+  }
+
+  @Override
+  public ExpressionType getExpressionType() {
+    return ExpressionType.CALL;
+  }
+
+  public PartialArguments getArguments() {
+    return arguments;
+  }
+
+  public PartialApplicationNode setArguments(PartialArguments arguments) {
+    this.arguments = arguments;
+    return this;
+  }
+
 }

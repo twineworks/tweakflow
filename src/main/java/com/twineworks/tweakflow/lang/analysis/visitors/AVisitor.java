@@ -29,8 +29,8 @@ import com.twineworks.tweakflow.lang.ast.ForHeadElementNode;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArgumentNode;
-import com.twineworks.tweakflow.lang.ast.curry.CurryArguments;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportMemberNode;
@@ -156,7 +156,7 @@ public class AVisitor implements Visitor {
   }
 
   @Override
-  public ExpressionNode visit(CurryNode node) {
+  public ExpressionNode visit(PartialApplicationNode node) {
     return node;
   }
 
@@ -526,12 +526,12 @@ public class AVisitor implements Visitor {
   }
 
   @Override
-  public CurryArguments visit(CurryArguments node) {
+  public PartialArguments visit(PartialArguments node) {
     return node;
   }
 
   @Override
-  public CurryArgumentNode visit(CurryArgumentNode node) {
+  public PartialArgumentNode visit(PartialArgumentNode node) {
     return node;
   }
 
