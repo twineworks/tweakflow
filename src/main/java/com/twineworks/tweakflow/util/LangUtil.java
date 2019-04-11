@@ -89,7 +89,7 @@ public class LangUtil {
     String escaped = s
         .replace("\\", "\\\\")
         .replace("\"", "\\\"")
-        .replace("#", "\\#");
+        .replace("#{", "\\#{");
 
     return escaped;
   }

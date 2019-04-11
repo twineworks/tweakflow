@@ -115,11 +115,11 @@ public class ParserStringLiteralsTest {
   }
 
   @Test
-  void parses_escape_sequence_1(){
+  void parses_escape_sequence_newline(){
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
 
-    ExpressionNode expNode = varDefMap.get("escape_sequence_1").getValueExpression();
+    ExpressionNode expNode = varDefMap.get("escape_sequence_newline").getValueExpression();
     assertThat(expNode).isInstanceOf(StringNode.class);
     StringNode node = (StringNode) expNode;
     assertThat(node.getStringVal()).isEqualTo("-\n-");
@@ -127,14 +127,86 @@ public class ParserStringLiteralsTest {
   }
 
   @Test
-  void parses_escape_sequence_2(){
+  void parses_escape_sequence_backslash(){
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
 
-    ExpressionNode expNode = varDefMap.get("escape_sequence_2").getValueExpression();
+    ExpressionNode expNode = varDefMap.get("escape_sequence_backslash").getValueExpression();
     assertThat(expNode).isInstanceOf(StringNode.class);
     StringNode node = (StringNode) expNode;
-    assertThat(node.getStringVal()).isEqualTo("string with\nescape sequence");
+    assertThat(node.getStringVal()).isEqualTo("string with \\ backslash");
+
+  }
+
+  @Test
+  void parses_escape_sequence_mixed(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_mixed").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("\\\t\r\n⊇\"\uD834\uDD1E");
+
+  }
+
+  @Test
+  void parses_escape_sequence_double_quote(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_double_quote").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with \" double quote");
+
+  }
+
+  @Test
+  void parses_escape_sequence_tab(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_tab").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with \t tab");
+
+  }
+
+  @Test
+  void parses_escape_sequence_cr(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_cr").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with \r carriage return");
+
+  }
+
+  @Test
+  void parses_escape_sequence_bmp(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_bmp").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with ⊇ superset");
+
+  }
+
+  @Test
+  void parses_escape_sequence_unicode(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("escape_sequence_unicode").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with \uD834\uDD1E clef");
 
   }
 

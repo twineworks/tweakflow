@@ -702,8 +702,8 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       case "\\\"":
         str = "\"";
         break;
-      case "\\#":
-        str = "#";
+      case "\\#{":
+        str = "#{";
         break;
       default:
         if (escapeSequence.startsWith("\\u")){ // 2 byte variant

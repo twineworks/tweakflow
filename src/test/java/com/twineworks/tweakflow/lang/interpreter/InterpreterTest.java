@@ -260,8 +260,24 @@ public class InterpreterTest {
     assertThat(nested_dict.getValue()).isEqualTo(Values.makeDict("k", "v", "sub", Values.makeDict("key", "value")));
 
     // string_escape: "-\n-"
-    Cell string_escape = vars.gets("string_escape");
-    assertThat(string_escape.getValue()).isEqualTo(Values.make("-\n-"));
+    Cell newline_escape = vars.gets("newline_escape");
+    assertThat(newline_escape.getValue()).isEqualTo(Values.make("-\n-"));
+
+    // backslash_escape: "-\\n-"
+    Cell backslash_escape = vars.gets("backslash_escape");
+    assertThat(backslash_escape.getValue()).isEqualTo(Values.make("-\\n-"));
+
+    // hash_alone: "-#-"
+    Cell hash_alone = vars.gets("hash_alone");
+    assertThat(hash_alone.getValue()).isEqualTo(Values.make("-#-"));
+
+    // hash_interpolation: "-#-"
+    Cell hash_interpolation = vars.gets("hash_interpolation");
+    assertThat(hash_interpolation.getValue()).isEqualTo(Values.make("-bar-"));
+
+    // hash_escaped: "-\#{foo}-";
+    Cell hash_escaped = vars.gets("hash_escaped");
+    assertThat(hash_escaped.getValue()).isEqualTo(Values.make("-#{foo}-"));
 
     // bool_t: true
     Cell bool_t = vars.gets("bool_t");

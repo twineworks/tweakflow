@@ -345,10 +345,10 @@ public class ExpressionBuilderTest {
   }
 
   @Test
-  public void supports_dollar_escape() throws Exception {
+  public void supports_hash_escape() throws Exception {
 
     ExpressionBuilder x = makeBuilder();
-    assertThat(x.convertEscapeSequence("\\#")).isEqualTo("#");
+    assertThat(x.convertEscapeSequence("\\#{")).isEqualTo("#{");
 
   }
 

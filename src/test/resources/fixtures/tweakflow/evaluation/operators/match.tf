@@ -32,6 +32,38 @@ library match_expression_spec {
     )
     == "two";
 
+  match_double_on_long_missing: (
+      match 2.2
+        1 -> "one",
+        2 -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_double_on_long_found: (
+      match 2.0
+        1 -> "one",
+        2 -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_long_on_double_missing: (
+      match 3
+        1.0 -> "one",
+        2.0 -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_long_on_double_found: (
+      match 2
+        1.0 -> "one",
+        2.0 -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
   match_empty_list: (
       match []
         [] -> "empty",

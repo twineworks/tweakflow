@@ -246,6 +246,18 @@ public class ParserTest {
   }
 
   @Test
+  public void fails_on_datetime_invalid_year() throws Exception {
+
+    Parser p = new Parser(
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_year.tf")
+    );
+    ParseResult result = p.parseUnit();
+
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getException().getCode()).isEqualTo(LangError.PARSE_ERROR);
+  }
+
+  @Test
   public void fails_on_datetime_invalid_second_fraction() throws Exception {
 
     Parser p = new Parser(
@@ -268,7 +280,6 @@ public class ParserTest {
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
-
 
   @Test
   public void parses_module_aliases() throws Exception {

@@ -227,7 +227,7 @@ STRING_ESCAPE_SEQUENCE
   : '\\\\'
   | '\\"'
   | '\\t'
-  | '\\#'
+  | '\\#{'
   | '\\n'
   | '\\r'
   | '\\u' BYTE BYTE
