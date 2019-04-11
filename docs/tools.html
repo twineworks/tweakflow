@@ -206,8 +206,8 @@ std.tf&gt; strings.length(&quot;foo&quot;)
 
 <pre><code class="language-tweakflow">std.tf&gt; \e
 std.tf* let {
-std.tf*   a: 3
-std.tf*   b: 4
+std.tf*   a: 3;
+std.tf*   b: 4;
 std.tf* }
 std.tf* a+b
 std.tf* \e
@@ -325,18 +325,18 @@ Returns `nil` if `x` is `nil`.
 
 <pre><code class="language-tweakflow"># acme.tf
 
-import data, regex, strings from 'std'
+import data, regex, strings from 'std';
 
-alias strings.replace as replace
-alias data.map as map
-alias data.slices as slices
-alias strings.join as join
-alias strings.upper_case as upper_case
+alias strings.replace as replace;
+alias data.map as map;
+alias data.slices as slices;
+alias strings.join as join;
+alias strings.upper_case as upper_case;
 
 library product_codes {
 
   remove_whitespace:
-    regex.replacing('\s+', &quot;&quot;) # function that removes any whitespace from a string
+    regex.replacing('\s+', &quot;&quot;); # function that removes any whitespace from a string
 
   normalize: (string x) -&gt;
     -&gt;&gt; (x)
@@ -349,7 +349,7 @@ library product_codes {
         # split to a list of blocks of up to 4 chars &quot;foobar&quot; -&gt; [&quot;foob&quot;, &quot;ar&quot;]
         (x) -&gt; let {
                  # &quot;foobar&quot; -&gt; [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]]
-                 blocks: slices(x as list, 4)
+                 blocks: slices(x as list, 4);
                }
                # [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]] -&gt; [&quot;foob&quot;, &quot;ar&quot;]
                map(blocks, (block) -&gt; join(block)),
@@ -358,7 +358,7 @@ library product_codes {
         (blocks) -&gt; join(blocks, &quot;-&quot;),
 
         # upper case all characters &quot;foob-ar&quot; -&gt; &quot;FOOB-AR&quot;
-        upper_case
+        upper_case;
 }
 </code></pre>
 
@@ -428,18 +428,18 @@ acme.tf&gt;
 
 <pre><code class="language-tweakflow"># acme.tf
 
-import data, regex, strings from 'std'
+import data, regex, strings from 'std';
 
-alias strings.replace as replace
-alias data.map as map
-alias data.slices as slices
-alias strings.join as join
-alias strings.upper_case as upper_case
+alias strings.replace as replace;
+alias data.map as map;
+alias data.slices as slices;
+alias strings.join as join;
+alias strings.upper_case as upper_case;
 
 library product_codes {
 
   remove_whitespace:
-    regex.replacing('\s+', &quot;&quot;) # function that removes any whitespace from a string
+    regex.replacing('\s+', &quot;&quot;); # function that removes any whitespace from a string
 
   normalize: (string x) -&gt;
     -&gt;&gt; (x)
@@ -452,7 +452,7 @@ library product_codes {
         # split to a list of blocks of up to 4 chars &quot;foobar&quot; -&gt; [&quot;foob&quot;, &quot;ar&quot;]
         (x) -&gt; let {
                  # &quot;foobar&quot; -&gt; [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]]
-                 blocks: slices(x as list, 4)
+                 blocks: slices(x as list, 4);
                }
                # [[&quot;f&quot;, &quot;o&quot;, &quot;o&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;r&quot;]] -&gt; [&quot;foob&quot;, &quot;ar&quot;]
                map(blocks, (block) -&gt; join(block)),
@@ -461,14 +461,14 @@ library product_codes {
         (blocks) -&gt; join(blocks, &quot;-&quot;),
 
         # upper case all characters &quot;foob-ar&quot; -&gt; &quot;FOOB-AR&quot;
-        upper_case
+        upper_case;
 }
 </code></pre>
 
 <p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
 
 <pre><code class="language-bash">$ java -jar tweakflow-0.9.0.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
-&quot;KSH7-65FG-25FF&quot;
+KSH7-65FG-25FF
 </code></pre>
 
 <h2 id="metadata-extraction">Metadata extraction</h2>
@@ -487,7 +487,7 @@ meta {
   :description &quot;Description of the module&quot;,
   :version     &quot;4.2&quot;
 }
-module
+module;
 
 # library bar
 doc 'This is documentation for library bar.'
@@ -507,7 +507,7 @@ library bar {
     :date 2017-03-12T
   }
 
-  function baz: (x) -&gt; x*x
+  function baz: (x) -&gt; x*x;
 }
 </code></pre>
 
@@ -532,12 +532,6 @@ library bar {
 <pre><code class="language-text">{
   :node &quot;module&quot;,
   :global false,
-  :path &quot;/path/to/foo.tf&quot;,
-  :meta {
-    :version &quot;4.2&quot;,
-    :title &quot;foo&quot;,
-    :description &quot;Description of the module&quot;
-  },
   :components [{
     :node &quot;library&quot;,
     :meta {
@@ -552,15 +546,21 @@ library bar {
         :date 2017-03-12T00:00:00Z@UTC
       },
       :name &quot;baz&quot;,
+      :type &quot;function&quot;,
       :doc &quot;This is documentation for function baz.&quot;,
-      :expression &quot;(x) -&gt; x*x&quot;,
-      :type &quot;function&quot;
+      :expression &quot;(x) -&gt; x*x&quot;
     }],
     :export false,
     :doc &quot;This is documentation for library bar.&quot;
   }],
   :doc &quot;This is documentation at the module level.&quot;,
-  :file &quot;foo.tf&quot;
+  :file &quot;foo.tf&quot;,
+  :path &quot;/Users/slawo/Desktop/docs_check/foo.tf&quot;,
+  :meta {
+    :description &quot;Description of the module&quot;,
+    :version &quot;4.2&quot;,
+    :title &quot;foo&quot;
+  }
 }
 </code></pre>
 
@@ -578,8 +578,9 @@ library bar {
 
 <pre><code class="language-tweakflow"># transformer.tf
 import data, strings from &quot;std&quot;;
-alias data.size as size
-alias data.reduce as reduce
+
+alias data.size as size;
+alias data.reduce as reduce;
 
 library transform {
 
@@ -590,19 +591,19 @@ library transform {
       ..libs_in_module(x)
       ..&quot; libraries, and a total of &quot;
       ..vars_in_module(x)
-      ..&quot; variables.&quot;
+      ..&quot; variables.&quot;;
 
   libs_in_module: (dict m) -&gt; long
-    size(m[:components])
+    size(m[:components]);
 
   vars_in_module: (dict m) -&gt; long
     let {
-      libs: m[:components]
+      libs: m[:components];
     }
-    reduce(libs, 0, (a, lib) -&gt; a+vars_in_lib(lib))
+    reduce(libs, 0, (a, lib) -&gt; a+vars_in_lib(lib));
 
   vars_in_lib: (dict lib) -&gt; long
-    size(lib[:vars])
+    size(lib[:vars]);
 }
 </code></pre>
 
@@ -636,7 +637,7 @@ Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
 
 <p><code>docs/std.tf.md</code></p>
 
-<pre><code class="language-text">Module std.tf contains 8 libraries, and a total of 159 variables.
+<pre><code class="language-text">Module std.tf contains 8 libraries, and a total of 167 variables.
 </code></pre>
 
 <p><code>docs/foo.tf.md</code></p>

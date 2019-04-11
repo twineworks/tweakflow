@@ -180,7 +180,7 @@ nil
 > core.eval("(x) -> x+1")(1)
 2
 
-> core.eval("let {f: (x) -> x*x} f(5)")
+> core.eval("let {f: (x) -> x*x;} f(5)")
 25
 
 > core.eval("hello")
@@ -746,7 +746,7 @@ Returns `nil` if `x` is `nil`, `i` is `nil`, or `i` is out of bounds: `i<0`, `i>
 97 # "a"
 
 > strings.code_point_at("你好", 0)
-"a"
+20320 # "你"
 
 > strings.code_point_at(nil, 0)
 nil
@@ -754,7 +754,6 @@ nil
 ~~~
 
   function code_point_at: (string x, long i) -> long via {:class "com.twineworks.tweakflow.std.Strings$codePointAt"};
-
 
 }
 

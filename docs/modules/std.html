@@ -428,7 +428,7 @@ nil
 &gt; core.eval(&quot;(x) -&gt; x+1&quot;)(1)
 2
 
-&gt; core.eval(&quot;let {f: (x) -&gt; x*x} f(5)&quot;)
+&gt; core.eval(&quot;let {f: (x) -&gt; x*x;} f(5)&quot;)
 25
 
 &gt; core.eval(&quot;hello&quot;)
@@ -919,7 +919,7 @@ nil
 97 # &quot;a&quot;
 
 &gt; strings.code_point_at(&quot;你好&quot;, 0)
-&quot;a&quot;
+20320 # &quot;你&quot;
 
 &gt; strings.code_point_at(nil, 0)
 nil

@@ -75,8 +75,8 @@ The REPL accepts single line entry by default. If you want to use an expression 
 ```tweakflow
 std.tf> \e
 std.tf* let {
-std.tf*   a: 3
-std.tf*   b: 4
+std.tf*   a: 3;
+std.tf*   b: 4;
 std.tf* }
 std.tf* a+b
 std.tf* \e
@@ -197,18 +197,18 @@ You can load a different module than the standard library through the `\load` co
 ```tweakflow
 # acme.tf
 
-import data, regex, strings from 'std'
+import data, regex, strings from 'std';
 
-alias strings.replace as replace
-alias data.map as map
-alias data.slices as slices
-alias strings.join as join
-alias strings.upper_case as upper_case
+alias strings.replace as replace;
+alias data.map as map;
+alias data.slices as slices;
+alias strings.join as join;
+alias strings.upper_case as upper_case;
 
 library product_codes {
 
   remove_whitespace:
-    regex.replacing('\s+', "") # function that removes any whitespace from a string
+    regex.replacing('\s+', ""); # function that removes any whitespace from a string
 
   normalize: (string x) ->
     ->> (x)
@@ -221,7 +221,7 @@ library product_codes {
         # split to a list of blocks of up to 4 chars "foobar" -> ["foob", "ar"]
         (x) -> let {
                  # "foobar" -> [["f", "o", "o", "b"], ["a", "r"]]
-                 blocks: slices(x as list, 4)
+                 blocks: slices(x as list, 4);
                }
                # [["f", "o", "o", "b"], ["a", "r"]] -> ["foob", "ar"]
                map(blocks, (block) -> join(block)),
@@ -230,7 +230,7 @@ library product_codes {
         (blocks) -> join(blocks, "-"),
 
         # upper case all characters "foob-ar" -> "FOOB-AR"
-        upper_case
+        upper_case;
 }
 ```
 
@@ -294,18 +294,18 @@ You can load any module on disk. Let's say you have the following module availab
 ```tweakflow
 # acme.tf
 
-import data, regex, strings from 'std'
+import data, regex, strings from 'std';
 
-alias strings.replace as replace
-alias data.map as map
-alias data.slices as slices
-alias strings.join as join
-alias strings.upper_case as upper_case
+alias strings.replace as replace;
+alias data.map as map;
+alias data.slices as slices;
+alias strings.join as join;
+alias strings.upper_case as upper_case;
 
 library product_codes {
 
   remove_whitespace:
-    regex.replacing('\s+', "") # function that removes any whitespace from a string
+    regex.replacing('\s+', ""); # function that removes any whitespace from a string
 
   normalize: (string x) ->
     ->> (x)
@@ -318,7 +318,7 @@ library product_codes {
         # split to a list of blocks of up to 4 chars "foobar" -> ["foob", "ar"]
         (x) -> let {
                  # "foobar" -> [["f", "o", "o", "b"], ["a", "r"]]
-                 blocks: slices(x as list, 4)
+                 blocks: slices(x as list, 4);
                }
                # [["f", "o", "o", "b"], ["a", "r"]] -> ["foob", "ar"]
                map(blocks, (block) -> join(block)),
@@ -327,7 +327,7 @@ library product_codes {
         (blocks) -> join(blocks, "-"),
 
         # upper case all characters "foob-ar" -> "FOOB-AR"
-        upper_case
+        upper_case;
 }
 ```
 
@@ -335,7 +335,7 @@ To load it, and run `product_codes.normalize("ksh765fg25ff")`:
 
 ```bash
 $ java -jar tweakflow-{{< version >}}.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
-"KSH7-65FG-25FF"
+KSH7-65FG-25FF
 ```
 
 ## Metadata extraction
@@ -354,7 +354,7 @@ meta {
   :description "Description of the module",
   :version     "4.2"
 }
-module
+module;
 
 # library bar
 doc 'This is documentation for library bar.'
@@ -374,7 +374,7 @@ library bar {
     :date 2017-03-12T
   }
 
-  function baz: (x) -> x*x
+  function baz: (x) -> x*x;
 }
 ```
 
@@ -398,12 +398,6 @@ By default the `doc` utility prints the structure of available meta data:
 {
   :node "module",
   :global false,
-  :path "/path/to/foo.tf",
-  :meta {
-    :version "4.2",
-    :title "foo",
-    :description "Description of the module"
-  },
   :components [{
     :node "library",
     :meta {
@@ -418,15 +412,21 @@ By default the `doc` utility prints the structure of available meta data:
         :date 2017-03-12T00:00:00Z@UTC
       },
       :name "baz",
+      :type "function",
       :doc "This is documentation for function baz.",
-      :expression "(x) -> x*x",
-      :type "function"
+      :expression "(x) -> x*x"
     }],
     :export false,
     :doc "This is documentation for library bar."
   }],
   :doc "This is documentation at the module level.",
-  :file "foo.tf"
+  :file "foo.tf",
+  :path "/Users/slawo/Desktop/docs_check/foo.tf",
+  :meta {
+    :description "Description of the module",
+    :version "4.2",
+    :title "foo"
+  }
 }
 ```
 Please note that the output is a valid tweakflow dict value.
@@ -443,8 +443,9 @@ Let's supply a basic transformer that just generates a one-sentence summary of t
 ```tweakflow
 # transformer.tf
 import data, strings from "std";
-alias data.size as size
-alias data.reduce as reduce
+
+alias data.size as size;
+alias data.reduce as reduce;
 
 library transform {
 
@@ -455,19 +456,19 @@ library transform {
       ..libs_in_module(x)
       .." libraries, and a total of "
       ..vars_in_module(x)
-      .." variables."
+      .." variables.";
 
   libs_in_module: (dict m) -> long
-    size(m[:components])
+    size(m[:components]);
 
   vars_in_module: (dict m) -> long
     let {
-      libs: m[:components]
+      libs: m[:components];
     }
-    reduce(libs, 0, (a, lib) -> a+vars_in_lib(lib))
+    reduce(libs, 0, (a, lib) -> a+vars_in_lib(lib));
 
   vars_in_lib: (dict lib) -> long
-    size(lib[:vars])
+    size(lib[:vars]);
 }
 ```
 
@@ -501,7 +502,7 @@ It generates a `docs` directory, placing the following files in there:
 
 `docs/std.tf.md`
 ```text
-Module std.tf contains 8 libraries, and a total of 159 variables.
+Module std.tf contains 8 libraries, and a total of 167 variables.
 ```
 
 `docs/foo.tf.md`
