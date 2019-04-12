@@ -198,3 +198,4 @@ UNRECOGNIZED=109
 'module::'=89
 'library::'=90
 'global::'=91
+';'=99

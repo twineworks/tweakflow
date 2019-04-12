@@ -100,6 +100,28 @@ public class ParserListLiteralsTest {
   }
 
   @Test
+  void parses_extra_final_separator() {
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/lists.tf");
+
+    //    extra_final_separator: [1, 2, 3,];
+    ExpressionNode expNode = varDefMap.get("extra_final_separator").getValueExpression();
+    assertThat(expNode).isInstanceOf(ListNode.class);
+    ListNode node = (ListNode) expNode;
+    assertThat(node.getElements()).hasSize(3);
+
+    LongNode e1 = (LongNode) node.getElements().get(0);
+    assertThat(e1.getLongNum()).isEqualTo(1L);
+
+    LongNode e2 = (LongNode) node.getElements().get(1);
+    assertThat(e2.getLongNum()).isEqualTo(2L);
+
+    LongNode e3 = (LongNode) node.getElements().get(2);
+    assertThat(e3.getLongNum()).isEqualTo(3L);
+
+  }
+
+  @Test
   void parses_nested() {
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/lists.tf");

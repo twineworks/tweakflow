@@ -24,31 +24,33 @@
 
 package com.twineworks.tweakflow.lang.parse;
 
-import com.twineworks.tweakflow.grammar.TweakFlowParserBaseListener;
-import com.twineworks.tweakflow.lang.parse.bailing.BailParser;
-import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
+import org.junit.jupiter.api.Test;
 
-final public class Parser extends TweakFlowParserBaseListener {
+import java.util.regex.Pattern;
 
-  private ParseUnit parseUnit;
+import static org.assertj.core.api.Assertions.assertThat;
 
-  public Parser(ParseUnit parseUnit) {
-    this.parseUnit = parseUnit;
+public class ParserLetErrorsTest {
+
+  private ParseResult parseFailing(String fixturePath){
+    Parser p = new Parser(
+        new ResourceParseUnit(new ResourceLocation.Builder().build(), fixturePath)
+    );
+    ParseResult result = p.parseUnit();
+    assertThat(result.isSuccess()).isFalse();
+    return result;
   }
 
-  public ParseResult parseUnit(){
-    return new BailParser(parseUnit).parseUnit();
+  @Test
+  public void fails_on_missing_vardef_eos() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/let_missing_vardef_eos.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*let variable.*"));
   }
 
-  public ParseResult parseInteractiveInput(){
-    return new BailParser(parseUnit).parseInteractiveInput();
-  }
-
-  public ParseResult parseReference(){
-    return new BailParser(parseUnit).parseReference();
-  }
-
-  public ParseResult parseExpression(){
-    return new BailParser(parseUnit).parseExpression();
-  }
 }

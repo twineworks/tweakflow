@@ -99,6 +99,10 @@ public class SourceInfo {
     return parseUnit.getPath()+":"+line+":"+charWithinLine;
   }
 
+  public String getShortLocation(){
+    return line+":"+charWithinLine;
+  }
+
   public String getSourceCode(){
     String programText = parseUnit.getProgramText();
     if (programText == null) return null;

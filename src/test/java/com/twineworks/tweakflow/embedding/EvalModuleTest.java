@@ -79,7 +79,7 @@ public class EvalModuleTest {
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-//      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:11");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("userModule:1:9");
       return;
     }
 

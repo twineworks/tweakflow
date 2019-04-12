@@ -1,4 +1,4 @@
-# tweakflow
+# Tweakflow - Safe embeddable scripting for the JVM 
 
 [![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)

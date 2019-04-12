@@ -161,7 +161,7 @@ WHITESPACE
   ;
 
 END_OF_STATEMENT
-  : ';'+
+  : ';'
   ;
 
 fragment NEWLINE

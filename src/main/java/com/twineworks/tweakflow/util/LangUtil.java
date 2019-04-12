@@ -112,15 +112,17 @@ public class LangUtil {
     return "`"+id+"`";
   }
 
-  public static String escapeKey(String id){
+  public static String getKeyLiteral(String id){
 
     // safe as is?
     if (safeIdentifier.matcher(id).matches()){
-      return id;
+      return ":"+id;
     }
 
-    if (id.contains("`")) throw new IllegalArgumentException("key cannot contain ` character");
-    return "`"+id+"`";
+    if (id.contains("`")){
+      return getStringLiteral(id);
+    }
+    return ":`"+id+"`";
   }
 
 }

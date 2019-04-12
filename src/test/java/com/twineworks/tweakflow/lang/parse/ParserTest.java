@@ -446,7 +446,6 @@ public class ParserTest {
   @Test
   public void parses_semantic_expressions() throws Exception {
 
-
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/semantic_expressions.tf");
 
     // nest_exp: (1)

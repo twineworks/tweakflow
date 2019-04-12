@@ -22,33 +22,11 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.parse;
+package com.twineworks.tweakflow.lang.parse.bailing;
 
-import com.twineworks.tweakflow.grammar.TweakFlowParserBaseListener;
-import com.twineworks.tweakflow.lang.parse.bailing.BailParser;
-import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.grammar.TweakFlowParser;
+import org.antlr.v4.runtime.ParserRuleContext;
 
-final public class Parser extends TweakFlowParserBaseListener {
-
-  private ParseUnit parseUnit;
-
-  public Parser(ParseUnit parseUnit) {
-    this.parseUnit = parseUnit;
-  }
-
-  public ParseResult parseUnit(){
-    return new BailParser(parseUnit).parseUnit();
-  }
-
-  public ParseResult parseInteractiveInput(){
-    return new BailParser(parseUnit).parseInteractiveInput();
-  }
-
-  public ParseResult parseReference(){
-    return new BailParser(parseUnit).parseReference();
-  }
-
-  public ParseResult parseExpression(){
-    return new BailParser(parseUnit).parseExpression();
-  }
+public interface RuleInvoker {
+  ParserRuleContext invokeRule(TweakFlowParser p);
 }

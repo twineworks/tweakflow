@@ -30,9 +30,23 @@ import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class CodeParseHelper {
+
+  public static SourceInfo srcOf(ParseUnit unit, Token token){
+
+    SourceInfo sourceInfo = new SourceInfo(
+        unit,
+        token.getLine(),
+        token.getCharPositionInLine() + 1,
+        token.getStartIndex(),
+        token.getStopIndex()
+    );
+
+    return sourceInfo;
+  }
 
   public static SourceInfo srcOf(ParseUnit unit, ParserRuleContext treeNode){
 

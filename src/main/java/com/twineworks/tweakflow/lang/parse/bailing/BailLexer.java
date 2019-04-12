@@ -22,33 +22,26 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.parse;
+package com.twineworks.tweakflow.lang.parse.bailing;
 
-import com.twineworks.tweakflow.grammar.TweakFlowParserBaseListener;
-import com.twineworks.tweakflow.lang.parse.bailing.BailParser;
-import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.grammar.TweakFlowLexer;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.LexerNoViableAltException;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
-final public class Parser extends TweakFlowParserBaseListener {
-
-  private ParseUnit parseUnit;
-
-  public Parser(ParseUnit parseUnit) {
-    this.parseUnit = parseUnit;
+public class BailLexer extends TweakFlowLexer {
+  public BailLexer(CharStream input) {
+    super(input);
   }
 
-  public ParseResult parseUnit(){
-    return new BailParser(parseUnit).parseUnit();
+  @Override
+  public void recover(LexerNoViableAltException e) {
+    throw new ParseCancellationException(e.getMessage(), e);
   }
 
-  public ParseResult parseInteractiveInput(){
-    return new BailParser(parseUnit).parseInteractiveInput();
-  }
-
-  public ParseResult parseReference(){
-    return new BailParser(parseUnit).parseReference();
-  }
-
-  public ParseResult parseExpression(){
-    return new BailParser(parseUnit).parseExpression();
+  @Override
+  public void recover(RecognitionException e) {
+    throw new ParseCancellationException(e.getMessage(), e);
   }
 }

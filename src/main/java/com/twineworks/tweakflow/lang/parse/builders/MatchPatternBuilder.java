@@ -32,6 +32,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.types.Types;
+import com.twineworks.tweakflow.util.LangUtil;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -196,14 +197,14 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
       StringNode keyNode = (StringNode) expressionBuilder.visit(keys.get(i));
       String key = keyNode.getStringVal();
       if (node.getElements().containsKey(key)){
-        throw new LangException(LangError.ALREADY_DEFINED, srcOf(parseUnit, keys.get(i)));
+        throw new LangException(LangError.ALREADY_DEFINED, "key "+ LangUtil.getKeyLiteral(key)+" already defined in this pattern", srcOf(parseUnit, keys.get(i)));
       }
       node.getElements().put(key, visit(pattern));
     }
 
     // exactly one rest capture allowed
     if (ctx.splatCapture().size() != 1){
-      throw new LangException(LangError.ALREADY_DEFINED, srcOf(parseUnit, ctx.splatCapture(1)));
+      throw new LangException(LangError.ALREADY_DEFINED, "splat capture already defined in this pattern", srcOf(parseUnit, ctx.splatCapture(1)));
     }
     node.setRestCapture(visitSplatCapture(ctx.splatCapture(0)));
 
@@ -233,7 +234,7 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
       String key = keyNode.getStringVal();
 
       if (node.getElements().containsKey(key)){
-        throw new LangException(LangError.ALREADY_DEFINED, srcOf(parseUnit, keys.get(i)));
+        throw new LangException(LangError.ALREADY_DEFINED, "key "+LangUtil.getKeyLiteral(key), srcOf(parseUnit, keys.get(i)));
       }
       node.getElements().put(key, visit(pattern));
     }

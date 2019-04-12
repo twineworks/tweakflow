@@ -16,11 +16,11 @@ interactive
   ;
 
 interactiveSection
-  : 'in_scope' reference '{' (varDef endOfStatement)* '}'
+  : 'in_scope' reference '{' (varDef ';')* '}'
   ;
 
 interactiveInput
-  : varDef endOfStatement? EOF
+  : varDef ';'? EOF
   | expression EOF
   | empty
   ;
@@ -49,24 +49,19 @@ moduleHead
 
 moduleComponent
   : library           # libraryComponent
-  | endOfStatement    # nopCompoment
-  ;
-
-endOfStatement
-  : END_OF_STATEMENT
   ;
 
 // name declaration of module
 
 nameDec
-  : metaDef 'module' endOfStatement
-  | metaDef 'global' 'module' identifier endOfStatement
+  : metaDef 'module' ';'
+  | metaDef 'global' 'module' identifier ';'
   ;
 
 // import definition
 
 importDef 
-  : 'import' importMember (',' importMember)* 'from' modulePath endOfStatement
+  : 'import' importMember (',' importMember)* 'from' modulePath ';'
   ;
 
 importMember
@@ -100,7 +95,7 @@ modulePath
 
 // alias definitions
 aliasDef
-  : 'alias' reference 'as' aliasName endOfStatement
+  : 'alias' reference 'as' aliasName ';'
   ;
 
 aliasName
@@ -109,7 +104,7 @@ aliasName
 
 // export definitions
 exportDef
-  : 'export' reference ('as' exportName)? endOfStatement
+  : 'export' reference ('as' exportName)? ';'
   ;
 
 exportName
@@ -119,7 +114,7 @@ exportName
 // library
 
 library
-  : metaDef 'export'? 'library' identifier '{' (libVar endOfStatement)* '}'
+  : metaDef 'export'? 'library' identifier '{' (libVar ';')* '}'
   ;
 
 libVar
@@ -157,6 +152,8 @@ expression
   | expression'('args')'                                    # callExp
   | expression'('partialArgs')'                             # partialExp
   | '->>' '('threadArg')' expression (',' expression)*      # threadExp
+  | '->>' '('threadArg')' expression (',' expression)* expression {/* id: threadExpMissingSep */ false}? # threadExpErr
+  | '->>' expression {/* id: threadExpMissingArg */ false}? # threadExpErr
   | expression'['containerAccessKeySequence']'              # containerAccessExp
   | '(' expression ')'                                      # nestedExp
   | expression 'as' dataType                                # castExp
@@ -196,7 +193,7 @@ expression
   | 'match' expression matchBody                            # matchExp
   | 'for' forHead ',' expression                            # forExp
   | 'if' expression 'then'? expression 'else'? expression   # ifExp
-  | 'let' '{' (varDef endOfStatement)* '}' expression       # letExp
+  | 'let' '{' (varDef ';')* '}' expression       # letExp
   | 'try' expression 'catch' catchDeclaration expression    # tryCatchExp
   | 'throw' expression                                      # throwErrorExp
   | 'debug' '(' expression (',' expression)* ')'            # debugExp
@@ -204,10 +201,12 @@ expression
 
 matchBody
   : matchLine (',' matchLine)*
+  | matchLine (',' matchLine)* matchLine {/* id: matchMissingLineSep */ false}?
   ;
 
 matchLine
   : matchPattern (',' matchGuard)? '->' expression                  # patternLine
+  | matchPattern  matchGuard '->' {/* id: matchMissingGuardSep */ false}? # patternLine
   | 'default' '->'  expression                                      # defaultLine
   ;
 
@@ -233,6 +232,8 @@ matchPattern
   | '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' varCapture?                               # dictPattern
   | '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' varCapture? # openDictPattern
   | expression  varCapture?                     # expPattern
+  | '[' (',' | matchPattern | splatCapture) +']'              {/* id: matchBadListPattern */ false}? # errListPattern
+  | '{' (',' | stringConstant| matchPattern | splatCapture | expression )+ '}' {/* id: matchBadDictPattern */ false}? # errDictPattern
   ;
 
 threadArg
@@ -302,6 +303,7 @@ dateTimeLiteral
 listLiteral
    : '['']'
    | '[' (expression|splat) (',' (expression|splat))* ','? ']'
+   | '[' (',' |expression|splat)+ ']' {/* id: badListLiteral */ false}?
    ;
 
 dictLiteral

@@ -24,10 +24,6 @@
 
 package com.twineworks.tweakflow.lang.parse.util;
 
-import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.parse.SourceInfo;
-import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -37,34 +33,13 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 import java.util.BitSet;
 
-public class DefaultParserErrorListener implements ANTLRErrorListener {
+public class NullParserErrorListener implements ANTLRErrorListener {
 
-  private LangException exception;
-  private final ParseUnit parseUnit;
-
-  public DefaultParserErrorListener(ParseUnit parseUnit) {
-    this.parseUnit = parseUnit;
-  }
-
-  public LangException getException() {
-    return exception;
-  }
-
-  public boolean hasErrors(){
-    return exception != null;
+  public NullParserErrorListener() {
   }
 
   @Override
   public void syntaxError(Recognizer<?, ?> recognizer, Object o, int line, int charIndex, String message, RecognitionException e) {
-    if (message == null){
-      message = "parse error at line: "+line;
-    }
-//    else {
-//      // replace parser internal error message details
-//      message = message.replaceAll(" expecting.*", "");
-//    }
-    message = "line: "+line+" "+message;
-    exception = new LangException(LangError.PARSE_ERROR, message, new SourceInfo(parseUnit, line, charIndex+1, -1,-1));
   }
 
   @Override
