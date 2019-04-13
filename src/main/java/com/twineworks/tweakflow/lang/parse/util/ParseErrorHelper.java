@@ -81,12 +81,12 @@ public class ParseErrorHelper {
 
     StringBuilder msg = new StringBuilder();
 
-    if ("#".equals(symbol)){
+    if ("#".equals(symbol)) {
       msg.append("syntax error - unterminated or malformed string interpolation of #{value} ?");
     }
 
     String message = msg.toString();
-    if (message.isEmpty()){
+    if (message.isEmpty()) {
       message = "unrecognized token: '" + symbol + "'";
     }
 
@@ -147,18 +147,16 @@ public class ParseErrorHelper {
 
 
     // only one expected possibility, usually some delimiter or keyword
-    if (exp.size() == 1) {
+    if (exp.size() == 1 && !exp.contains(TweakFlowParser.EOF)) {
       int t = exp.iterator().next();
       String expectedToken = parser.getVocabulary().getLiteralName(t);
-      if (expectedToken == null) {
-        expectedToken = "<EOF>";
-      }
       msg.append("expecting ").append(expectedToken);
 
       switch (t) {
-        case TweakFlowParser.EOF:
-          if (ctx instanceof TweakFlowParser.ModuleContext) {
-            msg.append(" - malformed library keyword or extra content at end of file?");
+        case TweakFlowParser.RP:
+        case TweakFlowParser.LP:
+          if (ctx instanceof TweakFlowParser.ExpressionContext) {
+            msg.append(" - unbalanced call or grouping brackets?");
           }
           break;
 
@@ -177,12 +175,24 @@ public class ParseErrorHelper {
           break;
 
       }
+
       // if offending token is a quote character, assume it's most likely a misquoted string
     } else if (offendingToken.getType() == TweakFlowLexer.SQ ||
         offendingToken.getType() == TweakFlowLexer.STRING_BEGIN ||
         offendingToken.getType() == TweakFlowLexer.STRING_END) {
       msg.append("syntax error - unterminated or misquoted string?");
-
+    } else if (offendingToken.getType() == TweakFlowLexer.LP ||
+        offendingToken.getType() == TweakFlowLexer.RP) {
+      msg.append("syntax error - unbalanced call or grouping brackets?");
+    }
+    // only EOF expected
+    else if (exp.size() == 1 && exp.contains(TweakFlowParser.EOF)) {
+      msg.append("syntax error");
+      if (ctx instanceof TweakFlowParser.ModuleContext) {
+        msg.append(" - malformed library keyword or extra content at end of file?");
+      } else {
+        msg.append(" - incomplete or malformed expression?");
+      }
     } else {
       // generic error
       msg.append("found ")
@@ -221,7 +231,7 @@ public class ParseErrorHelper {
       case TweakFlowLexer.STRING_BEGIN:
       case TweakFlowLexer.STRING_END: {
         msg.append("syntax error - unterminated or misquoted string?");
-        srcInfo = new SourceInfo(parseUnit, e.getStartToken().getLine(), e.getStartToken().getCharPositionInLine() + 1, -1, -1);
+//        srcInfo = new SourceInfo(parseUnit, e.getStartToken().getLine(), e.getStartToken().getCharPositionInLine() + 1, -1, -1);
       }
       break;
 

@@ -215,10 +215,17 @@ public class LangException extends RuntimeException {
       }
 
       String line = getSourceInfo().getSourceCodeLine();
+
       if (line != null){
         trace.append("  line: ");
         if (line.length() < 250){
           trace.append(line);
+          String marker = getSourceInfo().getLineLocationMarker();
+          if (marker != null){
+            trace.append("\n")
+                .append("        ")
+                .append(marker);
+          }
         }
         else{
           trace.append(line.substring(0, 250));

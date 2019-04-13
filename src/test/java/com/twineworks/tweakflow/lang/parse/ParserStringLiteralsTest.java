@@ -309,4 +309,32 @@ public class ParserStringLiteralsTest {
 
   }
 
+  @Test
+  void parses_with_nested_interpolation(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+//    with_nested_interpolation: "string with #{"name: #{name}"}";
+    ExpressionNode expNode = varDefMap.get("with_nested_interpolation").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringConcatNode.class);
+    StringConcatNode string_inter = (StringConcatNode) expNode;
+    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
+    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
+    assertThat(string_inter_left.getStringVal()).isEqualTo("string with ");
+
+    assertThat(string_inter.getRightExpression()).isInstanceOf(StringConcatNode.class);
+    StringConcatNode string_inter_right = (StringConcatNode) string_inter.getRightExpression();
+    assertThat(string_inter_right.getLeftExpression()).isInstanceOf(StringNode.class);
+    StringNode string_inter_right_left = (StringNode) string_inter_right.getLeftExpression();
+    assertThat(string_inter_right_left.getStringVal()).isEqualTo("name: ");
+
+    assertThat(string_inter_right.getRightExpression()).isInstanceOf(ReferenceNode.class);
+    ReferenceNode string_inter_right_right = (ReferenceNode) string_inter_right.getRightExpression();
+    assertThat(string_inter_right_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
+    List<String> string_inter_right_right_elements = string_inter_right_right.getElements();
+    assertThat(string_inter_right_right_elements).hasSize(1);
+    assertThat(string_inter_right_right_elements).containsExactly("name");
+
+  }
+
 }

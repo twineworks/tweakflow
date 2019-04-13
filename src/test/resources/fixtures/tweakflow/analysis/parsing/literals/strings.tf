@@ -15,6 +15,7 @@ library lib
   with_hash: "string with # hash";
   with_escaped_interpolation: "string with \#{hash}";
   with_interpolation: "string with #{hash}";
+  with_nested_interpolation: "string with #{"name: #{name}"}";
   single_escaped: 'single quoted ''string''';
   single_multi_line: 'single quoted
 multi

@@ -8,6 +8,6 @@ library lib {
   interpolation_expected: a..":"..b;
 
   simple_interpolation: "#{a}";
-  simple_interpolation_expected: a;
+  simple_interpolation_expected: a as string;
 
 }

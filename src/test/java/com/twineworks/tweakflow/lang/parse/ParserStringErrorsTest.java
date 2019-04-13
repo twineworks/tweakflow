@@ -62,7 +62,7 @@ public class ParserStringErrorsTest {
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
-    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:6");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:2");
 
   }
 
@@ -72,8 +72,30 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_unterminated_interpolation.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("malformed string interpolation");
-    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:22");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:2");
+
+  }
+
+  @Test
+  void fails_on_double_invalid_interpolation(){
+
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_invalid_interpolation.tf");
+    LangException e = r.getException();
+    StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:22");
+
+  }
+
+  @Test
+  void fails_on_double_nested_invalid_interpolation(){
+
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_nested_invalid_interpolation.tf");
+    LangException e = r.getException();
+    StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:28");
 
   }
 

@@ -69,7 +69,7 @@ public class SourceInfo {
     return this;
   }
 
-  public SourceInfo copy(){
+  public SourceInfo copy() {
     return new SourceInfo(parseUnit, line, charWithinLine, sourceIdxStart, sourceIdxEnd);
   }
 
@@ -77,13 +77,13 @@ public class SourceInfo {
     return sourceIdxStart;
   }
 
-  public int getSourceIdxEnd() {
-    return sourceIdxEnd;
-  }
-
   public SourceInfo setSourceIdxStart(int sourceIdxStart) {
     this.sourceIdxStart = sourceIdxStart;
     return this;
+  }
+
+  public int getSourceIdxEnd() {
+    return sourceIdxEnd;
   }
 
   public SourceInfo setSourceIdxEnd(int sourceIdxEnd) {
@@ -91,44 +91,66 @@ public class SourceInfo {
     return this;
   }
 
-  public String toString(){
+  public String toString() {
     return getFullLocation();
   }
 
-  public String getFullLocation(){
-    return parseUnit.getPath()+":"+line+":"+charWithinLine;
+  public String getFullLocation() {
+    return parseUnit.getPath() + ":" + line + ":" + charWithinLine;
   }
 
-  public String getShortLocation(){
-    return line+":"+charWithinLine;
+  public String getShortLocation() {
+    return line + ":" + charWithinLine;
   }
 
-  public String getSourceCode(){
-    String programText = parseUnit.getProgramText();
-    if (programText == null) return null;
-    if (sourceIdxStart < 0 || sourceIdxEnd < 0) return null;
-    if (sourceIdxStart < programText.length() &&  sourceIdxEnd < programText.length()){
-        return programText.substring(sourceIdxStart, sourceIdxEnd+1);
+  public String getLineLocationMarker() {
+    String srcLine = getSourceCodeLine();
+    if (srcLine == null) return null;
+    int charIdx = charWithinLine - 1;
+
+    if (charIdx >= 0 && charIdx <= srcLine.length()) {
+      // construct a ptr by moving up to the index and replacing every char with a space, except for tabs
+      StringBuilder marker = new StringBuilder();
+      for (int i = 0; i < charIdx; i++) {
+        if (srcLine.charAt(i) == '\t') {
+          marker.append('\t');
+        } else {
+          marker.append(" ");
+        }
+      }
+      marker.append("^");
+      return marker.toString();
     } else {
       return null;
     }
 
   }
 
-  public String getSourceCodeLine(){
+  public String getSourceCode() {
+    String programText = parseUnit.getProgramText();
+    if (programText == null) return null;
+    if (sourceIdxStart < 0 || sourceIdxEnd < 0) return null;
+    if (sourceIdxStart < programText.length() && sourceIdxEnd < programText.length()) {
+      return programText.substring(sourceIdxStart, sourceIdxEnd + 1);
+    } else {
+      return null;
+    }
+
+  }
+
+  public String getSourceCodeLine() {
     String programText = parseUnit.getProgramText();
     if (programText == null) return null;
     if (line <= 0) return null;
     String[] lines = programText.split("\\r?\\n", -1);
-    if (lines.length > line-1){
-      return lines[line-1];
-    }
-    else{
+    if (lines.length > line - 1) {
+      return lines[line - 1];
+    } else {
       return null;
     }
   }
 
-  public boolean precedes(SourceInfo other){
+  public boolean precedes(SourceInfo other) {
     return parseUnit == other.parseUnit &&
         (getLine() < other.getLine() || getLine() == other.getLine() && getCharWithinLine() < other.getCharWithinLine());
 

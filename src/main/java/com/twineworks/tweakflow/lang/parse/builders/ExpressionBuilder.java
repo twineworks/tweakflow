@@ -24,14 +24,13 @@
 
 package com.twineworks.tweakflow.lang.parse.builders;
 
-import com.twineworks.tweakflow.grammar.TweakFlowLexer;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
-import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.meta.ViaNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.DefaultPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
@@ -43,7 +42,7 @@ import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.DateTimeValue;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -63,18 +62,17 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     this.parseUnit = parseUnit;
   }
 
-  public ExpressionNode addImplicitCast(Type targetType, ExpressionNode node){
+  public ExpressionNode addImplicitCast(Type targetType, ExpressionNode node) {
     if (targetType == Types.ANY) return node;
     if (targetType == node.getValueType()) return node;
 
-    if (node.getValueType().canAttemptCastTo(targetType)){
+    if (node.getValueType().canAttemptCastTo(targetType)) {
       return new CastNode()
           .setExpression(node)
           .setTargetType(targetType)
           .setSourceInfo(node.getSourceInfo());
-    }
-    else {
-      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast "+node.getValueType().name()+" to "+targetType.name(), node.getSourceInfo());
+    } else {
+      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + node.getValueType().name() + " to " + targetType.name(), node.getSourceInfo());
     }
   }
 
@@ -87,23 +85,20 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitStringHereDoc(TweakFlowParser.StringHereDocContext ctx) {
     String text = ctx.HEREDOC_STRING().getText();
     // empty heredoc?
-    if ("~~~\r\n~~~".equals(text) || "~~~\n~~~".equals(text)){
+    if ("~~~\r\n~~~".equals(text) || "~~~\n~~~".equals(text)) {
       text = "";
-    }
-    else{
+    } else {
 
-      if (text.startsWith("~~~\n")){
+      if (text.startsWith("~~~\n")) {
         text = text.substring(4);
-      }
-      else if (text.startsWith("~~~\r\n")){
+      } else if (text.startsWith("~~~\r\n")) {
         text = text.substring(5);
       }
 
-      if (text.endsWith("\r\n~~~")){
-        text = text.substring(0, text.length()-5);
-      }
-      else if (text.endsWith("\n~~~")){
-        text = text.substring(0, text.length()-4);
+      if (text.endsWith("\r\n~~~")) {
+        text = text.substring(0, text.length() - 5);
+      } else if (text.endsWith("\n~~~")) {
+        text = text.substring(0, text.length() - 4);
       }
     }
 
@@ -114,7 +109,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitStringVerbatim(TweakFlowParser.StringVerbatimContext ctx) {
     String text = ctx.VSTRING().getText();
     // strip quotes
-    text = text.substring(1, text.length()-1);
+    text = text.substring(1, text.length() - 1);
     // replace escape sequence
     return new StringNode(text.replaceAll("''", "'")).setSourceInfo(srcOf(parseUnit, ctx));
   }
@@ -159,7 +154,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     try {
       Long decLiteral = parseDecLiteral(ctx.getText());
       return new LongNode(decLiteral).setSourceInfo(sourceInfo);
-    } catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       throw new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
     }
 
@@ -175,22 +170,21 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     return new DoubleNode(parseDoubleLiteral(ctx.getText())).setSourceInfo(srcOf(parseUnit, ctx));
   }
 
-  private Long parseDecLiteral(String text){
+  private Long parseDecLiteral(String text) {
     return Long.parseLong(text);
   }
 
-  private Double parseDoubleLiteral(String text){
+  private Double parseDoubleLiteral(String text) {
     return Double.parseDouble(text);
   }
 
-  Long parseHexLiteral(String text){
+  Long parseHexLiteral(String text) {
     String hex = text.substring(2); // drop leading 0x
-    if (hex.length() == 8*2){
+    if (hex.length() == 8 * 2) {
       // if all 8 bytes given,
       // force parsing a two's complement representation
       return new BigInteger(hex, 16).longValue();
-    }
-    else{
+    } else {
       return Long.parseLong(hex, 16); // regular parse
     }
 
@@ -205,7 +199,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     int idxT = str.indexOf('T');
 
     // date part are first digits up to T
-    String date = str.substring(0,idxT);
+    String date = str.substring(0, idxT);
     boolean isNeg = date.startsWith("-");
 
     // temporarily strip off the leading - for processing convenience
@@ -218,7 +212,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     int month = Integer.parseInt(parts[1], 10);
     int dayOfMonth = Integer.parseInt(parts[2], 10);
 
-    if (isNeg){
+    if (isNeg) {
       year = -year;
     }
 
@@ -231,22 +225,22 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     int len = str.length();
 
     // optional parts
-    if (len > idxT+1) {
-      clockTime = str.substring(idxT+1, idxT+9);
+    if (len > idxT + 1) {
+      clockTime = str.substring(idxT + 1, idxT + 9);
     }
 
-    if (len > idxT+9) {
+    if (len > idxT + 9) {
 
       // fractional seconds
       StringBuilder fractionalSecondsBuilder = new StringBuilder();
-      int i = idxT+9;
-      if (str.charAt(i) == '.'){
+      int i = idxT + 9;
+      if (str.charAt(i) == '.') {
         // keep collecting fractional digits
-        i = idxT+10;
+        i = idxT + 10;
         char c = str.charAt(i);
-        while(c >= '0' && c <= '9'){
+        while (c >= '0' && c <= '9') {
           fractionalSecondsBuilder.append(c);
-          i+=1;
+          i += 1;
           if (i == len) break;
           c = str.charAt(i);
         }
@@ -254,29 +248,27 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       fractionalSeconds = fractionalSecondsBuilder.toString();
 
       // offset & timezone
-      if (i < len){
+      if (i < len) {
         char c = str.charAt(i);
-        if (c == '-' || c == '+'){
+        if (c == '-' || c == '+') {
           // offset present
-          offset = str.substring(i, i+6);
-          i+=6;
-        }
-        else if (c == 'Z'){
+          offset = str.substring(i, i + 6);
+          i += 6;
+        } else if (c == 'Z') {
           offset = "Z";
-          i+=1;
+          i += 1;
         }
 
         // time zone given?
-        if (i < len && str.charAt(i) == '@'){
-          tz = identifier(str.substring(i+1));
+        if (i < len && str.charAt(i) == '@') {
+          tz = identifier(str.substring(i + 1));
         }
         // no timezone given, construct implicitly
-        else{
-          if (offset.equals("Z")){
+        else {
+          if (offset.equals("Z")) {
             tz = "UTC";
-          }
-          else{
-            tz = "UTC"+offset;
+          } else {
+            tz = "UTC" + offset;
           }
         }
 
@@ -287,7 +279,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     try {
       // create a zoned time, using strict rules for all parts
       LocalDate localDate = LocalDate.of(year, month, dayOfMonth);
-      LocalTime localTime = LocalTime.parse(clockTime+"."+fractionalSeconds, DateTimeFormatter.ISO_LOCAL_TIME);
+      LocalTime localTime = LocalTime.parse(clockTime + "." + fractionalSeconds, DateTimeFormatter.ISO_LOCAL_TIME);
       LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
       ZonedDateTime zonedDateTime = ZonedDateTime.ofStrict(localDateTime, ZoneOffset.of(offset), ZoneId.of(tz));
 
@@ -295,7 +287,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
       return new DateTimeNode(dateTime).setSourceInfo(srcOf(parseUnit, ctx));
 
-    } catch(DateTimeException e){
+    } catch (DateTimeException e) {
       throw new LangException(LangError.INVALID_DATETIME, e.getMessage(), srcOf(parseUnit, ctx));
     }
   }
@@ -309,20 +301,20 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     TweakFlowParser.ForHeadContext headContext = ctx.forHead();
     int childCount = headContext.getChildCount();
 
-    for(int i=0; i<childCount; i++){
+    for (int i = 0; i < childCount; i++) {
       ParseTree child = headContext.getChild(i);
       // generator
-      if (child instanceof TweakFlowParser.GeneratorContext){
+      if (child instanceof TweakFlowParser.GeneratorContext) {
         GeneratorNode generatorNode = new GeneratorBuilder(parseUnit).visitGenerator((TweakFlowParser.GeneratorContext) child);
         head.getElements().add(generatorNode);
       }
       // local
-      else if (child instanceof TweakFlowParser.VarDefContext){
+      else if (child instanceof TweakFlowParser.VarDefContext) {
         VarDefNode varDefNode = new VarDefBuilder(parseUnit).visitVarDef((TweakFlowParser.VarDefContext) child);
         head.getElements().add(varDefNode);
       }
       // expression
-      else if (child instanceof TweakFlowParser.ExpressionContext){
+      else if (child instanceof TweakFlowParser.ExpressionContext) {
         head.getElements().add(visit(child));
       }
       // comma separator token children are skipped
@@ -351,8 +343,9 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       MatchLineNode matchLineNode = new MatchLineBuilder(parseUnit).visit(matchLineContext);
 
       // ensure the default pattern appears last, if present
-      if (matchLineNode.getPattern() instanceof DefaultPatternNode){
-        if (i != size-1) throw new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
+      if (matchLineNode.getPattern() instanceof DefaultPatternNode) {
+        if (i != size - 1)
+          throw new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
       }
       matchLines.getElements().add(matchLineNode);
     }
@@ -453,25 +446,22 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     // skip opening '"' and closing '"'
     int i = 1;
-    int n = ctx.getChildCount()-1;
+    int n = ctx.getChildCount() - 1;
 
-    for (;i<n;i++){
+    for (; i < n; i++) {
 
       ParserRuleContext child = (ParserRuleContext) ctx.children.get(i);
 
-      if (child instanceof TweakFlowParser.StringTextContext){
+      if (child instanceof TweakFlowParser.StringTextContext) {
         String text = child.getText();
         nodes.add(new StringNode(text).setSourceInfo(srcOf(parseUnit, child)));
-      }
-      else if (child instanceof TweakFlowParser.StringEscapeSequenceContext){
+      } else if (child instanceof TweakFlowParser.StringEscapeSequenceContext) {
         String escapeSequence = child.getText();
         nodes.add(new StringNode(convertEscapeSequence(escapeSequence)).setSourceInfo(srcOf(parseUnit, child)));
-      }
-      else if (child instanceof TweakFlowParser.StringReferenceInterpolationContext){
+      } else if (child instanceof TweakFlowParser.ExpressionContext) {
         nodes.add(visit(child));
-      }
-      else {
-        throw new AssertionError("Unknown child node in string interpolation: "+child.toString());
+      } else {
+        throw new AssertionError("Unknown child node in string interpolation: " + child.toString());
       }
 
     }
@@ -479,13 +469,18 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     List<ExpressionNode> compacted = compactStringNodes(nodes);
 
     // compacted to nothing is an empty string
-    if (nodes.size() == 0){
+    if (nodes.size() == 0) {
       return new StringNode("").setSourceInfo(sourceInfo);
     }
 
-    // a single node is returned directly, it might be a string or a reference
-    if (compacted.size() == 1){
-      return compacted.get(0).setSourceInfo(sourceInfo);
+    // a single node is returned directly, it might be a string or an expression
+    if (compacted.size() == 1) {
+      ExpressionNode c = compacted.get(0);
+      c.setSourceInfo(sourceInfo);
+      if (c.getValueType() != Types.STRING){
+        c = addImplicitCast(Types.STRING, c);
+      }
+      return c;
     }
 
     // multiple nodes go into concat nodes
@@ -503,43 +498,43 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   }
 
-  @Override
-  public ExpressionNode visitStringReferenceInterpolation(TweakFlowParser.StringReferenceInterpolationContext ctx) {
-    // re-parse as expression to get proper reference nodes out of interpolated text
-    String txt = ctx.getText();
-    // skip opening and ending markers in #{my.interpolated.expression}
-    String exp = txt.substring(2, txt.length()-1).trim();
+//  @Override
+//  public ExpressionNode visitStringReferenceInterpolation(TweakFlowParser.StringReferenceInterpolationContext ctx) {
+//    // re-parse as expression to get proper reference nodes out of interpolated text
+//    String txt = ctx.getText();
+//    // skip opening and ending markers in #{my.interpolated.expression}
+//    String exp = txt.substring(2, txt.length()-1).trim();
+//
+//    CodePointCharStream input = CharStreams.fromString(exp);
+//    TweakFlowLexer lexer = new TweakFlowLexer(input);
+//    CommonTokenStream tokens = new CommonTokenStream(lexer);
+//
+//    try {
+//      // consume tokens
+//      tokens.fill();
+//
+//      // parse them
+//      TweakFlowParser parser = new TweakFlowParser(tokens);
+//      // build AST nodes
+//      ExpressionNode expressionNode = visit(parser.reference());
+//      // ensure it's a reference
+//      if (!(expressionNode instanceof ReferenceNode)){
+//        throw new LangException(LangError.PARSE_ERROR, "Only references allowed in string interpolation");
+//      }
+//      // and update the source info on it to match where it was found
+//      ReferenceNode refNode = (ReferenceNode) expressionNode;
+//      refNode.setSourceInfo(srcOf(parseUnit, ctx));
+//      // adjust the char within line to point to the actual reference, not the marker in #{my.ref}
+//      return refNode;
+//    }
+//    catch (RecognitionException e){
+//      throw LangException.wrap(e, LangError.PARSE_ERROR)
+//          .put("location", srcOf(parseUnit, ctx));
+//    }
+//
+//  }
 
-    CodePointCharStream input = CharStreams.fromString(exp);
-    TweakFlowLexer lexer = new TweakFlowLexer(input);
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-    try {
-      // consume tokens
-      tokens.fill();
-
-      // parse them
-      TweakFlowParser parser = new TweakFlowParser(tokens);
-      // build AST nodes
-      ExpressionNode expressionNode = visit(parser.reference());
-      // ensure it's a reference
-      if (!(expressionNode instanceof ReferenceNode)){
-        throw new LangException(LangError.PARSE_ERROR, "Only references allowed in string interpolation");
-      }
-      // and update the source info on it to match where it was found
-      ReferenceNode refNode = (ReferenceNode) expressionNode;
-      refNode.setSourceInfo(srcOf(parseUnit, ctx));
-      // adjust the char within line to point to the actual reference, not the marker in #{my.ref}
-      return refNode;
-    }
-    catch (RecognitionException e){
-      throw LangException.wrap(e, LangError.PARSE_ERROR)
-          .put("location", srcOf(parseUnit, ctx));
-    }
-
-  }
-
-  private ExpressionNode splatEnabledListExpression(SourceInfo src, List<ParseTree> children){
+  private ExpressionNode splatEnabledListExpression(SourceInfo src, List<ParseTree> children) {
 
     // phase 1: collect subLists
     // [a, b, ...c, d] -> [[a, b], c, [d]]
@@ -547,28 +542,27 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     ListNode currentSubList = null;
 
-    for(ParseTree child : children){
+    for (ParseTree child : children) {
 
-      if (child instanceof TerminalNode){
+      if (child instanceof TerminalNode) {
         // skip ',' optionally separating entries
         continue;
       }
 
-      if (child instanceof TweakFlowParser.SplatContext){
+      if (child instanceof TweakFlowParser.SplatContext) {
         // a splat closes any current sublist and enters itself as sublist
         // close sublist
-        if (currentSubList != null){
+        if (currentSubList != null) {
           subLists.add(currentSubList);
           currentSubList = null;
         }
         // enter its expression as sublist
         TweakFlowParser.SplatContext splatContext = (TweakFlowParser.SplatContext) child;
         subLists.add(visit(splatContext.expression()));
-      }
-      else {
+      } else {
 
         // a regular list item enters itself into the current sublist, creating one if necessary
-        if (currentSubList == null){
+        if (currentSubList == null) {
           currentSubList = new ListNode();
           currentSubList.setSourceInfo(srcOf(parseUnit, (ParserRuleContext) child));
         }
@@ -580,7 +574,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     }
 
     // at the end, any open sublist is closed
-    if (currentSubList != null){
+    if (currentSubList != null) {
       subLists.add(currentSubList);
     }
 
@@ -588,11 +582,11 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     // [[a, b], c, [d]] -> concat(concat([a, b], [c]), [d])
 
     // direct returns if no concat necessary
-    if (subLists.size() == 0){
+    if (subLists.size() == 0) {
       return new ListNode().setSourceInfo(src);
     }
 
-    if (subLists.size() == 1){
+    if (subLists.size() == 1) {
       ExpressionNode result = subLists.get(0);
       // for cosmetics, let source info point to the list definition, as opposed to the element in it
       result.setSourceInfo(src);
@@ -620,7 +614,6 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   }
 
 
-
   /**
    * Compacts consecutive StringNode elements in the given list. All sequences of StringNode elements
    * are compacted into a single StringNode element in the returned list. Source information of the first
@@ -628,39 +621,40 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
    * All StringNodes in the returned list are newly constructed objects. Original StringNodes are not
    * modified. Nodes that are not StringNodes are carried over in the returned list by reference. There
    * are no copies created for them.
+   *
    * @param in
    * @return The list of nodes where any sub-sequences of StringNodes should be compacted.
    */
 
-  List<ExpressionNode> compactStringNodes(List<ExpressionNode> in){
+  List<ExpressionNode> compactStringNodes(List<ExpressionNode> in) {
 
     ArrayList<ExpressionNode> results = new ArrayList<>(in.size());
 
     StringNode currentBase = null;
     StringBuilder builder = null;
 
-    for(int i=0;i<in.size();i++){
+    for (int i = 0; i < in.size(); i++) {
       ExpressionNode node = in.get(i);
 
       // string-node
-      if (node instanceof StringNode){
+      if (node instanceof StringNode) {
         StringNode strNode = (StringNode) node;
 
         // new sub-sequence?
-        if (currentBase == null){
+        if (currentBase == null) {
           currentBase = strNode;
           builder = new StringBuilder().append(currentBase.getStringVal());
         }
         // continuing sub-sequence
-        else{
+        else {
           builder.append(strNode.getStringVal());
         }
       }
 
       // non-string node
-      else{
+      else {
         // closing a sub-sequence?
-        if (currentBase != null){
+        if (currentBase != null) {
           results.add(currentBase.copy().setStringVal(builder.toString()));
           currentBase = null;
           builder = null;
@@ -671,7 +665,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     }
 
     // closing a trailing sequence?
-    if (currentBase != null){
+    if (currentBase != null) {
       results.add(currentBase.copy().setStringVal(builder.toString()));
     }
 
@@ -680,17 +674,18 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   /**
    * Converts a string escape sequence to the string it represents.
+   *
    * @param escapeSequence the escape sequence
    * @return the string it represents
    */
   String convertEscapeSequence(String escapeSequence) {
 
     String str;
-    switch (escapeSequence){
+    switch (escapeSequence) {
       case "\\\\":
         str = "\\";
         break;
-      case  "\\r":
+      case "\\r":
         str = "\r";
         break;
       case "\\n":
@@ -706,18 +701,16 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         str = "#{";
         break;
       default:
-        if (escapeSequence.startsWith("\\u")){ // 2 byte variant
-          int codePoint = Integer.parseInt(escapeSequence.substring(2),16);
+        if (escapeSequence.startsWith("\\u")) { // 2 byte variant
+          int codePoint = Integer.parseInt(escapeSequence.substring(2), 16);
           char[] ch = Character.toChars(codePoint);
           str = new String(ch);
-        }
-        else if (escapeSequence.startsWith("\\U")){ // 4 byte variant
-          int codePoint = Integer.parseInt(escapeSequence.substring(2),16);
+        } else if (escapeSequence.startsWith("\\U")) { // 4 byte variant
+          int codePoint = Integer.parseInt(escapeSequence.substring(2), 16);
           char[] ch = Character.toChars(codePoint);
           str = new String(ch);
-        }
-        else {
-          throw new AssertionError("Unknown escape sequence: "+escapeSequence);
+        } else {
+          throw new AssertionError("Unknown escape sequence: " + escapeSequence);
         }
     }
     return str;
@@ -773,7 +766,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     }
 
     // at the end, any open subMap is closed
-    if (currentSubMap != null){
+    if (currentSubMap != null) {
       subMaps.add(currentSubMap);
     }
 
@@ -781,11 +774,11 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     // [{:a a, :b b}, c, {:d d}] -> merge(merge({:a a, :b b}, c), {:d d})
 
     // direct returns if no concat necessary
-    if (subMaps.size() == 0){
+    if (subMaps.size() == 0) {
       return new DictNode().setSourceInfo(srcOf(parseUnit, ctx));
     }
 
-    if (subMaps.size() == 1){
+    if (subMaps.size() == 1) {
       ExpressionNode result = subMaps.get(0);
       // for cosmetics, let source info point to the map definition, as opposed to the entry in it
       result.setSourceInfo(srcOf(parseUnit, ctx));
@@ -809,10 +802,9 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   @Override
   public BooleanNode visitBooleanLiteral(TweakFlowParser.BooleanLiteralContext ctx) {
-    if (ctx.TRUE() != null){
+    if (ctx.TRUE() != null) {
       return new BooleanNode(Boolean.TRUE).setSourceInfo(srcOf(parseUnit, ctx));
-    }
-    else {
+    } else {
       return new BooleanNode(Boolean.FALSE).setSourceInfo(srcOf(parseUnit, ctx));
     }
   }
@@ -826,8 +818,8 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     Map<String, VarDefNode> varDefs = bindings.getVars().getMap();
     for (TweakFlowParser.VarDefContext varDefContext : ctx.varDef()) {
       VarDefNode varDef = new VarDefBuilder(parseUnit).visitVarDef(varDefContext);
-      if (varDefs.containsKey(varDef.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined more than once", varDef.getSourceInfo());
+      if (varDefs.containsKey(varDef.getSymbolName())) {
+        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName() + " defined more than once", varDef.getSourceInfo());
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }
@@ -852,10 +844,9 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     TweakFlowParser.FunctionHeadContext head = ctx.functionHead();
 
     Type declaredReturnType;
-    if (head.dataType() == null){
+    if (head.dataType() == null) {
       declaredReturnType = Types.ANY;
-    }
-    else{
+    } else {
       declaredReturnType = Types.byName(head.dataType().getText());
     }
 
@@ -863,40 +854,38 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     for (TweakFlowParser.ParamDefContext defContext : head.paramsList().paramDef()) {
 
       Type declaredType;
-      if (defContext.dataType() == null){
+      if (defContext.dataType() == null) {
         declaredType = Types.ANY;
-      }
-      else{
+      } else {
         declaredType = Types.byName(defContext.dataType().getText());
       }
 
       ExpressionNode defaultValue;
-      if (defContext.expression() == null){
+      if (defContext.expression() == null) {
         defaultValue = new NilNode().setSourceInfo(srcOf(parseUnit, defContext.identifier()));
-      }
-      else{
+      } else {
         defaultValue = visit(defContext.expression());
       }
 
       String name = identifier(defContext.identifier().getText());
 
-      if (paramMap.containsKey(name)){
-        throw new LangException(LangError.ALREADY_DEFINED, name+" defined more than once", srcOf(parseUnit, defContext));
+      if (paramMap.containsKey(name)) {
+        throw new LangException(LangError.ALREADY_DEFINED, name + " defined more than once", srcOf(parseUnit, defContext));
       }
 
       paramMap.put(name, new ParameterNode()
-        .setSymbolName(name)
-        .setIndex(paramMap.size())
-        .setDeclaredType(declaredType)
-        .setDefaultValue(defaultValue)
-        .setSourceInfo(srcOf(parseUnit, defContext)));
+          .setSymbolName(name)
+          .setIndex(paramMap.size())
+          .setDeclaredType(declaredType)
+          .setDefaultValue(defaultValue)
+          .setSourceInfo(srcOf(parseUnit, defContext)));
     }
 
     Parameters parameters = new Parameters()
         .setSourceInfo(srcOf(parseUnit, ctx))
         .setMap(paramMap);
 
-    if (ctx.expression() != null){
+    if (ctx.expression() != null) {
       ExpressionNode expression = visit(ctx.expression());
 
       return new FunctionNode()
@@ -905,7 +894,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
           .setDeclaredReturnType(declaredReturnType)
           .setSourceInfo(srcOf(parseUnit, ctx));
 
-    } else if (ctx.viaDec() != null){
+    } else if (ctx.viaDec() != null) {
 
       ViaNode via = new ViaBuilder(parseUnit).visit(ctx.viaDec());
 
@@ -917,7 +906,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     }
 
-    throw new AssertionError("unknown function definition: "+ctx);
+    throw new AssertionError("unknown function definition: " + ctx);
 
   }
 
@@ -985,7 +974,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ExpressionNode catchExpression = visit(ctx.expression(1));
     VarDecNode caughtException = null;
     VarDecNode caughtTrace = null;
-    if (ctx.catchDeclaration() instanceof TweakFlowParser.CatchErrorContext){
+    if (ctx.catchDeclaration() instanceof TweakFlowParser.CatchErrorContext) {
       TweakFlowParser.CatchErrorContext catchDeclaration = (TweakFlowParser.CatchErrorContext) ctx.catchDeclaration();
       String exceptionName = identifier(catchDeclaration.identifier().getText());
       caughtException = new VarDecNode()
@@ -993,8 +982,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
           .setSymbolName(exceptionName)
           .setSourceInfo(srcOf(parseUnit, catchDeclaration.identifier()));
 
-    }
-    else if (ctx.catchDeclaration() instanceof TweakFlowParser.CatchErrorAndTraceContext){
+    } else if (ctx.catchDeclaration() instanceof TweakFlowParser.CatchErrorAndTraceContext) {
       TweakFlowParser.CatchErrorAndTraceContext catchDeclaration = (TweakFlowParser.CatchErrorAndTraceContext) ctx.catchDeclaration();
 
       String exceptionName = identifier(catchDeclaration.identifier().get(0).getText());
@@ -1033,14 +1021,13 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ExpressionNode exp = visit(ctx.expression());
     Type type = type(ctx.dataType());
 
-    if (exp.getValueType().canAttemptCastTo(type)){
+    if (exp.getValueType().canAttemptCastTo(type)) {
       return new CastNode()
           .setExpression(exp)
           .setTargetType(type)
           .setSourceInfo(srcOf(parseUnit, ctx));
-    }
-    else{
-      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast "+exp.getValueType().name()+" to "+type.name(), srcOf(parseUnit, ctx));
+    } else {
+      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + exp.getValueType().name() + " to " + type.name(), srcOf(parseUnit, ctx));
     }
 
   }
@@ -1281,31 +1268,28 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ArrayList<PartialArgumentNode> args = new ArrayList<>();
     HashMap<String, PartialArgumentNode> argMap = new HashMap<>();
 
-    if (ctx.children != null){
+    if (ctx.children != null) {
 
       for (ParseTree child : ctx.children) {
 
         PartialArgumentNode arg;
 
-        if (child instanceof TweakFlowParser.NamedPartialArgContext){
+        if (child instanceof TweakFlowParser.NamedPartialArgContext) {
           TweakFlowParser.NamedPartialArgContext nArg = (TweakFlowParser.NamedPartialArgContext) child;
           arg = new PartialArgumentNode()
               .setSourceInfo(srcOf(parseUnit, nArg))
               .setExpression(visit(nArg.expression()))
               .setName(identifier(nArg.identifier().getText()));
 
-          if (argMap.containsKey(arg.getName())){
-            throw new LangException(LangError.ALREADY_DEFINED, arg.getName()+" defined more than once", arg.getSourceInfo());
-          }
-          else{
+          if (argMap.containsKey(arg.getName())) {
+            throw new LangException(LangError.ALREADY_DEFINED, arg.getName() + " defined more than once", arg.getSourceInfo());
+          } else {
             argMap.put(arg.getName(), arg);
           }
-        }
-        else if (child instanceof TerminalNode && child.getText().equals(",")){ // skip ',' separators
+        } else if (child instanceof TerminalNode && child.getText().equals(",")) { // skip ',' separators
           continue;
-        }
-        else {
-          throw new AssertionError("unknown partial argument type: "+child);
+        } else {
+          throw new AssertionError("unknown partial argument type: " + child);
         }
         args.add(arg);
 
@@ -1340,14 +1324,14 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     ArrayList<ArgumentNode> args = new ArrayList<>();
 
-    if (ctx.children != null){
+    if (ctx.children != null) {
       int idx = 0;
 
       for (ParseTree child : ctx.children) {
 
         ArgumentNode arg;
 
-        if (child instanceof TweakFlowParser.PositionalArgContext){
+        if (child instanceof TweakFlowParser.PositionalArgContext) {
           TweakFlowParser.PositionalArgContext pArg = (TweakFlowParser.PositionalArgContext) child;
 
           arg = new PositionalArgumentNode()
@@ -1355,26 +1339,22 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
               .setExpression(visit(pArg.expression()))
               .setIndex(idx);
 
-        }
-        else if (child instanceof TweakFlowParser.NamedArgContext){
+        } else if (child instanceof TweakFlowParser.NamedArgContext) {
           TweakFlowParser.NamedArgContext nArg = (TweakFlowParser.NamedArgContext) child;
           arg = new NamedArgumentNode()
               .setSourceInfo(srcOf(parseUnit, nArg))
               .setExpression(visit(nArg.expression()))
               .setName(identifier(nArg.identifier().getText()));
-        }
-        else if (child instanceof TweakFlowParser.SplatArgContext){
+        } else if (child instanceof TweakFlowParser.SplatArgContext) {
           TweakFlowParser.SplatArgContext sArg = (TweakFlowParser.SplatArgContext) child;
           arg = new SplatArgumentNode()
               .setSourceInfo(srcOf(parseUnit, sArg))
               .setExpression(visit(sArg.splat().expression()))
               .setIndex(idx);
-        }
-        else if (child instanceof TerminalNode && child.getText().equals(",")){ // skip ',' separators
+        } else if (child instanceof TerminalNode && child.getText().equals(",")) { // skip ',' separators
           continue;
-        }
-        else {
-          throw new AssertionError("unknown argument type: "+child);
+        } else {
+          throw new AssertionError("unknown argument type: " + child);
         }
         args.add(arg);
         idx += 1;

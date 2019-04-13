@@ -1,7 +1,18 @@
 lexer grammar TweakFlowLexer;
 
+@lexer::header
+{
+  import java.util.Stack;
+}
+
 channels {
   WS, COMMENTS
+}
+
+@lexer::members
+{
+  private int stringLevel;
+  private Stack<Integer> curlyLevels = new Stack<Integer>();
 }
 
 // keywords
@@ -60,8 +71,27 @@ LIBRARY: 'library';
 LP: '(';
 RP: ')';
 
-LCURLY: '{';
-RCURLY: '}';
+LCURLY: '{' {
+  if (stringLevel > 0){
+    // increase curly level on current string
+    curlyLevels.push(curlyLevels.pop() + 1);
+  }
+};
+
+RCURLY: '}' {
+  if (stringLevel > 0){
+    // decrease curly level on current string
+    curlyLevels.push(curlyLevels.pop() - 1);
+
+    // if initial curly popped, we're back in string mode again
+    if (curlyLevels.peek() == 0){
+      curlyLevels.pop();
+      skip();
+      popMode();
+    }
+  }
+};
+
 
 LBLOCK: '[';
 RBLOCK: ']';
@@ -210,7 +240,7 @@ fragment VSTRING_ESCAPE_SEQUENCE
 // standard escape sequences
 
 STRING_BEGIN
-  : '"' -> pushMode(StringMode)
+  : '"' { stringLevel++; } -> pushMode(StringMode)
   ;
 
 INLINE_COMMENT
@@ -234,8 +264,8 @@ STRING_ESCAPE_SEQUENCE
   | '\\U' BYTE BYTE BYTE BYTE
   ;
 
-STRING_REFERENCE_INTERPOLATION
-  : '#{'('$'|'global::'|'module::'|'::'|'library::')?IDENTIFIER('.' IDENTIFIER)*'}'
+STRING_INTERPOLATION
+  : '#{' { curlyLevels.push(1); } -> skip, pushMode(DEFAULT_MODE)
   ;
 
 STRING_TEXT
@@ -244,7 +274,7 @@ STRING_TEXT
   ;
 
 STRING_END
-  : '"' -> popMode
+  : '"' { stringLevel--; } -> popMode
   ;
 
 UNRECOGNIZED_STRING_ESCAPE_SEQUENCE

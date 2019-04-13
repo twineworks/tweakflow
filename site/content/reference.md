@@ -171,10 +171,10 @@ A double-quoted string begins and ends with a double quote character `"`. Line b
 | `\r`            | `⏎` carriage return character            |
 | `\u[byte]{2}`   | unicode character from the [basic multilingual plane](https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane) given by the two-byte address |
 | `\U[byte]{4}`   | any unicode character given by the full four-byte address |
-| `#{reference}`  | value given by the reference when cast to string |
+| `#{expression}`  | value of expression cast to string |
 | `\#{`           | `#{` literal hash character followed by curly brace |
 
-To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of a variable reference, escape the hash character that opens the sequence, so it is interpreted literally.
+To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of an expression, escape the hash character that opens the sequence, so it is interpreted literally.
 
 ```tweakflow
 > "hello world"

@@ -193,13 +193,17 @@ The REPL defines a special variable `$` that it maintains. It is defined as the 
 
 ## String interpolation
 
-You can include the values of variables in double quoted strings using the `#{varname}` escape sequence.
+You can include the values of expressions in double quoted strings using the `#{expression}` escape sequence.
 
 ```tweakflow
 > name: "Joe"
 "Joe"
+
 > "Hello #{name}"
 "Hello Joe"
+
+> "Hello #{strings.upper_case(name)}"
+"Hello JOE"
 ```
 
 There are other escape sequences like `\n` for newlines and `\t` for tabs.

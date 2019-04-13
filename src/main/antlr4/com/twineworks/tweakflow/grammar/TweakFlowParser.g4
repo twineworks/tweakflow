@@ -206,9 +206,9 @@ matchBody
   ;
 
 matchLine
-  : matchPattern (',' matchGuard)? '->' expression                  # patternLine
-  | matchPattern  matchGuard '->' {/* id: matchMissingGuardSep */ false}? # patternLine
-  | 'default' '->'  expression                                      # defaultLine
+  : matchPattern (',' matchGuard)? '->' expression                         # patternLine
+  | matchPattern  matchGuard '->' {/* id: matchMissingGuardSep */ false}?  # patternLine
+  | 'default' '->'  expression                                             # defaultLine
   ;
 
 matchGuard
@@ -224,16 +224,16 @@ splatCapture
   ;
 
 matchPattern
-  : varCapture                                  # capturePattern
-  | dataType    varCapture?                     # dataTypePattern
-  | '[' (matchPattern ',') * splatCapture ']' varCapture?  # headTailListPattern
+  : varCapture                                                                                  # capturePattern
+  | dataType    varCapture?                                                                     # dataTypePattern
+  | '[' (matchPattern ',') * splatCapture ']' varCapture?                                       # headTailListPattern
   | '[' splatCapture ',' (matchPattern ',') * matchPattern ']' varCapture?                      # initLastListPattern
   | '[' (matchPattern ',') + splatCapture ',' (matchPattern ',')* matchPattern ']' varCapture?  # midListPattern
   | '[' (matchPattern ',') * matchPattern ']' varCapture?                                       # listPattern
-  | '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' varCapture?                               # dictPattern
+  | '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' varCapture?     # dictPattern
   | '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' varCapture? # openDictPattern
   | expression  varCapture?                     # expPattern
-  | '[' (',' | matchPattern | splatCapture | wrongSideColonKey) +']'              {/* id: matchBadListPattern */ false}? # errListPattern
+  | '[' (',' | matchPattern | splatCapture | wrongSideColonKey) +']' {/* id: matchBadListPattern */ false}? # errListPattern
   | '{' (',' | stringConstant| matchPattern | splatCapture | expression | wrongSideColonKey)+ '}' {/* id: matchBadDictPattern */ false}? # errDictPattern
   ;
 
@@ -264,8 +264,8 @@ nilLiteral
 stringLiteral
   : VSTRING           # stringVerbatim
   | HEREDOC_STRING    # stringHereDoc
-  | STRING_BEGIN (stringText|stringEscapeSequence|stringReferenceInterpolation)* STRING_END # stringInterpolation
-  | STRING_BEGIN (unrecognizedEscapeSequence|stringText|stringEscapeSequence|stringReferenceInterpolation)+ STRING_END {/* id: badStringInterpolation */ false}?  # stringInterpolation
+  | STRING_BEGIN (stringText|stringEscapeSequence|expression)* STRING_END # stringInterpolation
+  | STRING_BEGIN (unrecognizedEscapeSequence|stringText|stringEscapeSequence|expression)+ STRING_END {/* id: badStringInterpolation */ false}?  # stringInterpolation
   ;
 
 stringText
@@ -274,10 +274,6 @@ stringText
 
 stringEscapeSequence
   : STRING_ESCAPE_SEQUENCE
-  ;
-
-stringReferenceInterpolation
-  : STRING_REFERENCE_INTERPOLATION
   ;
 
 unrecognizedEscapeSequence
