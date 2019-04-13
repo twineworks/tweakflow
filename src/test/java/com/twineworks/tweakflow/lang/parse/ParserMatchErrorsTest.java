@@ -45,7 +45,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_line_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_line_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_line_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -54,7 +54,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_mid_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_mid_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_mid_pattern_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -63,7 +63,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_final_mid_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_final_mid_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_mid_pattern_extra_final_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -72,7 +72,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_initial_mid_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_initial_mid_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_mid_pattern_extra_initial_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -81,7 +81,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_middle_mid_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_middle_mid_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_mid_pattern_extra_middle_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -91,7 +91,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_init_last_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_init_last_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_init_last_pattern_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -100,7 +100,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_final_init_last_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_final_init_last_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_init_last_pattern_extra_final_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -109,7 +109,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_initial_init_last_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_initial_init_last_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_init_last_pattern_extra_initial_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -118,7 +118,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_middle_init_last_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_middle_init_last_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_init_last_pattern_extra_middle_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -127,7 +127,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_head_tail_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_head_tail_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_head_tail_pattern_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -136,7 +136,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_final_head_tail_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_final_head_tail_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_head_tail_pattern_extra_final_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -145,7 +145,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_initial_head_tail_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_initial_head_tail_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_head_tail_pattern_extra_initial_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -154,7 +154,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_middle_head_tail_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_middle_head_tail_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_head_tail_pattern_extra_middle_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -163,7 +163,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_guard_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_guard_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_guard_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -172,7 +172,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_missing_list_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_missing_list_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting ','");
@@ -180,8 +180,17 @@ public class ParserMatchErrorsTest {
   }
 
   @Test
+  public void fails_on_list_pattern_wrong_side_colon_key() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_wrong_side_colon_key.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected 'name:'");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:12");
+  }
+
+  @Test
   public void fails_on_extra_final_list_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_final_list_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_extra_final_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -190,7 +199,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_initial_list_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_initial_list_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_extra_initial_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -199,7 +208,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_extra_middle_list_pattern_separator() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_extra_middle_list_pattern_separator.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_extra_middle_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected ','");
@@ -208,7 +217,7 @@ public class ParserMatchErrorsTest {
 
   @Test
   public void fails_on_list_multi_splat() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_multi_splat.tf");
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_list_pattern_multi_splat.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("unexpected splat capture");
@@ -261,6 +270,15 @@ public class ParserMatchErrorsTest {
   }
 
   @Test
+  public void fails_on_dict_unbalanced_pairs() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_dict_unbalanced_pairs.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("value for key ':name' expected");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:22");
+  }
+
+  @Test
   public void fails_on_dict_non_string_key() throws Exception {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_dict_non_string_key.tf");
     LangException e = r.getException();
@@ -270,11 +288,38 @@ public class ParserMatchErrorsTest {
   }
 
   @Test
+  public void fails_on_dict_wrong_side_colon_key() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_dict_wrong_side_colon_key.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected 'name:'");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:22");
+  }
+
+  @Test
   public void fails_on_open_dict_non_string_key() throws Exception {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_open_dict_non_string_key.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
     assertThat(e.getMessage()).contains("expecting key");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:30");
+  }
+
+  @Test
+  public void fails_on_open_dict_unbalanced_pairs() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_open_dict_unbalanced_pairs.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("value for key ':name' expected");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:29");
+  }
+
+  @Test
+  public void fails_on_open_dict_wrong_side_colon_key() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/match_open_dict_wrong_side_colon_key.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected 'profession:'");
     assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("5:30");
   }
 

@@ -155,6 +155,7 @@ expression
   | '->>' '('threadArg')' expression (',' expression)* expression {/* id: threadExpMissingSep */ false}? # threadExpErr
   | '->>' expression {/* id: threadExpMissingArg */ false}? # threadExpErr
   | expression'['containerAccessKeySequence']'              # containerAccessExp
+  | expression'['badContainerAccessKeySequence']' {/* id: badContainerAccessKeySequence */ false}? # containerAccessExp
   | '(' expression ')'                                      # nestedExp
   | expression 'as' dataType                                # castExp
   | expression 'default' expression                         # defaultExp
@@ -232,8 +233,8 @@ matchPattern
   | '{' ((stringConstant matchPattern) ',' )* (stringConstant matchPattern) '}' varCapture?                               # dictPattern
   | '{' (((stringConstant matchPattern)|splatCapture) ',' )* ((stringConstant matchPattern)|splatCapture) '}' varCapture? # openDictPattern
   | expression  varCapture?                     # expPattern
-  | '[' (',' | matchPattern | splatCapture) +']'              {/* id: matchBadListPattern */ false}? # errListPattern
-  | '{' (',' | stringConstant| matchPattern | splatCapture | expression )+ '}' {/* id: matchBadDictPattern */ false}? # errDictPattern
+  | '[' (',' | matchPattern | splatCapture | wrongSideColonKey) +']'              {/* id: matchBadListPattern */ false}? # errListPattern
+  | '{' (',' | stringConstant| matchPattern | splatCapture | expression | wrongSideColonKey)+ '}' {/* id: matchBadDictPattern */ false}? # errDictPattern
   ;
 
 threadArg
@@ -264,6 +265,7 @@ stringLiteral
   : VSTRING           # stringVerbatim
   | HEREDOC_STRING    # stringHereDoc
   | STRING_BEGIN (stringText|stringEscapeSequence|stringReferenceInterpolation)* STRING_END # stringInterpolation
+  | STRING_BEGIN (unrecognizedEscapeSequence|stringText|stringEscapeSequence|stringReferenceInterpolation)+ STRING_END {/* id: badStringInterpolation */ false}?  # stringInterpolation
   ;
 
 stringText
@@ -276,6 +278,10 @@ stringEscapeSequence
 
 stringReferenceInterpolation
   : STRING_REFERENCE_INTERPOLATION
+  ;
+
+unrecognizedEscapeSequence
+  : UNRECOGNIZED_STRING_ESCAPE_SEQUENCE
   ;
 
 longLiteral
@@ -303,13 +309,18 @@ dateTimeLiteral
 listLiteral
    : '['']'
    | '[' (expression|splat) (',' (expression|splat))* ','? ']'
-   | '[' (',' |expression|splat)+ ']' {/* id: badListLiteral */ false}?
+   | '[' (',' |expression|splat|wrongSideColonKey)+ ']' {/* id: badListLiteral */ false}?
    ;
 
 dictLiteral
    : '{' '}'
    | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))* ','? '}'
+   | '{' (',' |expression|splat|wrongSideColonKey)+ '}' {/* id: badDictLiteral */ false}?
    ;
+
+wrongSideColonKey
+  : identifier ':'
+  ;
 
 
 functionLiteral
@@ -358,7 +369,11 @@ identifier
   ;
 
 containerAccessKeySequence
-  : ((expression | splat)) (',' (expression | splat))*
+  : ((expression | splat)) (',' (expression | splat))* ','?
+  ;
+
+badContainerAccessKeySequence
+  : (',' |expression|splat|wrongSideColonKey)+
   ;
 
 partialArgs

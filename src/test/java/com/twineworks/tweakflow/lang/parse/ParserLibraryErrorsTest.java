@@ -50,7 +50,7 @@ public class ParserLibraryErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/library_missing_vardef_eos.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*library variable.*"));
+    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*variable.*"));
   }
 
   @Test

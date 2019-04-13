@@ -44,6 +44,15 @@ public class ParserListLiteralErrorsTest {
   }
 
   @Test
+  public void fails_on_wrong_side_colon_key() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/list_wrong_side_colon_key.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected 'b:'");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:14");
+  }
+
+  @Test
   public void fails_on_missing_separator() throws Exception {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/list_missing_separator.tf");
     LangException e = r.getException();

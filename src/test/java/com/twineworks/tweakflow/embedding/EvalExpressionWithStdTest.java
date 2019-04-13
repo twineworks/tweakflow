@@ -104,13 +104,13 @@ public class EvalExpressionWithStdTest {
   public void evaluates_expression_with_parse_error() throws Exception {
 
     String exp = "{error}";
-    //                  ^ up till here this could have been a dict definition. Error.
+    //             ^ unbalanced key - value pair
     try {
       Runtime.Var x = compileUserExpression(exp);
     } catch (LangException e){
       assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
       SourceInfo sourceInfo = e.getSourceInfo();
-      assertThat(sourceInfo.getFullLocation()).isEqualTo("exp:1:7");
+      assertThat(sourceInfo.getFullLocation()).isEqualTo("exp:1:2");
       assertThat(sourceInfo.getSourceCodeLine()).isEqualTo("{error}");
       return;
     }

@@ -154,6 +154,37 @@ public class ParserDictLiteralsTest {
   }
 
   @Test
+  void parses_extra_final_separator() {
+
+//      extra_final_separator: {:key1 "value1", :key2 "value2", };
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/dicts.tf");
+
+    ExpressionNode expNode = varDefMap.get("extra_final_separator").getValueExpression();
+    assertThat(expNode).isInstanceOf(DictNode.class);
+    DictNode node = (DictNode) expNode;
+    assertThat(node.getEntries()).hasSize(2);
+
+    DictEntryNode e0 = node.getEntries().get(0);
+    assertThat(e0.getKey()).isInstanceOf(StringNode.class);
+    StringNode e0k = (StringNode) e0.getKey();
+    assertThat(e0k.getStringVal()).isEqualTo("key1");
+
+    assertThat(e0.getValue()).isInstanceOf(StringNode.class);
+    StringNode e0v = (StringNode) e0.getValue();
+    assertThat(e0v.getStringVal()).isEqualTo("value1");
+
+    DictEntryNode e1 = node.getEntries().get(1);
+    assertThat(e1.getKey()).isInstanceOf(StringNode.class);
+    StringNode e1k = (StringNode) e1.getKey();
+    assertThat(e1k.getStringVal()).isEqualTo("key2");
+
+    assertThat(e1.getValue()).isInstanceOf(StringNode.class);
+    StringNode e1v = (StringNode) e1.getValue();
+    assertThat(e1v.getStringVal()).isEqualTo("value2");
+
+  }
+
+  @Test
   void parses_nested() {
 
 //      nested: {"k" "v", "sub" {:key "value"}};

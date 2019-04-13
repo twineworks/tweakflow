@@ -30,11 +30,9 @@ import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import org.junit.jupiter.api.Test;
 
-import java.util.regex.Pattern;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParserLetErrorsTest {
+public class ParserContainerAccessErrorsTest {
 
   private ParseResult parseFailing(String fixturePath){
     Parser p = new Parser(
@@ -46,11 +44,40 @@ public class ParserLetErrorsTest {
   }
 
   @Test
-  public void fails_on_missing_vardef_eos() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/let_missing_vardef_eos.tf");
+  public void fails_on_wrong_side_colon_key() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/container_access_wrong_side_colon_key.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*variable.*"));
+    assertThat(e.getMessage()).contains("unexpected 'k:'");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:11");
   }
+
+  @Test
+  public void fails_on_missing_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/container_access_missing_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("expecting ','");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:13");
+  }
+
+  @Test
+  public void fails_on_extra_initial_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/container_access_extra_initial_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected ','");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:8");
+  }
+
+  @Test
+  public void fails_on_extra_mid_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/container_access_extra_mid_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getMessage()).contains("unexpected ','");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:10");
+  }
+
 
 }

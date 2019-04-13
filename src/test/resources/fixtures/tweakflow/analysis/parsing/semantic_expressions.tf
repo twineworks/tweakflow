@@ -29,12 +29,16 @@ library lib
   f_call_a_bfoo:    f(:a, b: "foo");          # call f with arg0="a", b="foo"
   f_partial_a:      f(a="foo");               # partial f with a="foo"
   f_partial_a_b:    f(a="foo", b="bar");      # partial f with a="foo", b="bar"
+  ca_single:        c[1];                     # container access single
+  ca_multi:         c[1, :a, 3];              # container access multi
   thread: ->> (8)
            (n) -> n*4,
            (n) -> n+3,
            (n) -> n*n;
   thread_expected: ((n) -> n*n)(((n) -> n+3)(((n) -> n*4)(8)));
-  match_42: match 42
+  gen: for x <- [1, 2, 3],                    # list comprehension generator
+           x**2;
+  match_42: match 42                          # match wit basic patterns
         10 ->      "ten",
         20 ->      "twenty",
         42 ->      "the answer to everything",

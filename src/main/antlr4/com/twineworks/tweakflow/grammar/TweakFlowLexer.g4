@@ -209,8 +209,8 @@ fragment VSTRING_ESCAPE_SEQUENCE
 // enclosed in double quotes
 // standard escape sequences
 
-STRING_BEGIN:
-  '"' -> pushMode(StringMode)
+STRING_BEGIN
+  : '"' -> pushMode(StringMode)
   ;
 
 INLINE_COMMENT
@@ -247,6 +247,6 @@ STRING_END
   : '"' -> popMode
   ;
 
-UNRECOGNIZED
-  : .
+UNRECOGNIZED_STRING_ESCAPE_SEQUENCE
+  : '\\'(.)+?
   ;

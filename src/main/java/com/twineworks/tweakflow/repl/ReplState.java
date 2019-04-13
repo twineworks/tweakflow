@@ -260,8 +260,9 @@ public class ReplState {
 
     for (String var : varDefs.keySet()) {
       builder
-          .append("    ")
+//          .append("    ")
           .append(varDefs.get(var))
+          .append("\n")
           .append(";")
           .append("\n");
     }
@@ -269,8 +270,9 @@ public class ReplState {
     // add input expression, if any
     if (getPromptInput() != null){
       builder
-          .append("    ")
+//          .append("    ")
           .append(LangUtil.escapeIdentifier(getPromptVarName())).append(": ").append(getPromptInput())
+          .append("\n")
           .append(";")
           .append("\n");
     }
