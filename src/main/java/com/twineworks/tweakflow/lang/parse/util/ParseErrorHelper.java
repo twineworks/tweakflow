@@ -133,6 +133,14 @@ public class ParseErrorHelper {
     return "'" + s + "'";
   }
 
+  private static String namedPartialArgAsNamedArg(TweakFlowParser.NamedPartialArgContext item){
+    return item.identifier().getText()+": "+item.expression().getText();
+  }
+
+  private static String namedArgAsNamedPartialArg(TweakFlowParser.NamedArgContext item){
+    return item.identifier().getText()+"= "+item.expression().getText();
+  }
+
   public static LangException exceptionFor(ParseUnit parseUnit, TweakFlowParser parser, InputMismatchException e) {
 
     // position
@@ -180,7 +188,7 @@ public class ParseErrorHelper {
     } else if (offendingToken.getType() == TweakFlowLexer.SQ ||
         offendingToken.getType() == TweakFlowLexer.STRING_BEGIN ||
         offendingToken.getType() == TweakFlowLexer.STRING_END) {
-      msg.append("syntax error - unterminated or misquoted string?");
+      msg.append("syntax error - unterminated or incorrectly quoted string?");
     } else if (offendingToken.getType() == TweakFlowLexer.LP ||
         offendingToken.getType() == TweakFlowLexer.RP) {
       msg.append("syntax error - unbalanced call or grouping brackets?");
@@ -230,7 +238,7 @@ public class ParseErrorHelper {
       case TweakFlowLexer.SQ:
       case TweakFlowLexer.STRING_BEGIN:
       case TweakFlowLexer.STRING_END: {
-        msg.append("syntax error - unterminated or misquoted string?");
+        msg.append("syntax error - unterminated or incorrectly quoted string?");
 //        srcInfo = new SourceInfo(parseUnit, e.getStartToken().getLine(), e.getStartToken().getCharPositionInLine() + 1, -1, -1);
       }
       break;
@@ -308,7 +316,7 @@ public class ParseErrorHelper {
           if (isWrongSideColonKey) {
             sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
             TweakFlowParser.WrongSideColonKeyContext wrongSideColonKey = (TweakFlowParser.WrongSideColonKeyContext) item;
-            msg.append("unexpected '" + item.getText() + "' - did you mean ':" + wrongSideColonKey.identifier().getText() + "' ?");
+            msg.append("unexpected '").append(item.getText()).append("' - did you mean ':").append(wrongSideColonKey.identifier().getText()).append("' ?");
           }
 
           // separator expected on indexes 2, 4, etc.
@@ -361,7 +369,7 @@ public class ParseErrorHelper {
           if (isWrongSideColonKey) {
             sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
             TweakFlowParser.WrongSideColonKeyContext wrongSideColonKey = (TweakFlowParser.WrongSideColonKeyContext) item;
-            msg.append("unexpected '" + item.getText() + "' - did you mean ':" + wrongSideColonKey.identifier().getText() + "' ?");
+            msg.append("unexpected '").append(item.getText()).append("' - did you mean ':").append(wrongSideColonKey.identifier().getText()).append("' ?");
           }
 
           // separator expected on indexes 3, 6, etc.
@@ -395,7 +403,7 @@ public class ParseErrorHelper {
           if (i == children.size() - 2) {
             if (isKeyPosition) {
               sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
-              msg.append("unexpected end of dict pattern - value for key '" + item.getText() + "' expected");
+              msg.append("unexpected end of dict pattern - value for key '").append(item.getText()).append("' expected");
             }
           }
         }
@@ -544,7 +552,6 @@ public class ParseErrorHelper {
 
         // manually validate children in order
         List<ParseTree> children = ctx.children;
-        int seenSplats = 0;
         /* skip leading '"' and final '"' nodes */
         for (int i = 1; i < children.size() - 1; i++) {
           ParseTree item = children.get(i);
@@ -553,9 +560,89 @@ public class ParseErrorHelper {
           if (isUnrecognizedEscape) {
             sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
             TweakFlowParser.UnrecognizedEscapeSequenceContext badSequence = (TweakFlowParser.UnrecognizedEscapeSequenceContext) item;
-            msg.append("invalid escape sequence: '" + item.getText() + "' - did you mean '\\" + badSequence.getText() + "' ?");
+            msg.append("invalid escape sequence: '").append(item.getText()).append("' - did you mean '\\").append(badSequence.getText()).append("' ?");
           }
         }
+
+      }
+      break;
+      case "badCallArgs": {
+        // predicate matches full dict with mixed splats and non-splats, and optional separators
+        TweakFlowParser.CallExpContext ctxc = (TweakFlowParser.CallExpContext) e.getCtx();
+        TweakFlowParser.BadArgsContext ctx = ctxc.badArgs();
+
+        // manually validate children in order
+        List<ParseTree> children = ctx.children;
+
+        boolean seenPositional = false;
+        boolean seenNamed = false;
+        boolean seenPartial = false;
+        boolean seenSplat = false;
+        TweakFlowParser.NamedPartialArgContext lastPartial = null;
+
+        for (int i = 0; i < children.size(); i++) {
+          ParseTree item = children.get(i);
+          boolean isSep = (item instanceof TerminalNode);
+          boolean isSepPosition = i % 2 == 1;
+
+
+          if (isSep) {
+            if (!isSepPosition || i == children.size() - 1) {
+              sourceInfo = srcOf(parseUnit, ((TerminalNode) item).getSymbol());
+              msg.append("unexpected ','");
+              break;
+            }
+          } else {
+            if (isSepPosition) {
+              sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
+              msg.append("expecting ',' - must separate call arguments with ','");
+              break;
+            }
+          }
+
+          if (item instanceof TweakFlowParser.NamedPartialArgContext){
+            seenPartial = true;
+            TweakFlowParser.NamedPartialArgContext partial = (TweakFlowParser.NamedPartialArgContext) item;
+
+            lastPartial = partial;
+
+            if (seenNamed || seenPositional || seenSplat){
+              sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
+              msg.append("unexpected partial application binding '"+item.getText()+" after call arguments - did you mean '"+namedPartialArgAsNamedArg(partial)+"'?");
+              break;
+            }
+          }
+
+          if (item instanceof TweakFlowParser.NamedArgContext){
+            seenNamed = true;
+            if (seenPartial){
+              TweakFlowParser.NamedArgContext namedArg = (TweakFlowParser.NamedArgContext) item;
+              sourceInfo = srcOf(parseUnit, namedArg);
+              msg.append("unexpected named argument '"+namedArg.getText()+"' after partial application binding '"+lastPartial.getText()+" - did you mean '"+namedArgAsNamedPartialArg(namedArg)+"'?");
+              break;
+            }
+          }
+
+          if (item instanceof TweakFlowParser.PositionalArgContext){
+            seenPositional = true;
+            if (seenPartial){
+              sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
+              msg.append("unexpected positional argument '"+item.getText()+"' after partial application binding '"+lastPartial.getText());
+              break;
+            }
+          }
+
+          if (item instanceof TweakFlowParser.SplatArgContext){
+            seenSplat = true;
+            if (seenPartial){
+              sourceInfo = srcOf(parseUnit, ((ParserRuleContext) item));
+              msg.append("unexpected splat argument '"+item.getText()+"' after partial application binding '"+lastPartial.getText());
+              break;
+            }
+          }
+
+        }
+
 
       }
       break;

@@ -151,6 +151,7 @@ expression
   | reference                                               # referenceExp
   | expression'('args')'                                    # callExp
   | expression'('partialArgs')'                             # partialExp
+  | expression'('badArgs')' {/* id: badCallArgs */ false}? # callExp
   | '->>' '('threadArg')' expression (',' expression)*      # threadExp
   | '->>' '('threadArg')' expression (',' expression)* expression {/* id: threadExpMissingSep */ false}? # threadExpErr
   | '->>' expression {/* id: threadExpMissingArg */ false}? # threadExpErr
@@ -264,8 +265,8 @@ nilLiteral
 stringLiteral
   : VSTRING           # stringVerbatim
   | HEREDOC_STRING    # stringHereDoc
-  | STRING_BEGIN (stringText|stringEscapeSequence|expression)* STRING_END # stringInterpolation
-  | STRING_BEGIN (unrecognizedEscapeSequence|stringText|stringEscapeSequence|expression)+ STRING_END {/* id: badStringInterpolation */ false}?  # stringInterpolation
+  | STRING_BEGIN (stringText|stringEscapeSequence|(STRING_INTERPOLATION expression RCURLY))* STRING_END # stringInterpolation
+  | STRING_BEGIN (unrecognizedEscapeSequence|stringText|stringEscapeSequence|(STRING_INTERPOLATION expression RCURLY))+ STRING_END {/* id: badStringInterpolation */ false}?  # stringInterpolation
   ;
 
 stringText
@@ -395,6 +396,10 @@ namedArg
 
 splatArg
   : splat
+  ;
+
+badArgs
+  : (namedPartialArg|namedArg|positionalArg|splatArg|',') *
   ;
 
 keyLiteral

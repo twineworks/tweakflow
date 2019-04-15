@@ -86,7 +86,6 @@ RCURLY: '}' {
     // if initial curly popped, we're back in string mode again
     if (curlyLevels.peek() == 0){
       curlyLevels.pop();
-      skip();
       popMode();
     }
   }
@@ -265,7 +264,7 @@ STRING_ESCAPE_SEQUENCE
   ;
 
 STRING_INTERPOLATION
-  : '#{' { curlyLevels.push(1); } -> skip, pushMode(DEFAULT_MODE)
+  : '#{' { curlyLevels.push(1); } -> pushMode(DEFAULT_MODE)
   ;
 
 STRING_TEXT

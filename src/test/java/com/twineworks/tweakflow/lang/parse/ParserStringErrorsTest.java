@@ -50,7 +50,7 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_single_unterminated.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or incorrectly quoted string");
     StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:6");
 
   }
@@ -61,7 +61,7 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_unterminated.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or incorrectly quoted string");
     StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:2");
 
   }
@@ -72,8 +72,8 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_unterminated_interpolation.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
-    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("4:2");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or incorrectly quoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:22");
 
   }
 
@@ -83,8 +83,8 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_invalid_interpolation.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
-    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:22");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or incorrectly quoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:21");
 
   }
 
@@ -94,8 +94,8 @@ public class ParserStringErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_double_nested_invalid_interpolation.tf");
     LangException e = r.getException();
     StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or misquoted string");
-    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:28");
+    StrictAssertions.assertThat(e.getMessage()).contains("unterminated or incorrectly quoted string");
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:27");
 
   }
 

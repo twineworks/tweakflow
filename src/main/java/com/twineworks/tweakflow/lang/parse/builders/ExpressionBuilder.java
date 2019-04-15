@@ -450,7 +450,13 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     for (; i < n; i++) {
 
-      ParserRuleContext child = (ParserRuleContext) ctx.children.get(i);
+      ParseTree item = ctx.children.get(i);
+      if (item instanceof TerminalNode) {
+        // skip #{ and } interpolation start and end tokens
+        continue;
+      }
+
+      ParserRuleContext child = (ParserRuleContext) item;
 
       if (child instanceof TweakFlowParser.StringTextContext) {
         String text = child.getText();
@@ -460,6 +466,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         nodes.add(new StringNode(convertEscapeSequence(escapeSequence)).setSourceInfo(srcOf(parseUnit, child)));
       } else if (child instanceof TweakFlowParser.ExpressionContext) {
         nodes.add(visit(child));
+
       } else {
         throw new AssertionError("Unknown child node in string interpolation: " + child.toString());
       }
@@ -477,7 +484,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     if (compacted.size() == 1) {
       ExpressionNode c = compacted.get(0);
       c.setSourceInfo(sourceInfo);
-      if (c.getValueType() != Types.STRING){
+      if (c.getValueType() != Types.STRING) {
         c = addImplicitCast(Types.STRING, c);
       }
       return c;

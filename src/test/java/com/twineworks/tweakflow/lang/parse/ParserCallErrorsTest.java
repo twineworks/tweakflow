@@ -48,8 +48,89 @@ public class ParserCallErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_missing_separator.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    // TODO: matcher for bad calls/partial applications
-//    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*variable.*"));
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getMessage()).contains("expecting ','");
+  }
+
+  @Test
+  public void fails_on_extra_initial_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_extra_initial_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:8");
+    assertThat(e.getMessage()).contains("unexpected ','");
+  }
+
+  @Test
+  public void fails_on_extra_mid_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_extra_mid_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:17");
+    assertThat(e.getMessage()).contains("unexpected ','");
+  }
+
+  @Test
+  public void fails_on_extra_final_separator() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_extra_final_separator.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:15");
+    assertThat(e.getMessage()).contains("unexpected ','");
+  }
+
+  @Test
+  public void fails_on_mix_binding_with_named() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_binding_with_named.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getMessage()).contains("unexpected named argument");
+  }
+
+  @Test
+  public void fails_on_mix_binding_with_positional() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_binding_with_positional.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getMessage()).contains("unexpected positional argument");
+  }
+
+  @Test
+  public void fails_on_mix_binding_with_splat() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_binding_with_splat.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getMessage()).contains("unexpected splat argument");
+  }
+
+  @Test
+  public void fails_on_mix_named_with_binding() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_named_with_binding.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getMessage()).contains("unexpected partial application binding");
+  }
+
+  @Test
+  public void fails_on_mix_positional_with_binding() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_positional_with_binding.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:11");
+    assertThat(e.getMessage()).contains("unexpected partial application binding");
+  }
+
+  @Test
+  public void fails_on_mix_splat_with_binding() throws Exception {
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_splat_with_binding.tf");
+    LangException e = r.getException();
+    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:15");
+    assertThat(e.getMessage()).contains("unexpected partial application binding");
   }
 
 }
