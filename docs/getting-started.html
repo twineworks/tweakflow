@@ -208,13 +208,13 @@ false
 <p>Create a datetime value. If you don&rsquo;t need supply the time, it defaults to midnight UTC time.</p>
 
 <pre><code class="language-tweakflow">&gt; 2017-01-23T
-2017-01-23T00:00:00Z@`UTC`
+2017-01-23T00:00:00Z@UTC
 </code></pre>
 
 <p>You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:</p>
 
-<pre><code class="language-tweakflow">&gt; 2017-01-23T18:23:11+01:00@`Europe/Berlin`
-2017-01-23T18:23:11+01:00@`Europe/Berlin`
+<pre><code class="language-tweakflow">&gt; 2017-01-23T18:23:11+01:00@Europe/Berlin
+2017-01-23T18:23:11+01:00@Europe/Berlin
 </code></pre>
 
 <h2 id="calling-functions">Calling functions</h2>
@@ -234,13 +234,13 @@ false
 <p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="./modules/std.html#add-period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
 
 <pre><code class="language-tweakflow">&gt; time.add_period(start: 2017-01-01T, days: 100)
-2017-04-11T00:00:00Z@`UTC`
+2017-04-11T00:00:00Z@UTC
 </code></pre>
 
 <p>You can even start with positional arguments, and switch to named arguments later in the call.</p>
 
 <pre><code class="language-tweakflow">&gt; time.add_period(2017-01-01T, days: 100)
-2017-04-11T00:00:00Z@`UTC`
+2017-04-11T00:00:00Z@UTC
 </code></pre>
 
 <h2 id="variables">Variables</h2>
@@ -297,12 +297,16 @@ z: x*y
 
 <h2 id="string-interpolation">String interpolation</h2>
 
-<p>You can include the values of variables in double quoted strings using the <code>#{varname}</code> escape sequence.</p>
+<p>You can include the values of expressions in double quoted strings using the <code>#{expression}</code> escape sequence.</p>
 
 <pre><code class="language-tweakflow">&gt; name: &quot;Joe&quot;
 &quot;Joe&quot;
+
 &gt; &quot;Hello #{name}&quot;
 &quot;Hello Joe&quot;
+
+&gt; &quot;Hello #{strings.upper_case(name)}&quot;
+&quot;Hello JOE&quot;
 </code></pre>
 
 <p>There are other escape sequences like <code>\n</code> for newlines and <code>\t</code> for tabs.</p>

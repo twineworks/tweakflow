@@ -466,8 +466,8 @@ Line 3&quot;
 </tr>
 
 <tr>
-<td><code>#{reference}</code></td>
-<td>value given by the reference when cast to string</td>
+<td><code>#{expression}</code></td>
+<td>value of expression cast to string</td>
 </tr>
 
 <tr>
@@ -477,7 +477,7 @@ Line 3&quot;
 </tbody>
 </table>
 
-<p>To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of a variable reference, escape the hash character that opens the sequence, so it is interpreted literally.</p>
+<p>To prevent expansion of escape sequences beginning with a backslash, escape the backslash, so it is interpreted literally. To prevent expansion of an expression, escape the hash character that opens the sequence, so it is interpreted literally.</p>
 
 <pre><code class="language-tweakflow">&gt; &quot;hello world&quot;
 &quot;hello world&quot;
@@ -582,19 +582,19 @@ Hello World
 
 <h3 id="datetime-literals">Datetime literals</h3>
 
-<p>Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form <code>[year]-[month]-[day]T</code>  with year given as four to nine digits, month and day given as two digits each. The year may carry a <code>-</code> or <code>+</code> prefix.</p>
+<p>Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form <code>[year]-[month]-[day]T</code>  with year given as four to nine digits and month and day given as one or two digits each. The year may carry a <code>-</code> or <code>+</code> prefix.</p>
 
-<pre><code class="language-tweakflow">&gt; 2019-04-30T
+<pre><code class="language-tweakflow">&gt; 2019-4-30T
 2019-04-30T00:00:00Z@UTC
 
-&gt; -0001-01-01T
+&gt; -0001-1-1T
 -0001-01-01T00:00:00Z@UTC
 
 &gt; +999999-03-12T
 +999999-03-12T00:00:00Z@UTC
 </code></pre>
 
-<p>The basic form is extended to specify the local time in 24 hour format as <code>[hours]:[minutes]:[seconds](.[fraction_of_seconds])?</code> with two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.</p>
+<p>The basic form is extended to specify the local time in 24 hour format as <code>[hours]:[minutes]:[seconds](.[fraction_of_seconds])?</code> with one or two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.</p>
 
 <pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11
 2017-04-30T21:32:11Z@UTC
@@ -603,7 +603,7 @@ Hello World
 2017-04-30T21:32:11.123456789Z@UTC
 </code></pre>
 
-<p>The local time form is extended to specify an offset from UTC of the form <code>((+|-)[offset_hours]:[offset_minutes])|Z</code>  where offset hours and offset minutes is specified with 2 digits each. The shorthand Z means UTC time, no offset.</p>
+<p>The local time form is extended to specify an offset from UTC of the form <code>((+|-)[offset_hours]:[offset_minutes])|Z</code>  where offset hours and offset minutes is specified with one or two digits each. The shorthand Z means UTC time, no offset.</p>
 
 <pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11+02:00
 2017-04-30T21:32:11+02:00@`UTC+02:00`
@@ -612,15 +612,56 @@ Hello World
 2017-04-30T21:32:11Z@UTC
 </code></pre>
 
-<p>The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an <code>@</code> sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as <a href="#identifiers">identifiers</a>, and will often have to be escaped by backticks.</p>
+<p>The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an <code>@</code> sign, followed by the id of the desired time zone.</p>
 
-<p>Time zones are valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
+<p>A time zone id is valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
 
-<pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11+02:00@`Europe/Berlin`
-2017-04-30T21:32:11+02:00@`Europe/Berlin`
+<p>If a time zone id matches one of the following syntax rules, it may but need not be escaped by backticks:</p>
 
-&gt; 2017-04-30T21:32:11+02:00@`UTC+02:00`
+<pre><code class="language-text">[a-zA-Z_][a-zA-Z_0-9?]*            # regular identifier syntax
+[a-zA-Z_]+('/'[a-zA-Z0-9_?]+)+     # extended syntax for time zone ids, allowing sections separated by the '/' character
+</code></pre>
+
+<p>If a time zone id does not match above syntax, it must be escaped by backticks, just like <a href="#identifiers">identifiers</a>.</p>
+
+<p>Examples:</p>
+
+<pre><code class="language-tweakflow">&gt; 2017-04-30T21:32:11+02:00@`Europe/Berlin`     # can always escape a time zone id
+2017-04-30T21:32:11+02:00@Europe/Berlin
+
+&gt; 2017-04-30T21:32:11+02:00@Europe/Berlin       # most regional time zone ids need no escaping
+2017-04-30T21:32:11+02:00@Europe/Berlin
+
+&gt; 2017-04-30T21:32:11+02:00@`UTC+02:00`         # escaped time zone id that needs escaping
 2017-04-30T21:32:11+02:00@`UTC+02:00`
+
+&gt; 2017-04-30T21:32:11+02:00@UTC+02:00           # missing escaping on time zone id
+ERROR:
+  code: PARSE_ERROR
+</code></pre>
+
+<p>In case the UTC offset is omitted, but a time zone id is provided, an offset implied by the time zone id is used.</p>
+
+<pre><code class="language-tweakflow">&gt; 2019-01-01T00:00:00@Europe/Berlin
+2019-01-01T00:00:00+01:00@Europe/Berlin # note that +01:00 is used
+</code></pre>
+
+<p>If in the case of omitted offset the datetime is ambiguous because of daylight saving mechanics, the following rules apply:
+ - if the datetime falls into a gap, the length of the gap is added
+ - if the datetime falls into an overlap, the earlier point in time is used</p>
+
+<pre><code class="language-tweakflow"># time does not exist as given, it falls into a 1-hour DST gap, so 1 hour is added
+&gt; 2019-03-31T02:30:00@Europe/Berlin
+2019-03-31T03:30:00+02:00@Europe/Berlin
+
+# time falls into a DST overlap, the earlier point in time is used.
+# In this case +02:00 in favor of +01:00
+&gt; 2019-10-27T02:30:00@Europe/Berlin
+2019-10-27T02:30:00+02:00@Europe/Berlin
+
+# you can notate the later point in time by manually supplying the offset
+&gt; 2019-10-27T02:30:00+01:00@Europe/Berlin
+2019-10-27T02:30:00+01:00@Europe/Berlin
 </code></pre>
 
 <h3 id="list-literals">List literals</h3>
@@ -1477,7 +1518,7 @@ ERROR:
   :year 1970
 }
 
-&gt; 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict
+&gt; 2017-07-23T23:12:32.298+02:00@Europe/Berlin as dict
 {
   :month 7,
   :day_of_year 204,
@@ -4273,7 +4314,7 @@ false
   :c &quot;d&quot;
 }
 
-&gt; 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
+&gt; 2017-07-23T23:12:32.298+02:00@Europe/Berlin as dict # datetime as dict
 {
   :month 7,
   :day_of_year 204,

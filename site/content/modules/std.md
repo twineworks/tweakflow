@@ -2880,14 +2880,14 @@ Returns `nil` if any argument is `nil`.
 1970-01-01T00:00:00Z@UTC
 
 > time.of(2019, 04, 10, tz: "Europe/Berlin")
-2019-04-10T00:00:00+02:00@`Europe/Berlin`
+2019-04-10T00:00:00+02:00@Europe/Berlin
 
 > time.of(2019, 04, 10, 16, 23, 11, 999000000, "America/New_York")
-2019-04-10T16:23:11.999-04:00@`America/New_York`
+2019-04-10T16:23:11.999-04:00@America/New_York
 
 # DST gap
 > time.of(2019, 03, 31, 2, 30, tz: "Europe/Berlin")
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 > time.of(nil)
 nil
@@ -2917,12 +2917,12 @@ Returns `nil` if any argument is `nil`.
 > time.at(time.epoch, 23, 12, 10)
 1970-01-01T23:12:10Z@UTC
 
-> time.at(2019-04-10T00:00:00+02:00@`Europe/Berlin`, 6, 30)
-2019-04-10T06:30:00+02:00@`Europe/Berlin`
+> time.at(2019-04-10T00:00:00+02:00@Europe/Berlin, 6, 30)
+2019-04-10T06:30:00+02:00@Europe/Berlin
 
 # DST gap
-> time.at(2019-03-31T00:00:00+01:00@`Europe/Berlin`, 2, 30)
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+> time.at(2019-03-31T00:00:00+01:00@Europe/Berlin, 2, 30)
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 > time.at(nil)
 nil
@@ -3478,7 +3478,7 @@ Returns `nil` if `x` is `nil`.
 > time.zone(2010-01-01T00:00:00.00+02:00)
 "UTC+02:00"
 
-> time.zone(2010-01-01T00:00:00.00+01:00@`Europe/Berlin`)
+> time.zone(2010-01-01T00:00:00.00+01:00@Europe/Berlin)
 "Europe/Berlin"
 
 > time.zone(nil)
@@ -3596,8 +3596,8 @@ Throws an error if no datetime can be constructed with given `hour`.
 1970-01-01T04:00:00Z@UTC
 
 # 2:30 is in a 1h DST gap, it technically did not exist
-> time.with_hour(2019-03-31T01:30:00+01:00@`Europe/Berlin`, 2)
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+> time.with_hour(2019-03-31T01:30:00+01:00@Europe/Berlin, 2)
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 > time.with_hour(time.epoch, nil)
 nil
@@ -3705,13 +3705,13 @@ Throws an error if no datetime can be constructed with given `tz`.
 
 ```tweakflow
 > time.with_zone(time.epoch, "Europe/Berlin")
-1970-01-01T00:00:00+01:00@`Europe/Berlin`
+1970-01-01T00:00:00+01:00@Europe/Berlin
 
 > time.with_zone(time.epoch, "GMT+08:00")
 1970-01-01T00:00:00+08:00@`GMT+08:00`
 
 > time.with_zone(time.epoch, 'America/New_York')
-  1970-01-01T00:00:00-05:00@`America/New_York`
+  1970-01-01T00:00:00-05:00@America/New_York
 
 > time.with_zone(time.epoch, nil)
 nil
@@ -3737,13 +3737,13 @@ Throws an error if no datetime can be constructed with given `tz`.
 
 ```tweakflow
 > time.same_instant_at_zone(time.epoch, "Europe/Berlin")
-1970-01-01T01:00:00+01:00@`Europe/Berlin`
+1970-01-01T01:00:00+01:00@Europe/Berlin
 
 > time.same_instant_at_zone(time.epoch, "GMT+08:00")
 1970-01-01T08:00:00+08:00@`GMT+08:00`
 
 # the instant in time is the same
-> time.compare(1970-01-01T01:00:00+01:00@`Europe/Berlin`, 1970-01-01T08:00:00+08:00@`GMT+08:00`)
+> time.compare(1970-01-01T01:00:00+01:00@Europe/Berlin, 1970-01-01T08:00:00+08:00@`GMT+08:00`)
 0
 
 > time.same_instant_at_zone(time.epoch, nil)
@@ -3942,8 +3942,8 @@ nil
 > f("2017-04-23T21:43:11")
 2017-04-23T21:43:11Z@UTC
 
-> f("2017-04-23T21:43:11@`Europe/Berlin`")
-2017-04-23T21:43:11+02:00@`Europe/Berlin`
+> f("2017-04-23T21:43:11@Europe/Berlin")
+2017-04-23T21:43:11+02:00@Europe/Berlin
 
 # patterns specifies mandatory @ sign and backticks before timezone
 > f("2017-04-23T21:43:11 Europe/Berlin")
@@ -3974,10 +3974,10 @@ function
 function
 
 > f("2017-06-22 12:34:11")
-2017-06-22T12:34:11-05:00@`America/Chicago`
+2017-06-22T12:34:11-05:00@America/Chicago
 
 > f("2017-06-22")
-2017-06-22T00:00:00-05:00@`America/Chicago`
+2017-06-22T00:00:00-05:00@America/Chicago
 
 ```
 

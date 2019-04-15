@@ -284,20 +284,20 @@ Symbol strings are regular strings. They are merely a notational convenience to 
 
 ### Datetime literals
 
-Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form `[year]-[month]-[day]T`  with year given as four to nine digits, month and day given as two digits each. The year may carry a `-` or `+` prefix.
+Datetime literals can be specified at various levels of granularity. Starting at the level of days, the datetime literals take the form `[year]-[month]-[day]T`  with year given as four to nine digits and month and day given as one or two digits each. The year may carry a `-` or `+` prefix.
 
 ```tweakflow
-> 2019-04-30T
+> 2019-4-30T
 2019-04-30T00:00:00Z@UTC
 
-> -0001-01-01T
+> -0001-1-1T
 -0001-01-01T00:00:00Z@UTC
 
 > +999999-03-12T
 +999999-03-12T00:00:00Z@UTC
 ```
 
-The basic form is extended to specify the local time in 24 hour format as `[hours]:[minutes]:[seconds](.[fraction_of_seconds])?` with two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.
+The basic form is extended to specify the local time in 24 hour format as `[hours]:[minutes]:[seconds](.[fraction_of_seconds])?` with one or two digits for hours, minutes, and seconds, and up to nine digits for the optional fraction of seconds.
 
 ```tweakflow
 > 2017-04-30T21:32:11
@@ -307,7 +307,7 @@ The basic form is extended to specify the local time in 24 hour format as `[hour
 2017-04-30T21:32:11.123456789Z@UTC
 ```
 
-The local time form is extended to specify an offset from UTC of the form `((+|-)[offset_hours]:[offset_minutes])|Z`  where offset hours and offset minutes is specified with 2 digits each. The shorthand Z means UTC time, no offset.
+The local time form is extended to specify an offset from UTC of the form `((+|-)[offset_hours]:[offset_minutes])|Z`  where offset hours and offset minutes is specified with one or two digits each. The shorthand Z means UTC time, no offset.
 
 ```tweakflow
 > 2017-04-30T21:32:11+02:00
@@ -317,16 +317,58 @@ The local time form is extended to specify an offset from UTC of the form `((+|-
 2017-04-30T21:32:11Z@UTC
 ```
 
-The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an `@` sign, followed by the id of the desired time zone. The time zone id follows the same escaping rules as [identifiers](#identifiers), and will often have to be escaped by backticks.
+The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an `@` sign, followed by the id of the desired time zone.
 
-Time zones are valid if recognized by Java's [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-). A list of known regional zone ids can be obtained by calling [time.zones](/modules/std.html#zones) of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-).
+A time zone id is valid if recognized by Java's [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-). A list of known regional zone ids can be obtained by calling [time.zones](/modules/std.html#zones) of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of [ZoneId.of](https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-).
+
+If a time zone id matches one of the following syntax rules, it may but need not be escaped by backticks:
+```text
+[a-zA-Z_][a-zA-Z_0-9?]*            # regular identifier syntax
+[a-zA-Z_]+('/'[a-zA-Z0-9_?]+)+     # extended syntax for time zone ids, allowing sections separated by the '/' character
+```
+
+If a time zone id does not match above syntax, it must be escaped by backticks, just like [identifiers](#identifiers).
+
+Examples:
+```tweakflow
+> 2017-04-30T21:32:11+02:00@`Europe/Berlin`     # can always escape a time zone id
+2017-04-30T21:32:11+02:00@Europe/Berlin
+
+> 2017-04-30T21:32:11+02:00@Europe/Berlin       # most regional time zone ids need no escaping
+2017-04-30T21:32:11+02:00@Europe/Berlin
+
+> 2017-04-30T21:32:11+02:00@`UTC+02:00`         # escaped time zone id that needs escaping
+2017-04-30T21:32:11+02:00@`UTC+02:00`
+
+> 2017-04-30T21:32:11+02:00@UTC+02:00           # missing escaping on time zone id
+ERROR:
+  code: PARSE_ERROR
+```
+
+In case the UTC offset is omitted, but a time zone id is provided, an offset implied by the time zone id is used.
 
 ```tweakflow
-> 2017-04-30T21:32:11+02:00@`Europe/Berlin`
-2017-04-30T21:32:11+02:00@`Europe/Berlin`
+> 2019-01-01T00:00:00@Europe/Berlin
+2019-01-01T00:00:00+01:00@Europe/Berlin # note that +01:00 is used
+```
 
-> 2017-04-30T21:32:11+02:00@`UTC+02:00`
-2017-04-30T21:32:11+02:00@`UTC+02:00`
+If in the case of omitted offset the datetime is ambiguous because of daylight saving mechanics, the following rules apply:
+ - if the datetime falls into a gap, the length of the gap is added
+ - if the datetime falls into an overlap, the earlier point in time is used
+
+```tweakflow
+# time does not exist as given, it falls into a 1-hour DST gap, so 1 hour is added
+> 2019-03-31T02:30:00@Europe/Berlin
+2019-03-31T03:30:00+02:00@Europe/Berlin
+
+# time falls into a DST overlap, the earlier point in time is used.
+# In this case +02:00 in favor of +01:00
+> 2019-10-27T02:30:00@Europe/Berlin
+2019-10-27T02:30:00+02:00@Europe/Berlin
+
+# you can notate the later point in time by manually supplying the offset
+> 2019-10-27T02:30:00+01:00@Europe/Berlin
+2019-10-27T02:30:00+01:00@Europe/Berlin
 ```
 
 ### List literals
@@ -1218,7 +1260,7 @@ For example:
   :year 1970
 }
 
-> 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict
+> 2017-07-23T23:12:32.298+02:00@Europe/Berlin as dict
 {
   :month 7,
   :day_of_year 204,
@@ -3847,7 +3889,7 @@ Supported type casts are listed for each type in their respective section of [da
   :c "d"
 }
 
-> 2017-07-23T23:12:32.298+02:00@`Europe/Berlin` as dict # datetime as dict
+> 2017-07-23T23:12:32.298+02:00@Europe/Berlin as dict # datetime as dict
 {
   :month 7,
   :day_of_year 204,

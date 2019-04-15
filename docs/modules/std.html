@@ -3080,14 +3080,14 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 1970-01-01T00:00:00Z@UTC
 
 &gt; time.of(2019, 04, 10, tz: &quot;Europe/Berlin&quot;)
-2019-04-10T00:00:00+02:00@`Europe/Berlin`
+2019-04-10T00:00:00+02:00@Europe/Berlin
 
 &gt; time.of(2019, 04, 10, 16, 23, 11, 999000000, &quot;America/New_York&quot;)
-2019-04-10T16:23:11.999-04:00@`America/New_York`
+2019-04-10T16:23:11.999-04:00@America/New_York
 
 # DST gap
 &gt; time.of(2019, 03, 31, 2, 30, tz: &quot;Europe/Berlin&quot;)
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 &gt; time.of(nil)
 nil
@@ -3114,12 +3114,12 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 <pre><code class="language-tweakflow">&gt; time.at(time.epoch, 23, 12, 10)
 1970-01-01T23:12:10Z@UTC
 
-&gt; time.at(2019-04-10T00:00:00+02:00@`Europe/Berlin`, 6, 30)
-2019-04-10T06:30:00+02:00@`Europe/Berlin`
+&gt; time.at(2019-04-10T00:00:00+02:00@Europe/Berlin, 6, 30)
+2019-04-10T06:30:00+02:00@Europe/Berlin
 
 # DST gap
-&gt; time.at(2019-03-31T00:00:00+01:00@`Europe/Berlin`, 2, 30)
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+&gt; time.at(2019-03-31T00:00:00+01:00@Europe/Berlin, 2, 30)
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 &gt; time.at(nil)
 nil
@@ -3689,7 +3689,7 @@ nil
 &gt; time.zone(2010-01-01T00:00:00.00+02:00)
 &quot;UTC+02:00&quot;
 
-&gt; time.zone(2010-01-01T00:00:00.00+01:00@`Europe/Berlin`)
+&gt; time.zone(2010-01-01T00:00:00.00+01:00@Europe/Berlin)
 &quot;Europe/Berlin&quot;
 
 &gt; time.zone(nil)
@@ -3803,8 +3803,8 @@ If resulting datetime is in a DST gap, the datetime is adjusted forward by the l
 1970-01-01T04:00:00Z@UTC
 
 # 2:30 is in a 1h DST gap, it technically did not exist
-&gt; time.with_hour(2019-03-31T01:30:00+01:00@`Europe/Berlin`, 2)
-2019-03-31T03:30:00+02:00@`Europe/Berlin`
+&gt; time.with_hour(2019-03-31T01:30:00+01:00@Europe/Berlin, 2)
+2019-03-31T03:30:00+02:00@Europe/Berlin
 
 &gt; time.with_hour(time.epoch, nil)
 nil
@@ -3908,13 +3908,13 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; time.with_zone(time.epoch, &quot;Europe/Berlin&quot;)
-1970-01-01T00:00:00+01:00@`Europe/Berlin`
+1970-01-01T00:00:00+01:00@Europe/Berlin
 
 &gt; time.with_zone(time.epoch, &quot;GMT+08:00&quot;)
 1970-01-01T00:00:00+08:00@`GMT+08:00`
 
 &gt; time.with_zone(time.epoch, 'America/New_York')
-  1970-01-01T00:00:00-05:00@`America/New_York`
+  1970-01-01T00:00:00-05:00@America/New_York
 
 &gt; time.with_zone(time.epoch, nil)
 nil
@@ -3939,13 +3939,13 @@ ERROR:
 <p>Throws an error if no datetime can be constructed with given <code>tz</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; time.same_instant_at_zone(time.epoch, &quot;Europe/Berlin&quot;)
-1970-01-01T01:00:00+01:00@`Europe/Berlin`
+1970-01-01T01:00:00+01:00@Europe/Berlin
 
 &gt; time.same_instant_at_zone(time.epoch, &quot;GMT+08:00&quot;)
 1970-01-01T08:00:00+08:00@`GMT+08:00`
 
 # the instant in time is the same
-&gt; time.compare(1970-01-01T01:00:00+01:00@`Europe/Berlin`, 1970-01-01T08:00:00+08:00@`GMT+08:00`)
+&gt; time.compare(1970-01-01T01:00:00+01:00@Europe/Berlin, 1970-01-01T08:00:00+08:00@`GMT+08:00`)
 0
 
 &gt; time.same_instant_at_zone(time.epoch, nil)
@@ -4136,8 +4136,8 @@ nil
 &gt; f(&quot;2017-04-23T21:43:11&quot;)
 2017-04-23T21:43:11Z@UTC
 
-&gt; f(&quot;2017-04-23T21:43:11@`Europe/Berlin`&quot;)
-2017-04-23T21:43:11+02:00@`Europe/Berlin`
+&gt; f(&quot;2017-04-23T21:43:11@Europe/Berlin&quot;)
+2017-04-23T21:43:11+02:00@Europe/Berlin
 
 # patterns specifies mandatory @ sign and backticks before timezone
 &gt; f(&quot;2017-04-23T21:43:11 Europe/Berlin&quot;)
@@ -4168,10 +4168,10 @@ function
 function
 
 &gt; f(&quot;2017-06-22 12:34:11&quot;)
-2017-06-22T12:34:11-05:00@`America/Chicago`
+2017-06-22T12:34:11-05:00@America/Chicago
 
 &gt; f(&quot;2017-06-22&quot;)
-2017-06-22T00:00:00-05:00@`America/Chicago`
+2017-06-22T00:00:00-05:00@America/Chicago
 
 </code></pre>
 

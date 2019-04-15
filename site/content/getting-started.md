@@ -96,14 +96,14 @@ Create a datetime value. If you don't need supply the time, it defaults to midni
 
 ```tweakflow
 > 2017-01-23T
-2017-01-23T00:00:00Z@`UTC`
+2017-01-23T00:00:00Z@UTC
 ```
 
 You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:
 
 ```tweakflow
-> 2017-01-23T18:23:11+01:00@`Europe/Berlin`
-2017-01-23T18:23:11+01:00@`Europe/Berlin`
+> 2017-01-23T18:23:11+01:00@Europe/Berlin
+2017-01-23T18:23:11+01:00@Europe/Berlin
 ```
 
 ## Calling functions
@@ -125,14 +125,14 @@ You were using positional arguments. Let's add 100 days to a date, and see where
 
 ```tweakflow
 > time.add_period(start: 2017-01-01T, days: 100)
-2017-04-11T00:00:00Z@`UTC`
+2017-04-11T00:00:00Z@UTC
 ```
 
 You can even start with positional arguments, and switch to named arguments later in the call.
 
 ```tweakflow
 > time.add_period(2017-01-01T, days: 100)
-2017-04-11T00:00:00Z@`UTC`
+2017-04-11T00:00:00Z@UTC
 ```
 
 ## Variables
