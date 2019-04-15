@@ -91,7 +91,6 @@ RCURLY: '}' {
   }
 };
 
-
 LBLOCK: '[';
 RBLOCK: ']';
 
@@ -142,14 +141,15 @@ LIBRARY_REF: 'library::';
 GLOBAL_REF: 'global::';
 
 DT
-  : DATE'T'(TIME(OFFSET|(OFFSET TZ))?)?
+  : DATE'T'(TIME(OFFSET|(OFFSET TZ)|TZ)?)?
   ;
 
-fragment YEAR: ('+'|'-')? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT DIGIT DIGIT DIGIT;
-fragment DATE: YEAR '-' DIGIT DIGIT '-' DIGIT DIGIT;
-fragment TIME: DIGIT DIGIT':'DIGIT DIGIT ':' DIGIT DIGIT ('.'DIGIT+)?;
-fragment OFFSET: (('+'|'-')DIGIT DIGIT':'DIGIT DIGIT)|'Z';
-fragment TZ: '@' (ID | ID_ESCAPED);
+fragment YEAR: ('+'|'-')? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT? DIGIT;
+fragment DATE: YEAR '-' DIGIT+ '-' DIGIT+;
+fragment TIME: DIGIT+':'DIGIT+':' DIGIT+('.'DIGIT+)?;
+fragment OFFSET: (('+'|'-')DIGIT+':'DIGIT+)|'Z';
+fragment TZ: '@' (TZ_NAME | ID_ESCAPED | ID);
+fragment TZ_NAME: [a-zA-Z_]+('/'[a-zA-Z0-9_?]+)+;
 
 INT
   : DIGIT DIGIT*

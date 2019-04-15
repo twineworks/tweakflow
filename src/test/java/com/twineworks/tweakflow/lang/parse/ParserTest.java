@@ -28,17 +28,16 @@ import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.NamedArgumentNode;
 import com.twineworks.tweakflow.lang.ast.args.PositionalArgumentNode;
 import com.twineworks.tweakflow.lang.ast.args.SplatArgumentNode;
-import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
 import com.twineworks.tweakflow.lang.ast.imports.ModuleImportNode;
 import com.twineworks.tweakflow.lang.ast.imports.NameImportNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.DefaultPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.ExpressionPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
-import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
@@ -183,102 +182,6 @@ public class ParserTest {
     assertThat(i2_m2.getExportName()).isEqualTo("lib_y");
     assertThat(i2_m2.getImportName()).isEqualTo("lib_y");
 
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_month() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_month.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_day() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_day.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_hour() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_hour.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_minute() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_minute.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_second() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_year() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_year.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.PARSE_ERROR);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_second_fraction() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_second_fraction.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
-  }
-
-  @Test
-  public void fails_on_datetime_invalid_offset_for_tz() throws Exception {
-
-    Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), "fixtures/tweakflow/analysis/parsing/errors/datetime_invalid_offset_for_tz.tf")
-    );
-    ParseResult result = p.parseUnit();
-
-    assertThat(result.isSuccess()).isFalse();
-    assertThat(result.getException().getCode()).isEqualTo(LangError.INVALID_DATETIME);
   }
 
   @Test

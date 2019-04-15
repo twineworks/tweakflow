@@ -32,9 +32,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -260,6 +258,107 @@ public class ParserDatetimeLiteralsTest {
         ZonedDateTime.of(-2017, 3, 17, 0, 0, 0, 0, ZoneOffset.UTC)
     );
   }
+
+  @Test
+  void minimal_date() {
+
+//  minimal_date:                1999-1-1T;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("minimal_date").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(1999, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+    );
+  }
+
+
+  @Test
+  void minimal_date_time() {
+
+//  minimal_date_time:           1999-1-1T1:2:3;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("minimal_date_time").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(1999, 1, 1, 1, 2, 3, 0, ZoneOffset.UTC)
+    );
+  }
+
+  @Test
+  void minimal_date_time_offset() {
+
+//    minimal_date_time_offset:    1999-1-1T1:2:3+1:0;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("minimal_date_time_offset").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(1999, 1, 1, 1, 2, 3, 0, ZoneOffset.ofHours(1))
+    );
+  }
+
+  @Test
+  void minimal_date_time_offset_tz() {
+
+//    minimal_date_time_offset_tz: 1999-1-1T1:2:3+1:0@`UTC+01:00`;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("minimal_date_time_offset_tz").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(1999, 1, 1, 1, 2, 3, 0, ZoneOffset.ofHours(1))
+    );
+  }
+
+  @Test
+  void tz_implied_offset() {
+
+//  tz_implied_offset:          2019-01-01T00:00:00@Europe/Berlin;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("tz_implied_offset").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.of(2019, 1, 1, 0, 0, 0, 0, ZoneId.of("Europe/Berlin"))
+    );
+  }
+
+  @Test
+  void tz_implied_offset_gap() {
+
+//  tz_implied_offset_gap:      2019-03-31T02:30:00@Europe/Berlin; -> moves to 3:30+02:00
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("tz_implied_offset_gap").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.ofStrict(LocalDateTime.of(2019, 3, 31, 3, 30, 0, 0), ZoneOffset.ofHours(2), ZoneId.of("Europe/Berlin"))
+    );
+  }
+
+  @Test
+  void tz_implied_offset_overlap() {
+
+//  tz_implied_offset_overlap:  2019-10-27T02:30:00@Europe/Berlin; uses earlier 02:30+02:00 rather than 02:30+01:00
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
+
+    ExpressionNode expNode = varDefMap.get("tz_implied_offset_overlap").getValueExpression();
+    assertThat(expNode).isInstanceOf(DateTimeNode.class);
+    DateTimeNode node = (DateTimeNode) expNode;
+    assertThat(node.getDateTime().getZoned()).isEqualTo(
+        ZonedDateTime.ofStrict(LocalDateTime.of(2019, 10, 27, 2, 30, 0, 0), ZoneOffset.ofHours(2), ZoneId.of("Europe/Berlin"))
+    );
+  }
+
+
 
 
 }

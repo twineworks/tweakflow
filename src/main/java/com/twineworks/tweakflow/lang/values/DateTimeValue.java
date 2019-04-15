@@ -42,7 +42,7 @@ public class DateTimeValue {
         .append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         .toFormatter();
 
-  private static final DateTimeFormatter regionIdFormatter = new DateTimeFormatterBuilder()
+  private static final DateTimeFormatter zoneIdFormatter = new DateTimeFormatterBuilder()
       .parseCaseSensitive()
       .appendZoneId()
       .toFormatter();
@@ -107,7 +107,7 @@ public class DateTimeValue {
   @Override
   public String toString() {
     String lead = leadFormatter.format(zoned);
-    String zone = regionIdFormatter.format(zoned);
-    return lead+"@"+LangUtil.escapeIdentifier(zone);
+    String offset = zoneIdFormatter.format(zoned);
+    return lead+"@"+LangUtil.escapeTimeZoneIdentifier(offset);
   }
 }

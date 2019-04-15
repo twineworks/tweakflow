@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 public class LangUtil {
 
   private final static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
+  private final static Pattern safeTimeZoneIdentifier = Pattern.compile("[a-zA-Z_]+(/[a-zA-Z_0-9?]+)+");
   private final static HashSet<String> keywords = new HashSet<>(Arrays.asList(
 
       "interactive",
@@ -112,6 +113,23 @@ public class LangUtil {
     return "`"+id+"`";
   }
 
+  public static String escapeTimeZoneIdentifier(String id){
+
+    // safe as regular identifier?
+    if (safeIdentifier.matcher(id).matches()){
+      return id;
+    }
+
+    // safe as time zone identifier foo/bar/baz?
+    if (safeTimeZoneIdentifier.matcher(id).matches()){
+      return id;
+    }
+
+    if (id.contains("`")) throw new IllegalArgumentException("time zone identifier cannot contain ` character");
+
+    return "`"+id+"`";
+  }
+
   public static String getKeyLiteral(String id){
 
     // safe as is?
@@ -122,6 +140,7 @@ public class LangUtil {
     if (id.contains("`")){
       return getStringLiteral(id);
     }
+
     return ":`"+id+"`";
   }
 
