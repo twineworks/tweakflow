@@ -148,7 +148,14 @@ public class Repl {
   }
 
   private static void printBanner(TextTerminal textTerminal) {
-    textTerminal.println("tweakflow interactive shell    \\? for help, \\q to quit");
+    String version = Repl.class.getPackage().getImplementationVersion();
+    StringBuilder banner = new StringBuilder();
+    banner.append("tweakflow ");
+    if (version != null){
+      banner.append(version).append(" ");
+    }
+    banner.append("interactive shell    \\? for help, \\q to quit");
+    textTerminal.println(banner.toString());
   }
 
   private static String prompt(ReplState state){

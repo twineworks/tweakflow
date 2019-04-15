@@ -33,7 +33,7 @@ import java.util.Arrays;
 public class Main {
 
   private static void printUsage(){
-    System.out.println("usage: tweakflow [repl | run | doc] [args]");
+    System.out.println("usage: tweakflow [repl | run | doc | --version] [args]");
   }
 
   public static void main(String[] args){
@@ -50,6 +50,15 @@ public class Main {
     }
     else if (args[0].equals("doc")){
       DocMain.main(Arrays.copyOfRange(args, 1, args.length));
+    }
+    else if (args[0].equals("--version")){
+      String version = Main.class.getPackage().getImplementationVersion();
+      if (version != null){
+        System.out.println(version);
+      }
+      else{
+        System.out.println("unknown version");
+      }
     }
     else{
       // unknown args -> print usage
