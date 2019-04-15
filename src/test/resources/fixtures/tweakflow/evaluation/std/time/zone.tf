@@ -18,7 +18,7 @@ library zone_spec {
     expect(zone(2019-01-01T00:00:00+02:00), to.be("UTC+02:00"));
 
   of_zone:
-    expect(zone(2010-01-01T00:00:00.00+01:00@`Europe/Berlin`), to.be("Europe/Berlin"));
+    expect(zone(2010-01-01T00:00:00.00+01:00@Europe/Berlin), to.be("Europe/Berlin"));
 
 
 }

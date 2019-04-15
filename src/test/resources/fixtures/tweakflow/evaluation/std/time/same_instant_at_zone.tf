@@ -17,13 +17,13 @@ library same_instant_at_zone_spec {
   epoch_new_york:
     expect(
       same_instant_at_zone(t.epoch, "America/New_York"),
-      to.be(1969-12-31T19:00:00-05:00@`America/New_York`)
+      to.be(1969-12-31T19:00:00-05:00@America/New_York)
     );
 
   epoch_berlin:
     expect(
       same_instant_at_zone(t.epoch, "Europe/Berlin"),
-      to.be(1970-01-01T01:00:00+01:00@`Europe/Berlin`)
+      to.be(1970-01-01T01:00:00+01:00@Europe/Berlin)
     );
 
   unknown_zone:

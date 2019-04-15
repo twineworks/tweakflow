@@ -16,22 +16,22 @@ library with_zone_spec {
 
   with_berlin:
     expect(with_zone(t.epoch, 'Europe/Berlin'),
-    to.be(1970-01-01T00:00:00+01:00@`Europe/Berlin`)
+    to.be(1970-01-01T00:00:00+01:00@Europe/Berlin)
   );
 
   with_new_york:
     expect(with_zone(t.epoch, 'America/New_York'),
-    to.be(1970-01-01T00:00:00-05:00@`America/New_York`)
+    to.be(1970-01-01T00:00:00-05:00@America/New_York)
   );
 
   with_change_into_dst_gap:
     expect(with_zone(2019-03-31T02:30:00, 'Europe/Berlin'),
-    to.be(2019-03-31T03:30:00+02:00@`Europe/Berlin`)
+    to.be(2019-03-31T03:30:00+02:00@Europe/Berlin)
   );
 
   with_change_into_dst_overlap:
     expect(with_zone(2019-10-27T02:30:00, 'Europe/Berlin'),
-    to.be(2019-10-27T02:30:00+02:00@`Europe/Berlin`)
+    to.be(2019-10-27T02:30:00+02:00@Europe/Berlin)
   );
 
   unknown_zone:

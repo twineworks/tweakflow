@@ -22,8 +22,8 @@ library with_hour_spec {
 
   with_change_to_dst_gap:
     expect(
-      with_hour(2019-03-31T01:30:00+01:00@`Europe/Berlin`, 2),
-      to.be(2019-03-31T03:30:00+02:00@`Europe/Berlin`)
+      with_hour(2019-03-31T01:30:00+01:00@Europe/Berlin, 2),
+      to.be(2019-03-31T03:30:00+02:00@Europe/Berlin)
     );
 
   out_of_range:

@@ -34,18 +34,18 @@ library at_spec {
 
   in_dst_gap:
     expect(
-      at(2019-03-31T00:00:00+01:00@`Europe/Berlin`, 2, 30),
-      to.be(2019-03-31T03:30:00+02:00@`Europe/Berlin`)
+      at(2019-03-31T00:00:00+01:00@Europe/Berlin, 2, 30),
+      to.be(2019-03-31T03:30:00+02:00@Europe/Berlin)
     );
 
   in_dst_overlap:
     expect(
-      at(2019-10-27T00:00:00+02:00@`Europe/Berlin`, 2, 30),
-      to.be(2019-10-27T02:30:00+02:00@`Europe/Berlin`)
+      at(2019-10-27T00:00:00+02:00@Europe/Berlin, 2, 30),
+      to.be(2019-10-27T02:30:00+02:00@Europe/Berlin)
     ) &&
     expect(
-      t.add_duration(at(2019-10-27T00:00:00+02:00@`Europe/Berlin`, 2, 30), 3600),
-      to.be(2019-10-27T02:30:00+01:00@`Europe/Berlin`)
+      t.add_duration(at(2019-10-27T00:00:00+02:00@Europe/Berlin, 2, 30), 3600),
+      to.be(2019-10-27T02:30:00+01:00@Europe/Berlin)
     );
 
   at_nil_hour:

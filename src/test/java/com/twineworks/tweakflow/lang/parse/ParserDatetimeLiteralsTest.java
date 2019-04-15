@@ -123,7 +123,7 @@ public class ParserDatetimeLiteralsTest {
   @Test
   void local() {
 
-//    local:        2017-03-17T16:04:02+01:00@`Europe/Berlin`; # local date in Berlin, second precision
+//    local:        2017-03-17T16:04:02+01:00@Europe/Berlin; # local date in Berlin, second precision
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
 
     ExpressionNode expNode = varDefMap.get("local").getValueExpression();
@@ -137,7 +137,7 @@ public class ParserDatetimeLiteralsTest {
   @Test
   void local_ms() {
 
-//    local_ms:     2017-03-17T16:04:02.123+01:00@`Europe/Berlin`; # local date in Berlin, milli-second precision
+//    local_ms:     2017-03-17T16:04:02.123+01:00@Europe/Berlin; # local date in Berlin, milli-second precision
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/datetimes.tf");
 
     ExpressionNode expNode = varDefMap.get("local_ms").getValueExpression();

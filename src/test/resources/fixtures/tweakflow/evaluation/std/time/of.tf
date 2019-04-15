@@ -29,7 +29,7 @@ library of_spec {
   of_date_and_time_and_tz:
     expect(
       of(2019, 04, 10, 23, 11, 32, tz: "America/New_York"),
-      to.be(2019-04-10T23:11:32-04:00@`America/New_York`)
+      to.be(2019-04-10T23:11:32-04:00@America/New_York)
     );
 
   of_date_and_time_and_offset_tz:
@@ -41,17 +41,17 @@ library of_spec {
   in_dst_gap:
     expect(
       of(2019, 03, 31, 2, 30, tz: "Europe/Berlin"),
-      to.be(2019-03-31T03:30:00+02:00@`Europe/Berlin`)
+      to.be(2019-03-31T03:30:00+02:00@Europe/Berlin)
     );
 
   in_dst_overlap:
     expect(
       of(2019, 10, 27, 2, 30, tz: "Europe/Berlin"),
-      to.be(2019-10-27T02:30:00+02:00@`Europe/Berlin`)
+      to.be(2019-10-27T02:30:00+02:00@Europe/Berlin)
     ) &&
     expect(
       t.add_duration(of(2019, 10, 27, 2, 30, tz: "Europe/Berlin"), 3600),
-      to.be(2019-10-27T02:30:00+01:00@`Europe/Berlin`)
+      to.be(2019-10-27T02:30:00+01:00@Europe/Berlin)
     );
 
   of_nil_year:

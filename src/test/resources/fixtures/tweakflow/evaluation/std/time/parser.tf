@@ -64,11 +64,11 @@ library parser_spec {
     }
     expect(
       f("2017-06-22 12:34:11"),
-      to.be(2017-06-22T12:34:11-05:00@`America/Chicago`)
+      to.be(2017-06-22T12:34:11-05:00@America/Chicago)
     ) &&
     expect(
       f("2017-06-22"),
-      to.be(2017-06-22T00:00:00-05:00@`America/Chicago`)
+      to.be(2017-06-22T00:00:00-05:00@America/Chicago)
     );
 
   of_bad_pattern:
