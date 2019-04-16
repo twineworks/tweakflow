@@ -734,7 +734,7 @@ function
 
 <p>The formal syntax of a dict literal is as follows:</p>
 
-<pre><code>dictLiteral
+<pre><code class="language-text">dictLiteral
    : '{' '}'
    | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  ','? '}'
    ;
@@ -952,7 +952,7 @@ spans multiple lines
 
 <p>Formally modules have the following syntax:</p>
 
-<pre><code>module
+<pre><code class="language-text">module
   : moduleHead moduleComponent* EOF
   ;
 
@@ -1181,7 +1181,7 @@ libVar
 
 <p>A variable is a named entity that holds a value. Variables are placed in <a href="#libraries">libraries</a>. Variables have a name, a  <a href="#data-types">type</a>, and a value. They can also be annotated by <a href="#annotations">docs and metadata</a>.</p>
 
-<pre><code>varDef
+<pre><code class="language-text">varDef
   : metaDef dataType? identifier ':' expression
   ;
 
@@ -1451,10 +1451,6 @@ foo.tf&gt; \meta bar.baz
 ERROR:
   code: CAST_ERROR
   message: Cannot cast 200.0kg to double
-  at: [interactive]:3:10
-  source: &quot;200.0kg&quot; as double
-
-
 </code></pre>
 
 <p>String as list</p>
@@ -2560,7 +2556,7 @@ matchGuard
 
 <p>Existence matches are the simplest form of match. They match any value including <code>nil</code>. An existence match is indicated by the <code>@</code> operator. If that operator is followed by an identifier, it becomes a capturing match, binding the identifier to the matched value in the guard and result expressions of the line. Formally the syntax is as follows:</p>
 
-<pre><code>matchPattern
+<pre><code class="language-text">matchPattern
   : '@' identifier?
   ;
 </code></pre>
@@ -3312,7 +3308,7 @@ nil
 
 <p>The syntax is as follows:</p>
 
-<pre><code>reference
+<pre><code class="language-text">reference
   :                   identifier ('.' identifier)*   # unscoped reference
   | ('library::')     identifier ('.' identifier)*   # library reference
   | ('::'|'module::') identifier ('.' identifier)*   # module reference
