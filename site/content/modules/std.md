@@ -3942,7 +3942,7 @@ nil
 > f("2017-04-23T21:43:11")
 2017-04-23T21:43:11Z@UTC
 
-> f("2017-04-23T21:43:11@Europe/Berlin")
+> f("2017-04-23T21:43:11@`Europe/Berlin`")
 2017-04-23T21:43:11+02:00@Europe/Berlin
 
 # patterns specifies mandatory @ sign and backticks before timezone
@@ -3962,7 +3962,7 @@ ERROR:
   message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
 
 # lenient parser
-> f: time.parser('uuuu-MM-dd', true)
+> f: time.parser('uuuu-MM-dd', lenient: true)
 function
 
 # lenient parser interprets march 32nd as april 1st
@@ -4660,7 +4660,7 @@ ERROR:
   message: Partial match not allowed. Parsing ended at index: 6
 
 # lenient parser
-> f: math.parser('0.##', nil, true)
+> f: math.parser('0.##', lenient: true)
 function
 
 > f("203.23kg")
