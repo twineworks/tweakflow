@@ -10,29 +10,6 @@ Applications can use tweakflow to expose runtime information to an expression-ba
 
 Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals. 
 
-## Language features
-
-### A simple computation model
-Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use formulas in your application too.
-
-### Dynamically typed
-Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
-
-### All data is immutable
-All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.
-
-### All functions are pure
-All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application must take care of all non-pure operations like file I/O.
-
-### Batteries included
-Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
-
-### Automatic dependency tracking
-When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
-
-### Inline documentation and meta-data
-Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.
-
 ## Requirements
 Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
 
@@ -60,6 +37,34 @@ std.tf> data.map([1, 2, 3], (x) -> x*x)
 ```
 
 See the [getting started](https://twineworks.github.io/tweakflow/getting-started.html) guide for a short guided tour of language features.
+
+## Language features
+
+### A simple computation model
+Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use formulas in your application too.
+
+### Dynamically typed
+Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
+
+### All data is immutable
+All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.
+
+### All functions are pure
+All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application must take care of all non-pure operations like file I/O.
+
+### Batteries included
+Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
+
+### Automatic dependency tracking
+When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
+
+### Inline documentation and meta-data
+Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.
+
+## Using tweakflow standalone
+Tweakflow is designed to be an expression language embedded in a bigger application. Much like formula languages are embedded in spreadsheet applications. However, for prototyping, development and testing, it can be handy to invoke tweakflow directly.
+
+See the [tools](https://twineworks.github.io/tweakflow/tools.html) guide, for more information on the tweakflow REPL, runner, and documentation tool.
 
 ## Embedding
 Evaluating simple expressions is as easy as:
@@ -117,11 +122,6 @@ for (Customer c : myCustomerCollection){
 Your application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
 
 See the [embedding](https://twineworks.github.io/tweakflow/embedding.html) guide for more information and examples.
-
-## Using tweakflow standalone
-Tweakflow is designed to be an expression language embedded in a bigger application. Much like formula languages are embedded in spreadsheet applications. However, for prototyping, development and testing, it can be handy to invoke tweakflow directly.
-
-See the [tools](https://twineworks.github.io/tweakflow/tools.html) guide, for more information on the tweakflow REPL, runner, and documentation tool.
 
 ## License
 Tweakflow uses the business friendly [MIT license](https://opensource.org/licenses/MIT).
