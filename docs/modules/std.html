@@ -308,7 +308,7 @@
 
 <p>All samples run in the interactive tweakflow REPL which you can launch using:</p>
 
-<pre><code class="language-bash">java -jar tweakflow-0.10.0.jar repl
+<pre><code class="language-bash">java -jar tweakflow-0.11.0.jar repl
 </code></pre>
 
 <h2 id="library-core">library core</h2>
@@ -4138,7 +4138,7 @@ nil
 &gt; f(&quot;2017-04-23T21:43:11&quot;)
 2017-04-23T21:43:11Z@UTC
 
-&gt; f(&quot;2017-04-23T21:43:11@Europe/Berlin&quot;)
+&gt; f(&quot;2017-04-23T21:43:11@`Europe/Berlin`&quot;)
 2017-04-23T21:43:11+02:00@Europe/Berlin
 
 # patterns specifies mandatory @ sign and backticks before timezone
@@ -4158,7 +4158,7 @@ ERROR:
   message: Text '2015-03-32' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
 
 # lenient parser
-&gt; f: time.parser('uuuu-MM-dd', true)
+&gt; f: time.parser('uuuu-MM-dd', lenient: true)
 function
 
 # lenient parser interprets march 32nd as april 1st
@@ -4829,7 +4829,7 @@ ERROR:
   message: Partial match not allowed. Parsing ended at index: 6
 
 # lenient parser
-&gt; f: math.parser('0.##', nil, true)
+&gt; f: math.parser('0.##', lenient: true)
 function
 
 &gt; f(&quot;203.23kg&quot;)
