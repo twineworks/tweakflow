@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/style.css">
 
-    <link rel="stylesheet" href="../js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="../js/highlight-tweakflow/tweakflow-light.css">
 
     <script type="text/javascript" src="../js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="../js/highlight-tweakflow/tweakflow.js"></script>
     <script type="text/javascript">
-      hljs.configure({languages: []});
+      hljs.registerLanguage('tweakflow', window.hljsDefineTweakflow);
+      hljs.configure({languages: ["xml", "tweakflow", "plaintext", "java"]});
       hljs.initHighlightingOnLoad();
     </script>
 
@@ -55,16 +57,16 @@
               <a class="menu__item-link" href="../getting-started.html">Getting started</a>
             </li>
             
+            <li class="menu__item active" >
+              <a class="menu__item-link" href="../modules/std.html">Docs</a>
+            </li>
+            
             <li class="menu__item" >
               <a class="menu__item-link" href="../reference.html">Reference</a>
             </li>
             
             <li class="menu__item" >
               <a class="menu__item-link" href="../embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item active" >
-              <a class="menu__item-link" href="../modules/std.html">Standard library</a>
             </li>
             
             <li class="menu__item" >
@@ -5301,13 +5303,13 @@ The human readable names are given in the language tag passed as the locale para
 </footer>
 
     
-<script type="text/javascript" src="../js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="../js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="../js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="../js/toc.js"></script>
+
+
+
+
+
+
 
 </body>
 

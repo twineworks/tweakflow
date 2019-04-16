@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/style.css">
 
-    <link rel="stylesheet" href="./js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./js/highlight-tweakflow/tweakflow-light.css">
 
     <script type="text/javascript" src="./js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="./js/highlight-tweakflow/tweakflow.js"></script>
     <script type="text/javascript">
-      hljs.configure({languages: []});
+      hljs.registerLanguage('tweakflow', window.hljsDefineTweakflow);
+      hljs.configure({languages: ["xml", "tweakflow", "plaintext", "java"]});
       hljs.initHighlightingOnLoad();
     </script>
 
@@ -56,15 +58,15 @@
             </li>
             
             <li class="menu__item" >
+              <a class="menu__item-link" href="./modules/std.html">Docs</a>
+            </li>
+            
+            <li class="menu__item" >
               <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
             <li class="menu__item active" >
               <a class="menu__item-link" href="./embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
             </li>
             
             <li class="menu__item" >
@@ -338,7 +340,7 @@ Congratulations. The formulas seem to be correct.
 
 <pre><code class="language-tweakflow"># user_module.tf
 
-import core, data, math, strings from 'std'
+import core, data, math, strings from 'std';
 
 library customer {
   provided first_name;
@@ -349,7 +351,7 @@ library user {
   greeting: if customer.first_name &amp;&amp; customer.last_name
               &quot;Hello #{customer.first_name} #{customer.last_name}&quot;
             else
-              &quot;Dear anonymous&quot;
+              &quot;Dear anonymous&quot;;
 }
 </code></pre>
 
@@ -490,13 +492,13 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
 </footer>
 
     
-<script type="text/javascript" src="./js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="./js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="./js/toc.js"></script>
+
+
+
+
+
+
 
 </body>
 

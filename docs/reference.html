@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/style.css">
 
-    <link rel="stylesheet" href="./js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./js/highlight-tweakflow/tweakflow-light.css">
 
     <script type="text/javascript" src="./js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="./js/highlight-tweakflow/tweakflow.js"></script>
     <script type="text/javascript">
-      hljs.configure({languages: []});
+      hljs.registerLanguage('tweakflow', window.hljsDefineTweakflow);
+      hljs.configure({languages: ["xml", "tweakflow", "plaintext", "java"]});
       hljs.initHighlightingOnLoad();
     </script>
 
@@ -55,16 +57,16 @@
               <a class="menu__item-link" href="./getting-started.html">Getting started</a>
             </li>
             
+            <li class="menu__item" >
+              <a class="menu__item-link" href="./modules/std.html">Docs</a>
+            </li>
+            
             <li class="menu__item active" >
               <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
             <li class="menu__item" >
               <a class="menu__item-link" href="./embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
             </li>
             
             <li class="menu__item" >
@@ -832,17 +834,20 @@ viaDec
 <pre><code class="language-tweakflow"># A function with no parameters, returning a constant of any type
 &gt; f: () -&gt; 1
 function
+
 &gt; f()
 1
 
 # A function taking two strings and returning a string
 &gt; f: (string x, string y) -&gt; string    x .. y
 function
+
 &gt; f(&quot;John&quot;, &quot;Doe&quot;)
 &quot;JohnDoe&quot;
 
 # A function taking a list and returning a list
 &gt; f: (list xs) -&gt; list    data.map(xs, (_, i) -&gt; xs[data.size(xs)-1-i])
+
 function
 &gt; f([1, 2, 3])
 [3, 2, 1]
@@ -850,19 +855,25 @@ function
 # A function taking two doubles, each having a default value, returning a double
 &gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
+
 &gt; f(3, 4)
 7.0
+
 &gt; f()
 1.0
+
 &gt; f(0)
 0.0
+
 &gt; f(x: 2, y: 3)
 5.0
+
 &gt; f(y: 7)
 8.0
 
 &gt; f: (string x) -&gt; long via {:class &quot;com.twineworks.tweakflow.std.Strings$length&quot;}
 function
+
 &gt; f(&quot;foo&quot;)
 3
 </code></pre>
@@ -1629,6 +1640,7 @@ ERROR:
 
 <pre><code class="language-tweakflow"># A function with no parameters, returning a constant of any type
 &gt; f: () -&gt; 1
+
 function
 &gt; f()
 1
@@ -1636,26 +1648,33 @@ function
 # A function taking two strings and returning a string
 &gt; f: (string x, string y) -&gt; string    x .. y
 function
+
 &gt; f(&quot;John&quot;, &quot;Doe&quot;)
 &quot;JohnDoe&quot;
 
 # A function taking a list and returning a list
 &gt; f: (list xs) -&gt; list    data.map(xs, (_, i) -&gt; xs[data.size(xs)-1-i])
 function
+
 &gt; f([1, 2, 3])
 [3, 2, 1]
 
 # A function taking two doubles, each having a default value, returning a double
 &gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
+
 &gt; f(3, 4)
 7.0
+
 &gt; f()
 1.0
+
 &gt; f(0)
 0.0
+
 &gt; f(x: 2, y: 3)
 5.0
+
 &gt; f(y: 7)
 8.0
 
@@ -1666,6 +1685,7 @@ function
 # the returned value, a string, is cast to the declared return type, a list
 &gt; f: (string x, string y) -&gt; list  x..y
 function
+
 &gt; f(&quot;Foo&quot;, &quot;Bar&quot;)
 [&quot;F&quot;, &quot;o&quot;, &quot;o&quot;, &quot;B&quot;, &quot;a&quot;, &quot;r&quot;]
 
@@ -1681,6 +1701,7 @@ function
 
 <pre><code class="language-tweakflow">&gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
+
 &gt; fun.signature(f)
 {
   :return_type &quot;double&quot;,
@@ -1747,6 +1768,7 @@ function
 
 <pre><code class="language-tweakflow">&gt; f: (list xs) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$concat&quot;}
 function
+
 &gt; f([&quot;Foo&quot;, &quot;Bar&quot;, &quot;Baz&quot;])
 &quot;FooBarBaz&quot;
 </code></pre>
@@ -1755,10 +1777,13 @@ function
 
 <pre><code class="language-tweakflow">&gt; f: (string x) -&gt; long via {:class &quot;com.twineworks.tweakflow.std.Strings$length&quot;}
 function
+
 &gt; g: (string x) -&gt; string via {:class &quot;com.twineworks.tweakflow.std.Strings$length&quot;}
 function
+
 &gt; f(&quot;foo&quot;)
 3
+
 &gt; g(&quot;foo&quot;)
 &quot;3&quot;
 </code></pre>
@@ -2185,21 +2210,28 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; sum: (long x, long y) -&gt; long        x+y
 function
+
 &gt; sum_d: (long x, long y) -&gt; double    x+y
 function
+
 &gt; sum_s: (long x, long y) -&gt; string    x+y
 function
+
 &gt; id: (x) -&gt; x # return type is default: any
 function
 
 &gt; sum(1, 2)
 3
+
 &gt; sum_d(1, 2)
 3.0
+
 &gt; sum_s(1, 2)
 &quot;3&quot;
+
 &gt; id([])
 []
+
 &gt; id(&quot;foo&quot;)
 &quot;foo&quot;
 </code></pre>
@@ -2336,8 +2368,10 @@ function
 
 &gt; can_vote(born: 1981-08-16T, at: 1998-11-02T)
 false
+
 &gt; can_vote(born: 1981-08-16T, at: 1999-11-02T)
 true
+
 &gt; can_vote(born: 1981-08-16T, at: 2016-11-02T)
 true
 
@@ -2374,8 +2408,10 @@ x .. y # &quot;foo&quot;..&quot;bar&quot;
 
 &gt; f: (string x) -&gt; if strings.length(x) &gt; 2 then &quot;long&quot; else &quot;short&quot;
 function
+
 &gt; f(&quot;hello&quot;)
 &quot;long&quot;
+
 &gt; f(&quot;hi&quot;)
 &quot;short&quot;
 
@@ -2391,8 +2427,10 @@ greeting: (string language) -&gt;
 function
 &gt; greeting(&quot;de&quot;)
 &quot;Guten Tag&quot;
+
 &gt; greeting(&quot;es&quot;)
 &quot;Hola&quot;
+
 &gt; greeting()
 &quot;Hello&quot;
 </code></pre>
@@ -2413,8 +2451,10 @@ function
 
 <pre><code class="language-tweakflow">&gt; greeting: (dict customer) -&gt; &quot;Dear &quot;..(customer[:name] default &quot;customer&quot;)
 function
+
 &gt; greeting({:id 723, :name &quot;Jane Doe&quot;, :type &quot;user&quot;})
 &quot;Dear Jane Doe&quot;
+
 &gt; greeting({:id 0, :type &quot;admin&quot;})
 &quot;Dear customer&quot;
 </code></pre>
@@ -2535,8 +2575,10 @@ f: (long x) -&gt;
 function
 &gt; f(0)
 true
+
 &gt; f(1)
 true
+
 &gt; f(nil)
 true
 </code></pre>
@@ -2552,8 +2594,10 @@ pair?: (list xs) -&gt;
 function
 &gt; pair?([1, 2])
 true
+
 &gt; pair?([1, 2, 3])
 false
+
 &gt; pair?(nil)
 false
 
@@ -2567,6 +2611,7 @@ sequence_pair?: (list xs) -&gt;
 function
 &gt; sequence_pair?([1, 2])
 true
+
 &gt; sequence_pair?([2, 4])
 false
 </code></pre>
@@ -2598,14 +2643,19 @@ low_prime?: (long x) -&gt;
 function
 &gt; low_prime?(1)
 false
+
 &gt; low_prime?(2)
 true
+
 &gt; low_prime?(3)
 true
+
 &gt; low_prime?(4)
 false
+
 &gt; low_prime?(5)
 true
+
 &gt; low_prime?(nil)
 false
 </code></pre>
@@ -2648,14 +2698,19 @@ function
 
 &gt; leap_year?(1900)
 false
+
 &gt; leap_year?(1904)
 true
+
 &gt; leap_year?(2000)
 true
+
 &gt; leap_year?(2004)
 true
+
 &gt; leap_year?(2016)
 true
+
 &gt; leap_year?(2017)
 false
 </code></pre>
@@ -2688,20 +2743,28 @@ int?: (x) -&gt;
 function
 &gt; int?(1)
 true
+
 &gt; int?(1.0)
 true
+
 &gt; int?(1.5)
 false
+
 &gt; int?(&quot;2&quot;)
 true
+
 &gt; int?(&quot;2e3&quot;)  # 2000
 true
+
 &gt; int?(&quot;-2e3&quot;) # -2000
 true
+
 &gt; int?(&quot;2e-3&quot;) # 0.002
 false
+
 &gt; int?(&quot;2m&quot;)   # does not parse as double
 false
+
 &gt; int?(nil)
 false
 </code></pre>
@@ -2723,6 +2786,7 @@ capture
 
 <pre><code class="language-tweakflow">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.NaN?(x) &amp;&amp; math.abs(x) != Infinity)
 function
+
 &gt; \e
 vector2d?: (list xs) -&gt;
   match xs
@@ -2733,14 +2797,19 @@ vector2d?: (list xs) -&gt;
 function
 &gt; vector2d?([1, 2])
 true
+
 &gt; vector2d?([&quot;a&quot;, &quot;b&quot;])
 false
+
 &gt; vector2d?([8, 2, 2.0])
 false
+
 &gt; vector2d?([8.0, 2.0])
 true
+
 &gt; vector2d?([nil, nil])
 false
+
 &gt; vector2d?(nil)
 false
 </code></pre>
@@ -2778,12 +2847,16 @@ valid_list?: (list xs) -&gt;
 function
 &gt; valid_list?([&quot;adam&quot;, 2, &quot;abner&quot;, 7])
 true
+
 &gt; valid_list?([&quot;adam&quot;, 2, &quot;eve&quot;, 7])
 false
+
 &gt; valid_list?([1, &quot;a&quot;])
 false
+
 &gt; valid_list?([&quot;a1&quot;, nil, &quot;a2&quot;, nil, &quot;a3&quot;, &quot;hello&quot;])
 true
+
 &gt; valid_list?(nil)
 false
 </code></pre>
@@ -2817,14 +2890,19 @@ ends_in_datetime?: (list xs) -&gt;
     [@..., datetime] -&gt; true,
     default -&gt; false
 \e
+
 &gt; ends_in_datetime?([&quot;a&quot;, &quot;b&quot;])
 false
+
 &gt; ends_in_datetime?([])
 false
+
 &gt; ends_in_datetime?([2017-02-24T, 2017-02-25T])
 true
+
 &gt; ends_in_datetime?(nil)
 false
+
 &gt; ends_in_datetime?([1, nil])
 false
 </code></pre>
@@ -2861,14 +2939,19 @@ measures?: (list xs) -&gt;
 function
 &gt; measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T])
 true
+
 &gt; measures?([:p2, 99, 2015-02-11T])
 true
+
 &gt; measures?([:p3, 2016-02-11T])
 true
+
 &gt; measures?([2016-02-11T])
 false
+
 &gt; measures?([])
 false
+
 &gt; measures?([:p4, 201, 2017-04-22T]) # number out of range
 false
 </code></pre>
@@ -2899,16 +2982,22 @@ vector_dict?: (dict v) -&gt;
 function
 &gt; vector_dict?({:x 10, :y 20})
 false
+
 &gt; vector_dict?({:x 10.0, :y 20.0})
 true
+
 &gt; vector_dict?({:x 10.0, :y nil})
 false
+
 &gt; vector_dict?({:x 10.0, :y 20.0, :z 14.9})
 false
+
 &gt; vector_dict?({:x 10.0})
 false
+
 &gt; vector_dict?({:a &quot;one&quot; :b &quot;two&quot;})
 false
+
 &gt; vector_dict?(nil)
 false
 </code></pre>
@@ -2943,12 +3032,16 @@ person?: (dict x) -&gt;
 function
 &gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T})
 true
+
 &gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T, :profession &quot;author&quot;})
 true
+
 &gt; person?({:name &quot;Mark Twain&quot;, :profession &quot;author&quot;})
 false
+
 &gt; person?({:x 1, :y 2})
 false
+
 &gt; person?(nil)
 false
 </code></pre>
@@ -2964,12 +3057,16 @@ person?: (dict x) -&gt;
 function
 &gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T})
 false
+
 &gt; person?({:name &quot;Mark Twain&quot;, :born 1835-11-30T, :profession &quot;author&quot;})
 true
+
 &gt; person?({:name &quot;Mark Twain&quot; :profession &quot;author&quot;})
 false
+
 &gt; person?({:x 1, :y 2})
 false
+
 &gt; person?(nil)
 false
 </code></pre>
@@ -3400,14 +3497,19 @@ factorial: (long x) -&gt; long
 function
 &gt; factorial(1)
 1
+
 &gt; factorial(2)
 2
+
 &gt; factorial(3)
 6
+
 &gt; factorial(4)
 24
+
 &gt; factorial(5)
 120
+
 &gt; factorial(10)
 3628800
 </code></pre>
@@ -3430,8 +3532,10 @@ fs:
 
 <pre><code class="language-tweakflow">&gt; fs[0](10) # first function multiplies by 1
 10
+
 &gt; fs[1](10) # second function multiplies by 2
 20
+
 &gt; fs[2](10) # third function multiplies by 3
 30
 </code></pre>
@@ -3470,14 +3574,19 @@ false
 
 <pre><code class="language-tweakflow">&gt; 1 &amp;&amp; 2
 true
+
 &gt; 1 &amp;&amp; 0
 false
+
 &gt; false &amp;&amp; throw &quot;not evaluated&quot;
 false
+
 &gt; true &amp;&amp; true
 true
+
 &gt; [] &amp;&amp; 1
 false
+
 &gt; [&quot;foo&quot;] &amp;&amp; 1
 true
 </code></pre>
@@ -3490,12 +3599,16 @@ true
 
 <pre><code class="language-tweakflow">&gt; true || false
 true
+
 &gt; true || throw &quot;not evaluated&quot;
 true
+
 &gt; false || true
 true
+
 &gt; [] || []
 false
+
 &gt; [] || [1]
 true
 </code></pre>
@@ -3536,14 +3649,19 @@ true
 
 <pre><code class="language-tweakflow">&gt; -(1)
 -1
+
 &gt; -(-1)
 1
+
 &gt; -(-2.3)
 2.3
+
 &gt; -(Infinity)
 -Infinity
+
 &gt; -(NaN)
 NaN
+
 &gt; -(&quot;foo&quot;)
 ERROR:
   code: CAST_ERROR
@@ -3599,10 +3717,13 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; 1+2
 3
+
 &gt; 2.0+2
 4.0
+
 &gt; Infinity + 3
 Infinity
+
 &gt; math.max_long + 1   # binary overflow
 -9223372036854775808
 </code></pre>
@@ -3656,12 +3777,16 @@ Infinity
 
 <pre><code class="language-tweakflow">&gt; 5-3
 2
+
 &gt; 5-10
 -5
+
 &gt; 2.3-9
 -6.7
+
 &gt; math.min_long - 1 # binary underflow
 9223372036854775807
+
 &gt; Infinity - 100
 Infinity
 </code></pre>
@@ -3722,14 +3847,19 @@ Infinity
 
 <pre><code class="language-tweakflow">&gt; 2 * 3
 6
+
 &gt; 2 * 3.3
 6.6
+
 &gt; 2 * 3.3
 6.6
+
 &gt; 1.1 * 2.9
 3.19
+
 &gt; math.max_long * math.max_long # binary overflow
 1
+
 &gt; math.max_long as double * math.max_long # floating point multiplication
 8.507059173023462E37
 </code></pre>
@@ -3785,8 +3915,10 @@ Infinity
 
 <pre><code class="language-tweakflow">&gt; 1 / 2
 0.5
+
 &gt; 5 / 0.5
 10.0
+
 &gt; nil / 2
 nil
 </code></pre>
@@ -3807,14 +3939,19 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 10 // 2
 5
+
 &gt; 10 // 3
 3
+
 &gt; 10 // 4
 2
+
 &gt; 10 // 1
 10
+
 &gt; 10 // -3
 -3
+
 &gt; 10 // 0
 ERROR:
   code: DIVISION_BY_ZERO
@@ -3888,12 +4025,16 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; 10 % 4
 2
+
 &gt; 10 % 3
 1
+
 &gt; 10 % 2.5
 0.0
+
 &gt; 5 % 1.5
 0.5
+
 &gt; -5 % 1.5
 -0.5
 </code></pre>
@@ -3980,12 +4121,16 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; 2**3
 8.0
+
 &gt; 4**0.5
 2.0
+
 &gt; 2**10
 1024.0
+
 &gt; nil**nil
 nil
+
 &gt; &quot;2&quot;**&quot;3&quot;
 ERROR:
   code: CAST_ERROR
@@ -4012,10 +4157,13 @@ false
 
 <pre><code class="language-tweakflow">&gt; 0 == 0.0
 true
+
 &gt; 3 == 3.0
 true
+
 &gt; -4 == 4.0
 false
+
 &gt; 0 == NaN
 false
 </code></pre>
@@ -4037,6 +4185,7 @@ true
 
 <pre><code class="language-tweakflow">&gt; strings.length(&quot;foo&quot;)
 3
+
 &gt; strings.length == strings.length
 false
 </code></pre>
@@ -4045,6 +4194,7 @@ false
 
 <pre><code class="language-tweakflow">&gt; [1, 2] == [1.0, 2.0]
 true
+
 &gt; [NaN] == [NaN]
 false
 </code></pre>
@@ -4053,6 +4203,7 @@ false
 
 <pre><code class="language-tweakflow">&gt; {:a 1} == {:a 1.0}
 true
+
 &gt; {:a NaN} == {:a NaN}
 false
 </code></pre>
@@ -4075,17 +4226,20 @@ false
 
 <pre><code class="language-tweakflow">&gt; 1 &lt; 2
 true
+
 &gt; 1 &lt; 1
 false
+
 &gt; 1.0 &lt; 1
 false
+
 &gt; -Infinity &lt; 5
 true
+
 &gt; &quot;1&quot; &lt; 1
 ERROR:
   code: CAST_ERROR
   message: cannot compare types string and long
-  ...
 
 </code></pre>
 
@@ -4105,12 +4259,16 @@ ERROR:
 
 <pre><code class="language-tweakflow">&gt; 1 &lt;= 3
 true
+
 &gt; 1 &lt;= 1
 true
+
 &gt; 1.0 &lt;= Infinity
 true
+
 &gt; NaN &lt;= NaN
 false
+
 &gt; nil &lt;= nil
 true
 </code></pre>
@@ -4127,14 +4285,19 @@ true
 
 <pre><code class="language-tweakflow">&gt; 1 &gt; 2
 false
+
 &gt; Infinity &gt; 4
 true
+
 &gt; 5 &gt; 3
 true
+
 &gt; NaN &gt; 2
 false
+
 &gt; Infinity &gt; NaN
 false
+
 &gt; 4.0 &gt; 2
 true
 </code></pre>
@@ -4155,14 +4318,19 @@ true
 
 <pre><code class="language-tweakflow">&gt; 1 &gt;= 2
 false
+
 &gt; Infinity &gt;= 2
 true
+
 &gt; 2.0 &gt;= 2
 true
+
 &gt; NaN &gt; 2
 false
+
 &gt; nil &gt;= nil
 true
+
 &gt; Infinity &gt;= -Infinity
 true
 </code></pre>
@@ -4175,18 +4343,25 @@ true
 
 <pre><code class="language-tweakflow">&gt; 0 === -0
 true
+
 &gt; 1 === 1
 true
+
 &gt; 1 === 1.0
 false
+
 &gt; &quot;foo&quot; === &quot;foo&quot;
 true
+
 &gt; {:a 1.0} === {:a 1.0}
 true
+
 &gt; {:a 1.0} === {:a 1}
 false
+
 &gt; [1.0] === [1.0]
 true
+
 &gt; [1.0] === [1]
 false
 </code></pre>
@@ -4199,18 +4374,25 @@ false
 
 <pre><code class="language-tweakflow">&gt; 0 !== 1
 true
+
 &gt; 0 !== 0
 false
+
 &gt; 1 !== 1.0
 true
+
 &gt; &quot;foo&quot; !== &quot;foo&quot;
 false
+
 &gt; {:a 1.0} !== {:a 1.0}
 false
+
 &gt; {:a 1.0} !== {:a 1}
 true
+
 &gt; [1.0] !== [1.0]
 false
+
 &gt; [1.0] !== [1]
 true
 </code></pre>
@@ -4223,6 +4405,7 @@ true
 
 <pre><code class="language-tweakflow">&gt; &quot;Hello&quot;..&quot; &quot;..&quot;World&quot;
 &quot;Hello World&quot;
+
 &gt; &quot;foo&quot;..1
 &quot;foo1&quot;
 </code></pre>
@@ -4244,22 +4427,31 @@ true
 
 <pre><code class="language-tweakflow">&gt; &quot;&quot; is string
 true
+
 &gt; nil is string
 false
+
 &gt; 42 is string
 false
+
 &gt; {} is list
 false
+
 &gt; [] is list
 true
+
 &gt; {} is dict
 true
+
 &gt; [1,2] is dict
 false
+
 &gt; nil is void
 true
+
 &gt; &quot;foo&quot; is any
 true
+
 &gt; nil is any
 false
 </code></pre>
@@ -4272,20 +4464,28 @@ false
 
 <pre><code class="language-tweakflow">&gt; typeof &quot;foo&quot;
 &quot;string&quot;
+
 &gt; typeof (x) -&gt; x+1
 &quot;function&quot;
+
 &gt; typeof 1
 &quot;long&quot;
+
 &gt; typeof 1.0
 &quot;double&quot;
+
 &gt; typeof false
 &quot;boolean&quot;
+
 &gt; typeof {}
 &quot;dict&quot;
+
 &gt; typeof []
 &quot;list&quot;
+
 &gt; typeof 2017-03-12T
 &quot;datetime&quot;
+
 &gt; typeof nil
 &quot;void&quot;
 </code></pre>
@@ -4359,14 +4559,19 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 1 &lt;&lt; 2
 4
+
 &gt; -1 &lt;&lt; 8
 -256
+
 &gt; 7 &lt;&lt; 1
 14
+
 &gt; 2.3 &lt;&lt; 4.9 # operands are cast to 2 &lt;&lt; 4
 32
+
 &gt; &quot;1&quot; &lt;&lt; 3.4 # operands are cast to 1 &lt;&lt; 3
 8
+
 &gt; nil &lt;&lt; 1
 nil
 </code></pre>
@@ -4381,12 +4586,16 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 8 &gt;&gt; 1
 4
+
 &gt; 8 &gt;&gt; 8
 0
+
 &gt; -1 &gt;&gt; 1
 -1
+
 &gt; -1 &gt;&gt; 8
 -1
+
 &gt; nil &gt;&gt; 2
 nil
 </code></pre>
@@ -4401,12 +4610,16 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 8 &gt;&gt;&gt; 1
 4
+
 &gt; 8 &gt;&gt;&gt; 8
 0
+
 &gt; -1 &gt;&gt;&gt; 1
 9223372036854775807
+
 &gt; -1 &gt;&gt;&gt; 56
 255
+
 &gt; nil &gt;&gt;&gt; 2
 nil
 </code></pre>
@@ -4421,12 +4634,16 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 1 &amp; 2
 0
+
 &gt; 7 &amp; 15
 7
+
 &gt; -1 &amp; 29837
 29837
+
 &gt; 3 &amp; 2
 2
+
 &gt; nil &amp; 1
 nil
 </code></pre>
@@ -4441,12 +4658,16 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 1 ^ 1
 0
+
 &gt; 1 ^ 2
 3
+
 &gt; -1 ^ 0
 -1
+
 &gt; -1 ^ 1
 -2
+
 &gt; nil ^ 2
 nil
 </code></pre>
@@ -4461,10 +4682,13 @@ nil
 
 <pre><code class="language-tweakflow">&gt; 1 | 3
 3
+
 &gt; -1 | 0
 -1
+
 &gt; 1 | 2 | 4 | 8
 15
+
 &gt; nil | 2
 nil
 </code></pre>
@@ -4752,13 +4976,13 @@ DEBUG: x is zero or nil 0
 </footer>
 
     
-<script type="text/javascript" src="./js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="./js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="./js/toc.js"></script>
+
+
+
+
+
+
 
 </body>
 

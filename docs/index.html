@@ -4,7 +4,7 @@
 <head>
 	<meta name="generator" content="Hugo 0.53" />
     <meta charset="utf-8">
-    <title>tweakflow: an expression language for the JVM</title>
+    <title>tweakflow: an embeddable scripting language for the JVM</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,11 +15,13 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/style.css">
 
-    <link rel="stylesheet" href="./js/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./js/highlight-tweakflow/tweakflow-light.css">
 
     <script type="text/javascript" src="./js/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="./js/highlight-tweakflow/tweakflow.js"></script>
     <script type="text/javascript">
-      hljs.configure({languages: []});
+      hljs.registerLanguage('tweakflow', window.hljsDefineTweakflow);
+      hljs.configure({languages: ["xml", "tweakflow", "plaintext", "java"]});
       hljs.initHighlightingOnLoad();
     </script>
 
@@ -57,15 +59,15 @@
             </li>
             
             <li class="menu__item" >
+              <a class="menu__item-link" href="./modules/std.html">Docs</a>
+            </li>
+            
+            <li class="menu__item" >
               <a class="menu__item-link" href="./reference.html">Reference</a>
             </li>
             
             <li class="menu__item" >
               <a class="menu__item-link" href="./embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Standard library</a>
             </li>
             
             <li class="menu__item" >
@@ -87,7 +89,7 @@
 
     
     <div class="homepage-head">
-      <div class="homepage-head__phrase">User-defined calculations for the JVM
+      <div class="homepage-head__phrase">Safe embeddable scripting for the JVM
       </div>
     </div>
     
@@ -100,17 +102,19 @@
 
 <h1 id="rationale">Rationale</h1>
 
-<p>Many applications benefit from user input and configuration based on information the application only knows at runtime. Applications can use tweakflow to expose runtime information, and allow users to define, reference and combine provided variables to express values.</p>
+<p>Applications can use tweakflow to expose runtime information to an expression-based scripting runtime, allowing users to safely interact with the provided data and collect scripted results.</p>
 
-<p>Tweakflow is designed to offer application users a formula-like notation for expressions that is familiar from spreadsheet applications. Tweakflow also supports user-defined functions, libraries, and modules, if more sophistication is needed.</p>
-
-<p>Tweakflow keeps the application in control of the data exchange mechanism with user-supplied expressions. The application controls which code users can call. Applications can expose functions implemented in Java, but users cannot arbitrarily call into application internals.</p>
+<p>Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.</p>
 
 <h1 id="language-features">Language features</h1>
 
 <h2 id="a-simple-computation-model">A simple computation model</h2>
 
-<p>Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use tweakflow.</p>
+<p>Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they are able to use formulas in a spreadsheet application, they are able to use tweakflow.</p>
+
+<h3 id="batteries-included">Batteries included</h3>
+
+<p>Tweakflow comes with a <a href="./modules/std.html">standard library</a> that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.</p>
 
 <h2 id="dynamically-typed">Dynamically typed</h2>
 
@@ -123,14 +127,6 @@
 <h2 id="all-functions-are-pure">All functions are pure</h2>
 
 <p>All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application handles all non-pure operations like file I/O.</p>
-
-<h2 id="automatic-dependency-tracking">Automatic dependency tracking</h2>
-
-<p>When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.</p>
-
-<h2 id="runtime-errors-can-be-thrown-and-caught">Runtime errors can be thrown and caught</h2>
-
-<p>Users can throw and catch errors within expressions, allowing them to gracefully handle unexpected or missing input.</p>
 
 <h2 id="embedded-documentation-and-meta-data">Embedded documentation and meta-data</h2>
 
@@ -150,13 +146,13 @@
 </footer>
 
     
-<script type="text/javascript" src="./js/vendor/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="./js/vendor/waypoints/lib/shortcuts/sticky.js"></script>
 
-<script type="text/javascript">window.noZensmooth = true;</script>
-<script type="text/javascript" src="./js/vendor/zenscroll/zenscroll-min.js"></script>
-<script type="text/javascript" src="./js/toc.js"></script>
+
+
+
+
+
+
 
 </body>
 
