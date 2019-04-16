@@ -43,7 +43,7 @@ Get the latest release jar from [github](https://github.com/twineworks/tweakflow
 
 Start the REPL using:
 ```bash
-$ java -jar tweakflow-0.10.0.jar repl
+$ java -jar tweakflow-0.11.0.jar repl
 ```
 
 Start typing expressions for the REPL to evaluate:
