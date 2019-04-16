@@ -548,17 +548,20 @@ Some examples:
 # A function with no parameters, returning a constant of any type
 > f: () -> 1
 function
+
 > f()
 1
 
 # A function taking two strings and returning a string
 > f: (string x, string y) -> string    x .. y
 function
+
 > f("John", "Doe")
 "JohnDoe"
 
 # A function taking a list and returning a list
 > f: (list xs) -> list    data.map(xs, (_, i) -> xs[data.size(xs)-1-i])
+
 function
 > f([1, 2, 3])
 [3, 2, 1]
@@ -566,19 +569,25 @@ function
 # A function taking two doubles, each having a default value, returning a double
 > f: (double x=1.0, double y=0.0) -> double    x+y
 function
+
 > f(3, 4)
 7.0
+
 > f()
 1.0
+
 > f(0)
 0.0
+
 > f(x: 2, y: 3)
 5.0
+
 > f(y: 7)
 8.0
 
 > f: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"}
 function
+
 > f("foo")
 3
 ```
@@ -1374,6 +1383,7 @@ If a function body is an expression, it is evaluated to the return value when th
 ```tweakflow
 # A function with no parameters, returning a constant of any type
 > f: () -> 1
+
 function
 > f()
 1
@@ -1381,26 +1391,33 @@ function
 # A function taking two strings and returning a string
 > f: (string x, string y) -> string    x .. y
 function
+
 > f("John", "Doe")
 "JohnDoe"
 
 # A function taking a list and returning a list
 > f: (list xs) -> list    data.map(xs, (_, i) -> xs[data.size(xs)-1-i])
 function
+
 > f([1, 2, 3])
 [3, 2, 1]
 
 # A function taking two doubles, each having a default value, returning a double
 > f: (double x=1.0, double y=0.0) -> double    x+y
 function
+
 > f(3, 4)
 7.0
+
 > f()
 1.0
+
 > f(0)
 0.0
+
 > f(x: 2, y: 3)
 5.0
+
 > f(y: 7)
 8.0
 
@@ -1411,6 +1428,7 @@ function
 # the returned value, a string, is cast to the declared return type, a list
 > f: (string x, string y) -> list  x..y
 function
+
 > f("Foo", "Bar")
 ["F", "o", "o", "B", "a", "r"]
 
@@ -1427,6 +1445,7 @@ The signature of a function can be inspected calling [fun.signature](/modules/st
 ```tweakflow
 > f: (double x=1.0, double y=0.0) -> double    x+y
 function
+
 > fun.signature(f)
 {
   :return_type "double",
@@ -1462,6 +1481,7 @@ For example, the inner class [com.twineworks.tweakflow.std.Strings$concat](https
 ```tweakflow
 > f: (list xs) -> string via {:class "com.twineworks.tweakflow.std.Strings$concat"}
 function
+
 > f(["Foo", "Bar", "Baz"])
 "FooBarBaz"
 ```
@@ -1470,10 +1490,13 @@ It is worth noting that return values coming from java implementations of functi
 ```tweakflow
 > f: (string x) -> long via {:class "com.twineworks.tweakflow.std.Strings$length"}
 function
+
 > g: (string x) -> string via {:class "com.twineworks.tweakflow.std.Strings$length"}
 function
+
 > f("foo")
 3
+
 > g("foo")
 "3"
 ```
@@ -1928,21 +1951,28 @@ Every function declares a return type. It is `any` by default. Every value a fun
 ```tweakflow
 > sum: (long x, long y) -> long        x+y
 function
+
 > sum_d: (long x, long y) -> double    x+y
 function
+
 > sum_s: (long x, long y) -> string    x+y
 function
+
 > id: (x) -> x # return type is default: any
 function
 
 > sum(1, 2)
 3
+
 > sum_d(1, 2)
 3.0
+
 > sum_s(1, 2)
 "3"
+
 > id([])
 []
+
 > id("foo")
 "foo"
 ```
@@ -2084,8 +2114,10 @@ function
 
 > can_vote(born: 1981-08-16T, at: 1998-11-02T)
 false
+
 > can_vote(born: 1981-08-16T, at: 1999-11-02T)
 true
+
 > can_vote(born: 1981-08-16T, at: 2016-11-02T)
 true
 
@@ -2125,8 +2157,10 @@ Some examples:
 
 > f: (string x) -> if strings.length(x) > 2 then "long" else "short"
 function
+
 > f("hello")
 "long"
+
 > f("hi")
 "short"
 
@@ -2142,8 +2176,10 @@ greeting: (string language) ->
 function
 > greeting("de")
 "Guten Tag"
+
 > greeting("es")
 "Hola"
+
 > greeting()
 "Hello"
 ```
@@ -2167,8 +2203,10 @@ Given customer records, the following function creates a greeting line:
 ```tweakflow
 > greeting: (dict customer) -> "Dear "..(customer[:name] default "customer")
 function
+
 > greeting({:id 723, :name "Jane Doe", :type "user"})
 "Dear Jane Doe"
+
 > greeting({:id 0, :type "admin"})
 "Dear customer"
 ```
@@ -2296,8 +2334,10 @@ f: (long x) ->
 function
 > f(0)
 true
+
 > f(1)
 true
+
 > f(nil)
 true
 ```
@@ -2314,8 +2354,10 @@ pair?: (list xs) ->
 function
 > pair?([1, 2])
 true
+
 > pair?([1, 2, 3])
 false
+
 > pair?(nil)
 false
 
@@ -2329,6 +2371,7 @@ sequence_pair?: (list xs) ->
 function
 > sequence_pair?([1, 2])
 true
+
 > sequence_pair?([2, 4])
 false
 ```
@@ -2362,14 +2405,19 @@ low_prime?: (long x) ->
 function
 > low_prime?(1)
 false
+
 > low_prime?(2)
 true
+
 > low_prime?(3)
 true
+
 > low_prime?(4)
 false
+
 > low_prime?(5)
 true
+
 > low_prime?(nil)
 false
 ```
@@ -2414,14 +2462,19 @@ function
 
 > leap_year?(1900)
 false
+
 > leap_year?(1904)
 true
+
 > leap_year?(2000)
 true
+
 > leap_year?(2004)
 true
+
 > leap_year?(2016)
 true
+
 > leap_year?(2017)
 false
 ```
@@ -2456,20 +2509,28 @@ int?: (x) ->
 function
 > int?(1)
 true
+
 > int?(1.0)
 true
+
 > int?(1.5)
 false
+
 > int?("2")
 true
+
 > int?("2e3")  # 2000
 true
+
 > int?("-2e3") # -2000
 true
+
 > int?("2e-3") # 0.002
 false
+
 > int?("2m")   # does not parse as double
 false
+
 > int?(nil)
 false
 ```
@@ -2493,6 +2554,7 @@ Each pattern in the pattern list must match the items of the matched value in or
 ```tweakflow
 > num?: (x) -> (x is long) || (x is double && !math.NaN?(x) && math.abs(x) != Infinity)
 function
+
 > \e
 vector2d?: (list xs) ->
   match xs
@@ -2503,14 +2565,19 @@ vector2d?: (list xs) ->
 function
 > vector2d?([1, 2])
 true
+
 > vector2d?(["a", "b"])
 false
+
 > vector2d?([8, 2, 2.0])
 false
+
 > vector2d?([8.0, 2.0])
 true
+
 > vector2d?([nil, nil])
 false
+
 > vector2d?(nil)
 false
 ```
@@ -2550,12 +2617,16 @@ valid_list?: (list xs) ->
 function
 > valid_list?(["adam", 2, "abner", 7])
 true
+
 > valid_list?(["adam", 2, "eve", 7])
 false
+
 > valid_list?([1, "a"])
 false
+
 > valid_list?(["a1", nil, "a2", nil, "a3", "hello"])
 true
+
 > valid_list?(nil)
 false
 ```
@@ -2591,14 +2662,19 @@ ends_in_datetime?: (list xs) ->
     [@..., datetime] -> true,
     default -> false
 \e
+
 > ends_in_datetime?(["a", "b"])
 false
+
 > ends_in_datetime?([])
 false
+
 > ends_in_datetime?([2017-02-24T, 2017-02-25T])
 true
+
 > ends_in_datetime?(nil)
 false
+
 > ends_in_datetime?([1, nil])
 false
 ```
@@ -2637,14 +2713,19 @@ measures?: (list xs) ->
 function
 > measures?([:p1, 0, 2, 3, 4, 99, 2017-04-22T])
 true
+
 > measures?([:p2, 99, 2015-02-11T])
 true
+
 > measures?([:p3, 2016-02-11T])
 true
+
 > measures?([2016-02-11T])
 false
+
 > measures?([])
 false
+
 > measures?([:p4, 201, 2017-04-22T]) # number out of range
 false
 ```
@@ -2677,16 +2758,22 @@ vector_dict?: (dict v) ->
 function
 > vector_dict?({:x 10, :y 20})
 false
+
 > vector_dict?({:x 10.0, :y 20.0})
 true
+
 > vector_dict?({:x 10.0, :y nil})
 false
+
 > vector_dict?({:x 10.0, :y 20.0, :z 14.9})
 false
+
 > vector_dict?({:x 10.0})
 false
+
 > vector_dict?({:a "one" :b "two"})
 false
+
 > vector_dict?(nil)
 false
 ```
@@ -2723,12 +2810,16 @@ person?: (dict x) ->
 function
 > person?({:name "Mark Twain", :born 1835-11-30T})
 true
+
 > person?({:name "Mark Twain", :born 1835-11-30T, :profession "author"})
 true
+
 > person?({:name "Mark Twain", :profession "author"})
 false
+
 > person?({:x 1, :y 2})
 false
+
 > person?(nil)
 false
 ```
@@ -2745,12 +2836,16 @@ person?: (dict x) ->
 function
 > person?({:name "Mark Twain", :born 1835-11-30T})
 false
+
 > person?({:name "Mark Twain", :born 1835-11-30T, :profession "author"})
 true
+
 > person?({:name "Mark Twain" :profession "author"})
 false
+
 > person?({:x 1, :y 2})
 false
+
 > person?(nil)
 false
 ```
@@ -3151,14 +3246,19 @@ factorial: (long x) -> long
 function
 > factorial(1)
 1
+
 > factorial(2)
 2
+
 > factorial(3)
 6
+
 > factorial(4)
 24
+
 > factorial(5)
 120
+
 > factorial(10)
 3628800
 ```
@@ -3183,8 +3283,10 @@ Each function has closed over the value of `i`, not a reference to `i`. Therefor
 ```tweakflow
 > fs[0](10) # first function multiplies by 1
 10
+
 > fs[1](10) # second function multiplies by 2
 20
+
 > fs[2](10) # third function multiplies by 3
 30
 ```
@@ -3225,14 +3327,19 @@ This operation is a short-circuiting boolean and. The first operand `a` is evalu
 ```tweakflow
 > 1 && 2
 true
+
 > 1 && 0
 false
+
 > false && throw "not evaluated"
 false
+
 > true && true
 true
+
 > [] && 1
 false
+
 > ["foo"] && 1
 true
 ```
@@ -3246,12 +3353,16 @@ This operation is a short-circuiting boolean or. The first operand `a` is evalua
 ```tweakflow
 > true || false
 true
+
 > true || throw "not evaluated"
 true
+
 > false || true
 true
+
 > [] || []
 false
+
 > [] || [1]
 true
 ```
@@ -3273,14 +3384,19 @@ The following special cases are defined:
 ```tweakflow
 > -(1)
 -1
+
 > -(-1)
 1
+
 > -(-2.3)
 2.3
+
 > -(Infinity)
 -Infinity
+
 > -(NaN)
 NaN
+
 > -("foo")
 ERROR:
   code: CAST_ERROR
@@ -3313,10 +3429,13 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 ```tweakflow
 > 1+2
 3
+
 > 2.0+2
 4.0
+
 > Infinity + 3
 Infinity
+
 > math.max_long + 1   # binary overflow
 -9223372036854775808
 ```
@@ -3347,12 +3466,16 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 ```tweakflow
 > 5-3
 2
+
 > 5-10
 -5
+
 > 2.3-9
 -6.7
+
 > math.min_long - 1 # binary underflow
 9223372036854775807
+
 > Infinity - 100
 Infinity
 ```
@@ -3387,14 +3510,19 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 ```tweakflow
 > 2 * 3
 6
+
 > 2 * 3.3
 6.6
+
 > 2 * 3.3
 6.6
+
 > 1.1 * 2.9
 3.19
+
 > math.max_long * math.max_long # binary overflow
 1
+
 > math.max_long as double * math.max_long # floating point multiplication
 8.507059173023462E37
 ```
@@ -3427,8 +3555,10 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 ```tweakflow
 > 1 / 2
 0.5
+
 > 5 / 0.5
 10.0
+
 > nil / 2
 nil
 ```
@@ -3450,14 +3580,19 @@ Both operands are cast to long before division is performed. The result of the d
 ```tweakflow
 > 10 // 2
 5
+
 > 10 // 3
 3
+
 > 10 // 4
 2
+
 > 10 // 1
 10
+
 > 10 // -3
 -3
+
 > 10 // 0
 ERROR:
   code: DIVISION_BY_ZERO
@@ -3496,12 +3631,16 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 ```tweakflow
 > 10 % 4
 2
+
 > 10 % 3
 1
+
 > 10 % 2.5
 0.0
+
 > 5 % 1.5
 0.5
+
 > -5 % 1.5
 -0.5
 ```
@@ -3537,12 +3676,16 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 ```tweakflow
 > 2**3
 8.0
+
 > 4**0.5
 2.0
+
 > 2**10
 1024.0
+
 > nil**nil
 nil
+
 > "2"**"3"
 ERROR:
   code: CAST_ERROR
@@ -3571,10 +3714,13 @@ A double value and a long value are equal if the double value has the same magni
 ```tweakflow
 > 0 == 0.0
 true
+
 > 3 == 3.0
 true
+
 > -4 == 4.0
 false
+
 > 0 == NaN
 false
 ```
@@ -3598,6 +3744,7 @@ Function values are never equal to anything, not even to themselves.
 ```tweakflow
 > strings.length("foo")
 3
+
 > strings.length == strings.length
 false
 ```
@@ -3607,6 +3754,7 @@ Lists are equal if they contain items that compare as equal.
 ```tweakflow
 > [1, 2] == [1.0, 2.0]
 true
+
 > [NaN] == [NaN]
 false
 ```
@@ -3616,6 +3764,7 @@ Dicts are equal if they have the same keyset and values associated with the same
 ```tweakflow
 > {:a 1} == {:a 1.0}
 true
+
 > {:a NaN} == {:a NaN}
 false
 ```
@@ -3639,17 +3788,20 @@ If either operand is `nil`, or `NaN` the result is `false`.
 ```tweakflow
 > 1 < 2
 true
+
 > 1 < 1
 false
+
 > 1.0 < 1
 false
+
 > -Infinity < 5
 true
+
 > "1" < 1
 ERROR:
   code: CAST_ERROR
   message: cannot compare types string and long
-  ...
 
 ```
 
@@ -3670,12 +3822,16 @@ If exactly one operand is `nil`, the result is `false`.
 ```tweakflow
 > 1 <= 3
 true
+
 > 1 <= 1
 true
+
 > 1.0 <= Infinity
 true
+
 > NaN <= NaN
 false
+
 > nil <= nil
 true
 ```
@@ -3693,14 +3849,19 @@ If either operand is `nil`, or `NaN` the result is `false`.
 ```tweakflow
 > 1 > 2
 false
+
 > Infinity > 4
 true
+
 > 5 > 3
 true
+
 > NaN > 2
 false
+
 > Infinity > NaN
 false
+
 > 4.0 > 2
 true
 ```
@@ -3722,14 +3883,19 @@ If exactly one operand is `nil`, the result is `false`.
 ```tweakflow
 > 1 >= 2
 false
+
 > Infinity >= 2
 true
+
 > 2.0 >= 2
 true
+
 > NaN > 2
 false
+
 > nil >= nil
 true
+
 > Infinity >= -Infinity
 true
 ```
@@ -3743,18 +3909,25 @@ Evaluates to `true` if a is equal to b as per the semantics of the [equality](#e
 ```tweakflow
 > 0 === -0
 true
+
 > 1 === 1
 true
+
 > 1 === 1.0
 false
+
 > "foo" === "foo"
 true
+
 > {:a 1.0} === {:a 1.0}
 true
+
 > {:a 1.0} === {:a 1}
 false
+
 > [1.0] === [1.0]
 true
+
 > [1.0] === [1]
 false
 ```
@@ -3768,18 +3941,25 @@ Evaluates to `false` if a is equal to b as per the semantics of the equality ope
 ```tweakflow
 > 0 !== 1
 true
+
 > 0 !== 0
 false
+
 > 1 !== 1.0
 true
+
 > "foo" !== "foo"
 false
+
 > {:a 1.0} !== {:a 1.0}
 false
+
 > {:a 1.0} !== {:a 1}
 true
+
 > [1.0] !== [1.0]
 false
+
 > [1.0] !== [1]
 true
 ```
@@ -3793,6 +3973,7 @@ Both operands are cast to string, then they are concatenated to form the result 
 ```tweakflow
 > "Hello".." ".."World"
 "Hello World"
+
 > "foo"..1
 "foo1"
 ```
@@ -3816,22 +3997,31 @@ As a special case, if `any` is given as data type, the result is true only if th
 ```tweakflow
 > "" is string
 true
+
 > nil is string
 false
+
 > 42 is string
 false
+
 > {} is list
 false
+
 > [] is list
 true
+
 > {} is dict
 true
+
 > [1,2] is dict
 false
+
 > nil is void
 true
+
 > "foo" is any
 true
+
 > nil is any
 false
 ```
@@ -3845,20 +4035,28 @@ The expression returns the name of a value's type. The possible results are: `"b
 ```tweakflow
 > typeof "foo"
 "string"
+
 > typeof (x) -> x+1
 "function"
+
 > typeof 1
 "long"
+
 > typeof 1.0
 "double"
+
 > typeof false
 "boolean"
+
 > typeof {}
 "dict"
+
 > typeof []
 "list"
+
 > typeof 2017-03-12T
 "datetime"
+
 > typeof nil
 "void"
 ```
@@ -3936,14 +4134,19 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 1 << 2
 4
+
 > -1 << 8
 -256
+
 > 7 << 1
 14
+
 > 2.3 << 4.9 # operands are cast to 2 << 4
 32
+
 > "1" << 3.4 # operands are cast to 1 << 3
 8
+
 > nil << 1
 nil
 ```
@@ -3959,12 +4162,16 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 8 >> 1
 4
+
 > 8 >> 8
 0
+
 > -1 >> 1
 -1
+
 > -1 >> 8
 -1
+
 > nil >> 2
 nil
 ```
@@ -3980,12 +4187,16 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 8 >>> 1
 4
+
 > 8 >>> 8
 0
+
 > -1 >>> 1
 9223372036854775807
+
 > -1 >>> 56
 255
+
 > nil >>> 2
 nil
 ```
@@ -4001,12 +4212,16 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 1 & 2
 0
+
 > 7 & 15
 7
+
 > -1 & 29837
 29837
+
 > 3 & 2
 2
+
 > nil & 1
 nil
 ```
@@ -4022,12 +4237,16 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 1 ^ 1
 0
+
 > 1 ^ 2
 3
+
 > -1 ^ 0
 -1
+
 > -1 ^ 1
 -2
+
 > nil ^ 2
 nil
 ```
@@ -4043,10 +4262,13 @@ If any operand is `nil`, the result is `nil`.
 ```tweakflow
 > 1 | 3
 3
+
 > -1 | 0
 -1
+
 > 1 | 2 | 4 | 8
 15
+
 > nil | 2
 nil
 ```

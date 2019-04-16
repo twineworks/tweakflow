@@ -204,7 +204,7 @@ For the purposes of discussion, consider the following module.
 ```tweakflow
 # user_module.tf
 
-import core, data, math, strings from 'std'
+import core, data, math, strings from 'std';
 
 library customer {
   provided first_name;
@@ -215,7 +215,7 @@ library user {
   greeting: if customer.first_name && customer.last_name
               "Hello #{customer.first_name} #{customer.last_name}"
             else
-              "Dear anonymous"
+              "Dear anonymous";
 }
 ```
 

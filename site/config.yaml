@@ -9,6 +9,10 @@ menu:
       URL: "/getting-started.html"
       Weight: -700
 
+    - Name: "Docs"
+      URL: "/modules/std.html"
+      Weight: -650
+
     - Name: "Reference"
       URL: "/reference.html"
       Weight: -600
@@ -16,10 +20,6 @@ menu:
     - Name: "Embedding"
       URL: "/embedding.html"
       Weight: -500
-
-    - Name: "Standard library"
-      URL: "/modules/std.html"
-      Weight: -400
 
     - Name: "Tools"
       URL: "/tools.html"
