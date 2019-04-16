@@ -1,4 +1,4 @@
-# Tweakflow - Safe embeddable scripting for the JVM 
+# Tweakflow - safe embeddable scripting for the JVM 
 
 [![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
@@ -6,11 +6,9 @@
 [![Travis Build Status](https://travis-ci.org/twineworks/tweakflow.svg?branch=master)](https://travis-ci.org/twineworks/tweakflow)
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/v1u88koademagp2c/branch/master?svg=true)](https://ci.appveyor.com/project/slawo-ch/tweakflow/branch/master)
 
-An embeddable expression language for Java. Embed tweakflow in your application to interact with user-supplied expressions.
+Applications can use tweakflow to expose runtime information to an expression-based scripting runtime, allowing users to safely interact with the provided data and collect scripted results.
 
-Tweakflow offers simple expression evaluation as well as user variables, libraries, and modules. Your application can offer varying levels of sophistication depending on your needs.
-
-Tweakflow uses immutable values for everything, and all functions are pure. This leads to repeatable expression evaluation without side effects. Your app remains in control. Unlike other embeddable languages, users cannot use tweakflow to gain access to your app's internals.
+Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals. 
 
 ## Language features
 
@@ -26,14 +24,14 @@ All values in tweakflow are immutable. It is always safe to pass values between 
 ### All functions are pure
 All functions in tweakflow are pure and free of observable side-effects. A tweakflow function, given the same arguments, will always return the same result. The host application must take care of all non-pure operations like file I/O.
 
+### Batteries included
+Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
+
 ### Automatic dependency tracking
 When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
 
 ### Inline documentation and meta-data
 Tweakflow supports documentation annotations as well as arbitrary meta-data on variables, libraries and modules. This feature supports interactive help as well as automated generation of project documentation.
-
-### Batteries included
-Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
 ## Requirements
 Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
