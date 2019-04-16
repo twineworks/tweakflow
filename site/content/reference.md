@@ -442,7 +442,7 @@ A splat expression can be used to merge dicts inline.
 
 The formal syntax of a dict literal is as follows:
 
-```
+```text
 dictLiteral
    : '{' '}'
    | '{' ((expression expression)|(splat)) (',' ((expression expression)|(splat)))*  ','? '}'
@@ -671,7 +671,7 @@ A module usually starts with the `module` keyword. If there are no [annotations]
 
 Formally modules have the following syntax:
 
-```
+```text
 module
   : moduleHead moduleComponent* EOF
   ;
@@ -913,7 +913,7 @@ export library nums {
 ### Variables
 A variable is a named entity that holds a value. Variables are placed in [libraries](#libraries). Variables have a name, a  [type](#data-types), and a value. They can also be annotated by [docs and metadata](#annotations).
 
-```
+```text
 varDef
   : metaDef dataType? identifier ':' expression
   ;
@@ -1187,10 +1187,6 @@ Examples for casts from string to double:
 ERROR:
   code: CAST_ERROR
   message: Cannot cast 200.0kg to double
-  at: [interactive]:3:10
-  source: "200.0kg" as double
-
-
 ```
 
 String as list
@@ -2317,7 +2313,7 @@ The patterns available for matching include existence matches, value matches, pr
 
 Existence matches are the simplest form of match. They match any value including `nil`. An existence match is indicated by the `@` operator. If that operator is followed by an identifier, it becomes a capturing match, binding the identifier to the matched value in the guard and result expressions of the line. Formally the syntax is as follows:
 
-```
+```text
 matchPattern
   : '@' identifier?
   ;
@@ -3049,7 +3045,7 @@ References point to named values. There are four variants of references: unscope
 
 The syntax is as follows:
 
-```
+```text
 reference
   :                   identifier ('.' identifier)*   # unscoped reference
   | ('library::')     identifier ('.' identifier)*   # library reference
