@@ -31,7 +31,7 @@ The above paradigm is familiar from spreadsheet applications. Spreadsheets allow
 
 Allowing users to perform computations in an application has implications, especially when users can access application internals. Many general-purpose languages on the JVM, like JRuby, Closure, Scala, or various implementations of Javascript have excellent Java interop capabilities. Tweakflow deliberately does not offer such features.
 
-While Tweakflow functions can be written in Java for performance reasons, they must implement an interface and be on the classpath. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application sets up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what user expressions can call or have access to.
+While tweakflow functions can be written in Java for performance reasons, they must implement an interface and be on the classpath. Calling arbitrary Java code is not possible. When embedding tweakflow, the host application sets up a load path that controls which tweakflow code can contain functions implemented in Java. In addition, the host application can remove or replace the default standard library that comes with tweakflow. As a result applications control precisely what user expressions can call or have access to.
 
 ## Lexical structure
 

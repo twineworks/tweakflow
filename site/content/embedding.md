@@ -106,7 +106,7 @@ System.out.println(dump);
 ```
 
 ## Evaluating expressions
-The simplest case of embedding tweakflow is to evaluate independent, self-contained expressions in an empty scope. This is just a call to [Tweakflow](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/TweakFlow.java).evaluate.
+The simplest case of embedding tweakflow is to evaluate independent, self-contained expressions in an empty scope. This is just a call to [TweakFlow](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/TweakFlow.java).evaluate.
 
 ```java
 TweakFlow.evaluate("1+2"); // returns 3
