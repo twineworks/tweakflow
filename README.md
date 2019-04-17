@@ -79,7 +79,7 @@ Or it can be more sophisticated, providing users with application variables they
 ```tweakflow
 # my_module.tf
 # allow users to use core, data, math, and strings libraries from the standard library
-import core, data, math, strings from 'std'
+import core, data, math, strings from 'std';
 
 # place customer.first_name and customer.last_name into scope, provided dynamically during runtime
 library customer {
@@ -92,7 +92,7 @@ library user {
   greeting: if customer.first_name && customer.last_name
               "Hello #{customer.first_name} #{customer.last_name}"
             else
-              "Dear anonymous"
+              "Dear anonymous";
 }
 ```
 
