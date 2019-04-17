@@ -353,6 +353,7 @@ In case the UTC offset is omitted, but a time zone id is provided, an offset imp
 ```
 
 If in the case of omitted offset the datetime is ambiguous because of daylight saving mechanics, the following rules apply:
+
  - if the datetime falls into a gap, the length of the gap is added
  - if the datetime falls into an overlap, the earlier point in time is used
 
@@ -2548,7 +2549,11 @@ capture
 Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.
 
 ```tweakflow
-> num?: (x) -> (x is long) || (x is double && !math.NaN?(x) && math.abs(x) != Infinity)
+> \e
+  num?: (x) ->
+    (x is long) ||
+    (x is double && !math.NaN?(x) && math.abs(x) != Infinity)
+\e
 function
 
 > \e
