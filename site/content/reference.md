@@ -643,9 +643,6 @@ The comment markers `/*` and `*/` enclose a comment that can span multiple lines
 > 3 /* This is a comment */
 3
 
-> /* this is a /* nested */ comment */ 3
-3
-
 > \e
 /*
 this comment
