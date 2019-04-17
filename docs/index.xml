@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tweakflow: an embeddable scripting language for the JVM on tweakflow - an expression language for the JVM</title>
+    <title>tweakflow: embeddable scripting language for the JVM on tweakflow - safe embeddable scripting language for the JVM</title>
     <link>/</link>
-    <description>Recent content in tweakflow: an embeddable scripting language for the JVM on tweakflow - an expression language for the JVM</description>
+    <description>Recent content in tweakflow: embeddable scripting language for the JVM on tweakflow - safe embeddable scripting language for the JVM</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
@@ -27,10 +27,10 @@ Getting tweakflow You can get the tweakflow jar from the releases page or from m
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/getting-started.html</guid>
-      <description>Getting started with tweakflow This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
+      <description>Getting started This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 Requirements Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
 Getting tweakflow Download the latest release jar. You can also obtain it from maven central using the following dependency:
-&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.11.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Starting a tweakflow REPL Launch the interactive REPL using:</description>
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.11.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Starting a REPL Launch the interactive REPL using:</description>
     </item>
     
     <item>

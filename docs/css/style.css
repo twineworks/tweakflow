@@ -29,7 +29,7 @@ html {
   /*color: rgba(26,26,26,.7);*/
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 a {
@@ -49,35 +49,46 @@ a {
   padding-left: 10px;
   padding-right: 10px;
   max-width: 100%;
-  width: 1100px;
+  width: 100%;
   font-size: 1.0em;
   line-height: normal;
-  padding-top: 1em;
+  /* padding-top: 1em; */
   font-family: 'Lato';
   font-weight: 400;
   position: relative;
+  background-color: #fafafa;
   border-bottom: 1px solid #e7f0f0;
+  border-bottom: 1px solid #c5c5c5;
 }
 
 .menu__logo-wrapper {
   float: left;
-  -webkit-transform: translateY(-10px);
+  /* -webkit-transform: translateY(-10px);
   -ms-transform: translateY(-10px);
-  transform: translateY(-10px);
+  transform: translateY(-10px); */
   margin-right: 0;
 }
 
 .menu__logo-wrapper a {
   display: block;
-  height: 60px;
+  padding-top: 10px;
+  height: 36px;
 }
 
 .menu__logo-wrapper img {
-  width: 240px;
-  height: 60px;
+  /* width: 240px; */
+  height: 27px;
+  image-rendering: optimizequality
 }
 
-.menu__items-wrapper {
+.menu__items-wrapper-left {
+  float: left;
+  display: block;
+  margin-top: 13px;
+  margin-bottom: 12px;
+}
+
+.menu__items-wrapper-right {
   float: right;
   display: block;
   margin-top: 13px;
@@ -97,7 +108,7 @@ a {
 .menu__item.active {
   /*color: #1603f8;*/
   /*color: #fdcd27;*/
-  color: #19b6f9;
+  color: #1394cb;
   /*color: #fc3430;*/
   /*color: #c8cea9;*/
   /*color: #23c559;*/
@@ -105,11 +116,11 @@ a {
   /*color: green;*/
 }
 
-.menu__item a:hover {
-  border-bottom: 3px solid #19b6f9;;
+.menu__item a.menu__item-link:hover {
+  border-bottom: 3px solid #1394cb;
 }
 
-.menu__item-link {
+.menu__item-link, .menu__item-version-link {
   color: inherit;
   padding: 0.2em 0;
   text-decoration: none;
@@ -147,7 +158,7 @@ a {
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
-  width: 1100px;
+  width: 1200px;
   font-size: 1.0em;
   line-height: normal;
   padding-bottom: 1em;
@@ -159,7 +170,7 @@ a {
 }
 
 .content-wrapper aside {
-  flex: 0 0 360px;
+  flex: 0 0 320px;
   padding: 0;
   margin: 0;
   position: relative;
@@ -167,7 +178,7 @@ a {
 
 .content-wrapper aside .toc-wrapper {
   position: absolute;
-  width: 360px;
+  width: 320px;
   top: 0;
   bottom: 0;
 }
@@ -242,12 +253,12 @@ aside nav ul {
 
 aside nav > ul > li > a {
   /*margin-top: 20px;*/
-  font-size: 1.45em;
+  font-size: 1.25em;
 }
 
 aside nav > ul > li > ul > li > a {
   /*margin-top: 30px;*/
-  font-size: 1.45em;
+  font-size: 1.25em;
   /*background-color: whitesmoke;*/
   /*background-color: #C1D6FF;*/
   /*background-color: #f0f0f0;*/
@@ -258,17 +269,17 @@ aside nav > ul > li > ul > li > a {
 }
 
 aside nav > ul > li > ul > li > ul > li > a {
-  font-size: 1.3em;
+  font-size: 1.15em;
   padding-left: 2.0em;
 }
 
 aside nav > ul > li > ul > li > ul > li > ul > li > a{
-  font-size: 1.1em;
+  font-size: 1.0em;
   padding-left: 3.5em;
 }
 
 aside nav > ul > li > ul > li > ul > li > ul > li > ul > li a {
-  font-size: 1.1em;
+  font-size: 1.0em;
   padding-left: 4.5em;
 }
 
@@ -300,7 +311,7 @@ aside nav ul li a:hover, aside nav ul li a.active {
   /*background-color: whitesmoke;*/
   /*background-color: #1603f8;*/
   /*background-color: #fdcd27;*/
-  background-color: #19b6f9;
+  background-color: #1394cb;
   /*background-color: #fc3430;*/
   /*background-color: #c8cea9;*/
   /*background-color: #23c559;*/
@@ -314,7 +325,7 @@ main {
   padding-top: 2em;
   padding-left: 1em;
   padding-right: 1em;
-  flex: 0 1 740px;
+  flex: 0 1 880px;
   /* https://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text */
   min-width: 0;
 }
@@ -372,7 +383,7 @@ main pre code {
   font-size: 0.9em;
   padding:8px 15px;
   /*background: #f8f8f8;  */
-  border-radius:8px;
+  /* border-radius:8px; */
   border:1px solid #c5c5c5;
   overflow-x: auto;
   margin: 1.0rem auto;

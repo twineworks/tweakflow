@@ -2,15 +2,30 @@
     <div class="menu">
 
       <!-- logo -->
-      <div class="menu__logo-wrapper">
+      <!-- <div class="menu__logo-wrapper">
           <a href="/index.html" class="menu__logo"><img alt="tweakflow logo" src="/img/tweakflow_logo.svg"></a>
-      </div>
+      </div> -->
       <!-- navigation -->
-      <nav role="navigation" class="menu__items-wrapper">
+      <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
-            {{ if .Site.Menus.main }}
+            <li class="menu__item">
+                <a class="menu__item-version-link" href="/index.html"><b>Tweakflow</b> v{{ .Site.Params.version }}</a>
+            </li>
+            {{ if .Site.Menus.mainleft }}
             {{ $currentPage := . }}
-            {{ range .Site.Menus.main }}
+            {{ range .Site.Menus.mainleft }}
+            <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}" >
+              <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
+            </li>
+            {{ end }}
+            {{ end }}
+        </ul>
+      </nav>
+      <nav role="navigation" class="menu__items-wrapper-right">
+        <ul class="menu__items">
+            {{ if .Site.Menus.mainright }}
+            {{ $currentPage := . }}
+            {{ range .Site.Menus.mainright }}
             <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}" >
               <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
             </li>
@@ -19,12 +34,5 @@
         </ul>
       </nav>
     </div>
-
-    {{ if .IsHome }}
-    <div class="homepage-head">
-      <div class="homepage-head__phrase">Safe embeddable scripting for the JVM
-      </div>
-    </div>
-    {{ end }}
 
 </header>
