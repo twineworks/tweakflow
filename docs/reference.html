@@ -648,9 +648,12 @@ ERROR:
 2019-01-01T00:00:00+01:00@Europe/Berlin # note that +01:00 is used
 </code></pre>
 
-<p>If in the case of omitted offset the datetime is ambiguous because of daylight saving mechanics, the following rules apply:
- - if the datetime falls into a gap, the length of the gap is added
- - if the datetime falls into an overlap, the earlier point in time is used</p>
+<p>If in the case of omitted offset the datetime is ambiguous because of daylight saving mechanics, the following rules apply:</p>
+
+<ul>
+<li>if the datetime falls into a gap, the length of the gap is added</li>
+<li>if the datetime falls into an overlap, the earlier point in time is used</li>
+</ul>
 
 <pre><code class="language-tweakflow"># time does not exist as given, it falls into a 1-hour DST gap, so 1 hour is added
 &gt; 2019-03-31T02:30:00@Europe/Berlin
@@ -2780,7 +2783,11 @@ capture
 
 <p>Each pattern in the pattern list must match the items of the matched value in order. The optional capture contains the entire matched list.</p>
 
-<pre><code class="language-tweakflow">&gt; num?: (x) -&gt; (x is long) || (x is double &amp;&amp; !math.NaN?(x) &amp;&amp; math.abs(x) != Infinity)
+<pre><code class="language-tweakflow">&gt; \e
+  num?: (x) -&gt;
+    (x is long) ||
+    (x is double &amp;&amp; !math.NaN?(x) &amp;&amp; math.abs(x) != Infinity)
+\e
 function
 
 &gt; \e
