@@ -2,7 +2,7 @@
 title: Getting started
 ---
 
-# Getting started with tweakflow
+# Getting started
 
 This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
 
@@ -22,7 +22,7 @@ Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
 </dependency>
 ```
 
-## Starting a tweakflow REPL
+## Starting a REPL
 Launch the interactive REPL using:
 
 `java -jar tweakflow-{{< version >}}.jar repl`
@@ -238,7 +238,7 @@ You can write functions inline without naming them. Functions are just values, l
 
 ## Local variables
 
-You can define helper variables scoped to an expression using let:
+You can define helper variables scoped to an expression using `let`:
 
 ```tweakflow
 > let {sq: (x) -> x*x; five: 5;} sq(five)
@@ -333,10 +333,13 @@ sgn: (x) ->
   else 0
 \e
 function
+
 > sgn(0)
 0
+
 > sgn(-2.3)
 -1
+
 > sgn(9.2)
 1
 ```

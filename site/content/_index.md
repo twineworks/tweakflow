@@ -1,12 +1,24 @@
 ---
-title: "tweakflow: an embeddable scripting language for the JVM"
+title: "tweakflow: embeddable scripting language for the JVM"
 ---
+# Tweakflow
 
-# Rationale
+A safe, embeddable scripting language for the JVM. \
+[![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
+[![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twineworks/tweakflow/badge.svg)](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow")
+[![Travis Build Status](https://travis-ci.org/twineworks/tweakflow.svg?branch=master)](https://travis-ci.org/twineworks/tweakflow)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/v1u88koademagp2c/branch/master?svg=true)](https://ci.appveyor.com/project/slawo-ch/tweakflow/branch/master)
+[![Join the chat at https://gitter.im/twineworks/tweakflow](https://badges.gitter.im/twineworks/tweakflow.svg)](https://gitter.im/twineworks/tweakflow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Applications can use tweakflow to expose runtime information to an expression-based scripting runtime, allowing users to safely interact with the provided data and collect scripted results.
 
-Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals. 
+## Why tweakflow?
+
+JVM applications can use tweakflow to interact with users through an expression-based scripting runtime. Users can safely interact with application-provided data and the application can collect any dynamically calculated results.
+
+Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.
+
+This is in contrast to other embeddable languages like JRuby and JavaScript that have the ability to call into application internals via Java interop features, which tweakflow deliberately does not offer.
 
 # Language features
 
