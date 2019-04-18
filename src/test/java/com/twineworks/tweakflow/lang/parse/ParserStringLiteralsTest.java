@@ -26,8 +26,6 @@ package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.lang.ast.NodeStructureAssert;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
-import com.twineworks.tweakflow.lang.ast.expressions.StringConcatNode;
 import com.twineworks.tweakflow.lang.ast.expressions.StringNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
@@ -36,7 +34,6 @@ import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.twineworks.tweakflow.lang.ast.NodeStructureAssert.assertThat;
@@ -304,22 +301,14 @@ public class ParserStringLiteralsTest {
   @Test
   void parses_with_interpolation(){
 
-//    with_interpolation: "string with #{hash}";
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
 
+//    with_interpolation: "string with #{hash}";
     ExpressionNode expNode = varDefMap.get("with_interpolation").getValueExpression();
-    assertThat(expNode).isInstanceOf(StringConcatNode.class);
-    StringConcatNode string_inter = (StringConcatNode) expNode;
-    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
-    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
-    assertThat(string_inter_left.getStringVal()).isEqualTo("string with ");
+//    with_interpolation_expected: "string with "..(hash as string);
+    ExpressionNode expNodeExpected = varDefMap.get("with_interpolation_expected").getValueExpression();
 
-    assertThat(string_inter.getRightExpression()).isInstanceOf(ReferenceNode.class);
-    ReferenceNode string_inter_right = (ReferenceNode) string_inter.getRightExpression();
-    assertThat(string_inter_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> string_inter_right_elements = string_inter_right.getElements();
-    assertThat(string_inter_right_elements).hasSize(1);
-    assertThat(string_inter_right_elements).containsExactly("hash");
+    NodeStructureAssert.assertThat(expNode).hasSameStructureAs(expNodeExpected);
 
   }
 
@@ -331,6 +320,7 @@ public class ParserStringLiteralsTest {
 //    with_serial_interpolation: "### #{name}{##{id}}";
     ExpressionNode serialInterpolation = varDefMap.get("with_serial_interpolation").getValueExpression();
 
+    //    with_serial_interpolation_expected: "### "..(name as string).."{#"..(id as string).."}";
     ExpressionNode serialInterpolationExpected = varDefMap.get("with_serial_interpolation_expected").getValueExpression();
     NodeStructureAssert.assertThat(serialInterpolation).hasSameStructureAs(serialInterpolationExpected);
   }
@@ -340,27 +330,37 @@ public class ParserStringLiteralsTest {
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
 
-//    with_nested_interpolation: "string with #{"name: #{name}"}";
-    ExpressionNode expNode = varDefMap.get("with_nested_interpolation").getValueExpression();
-    assertThat(expNode).isInstanceOf(StringConcatNode.class);
-    StringConcatNode string_inter = (StringConcatNode) expNode;
-    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
-    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
-    assertThat(string_inter_left.getStringVal()).isEqualTo("string with ");
-
-    assertThat(string_inter.getRightExpression()).isInstanceOf(StringConcatNode.class);
-    StringConcatNode string_inter_right = (StringConcatNode) string_inter.getRightExpression();
-    assertThat(string_inter_right.getLeftExpression()).isInstanceOf(StringNode.class);
-    StringNode string_inter_right_left = (StringNode) string_inter_right.getLeftExpression();
-    assertThat(string_inter_right_left.getStringVal()).isEqualTo("name: ");
-
-    assertThat(string_inter_right.getRightExpression()).isInstanceOf(ReferenceNode.class);
-    ReferenceNode string_inter_right_right = (ReferenceNode) string_inter_right.getRightExpression();
-    assertThat(string_inter_right_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> string_inter_right_right_elements = string_inter_right_right.getElements();
-    assertThat(string_inter_right_right_elements).hasSize(1);
-    assertThat(string_inter_right_right_elements).containsExactly("name");
-
+    ExpressionNode inter = varDefMap.get("with_nested_interpolation").getValueExpression();
+    ExpressionNode inter_expected = varDefMap.get("with_nested_interpolation_expected").getValueExpression();
+    NodeStructureAssert.assertThat(inter).hasSameStructureAs(inter_expected);
   }
+
+//  @Test
+//  void parses_with_nested_interpolation(){
+//
+//    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+//
+////    with_nested_interpolation: "string with #{"name: #{name}"}";
+//    ExpressionNode expNode = varDefMap.get("with_nested_interpolation").getValueExpression();
+//    assertThat(expNode).isInstanceOf(StringConcatNode.class);
+//    StringConcatNode string_inter = (StringConcatNode) expNode;
+//    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
+//    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
+//    assertThat(string_inter_left.getStringVal()).isEqualTo("string with ");
+//
+//    assertThat(string_inter.getRightExpression()).isInstanceOf(StringConcatNode.class);
+//    StringConcatNode string_inter_right = (StringConcatNode) string_inter.getRightExpression();
+//    assertThat(string_inter_right.getLeftExpression()).isInstanceOf(StringNode.class);
+//    StringNode string_inter_right_left = (StringNode) string_inter_right.getLeftExpression();
+//    assertThat(string_inter_right_left.getStringVal()).isEqualTo("name: ");
+//
+//    assertThat(string_inter_right.getRightExpression()).isInstanceOf(ReferenceNode.class);
+//    ReferenceNode string_inter_right_right = (ReferenceNode) string_inter_right.getRightExpression();
+//    assertThat(string_inter_right_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
+//    List<String> string_inter_right_right_elements = string_inter_right_right.getElements();
+//    assertThat(string_inter_right_right_elements).hasSize(1);
+//    assertThat(string_inter_right_right_elements).containsExactly("name");
+//
+//  }
 
 }

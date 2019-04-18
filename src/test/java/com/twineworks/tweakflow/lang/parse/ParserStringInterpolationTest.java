@@ -24,7 +24,8 @@
 
 package com.twineworks.tweakflow.lang.parse;
 
-import com.twineworks.tweakflow.lang.ast.expressions.*;
+import com.twineworks.tweakflow.lang.ast.NodeStructureAssert;
+import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
@@ -32,10 +33,8 @@ import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.twineworks.tweakflow.lang.ast.NodeStructureAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParserStringInterpolationTest {
@@ -69,19 +68,10 @@ public class ParserStringInterpolationTest {
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/semantic/string_interpolation.tf");
 
 //  string_ref_inter: "string ${e0}"         # string reference interpolation
-    ExpressionNode string_inter_node = varDefMap.get("string_ref_inter").getValueExpression();
-    assertThat(string_inter_node).isInstanceOf(StringConcatNode.class);
-    StringConcatNode string_inter = (StringConcatNode) string_inter_node;
-    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
-    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
-    assertThat(string_inter_left.getStringVal()).isEqualTo("string ");
-
-    assertThat(string_inter.getRightExpression()).isInstanceOf(ReferenceNode.class);
-    ReferenceNode string_inter_right = (ReferenceNode) string_inter.getRightExpression();
-    assertThat(string_inter_right.getAnchor()).isSameAs(ReferenceNode.Anchor.LOCAL);
-    List<String> string_inter_right_elements = string_inter_right.getElements();
-    assertThat(string_inter_right_elements).hasSize(1);
-    assertThat(string_inter_right_elements).containsExactly("e0");
+    ExpressionNode string_ref_inter = varDefMap.get("string_ref_inter").getValueExpression();
+//  string_ref_inter_expected:  "string "..(e0 as string);
+    ExpressionNode string_ref_inter_expected = varDefMap.get("string_ref_inter_expected").getValueExpression();
+    NodeStructureAssert.assertThat(string_ref_inter).hasSameStructureAs(string_ref_inter_expected);
 
   }
 
@@ -91,19 +81,11 @@ public class ParserStringInterpolationTest {
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/semantic/string_interpolation.tf");
 
 //    string_sum_inter:     "string #{1+2}";
-    ExpressionNode string_inter_node = varDefMap.get("string_sum_inter").getValueExpression();
-    assertThat(string_inter_node).isInstanceOf(StringConcatNode.class);
-    StringConcatNode string_inter = (StringConcatNode) string_inter_node;
-    assertThat(string_inter.getLeftExpression()).isInstanceOf(StringNode.class);
-    StringNode string_inter_left = (StringNode) string_inter.getLeftExpression();
-    assertThat(string_inter_left.getStringVal()).isEqualTo("string ");
+    ExpressionNode string_sum_inter = varDefMap.get("string_sum_inter").getValueExpression();
 
-    assertThat(string_inter.getRightExpression()).isInstanceOf(PlusNode.class);
-    PlusNode exp = (PlusNode) string_inter.getRightExpression();
-    assertThat(exp.getLeftExpression()).isInstanceOf(LongNode.class);
-    assertThat(((LongNode)exp.getLeftExpression()).getLongNum()).isEqualTo(1L);
-    assertThat(exp.getRightExpression()).isInstanceOf(LongNode.class);
-    assertThat(((LongNode)exp.getRightExpression()).getLongNum()).isEqualTo(2L);
+//    string_sum_inter_expected:  "string "..((1+2) as string);
+    ExpressionNode string_sum_inter_expected  = varDefMap.get("string_sum_inter_expected").getValueExpression();
+    NodeStructureAssert.assertThat(string_sum_inter).hasSameStructureAs(string_sum_inter_expected);
 
   }
 

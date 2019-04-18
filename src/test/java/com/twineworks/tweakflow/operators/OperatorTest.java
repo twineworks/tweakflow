@@ -133,6 +133,11 @@ public class OperatorTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> concat() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/operators/concat.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> plus() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/operators/plus.tf");
   }
