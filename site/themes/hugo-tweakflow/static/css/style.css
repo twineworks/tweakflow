@@ -1,6 +1,3 @@
-*, ::before, ::after {
-    box-sizing: inherit;
-}
 
 colors {
   color: #1603f8;
@@ -12,53 +9,149 @@ colors {
   color: #13902e;
 }
 
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
-
-html {
-  font-family: 'Lato', 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  line-height: normal;
-  /*color: #20201D;*/
-  color: #3e3e3e;
-  /*color: rgba(26,26,26,.7);*/
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-  font-size: 20px;
-}
-
 a {
   color: #fc3430;
   color: #356fc0;
 }
 
-.menu::before, .menu::after {
-  clear: both;
-  content: '';
-  display: table;
+.hidden {
+  display: none !important;
 }
 
-.menu {
+.menu, .menu-narrow {
+  display: block;
   margin-left: auto;
   margin-right: auto;
   padding-left: 10px;
   padding-right: 10px;
   max-width: 100%;
   width: 100%;
-  font-size: 1.0em;
+  font-size: 0.9em;
   line-height: normal;
   /* padding-top: 1em; */
   font-family: 'Lato';
   font-weight: 400;
   position: relative;
   background-color: #fafafa;
-  border-bottom: 1px solid #e7f0f0;
   border-bottom: 1px solid #c5c5c5;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,.1);
+  height: 50px;
+}
+
+.menu-narrow {
+  display: none;
+}
+
+.dropdown {
+  display: inline-flex;
+  position: relative;
+  vertical-align: top;
+}
+
+.dropdown-trigger a {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  left: 0;
+  min-width: 12rem;
+  padding-top: 4px;
+  position: absolute;
+  top: 100%;
+  z-index: 20;
+}
+
+.dropdown.is-active .dropdown-menu {
+	display: block;
+}
+
+.dropdown-content {
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: 0 2px 3px rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.1);
+  padding-bottom: .5rem;
+  padding-top: .5rem;
+}
+
+a.dropdown-item, button.dropdown-item {
+	padding-right: 3rem;
+	text-align: left;
+	white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.dropdown-item:hover, button.dropdown-item:hover {
+	background-color: #f5f5f5;
+	color: #0a0a0a;
+}
+
+.dropdown-item {
+	color: #4a4a4a;
+	display: block;
+	font-size: .775rem;
+	line-height: 1.35;
+	padding: .35rem 1rem;
+	position: relative;
+}
+
+.dropdown-divider {
+	background-color: #dbdbdb;
+	border: none;
+	display: block;
+	height: 1px;
+	margin: .5rem 0;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  padding-right: 12px;
+  font-size: initial;
+  line-height: 1.42857143;
+  color: #555;
+  border-radius: 4px;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+}
+
+.form-control:focus {
+  border-color: #959595;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 4px rgba(129, 142, 129, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 4px rgba(114, 135, 121, 0.6);
+}
+
+.search-box .form-control {
+  font-family: Inconsolata, "Ubuntu Mono", Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, Consolas, "Courier New", monospace;
+  padding-right: 42.5px;
+}
+
+.form-control-icon-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  pointer-events: none;
+  font-size: 0.8em;
+  color: #959595;
 }
 
 .menu__logo-wrapper {
@@ -126,105 +219,10 @@ a {
   text-decoration: none;
 }
 
-.homepage-head {
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1em;
-  padding-right: 1em;
-  max-width: 100%;
-  width: 740px;
-  line-height: normal;
-  font-family: 'Lato';
-  font-weight: normal;
-  position: relative;
-}
-
-.homepage-head__phrase {
-
-  margin: 0 auto 1.0rem auto;
-  padding-top: 2em;
-  /* padding-left: 1em;
-  padding-right: 1em; */
-
-  /* margin: 0 auto 1.0rem auto; */
-  /* margin: 1.0em auto; */
-  margin-left: auto;
-  line-height: 2.1em;
-  font-size: 1.75em;
-  /*color: #fc3430;*/
-}
-
-.content-wrapper {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-  width: 1200px;
-  font-size: 1.0em;
-  line-height: normal;
-  padding-bottom: 1em;
-  font-family: 'Lato';
-  font-weight: 400;
-  position: relative;
-  display: flex;
-  flex-flow: row;
-}
-
-.content-wrapper aside {
-  flex: 0 0 320px;
-  padding: 0;
-  margin: 0;
-  position: relative;
-}
-
-.content-wrapper aside .toc-wrapper {
-  position: absolute;
-  width: 320px;
-  top: 0;
-  bottom: 0;
-}
-
-.content-wrapper aside .toc-wrapper.stuck {
-  position: fixed;
-  top: 0;
-  left: auto;
-  height: 100%;
-
-}
-
-.content-wrapper aside .scrollable-parent {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.content-wrapper aside .scrollable-content {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-}
-
-@media (max-width: 900px) {
-  aside {
-    width: 0px;
-    overflow: hidden;
-    visibility: hidden;
-    flex: 0 0 0px !important;
-  }
-
-  menu__items-wrapper {
-    line-height: 37px;
-  }
-
-}
-
 aside nav {
-  padding-top: 2em;
-  padding-bottom: 1em;
+  padding: 1.0em 0.5em;
 }
+
 aside nav ul li {
   display: block;
 }
@@ -233,7 +231,7 @@ aside nav ul li a {
   display: block;
   text-decoration: none;
   padding: 0.3em 1em;
-  margin-right: 0.3em;
+  /* margin-right: 0.3em; */
   border-radius: 3px;
   color: #888;
 }
@@ -319,46 +317,37 @@ aside nav ul li a:hover, aside nav ul li a.active {
 
 }
 
-main {
 
-  margin: 0 auto 1.0rem auto;
-  padding-top: 2em;
-  padding-left: 1em;
-  padding-right: 1em;
-  flex: 0 1 880px;
-  /* https://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text */
-  min-width: 0;
-}
 
 main h1 {
   font-size: 1.7em;
-  padding-top: 1.9rem;
+  /* padding-top: 1.9rem; */
   margin-bottom: 1.9rem;
 }
 
-main h1:first-child {
+/* main h1:first-child {
   margin-top: 0;
   padding-top: 0;
-}
+} */
 
 main h2 {
   font-size: 1.4em;
   /*font-weight: bold;*/
-  padding-top: 1.0rem;
+  /* padding-top: 1.0rem; */
   margin-bottom: 1.0rem;
 }
 
 main h3 {
   font-size: 1.3em;
   /*font-weight: bold;*/
-  padding-top: 1.0rem;
+  /* padding-top: 1.0rem; */
   margin-bottom: 1.0rem;
 }
 
 main h4, main h5, main h6 {
   font-size: 1.2em;
   /*font-weight: bold;*/
-  padding-top: 1.0rem;
+  /* padding-top: 1.0rem; */
   margin-bottom: 1.0rem;
 }
 
@@ -374,7 +363,7 @@ main code, main pre {
 
 main code {
   background: #f8f8f8;
-  padding: 0.2em;
+  padding: 0.15em;
   white-space: pre;
 }
 
@@ -458,20 +447,6 @@ main table.horizontal th {
 }
 main table.horizontal tbody > tr:last-child > td {
     border-bottom-width: 0;
-}
-
-footer {
-  display: flex;
-  flex-wrap: nowrap;
-  color: #999;
-  /*font-size: 0.8em;*/
-  padding: 2em 10px;
-  border-top: 1px solid #e7f0f0;
-
-  margin-left: auto;
-  margin-right: auto;
-  width: 1100px;
-  max-width: 100%;
 }
 
 footer > div {

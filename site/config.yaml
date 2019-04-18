@@ -26,6 +26,9 @@ menu:
       URL: "/reference.html"
       Weight: -100
 
+    - Name: "Support"
+      URL: "/support.html"
+      Weight: 0
 
   mainright:
 
@@ -37,9 +40,7 @@ menu:
       URL: "https://gitter.im/twineworks/tweakflow"
       Weight: -100
 
-    - Name: "Support"
-      URL: "/support.html"
-      Weight: 0
+
 
 params:
   # shortcode {{< gitRef >}}

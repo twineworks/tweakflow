@@ -1,38 +1,72 @@
 <header>
-    <div class="menu">
-
-      <!-- logo -->
-      <!-- <div class="menu__logo-wrapper">
+  <div class="menu-narrow">
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+        <nav role="navigation" class="menu__items-wrapper-left">
+        <ul class="menu__items">
+          <li class="menu__item">
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v{{ .Site.Params.version }}</a>
+          </li>
+        </ul>
+        </nav>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu-narrow" role="menu">
+        <div class="dropdown-content">
+          <a href="/index.html" class="dropdown-item">
+            Home
+          </a>
+          {{ if .Site.Menus.mainleft }}
+          {{ $currentPage := . }}
+          {{ range.Site.Menus.mainleft }}
+          <a class="dropdown-item" href="{{.URL}}">{{ .Name }}</a>
+          {{ end }}
+          {{ end }}
+          <hr class="dropdown-divider" />
+          {{ if .Site.Menus.mainright }}
+          {{ $currentPage := . }}
+          {{ range.Site.Menus.mainright }}
+          <a class="dropdown-item" href="{{.URL}}">{{ .Name }}</a>
+          {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="menu">
+    <!-- logo -->
+    <!-- <div class="menu__logo-wrapper">
           <a href="/index.html" class="menu__logo"><img alt="tweakflow logo" src="/img/tweakflow_logo.svg"></a>
       </div> -->
-      <!-- navigation -->
-      <nav role="navigation" class="menu__items-wrapper-left">
-        <ul class="menu__items">
-            <li class="menu__item">
-                <a class="menu__item-version-link" href="/index.html"><b>Tweakflow</b> v{{ .Site.Params.version }}</a>
-            </li>
-            {{ if .Site.Menus.mainleft }}
-            {{ $currentPage := . }}
-            {{ range .Site.Menus.mainleft }}
-            <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}" >
-              <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
-            </li>
-            {{ end }}
-            {{ end }}
-        </ul>
-      </nav>
-      <nav role="navigation" class="menu__items-wrapper-right">
-        <ul class="menu__items">
-            {{ if .Site.Menus.mainright }}
-            {{ $currentPage := . }}
-            {{ range .Site.Menus.mainright }}
-            <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}" >
-              <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
-            </li>
-            {{ end }}
-            {{ end }}
-        </ul>
-      </nav>
-    </div>
-
+    <!-- navigation -->
+    <nav role="navigation" class="menu__items-wrapper-left">
+      <ul class="menu__items">
+        <li class="menu__item">
+          <a class="menu__item-version-link" href="/index.html"
+            ><b>Tweakflow</b> v{{ .Site.Params.version }}</a
+          >
+        </li>
+        {{ if .Site.Menus.mainleft }}
+        {{ $currentPage := . }}
+        {{ range.Site.Menus.mainleft }}
+        <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}">
+          <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
+        </li>
+        {{ end }}
+        {{ end }}
+      </ul>
+    </nav>
+    <nav role="navigation" class="menu__items-wrapper-right">
+      <ul class="menu__items">
+        {{ if .Site.Menus.mainright }}
+        {{ $currentPage := . }}
+        {{ range.Site.Menus.mainright }}
+        <li class="menu__item{{ if eq $currentPage.URL .URL }} active{{ end }}">
+          <a class="menu__item-link" href="{{.URL}}">{{ .Name }}</a>
+        </li>
+        {{ end }}
+        {{ end }}
+      </ul>
+    </nav>
+  </div>
 </header>
+<script type="text/javascript" src="/js/dropdown.js"></script>

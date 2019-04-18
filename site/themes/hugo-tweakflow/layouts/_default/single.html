@@ -6,7 +6,7 @@
 <body>
     {{ partial "header" . }}
     <div class="content-wrapper">
-      {{ if not (eq .Params.toc false) }} 
+      {{ if not (eq .Params.toc false) }}
       <aside class="toc">
         <div class="toc-wrapper">
           <div class="scrollable-parent">
@@ -17,11 +17,12 @@
         </div>
       </aside>
       {{ end }}
-      <main class="single-content" role="main">
+      <main class="single-content {{ if (eq .Params.toc false) }}no-toc{{end}}" role="main">
         {{ .Content }}
+        {{ partial "footer" . }}
       </main>
     </div>
-    {{ partial "footer" . }}
+
     {{ partial "js" . }}
 </body>
 

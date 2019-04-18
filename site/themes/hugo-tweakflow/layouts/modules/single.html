@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html
+  class="no-js"
+  lang="{{ .Site.LanguageCode }}"
+  prefix="og: http://ogp.me/ns#"
+>
+  {{ partial "head" . }}
+
+  <body>
+    {{ partial "header" . }}
+    <div class="content-wrapper">
+      {{ if not (eq .Params.toc false) }}
+      <aside class="toc">
+        <div class="toc-wrapper">
+          <div class="filter">
+            <div class="search-box">
+              <input
+                class="form-control"
+                tabindex="1"
+                id="filter-input"
+                placeholder="Filter"
+                type="text"
+                autocomplete="false"
+                autofocus=""
+              />
+              <span class="form-control-icon-right">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
+          <div class="scrollable-parent">
+            <div class="scrollable-content">
+              <ul class="search-results"></ul>
+            </div>
+          </div>
+        </div>
+      </aside>
+      {{ end }}
+      <main class="single-content" role="main">
+        {{ .Content }}
+        {{ partial "footer" . }}
+      </main>
+    </div>
+
+    {{ partial "js" . }}
+    <script type="text/javascript" src="/js/module-toc.js"></script>
+  </body>
+</html>

@@ -6,11 +6,12 @@
 <body>
     {{ partial "header" . }}
     <div class="content-wrapper">
-      <main class="homepage content" role="main">
+      <main class="homepage content no-toc" role="main">
           {{ .Content }}
-        </main>
+          {{ partial "footer" . }}
+      </main>
     </div>
-    {{ partial "footer" . }}
+
     {{ partial "js" . }}
 </body>
 

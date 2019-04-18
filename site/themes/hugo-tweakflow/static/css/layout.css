@@ -1,0 +1,333 @@
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+sub,
+sup,
+tt,
+var,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+html {
+  font-family: "Lato", "Open Sans", "Helvetica Neue", "Helvetica", "Arial",
+    sans-serif;
+  line-height: normal;
+  /*color: #20201D;*/
+  color: #3e3e3e;
+  /*color: rgba(26,26,26,.7);*/
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  z-index: 1300;
+}
+
+.menu::before,
+.menu::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.menu-narrow::before,
+.menu-narrow::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.content-wrapper {
+  max-width: 100%;
+  /* width: 1200px; */
+  font-size: 1em;
+  line-height: normal;
+  padding-bottom: 1em;
+  font-family: "Lato";
+  font-weight: 400;
+  position: relative;
+}
+
+.content-wrapper aside {
+  width: 320px;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+aside.toc {
+  top: 50px;
+  bottom: 0px;
+  width: 320px;
+  position: fixed;
+  border-right: 1px solid #f2f2f2;
+}
+
+.content-wrapper aside .toc-wrapper {
+  position: absolute;
+  width: 320px;
+  top: 0;
+  bottom: 0;
+}
+
+.content-wrapper aside .toc-wrapper.stuck {
+  position: fixed;
+  top: 0;
+  left: auto;
+  height: 100%;
+}
+
+.content-wrapper aside .scrollable-parent {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content-wrapper aside .scrollable-content {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+main {
+  margin: 30px auto 1rem 320px;
+  padding-top: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  max-width: 860px;
+  /* https://stackoverflow.com/questions/12022288/how-to-keep-a-flex-item-from-overflowing-due-to-its-text */
+  min-width: 0;
+}
+
+main.no-toc {
+  margin: 30px auto 1rem auto;
+}
+
+.toc .filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: whitesmoke;
+  border-right: 1px solid #ccc;
+}
+
+.toc .filter .search-box {
+  padding: 0;
+  margin: 15px 15px;
+  height: 30px;
+  position: relative;
+}
+
+ul.search-results {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  bottom: 0;
+  top: 60px;
+  background: white;
+  border-top: 1px solid #ccc;
+  position: absolute;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  font-family: Inconsolata, "Ubuntu Mono", Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, Consolas, "Courier New", monospace;
+}
+
+ul.search-results li {
+  font-size: 0.95em;
+  display: flex;
+  position: relative;
+}
+
+ul.search-results li a {
+  padding: 5px 15px;
+  width: 100%;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: #888888;
+}
+
+ul.search-results li a:hover {
+  background: #efefef;
+}
+
+ul.search-results li a span {
+  float: right !important;
+  background: #d0e6d3;
+  color: #5e9969;
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 85%;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 3px;
+}
+
+
+@media (max-width: 960px) {
+
+  .menu-narrow {
+    display: block !important;
+  }
+
+  .menu {
+    display: none !important;
+  }
+
+  aside {
+    width: 0px;
+    overflow: hidden;
+    visibility: hidden;
+    display: none;
+  }
+
+  main {
+    margin: 30px 1rem 1rem 1rem !important;
+  }
+}
+
+footer {
+  display: flex;
+  flex-wrap: nowrap;
+  color: #999;
+  /*font-size: 0.8em;*/
+  padding: 2em 10px;
+  border-top: 1px solid #f2f2f2;
+
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+/*
+  compensate for fixed nav-bar when clicking on internal anchors
+  see: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+  see: http://nicolasgallagher.com/jump-links-and-viewport-positioning/demo/#method-B
+*/
+/* h1[id]:before,
+h2[id]:before,
+h3[id]:before,
+h4[id]:before,
+h5[id]:before,
+h6[id]:before {
+  content: " ";
+  visibility: hidden;
+  display: block;
+  height: 70px;
+  margin-top: -50px;
+} */
+
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+h5[id],
+h6[id] {
+  padding-top: 70px;
+  margin-top: -50px;
+  -webkit-background-clip: content-box;
+  background-clip: content-box;
+}
+
+
