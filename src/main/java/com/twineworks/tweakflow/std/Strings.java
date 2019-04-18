@@ -210,14 +210,16 @@ public final class Strings {
       if (s == Values.NIL) return Values.NIL;
 
       ListValue list = xs.list();
-      String str = s.string();
+      String sep = s.string();
+      boolean emptySep = sep.isEmpty();
 
       StringBuilder b = new StringBuilder();
-      for (int i = 0, size = list.size(); i < size; i++) {
 
-        if (i > 0) b.append(str);
+      int i=0;
+      for (Value x : list) {
 
-        Value x = list.get(i);
+        if (!emptySep && i > 0) b.append(sep);
+
         Value value = x.castTo(Types.STRING);
 
         if (value.isNil()) {
@@ -226,7 +228,9 @@ public final class Strings {
           b.append(value.string());
         }
 
+        i++;
       }
+
       return Values.make(b.toString());
     }
   }
