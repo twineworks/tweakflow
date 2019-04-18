@@ -55,6 +55,7 @@ public class ConstantPool {
     if (!set.contains(v)){
       set.add(v);
     }
+    // return existing equivalent, not v as it's a potentially new instance
     return set.subSet(v, true, v, true).first();
   }
 }
