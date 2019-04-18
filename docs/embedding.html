@@ -11,7 +11,9 @@
     <meta name="description" content="" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
+    <link rel="stylesheet" href="./fontawesome/css/all.min.css">
     <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/layout.css">
     <link rel="stylesheet" href="./css/style.css">
 
     <link rel="stylesheet" href="./js/highlight-tweakflow/tweakflow-light.css">
@@ -41,68 +43,114 @@
 
 <body>
     <header>
-    <div class="menu">
-
-      
-      
-      
-      <nav role="navigation" class="menu__items-wrapper-left">
+  <div class="menu-narrow">
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+        <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
-            <li class="menu__item">
-                <a class="menu__item-version-link" href="./index.html"><b>Tweakflow</b> v0.11.0</a>
-            </li>
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./getting-started.html">Getting started</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./tools.html">Tools</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Docs</a>
-            </li>
-            
-            <li class="menu__item active" >
-              <a class="menu__item-link" href="./embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./reference.html">Reference</a>
-            </li>
-            
-            
+          <li class="menu__item">
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.11.0</a>
+          </li>
         </ul>
-      </nav>
-      <nav role="navigation" class="menu__items-wrapper-right">
-        <ul class="menu__items">
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./support.html">Support</a>
-            </li>
-            
-            
-        </ul>
-      </nav>
+        </nav>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu-narrow" role="menu">
+        <div class="dropdown-content">
+          <a href="./index.html" class="dropdown-item">
+            Home
+          </a>
+          
+          
+          
+          <a class="dropdown-item" href="./getting-started.html">Getting started</a>
+          
+          <a class="dropdown-item" href="./tools.html">Tools</a>
+          
+          <a class="dropdown-item" href="./modules/std.html">Docs</a>
+          
+          <a class="dropdown-item" href="./embedding.html">Embedding</a>
+          
+          <a class="dropdown-item" href="./reference.html">Reference</a>
+          
+          <a class="dropdown-item" href="./support.html">Support</a>
+          
+          
+          <hr class="dropdown-divider" />
+          
+          
+          
+          <a class="dropdown-item" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+          
+          <a class="dropdown-item" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+          
+          
+        </div>
+      </div>
     </div>
-
+  </div>
+  <div class="menu">
+    
+    
+    
+    <nav role="navigation" class="menu__items-wrapper-left">
+      <ul class="menu__items">
+        <li class="menu__item">
+          <a class="menu__item-version-link" href="./index.html"
+            ><b>Tweakflow</b> v0.11.0</a
+          >
+        </li>
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./getting-started.html">Getting started</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./tools.html">Tools</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./modules/std.html">Docs</a>
+        </li>
+        
+        <li class="menu__item active">
+          <a class="menu__item-link" href="./embedding.html">Embedding</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./reference.html">Reference</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./support.html">Support</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+    <nav role="navigation" class="menu__items-wrapper-right">
+      <ul class="menu__items">
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+  </div>
 </header>
+<script type="text/javascript" src="./js/dropdown.js"></script>
 
     <div class="content-wrapper">
-       
+      
       <aside class="toc">
         <div class="toc-wrapper">
           <div class="scrollable-parent">
@@ -147,7 +195,7 @@
         </div>
       </aside>
       
-      <main class="single-content" role="main">
+      <main class="single-content " role="main">
         
 
 <h2 id="requirements">Requirements</h2>
@@ -204,7 +252,7 @@ Value c = Values.make(1.2d);   // a double
     .append(Values.make(&quot;world&quot;)));
 </code></pre>
 
-<p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
+<p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#regex-matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
 
 <p>The following snippet creates a function that takes one string parameter named <code>x</code> with default value <code>&quot;hello&quot;</code>, and returns a boolean.</p>
 
@@ -489,9 +537,7 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
 
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/LimitingExecTime.java">LimitingExecTime</a> sample evaluates a set of expressions, each taking exponentially longer to evaluate than the next. Each expression is evaluated within an enforced time limit, so at some point the evaluations start timing out, and the application interrupts the evaluation thread.</p>
 
-      </main>
-    </div>
-    
+        
 <footer>
   <div class="footer__copyright">
     © <a href="http://twineworks.com">Twineworks 2019</a>
@@ -502,14 +548,10 @@ System.out.println(&quot;runtime call context: &quot;+ callContext.call(f, now))
   </div>
 </footer>
 
+      </main>
+    </div>
+
     
-
-
-
-
-
-
-
 
 </body>
 

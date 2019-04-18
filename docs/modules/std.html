@@ -1,7 +1,10 @@
-<!doctype html>
-<html class="no-js" lang="en-us" prefix="og: http://ogp.me/ns#">
-
-<head>
+<!DOCTYPE html>
+<html
+  class="no-js"
+  lang="en-us"
+  prefix="og: http://ogp.me/ns#"
+>
+  <head>
     <meta charset="utf-8">
     <title>std.tf | tweakflow - safe embeddable scripting language for the JVM</title>
 
@@ -11,7 +14,9 @@
     <meta name="description" content="" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
+    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
     <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/style.css">
 
     <link rel="stylesheet" href="../js/highlight-tweakflow/tweakflow-light.css">
@@ -39,272 +44,137 @@
 </head>
 
 
-<body>
+  <body>
     <header>
-    <div class="menu">
-
-      
-      
-      
-      <nav role="navigation" class="menu__items-wrapper-left">
+  <div class="menu-narrow">
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+        <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
-            <li class="menu__item">
-                <a class="menu__item-version-link" href="../index.html"><b>Tweakflow</b> v0.11.0</a>
-            </li>
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="../getting-started.html">Getting started</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="../tools.html">Tools</a>
-            </li>
-            
-            <li class="menu__item active" >
-              <a class="menu__item-link" href="../modules/std.html">Docs</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="../embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="../reference.html">Reference</a>
-            </li>
-            
-            
+          <li class="menu__item">
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.11.0</a>
+          </li>
         </ul>
-      </nav>
-      <nav role="navigation" class="menu__items-wrapper-right">
-        <ul class="menu__items">
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="../support.html">Support</a>
-            </li>
-            
-            
-        </ul>
-      </nav>
+        </nav>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu-narrow" role="menu">
+        <div class="dropdown-content">
+          <a href="../index.html" class="dropdown-item">
+            Home
+          </a>
+          
+          
+          
+          <a class="dropdown-item" href="../getting-started.html">Getting started</a>
+          
+          <a class="dropdown-item" href="../tools.html">Tools</a>
+          
+          <a class="dropdown-item" href="../modules/std.html">Docs</a>
+          
+          <a class="dropdown-item" href="../embedding.html">Embedding</a>
+          
+          <a class="dropdown-item" href="../reference.html">Reference</a>
+          
+          <a class="dropdown-item" href="../support.html">Support</a>
+          
+          
+          <hr class="dropdown-divider" />
+          
+          
+          
+          <a class="dropdown-item" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+          
+          <a class="dropdown-item" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+          
+          
+        </div>
+      </div>
     </div>
-
+  </div>
+  <div class="menu">
+    
+    
+    
+    <nav role="navigation" class="menu__items-wrapper-left">
+      <ul class="menu__items">
+        <li class="menu__item">
+          <a class="menu__item-version-link" href="../index.html"
+            ><b>Tweakflow</b> v0.11.0</a
+          >
+        </li>
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="../getting-started.html">Getting started</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="../tools.html">Tools</a>
+        </li>
+        
+        <li class="menu__item active">
+          <a class="menu__item-link" href="../modules/std.html">Docs</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="../embedding.html">Embedding</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="../reference.html">Reference</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="../support.html">Support</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+    <nav role="navigation" class="menu__items-wrapper-right">
+      <ul class="menu__items">
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+  </div>
 </header>
+<script type="text/javascript" src="../js/dropdown.js"></script>
 
     <div class="content-wrapper">
-       
+      
       <aside class="toc">
         <div class="toc-wrapper">
+          <div class="filter">
+            <div class="search-box">
+              <input
+                class="form-control"
+                tabindex="1"
+                id="filter-input"
+                placeholder="Filter"
+                type="text"
+                autocomplete="false"
+                autofocus=""
+              />
+              <span class="form-control-icon-right">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
           <div class="scrollable-parent">
             <div class="scrollable-content">
-              <nav id="TableOfContents">
-<ul>
-<li><a href="#module-std-tf">module std.tf</a>
-<ul>
-<li><a href="#library-core">library core</a>
-<ul>
-<li><a href="#id">id</a></li>
-<li><a href="#inspect">inspect</a></li>
-<li><a href="#present">present?</a></li>
-<li><a href="#nil">nil?</a></li>
-<li><a href="#hash">hash</a></li>
-<li><a href="#eval">eval</a></li>
-</ul></li>
-<li><a href="#library-strings">library strings</a>
-<ul>
-<li><a href="#concat">concat</a></li>
-<li><a href="#length">length</a></li>
-<li><a href="#substring">substring</a></li>
-<li><a href="#replace">replace</a></li>
-<li><a href="#join">join</a></li>
-<li><a href="#trim">trim</a></li>
-<li><a href="#lower-case">lower_case</a></li>
-<li><a href="#upper-case">upper_case</a></li>
-<li><a href="#comparator">comparator</a></li>
-<li><a href="#chars">chars</a></li>
-<li><a href="#code-points">code_points</a></li>
-<li><a href="#of-code-points">of_code_points</a></li>
-<li><a href="#split">split</a></li>
-<li><a href="#starts-with">starts_with?</a></li>
-<li><a href="#ends-with">ends_with?</a></li>
-<li><a href="#index-of">index_of</a></li>
-<li><a href="#last-index-of">last_index_of</a></li>
-<li><a href="#char-at">char_at</a></li>
-<li><a href="#code-point-at">code_point_at</a></li>
-</ul></li>
-<li><a href="#library-regex">library regex</a>
-<ul>
-<li><a href="#matching">matching</a></li>
-<li><a href="#capturing">capturing</a></li>
-<li><a href="#scanning">scanning</a></li>
-<li><a href="#splitting">splitting</a></li>
-<li><a href="#replacing">replacing</a></li>
-<li><a href="#quote">quote</a></li>
-</ul></li>
-<li><a href="#library-data">library data</a>
-<ul>
-<li><a href="#size">size</a></li>
-<li><a href="#empty">empty?</a></li>
-<li><a href="#get">get</a></li>
-<li><a href="#put">put</a></li>
-<li><a href="#get-in">get_in</a></li>
-<li><a href="#put-in">put_in</a></li>
-<li><a href="#update">update</a></li>
-<li><a href="#update-in">update_in</a></li>
-<li><a href="#keys">keys</a></li>
-<li><a href="#has">has?</a></li>
-<li><a href="#values">values</a></li>
-<li><a href="#entries">entries</a></li>
-<li><a href="#prepend">prepend</a></li>
-<li><a href="#append">append</a></li>
-<li><a href="#find">find</a></li>
-<li><a href="#find-index">find_index</a></li>
-<li><a href="#insert">insert</a></li>
-<li><a href="#delete">delete</a></li>
-<li><a href="#select">select</a></li>
-<li><a href="#filter">filter</a></li>
-<li><a href="#shuffle">shuffle</a></li>
-<li><a href="#unique">unique</a></li>
-<li><a href="#range">range</a></li>
-<li><a href="#any">any?</a></li>
-<li><a href="#none">none?</a></li>
-<li><a href="#all">all?</a></li>
-<li><a href="#init">init</a></li>
-<li><a href="#tail">tail</a></li>
-<li><a href="#head">head</a></li>
-<li><a href="#last">last</a></li>
-<li><a href="#slice">slice</a></li>
-<li><a href="#slices">slices</a></li>
-<li><a href="#reverse">reverse</a></li>
-<li><a href="#sort">sort</a></li>
-<li><a href="#repeat">repeat</a></li>
-<li><a href="#concat-1">concat</a></li>
-<li><a href="#merge">merge</a></li>
-<li><a href="#take">take</a></li>
-<li><a href="#take-while">take_while</a></li>
-<li><a href="#take-until">take_until</a></li>
-<li><a href="#drop">drop</a></li>
-<li><a href="#drop-while">drop_while</a></li>
-<li><a href="#drop-until">drop_until</a></li>
-<li><a href="#contains">contains?</a></li>
-<li><a href="#index-of-1">index_of</a></li>
-<li><a href="#last-index-of-1">last_index_of</a></li>
-<li><a href="#key-of">key_of</a></li>
-<li><a href="#flatten">flatten</a></li>
-<li><a href="#map">map</a></li>
-<li><a href="#flatmap">flatmap</a></li>
-<li><a href="#mapcat">mapcat</a></li>
-<li><a href="#zip">zip</a></li>
-<li><a href="#zip-dict">zip_dict</a></li>
-<li><a href="#interpose">interpose</a></li>
-<li><a href="#reduce">reduce</a></li>
-<li><a href="#reduce-until">reduce_until</a></li>
-<li><a href="#reduce-while">reduce_while</a></li>
-</ul></li>
-<li><a href="#library-time">library time</a>
-<ul>
-<li><a href="#epoch">epoch</a></li>
-<li><a href="#of">of</a></li>
-<li><a href="#at">at</a></li>
-<li><a href="#seconds-between">seconds_between</a></li>
-<li><a href="#minutes-between">minutes_between</a></li>
-<li><a href="#hours-between">hours_between</a></li>
-<li><a href="#days-between">days_between</a></li>
-<li><a href="#months-between">months_between</a></li>
-<li><a href="#years-between">years_between</a></li>
-<li><a href="#period-between">period_between</a></li>
-<li><a href="#duration-between">duration_between</a></li>
-<li><a href="#add-period">add_period</a></li>
-<li><a href="#add-duration">add_duration</a></li>
-<li><a href="#year">year</a></li>
-<li><a href="#month">month</a></li>
-<li><a href="#day-of-month">day_of_month</a></li>
-<li><a href="#day-of-year">day_of_year</a></li>
-<li><a href="#day-of-week">day_of_week</a></li>
-<li><a href="#hour">hour</a></li>
-<li><a href="#minute">minute</a></li>
-<li><a href="#second">second</a></li>
-<li><a href="#nano-of-second">nano_of_second</a></li>
-<li><a href="#week-of-year">week_of_year</a></li>
-<li><a href="#offset-seconds">offset_seconds</a></li>
-<li><a href="#zone">zone</a></li>
-<li><a href="#with-year">with_year</a></li>
-<li><a href="#with-month">with_month</a></li>
-<li><a href="#with-day-of-month">with_day_of_month</a></li>
-<li><a href="#with-hour">with_hour</a></li>
-<li><a href="#with-minute">with_minute</a></li>
-<li><a href="#with-second">with_second</a></li>
-<li><a href="#with-nano-of-second">with_nano_of_second</a></li>
-<li><a href="#with-zone">with_zone</a></li>
-<li><a href="#same-instant-at-zone">same_instant_at_zone</a></li>
-<li><a href="#unix-timestamp">unix_timestamp</a></li>
-<li><a href="#unix-timestamp-ms">unix_timestamp_ms</a></li>
-<li><a href="#of-unix-timestamp">of_unix_timestamp</a></li>
-<li><a href="#of-unix-timestamp-ms">of_unix_timestamp_ms</a></li>
-<li><a href="#compare">compare</a></li>
-<li><a href="#formatter">formatter</a></li>
-<li><a href="#parser">parser</a></li>
-<li><a href="#zones">zones</a></li>
-</ul></li>
-<li><a href="#library-math">library math</a>
-<ul>
-<li><a href="#abs">abs</a></li>
-<li><a href="#rand">rand</a></li>
-<li><a href="#inc">inc</a></li>
-<li><a href="#dec">dec</a></li>
-<li><a href="#compare-1">compare</a></li>
-<li><a href="#min">min</a></li>
-<li><a href="#max">max</a></li>
-<li><a href="#round">round</a></li>
-<li><a href="#ceil">ceil</a></li>
-<li><a href="#floor">floor</a></li>
-<li><a href="#nan">NaN?</a></li>
-<li><a href="#sqrt">sqrt</a></li>
-<li><a href="#sin">sin</a></li>
-<li><a href="#cos">cos</a></li>
-<li><a href="#tan">tan</a></li>
-<li><a href="#asin">asin</a></li>
-<li><a href="#acos">acos</a></li>
-<li><a href="#atan">atan</a></li>
-<li><a href="#log">log</a></li>
-<li><a href="#log10">log10</a></li>
-<li><a href="#bit-count">bit_count</a></li>
-<li><a href="#formatter-1">formatter</a></li>
-<li><a href="#parser-1">parser</a></li>
-<li><a href="#e">e</a></li>
-<li><a href="#pi">pi</a></li>
-<li><a href="#min-long">min_long</a></li>
-<li><a href="#max-long">max_long</a></li>
-</ul></li>
-<li><a href="#library-fun">library fun</a>
-<ul>
-<li><a href="#times">times</a></li>
-<li><a href="#until">until</a></li>
-<li><a href="#while">while</a></li>
-<li><a href="#iterate">iterate</a></li>
-<li><a href="#thread">thread</a></li>
-<li><a href="#chain">chain</a></li>
-<li><a href="#compose">compose</a></li>
-<li><a href="#signature">signature</a></li>
-</ul></li>
-<li><a href="#library-locale">library locale</a>
-<ul>
-<li><a href="#languages">languages</a></li>
-<li><a href="#decimal-symbols">decimal_symbols</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
+              <ul class="search-results"></ul>
             </div>
           </div>
         </div>
@@ -313,7 +183,7 @@
       <main class="single-content" role="main">
         
 
-<h1 id="module-std-tf">module std.tf</h1>
+<h1 id="std">module std.tf</h1>
 
 <p>The standard module contains basic functions for general computing tasks.</p>
 
@@ -322,11 +192,27 @@
 <pre><code class="language-bash">java -jar tweakflow-0.11.0.jar repl
 </code></pre>
 
-<h2 id="library-core">library core</h2>
+<div
+      data-meta='true'
+      data-meta-id='std'
+      data-meta-type='module'
+      data-meta-name='std.tf'
+      data-meta-tags=''
+    ></div>
+
+<h2 id="core">library core</h2>
 
 <p>The core library contains utility functions to process values at a basic level.</p>
 
-<h3 id="id">id</h3>
+<div
+      data-meta='true'
+      data-meta-id='core'
+      data-meta-type='library'
+      data-meta-name='core'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="core-id">id</h3>
 
 <p><code>(any x) -&gt; any</code></p>
 
@@ -344,7 +230,15 @@
 nil
 </code></pre>
 
-<h3 id="inspect">inspect</h3>
+<div
+      data-meta='true'
+      data-meta-id='core-id'
+      data-meta-type='var'
+      data-meta-name='id'
+      data-meta-tags='core'
+    ></div>
+
+<h3 id="core-inspect">inspect</h3>
 
 <p><code>(x) -&gt; string</code></p>
 
@@ -372,7 +266,15 @@ If <code>x</code> is not a function, and contains no functions as children <code
 &quot;\&quot;foo\&quot;&quot;
 </code></pre>
 
-<h3 id="present">present?</h3>
+<div
+      data-meta='true'
+      data-meta-id='core-inspect'
+      data-meta-type='var'
+      data-meta-name='inspect'
+      data-meta-tags='core'
+    ></div>
+
+<h3 id="core-present?">present?</h3>
 
 <p><code>(x) -&gt; boolean</code></p>
 
@@ -385,7 +287,15 @@ true
 false
 </code></pre>
 
-<h3 id="nil">nil?</h3>
+<div
+      data-meta='true'
+      data-meta-id='core-present?'
+      data-meta-type='var'
+      data-meta-name='present?'
+      data-meta-tags='core'
+    ></div>
+
+<h3 id="core-nil?">nil?</h3>
 
 <p><code>(x) -&gt; boolean</code></p>
 
@@ -398,7 +308,15 @@ false
 true
 </code></pre>
 
-<h3 id="hash">hash</h3>
+<div
+      data-meta='true'
+      data-meta-id='core-nil?'
+      data-meta-type='var'
+      data-meta-name='nil?'
+      data-meta-tags='core'
+    ></div>
+
+<h3 id="core-hash">hash</h3>
 
 <p><code>(x) -&gt; long</code></p>
 
@@ -417,7 +335,15 @@ true
 66614367
 </code></pre>
 
-<h3 id="eval">eval</h3>
+<div
+      data-meta='true'
+      data-meta-id='core-hash'
+      data-meta-type='var'
+      data-meta-name='hash'
+      data-meta-tags='core'
+    ></div>
+
+<h3 id="core-eval">eval</h3>
 
 <p><code>(string x) -&gt; any</code></p>
 
@@ -452,11 +378,27 @@ ERROR:
   source: hello
 </code></pre>
 
-<h2 id="library-strings">library strings</h2>
+<div
+      data-meta='true'
+      data-meta-id='core-eval'
+      data-meta-type='var'
+      data-meta-name='eval'
+      data-meta-tags='core'
+    ></div>
+
+<h2 id="strings">library strings</h2>
 
 <p>The strings library contains basic functions for text processing.</p>
 
-<h3 id="concat">concat</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings'
+      data-meta-type='library'
+      data-meta-name='strings'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="strings-concat">concat</h3>
 
 <p><code>(list xs) -&gt; string</code></p>
 
@@ -483,7 +425,15 @@ If any <code>x</code> is <code>nil</code>, it is concatenated into the output st
 nil
 </code></pre>
 
-<h3 id="length">length</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-length">length</h3>
 
 <p><code>(string x) -&gt; long</code></p>
 
@@ -501,7 +451,15 @@ nil
 2
 </code></pre>
 
-<h3 id="substring">substring</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-length'
+      data-meta-type='var'
+      data-meta-name='length'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-substring">substring</h3>
 
 <p><code>(string x, long start=0, long end=nil) -&gt; string</code></p>
 
@@ -552,7 +510,15 @@ ERROR:
   message: start must not be negative: -4
 </code></pre>
 
-<h3 id="replace">replace</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-substring'
+      data-meta-type='var'
+      data-meta-name='substring'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-replace">replace</h3>
 
 <p><code>(string x, string search, string replace) -&gt; string</code></p>
 
@@ -578,7 +544,15 @@ so <code>strings.replace('ooo', 'oo', 'g')</code> results in <code>'go'</code> r
 &quot;hello world&quot;
 </code></pre>
 
-<h3 id="join">join</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-replace'
+      data-meta-type='var'
+      data-meta-name='replace'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-join">join</h3>
 
 <p><code>(list xs, string s=&quot;&quot;) -&gt; string</code></p>
 
@@ -612,7 +586,15 @@ nil
 
 </code></pre>
 
-<h3 id="trim">trim</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-join'
+      data-meta-type='var'
+      data-meta-name='join'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-trim">trim</h3>
 
 <p><code>(string x) -&gt; string</code></p>
 
@@ -630,7 +612,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="lower-case">lower_case</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-trim'
+      data-meta-type='var'
+      data-meta-name='trim'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-lower_case">lower_case</h3>
 
 <p><code>(string x, string lang='en-US') -&gt; string</code></p>
 
@@ -648,7 +638,15 @@ nil
 &quot;tıtle&quot; # note the dotless i in turkish language
 </code></pre>
 
-<h3 id="upper-case">upper_case</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-lower_case'
+      data-meta-type='var'
+      data-meta-name='lower_case'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-upper_case">upper_case</h3>
 
 <p><code>(string x, string lang='en-US') -&gt; string</code></p>
 
@@ -666,9 +664,21 @@ nil
 &quot;TİTLE&quot; # note the dotted upper case I in turkish language
 </code></pre>
 
-<h3 id="comparator">comparator</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-upper_case'
+      data-meta-type='var'
+      data-meta-name='upper_case'
+      data-meta-tags='strings'
+    ></div>
 
-<p><code>(string lang='en-US', boolean case_sensitive=true) -&gt; function</code></p>
+<h3 id="strings-comparator">comparator</h3>
+
+<pre><code>(
+  string lang='en-US',
+  boolean case_sensitive=true
+) -&gt; function
+</code></pre>
 
 <p>Returns a function <code>f (string a, string b) -&gt; long</code> that compares two strings <code>a</code> and <code>b</code> according to conventions appropriate for the given language tag.
 If <code>case_sensitive</code> is <code>true</code>, lower case characters precede their upper case counterparts.
@@ -701,7 +711,15 @@ function
 [nil, &quot;Bar&quot;, &quot;bar&quot;, &quot;Foo&quot;, &quot;foo&quot;]
 </code></pre>
 
-<h3 id="chars">chars</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-comparator'
+      data-meta-type='var'
+      data-meta-name='comparator'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-chars">chars</h3>
 
 <p><code>(string x) -&gt; list</code></p>
 
@@ -722,7 +740,15 @@ function
 nil
 </code></pre>
 
-<h3 id="code-points">code_points</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-chars'
+      data-meta-type='var'
+      data-meta-name='chars'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-code_points">code_points</h3>
 
 <p><code>(string x) -&gt; list</code></p>
 
@@ -743,7 +769,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="of-code-points">of_code_points</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-code_points'
+      data-meta-type='var'
+      data-meta-name='code_points'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-of_code_points">of_code_points</h3>
 
 <p><code>(list xs) -&gt; string</code></p>
 
@@ -768,7 +802,15 @@ valid code point.</p>
 nil
 </code></pre>
 
-<h3 id="split">split</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-of_code_points'
+      data-meta-type='var'
+      data-meta-name='of_code_points'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-split">split</h3>
 
 <p><code>(string x, string s=&quot; &quot;) -&gt; list</code></p>
 
@@ -790,7 +832,15 @@ The separator <code>s</code> is treated like a regular string, it is not a regul
 [&quot;&quot;, &quot;foo&quot;, &quot;&quot;, &quot;bar&quot;, &quot;&quot;]
 </code></pre>
 
-<h3 id="starts-with">starts_with?</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-split'
+      data-meta-type='var'
+      data-meta-name='split'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-starts_with?">starts_with?</h3>
 
 <p><code>(string x, string init) -&gt; boolean</code></p>
 
@@ -817,7 +867,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="ends-with">ends_with?</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-starts_with?'
+      data-meta-type='var'
+      data-meta-name='starts_with?'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-ends_with?">ends_with?</h3>
 
 <p><code>(string x, string tail) -&gt; boolean</code></p>
 
@@ -844,7 +902,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="index-of">index_of</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-ends_with?'
+      data-meta-type='var'
+      data-meta-name='ends_with?'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-index_of">index_of</h3>
 
 <p><code>(string x, string sub, long start=0) -&gt; long</code></p>
 
@@ -871,7 +937,15 @@ at or past index <code>start</code>.</p>
 -1
 </code></pre>
 
-<h3 id="last-index-of">last_index_of</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-last_index_of">last_index_of</h3>
 
 <p><code>(string x, string sub, long end=nil) -&gt; long</code></p>
 
@@ -902,7 +976,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="char-at">char_at</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-char_at">char_at</h3>
 
 <p><code>(string x, long i) -&gt; string</code></p>
 
@@ -920,7 +1002,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="code-point-at">code_point_at</h3>
+<div
+      data-meta='true'
+      data-meta-id='strings-char_at'
+      data-meta-type='var'
+      data-meta-name='char_at'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-code_point_at">code_point_at</h3>
 
 <p><code>(string x, long i) -&gt; long</code></p>
 
@@ -938,12 +1028,28 @@ nil
 nil
 </code></pre>
 
-<h2 id="library-regex">library regex</h2>
+<div
+      data-meta='true'
+      data-meta-id='strings-code_point_at'
+      data-meta-type='var'
+      data-meta-name='code_point_at'
+      data-meta-tags='strings'
+    ></div>
+
+<h2 id="regex">library regex</h2>
 
 <p>The regex library provides functions to work with regular expressions.
 Pattern syntax is that of the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html">Java regular expression language</a>.</p>
 
-<h3 id="matching">matching</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex'
+      data-meta-type='library'
+      data-meta-name='regex'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="regex-matching">matching</h3>
 
 <p><code>(string pattern) -&gt; function</code></p>
 
@@ -965,7 +1071,15 @@ false
 nil
 </code></pre>
 
-<h3 id="capturing">capturing</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex-matching'
+      data-meta-type='var'
+      data-meta-name='matching'
+      data-meta-tags='regex'
+    ></div>
+
+<h3 id="regex-capturing">capturing</h3>
 
 <p><code>(string pattern) -&gt; function</code></p>
 
@@ -1000,7 +1114,15 @@ function
 nil
 </code></pre>
 
-<h3 id="scanning">scanning</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex-capturing'
+      data-meta-type='var'
+      data-meta-name='capturing'
+      data-meta-tags='regex'
+    ></div>
+
+<h3 id="regex-scanning">scanning</h3>
 
 <p><code>(string pattern) -&gt; function</code></p>
 
@@ -1036,7 +1158,15 @@ function
 nil
 </code></pre>
 
-<h3 id="splitting">splitting</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex-scanning'
+      data-meta-type='var'
+      data-meta-name='scanning'
+      data-meta-tags='regex'
+    ></div>
+
+<h3 id="regex-splitting">splitting</h3>
 
 <p><code>(string pattern, long limit=nil) -&gt; function</code></p>
 
@@ -1085,7 +1215,15 @@ function
 nil
 </code></pre>
 
-<h3 id="replacing">replacing</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex-splitting'
+      data-meta-type='var'
+      data-meta-name='splitting'
+      data-meta-tags='regex'
+    ></div>
+
+<h3 id="regex-replacing">replacing</h3>
 
 <p><code>(string pattern, string replace) -&gt; function</code></p>
 
@@ -1117,7 +1255,15 @@ function
 &quot;I need $1, just $1 more.&quot;
 </code></pre>
 
-<h3 id="quote">quote</h3>
+<div
+      data-meta='true'
+      data-meta-id='regex-replacing'
+      data-meta-type='var'
+      data-meta-name='replacing'
+      data-meta-tags='regex'
+    ></div>
+
+<h3 id="regex-quote">quote</h3>
 
 <p><code>(string x) -&gt; string</code></p>
 
@@ -1141,11 +1287,27 @@ function
 [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]
 </code></pre>
 
-<h2 id="library-data">library data</h2>
+<div
+      data-meta='true'
+      data-meta-id='regex-quote'
+      data-meta-type='var'
+      data-meta-name='quote'
+      data-meta-tags='regex'
+    ></div>
+
+<h2 id="data">library data</h2>
 
 <p>The data library contains functions for manipulation of lists and dictionaries.</p>
 
-<h3 id="size">size</h3>
+<div
+      data-meta='true'
+      data-meta-id='data'
+      data-meta-type='library'
+      data-meta-name='data'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="data-size">size</h3>
 
 <p><code>(any xs) -&gt; long</code></p>
 
@@ -1176,7 +1338,15 @@ ERROR:
   message: size is not defined for type string
 </code></pre>
 
-<h3 id="empty">empty?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-size'
+      data-meta-type='var'
+      data-meta-name='size'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-empty?">empty?</h3>
 
 <p><code>(any xs) -&gt; boolean</code></p>
 
@@ -1207,7 +1377,15 @@ ERROR:
   message: empty? is not defined for type string
 </code></pre>
 
-<h3 id="get">get</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-empty?'
+      data-meta-type='var'
+      data-meta-name='empty?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-get">get</h3>
 
 <p><code>(xs, key, not_found) -&gt;</code></p>
 
@@ -1239,7 +1417,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="put">put</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-get'
+      data-meta-type='var'
+      data-meta-name='get'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-put">put</h3>
 
 <p><code>(xs, key, value) -&gt;</code></p>
 
@@ -1285,7 +1471,15 @@ Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> c
 nil
 </code></pre>
 
-<h3 id="get-in">get_in</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-put'
+      data-meta-type='var'
+      data-meta-name='put'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-get_in">get_in</h3>
 
 <p><code>(any xs, list keys, any not_found) -&gt;</code></p>
 
@@ -1326,7 +1520,15 @@ ERROR:
   message: Cannot cast c to long
 </code></pre>
 
-<h3 id="put-in">put_in</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-get_in'
+      data-meta-type='var'
+      data-meta-name='get_in'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-put_in">put_in</h3>
 
 <p><code>(xs, list keys, value) -&gt;</code></p>
 
@@ -1388,7 +1590,15 @@ data.put_in(
 nil
 </code></pre>
 
-<h3 id="update">update</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-put_in'
+      data-meta-type='var'
+      data-meta-name='put_in'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-update">update</h3>
 
 <p><code>(xs, key, function f)</code></p>
 
@@ -1419,7 +1629,15 @@ Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> c
 nil
 </code></pre>
 
-<h3 id="update-in">update_in</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-update'
+      data-meta-type='var'
+      data-meta-name='update'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-update_in">update_in</h3>
 
 <p><code>(xs, list keys, function f) -&gt;</code></p>
 
@@ -1474,7 +1692,15 @@ data.update_in(
 nil
 </code></pre>
 
-<h3 id="keys">keys</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-update_in'
+      data-meta-type='var'
+      data-meta-name='update_in'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-keys">keys</h3>
 
 <p><code>(xs) -&gt; list</code></p>
 
@@ -1506,7 +1732,15 @@ ERROR:
 
 </code></pre>
 
-<h3 id="has">has?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-keys'
+      data-meta-type='var'
+      data-meta-name='keys'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-has?">has?</h3>
 
 <p><code>(xs, key) -&gt; boolean</code></p>
 
@@ -1545,7 +1779,15 @@ ERROR:
 true
 </code></pre>
 
-<h3 id="values">values</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-has?'
+      data-meta-type='var'
+      data-meta-name='has?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-values">values</h3>
 
 <p><code>(xs) -&gt; list</code></p>
 
@@ -1576,7 +1818,15 @@ ERROR:
   message: values is not defined for type string
 </code></pre>
 
-<h3 id="entries">entries</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-values'
+      data-meta-type='var'
+      data-meta-name='values'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-entries">entries</h3>
 
 <p><code>(dict xs) -&gt; list</code></p>
 
@@ -1606,7 +1856,15 @@ ERROR:
 nil
 </code></pre>
 
-<h3 id="prepend">prepend</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-entries'
+      data-meta-type='var'
+      data-meta-name='entries'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-prepend">prepend</h3>
 
 <p><code>(x, list xs) -&gt; list</code></p>
 
@@ -1624,7 +1882,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="append">append</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-prepend'
+      data-meta-type='var'
+      data-meta-name='prepend'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-append">append</h3>
 
 <p><code>(list xs, x) -&gt; list</code></p>
 
@@ -1642,7 +1908,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="find">find</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-append'
+      data-meta-type='var'
+      data-meta-name='append'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-find">find</h3>
 
 <p><code>(list xs, function p) -&gt;</code></p>
 
@@ -1677,7 +1951,15 @@ nil
   message: predicate function cannot be nil
 </code></pre>
 
-<h3 id="find-index">find_index</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-find'
+      data-meta-type='var'
+      data-meta-name='find'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-find_index">find_index</h3>
 
 <p><code>(list xs, function p) -&gt; long</code></p>
 
@@ -1713,7 +1995,15 @@ ERROR:
   message: predicate function cannot be nil
 </code></pre>
 
-<h3 id="insert">insert</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-find_index'
+      data-meta-type='var'
+      data-meta-name='find_index'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-insert">insert</h3>
 
 <p><code>(list xs, long i, v) -&gt;</code></p>
 
@@ -1748,7 +2038,15 @@ ERROR:
 
 </code></pre>
 
-<h3 id="delete">delete</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-insert'
+      data-meta-type='var'
+      data-meta-name='insert'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-delete">delete</h3>
 
 <p><code>(xs, key) -&gt;</code></p>
 
@@ -1789,7 +2087,15 @@ ERROR:
   message: cannot delete index -2
 </code></pre>
 
-<h3 id="select">select</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-delete'
+      data-meta-type='var'
+      data-meta-name='delete'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-select">select</h3>
 
 <p><code>(xs, list keys, not_found) -&gt;</code></p>
 
@@ -1824,7 +2130,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="filter">filter</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-select'
+      data-meta-type='var'
+      data-meta-name='select'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-filter">filter</h3>
 
 <p><code>(xs, function p) -&gt;</code></p>
 
@@ -1871,7 +2185,15 @@ ERROR:
   message: filter is not defined for type long
 </code></pre>
 
-<h3 id="shuffle">shuffle</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-filter'
+      data-meta-type='var'
+      data-meta-name='filter'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-shuffle">shuffle</h3>
 
 <p><code>(list xs, seed) -&gt; list</code></p>
 
@@ -1896,7 +2218,15 @@ The same seed will shuffle lists of equal length in the same way.</p>
 nil
 </code></pre>
 
-<h3 id="unique">unique</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-shuffle'
+      data-meta-type='var'
+      data-meta-name='shuffle'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-unique">unique</h3>
 
 <p><code>(list xs) -&gt; list</code></p>
 
@@ -1924,7 +2254,15 @@ using the <code>===</code> operator.</p>
 nil
 </code></pre>
 
-<h3 id="range">range</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-unique'
+      data-meta-type='var'
+      data-meta-name='unique'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-range">range</h3>
 
 <p><code>(long start=0, long end=0) -&gt; list</code></p>
 
@@ -1953,7 +2291,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="any">any?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-range'
+      data-meta-type='var'
+      data-meta-name='range'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-any?">any?</h3>
 
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 
@@ -1986,7 +2332,15 @@ false
 nil
 </code></pre>
 
-<h3 id="none">none?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-any?'
+      data-meta-type='var'
+      data-meta-name='any?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-none?">none?</h3>
 
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 
@@ -2019,7 +2373,15 @@ true
 nil
 </code></pre>
 
-<h3 id="all">all?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-none?'
+      data-meta-type='var'
+      data-meta-name='none?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-all?">all?</h3>
 
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 
@@ -2054,7 +2416,15 @@ true
 nil
 </code></pre>
 
-<h3 id="init">init</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-all?'
+      data-meta-type='var'
+      data-meta-name='all?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-init">init</h3>
 
 <p><code>(list xs) -&gt; list</code></p>
 
@@ -2076,7 +2446,15 @@ ERROR:
   message: list must not be empty
 </code></pre>
 
-<h3 id="tail">tail</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-init'
+      data-meta-type='var'
+      data-meta-name='init'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-tail">tail</h3>
 
 <p><code>(list xs) -&gt; list</code></p>
 
@@ -2098,7 +2476,15 @@ ERROR:
   message: list must not be empty
 </code></pre>
 
-<h3 id="head">head</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-tail'
+      data-meta-type='var'
+      data-meta-name='tail'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-head">head</h3>
 
 <p><code>(list xs) -&gt; any</code></p>
 
@@ -2120,7 +2506,15 @@ ERROR:
   message: list must not be empty
 </code></pre>
 
-<h3 id="last">last</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-head'
+      data-meta-type='var'
+      data-meta-name='head'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-last">last</h3>
 
 <p><code>(list xs) -&gt; any</code></p>
 
@@ -2142,7 +2536,15 @@ ERROR:
   message: list must not be empty
 </code></pre>
 
-<h3 id="slice">slice</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-last'
+      data-meta-type='var'
+      data-meta-name='last'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-slice">slice</h3>
 
 <p><code>(list xs, long start=0, long end=nil) -&gt; list</code></p>
 
@@ -2173,7 +2575,15 @@ nil
 
 </code></pre>
 
-<h3 id="slices">slices</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-slices">slices</h3>
 
 <p><code>(list xs, long s=1) -&gt; list</code></p>
 
@@ -2205,7 +2615,15 @@ ERROR:
 }
 </code></pre>
 
-<h3 id="reverse">reverse</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-slices'
+      data-meta-type='var'
+      data-meta-name='slices'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-reverse">reverse</h3>
 
 <p><code>(list xs) -&gt; list</code></p>
 
@@ -2220,7 +2638,15 @@ ERROR:
 nil
 </code></pre>
 
-<h3 id="sort">sort</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-reverse'
+      data-meta-type='var'
+      data-meta-name='reverse'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-sort">sort</h3>
 
 <p><code>(list xs, function f) -&gt; list</code></p>
 
@@ -2255,7 +2681,15 @@ If a == b, f returns 0.</p>
 }]
 </code></pre>
 
-<h3 id="repeat">repeat</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-sort'
+      data-meta-type='var'
+      data-meta-name='sort'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-repeat">repeat</h3>
 
 <p><code>(long n, x) -&gt; list</code></p>
 
@@ -2280,7 +2714,15 @@ ERROR:
   message: Cannot repeat -2 times
 </code></pre>
 
-<h3 id="concat-1">concat</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-repeat'
+      data-meta-type='var'
+      data-meta-name='repeat'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-concat">concat</h3>
 
 <p><code>(list lists) -&gt; list</code></p>
 
@@ -2309,7 +2751,15 @@ ERROR:
   message: cannot concat type string
 </code></pre>
 
-<h3 id="merge">merge</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-merge">merge</h3>
 
 <p><code>(list dicts) -&gt; dict</code></p>
 
@@ -2346,7 +2796,15 @@ ERROR:
   message: cannot merge type string
 </code></pre>
 
-<h3 id="take">take</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-merge'
+      data-meta-type='var'
+      data-meta-name='merge'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-take">take</h3>
 
 <p><code>(long n, list xs) -&gt; list</code></p>
 
@@ -2375,7 +2833,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="take-while">take_while</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-take'
+      data-meta-type='var'
+      data-meta-name='take'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-take_while">take_while</h3>
 
 <p><code>(function p, list xs) -&gt; list</code></p>
 
@@ -2400,7 +2866,15 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 nil
 </code></pre>
 
-<h3 id="take-until">take_until</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-take_while'
+      data-meta-type='var'
+      data-meta-name='take_while'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-take_until">take_until</h3>
 
 <p><code>(function p, list xs) -&gt; list</code></p>
 
@@ -2428,7 +2902,15 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 nil
 </code></pre>
 
-<h3 id="drop">drop</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-take_until'
+      data-meta-type='var'
+      data-meta-name='take_until'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-drop">drop</h3>
 
 <p><code>(long n, list xs) -&gt; list</code></p>
 
@@ -2457,7 +2939,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="drop-while">drop_while</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-drop'
+      data-meta-type='var'
+      data-meta-name='drop'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-drop_while">drop_while</h3>
 
 <p><code>(function p, list xs) -&gt; list</code></p>
 
@@ -2479,7 +2969,15 @@ nil
 
 </code></pre>
 
-<h3 id="drop-until">drop_until</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-drop_while'
+      data-meta-type='var'
+      data-meta-name='drop_while'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-drop_until">drop_until</h3>
 
 <p><code>(function p, list xs) -&gt; list</code></p>
 
@@ -2504,7 +3002,15 @@ nil
 
 </code></pre>
 
-<h3 id="contains">contains?</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-drop_until'
+      data-meta-type='var'
+      data-meta-name='drop_until'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-contains?">contains?</h3>
 
 <p><code>(xs, x) -&gt; boolean</code></p>
 
@@ -2546,7 +3052,15 @@ ERROR:
   ...
 </code></pre>
 
-<h3 id="index-of-1">index_of</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-contains?'
+      data-meta-type='var'
+      data-meta-name='contains?'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-index_of">index_of</h3>
 
 <p><code>(list xs, x, long start=0) -&gt; long</code></p>
 
@@ -2586,7 +3100,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="last-index-of-1">last_index_of</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-last_index_of">last_index_of</h3>
 
 <p><code>(list xs, x, long end=nil) -&gt; long</code></p>
 
@@ -2630,7 +3152,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="key-of">key_of</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-key_of">key_of</h3>
 
 <p><code>(dict xs, x) -&gt; string</code></p>
 
@@ -2666,7 +3196,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="flatten">flatten</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-key_of'
+      data-meta-type='var'
+      data-meta-name='key_of'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-flatten">flatten</h3>
 
 <p><code>(list xs) -&gt; list</code></p>
 
@@ -2691,7 +3229,15 @@ Otherwise the element is appended to the list. Returns the result list.</p>
 nil
 </code></pre>
 
-<h3 id="map">map</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-flatten'
+      data-meta-type='var'
+      data-meta-name='flatten'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-map">map</h3>
 
 <p><code>(xs, function f) -&gt; any</code></p>
 
@@ -2741,7 +3287,15 @@ ERROR:
   message: map is not defined for type string
 </code></pre>
 
-<h3 id="flatmap">flatmap</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-map'
+      data-meta-type='var'
+      data-meta-name='map'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-flatmap">flatmap</h3>
 
 <p><code>(xs, function f) -&gt; list</code></p>
 
@@ -2776,7 +3330,15 @@ ERROR:
   ...
 </code></pre>
 
-<h3 id="mapcat">mapcat</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-flatmap'
+      data-meta-type='var'
+      data-meta-name='flatmap'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-mapcat">mapcat</h3>
 
 <p><code>(xs, function f) -&gt; list</code></p>
 
@@ -2811,7 +3373,15 @@ ERROR:
   ...
 </code></pre>
 
-<h3 id="zip">zip</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-mapcat'
+      data-meta-type='var'
+      data-meta-name='mapcat'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-zip">zip</h3>
 
 <p><code>(list xs, list ys) -&gt; list</code></p>
 
@@ -2835,7 +3405,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="zip-dict">zip_dict</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-zip'
+      data-meta-type='var'
+      data-meta-name='zip'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-zip_dict">zip_dict</h3>
 
 <p><code>(list keys, list values) -&gt; dict</code></p>
 
@@ -2882,7 +3460,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="interpose">interpose</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-zip_dict'
+      data-meta-type='var'
+      data-meta-name='zip_dict'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-interpose">interpose</h3>
 
 <p><code>(list xs, s) -&gt; list</code></p>
 
@@ -2903,7 +3489,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="reduce">reduce</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-interpose'
+      data-meta-type='var'
+      data-meta-name='interpose'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-reduce">reduce</h3>
 
 <p><code>(xs, init, function f) -&gt; any</code></p>
 
@@ -2960,7 +3554,15 @@ ERROR:
   ...
 </code></pre>
 
-<h3 id="reduce-until">reduce_until</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-reduce'
+      data-meta-type='var'
+      data-meta-name='reduce'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-reduce_until">reduce_until</h3>
 
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 
@@ -3009,7 +3611,15 @@ ERROR:
   message: reduce_until is not defined for type string
 </code></pre>
 
-<h3 id="reduce-while">reduce_while</h3>
+<div
+      data-meta='true'
+      data-meta-id='data-reduce_until'
+      data-meta-type='var'
+      data-meta-name='reduce_until'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-reduce_while">reduce_while</h3>
 
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 
@@ -3058,17 +3668,41 @@ ERROR:
   message: reduce_while is not defined for type string
 </code></pre>
 
-<h2 id="library-time">library time</h2>
+<div
+      data-meta='true'
+      data-meta-id='data-reduce_while'
+      data-meta-type='var'
+      data-meta-name='reduce_while'
+      data-meta-tags='data'
+    ></div>
+
+<h2 id="time">library time</h2>
 
 <p>The time library provides functions for processing datetime values.</p>
 
-<h3 id="epoch">epoch</h3>
+<div
+      data-meta='true'
+      data-meta-id='time'
+      data-meta-type='library'
+      data-meta-name='time'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="time-epoch">epoch</h3>
 
 <p><code>datetime</code></p>
 
 <p>The instant of time at <code>1970-01-01T00:00:00Z</code></p>
 
-<h3 id="of">of</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-epoch'
+      data-meta-type='var'
+      data-meta-name='epoch'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-of">of</h3>
 
 <pre><code class="language-tweakflow">(
   long year=1970,
@@ -3106,7 +3740,15 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 nil
 </code></pre>
 
-<h3 id="at">at</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-of'
+      data-meta-type='var'
+      data-meta-name='of'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-at">at</h3>
 
 <pre><code class="language-tweakflow">(
   datetime base,
@@ -3138,9 +3780,21 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 nil
 </code></pre>
 
-<h3 id="seconds-between">seconds_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-at'
+      data-meta-type='var'
+      data-meta-name='at'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-seconds_between">seconds_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full seconds between given datetimes.</p>
 
@@ -3164,9 +3818,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="minutes-between">minutes_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-seconds_between'
+      data-meta-type='var'
+      data-meta-name='seconds_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-minutes_between">minutes_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full minutes between given datetimes.</p>
 
@@ -3190,9 +3856,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="hours-between">hours_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-minutes_between'
+      data-meta-type='var'
+      data-meta-name='minutes_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-hours_between">hours_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full hours between given datetimes.</p>
 
@@ -3216,9 +3894,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="days-between">days_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-hours_between'
+      data-meta-type='var'
+      data-meta-name='hours_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-days_between">days_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full days between given datetimes.</p>
 
@@ -3242,9 +3932,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="months-between">months_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-days_between'
+      data-meta-type='var'
+      data-meta-name='days_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-months_between">months_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full months between given datetimes.</p>
 
@@ -3268,9 +3970,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="years-between">years_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-months_between'
+      data-meta-type='var'
+      data-meta-name='months_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; long</code></p>
+<h3 id="time-years_between">years_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; long
+</code></pre>
 
 <p>Returns the number of full years between given datetimes.</p>
 
@@ -3294,9 +4008,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="period-between">period_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-years_between'
+      data-meta-type='var'
+      data-meta-name='years_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; dict</code></p>
+<h3 id="time-period_between">period_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; dict
+</code></pre>
 
 <p>Returns a dict with long values on keys <code>:years</code>, <code>:months</code>, and <code>:days</code>, representing a calendar period between two datetimes.</p>
 
@@ -3330,9 +4056,21 @@ nil
 nil
 </code></pre>
 
-<h3 id="duration-between">duration_between</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-period_between'
+      data-meta-type='var'
+      data-meta-name='period_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start_inclusive, datetime end_exclusive) -&gt; dict</code></p>
+<h3 id="time-duration_between">duration_between</h3>
+
+<pre><code>(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -&gt; dict
+</code></pre>
 
 <p>Returns a dict with long values on keys <code>:seconds</code>, and <code>:nano_seconds</code>, representing a duration between two datetimes.</p>
 
@@ -3370,9 +4108,23 @@ A duration of <code>-1</code> nanosecond is represented as <code>-1</code> <code
 nil
 </code></pre>
 
-<h3 id="add-period">add_period</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-duration_between'
+      data-meta-type='var'
+      data-meta-name='duration_between'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start, long years=0, long months=0, long days=0) -&gt; datetime</code></p>
+<h3 id="time-add_period">add_period</h3>
+
+<pre><code>(
+  datetime start,
+  long years=0,
+  long months=0,
+  long days=0
+) -&gt; datetime
+</code></pre>
 
 <p>Adds a calendar period to the given start datetime and returns the result.</p>
 
@@ -3397,9 +4149,22 @@ nil
 nil
 </code></pre>
 
-<h3 id="add-duration">add_duration</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-add_period'
+      data-meta-type='var'
+      data-meta-name='add_period'
+      data-meta-tags='time'
+    ></div>
 
-<p><code>(datetime start, long seconds=0, long nano_of_second=0) -&gt; datetime</code></p>
+<h3 id="time-add_duration">add_duration</h3>
+
+<pre><code>(
+  datetime start,
+  long seconds=0,
+  long nano_of_second=0
+) -&gt; datetime
+</code></pre>
 
 <p>Adds a time duration to the given start datetime and returns the result.</p>
 
@@ -3424,7 +4189,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="year">year</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-add_duration'
+      data-meta-type='var'
+      data-meta-name='add_duration'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-year">year</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3442,7 +4215,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="month">month</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-year'
+      data-meta-type='var'
+      data-meta-name='year'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-month">month</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3460,7 +4241,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="day-of-month">day_of_month</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-month'
+      data-meta-type='var'
+      data-meta-name='month'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-day_of_month">day_of_month</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3478,7 +4267,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="day-of-year">day_of_year</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_month'
+      data-meta-type='var'
+      data-meta-name='day_of_month'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-day_of_year">day_of_year</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3496,7 +4293,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="day-of-week">day_of_week</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_year'
+      data-meta-type='var'
+      data-meta-name='day_of_year'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-day_of_week">day_of_week</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3562,7 +4367,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="hour">hour</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_week'
+      data-meta-type='var'
+      data-meta-name='day_of_week'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-hour">hour</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3580,7 +4393,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="minute">minute</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-hour'
+      data-meta-type='var'
+      data-meta-name='hour'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-minute">minute</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3598,7 +4419,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="second">second</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-minute'
+      data-meta-type='var'
+      data-meta-name='minute'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-second">second</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3616,7 +4445,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="nano-of-second">nano_of_second</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-second'
+      data-meta-type='var'
+      data-meta-name='second'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-nano_of_second">nano_of_second</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3637,7 +4474,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="week-of-year">week_of_year</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-nano_of_second'
+      data-meta-type='var'
+      data-meta-name='nano_of_second'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-week_of_year">week_of_year</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3667,7 +4512,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="offset-seconds">offset_seconds</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-week_of_year'
+      data-meta-type='var'
+      data-meta-name='week_of_year'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-offset_seconds">offset_seconds</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3688,7 +4541,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="zone">zone</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-offset_seconds'
+      data-meta-type='var'
+      data-meta-name='offset_seconds'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-zone">zone</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3709,7 +4570,15 @@ nil
 nil
 </code></pre>
 
-<h3 id="with-year">with_year</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-zone'
+      data-meta-type='var'
+      data-meta-name='zone'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_year">with_year</h3>
 
 <p><code>(datetime x, long year) -&gt; datetime</code></p>
 
@@ -3738,7 +4607,15 @@ ERROR:
   message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
 </code></pre>
 
-<h3 id="with-month">with_month</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_year'
+      data-meta-type='var'
+      data-meta-name='with_year'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_month">with_month</h3>
 
 <p><code>(datetime x, long month) -&gt; datetime</code></p>
 
@@ -3767,7 +4644,15 @@ ERROR:
   message: Invalid value for MonthOfYear (valid values 1 - 12): 13
 </code></pre>
 
-<h3 id="with-day-of-month">with_day_of_month</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_month'
+      data-meta-type='var'
+      data-meta-name='with_month'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_day_of_month">with_day_of_month</h3>
 
 <p><code>(datetime x, long day_of_month) -&gt; datetime</code></p>
 
@@ -3801,7 +4686,15 @@ ERROR:
   message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
 </code></pre>
 
-<h3 id="with-hour">with_hour</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_day_of_month'
+      data-meta-type='var'
+      data-meta-name='with_day_of_month'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_hour">with_hour</h3>
 
 <p><code>(datetime x, long hour) -&gt; datetime</code></p>
 
@@ -3831,7 +4724,15 @@ ERROR:
   message: Invalid value for HourOfDay (valid values 0 - 23): 25
 </code></pre>
 
-<h3 id="with-minute">with_minute</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_hour'
+      data-meta-type='var'
+      data-meta-name='with_hour'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_minute">with_minute</h3>
 
 <p><code>(datetime x, long minute) -&gt; datetime</code></p>
 
@@ -3857,7 +4758,15 @@ ERROR:
   message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
 </code></pre>
 
-<h3 id="with-second">with_second</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_minute'
+      data-meta-type='var'
+      data-meta-name='with_minute'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_second">with_second</h3>
 
 <p><code>(datetime x, long second) -&gt; datetime</code></p>
 
@@ -3883,7 +4792,15 @@ ERROR:
   message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
 </code></pre>
 
-<h3 id="with-nano-of-second">with_nano_of_second</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_second'
+      data-meta-type='var'
+      data-meta-name='with_second'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_nano_of_second">with_nano_of_second</h3>
 
 <p><code>(datetime x, long nano_of_second) -&gt; datetime</code></p>
 
@@ -3909,7 +4826,15 @@ ERROR:
   message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
 </code></pre>
 
-<h3 id="with-zone">with_zone</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_nano_of_second'
+      data-meta-type='var'
+      data-meta-name='with_nano_of_second'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-with_zone">with_zone</h3>
 
 <p><code>(datetime x, string tz) -&gt; datetime</code></p>
 
@@ -3941,7 +4866,15 @@ ERROR:
   message: unknown time zone id: ---
 </code></pre>
 
-<h3 id="same-instant-at-zone">same_instant_at_zone</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-with_zone'
+      data-meta-type='var'
+      data-meta-name='with_zone'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-same_instant_at_zone">same_instant_at_zone</h3>
 
 <p><code>(datetime x, string tz) -&gt; datetime</code></p>
 
@@ -3973,7 +4906,15 @@ ERROR:
   message: unknown time zone id: ---
 </code></pre>
 
-<h3 id="unix-timestamp">unix_timestamp</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-same_instant_at_zone'
+      data-meta-type='var'
+      data-meta-name='same_instant_at_zone'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-unix_timestamp">unix_timestamp</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -3992,7 +4933,15 @@ ERROR:
 -1496933995
 </code></pre>
 
-<h3 id="unix-timestamp-ms">unix_timestamp_ms</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-unix_timestamp_ms">unix_timestamp_ms</h3>
 
 <p><code>(datetime x) -&gt; long</code></p>
 
@@ -4011,7 +4960,15 @@ ERROR:
 -1496933995123
 </code></pre>
 
-<h3 id="of-unix-timestamp">of_unix_timestamp</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp_ms'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-of_unix_timestamp">of_unix_timestamp</h3>
 
 <p><code>(long s) -&gt; datetime</code></p>
 
@@ -4030,7 +4987,15 @@ ERROR:
 1922-07-26T09:00:05Z@UTC
 </code></pre>
 
-<h3 id="of-unix-timestamp-ms">of_unix_timestamp_ms</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-of_unix_timestamp_ms">of_unix_timestamp_ms</h3>
 
 <p><code>(long ms) -&gt; datetime</code></p>
 
@@ -4049,7 +5014,15 @@ ERROR:
 1922-07-26T09:00:04.237Z@UTC
 </code></pre>
 
-<h3 id="compare">compare</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp_ms'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-compare">compare</h3>
 
 <p><code>(datetime a, datetime b) -&gt; long</code></p>
 
@@ -4076,7 +5049,15 @@ Assumes <code>nil</code> to precede any non-nil datetime.</p>
 [nil, 2017-05-24T00:00:00Z@UTC, 2017-05-24T00:01:00Z@UTC, 2017-05-24T02:00:00Z@UTC, 2017-05-25T00:00:00Z@UTC]
 </code></pre>
 
-<h3 id="formatter">formatter</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-formatter">formatter</h3>
 
 <pre><code>(
   string pattern=&quot;uuuu-MM-dd'T'HH:mm:ssZZZZZ'@`'VV'`'&quot;,
@@ -4117,7 +5098,15 @@ function
 &quot;Donnerstag, 1 Januar 1970&quot;
 </code></pre>
 
-<h3 id="parser">parser</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-parser">parser</h3>
 
 <pre><code>(
   string pattern=&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;,
@@ -4188,7 +5177,15 @@ function
 
 </code></pre>
 
-<h3 id="zones">zones</h3>
+<div
+      data-meta='true'
+      data-meta-id='time-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+      data-meta-tags='time'
+    ></div>
+
+<h3 id="time-zones">zones</h3>
 
 <p><code>() -&gt; list</code></p>
 
@@ -4206,11 +5203,27 @@ function
 [&quot;US/Alaska&quot;, &quot;US/Aleutian&quot;, &quot;US/Arizona&quot;, &quot;US/Central&quot;, &quot;US/East-Indiana&quot;, &quot;US/Eastern&quot;, ...]
 </code></pre>
 
-<h2 id="library-math">library math</h2>
+<div
+      data-meta='true'
+      data-meta-id='time-zones'
+      data-meta-type='var'
+      data-meta-name='zones'
+      data-meta-tags='time'
+    ></div>
+
+<h2 id="math">library math</h2>
 
 <p>The math library contains basic mathematical functions.</p>
 
-<h3 id="abs">abs</h3>
+<div
+      data-meta='true'
+      data-meta-id='math'
+      data-meta-type='library'
+      data-meta-name='math'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="math-abs">abs</h3>
 
 <p><code>(x) -&gt;</code></p>
 
@@ -4257,7 +5270,15 @@ ERROR:
   message: cannot determine magnitude of type string
 </code></pre>
 
-<h3 id="rand">rand</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-abs'
+      data-meta-type='var'
+      data-meta-name='abs'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-rand">rand</h3>
 
 <p><code>(any seed) -&gt; double</code></p>
 
@@ -4313,7 +5334,15 @@ function
 
 </code></pre>
 
-<h3 id="inc">inc</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-rand'
+      data-meta-type='var'
+      data-meta-name='rand'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-inc">inc</h3>
 
 <p><code>(any x) -&gt; any</code></p>
 
@@ -4349,7 +5378,15 @@ ERROR:
   message: cannot increment type list
 </code></pre>
 
-<h3 id="dec">dec</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-inc'
+      data-meta-type='var'
+      data-meta-name='inc'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-dec">dec</h3>
 
 <p><code>(any x) -&gt; any</code></p>
 
@@ -4385,7 +5422,15 @@ ERROR:
   message: cannot decrement type list
 </code></pre>
 
-<h3 id="compare-1">compare</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-dec'
+      data-meta-type='var'
+      data-meta-name='dec'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-compare">compare</h3>
 
 <p><code>(a, b) -&gt; long</code></p>
 
@@ -4412,7 +5457,15 @@ Returns 0 if a == b.</p>
 [nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
 </code></pre>
 
-<h3 id="min">min</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-min">min</h3>
 
 <p><code>(list xs) -&gt; any</code></p>
 
@@ -4440,7 +5493,15 @@ ERROR:
   message: cannot compare type string
 </code></pre>
 
-<h3 id="max">max</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-min'
+      data-meta-type='var'
+      data-meta-name='min'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-max">max</h3>
 
 <p><code>(list xs) -&gt; any</code></p>
 
@@ -4468,7 +5529,15 @@ ERROR:
   message: cannot compare type string
 </code></pre>
 
-<h3 id="round">round</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-max'
+      data-meta-type='var'
+      data-meta-name='max'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-round">round</h3>
 
 <p><code>(double x) -&gt; long</code></p>
 
@@ -4495,7 +5564,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 nil
 </code></pre>
 
-<h3 id="ceil">ceil</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-round'
+      data-meta-type='var'
+      data-meta-name='round'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-ceil">ceil</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4516,7 +5593,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 nil
 </code></pre>
 
-<h3 id="floor">floor</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-ceil'
+      data-meta-type='var'
+      data-meta-name='ceil'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-floor">floor</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4537,7 +5622,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 nil
 </code></pre>
 
-<h3 id="nan">NaN?</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-floor'
+      data-meta-type='var'
+      data-meta-name='floor'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-NaN?">NaN?</h3>
 
 <p><code>(double x) -&gt; boolean</code></p>
 
@@ -4553,7 +5646,15 @@ true
 false
 </code></pre>
 
-<h3 id="sqrt">sqrt</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-NaN?'
+      data-meta-type='var'
+      data-meta-name='NaN?'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-sqrt">sqrt</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4573,7 +5674,15 @@ NaN
 nil
 </code></pre>
 
-<h3 id="sin">sin</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-sqrt'
+      data-meta-type='var'
+      data-meta-name='sqrt'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-sin">sin</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4591,7 +5700,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 0.8414709848078965
 </code></pre>
 
-<h3 id="cos">cos</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-sin'
+      data-meta-type='var'
+      data-meta-name='sin'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-cos">cos</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4612,7 +5729,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 0.5403023058681398
 </code></pre>
 
-<h3 id="tan">tan</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-cos'
+      data-meta-type='var'
+      data-meta-name='cos'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-tan">tan</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4630,7 +5755,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 0.9999999999999999
 </code></pre>
 
-<h3 id="asin">asin</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-tan'
+      data-meta-type='var'
+      data-meta-name='tan'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-asin">asin</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4648,7 +5781,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 1.5707963267948966
 </code></pre>
 
-<h3 id="acos">acos</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-asin'
+      data-meta-type='var'
+      data-meta-name='asin'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-acos">acos</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4669,7 +5810,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 3.141592653589793
 </code></pre>
 
-<h3 id="atan">atan</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-acos'
+      data-meta-type='var'
+      data-meta-name='acos'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-atan">atan</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4687,7 +5836,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 0.7853981633974483
 </code></pre>
 
-<h3 id="log">log</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-atan'
+      data-meta-type='var'
+      data-meta-name='atan'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-log">log</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4708,7 +5865,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 2.0
 </code></pre>
 
-<h3 id="log10">log10</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-log'
+      data-meta-type='var'
+      data-meta-name='log'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-log10">log10</h3>
 
 <p><code>(double x) -&gt; double</code></p>
 
@@ -4729,7 +5894,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 2.0
 </code></pre>
 
-<h3 id="bit-count">bit_count</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-log10'
+      data-meta-type='var'
+      data-meta-name='log10'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-bit_count">bit_count</h3>
 
 <p><code>(long x) -&gt; long</code></p>
 
@@ -4750,7 +5923,15 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 nil
 </code></pre>
 
-<h3 id="formatter-1">formatter</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-bit_count'
+      data-meta-type='var'
+      data-meta-name='bit_count'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-formatter">formatter</h3>
 
 <pre><code>(
   string pattern='0.##',
@@ -4762,7 +5943,7 @@ nil
 
 <p>Returns a function <code>f</code> that accepts a single <code>long</code> or <code>double</code> parameter <code>x</code>, and returns a string representation of <code>x</code> using the
 supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a>,
-<a href="#decimal-symbols">decimal_symbols</a>,
+<a href="#locale-decimal_symbols">decimal_symbols</a>,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a>, and
 <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-">always_show_decimal_separator</a> flag.</p>
 
@@ -4806,7 +5987,15 @@ std.tf&gt; f(648722)
 &quot;६४८,७२२&quot;
 </code></pre>
 
-<h3 id="parser-1">parser</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-parser">parser</h3>
 
 <pre><code>(
   string pattern='0.##',
@@ -4816,7 +6005,7 @@ std.tf&gt; f(648722)
 </code></pre>
 
 <p>Returns a function <code>f</code> that accepts a single string parameter <code>x</code> and returns a parsed numeric value as specified by the supplied
-<a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> and <a href="#decimal-symbols">decimal_symbols</a>.</p>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> and <a href="#locale-decimal_symbols">decimal_symbols</a>.</p>
 
 <p>Uses <code>en-US</code> decimal symbols if <code>decimal_symbols</code> is <code>nil</code>.</p>
 
@@ -4853,28 +6042,76 @@ function
 103
 </code></pre>
 
-<h3 id="e">e</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-e">e</h3>
 
 <p>The double value that is closer than any other to <code>e</code>, the base of the natural logarithms.</p>
 
-<h3 id="pi">pi</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-e'
+      data-meta-type='var'
+      data-meta-name='e'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-pi">pi</h3>
 
 <p>The double value that is closer than any other to <code>pi</code>, the ratio of the circumference of a circle to its diameter.</p>
 
-<h3 id="min-long">min_long</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-pi'
+      data-meta-type='var'
+      data-meta-name='pi'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-min_long">min_long</h3>
 
 <p>The smallest representable long value: <code>-9223372036854775808</code>.</p>
 
-<h3 id="max-long">max_long</h3>
+<div
+      data-meta='true'
+      data-meta-id='math-min_long'
+      data-meta-type='var'
+      data-meta-name='min_long'
+      data-meta-tags='math'
+    ></div>
+
+<h3 id="math-max_long">max_long</h3>
 
 <p>The largest representable long value: <code>9223372036854775807</code>.</p>
 
-<h2 id="library-fun">library fun</h2>
+<div
+      data-meta='true'
+      data-meta-id='math-max_long'
+      data-meta-type='var'
+      data-meta-name='max_long'
+      data-meta-tags='math'
+    ></div>
+
+<h2 id="fun">library fun</h2>
 
 <p>The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
 provide functionality similar to control-flow features in other languages.</p>
 
-<h3 id="times">times</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun'
+      data-meta-type='library'
+      data-meta-name='fun'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="fun-times">times</h3>
 
 <p><code>(long n, any x, function f) -&gt; any</code></p>
 
@@ -4910,7 +6147,15 @@ function
 [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 </code></pre>
 
-<h3 id="until">until</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-times'
+      data-meta-type='var'
+      data-meta-name='times'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-until">until</h3>
 
 <p><code>(function p, any x, function f) -&gt; any</code></p>
 
@@ -4952,7 +6197,15 @@ function
 
 </code></pre>
 
-<h3 id="while">while</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-until'
+      data-meta-type='var'
+      data-meta-name='until'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-while">while</h3>
 
 <p><code>(function p, any x, function f) -&gt; any</code></p>
 
@@ -4994,7 +6247,15 @@ function
 
 </code></pre>
 
-<h3 id="iterate">iterate</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-while'
+      data-meta-type='var'
+      data-meta-name='while'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-iterate">iterate</h3>
 
 <p><code>(long start, long end, any x, function f) -&gt; any</code></p>
 
@@ -5015,7 +6276,15 @@ Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
 55
 </code></pre>
 
-<h3 id="thread">thread</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-iterate'
+      data-meta-type='var'
+      data-meta-name='iterate'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-thread">thread</h3>
 
 <p><code>(any state, list fs) -&gt; any</code></p>
 
@@ -5042,7 +6311,15 @@ function
 &quot;hello world&quot;
 </code></pre>
 
-<h3 id="chain">chain</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-thread'
+      data-meta-type='var'
+      data-meta-name='thread'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-chain">chain</h3>
 
 <p><code>(list fs) -&gt; function</code></p>
 
@@ -5060,7 +6337,15 @@ function
 22
 </code></pre>
 
-<h3 id="compose">compose</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-chain'
+      data-meta-type='var'
+      data-meta-name='chain'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-compose">compose</h3>
 
 <p><code>(list fs) -&gt; function</code></p>
 
@@ -5079,7 +6364,15 @@ function
 12
 </code></pre>
 
-<h3 id="signature">signature</h3>
+<div
+      data-meta='true'
+      data-meta-id='fun-compose'
+      data-meta-type='var'
+      data-meta-name='compose'
+      data-meta-tags='fun'
+    ></div>
+
+<h3 id="fun-signature">signature</h3>
 
 <p><code>(function f) -&gt; dict</code></p>
 
@@ -5177,12 +6470,28 @@ function
 
 </code></pre>
 
-<h2 id="library-locale">library locale</h2>
+<div
+      data-meta='true'
+      data-meta-id='fun-signature'
+      data-meta-type='var'
+      data-meta-name='signature'
+      data-meta-tags='fun'
+    ></div>
+
+<h2 id="locale">library locale</h2>
 
 <p>The locale library provides information about available localization conventions. Localization conventions
 are relevant in the context of number and date formatting as well as string sorting.</p>
 
-<h3 id="languages">languages</h3>
+<div
+      data-meta='true'
+      data-meta-id='locale'
+      data-meta-type='library'
+      data-meta-name='locale'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="locale-languages">languages</h3>
 
 <p><code>(lang='en-US') -&gt; dict</code></p>
 
@@ -5209,7 +6518,15 @@ The human readable names are given in the language tag passed as the locale para
 }
 </code></pre>
 
-<h3 id="decimal-symbols">decimal_symbols</h3>
+<div
+      data-meta='true'
+      data-meta-id='locale-languages'
+      data-meta-type='var'
+      data-meta-name='languages'
+      data-meta-tags='locale'
+    ></div>
+
+<h3 id="locale-decimal_symbols">decimal_symbols</h3>
 
 <p><code>(lang='en-US') -&gt; dict</code></p>
 
@@ -5300,9 +6617,15 @@ The human readable names are given in the language tag passed as the locale para
 
 </code></pre>
 
-      </main>
-    </div>
-    
+<div
+      data-meta='true'
+      data-meta-id='locale-decimal_symbols'
+      data-meta-type='var'
+      data-meta-name='decimal_symbols'
+      data-meta-tags='locale'
+    ></div>
+
+        
 <footer>
   <div class="footer__copyright">
     © <a href="http://twineworks.com">Twineworks 2019</a>
@@ -5313,15 +6636,11 @@ The human readable names are given in the language tag passed as the locale para
   </div>
 </footer>
 
+      </main>
+    </div>
+
     
 
-
-
-
-
-
-
-
-</body>
-
+    <script type="text/javascript" src="../js/module-toc.js"></script>
+  </body>
 </html>

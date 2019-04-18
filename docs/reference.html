@@ -11,7 +11,9 @@
     <meta name="description" content="" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif|Lato|Roboto|Inconsolata">
+    <link rel="stylesheet" href="./fontawesome/css/all.min.css">
     <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/layout.css">
     <link rel="stylesheet" href="./css/style.css">
 
     <link rel="stylesheet" href="./js/highlight-tweakflow/tweakflow-light.css">
@@ -41,68 +43,114 @@
 
 <body>
     <header>
-    <div class="menu">
-
-      
-      
-      
-      <nav role="navigation" class="menu__items-wrapper-left">
+  <div class="menu-narrow">
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+        <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
-            <li class="menu__item">
-                <a class="menu__item-version-link" href="./index.html"><b>Tweakflow</b> v0.11.0</a>
-            </li>
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./getting-started.html">Getting started</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./tools.html">Tools</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./modules/std.html">Docs</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./embedding.html">Embedding</a>
-            </li>
-            
-            <li class="menu__item active" >
-              <a class="menu__item-link" href="./reference.html">Reference</a>
-            </li>
-            
-            
+          <li class="menu__item">
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.11.0</a>
+          </li>
         </ul>
-      </nav>
-      <nav role="navigation" class="menu__items-wrapper-right">
-        <ul class="menu__items">
-            
-            
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
-            </li>
-            
-            <li class="menu__item" >
-              <a class="menu__item-link" href="./support.html">Support</a>
-            </li>
-            
-            
-        </ul>
-      </nav>
+        </nav>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu-narrow" role="menu">
+        <div class="dropdown-content">
+          <a href="./index.html" class="dropdown-item">
+            Home
+          </a>
+          
+          
+          
+          <a class="dropdown-item" href="./getting-started.html">Getting started</a>
+          
+          <a class="dropdown-item" href="./tools.html">Tools</a>
+          
+          <a class="dropdown-item" href="./modules/std.html">Docs</a>
+          
+          <a class="dropdown-item" href="./embedding.html">Embedding</a>
+          
+          <a class="dropdown-item" href="./reference.html">Reference</a>
+          
+          <a class="dropdown-item" href="./support.html">Support</a>
+          
+          
+          <hr class="dropdown-divider" />
+          
+          
+          
+          <a class="dropdown-item" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+          
+          <a class="dropdown-item" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+          
+          
+        </div>
+      </div>
     </div>
-
+  </div>
+  <div class="menu">
+    
+    
+    
+    <nav role="navigation" class="menu__items-wrapper-left">
+      <ul class="menu__items">
+        <li class="menu__item">
+          <a class="menu__item-version-link" href="./index.html"
+            ><b>Tweakflow</b> v0.11.0</a
+          >
+        </li>
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./getting-started.html">Getting started</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./tools.html">Tools</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./modules/std.html">Docs</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./embedding.html">Embedding</a>
+        </li>
+        
+        <li class="menu__item active">
+          <a class="menu__item-link" href="./reference.html">Reference</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./support.html">Support</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+    <nav role="navigation" class="menu__items-wrapper-right">
+      <ul class="menu__items">
+        
+        
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="https://gitter.im/twineworks/tweakflow">Discuss</a>
+        </li>
+        
+        
+      </ul>
+    </nav>
+  </div>
 </header>
+<script type="text/javascript" src="./js/dropdown.js"></script>
 
     <div class="content-wrapper">
-       
+      
       <aside class="toc">
         <div class="toc-wrapper">
           <div class="scrollable-parent">
@@ -275,7 +323,7 @@
         </div>
       </aside>
       
-      <main class="single-content" role="main">
+      <main class="single-content " role="main">
         
 
 <h2 id="motivation">Motivation</h2>
@@ -627,7 +675,7 @@ Hello World
 
 <p>The UTC offset form can be further refined to include the regional time zone, ensuring consistency of local time calculations while observing daylight saving time. The regional time zone form appends an <code>@</code> sign, followed by the id of the desired time zone.</p>
 
-<p>A time zone id is valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
+<p>A time zone id is valid if recognized by Java&rsquo;s <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>. A list of known regional zone ids can be obtained by calling <a href="./modules/std.html#time-zones">time.zones</a> of the tweakflow standard module. In addition, time zones giving a constant offset from UTC or GMT are accepted, as per the documentation of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#of-java.lang.String-">ZoneId.of</a>.</p>
 
 <p>If a time zone id matches one of the following syntax rules, it may but need not be escaped by backticks:</p>
 
@@ -1408,7 +1456,7 @@ foo.tf&gt; \meta bar.baz
 
 <p>For any other double value, the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-">conventions the Java language</a> are used.</p>
 
-<p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#formatter-1">formatters</a> to to convert double values to strings in a controlled output format.</p>
+<p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#math-formatter">formatters</a> to to convert double values to strings in a controlled output format.</p>
 
 <h3 id="string">String</h3>
 
@@ -1496,7 +1544,7 @@ ERROR:
 &quot;1970-01-01T00:00:00Z@UTC&quot;
 </code></pre>
 
-<p>Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#formatter">formatters</a> to to convert datetime values to strings in a controlled output format.</p>
+<p>Casting datetimes to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#time-formatter">formatters</a> to to convert datetime values to strings in a controlled output format.</p>
 
 <p>Datetime as dict</p>
 
@@ -1704,7 +1752,7 @@ function
 
 <p>All function values cast to boolean <code>true</code>.</p>
 
-<p>The signature of a function can be inspected calling <a href="./modules/std.html#signature">fun.signature</a> from the standard library.</p>
+<p>The signature of a function can be inspected calling <a href="./modules/std.html#fun-signature">fun.signature</a> from the standard library.</p>
 
 <pre><code class="language-tweakflow">&gt; f: (double x=1.0, double y=0.0) -&gt; double    x+y
 function
@@ -2129,7 +2177,7 @@ ERROR:
 
 <p>Mixed style arguments are a useful idiom when a function exposes a set of leading arguments that have intuitive order, but allows for a set of less common option-style parameters to configure details.</p>
 
-<p>The function <a href="./modules/std.html#add-period">add_period</a> from the standard library for example:</p>
+<p>The function <a href="./modules/std.html#time-add_period">add_period</a> from the standard library for example:</p>
 
 <pre><code class="language-tweakflow">&gt; time.add_period(time.epoch, years: 1000)
 2970-01-01T00:00:00Z@UTC
@@ -2265,7 +2313,7 @@ namedPartialArg
 </code></pre>
 
 <p>As an example consider a function that checks whether an list contains only long values.
-The function is created by binding a predicate function to the parameter <code>p</code> of <a href="./modules/std.html#all">data.all?</a>.</p>
+The function is created by binding a predicate function to the parameter <code>p</code> of <a href="./modules/std.html#data-all?">data.all?</a>.</p>
 
 <pre><code class="language-tweakflow">&gt; fun.signature(data.all?)
 {
@@ -4179,7 +4227,7 @@ false
 false
 </code></pre>
 
-<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
+<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#time-compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
 
 <pre><code class="language-tweakflow"># same points in time, but different local time and time zone
 &gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
@@ -4973,9 +5021,7 @@ DEBUG: x is zero or nil 0
 0
 </code></pre>
 
-      </main>
-    </div>
-    
+        
 <footer>
   <div class="footer__copyright">
     © <a href="http://twineworks.com">Twineworks 2019</a>
@@ -4986,14 +5032,10 @@ DEBUG: x is zero or nil 0
   </div>
 </footer>
 
+      </main>
+    </div>
+
     
-
-
-
-
-
-
-
 
 </body>
 
