@@ -27,8 +27,9 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.ValueProvider;
 
-final public class ConstantOp implements ExpressionOp {
+final public class ConstantOp implements ExpressionOp, ValueProvider {
 
   private final Value v;
   public ConstantOp(Value v) {
@@ -39,6 +40,7 @@ final public class ConstantOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
     return v;
   }
+
 
   @Override
   public boolean isConstant() {
@@ -56,4 +58,8 @@ final public class ConstantOp implements ExpressionOp {
   }
 
 
+  @Override
+  public Value getValue() {
+    return v;
+  }
 }

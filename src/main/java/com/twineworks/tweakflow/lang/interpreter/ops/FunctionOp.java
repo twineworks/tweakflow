@@ -107,7 +107,9 @@ final public class FunctionOp implements ExpressionOp {
     // if all closures are constant, the function is constant
     Set<ReferenceNode> closedOverReferences = node.getClosedOverReferences();
     for (ReferenceNode closedOverReference : closedOverReferences) {
-      if (!closedOverReference.getOp().isConstant()) return false;
+      if (!closedOverReference.getOp().isConstant()){
+        return false;
+      }
     }
 
     return true;
@@ -123,5 +125,8 @@ final public class FunctionOp implements ExpressionOp {
     return new FunctionOp(node);
   }
 
-
+  public Value evalWithClosures(IdentityHashMap<ReferenceNode, ValueProvider> closures) {
+    FunctionSignature functionSignature = node.getSignature();
+    return Values.make(new StandardFunctionValue(node, functionSignature, closures));
+  }
 }

@@ -54,7 +54,12 @@ final public class CastOp implements ExpressionOp {
 
   @Override
   public ExpressionOp specialize() {
-    return new CastOp(node);
+    if (node.getExpression().getValueType() == targetType){
+      return exp;
+    }
+    else{
+      return new CastOp(node);
+    }
   }
 
   @Override
