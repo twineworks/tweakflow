@@ -25,15 +25,16 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.ast.expressions.StringConcatNode;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+
+import java.util.ArrayList;
 
 final public class StringConcatOp implements ExpressionOp {
 
-  private final StringConcatNode node;
+  final StringConcatNode node;
   private final ExpressionOp leftOp;
   private final ExpressionOp rightOp;
 
@@ -46,10 +47,10 @@ final public class StringConcatOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    String left = leftOp.eval(stack, context).castTo(Types.STRING).string();
+    String left = leftOp.eval(stack, context).string();
     if (left == null) left = "nil";
 
-    String right = rightOp.eval(stack, context).castTo(Types.STRING).string();
+    String right = rightOp.eval(stack, context).string();
     if (right == null) right = "nil";
 
     return Values.make(left+right);
@@ -57,12 +58,53 @@ final public class StringConcatOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override
   public ExpressionOp specialize() {
-    return new StringConcatOp(node);
+
+    boolean canFoldLeft = leftOp instanceof StringConcatOp || leftOp instanceof StringMultiConcatOp;
+    boolean canFoldRight = rightOp instanceof StringConcatOp || rightOp instanceof StringMultiConcatOp;
+
+    if (!canFoldLeft && !canFoldRight){
+      return new StringConcatOp(node);
+    }
+
+    ArrayList<ExpressionOp> ops = new ArrayList<>();
+
+    if (canFoldLeft){
+      if (leftOp instanceof StringConcatOp){
+        StringConcatOp op = (StringConcatOp) leftOp;
+        ops.add(op.node.getLeftExpression().getOp());
+        ops.add(op.node.getRightExpression().getOp());
+      }
+      else if (leftOp instanceof StringMultiConcatOp){
+        StringMultiConcatOp op = (StringMultiConcatOp) leftOp;
+        ops.addAll(op.ops);
+      }
+    }
+    else{
+      ops.add(leftOp);
+    }
+
+    if (canFoldRight){
+      if (rightOp instanceof StringConcatOp){
+        StringConcatOp op = (StringConcatOp) rightOp;
+        ops.add(op.node.getLeftExpression().getOp());
+        ops.add(op.node.getRightExpression().getOp());
+      }
+      else if (rightOp instanceof StringMultiConcatOp){
+        StringMultiConcatOp op = (StringMultiConcatOp) rightOp;
+        ops.addAll(op.ops);
+      }
+    }
+    else{
+      ops.add(rightOp);
+    }
+
+    return new StringMultiConcatOp(ops).specialize();
+
   }
 
   @Override

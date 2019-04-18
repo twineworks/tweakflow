@@ -629,7 +629,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         String escapeSequence = child.getText();
         nodes.add(new StringNode(convertEscapeSequence(escapeSequence)).setSourceInfo(srcOf(parseUnit, child)));
       } else if (child instanceof TweakFlowParser.ExpressionContext) {
-        nodes.add(visit(child));
+        nodes.add(addImplicitCast(Types.STRING, visit(child)));
 
       } else {
         throw new AssertionError("Unknown child node in string interpolation: " + child.toString());
@@ -640,7 +640,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     List<ExpressionNode> compacted = compactStringNodes(nodes);
 
     // compacted to nothing is an empty string
-    if (nodes.size() == 0) {
+    if (compacted.size() == 0) {
       return new StringNode("").setSourceInfo(sourceInfo);
     }
 
@@ -648,9 +648,6 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     if (compacted.size() == 1) {
       ExpressionNode c = compacted.get(0);
       c.setSourceInfo(sourceInfo);
-      if (c.getValueType() != Types.STRING) {
-        c = addImplicitCast(Types.STRING, c);
-      }
       return c;
     }
 
@@ -1224,8 +1221,8 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   @Override
   public ExpressionNode visitConcatExp(TweakFlowParser.ConcatExpContext ctx) {
     return new StringConcatNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.STRING, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.STRING, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
