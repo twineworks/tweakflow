@@ -30,12 +30,6 @@ java -jar tweakflow-{{< version >}}.jar repl
 ```
 ~~~
 
-#meta
-#{
-#  :date "2017-05-12"
-#  :since "1.0.0"
-#}
-
 module;
 
 doc
@@ -441,7 +435,12 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 
 doc
 ~~~
-`(string lang='en-US', boolean case_sensitive=true) -> function`
+```
+(
+  string lang='en-US',
+  boolean case_sensitive=true
+) -> function
+```
 
 Returns a function `f (string a, string b) -> long` that compares two strings `a` and `b` according to conventions appropriate for the given language tag.
 If `case_sensitive` is `true`, lower case characters precede their upper case counterparts.
@@ -3274,7 +3273,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full seconds between given datetimes.
 
@@ -3303,7 +3307,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full minutes between given datetimes.
 
@@ -3333,7 +3342,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full hours between given datetimes.
 
@@ -3362,7 +3376,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full days between given datetimes.
 
@@ -3392,7 +3411,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full months between given datetimes.
 
@@ -3422,7 +3446,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full years between given datetimes.
 
@@ -3451,7 +3480,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> dict`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> dict
+```
 
 Returns a dict with long values on keys `:years`, `:months`, and `:days`, representing a calendar period between two datetimes.
 
@@ -3491,7 +3525,12 @@ nil
 
 doc
 ~~~
-`(datetime start_inclusive, datetime end_exclusive) -> dict`
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> dict
+```
 
 Returns a dict with long values on keys `:seconds`, and `:nano_seconds`, representing a duration between two datetimes.
 
@@ -3534,7 +3573,14 @@ nil
 
 doc
 ~~~
-`(datetime start, long years=0, long months=0, long days=0) -> datetime`
+```
+(
+  datetime start,
+  long years=0,
+  long months=0,
+  long days=0
+) -> datetime
+```
 
 Adds a calendar period to the given start datetime and returns the result.
 
@@ -3565,7 +3611,13 @@ nil
 
 doc
 ~~~
-`(datetime start, long seconds=0, long nano_of_second=0) -> datetime`
+```
+(
+  datetime start,
+  long seconds=0,
+  long nano_of_second=0
+) -> datetime
+```
 
 Adds a time duration to the given start datetime and returns the result.
 
@@ -5116,7 +5168,7 @@ doc
 
 Returns a function `f` that accepts a single `long` or `double` parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html),
-[decimal_symbols](#decimal-symbols),
+[decimal_symbols](#locale-decimal_symbols),
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
 [always_show_decimal_separator](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-) flag.
 
@@ -5175,7 +5227,7 @@ doc
 ```
 
 Returns a function `f` that accepts a single string parameter `x` and returns a parsed numeric value as specified by the supplied
-[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and [decimal_symbols](#decimal-symbols).
+[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and [decimal_symbols](#locale-decimal_symbols).
 
 Uses `en-US` decimal symbols if `decimal_symbols` is `nil`.
 
