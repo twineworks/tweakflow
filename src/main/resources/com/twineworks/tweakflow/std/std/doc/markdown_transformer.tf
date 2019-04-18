@@ -23,44 +23,122 @@
 import core, data, strings from "std";
 
 alias data.map as map;
+alias data.flatmap as flatmap;
 alias strings.join as join;
 alias core.inspect as inspect;
+alias strings as s;
+
+library util {
+
+  trim_trailing: (string x, string tail) -> string
+  	let {
+      lower_x: s.lower_case(x);
+      lower_tail: s.lower_case(tail);
+  	}
+  	if s.ends_with?(lower_x, lower_tail)
+  	  s.substring(x, 0, s.last_index_of(lower_x, lower_tail))
+    else
+      x;
+}
+
+library fragments {
+
+  for_node: (dict x, list parents=[]) -> list
+    match x[:node]
+      'module'  -> module_fragments(x),
+      'library' -> library_fragments(x, parents),
+      'var'     -> var_fragments(x, parents),
+      default   -> [core.inspect(x)];
+
+  children: (dict x) -> list
+  	match x[:node]
+      'module'  -> x[:components],
+      'library' -> x[:vars],
+  	  default   -> [];
+
+  child_fragments: (dict x, list parents=[]) -> list
+  	let {
+      sub_fragments: for_node(parents=[x, ...parents]);
+  	}
+	flatmap(children(x), sub_fragments);
+
+  module_fragments: (dict x) -> list
+  	let {
+      prologue: "---\n"
+                .."title: "..x[:file].."\n"
+                .."---\n\n";
+  	}
+  	[
+      prologue,
+      title_fragment(x),
+      doc_fragment(x),
+      meta_fragment(x),
+      ...child_fragments(x)
+    ];
+
+  library_fragments: (dict x, list parents) -> list
+  	[
+      title_fragment(x, parents),
+      doc_fragment(x, parents),
+      meta_fragment(x, parents),
+      ...child_fragments(x, parents)
+    ];
+
+  var_fragments: (dict x, list parents) -> list
+  	[
+      title_fragment(x, parents),
+      doc_fragment(x, parents),
+      meta_fragment(x, parents)
+    ];
+
+  title_fragment: (dict x, list parents=[]) -> string
+    let {
+      id: '{#'..title_id(x, parents) ..'}';
+  	}
+  	match x[:node]
+  	  'var'      -> '### '        .. x[:name] .. id .. "\n\n",
+  	  'library'  -> '## library ' .. x[:name] .. id .. "\n\n",
+  	  'module'   -> '# module '   .. x[:file] .. id .. "\n\n",
+  	  'default'  -> '';
+
+  title_id: (dict x, list parents=[]) -> string
+	match x[:node]
+ 	  "var"      -> parents[0, :name] .. '-' .. x[:name],
+      "module"   -> util.trim_trailing(x[:file], ".tf"),
+      "library"  -> x[:name];
+
+  doc_fragment: (dict x, list parents=[]) -> string
+    (if x[:doc] != nil then x[:doc].."\n\n" else "");
+
+  meta_fragment: (dict x, list parents=[]) -> string
+  	let {
+
+      id: title_id(x, parents);
+
+      type: x[:node];
+
+      name: match x[:node]
+              'module' -> x[:file],
+              default  -> x[:name];
+
+      tags: if x[:node] == "var"
+              parents[0, :name]
+            else
+              "";
+  	}
+  	"\n\n<div
+      data-meta='true'
+      data-meta-id='#{id}'
+      data-meta-type='#{type}'
+      data-meta-name='#{name}'
+	  data-meta-tags='#{tags}'
+    ></div>\n\n";
+
+}
 
 library transform {
 
   transform: (dict x) -> string
-    match x[:node]
-      'module'  -> module_to_markdown(x),
-      'library' -> lib_to_markdown(x),
-      'var'     -> var_to_markdown(x),
-      default   -> core.inspect(x);
-
-  module_to_markdown: (dict x) -> string
-    "---\n"
-    .."title: "..x[:file].."\n"
-    .."---\n\n"
-
-    ..'# module '..x[:file].."\n\n"
-    ..doc_fragment(x)
-    ..meta_fragment(x)
-    ..join(map(x[:components], transform)).."\n";
-
-  lib_to_markdown: (dict x) -> string
-    '## library '..x[:name].."\n\n"
-    ..doc_fragment(x)
-    ..meta_fragment(x)
-    ..join(map(x[:vars], transform)).."\n";
-
-  var_to_markdown: (dict x) -> string
-    '### '..x[:name].."\n\n"
-    ..doc_fragment(x)
-    ..meta_fragment(x);
-
-  doc_fragment: (x) -> string
-    (if x[:doc] != nil then x[:doc].."\n\n" else "");
-
-  meta_fragment: (x) -> string
-    (if x[:meta] != nil then "`````tweakflow\n"..inspect(x[:meta]).."\n`````".."\n\n" else "");
-
+	join(fragments.for_node(x));
 
 }
