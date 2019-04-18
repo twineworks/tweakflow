@@ -24,17 +24,23 @@
 
 package com.twineworks.tweakflow.lang.analysis.constants;
 
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.ops.ConstantOp;
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.ops.ConstantOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.ExpressionOp;
+import com.twineworks.tweakflow.lang.interpreter.ops.FunctionOp;
 import com.twineworks.tweakflow.lang.scope.Symbol;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueProvider;
 
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor implements Visitor {
 
@@ -89,15 +95,47 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
     return node;
   }
 
+  private Value evalConstantFunction(FunctionNode node){
+    Set<ReferenceNode> refs = node.getClosedOverReferences();
+    if (refs.isEmpty()){
+      return Interpreter.evaluateInEmptyScope(node);
+    }
+
+    // we have some closed over references that need resolving to Values
+    IdentityHashMap<ReferenceNode, ValueProvider> closures = new IdentityHashMap<>();
+    for (ReferenceNode reference : node.getClosedOverReferences()) {
+      foldConstantOp(reference);
+      ConstantOp constantOp = (ConstantOp) reference.getOp();
+      closures.put(reference, constantOp.getValue());
+    }
+
+    FunctionOp op = (FunctionOp) node.getOp();
+    return op.evalWithClosures(closures);
+
+  }
+
   private void foldConstantOp(ExpressionNode node){
+    ExpressionOp nodeOp = node.getOp();
+    node.setOp(nodeOp.refresh());
 
-    node.setOp(node.getOp().refresh());
-
-    if (node.getOp().isConstant()){
+    if (nodeOp.isConstant()){
       try {
-        node.setOp(new ConstantOp(constantPool.get(Interpreter.evaluateInEmptyScope(node))));
+        Value c;
+        if (nodeOp instanceof ConstantOp){
+          c = ((ConstantOp) nodeOp).getValue();
+        }
+        // give functions their closed over references, deal with recursion
+        else if (node instanceof FunctionNode && nodeOp instanceof FunctionOp){
+          c = evalConstantFunction((FunctionNode) node);
+        }
+        else{
+          c = Interpreter.evaluateInEmptyScope(node);
+        }
+        node.setOp(new ConstantOp(constantPool.get(c)));
       }
-      catch(LangException ignored){}
+      catch(LangException ignored){
+//        ignored.printDigestMessageAndStackTrace();
+      }
     }
   }
 
@@ -208,6 +246,13 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
   }
 
   @Override
+  public ExpressionNode visit(StringConcatNode node) {
+    super.visit(node);
+    foldConstantOp(node);
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(DivNode node) {
     super.visit(node);
     foldConstantOp(node);
@@ -276,4 +321,7 @@ public class ConstantOpsFoldingVisitor extends AExpressionDescendingVisitor impl
     foldConstantOp(node);
     return node;
   }
+
+
+
 }
