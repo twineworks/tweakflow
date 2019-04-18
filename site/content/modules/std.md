@@ -2,7 +2,7 @@
 title: std.tf
 ---
 
-# module std.tf
+# module std.tf{#std}
 
 The standard module contains basic functions for general computing tasks.
 
@@ -11,11 +11,31 @@ All samples run in the interactive tweakflow REPL which you can launch using:
 java -jar tweakflow-{{< version >}}.jar repl
 ```
 
-## library core
+
+
+<div
+      data-meta='true'
+      data-meta-id='std'
+      data-meta-type='module'
+      data-meta-name='std.tf'
+	  data-meta-tags=''
+    ></div>
+
+## library core{#core}
 
 The core library contains utility functions to process values at a basic level.
 
-### id
+
+
+<div
+      data-meta='true'
+      data-meta-id='core'
+      data-meta-type='library'
+      data-meta-name='core'
+	  data-meta-tags=''
+    ></div>
+
+### id{#core-id}
 
 `(any x) -> any`
 
@@ -34,7 +54,17 @@ Identity function. Returns `x`.
 nil
 ```
 
-### inspect
+
+
+<div
+      data-meta='true'
+      data-meta-id='core-id'
+      data-meta-type='var'
+      data-meta-name='id'
+	  data-meta-tags='core'
+    ></div>
+
+### inspect{#core-inspect}
 
 `(x) -> string`
 
@@ -64,7 +94,17 @@ If `x` is not a function, and contains no functions as children `x == core.eval(
 ```
 
 
-### present?
+
+
+<div
+      data-meta='true'
+      data-meta-id='core-inspect'
+      data-meta-type='var'
+      data-meta-name='inspect'
+	  data-meta-tags='core'
+    ></div>
+
+### present?{#core-present?}
 
 `(x) -> boolean`
 
@@ -78,7 +118,17 @@ true
 false
 ```
 
-### nil?
+
+
+<div
+      data-meta='true'
+      data-meta-id='core-present?'
+      data-meta-type='var'
+      data-meta-name='present?'
+	  data-meta-tags='core'
+    ></div>
+
+### nil?{#core-nil?}
 
 `(x) -> boolean`
 
@@ -92,7 +142,17 @@ false
 true
 ```
 
-### hash
+
+
+<div
+      data-meta='true'
+      data-meta-id='core-nil?'
+      data-meta-type='var'
+      data-meta-name='nil?'
+	  data-meta-tags='core'
+    ></div>
+
+### hash{#core-hash}
 
 `(x) -> long`
 
@@ -112,7 +172,17 @@ Returns a hashcode of `x`. Values that compare as equal are guaranteed to have t
 66614367
 ```
 
-### eval
+
+
+<div
+      data-meta='true'
+      data-meta-id='core-hash'
+      data-meta-type='var'
+      data-meta-name='hash'
+	  data-meta-tags='core'
+    ></div>
+
+### eval{#core-eval}
 
 `(string x) -> any`
 
@@ -149,11 +219,30 @@ ERROR:
 ```
 
 
-## library strings
+
+<div
+      data-meta='true'
+      data-meta-id='core-eval'
+      data-meta-type='var'
+      data-meta-name='eval'
+	  data-meta-tags='core'
+    ></div>
+
+## library strings{#strings}
 
 The strings library contains basic functions for text processing.
 
-### concat
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings'
+      data-meta-type='library'
+      data-meta-name='strings'
+	  data-meta-tags=''
+    ></div>
+
+### concat{#strings-concat}
 
 `(list xs) -> string`
 
@@ -181,7 +270,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### length
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	  data-meta-tags='strings'
+    ></div>
+
+### length{#strings-length}
 
 `(string x) -> long`
 
@@ -200,7 +299,17 @@ Returns `nil` if `x` is `nil`.
 2
 ```
 
-### substring
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-length'
+      data-meta-type='var'
+      data-meta-name='length'
+	  data-meta-tags='strings'
+    ></div>
+
+### substring{#strings-substring}
 
 `(string x, long start=0, long end=nil) -> string`
 
@@ -252,7 +361,17 @@ ERROR:
   message: start must not be negative: -4
 ```
 
-### replace
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-substring'
+      data-meta-type='var'
+      data-meta-name='substring'
+	  data-meta-tags='strings'
+    ></div>
+
+### replace{#strings-replace}
 
 `(string x, string search, string replace) -> string`
 
@@ -279,7 +398,17 @@ Returns `nil` if any argument is `nil`.
 "hello world"
 ```
 
-### join
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-replace'
+      data-meta-type='var'
+      data-meta-name='replace'
+	  data-meta-tags='strings'
+    ></div>
+
+### join{#strings-join}
 
 `(list xs, string s="") -> string`
 
@@ -314,7 +443,17 @@ nil
 
 ```
 
-### trim
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-join'
+      data-meta-type='var'
+      data-meta-name='join'
+	  data-meta-tags='strings'
+    ></div>
+
+### trim{#strings-trim}
 
 `(string x) -> string`
 
@@ -333,7 +472,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### lower_case
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-trim'
+      data-meta-type='var'
+      data-meta-name='trim'
+	  data-meta-tags='strings'
+    ></div>
+
+### lower_case{#strings-lower_case}
 
 `(string x, string lang='en-US') -> string`
 
@@ -352,7 +501,17 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 "tıtle" # note the dotless i in turkish language
 ```
 
-### upper_case
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-lower_case'
+      data-meta-type='var'
+      data-meta-name='lower_case'
+	  data-meta-tags='strings'
+    ></div>
+
+### upper_case{#strings-upper_case}
 
 `(string x, string lang='en-US') -> string`
 
@@ -371,9 +530,24 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 "TİTLE" # note the dotted upper case I in turkish language
 ```
 
-### comparator
 
-`(string lang='en-US', boolean case_sensitive=true) -> function`
+
+<div
+      data-meta='true'
+      data-meta-id='strings-upper_case'
+      data-meta-type='var'
+      data-meta-name='upper_case'
+	  data-meta-tags='strings'
+    ></div>
+
+### comparator{#strings-comparator}
+
+```
+(
+  string lang='en-US',
+  boolean case_sensitive=true
+) -> function
+```
 
 Returns a function `f (string a, string b) -> long` that compares two strings `a` and `b` according to conventions appropriate for the given language tag.
 If `case_sensitive` is `true`, lower case characters precede their upper case counterparts.
@@ -407,7 +581,17 @@ function
 [nil, "Bar", "bar", "Foo", "foo"]
 ```
 
-### chars
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-comparator'
+      data-meta-type='var'
+      data-meta-name='comparator'
+	  data-meta-tags='strings'
+    ></div>
+
+### chars{#strings-chars}
 
 `(string x) -> list`
 
@@ -429,7 +613,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### code_points
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-chars'
+      data-meta-type='var'
+      data-meta-name='chars'
+	  data-meta-tags='strings'
+    ></div>
+
+### code_points{#strings-code_points}
 
 `(string x) -> list`
 
@@ -451,7 +645,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### of_code_points
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-code_points'
+      data-meta-type='var'
+      data-meta-name='code_points'
+	  data-meta-tags='strings'
+    ></div>
+
+### of_code_points{#strings-of_code_points}
 
 `(list xs) -> string`
 
@@ -477,7 +681,17 @@ valid code point.
 nil
 ```
 
-### split
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-of_code_points'
+      data-meta-type='var'
+      data-meta-name='of_code_points'
+	  data-meta-tags='strings'
+    ></div>
+
+### split{#strings-split}
 
 `(string x, string s=" ") -> list`
 
@@ -500,7 +714,17 @@ Returns `nil` if `x` is `nil` or `s` is `nil`.
 ["", "foo", "", "bar", ""]
 ```
 
-### starts_with?
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-split'
+      data-meta-type='var'
+      data-meta-name='split'
+	  data-meta-tags='strings'
+    ></div>
+
+### starts_with?{#strings-starts_with?}
 
 `(string x, string init) -> boolean`
 
@@ -528,7 +752,17 @@ nil
 nil
 ```
 
-### ends_with?
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-starts_with?'
+      data-meta-type='var'
+      data-meta-name='starts_with?'
+	  data-meta-tags='strings'
+    ></div>
+
+### ends_with?{#strings-ends_with?}
 
 `(string x, string tail) -> boolean`
 
@@ -556,7 +790,17 @@ nil
 nil
 ```
 
-### index_of
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-ends_with?'
+      data-meta-type='var'
+      data-meta-name='ends_with?'
+	  data-meta-tags='strings'
+    ></div>
+
+### index_of{#strings-index_of}
 
 `(string x, string sub, long start=0) -> long`
 
@@ -584,7 +828,17 @@ Returns `nil` if any argument is `nil`.
 -1
 ```
 
-### last_index_of
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+	  data-meta-tags='strings'
+    ></div>
+
+### last_index_of{#strings-last_index_of}
 
 `(string x, string sub, long end=nil) -> long`
 
@@ -616,7 +870,17 @@ nil
 nil
 ```
 
-### char_at
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+	  data-meta-tags='strings'
+    ></div>
+
+### char_at{#strings-char_at}
 
 `(string x, long i) -> string`
 
@@ -635,7 +899,17 @@ Returns `nil` if `x` is `nil`, `i` is `nil`, or `i` is out of bounds: `i<0`, `i>
 nil
 ```
 
-### code_point_at
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-char_at'
+      data-meta-type='var'
+      data-meta-name='char_at'
+	  data-meta-tags='strings'
+    ></div>
+
+### code_point_at{#strings-code_point_at}
 
 `(string x, long i) -> long`
 
@@ -655,12 +929,31 @@ nil
 ```
 
 
-## library regex
+
+<div
+      data-meta='true'
+      data-meta-id='strings-code_point_at'
+      data-meta-type='var'
+      data-meta-name='code_point_at'
+	  data-meta-tags='strings'
+    ></div>
+
+## library regex{#regex}
 
 The regex library provides functions to work with regular expressions.
 Pattern syntax is that of the [Java regular expression language](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html).
 
-### matching
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex'
+      data-meta-type='library'
+      data-meta-name='regex'
+	  data-meta-tags=''
+    ></div>
+
+### matching{#regex-matching}
 
 `(string pattern) -> function`
 
@@ -684,7 +977,17 @@ false
 nil
 ```
 
-### capturing
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex-matching'
+      data-meta-type='var'
+      data-meta-name='matching'
+	  data-meta-tags='regex'
+    ></div>
+
+### capturing{#regex-capturing}
 
 `(string pattern) -> function`
 
@@ -720,7 +1023,17 @@ function
 nil
 ```
 
-### scanning
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex-capturing'
+      data-meta-type='var'
+      data-meta-name='capturing'
+	  data-meta-tags='regex'
+    ></div>
+
+### scanning{#regex-scanning}
 
 `(string pattern) -> function`
 
@@ -757,7 +1070,17 @@ function
 nil
 ```
 
-### splitting
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex-scanning'
+      data-meta-type='var'
+      data-meta-name='scanning'
+	  data-meta-tags='regex'
+    ></div>
+
+### splitting{#regex-splitting}
 
 `(string pattern, long limit=nil) -> function`
 
@@ -807,7 +1130,17 @@ function
 nil
 ```
 
-### replacing
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex-splitting'
+      data-meta-type='var'
+      data-meta-name='splitting'
+	  data-meta-tags='regex'
+    ></div>
+
+### replacing{#regex-replacing}
 
 `(string pattern, string replace) -> function`
 
@@ -840,7 +1173,17 @@ function
 "I need $1, just $1 more."
 ```
 
-### quote
+
+
+<div
+      data-meta='true'
+      data-meta-id='regex-replacing'
+      data-meta-type='var'
+      data-meta-name='replacing'
+	  data-meta-tags='regex'
+    ></div>
+
+### quote{#regex-quote}
 
 `(string x) -> string`
 
@@ -866,11 +1209,30 @@ function
 ```
 
 
-## library data
+
+<div
+      data-meta='true'
+      data-meta-id='regex-quote'
+      data-meta-type='var'
+      data-meta-name='quote'
+	  data-meta-tags='regex'
+    ></div>
+
+## library data{#data}
 
 The data library contains functions for manipulation of lists and dictionaries.
 
-### size
+
+
+<div
+      data-meta='true'
+      data-meta-id='data'
+      data-meta-type='library'
+      data-meta-name='data'
+	  data-meta-tags=''
+    ></div>
+
+### size{#data-size}
 
 `(any xs) -> long`
 
@@ -902,7 +1264,17 @@ ERROR:
   message: size is not defined for type string
 ```
 
-### empty?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-size'
+      data-meta-type='var'
+      data-meta-name='size'
+	  data-meta-tags='data'
+    ></div>
+
+### empty?{#data-empty?}
 
 `(any xs) -> boolean`
 
@@ -934,7 +1306,17 @@ ERROR:
   message: empty? is not defined for type string
 ```
 
-### get
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-empty?'
+      data-meta-type='var'
+      data-meta-name='empty?'
+	  data-meta-tags='data'
+    ></div>
+
+### get{#data-get}
 
 `(xs, key, not_found) ->`
 
@@ -967,7 +1349,17 @@ nil
 nil
 ```
 
-### put
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-get'
+      data-meta-type='var'
+      data-meta-name='get'
+	  data-meta-tags='data'
+    ></div>
+
+### put{#data-put}
 
 `(xs, key, value) ->`
 
@@ -1014,7 +1406,17 @@ Throws an error if `xs` is a `dict` and `key` cannot be cast to a `string`.
 nil
 ```
 
-### get_in
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-put'
+      data-meta-type='var'
+      data-meta-name='put'
+	  data-meta-tags='data'
+    ></div>
+
+### get_in{#data-get_in}
 
 `(any xs, list keys, any not_found) ->`
 
@@ -1056,7 +1458,17 @@ ERROR:
   message: Cannot cast c to long
 ```
 
-### put_in
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-get_in'
+      data-meta-type='var'
+      data-meta-name='get_in'
+	  data-meta-tags='data'
+    ></div>
+
+### put_in{#data-put_in}
 
 `(xs, list keys, value) ->`
 
@@ -1119,7 +1531,17 @@ data.put_in(
 nil
 ```
 
-### update
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-put_in'
+      data-meta-type='var'
+      data-meta-name='put_in'
+	  data-meta-tags='data'
+    ></div>
+
+### update{#data-update}
 
 `(xs, key, function f)`
 
@@ -1151,7 +1573,17 @@ Throws an error if `xs` is a `dict` and `key` cannot be cast to a `string`.
 nil
 ```
 
-### update_in
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-update'
+      data-meta-type='var'
+      data-meta-name='update'
+	  data-meta-tags='data'
+    ></div>
+
+### update_in{#data-update_in}
 
 `(xs, list keys, function f) ->`
 
@@ -1207,7 +1639,17 @@ data.update_in(
 nil
 ```
 
-### keys
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-update_in'
+      data-meta-type='var'
+      data-meta-name='update_in'
+	  data-meta-tags='data'
+    ></div>
+
+### keys{#data-keys}
 
 `(xs) -> list `
 
@@ -1240,7 +1682,17 @@ ERROR:
 
 ```
 
-### has?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-keys'
+      data-meta-type='var'
+      data-meta-name='keys'
+	  data-meta-tags='data'
+    ></div>
+
+### has?{#data-has?}
 
 `(xs, key) -> boolean`
 
@@ -1280,7 +1732,17 @@ ERROR:
 true
 ```
 
-### values
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-has?'
+      data-meta-type='var'
+      data-meta-name='has?'
+	  data-meta-tags='data'
+    ></div>
+
+### values{#data-values}
 
 `(xs) -> list `
 
@@ -1312,7 +1774,17 @@ ERROR:
   message: values is not defined for type string
 ```
 
-### entries
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-values'
+      data-meta-type='var'
+      data-meta-name='values'
+	  data-meta-tags='data'
+    ></div>
+
+### entries{#data-entries}
 
 `(dict xs) -> list`
 
@@ -1343,7 +1815,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### prepend
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-entries'
+      data-meta-type='var'
+      data-meta-name='entries'
+	  data-meta-tags='data'
+    ></div>
+
+### prepend{#data-prepend}
 
 `(x, list xs) -> list`
 
@@ -1362,7 +1844,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### append
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-prepend'
+      data-meta-type='var'
+      data-meta-name='prepend'
+	  data-meta-tags='data'
+    ></div>
+
+### append{#data-append}
 
 `(list xs, x) -> list`
 
@@ -1381,7 +1873,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### find
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-append'
+      data-meta-type='var'
+      data-meta-name='append'
+	  data-meta-tags='data'
+    ></div>
+
+### find{#data-find}
 
 `(list xs, function p) ->`
 
@@ -1417,7 +1919,17 @@ nil
   message: predicate function cannot be nil
 ```
 
-### find_index
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-find'
+      data-meta-type='var'
+      data-meta-name='find'
+	  data-meta-tags='data'
+    ></div>
+
+### find_index{#data-find_index}
 
 `(list xs, function p) -> long`
 
@@ -1454,7 +1966,17 @@ ERROR:
   message: predicate function cannot be nil
 ```
 
-### insert
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-find_index'
+      data-meta-type='var'
+      data-meta-name='find_index'
+	  data-meta-tags='data'
+    ></div>
+
+### insert{#data-insert}
 
 `(list xs, long i, v) ->`
 
@@ -1490,7 +2012,17 @@ ERROR:
 
 ```
 
-### delete
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-insert'
+      data-meta-type='var'
+      data-meta-name='insert'
+	  data-meta-tags='data'
+    ></div>
+
+### delete{#data-delete}
 
 `(xs, key) -> `
 
@@ -1532,7 +2064,17 @@ ERROR:
   message: cannot delete index -2
 ```
 
-### select
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-delete'
+      data-meta-type='var'
+      data-meta-name='delete'
+	  data-meta-tags='data'
+    ></div>
+
+### select{#data-select}
 
 `(xs, list keys, not_found) ->`
 
@@ -1568,7 +2110,17 @@ nil
 nil
 ```
 
-### filter
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-select'
+      data-meta-type='var'
+      data-meta-name='select'
+	  data-meta-tags='data'
+    ></div>
+
+### filter{#data-filter}
 
 `(xs, function p) ->`
 
@@ -1616,7 +2168,17 @@ ERROR:
   message: filter is not defined for type long
 ```
 
-### shuffle
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-filter'
+      data-meta-type='var'
+      data-meta-name='filter'
+	  data-meta-tags='data'
+    ></div>
+
+### shuffle{#data-shuffle}
 
 `(list xs, seed) -> list`
 
@@ -1642,7 +2204,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### unique
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-shuffle'
+      data-meta-type='var'
+      data-meta-name='shuffle'
+	  data-meta-tags='data'
+    ></div>
+
+### unique{#data-unique}
 
 `(list xs) -> list `
 
@@ -1671,7 +2243,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### range
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-unique'
+      data-meta-type='var'
+      data-meta-name='unique'
+	  data-meta-tags='data'
+    ></div>
+
+### range{#data-range}
 
 `(long start=0, long end=0) -> list`
 
@@ -1701,7 +2283,17 @@ nil
 nil
 ```
 
-### any?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-range'
+      data-meta-type='var'
+      data-meta-name='range'
+	  data-meta-tags='data'
+    ></div>
+
+### any?{#data-any?}
 
 `(list xs, function p) -> boolean`
 
@@ -1735,7 +2327,17 @@ false
 nil
 ```
 
-### none?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-any?'
+      data-meta-type='var'
+      data-meta-name='any?'
+	  data-meta-tags='data'
+    ></div>
+
+### none?{#data-none?}
 
 `(list xs, function p) -> boolean`
 
@@ -1769,7 +2371,17 @@ true
 nil
 ```
 
-### all?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-none?'
+      data-meta-type='var'
+      data-meta-name='none?'
+	  data-meta-tags='data'
+    ></div>
+
+### all?{#data-all?}
 
 `(list xs, function p) -> boolean`
 
@@ -1805,7 +2417,17 @@ true
 nil
 ```
 
-### init
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-all?'
+      data-meta-type='var'
+      data-meta-name='all?'
+	  data-meta-tags='data'
+    ></div>
+
+### init{#data-init}
 
 `(list xs) -> list`
 
@@ -1828,7 +2450,17 @@ ERROR:
   message: list must not be empty
 ```
 
-### tail
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-init'
+      data-meta-type='var'
+      data-meta-name='init'
+	  data-meta-tags='data'
+    ></div>
+
+### tail{#data-tail}
 
 `(list xs) -> list`
 
@@ -1851,7 +2483,17 @@ ERROR:
   message: list must not be empty
 ```
 
-### head
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-tail'
+      data-meta-type='var'
+      data-meta-name='tail'
+	  data-meta-tags='data'
+    ></div>
+
+### head{#data-head}
 
 `(list xs) -> any`
 
@@ -1874,7 +2516,17 @@ ERROR:
   message: list must not be empty
 ```
 
-### last
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-head'
+      data-meta-type='var'
+      data-meta-name='head'
+	  data-meta-tags='data'
+    ></div>
+
+### last{#data-last}
 
 `(list xs) -> any`
 
@@ -1897,7 +2549,17 @@ ERROR:
   message: list must not be empty
 ```
 
-### slice
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-last'
+      data-meta-type='var'
+      data-meta-name='last'
+	  data-meta-tags='data'
+    ></div>
+
+### slice{#data-slice}
 
 `(list xs, long start=0, long end=nil) -> list`
 
@@ -1929,7 +2591,17 @@ nil
 
 ```
 
-### slices
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+	  data-meta-tags='data'
+    ></div>
+
+### slices{#data-slices}
 
 `(list xs, long s=1) -> list`
 
@@ -1963,7 +2635,17 @@ ERROR:
 }
 ```
 
-### reverse
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-slices'
+      data-meta-type='var'
+      data-meta-name='slices'
+	  data-meta-tags='data'
+    ></div>
+
+### reverse{#data-reverse}
 
 `(list xs) -> list`
 
@@ -1979,7 +2661,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### sort
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-reverse'
+      data-meta-type='var'
+      data-meta-name='reverse'
+	  data-meta-tags='data'
+    ></div>
+
+### sort{#data-sort}
 
 `(list xs, function f) -> list`
 
@@ -2015,7 +2707,17 @@ Returns `nil` if any argument is `nil`.
 }]
 ```
 
-### repeat
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-sort'
+      data-meta-type='var'
+      data-meta-name='sort'
+	  data-meta-tags='data'
+    ></div>
+
+### repeat{#data-repeat}
 
 `(long n, x) -> list`
 
@@ -2041,7 +2743,17 @@ ERROR:
   message: Cannot repeat -2 times
 ```
 
-### concat
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-repeat'
+      data-meta-type='var'
+      data-meta-name='repeat'
+	  data-meta-tags='data'
+    ></div>
+
+### concat{#data-concat}
 
 `(list lists) -> list`
 
@@ -2071,7 +2783,17 @@ ERROR:
   message: cannot concat type string
 ```
 
-### merge
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	  data-meta-tags='data'
+    ></div>
+
+### merge{#data-merge}
 
 `(list dicts) -> dict`
 
@@ -2109,7 +2831,17 @@ ERROR:
   message: cannot merge type string
 ```
 
-### take
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-merge'
+      data-meta-type='var'
+      data-meta-name='merge'
+	  data-meta-tags='data'
+    ></div>
+
+### take{#data-take}
 
 `(long n, list xs) -> list`
 
@@ -2139,7 +2871,17 @@ nil
 nil
 ```
 
-### take_while
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-take'
+      data-meta-type='var'
+      data-meta-name='take'
+	  data-meta-tags='data'
+    ></div>
+
+### take_while{#data-take_while}
 
 `(function p, list xs) -> list`
 
@@ -2165,7 +2907,17 @@ Throws an error if `p` is `nil`.
 nil
 ```
 
-### take_until
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-take_while'
+      data-meta-type='var'
+      data-meta-name='take_while'
+	  data-meta-tags='data'
+    ></div>
+
+### take_until{#data-take_until}
 
 `(function p, list xs) -> list`
 
@@ -2194,7 +2946,17 @@ Throws an error if `p` is `nil`.
 nil
 ```
 
-### drop
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-take_until'
+      data-meta-type='var'
+      data-meta-name='take_until'
+	  data-meta-tags='data'
+    ></div>
+
+### drop{#data-drop}
 
 `(long n, list xs) -> list`
 
@@ -2224,7 +2986,17 @@ nil
 nil
 ```
 
-### drop_while
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-drop'
+      data-meta-type='var'
+      data-meta-name='drop'
+	  data-meta-tags='data'
+    ></div>
+
+### drop_while{#data-drop_while}
 
 `(function p, list xs) -> list`
 
@@ -2247,7 +3019,17 @@ nil
 
 ```
 
-### drop_until
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-drop_while'
+      data-meta-type='var'
+      data-meta-name='drop_while'
+	  data-meta-tags='data'
+    ></div>
+
+### drop_until{#data-drop_until}
 
 `(function p, list xs) -> list`
 
@@ -2273,7 +3055,17 @@ nil
 
 ```
 
-### contains?
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-drop_until'
+      data-meta-type='var'
+      data-meta-name='drop_until'
+	  data-meta-tags='data'
+    ></div>
+
+### contains?{#data-contains?}
 
 `(xs, x) -> boolean`
 
@@ -2316,7 +3108,17 @@ ERROR:
   ...
 ```
 
-### index_of
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-contains?'
+      data-meta-type='var'
+      data-meta-name='contains?'
+	  data-meta-tags='data'
+    ></div>
+
+### index_of{#data-index_of}
 
 `(list xs, x, long start=0) -> long`
 
@@ -2357,7 +3159,17 @@ nil
 nil
 ```
 
-### last_index_of
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+	  data-meta-tags='data'
+    ></div>
+
+### last_index_of{#data-last_index_of}
 
 `(list xs, x, long end=nil) -> long`
 
@@ -2402,7 +3214,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### key_of
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+	  data-meta-tags='data'
+    ></div>
+
+### key_of{#data-key_of}
 
 `(dict xs, x) -> string`
 
@@ -2439,7 +3261,17 @@ nil
 nil
 ```
 
-### flatten
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-key_of'
+      data-meta-type='var'
+      data-meta-name='key_of'
+	  data-meta-tags='data'
+    ></div>
+
+### flatten{#data-flatten}
 
 `(list xs) -> list`
 
@@ -2465,7 +3297,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### map
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-flatten'
+      data-meta-type='var'
+      data-meta-name='flatten'
+	  data-meta-tags='data'
+    ></div>
+
+### map{#data-map}
 
 `(xs, function f) -> any`
 
@@ -2516,7 +3358,17 @@ ERROR:
   message: map is not defined for type string
 ```
 
-### flatmap
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-map'
+      data-meta-type='var'
+      data-meta-name='map'
+	  data-meta-tags='data'
+    ></div>
+
+### flatmap{#data-flatmap}
 
 `(xs, function f) -> list`
 
@@ -2552,7 +3404,17 @@ ERROR:
   ...
 ```
 
-### mapcat
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-flatmap'
+      data-meta-type='var'
+      data-meta-name='flatmap'
+	  data-meta-tags='data'
+    ></div>
+
+### mapcat{#data-mapcat}
 
 `(xs, function f) -> list`
 
@@ -2588,7 +3450,17 @@ ERROR:
   ...
 ```
 
-### zip
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-mapcat'
+      data-meta-type='var'
+      data-meta-name='mapcat'
+	  data-meta-tags='data'
+    ></div>
+
+### zip{#data-zip}
 
 `(list xs, list ys) -> list`
 
@@ -2613,7 +3485,17 @@ nil
 nil
 ```
 
-### zip_dict
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-zip'
+      data-meta-type='var'
+      data-meta-name='zip'
+	  data-meta-tags='data'
+    ></div>
+
+### zip_dict{#data-zip_dict}
 
 `(list keys, list values) -> dict`
 
@@ -2661,7 +3543,17 @@ nil
 nil
 ```
 
-### interpose
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-zip_dict'
+      data-meta-type='var'
+      data-meta-name='zip_dict'
+	  data-meta-tags='data'
+    ></div>
+
+### interpose{#data-interpose}
 
 `(list xs, s) -> list`
 
@@ -2683,7 +3575,17 @@ Returns `nil` if `xs` is `nil`.
 nil
 ```
 
-### reduce
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-interpose'
+      data-meta-type='var'
+      data-meta-name='interpose'
+	  data-meta-tags='data'
+    ></div>
+
+### reduce{#data-reduce}
 
 `(xs, init, function f) -> any`
 
@@ -2741,7 +3643,17 @@ ERROR:
   ...
 ```
 
-### reduce_until
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-reduce'
+      data-meta-type='var'
+      data-meta-name='reduce'
+	  data-meta-tags='data'
+    ></div>
+
+### reduce_until{#data-reduce_until}
 
 `(xs, init, function p, function f) -> any`
 
@@ -2791,7 +3703,17 @@ ERROR:
   message: reduce_until is not defined for type string
 ```
 
-### reduce_while
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-reduce_until'
+      data-meta-type='var'
+      data-meta-name='reduce_until'
+	  data-meta-tags='data'
+    ></div>
+
+### reduce_while{#data-reduce_while}
 
 `(xs, init, function p, function f) -> any`
 
@@ -2842,17 +3764,46 @@ ERROR:
 ```
 
 
-## library time
+
+<div
+      data-meta='true'
+      data-meta-id='data-reduce_while'
+      data-meta-type='var'
+      data-meta-name='reduce_while'
+	  data-meta-tags='data'
+    ></div>
+
+## library time{#time}
 
 The time library provides functions for processing datetime values.
 
-### epoch
+
+
+<div
+      data-meta='true'
+      data-meta-id='time'
+      data-meta-type='library'
+      data-meta-name='time'
+	  data-meta-tags=''
+    ></div>
+
+### epoch{#time-epoch}
 
 `datetime`
 
 The instant of time at `1970-01-01T00:00:00Z`
 
-### of
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-epoch'
+      data-meta-type='var'
+      data-meta-name='epoch'
+	  data-meta-tags='time'
+    ></div>
+
+### of{#time-of}
 
 
 ```tweakflow
@@ -2893,7 +3844,17 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### at
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-of'
+      data-meta-type='var'
+      data-meta-name='of'
+	  data-meta-tags='time'
+    ></div>
+
+### at{#time-at}
 
 
 ```tweakflow
@@ -2928,9 +3889,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### seconds_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-at'
+      data-meta-type='var'
+      data-meta-name='at'
+	  data-meta-tags='time'
+    ></div>
+
+### seconds_between{#time-seconds_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full seconds between given datetimes.
 
@@ -2955,9 +3931,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### minutes_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-seconds_between'
+      data-meta-type='var'
+      data-meta-name='seconds_between'
+	  data-meta-tags='time'
+    ></div>
+
+### minutes_between{#time-minutes_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full minutes between given datetimes.
 
@@ -2982,9 +3973,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### hours_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-minutes_between'
+      data-meta-type='var'
+      data-meta-name='minutes_between'
+	  data-meta-tags='time'
+    ></div>
+
+### hours_between{#time-hours_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full hours between given datetimes.
 
@@ -3009,9 +4015,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### days_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-hours_between'
+      data-meta-type='var'
+      data-meta-name='hours_between'
+	  data-meta-tags='time'
+    ></div>
+
+### days_between{#time-days_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full days between given datetimes.
 
@@ -3036,9 +4057,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### months_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-days_between'
+      data-meta-type='var'
+      data-meta-name='days_between'
+	  data-meta-tags='time'
+    ></div>
+
+### months_between{#time-months_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full months between given datetimes.
 
@@ -3063,9 +4099,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### years_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> long`
+
+<div
+      data-meta='true'
+      data-meta-id='time-months_between'
+      data-meta-type='var'
+      data-meta-name='months_between'
+	  data-meta-tags='time'
+    ></div>
+
+### years_between{#time-years_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> long
+```
 
 Returns the number of full years between given datetimes.
 
@@ -3090,9 +4141,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### period_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> dict`
+
+<div
+      data-meta='true'
+      data-meta-id='time-years_between'
+      data-meta-type='var'
+      data-meta-name='years_between'
+	  data-meta-tags='time'
+    ></div>
+
+### period_between{#time-period_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> dict
+```
 
 Returns a dict with long values on keys `:years`, `:months`, and `:days`, representing a calendar period between two datetimes.
 
@@ -3127,9 +4193,24 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### duration_between
 
-`(datetime start_inclusive, datetime end_exclusive) -> dict`
+
+<div
+      data-meta='true'
+      data-meta-id='time-period_between'
+      data-meta-type='var'
+      data-meta-name='period_between'
+	  data-meta-tags='time'
+    ></div>
+
+### duration_between{#time-duration_between}
+
+```
+(
+  datetime start_inclusive,
+  datetime end_exclusive
+) -> dict
+```
 
 Returns a dict with long values on keys `:seconds`, and `:nano_seconds`, representing a duration between two datetimes.
 
@@ -3168,9 +4249,26 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### add_period
 
-`(datetime start, long years=0, long months=0, long days=0) -> datetime`
+
+<div
+      data-meta='true'
+      data-meta-id='time-duration_between'
+      data-meta-type='var'
+      data-meta-name='duration_between'
+	  data-meta-tags='time'
+    ></div>
+
+### add_period{#time-add_period}
+
+```
+(
+  datetime start,
+  long years=0,
+  long months=0,
+  long days=0
+) -> datetime
+```
 
 Adds a calendar period to the given start datetime and returns the result.
 
@@ -3196,9 +4294,25 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### add_duration
 
-`(datetime start, long seconds=0, long nano_of_second=0) -> datetime`
+
+<div
+      data-meta='true'
+      data-meta-id='time-add_period'
+      data-meta-type='var'
+      data-meta-name='add_period'
+	  data-meta-tags='time'
+    ></div>
+
+### add_duration{#time-add_duration}
+
+```
+(
+  datetime start,
+  long seconds=0,
+  long nano_of_second=0
+) -> datetime
+```
 
 Adds a time duration to the given start datetime and returns the result.
 
@@ -3224,7 +4338,17 @@ Returns `nil` if any argument is `nil`.
 nil
 ```
 
-### year
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-add_duration'
+      data-meta-type='var'
+      data-meta-name='add_duration'
+	  data-meta-tags='time'
+    ></div>
+
+### year{#time-year}
 
 `(datetime x) -> long`
 
@@ -3243,7 +4367,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### month
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-year'
+      data-meta-type='var'
+      data-meta-name='year'
+	  data-meta-tags='time'
+    ></div>
+
+### month{#time-month}
 
 `(datetime x) -> long`
 
@@ -3262,7 +4396,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### day_of_month
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-month'
+      data-meta-type='var'
+      data-meta-name='month'
+	  data-meta-tags='time'
+    ></div>
+
+### day_of_month{#time-day_of_month}
 
 `(datetime x) -> long`
 
@@ -3281,7 +4425,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### day_of_year
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_month'
+      data-meta-type='var'
+      data-meta-name='day_of_month'
+	  data-meta-tags='time'
+    ></div>
+
+### day_of_year{#time-day_of_year}
 
 `(datetime x) -> long`
 
@@ -3300,7 +4454,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### day_of_week
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_year'
+      data-meta-type='var'
+      data-meta-name='day_of_year'
+	  data-meta-tags='time'
+    ></div>
+
+### day_of_week{#time-day_of_week}
 
 `(datetime x) -> long`
 
@@ -3331,7 +4495,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### hour
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-day_of_week'
+      data-meta-type='var'
+      data-meta-name='day_of_week'
+	  data-meta-tags='time'
+    ></div>
+
+### hour{#time-hour}
 
 `(datetime x) -> long`
 
@@ -3350,7 +4524,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### minute
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-hour'
+      data-meta-type='var'
+      data-meta-name='hour'
+	  data-meta-tags='time'
+    ></div>
+
+### minute{#time-minute}
 
 `(datetime x) -> long`
 
@@ -3369,7 +4553,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### second
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-minute'
+      data-meta-type='var'
+      data-meta-name='minute'
+	  data-meta-tags='time'
+    ></div>
+
+### second{#time-second}
 
 `(datetime x) -> long`
 
@@ -3388,7 +4582,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### nano_of_second
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-second'
+      data-meta-type='var'
+      data-meta-name='second'
+	  data-meta-tags='time'
+    ></div>
+
+### nano_of_second{#time-nano_of_second}
 
 `(datetime x) -> long`
 
@@ -3410,7 +4614,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### week_of_year
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-nano_of_second'
+      data-meta-type='var'
+      data-meta-name='nano_of_second'
+	  data-meta-tags='time'
+    ></div>
+
+### week_of_year{#time-week_of_year}
 
 `(datetime x) -> long`
 
@@ -3441,7 +4655,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### offset_seconds
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-week_of_year'
+      data-meta-type='var'
+      data-meta-name='week_of_year'
+	  data-meta-tags='time'
+    ></div>
+
+### offset_seconds{#time-offset_seconds}
 
 `(datetime x) -> long`
 
@@ -3463,7 +4687,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### zone
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-offset_seconds'
+      data-meta-type='var'
+      data-meta-name='offset_seconds'
+	  data-meta-tags='time'
+    ></div>
+
+### zone{#time-zone}
 
 `(datetime x) -> long`
 
@@ -3485,7 +4719,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### with_year
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-zone'
+      data-meta-type='var'
+      data-meta-name='zone'
+	  data-meta-tags='time'
+    ></div>
+
+### with_year{#time-with_year}
 
 `(datetime x, long year) -> datetime`
 
@@ -3515,7 +4759,17 @@ ERROR:
   message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
 ```
 
-### with_month
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_year'
+      data-meta-type='var'
+      data-meta-name='with_year'
+	  data-meta-tags='time'
+    ></div>
+
+### with_month{#time-with_month}
 
 `(datetime x, long month) -> datetime`
 
@@ -3545,7 +4799,17 @@ ERROR:
   message: Invalid value for MonthOfYear (valid values 1 - 12): 13
 ```
 
-### with_day_of_month
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_month'
+      data-meta-type='var'
+      data-meta-name='with_month'
+	  data-meta-tags='time'
+    ></div>
+
+### with_day_of_month{#time-with_day_of_month}
 
 `(datetime x, long day_of_month) -> datetime`
 
@@ -3580,7 +4844,17 @@ ERROR:
   message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
 ```
 
-### with_hour
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_day_of_month'
+      data-meta-type='var'
+      data-meta-name='with_day_of_month'
+	  data-meta-tags='time'
+    ></div>
+
+### with_hour{#time-with_hour}
 
 `(datetime x, long hour) -> datetime`
 
@@ -3611,7 +4885,17 @@ ERROR:
   message: Invalid value for HourOfDay (valid values 0 - 23): 25
 ```
 
-### with_minute
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_hour'
+      data-meta-type='var'
+      data-meta-name='with_hour'
+	  data-meta-tags='time'
+    ></div>
+
+### with_minute{#time-with_minute}
 
 `(datetime x, long minute) -> datetime`
 
@@ -3638,7 +4922,17 @@ ERROR:
   message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
 ```
 
-### with_second
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_minute'
+      data-meta-type='var'
+      data-meta-name='with_minute'
+	  data-meta-tags='time'
+    ></div>
+
+### with_second{#time-with_second}
 
 `(datetime x, long second) -> datetime`
 
@@ -3665,7 +4959,17 @@ ERROR:
   message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
 ```
 
-### with_nano_of_second
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_second'
+      data-meta-type='var'
+      data-meta-name='with_second'
+	  data-meta-tags='time'
+    ></div>
+
+### with_nano_of_second{#time-with_nano_of_second}
 
 `(datetime x, long nano_of_second) -> datetime`
 
@@ -3692,7 +4996,17 @@ ERROR:
   message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
 ```
 
-### with_zone
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_nano_of_second'
+      data-meta-type='var'
+      data-meta-name='with_nano_of_second'
+	  data-meta-tags='time'
+    ></div>
+
+### with_zone{#time-with_zone}
 
 `(datetime x, string tz) -> datetime`
 
@@ -3725,7 +5039,17 @@ ERROR:
   message: unknown time zone id: ---
 ```
 
-### same_instant_at_zone
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-with_zone'
+      data-meta-type='var'
+      data-meta-name='with_zone'
+	  data-meta-tags='time'
+    ></div>
+
+### same_instant_at_zone{#time-same_instant_at_zone}
 
 `(datetime x, string tz) -> datetime`
 
@@ -3758,7 +5082,17 @@ ERROR:
   message: unknown time zone id: ---
 ```
 
-### unix_timestamp
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-same_instant_at_zone'
+      data-meta-type='var'
+      data-meta-name='same_instant_at_zone'
+	  data-meta-tags='time'
+    ></div>
+
+### unix_timestamp{#time-unix_timestamp}
 
 `(datetime x) -> long`
 
@@ -3778,7 +5112,17 @@ Returns `nil` if `x` is `nil`.
 -1496933995
 ```
 
-### unix_timestamp_ms
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp'
+	  data-meta-tags='time'
+    ></div>
+
+### unix_timestamp_ms{#time-unix_timestamp_ms}
 
 `(datetime x) -> long`
 
@@ -3798,7 +5142,17 @@ Returns `nil` if `x` is `nil`.
 -1496933995123
 ```
 
-### of_unix_timestamp
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp_ms'
+	  data-meta-tags='time'
+    ></div>
+
+### of_unix_timestamp{#time-of_unix_timestamp}
 
 `(long s) -> datetime`
 
@@ -3818,7 +5172,17 @@ Returns `nil` if `s` is `nil`.
 1922-07-26T09:00:05Z@UTC
 ```
 
-### of_unix_timestamp_ms
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp'
+	  data-meta-tags='time'
+    ></div>
+
+### of_unix_timestamp_ms{#time-of_unix_timestamp_ms}
 
 `(long ms) -> datetime`
 
@@ -3838,7 +5202,17 @@ Returns `nil` if `ms` is `nil`.
 1922-07-26T09:00:04.237Z@UTC
 ```
 
-### compare
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp_ms'
+	  data-meta-tags='time'
+    ></div>
+
+### compare{#time-compare}
 
 `(datetime a, datetime b) -> long`
 
@@ -3866,7 +5240,17 @@ Assumes `nil` to precede any non-nil datetime.
 [nil, 2017-05-24T00:00:00Z@UTC, 2017-05-24T00:01:00Z@UTC, 2017-05-24T02:00:00Z@UTC, 2017-05-25T00:00:00Z@UTC]
 ```
 
-### formatter
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	  data-meta-tags='time'
+    ></div>
+
+### formatter{#time-formatter}
 
 ```
 (
@@ -3909,7 +5293,17 @@ function
 "Donnerstag, 1 Januar 1970"
 ```
 
-### parser
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+	  data-meta-tags='time'
+    ></div>
+
+### parser{#time-parser}
 
 ```
 (
@@ -3981,7 +5375,17 @@ function
 
 ```
 
-### zones
+
+
+<div
+      data-meta='true'
+      data-meta-id='time-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+	  data-meta-tags='time'
+    ></div>
+
+### zones{#time-zones}
 
 `() -> list`
 
@@ -4001,11 +5405,30 @@ Returns a list of all known time zone ids.
 ```
 
 
-## library math
+
+<div
+      data-meta='true'
+      data-meta-id='time-zones'
+      data-meta-type='var'
+      data-meta-name='zones'
+	  data-meta-tags='time'
+    ></div>
+
+## library math{#math}
 
 The math library contains basic mathematical functions.
 
-### abs
+
+
+<div
+      data-meta='true'
+      data-meta-id='math'
+      data-meta-type='library'
+      data-meta-name='math'
+	  data-meta-tags=''
+    ></div>
+
+### abs{#math-abs}
 
 `(x) -> `
 
@@ -4053,7 +5476,17 @@ ERROR:
   message: cannot determine magnitude of type string
 ```
 
-### rand
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-abs'
+      data-meta-type='var'
+      data-meta-name='abs'
+	  data-meta-tags='math'
+    ></div>
+
+### rand{#math-rand}
 
 `(any seed) -> double`
 
@@ -4110,7 +5543,17 @@ function
 
 ```
 
-### inc
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-rand'
+      data-meta-type='var'
+      data-meta-name='rand'
+	  data-meta-tags='math'
+    ></div>
+
+### inc{#math-inc}
 
 `(any x) -> any`
 
@@ -4147,7 +5590,17 @@ ERROR:
   message: cannot increment type list
 ```
 
-### dec
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-inc'
+      data-meta-type='var'
+      data-meta-name='inc'
+	  data-meta-tags='math'
+    ></div>
+
+### dec{#math-dec}
 
 `(any x) -> any`
 
@@ -4184,7 +5637,17 @@ ERROR:
   message: cannot decrement type list
 ```
 
-### compare
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-dec'
+      data-meta-type='var'
+      data-meta-name='dec'
+	  data-meta-tags='math'
+    ></div>
+
+### compare{#math-compare}
 
 `(a, b) -> long`
 
@@ -4212,7 +5675,17 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 [nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
 ```
 
-### min
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	  data-meta-tags='math'
+    ></div>
+
+### min{#math-min}
 
 `(list xs) -> any`
 
@@ -4241,7 +5714,17 @@ ERROR:
   message: cannot compare type string
 ```
 
-### max
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-min'
+      data-meta-type='var'
+      data-meta-name='min'
+	  data-meta-tags='math'
+    ></div>
+
+### max{#math-max}
 
 `(list xs) -> any`
 
@@ -4270,7 +5753,17 @@ ERROR:
   message: cannot compare type string
 ```
 
-### round
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-max'
+      data-meta-type='var'
+      data-meta-name='max'
+	  data-meta-tags='math'
+    ></div>
+
+### round{#math-round}
 
 `(double x) -> long`
 
@@ -4298,7 +5791,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### ceil
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-round'
+      data-meta-type='var'
+      data-meta-name='round'
+	  data-meta-tags='math'
+    ></div>
+
+### ceil{#math-ceil}
 
 `(double x) -> double`
 
@@ -4320,7 +5823,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### floor
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-ceil'
+      data-meta-type='var'
+      data-meta-name='ceil'
+	  data-meta-tags='math'
+    ></div>
+
+### floor{#math-floor}
 
 `(double x) -> double`
 
@@ -4342,7 +5855,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### NaN?
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-floor'
+      data-meta-type='var'
+      data-meta-name='floor'
+	  data-meta-tags='math'
+    ></div>
+
+### NaN?{#math-NaN?}
 
 `(double x) -> boolean`
 
@@ -4359,7 +5882,17 @@ true
 false
 ```
 
-### sqrt
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-NaN?'
+      data-meta-type='var'
+      data-meta-name='NaN?'
+	  data-meta-tags='math'
+    ></div>
+
+### sqrt{#math-sqrt}
 
 `(double x) -> double`
 
@@ -4380,7 +5913,17 @@ NaN
 nil
 ```
 
-### sin
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-sqrt'
+      data-meta-type='var'
+      data-meta-name='sqrt'
+	  data-meta-tags='math'
+    ></div>
+
+### sin{#math-sin}
 
 `(double x) -> double`
 
@@ -4399,7 +5942,17 @@ Returns `nil` if `x` is `nil`.
 0.8414709848078965
 ```
 
-### cos
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-sin'
+      data-meta-type='var'
+      data-meta-name='sin'
+	  data-meta-tags='math'
+    ></div>
+
+### cos{#math-cos}
 
 `(double x) -> double`
 
@@ -4421,7 +5974,17 @@ Returns `nil` if `x` is `nil`.
 0.5403023058681398
 ```
 
-### tan
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-cos'
+      data-meta-type='var'
+      data-meta-name='cos'
+	  data-meta-tags='math'
+    ></div>
+
+### tan{#math-tan}
 
 `(double x) -> double`
 
@@ -4440,7 +6003,17 @@ Returns `nil` if `x` is `nil`.
 0.9999999999999999
 ```
 
-### asin
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-tan'
+      data-meta-type='var'
+      data-meta-name='tan'
+	  data-meta-tags='math'
+    ></div>
+
+### asin{#math-asin}
 
 `(double x) -> double`
 
@@ -4459,7 +6032,17 @@ Returns `nil` if `x` is `nil`.
 1.5707963267948966
 ```
 
-### acos
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-asin'
+      data-meta-type='var'
+      data-meta-name='asin'
+	  data-meta-tags='math'
+    ></div>
+
+### acos{#math-acos}
 
 `(double x) -> double`
 
@@ -4481,7 +6064,17 @@ Returns `nil` if `x` is `nil`.
 3.141592653589793
 ```
 
-### atan
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-acos'
+      data-meta-type='var'
+      data-meta-name='acos'
+	  data-meta-tags='math'
+    ></div>
+
+### atan{#math-atan}
 
 `(double x) -> double`
 
@@ -4500,7 +6093,17 @@ Returns `nil` if `x` is `nil`.
 0.7853981633974483
 ```
 
-### log
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-atan'
+      data-meta-type='var'
+      data-meta-name='atan'
+	  data-meta-tags='math'
+    ></div>
+
+### log{#math-log}
 
 `(double x) -> double`
 
@@ -4522,7 +6125,17 @@ Returns `nil` if `x` is `nil`.
 2.0
 ```
 
-### log10
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-log'
+      data-meta-type='var'
+      data-meta-name='log'
+	  data-meta-tags='math'
+    ></div>
+
+### log10{#math-log10}
 
 `(double x) -> double`
 
@@ -4544,7 +6157,17 @@ Returns `nil` if `x` is `nil`.
 2.0
 ```
 
-### bit_count
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-log10'
+      data-meta-type='var'
+      data-meta-name='log10'
+	  data-meta-tags='math'
+    ></div>
+
+### bit_count{#math-bit_count}
 
 `(long x) -> long`
 
@@ -4566,7 +6189,17 @@ Returns `nil` if `x` is `nil`.
 nil
 ```
 
-### formatter
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-bit_count'
+      data-meta-type='var'
+      data-meta-name='bit_count'
+	  data-meta-tags='math'
+    ></div>
+
+### formatter{#math-formatter}
 
 ```
 (
@@ -4579,7 +6212,7 @@ nil
 
 Returns a function `f` that accepts a single `long` or `double` parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html),
-[decimal_symbols](#decimal-symbols),
+[decimal_symbols](#locale-decimal_symbols),
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
 [always_show_decimal_separator](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html#setDecimalSeparatorAlwaysShown-boolean-) flag.
 
@@ -4624,7 +6257,17 @@ std.tf> f(648722)
 "६४८,७२२"
 ```
 
-### parser
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+	  data-meta-tags='math'
+    ></div>
+
+### parser{#math-parser}
 
 ```
 (
@@ -4635,7 +6278,7 @@ std.tf> f(648722)
 ```
 
 Returns a function `f` that accepts a single string parameter `x` and returns a parsed numeric value as specified by the supplied
-[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and [decimal_symbols](#decimal-symbols).
+[pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) and [decimal_symbols](#locale-decimal_symbols).
 
 Uses `en-US` decimal symbols if `decimal_symbols` is `nil`.
 
@@ -4673,29 +6316,88 @@ function
 103
 ```
 
-### e
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+	  data-meta-tags='math'
+    ></div>
+
+### e{#math-e}
 
 The double value that is closer than any other to `e`, the base of the natural logarithms.
 
-### pi
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-e'
+      data-meta-type='var'
+      data-meta-name='e'
+	  data-meta-tags='math'
+    ></div>
+
+### pi{#math-pi}
 
 The double value that is closer than any other to `pi`, the ratio of the circumference of a circle to its diameter.
 
-### min_long
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-pi'
+      data-meta-type='var'
+      data-meta-name='pi'
+	  data-meta-tags='math'
+    ></div>
+
+### min_long{#math-min_long}
 
 The smallest representable long value: `-9223372036854775808`.
 
-### max_long
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-min_long'
+      data-meta-type='var'
+      data-meta-name='min_long'
+	  data-meta-tags='math'
+    ></div>
+
+### max_long{#math-max_long}
 
 The largest representable long value: `9223372036854775807`.
 
 
-## library fun
+
+<div
+      data-meta='true'
+      data-meta-id='math-max_long'
+      data-meta-type='var'
+      data-meta-name='max_long'
+	  data-meta-tags='math'
+    ></div>
+
+## library fun{#fun}
 
 The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
 provide functionality similar to control-flow features in other languages.
 
-### times
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun'
+      data-meta-type='library'
+      data-meta-name='fun'
+	  data-meta-tags=''
+    ></div>
+
+### times{#fun-times}
 
 `(long n, any x, function f) -> any`
 
@@ -4733,7 +6435,17 @@ function
 [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 ```
 
-### until
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-times'
+      data-meta-type='var'
+      data-meta-name='times'
+	  data-meta-tags='fun'
+    ></div>
+
+### until{#fun-until}
 
 `(function p, any x, function f) -> any`
 
@@ -4776,7 +6488,17 @@ function
 
 ```
 
-### while
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-until'
+      data-meta-type='var'
+      data-meta-name='until'
+	  data-meta-tags='fun'
+    ></div>
+
+### while{#fun-while}
 
 `(function p, any x, function f) -> any`
 
@@ -4819,7 +6541,17 @@ function
 
 ```
 
-### iterate
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-while'
+      data-meta-type='var'
+      data-meta-name='while'
+	  data-meta-tags='fun'
+    ></div>
+
+### iterate{#fun-iterate}
 
 `(long start, long end, any x, function f) -> any`
 
@@ -4841,7 +6573,17 @@ Throws an error if `f` is `nil`.
 55
 ```
 
-### thread
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-iterate'
+      data-meta-type='var'
+      data-meta-name='iterate'
+	  data-meta-tags='fun'
+    ></div>
+
+### thread{#fun-thread}
 
 `(any state, list fs) -> any`
 
@@ -4869,7 +6611,17 @@ function
 "hello world"
 ```
 
-### chain
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-thread'
+      data-meta-type='var'
+      data-meta-name='thread'
+	  data-meta-tags='fun'
+    ></div>
+
+### chain{#fun-chain}
 
 `(list fs) -> function`
 
@@ -4888,7 +6640,17 @@ function
 22
 ```
 
-### compose
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-chain'
+      data-meta-type='var'
+      data-meta-name='chain'
+	  data-meta-tags='fun'
+    ></div>
+
+### compose{#fun-compose}
 
 `(list fs) -> function`
 
@@ -4908,7 +6670,17 @@ function
 12
 ```
 
-### signature
+
+
+<div
+      data-meta='true'
+      data-meta-id='fun-compose'
+      data-meta-type='var'
+      data-meta-name='compose'
+	  data-meta-tags='fun'
+    ></div>
+
+### signature{#fun-signature}
 
 `(function f) -> dict`
 
@@ -4968,12 +6740,31 @@ Returns `nil` if `f` is `nil`.
 ```
 
 
-## library locale
+
+<div
+      data-meta='true'
+      data-meta-id='fun-signature'
+      data-meta-type='var'
+      data-meta-name='signature'
+	  data-meta-tags='fun'
+    ></div>
+
+## library locale{#locale}
 
 The locale library provides information about available localization conventions. Localization conventions
 are relevant in the context of number and date formatting as well as string sorting.
 
-### languages
+
+
+<div
+      data-meta='true'
+      data-meta-id='locale'
+      data-meta-type='library'
+      data-meta-name='locale'
+	  data-meta-tags=''
+    ></div>
+
+### languages{#locale-languages}
 
 `(lang='en-US') -> dict`
 
@@ -5002,7 +6793,17 @@ Returns `en-US` display names if `lang` is `nil` or unknown.
 }
 ```
 
-### decimal_symbols
+
+
+<div
+      data-meta='true'
+      data-meta-id='locale-languages'
+      data-meta-type='var'
+      data-meta-name='languages'
+	  data-meta-tags='locale'
+    ></div>
+
+### decimal_symbols{#locale-decimal_symbols}
 
 `(lang='en-US') -> dict`
 
@@ -5060,4 +6861,12 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
 ```
 
 
+
+<div
+      data-meta='true'
+      data-meta-id='locale-decimal_symbols'
+      data-meta-type='var'
+      data-meta-name='decimal_symbols'
+	  data-meta-tags='locale'
+    ></div>
 

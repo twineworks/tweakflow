@@ -1,5 +1,6 @@
 ---
 title: Support
+toc: false
 ---
 
 # Support

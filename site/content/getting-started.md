@@ -121,7 +121,7 @@ Let's call some functions from the standard library:
 2
 ```
 
-You were using positional arguments. Let's add 100 days to a date, and see where we end up. The function [add_period](/modules/std.html#add-period) takes multiple parameters. Let's just supply the start date and days to add using named arguments, and leave the other parameters at their default values.
+You were using positional arguments. Let's add 100 days to a date, and see where we end up. The function [add_period](/modules/std.html#time-add_period) takes multiple parameters. Let's just supply the start date and days to add using named arguments, and leave the other parameters at their default values.
 
 ```tweakflow
 > time.add_period(start: 2017-01-01T, days: 100)
@@ -222,7 +222,7 @@ function
 3
 ```
 
-The [data.map](/modules/std.html#map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
+The [data.map](/modules/std.html#data-map) function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.
 
 ```tweakflow
 > data.map([1, 0, 3, -2], next)
