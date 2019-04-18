@@ -269,7 +269,7 @@ STRING_INTERPOLATION
 
 STRING_TEXT
   : ~('"'|'\\'|'#')+
-  | '#'~'{'
+  | '#'
   ;
 
 STRING_END

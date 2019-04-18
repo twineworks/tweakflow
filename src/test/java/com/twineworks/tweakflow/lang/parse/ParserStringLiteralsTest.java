@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.parse;
 
+import com.twineworks.tweakflow.lang.ast.NodeStructureAssert;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.expressions.StringConcatNode;
@@ -277,6 +278,18 @@ public class ParserStringLiteralsTest {
   }
 
   @Test
+  void parses_with_hash_at_end(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("with_hash_at_end").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("string with #");
+
+  }
+
+  @Test
   void parses_with_escaped_interpolation(){
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
@@ -291,6 +304,7 @@ public class ParserStringLiteralsTest {
   @Test
   void parses_with_interpolation(){
 
+//    with_interpolation: "string with #{hash}";
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
 
     ExpressionNode expNode = varDefMap.get("with_interpolation").getValueExpression();
@@ -307,6 +321,18 @@ public class ParserStringLiteralsTest {
     assertThat(string_inter_right_elements).hasSize(1);
     assertThat(string_inter_right_elements).containsExactly("hash");
 
+  }
+
+  @Test
+  void parses_with_serial_interpolation(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+//    with_serial_interpolation: "### #{name}{##{id}}";
+    ExpressionNode serialInterpolation = varDefMap.get("with_serial_interpolation").getValueExpression();
+
+    ExpressionNode serialInterpolationExpected = varDefMap.get("with_serial_interpolation_expected").getValueExpression();
+    NodeStructureAssert.assertThat(serialInterpolation).hasSameStructureAs(serialInterpolationExpected);
   }
 
   @Test
