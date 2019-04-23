@@ -189,7 +189,6 @@ function hljsDefineTweakflow(hljs) {
 
   const PREFIXED_REFERENCE_MODE = {
     // className: 'variable',
-    // className: 'variable',
     begin: "((\\$)|(global::)|(module::)|(library::)|(::))"+IDENTIFIER_RE
   };
 
