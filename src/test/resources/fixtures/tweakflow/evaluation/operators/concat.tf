@@ -19,4 +19,10 @@ library concat_spec {
   mixed:
     expect(lib.a..2..3..4..5..6..7..8..lib.b, to.be("alice2345678bob"));
 
+  err:
+    expect_error(
+      () -> lib.a..(1//0)..lib.b
+      to.have_code("DIVISION_BY_ZERO")
+    );
+
 }
