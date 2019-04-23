@@ -111,7 +111,7 @@ a.dropdown-item:hover, button.dropdown-item:hover {
   height: 34px;
   padding: 6px 12px;
   padding-right: 12px;
-  font-size: initial;
+  font-size: 15px;
   line-height: 1.42857143;
   color: #555;
   border-radius: 4px;
@@ -238,7 +238,7 @@ aside nav ul li a {
 
 aside ul li {
   list-style-type: none;
-  font-size: initial;
+  font-size: 15px;
   margin-top: 2px;
 }
 

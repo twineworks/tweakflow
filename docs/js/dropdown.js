@@ -1,9 +1,8 @@
 
-
-document.addEventListener("DOMContentLoaded", event => {
+document.addEventListener("DOMContentLoaded", function(event){
   const dropdownTriggers = Array.from(document.querySelectorAll(".dropdown-trigger"));
-  dropdownTriggers.forEach(d => {
-    d.addEventListener("click", (e) => {
+  dropdownTriggers.forEach(function(d){
+    d.addEventListener("click", function(e){
       e.preventDefault();
       const dropdown = e.target.closest(".dropdown");
       if (dropdown){
