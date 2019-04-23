@@ -87,13 +87,13 @@ function hljsDefineTweakflow(hljs) {
   const LONG_RE = "[+\\-]?[0-9]+";
   const HEX_RE = "0x[0-9a-fA-F]+";
   const DOUBLE_RE = "[+\\-]?((NaN)|(Infinity)|([0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?)|\\.[0-9]+([eE][-+]?[0-9]+)?)";
-  const NUMBER_RE = `${BOUNDARY_RE}((${HEX_RE})|(${DOUBLE_RE}|(${LONG_RE})))`;
+  // const NUMBER_RE = `${BOUNDARY_RE}((${HEX_RE})|(${DOUBLE_RE}|(${LONG_RE})))`;
+  const NUMBER_RE = BOUNDARY_RE+"(("+HEX_RE+")|("+DOUBLE_RE+"|("+LONG_RE+")))";
 
   const ID_RE = "[a-zA-Z_][a-zA-Z0-9?_]*";
   const ID_ESCAPED_RE = "`.+?`";
-  const IDENTIFIER_RE = `((${ID_RE})|(${ID_ESCAPED_RE}))`;
-
-  // const DATETIME_RE_ = /(^|\b|[ ])([+\-])?\d+-\d+-\d+T((\d+:\d+:\d+(\.\d+)?)(Z|([+\-]\d+:\d+))?(@([a-zA-Z_]+))?)?/
+  // const IDENTIFIER_RE = `((${ID_RE})|(${ID_ESCAPED_RE}))`;
+  const IDENTIFIER_RE = "(("+ID_RE+")|("+ID_ESCAPED_RE+"))";
 
   const OPTIONAL_SIGN_RE = "([+\\-])?";
   const DATE_RE = "\\d+-\\d+-\\d+T";
@@ -101,9 +101,10 @@ function hljsDefineTweakflow(hljs) {
   const OFFSET_RE = "Z|([+\\-]\\d+:\\d+)";
   const TIMEZONE_ID_RE = "[a-zA-Z_]+(/[a-zA-Z_0-9?]+)+";
 
-  const TZ_RE = `@((${TIMEZONE_ID_RE})|(${ID_RE})|(${ID_ESCAPED_RE}))`;
+  const TZ_RE = "@(("+TIMEZONE_ID_RE+")|("+ID_RE+")|("+ID_ESCAPED_RE+"))";
 
-  const DATETIME_RE = `${BOUNDARY_RE}${OPTIONAL_SIGN_RE}${DATE_RE}(${TIME_RE}(${OFFSET_RE})?(${TZ_RE})?)?`;
+  // const DATETIME_RE = `${BOUNDARY_RE}${OPTIONAL_SIGN_RE}${DATE_RE}(${TIME_RE}(${OFFSET_RE})?(${TZ_RE})?)?`;
+  const DATETIME_RE = BOUNDARY_RE+OPTIONAL_SIGN_RE+DATE_RE+"("+TIME_RE+"("+OFFSET_RE+")?("+TZ_RE+")?)?";
 
   const COMMENT_MODES = [
     hljs.HASH_COMMENT_MODE,
@@ -168,7 +169,7 @@ function hljsDefineTweakflow(hljs) {
 
   const CAPTURE_PATTERN = {
     className: "regexp",
-    begin: `@(\\.\\.\\.)?${IDENTIFIER_RE}?`
+    begin: "@(\\.\\.\\.)?"+IDENTIFIER_RE+"?"
   };
 
   const LIBRARY_MODE = {
@@ -188,8 +189,7 @@ function hljsDefineTweakflow(hljs) {
 
   const PREFIXED_REFERENCE_MODE = {
     // className: 'variable',
-    // className: 'variable',
-    begin: `((\\$)|(global::)|(module::)|(library::)|(::))${IDENTIFIER_RE}`
+    begin: "((\\$)|(global::)|(module::)|(library::)|(::))"+IDENTIFIER_RE
   };
 
   const REFERENCE_MODE = {
@@ -201,7 +201,7 @@ function hljsDefineTweakflow(hljs) {
 
   const REF_FREE_KEYWORDS = {
     className: 'keyword',
-    begin: `(global)|(library)|(module)`
+    begin: "(global)|(library)|(module)"
   };
 
   const CODE = {

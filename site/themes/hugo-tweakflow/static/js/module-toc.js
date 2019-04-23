@@ -7,7 +7,7 @@ function extractTags(t) {
 
 function extractMetaData() {
   const allMeta = document.querySelectorAll("div[data-meta]");
-  const metaData = Array.from(allMeta).map(t => {
+  const metaData = Array.from(allMeta).map(function(t){
     return {
       id: t.getAttribute("data-meta-id"),
       type: t.getAttribute("data-meta-type"),
@@ -32,7 +32,7 @@ function makeResultNode(meta) {
   const txt = document.createTextNode(meta.name);
   a.appendChild(txt);
 
-  meta.tags.forEach(tag => {
+  meta.tags.forEach(function(tag){
     const label = document.createElement("span");
     label.className = "label";
     const labelTxt = document.createTextNode(tag);
@@ -62,7 +62,7 @@ function makeResultNode(meta) {
 
 function buildSearchables(parentNode) {
   const metaData = extractMetaData();
-  metaData.forEach(meta => {
+  metaData.forEach(function(meta){
     parentNode.appendChild(makeResultNode(meta));
   });
 }
@@ -88,7 +88,7 @@ function searchMatch(term, node){
 function searchToc(e){
   const term = e.target.value;
   const nodes = document.querySelectorAll(".search-results .search-result");
-  Array.from(nodes).forEach(n => {
+  Array.from(nodes).forEach(function(n){
 
     if (searchMatch(term, n)){
       n.classList.remove("hidden");
@@ -101,7 +101,7 @@ function searchToc(e){
 
 }
 
-document.addEventListener("DOMContentLoaded", event => {
+document.addEventListener("DOMContentLoaded", function(event){
   buildSearchables(document.querySelector(".search-results"));
   const searchInput = document.querySelector(".search-box input");
   searchInput.addEventListener('input', searchToc, false);
