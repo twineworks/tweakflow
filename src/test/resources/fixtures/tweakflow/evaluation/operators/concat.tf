@@ -21,7 +21,7 @@ library concat_spec {
 
   err:
     expect_error(
-      () -> lib.a..(1//0)..lib.b
+      () -> lib.a..(1//0)..lib.b,
       to.have_code("DIVISION_BY_ZERO")
     );
 
