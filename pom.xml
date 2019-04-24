@@ -117,6 +117,7 @@
             <id>release</id>
             <build>
                 <plugins>
+
                     <!-- generating javadoc -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -183,6 +184,28 @@
 
     <build>
         <plugins>
+
+            <!-- bundle license files of dependencies -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.19</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>aggregate-download-licenses</id>
+                        <goals>
+                            <goal>aggregate-download-licenses</goal>
+                        </goals>
+                        <configuration>
+                            <includedScopes>compile</includedScopes>
+                            <licensesOutputDirectory>target/generated-resources/META-INF/licenses</licensesOutputDirectory>
+                            <licensesOutputFile>target/generated-resources/META-INF/licenses/licenses.xml</licensesOutputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- antlr parser generator -->
             <plugin>
                 <groupId>org.antlr</groupId>
@@ -352,6 +375,9 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>target/generated-resources</directory>
             </resource>
         </resources>
     </build>
