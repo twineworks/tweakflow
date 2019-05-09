@@ -549,6 +549,10 @@ public class Runtime {
       return cell.getValue();
     }
 
+    public boolean isDirty(){
+      return cell.isDirty();
+    }
+
     public String getName() {
       return name;
     }
