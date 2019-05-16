@@ -59,7 +59,13 @@ public interface Type {
   Value castFrom(Value x);
 
   int valueHash(Value x);
+
+  // ==
   boolean valueEquals(Value x, Value o);
 
+  // ===
   boolean valueAndTypeEquals(Value x, Value o);
+
+  // valueIdentical(NaN, NaN) == true
+  boolean valueIdentical(Value x, Value o);
 }

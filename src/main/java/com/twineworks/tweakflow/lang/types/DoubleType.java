@@ -205,6 +205,16 @@ final public class DoubleType implements Type {
   }
 
   @Override
+  public boolean valueIdentical(Value x, Value o) {
+    if (x == o) return true;
+    if (o.type() != this) return false;
+
+    double d_x = x.doubleNum();
+    double d_o = o.doubleNum();
+    return d_x == d_o || Double.isNaN(d_x) && Double.isNaN(d_o);
+  }
+
+  @Override
   public String toString() {
     return name();
   }

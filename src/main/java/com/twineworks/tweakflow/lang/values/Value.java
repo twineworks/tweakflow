@@ -97,7 +97,7 @@ final public class Value implements ValueProvider {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Value other = (Value) o;
-    return type.valueAndTypeEquals(this, other);
+    return type.valueIdentical(this, other);
   }
 
   public boolean valueEquals(Value other) {
@@ -117,6 +117,11 @@ final public class Value implements ValueProvider {
   public boolean valueAndTypeEquals(Value other){
     return type.valueAndTypeEquals(this, other);
   }
+
+  public boolean valueIdentical(Value other) {
+    return type.valueIdentical(this, other);
+  }
+
 
   @Override
   public String toString() {

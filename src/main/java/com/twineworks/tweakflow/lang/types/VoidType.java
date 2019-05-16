@@ -150,6 +150,11 @@ final public class VoidType implements Type{
   }
 
   @Override
+  public boolean valueIdentical(Value x, Value o) {
+    return x == o;
+  }
+
+  @Override
   public String toString() {
     return name();
   }

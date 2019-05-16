@@ -213,6 +213,24 @@ final public class ListType implements Type {
   }
 
   @Override
+  public boolean valueIdentical(Value x, Value o) {
+    if (x == o) return true;
+    if (x.type() != this) return false;
+    if (o.type() != this) return false;
+    ListValue xList = x.list();
+    ListValue oList = o.list();
+    if (xList.size() != oList.size()) return false;
+    Iterator<Value> xi = xList.iterator();
+    Iterator<Value> oi = oList.iterator();
+    // lists have same size, only one iterator need be queried for
+    // hasNext
+    while(xi.hasNext()){
+      if (!xi.next().valueIdentical(oi.next())) return false;
+    }
+    return true;
+  }
+
+  @Override
   public String toString() {
     return name();
   }

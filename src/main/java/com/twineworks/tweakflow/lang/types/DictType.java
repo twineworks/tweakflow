@@ -222,6 +222,24 @@ final public class DictType implements Type {
   }
 
   @Override
+  public boolean valueIdentical(Value x, Value o) {
+    if (x == o) return true;
+    if (x.type() != this) return false;
+    if (o.type() != this) return false;
+    DictValue xDict = x.dict();
+    DictValue oDict = o.dict();
+    if (xDict.size() != oDict.size()) return false;
+    for (String k : xDict.keys()) {
+      if (!oDict.containsKey(k)) return false;
+      Value xValue = xDict.get(k);
+      Value oValue = oDict.get(k);
+      if (!xValue.valueIdentical(oValue)) return false;
+    }
+
+    return true;
+  }
+
+  @Override
   public String toString() {
     return name();
   }

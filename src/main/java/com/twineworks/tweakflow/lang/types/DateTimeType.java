@@ -163,6 +163,11 @@ final public class DateTimeType implements Type {
   }
 
   @Override
+  public boolean valueIdentical(Value x, Value o) {
+    return valueAndTypeEquals(x, o);
+  }
+
+  @Override
   public String toString() {
     return name();
   }
