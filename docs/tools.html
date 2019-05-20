@@ -51,7 +51,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.11.3</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.12.0</a>
           </li>
         </ul>
         </nav>
@@ -98,7 +98,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v0.11.3</a
+            ><b>Tweakflow</b> v0.12.0</a
           >
         </li>
         
@@ -204,7 +204,7 @@
 
 <p>To launch the REPL run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar repl
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar repl
 </code></pre>
 
 <p>The acronym <code>repl</code> stands for &lsquo;read evaluate process loop&rsquo;. You should see a prompt similar to this:</p>
@@ -441,7 +441,7 @@ acme.tf&gt;
 
 <p>The REPL accepts a number of command line arguments that influence which modules are initially loaded, and which directories are placed on the load path. To learn more, run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar repl --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar repl --help
 </code></pre>
 
 <h2 id="runner">Runner</h2>
@@ -450,7 +450,7 @@ acme.tf&gt;
 
 <p>Run the following command to view the command line options.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar run --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar run --help
 </code></pre>
 
 <p>The module(s) to load are given as positional arguments. You can pass <code>std</code> to load the standard module.</p>
@@ -463,13 +463,13 @@ acme.tf&gt;
 
 <p>The following invocation calls <code>strings.length(&quot;foo&quot;)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar run -m strings.length -a foo std
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar run -m strings.length -a foo std
 3
 </code></pre>
 
 <p>Since the argument is a string, it is passed using the <code>-a</code> switch. Please note that passing the argument using the <code>-ea</code> switch would fail, since <code>foo</code> would simply be a reference to an undefined variable. If you wish to pass strings using <code>-ea</code>, you have to pass a proper literal string as in:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar run -m strings.length -ea &quot;'foo'&quot; std
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar run -m strings.length -ea &quot;'foo'&quot; std
 3
 </code></pre>
 
@@ -479,7 +479,7 @@ acme.tf&gt;
 
 <p>The following invocation calls <code>data.map([1, 2, 3, 4], (x) -&gt; x*x)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar run -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -&gt; x*x' std
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar run -m data.map -ea '[1, 2, 3, 4]' -ea '(x) -&gt; x*x' std
 [1, 4, 9, 16]
 </code></pre>
 
@@ -530,7 +530,7 @@ library product_codes {
 
 <p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
 KSH7-65FG-25FF
 </code></pre>
 
@@ -578,7 +578,7 @@ library bar {
 
 <p>You can view all command line switches by running the following:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar doc --help
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar doc --help
 </code></pre>
 
 <p>The next sections provide a walkthrough for the most common options.</p>
@@ -587,7 +587,7 @@ library bar {
 
 <p>The following invokes <code>doc</code>, passing in the module to extract metadata from.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar doc foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar doc foo.tf
 </code></pre>
 
 <p>By default the <code>doc</code> utility prints the structure of available meta data:</p>
@@ -672,7 +672,7 @@ library transform {
 
 <p>Let&rsquo;s run this transformer over the standard library:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar doc -t transformer.tf std
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar doc -t transformer.tf std
 Module std.tf contains 8 libraries, and a total of 159 variables.
 </code></pre>
 
@@ -682,7 +682,7 @@ Module std.tf contains 8 libraries, and a total of 159 variables.
 
 <p>You can pass more than one module to <code>doc</code>, and they are processed in order.</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar doc -t transformer.tf std foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar doc -t transformer.tf std foo.tf
 Module std.tf contains 8 libraries, and a total of 159 variables.
 Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
 </code></pre>
@@ -693,7 +693,7 @@ Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
 
 <p>Assuming foo.tf is in the current directory, run:</p>
 
-<pre><code class="language-bash">$ java -jar tweakflow-0.11.3.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf
+<pre><code class="language-bash">$ java -jar tweakflow-0.12.0.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf
 </code></pre>
 
 <p>It generates a <code>docs</code> directory, placing the following files in there:</p>
