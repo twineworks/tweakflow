@@ -38,7 +38,7 @@
           $ ./site/make_docs
         - commit doc render
         - ensure there are no references to previous versions
-          $ grep -r '0\.11\.3' * # should come up empty
+          $ grep -r '0\.12\.0' * # should come up empty
         - ensure pom.xml contains release version
         - commit pom
         - deploy release version
@@ -58,7 +58,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.12.0</version>
 
     <organization>
         <name>Twineworks GmbH</name>
