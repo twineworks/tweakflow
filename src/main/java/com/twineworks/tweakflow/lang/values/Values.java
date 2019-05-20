@@ -183,7 +183,7 @@ final public class Values {
     long size = to - from + 1;
 
     if (size <= 0) {
-      return Values.EMPTY_LIST;
+      return EMPTY_LIST;
     }
 
     if (size >= Integer.MAX_VALUE) {
