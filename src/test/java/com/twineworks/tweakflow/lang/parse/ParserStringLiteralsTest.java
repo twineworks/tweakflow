@@ -65,6 +65,42 @@ public class ParserStringLiteralsTest {
   }
 
   @Test
+  void parses_key(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("key").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("key");
+
+  }
+
+  @Test
+  void parses_quoted_key(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("quoted_key").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("quoted key");
+
+  }
+
+  @Test
+  void parses_digit_key(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("digit_key").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("123");
+
+  }
+
+  @Test
   void parses_single_quoted_empty(){
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");

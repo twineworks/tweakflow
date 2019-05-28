@@ -181,8 +181,8 @@ IDENTIFIER
   ;
 
 KEY
-  : ':' ID
-  | ':' ID_ESCAPED
+  : ':' KEY_NAME
+  | ':' KEY_NAME_ESCAPED
   ;
 
 WHITESPACE
@@ -196,6 +196,9 @@ END_OF_STATEMENT
 fragment NEWLINE
   : '\r'? '\n'
   ;
+
+fragment KEY_NAME: [a-zA-Z_0-9?]+;
+fragment KEY_NAME_ESCAPED: '`'.+?'`';
 
 fragment ID: [a-zA-Z_][a-zA-Z_0-9?]*;
 fragment ID_ESCAPED: '`'.+?'`';

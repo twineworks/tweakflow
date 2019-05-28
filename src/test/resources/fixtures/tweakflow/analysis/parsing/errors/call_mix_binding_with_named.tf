@@ -1,4 +1,4 @@
 library lib
 {
-  a: f(b=1, c:2);
+  a: f(b=1, c: 2);
 }

@@ -111,7 +111,7 @@ public class ParserCallErrorsTest {
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/call_mix_named_with_binding.tf");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:13");
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("3:14");
     assertThat(e.getMessage()).contains("unexpected partial application binding");
   }
 

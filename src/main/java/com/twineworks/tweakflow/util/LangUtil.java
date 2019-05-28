@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 public class LangUtil {
 
+  private final static Pattern safeKeyName = Pattern.compile("[a-zA-Z_0-9?]+");
   private final static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
   private final static Pattern safeTimeZoneIdentifier = Pattern.compile("[a-zA-Z_]+(/[a-zA-Z_0-9?]+)+");
   private final static HashSet<String> keywords = new HashSet<>(Arrays.asList(
@@ -133,7 +134,7 @@ public class LangUtil {
   public static String getKeyLiteral(String id){
 
     // safe as is?
-    if (safeIdentifier.matcher(id).matches()){
+    if (safeKeyName.matcher(id).matches()){
       return ":"+id;
     }
 

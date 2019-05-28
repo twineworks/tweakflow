@@ -52,7 +52,7 @@ library partial_spec {
     )) &&
     expect(c(), to.be({:a 1, :b 1})) &&
     expect(c(2), to.be({:a 1, :b 2})) &&
-    expect(c(b:3), to.be({:a 1, :b 3}));
+    expect(c(b: 3), to.be({:a 1, :b 3}));
 
   ab_b_2:
     let {
@@ -73,7 +73,7 @@ library partial_spec {
     )) &&
     expect(c(), to.be({:a 0, :b 2})) &&
     expect(c(2), to.be({:a 2, :b 2})) &&
-    expect(c(a:3), to.be({:a 3, :b 2}));
+    expect(c(a: 3), to.be({:a 3, :b 2}));
 
   ab_a1_b2:
     let {
@@ -106,7 +106,7 @@ library partial_spec {
     )) &&
     expect(c(), to.be({:a 0, :b 4, :c 5})) &&
     expect(c(2), to.be({:a 2, :b 4, :c 5})) &&
-    expect(c(a:3), to.be({:a 3, :b 4, :c 5}));
+    expect(c(a: 3), to.be({:a 3, :b 4, :c 5}));
 
   abc_a4_b5:
     let {
@@ -127,7 +127,7 @@ library partial_spec {
     )) &&
     expect(c(), to.be({:a 4, :b 5, :c 2})) &&
     expect(c(3), to.be({:a 4, :b 5, :c 3})) &&
-    expect(c(c:4), to.be({:a 4, :b 5, :c 4}));
+    expect(c(c: 4), to.be({:a 4, :b 5, :c 4}));
 
   abc_a4_c5:
     let {
@@ -148,7 +148,7 @@ library partial_spec {
     )) &&
     expect(c(), to.be({:a 4, :b 1, :c 5})) &&
     expect(c(3), to.be({:a 4, :b 3, :c 5})) &&
-    expect(c(b:4), to.be({:a 4, :b 4, :c 5}));
+    expect(c(b: 4), to.be({:a 4, :b 4, :c 5}));
 
   abc_a4_b5_c6:
     let {

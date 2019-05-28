@@ -34,5 +34,8 @@ string";
 ~~~
 Here ~~~ String
 ~~~;
+  key: :key;
+  quoted_key: :`quoted key`;
+  digit_key: :123;
 
 }

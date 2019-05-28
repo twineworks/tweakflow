@@ -108,7 +108,7 @@ false
 ```
 ~~~
 
-  function present?:(x) -> boolean via {:class "com.twineworks.tweakflow.std.Core$present"};
+  function present?: (x) -> boolean via {:class "com.twineworks.tweakflow.std.Core$present"};
 
 doc
 ~~~
