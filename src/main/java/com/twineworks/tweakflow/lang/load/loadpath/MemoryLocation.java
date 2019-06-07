@@ -37,17 +37,23 @@ public class MemoryLocation implements LoadPathLocation {
   public static class Builder implements com.twineworks.tweakflow.util.Builder<LoadPathLocation> {
 
     private boolean allowNativeFunctions = true;
+    private boolean allowCaching = false;
     private Map<String, String> content = new HashMap<>();
 
     public Builder() { }
 
     @Override
     public MemoryLocation build() {
-      return new MemoryLocation(allowNativeFunctions, content);
+      return new MemoryLocation(allowNativeFunctions, allowCaching, content);
     }
 
     public MemoryLocation.Builder allowNativeFunctions(boolean allowNativeFunctions) {
       this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public MemoryLocation.Builder allowCaching(boolean allowCaching) {
+      this.allowCaching = allowCaching;
       return this;
     }
 
@@ -63,9 +69,15 @@ public class MemoryLocation implements LoadPathLocation {
 
   final private Map<String, MemoryParseUnit> parseUnits;
   final private boolean allowNativeFunctions;
+  final private boolean allowCaching;
 
   public MemoryLocation(boolean allowNativeFunctions, Map<String, String> content){
+    this(allowNativeFunctions, false, content);
+  }
+
+  public MemoryLocation(boolean allowNativeFunctions, boolean allowCaching, Map<String, String> content){
     this.allowNativeFunctions = allowNativeFunctions;
+    this.allowCaching = allowCaching;
     Map<String, MemoryParseUnit> units = new HashMap<>();
     for (String name : content.keySet()) {
       units.put(name, new MemoryParseUnit(this, content.get(name), name));
@@ -73,6 +85,7 @@ public class MemoryLocation implements LoadPathLocation {
 
     this.parseUnits = Collections.unmodifiableMap(units);
   }
+
 
   public Map<String, MemoryParseUnit> getParseUnits() {
     return parseUnits;
@@ -97,6 +110,11 @@ public class MemoryLocation implements LoadPathLocation {
   @Override
   public boolean allowsNativeFunctions() {
     return allowNativeFunctions;
+  }
+
+  @Override
+  public boolean allowsCaching() {
+    return allowCaching;
   }
 
 

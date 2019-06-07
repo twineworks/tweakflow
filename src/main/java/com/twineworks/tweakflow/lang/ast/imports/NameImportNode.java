@@ -42,6 +42,16 @@ public class NameImportNode implements ImportMemberNode {
   private AnalysisUnit importedCompilationUnit;
   private Scope scope;
 
+  @Override
+  public NameImportNode copy() {
+    NameImportNode copy = new NameImportNode();
+    copy.importName = importName;
+    copy.exportName = exportName;
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+
   public AnalysisUnit getImportedCompilationUnit() {
     return importedCompilationUnit;
   }

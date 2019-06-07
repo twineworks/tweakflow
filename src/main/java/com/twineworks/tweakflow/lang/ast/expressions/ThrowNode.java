@@ -36,6 +36,14 @@ public class ThrowNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode exceptionExpression;
 
+  @Override
+  public ExpressionNode copy() {
+    ThrowNode copy = new ThrowNode();
+    copy.sourceInfo = sourceInfo;
+    copy.exceptionExpression = exceptionExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExceptionExpression() {
     return exceptionExpression;
   }

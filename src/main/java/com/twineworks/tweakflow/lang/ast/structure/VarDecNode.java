@@ -130,4 +130,16 @@ public class VarDecNode implements MetaDataNode, SymbolNode {
     return visitor.visit(this);
   }
 
+  @Override
+  public VarDecNode copy() {
+    VarDecNode copy = new VarDecNode();
+    copy.sourceInfo = sourceInfo;
+    copy.declaredType = declaredType;
+    copy.docNode = docNode == null ? null : docNode.copy();
+    copy.metaNode = metaNode == null ? null : metaNode.copy();
+    copy.name = name;
+
+    return copy;
+  }
+
 }

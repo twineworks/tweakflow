@@ -41,6 +41,17 @@ public class TryCatchNode extends AExpressionNode implements ExpressionNode {
   private VarDecNode caughtTrace;
   private ExpressionNode catchExpression;
 
+  @Override
+  public TryCatchNode copy() {
+    TryCatchNode copy = new TryCatchNode();
+    copy.sourceInfo = sourceInfo;
+    copy.tryExpression = tryExpression.copy();
+    copy.catchExpression = catchExpression.copy();
+    copy.caughtException = caughtException == null ? null : caughtException.copy();
+    copy.caughtTrace = caughtTrace == null ? null : caughtTrace.copy();
+    return copy;
+  }
+
   public ExpressionNode getCatchExpression() {
     return catchExpression;
   }

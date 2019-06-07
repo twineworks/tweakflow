@@ -37,6 +37,15 @@ public class GreaterThanOrEqualNode extends AExpressionNode implements Expressio
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public GreaterThanOrEqualNode copy() {
+    GreaterThanOrEqualNode copy = new GreaterThanOrEqualNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

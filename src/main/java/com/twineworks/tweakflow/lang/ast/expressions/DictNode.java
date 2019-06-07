@@ -34,7 +34,17 @@ import java.util.List;
 
 public class DictNode extends AExpressionNode implements ExpressionNode {
 
-  List<DictEntryNode> entries = new ArrayList<>();
+  private List<DictEntryNode> entries = new ArrayList<>();
+
+  @Override
+  public DictNode copy() {
+    DictNode copy = new DictNode();
+    copy.sourceInfo = sourceInfo;
+    for (DictEntryNode entry : entries) {
+      copy.entries.add(entry.copy());
+    }
+    return copy;
+  }
 
   @Override
   public List<? extends Node> getChildren() {

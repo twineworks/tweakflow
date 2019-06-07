@@ -42,6 +42,17 @@ public class ImportNode implements Node {
   private AnalysisUnit importedCompilationUnit;
   private Scope scope;
 
+  @Override
+  public ImportNode copy() {
+    ImportNode copy = new ImportNode();
+    copy.sourceInfo = sourceInfo;
+    copy.modulePath = modulePath.copy();
+    for (ImportMemberNode member : members) {
+      copy.members.add(member.copy());
+    }
+    return copy;
+  }
+
   public List<ImportMemberNode> getMembers() {
     return members;
   }
@@ -114,6 +125,8 @@ public class ImportNode implements Node {
   public ImportNode accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
+
 
 
 }

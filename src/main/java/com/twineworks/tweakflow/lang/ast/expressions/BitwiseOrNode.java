@@ -37,6 +37,15 @@ public class BitwiseOrNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public BitwiseOrNode copy() {
+    BitwiseOrNode copy = new BitwiseOrNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

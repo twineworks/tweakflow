@@ -38,6 +38,13 @@ public class BooleanNode extends AExpressionNode implements ExpressionNode {
   private Boolean boolVal;
 
   @Override
+  public BooleanNode copy() {
+    BooleanNode copy = new BooleanNode(boolVal);
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

@@ -41,6 +41,16 @@ public class ForHead implements Node {
   private Scope scope;
 
   @Override
+  public ForHead copy() {
+    ForHead copy = new ForHead();
+    copy.sourceInfo = sourceInfo;
+    for (ForHeadElementNode element : elements) {
+      copy.elements.add((ForHeadElementNode) element.copy());
+    }
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

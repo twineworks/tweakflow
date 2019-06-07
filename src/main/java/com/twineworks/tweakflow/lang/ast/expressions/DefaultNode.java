@@ -37,6 +37,15 @@ public class DefaultNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode expression;
   private ExpressionNode defaultExpression;
 
+  @Override
+  public DefaultNode copy() {
+    DefaultNode copy = new DefaultNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    copy.defaultExpression = defaultExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

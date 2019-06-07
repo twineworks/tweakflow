@@ -43,6 +43,17 @@ public class ListPatternNode implements Node, MatchPatternNode {
   private Scope scope;
 
   @Override
+  public ListPatternNode copy() {
+    ListPatternNode copy = new ListPatternNode();
+    copy.capture = capture == null ? null : capture.copy();
+    copy.sourceInfo = sourceInfo;
+    for (MatchPatternNode element : elements) {
+      copy.elements.add((MatchPatternNode) element.copy());
+    }
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

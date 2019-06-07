@@ -36,6 +36,14 @@ public class BitwiseNotNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode expression;
 
+  @Override
+  public BitwiseNotNode copy() {
+    BitwiseNotNode copy = new BitwiseNotNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

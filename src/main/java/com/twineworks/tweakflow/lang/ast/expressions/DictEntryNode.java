@@ -40,6 +40,15 @@ public class DictEntryNode implements Node {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+  @Override
+  public DictEntryNode copy() {
+    DictEntryNode copy = new DictEntryNode();
+    copy.sourceInfo = sourceInfo;
+    copy.key = key.copy();
+    copy.value = value.copy();
+    return copy;
+  }
+
   public ExpressionNode getKey() {
     return key;
   }

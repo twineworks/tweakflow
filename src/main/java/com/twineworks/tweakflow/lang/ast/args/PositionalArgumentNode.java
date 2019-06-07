@@ -40,6 +40,15 @@ public class PositionalArgumentNode implements ArgumentNode {
   private ExpressionNode expression;
   private SourceInfo sourceInfo;
 
+  @Override
+  public PositionalArgumentNode copy() {
+    PositionalArgumentNode copy = new PositionalArgumentNode();
+    copy.sourceInfo = sourceInfo;
+    copy.index = index;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public int getIndex() {
     return index;
   }

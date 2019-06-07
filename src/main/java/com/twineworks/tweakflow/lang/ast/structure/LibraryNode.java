@@ -49,6 +49,18 @@ public class LibraryNode implements ComponentNode {
   private Scope scope;
 
   @Override
+  public LibraryNode copy() {
+    LibraryNode copy = new LibraryNode();
+    copy.sourceInfo = sourceInfo;
+    copy.docNode = docNode == null ? null : docNode.copy();
+    copy.metaNode = metaNode == null ? null : metaNode.copy();
+    copy.name = name;
+    copy.export = export;
+    copy.vars = vars.copy();
+    return copy;
+  }
+
+  @Override
   public String getSymbolName() {
     return name;
   }

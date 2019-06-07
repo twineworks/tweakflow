@@ -43,6 +43,20 @@ public class HeadTailListPatternNode implements Node, MatchPatternNode {
   private Scope scope;
 
   @Override
+  public HeadTailListPatternNode copy() {
+    HeadTailListPatternNode copy = new HeadTailListPatternNode();
+    copy.sourceInfo = sourceInfo;
+    copy.tailCapture = tailCapture.copy();
+    copy.capture = capture == null ? null : capture.copy();
+    for (MatchPatternNode element : elements) {
+      copy.elements.add((MatchPatternNode) element.copy());
+    }
+
+    return copy;
+  }
+
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

@@ -118,6 +118,19 @@ public class ReferenceNode extends AExpressionNode implements ExpressionNode {
   }
 
   @Override
+  public ReferenceNode copy() {
+    ReferenceNode copy = new ReferenceNode();
+    copy.sourceInfo = sourceInfo;
+    copy.anchor = anchor;
+    copy.elements.addAll(elements);
+    copy.simpleName = simpleName;
+    copy.isClosure = isClosure;
+    copy.isSimpleLocal = isSimpleLocal;
+    copy.isSimpleParent = isSimpleParent;
+    return copy;
+  }
+
+  @Override
   public Type getValueType() {
 
     if (expressionOp instanceof ConstantOp){

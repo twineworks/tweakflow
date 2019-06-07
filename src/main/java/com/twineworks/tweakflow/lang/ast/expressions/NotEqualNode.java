@@ -37,6 +37,15 @@ public class NotEqualNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public NotEqualNode copy() {
+    NotEqualNode copy = new NotEqualNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

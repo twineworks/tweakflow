@@ -38,6 +38,15 @@ public class PartialApplicationNode extends AExpressionNode implements Expressio
   private PartialArguments arguments = new PartialArguments();
   private ExpressionNode expression;
 
+  @Override
+  public PartialApplicationNode copy() {
+    PartialApplicationNode copy = new PartialApplicationNode();
+    copy.sourceInfo = sourceInfo;
+    copy.arguments = arguments.copy();
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

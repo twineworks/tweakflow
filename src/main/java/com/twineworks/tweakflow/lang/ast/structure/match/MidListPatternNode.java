@@ -43,6 +43,27 @@ public class MidListPatternNode implements Node, MatchPatternNode {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+
+  @Override
+  public MidListPatternNode copy() {
+
+    MidListPatternNode copy = new MidListPatternNode();
+
+    copy.sourceInfo = sourceInfo;
+    copy.capture = capture == null ? null : capture.copy();
+    copy.midCapture = midCapture.copy();
+
+    for (MatchPatternNode headElement : headElements) {
+      copy.headElements.add((MatchPatternNode) headElement.copy());
+    }
+
+    for (MatchPatternNode lastElement : lastElements) {
+      copy.lastElements.add((MatchPatternNode) lastElement.copy());
+    }
+
+    return copy;
+  }
+
   @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;

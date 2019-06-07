@@ -97,4 +97,13 @@ public class AliasNode implements SymbolNode {
   public Node accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
+  @Override
+  public AliasNode copy() {
+    AliasNode copy = new AliasNode();
+    copy.source = source.copy();
+    copy.sourceInfo = sourceInfo;
+    copy.symbolName = symbolName;
+    return copy;
+  }
 }

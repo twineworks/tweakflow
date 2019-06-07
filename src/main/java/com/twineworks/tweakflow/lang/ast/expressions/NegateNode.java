@@ -37,6 +37,14 @@ public class NegateNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode expression;
 
+  @Override
+  public NegateNode copy() {
+    NegateNode copy = new NegateNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

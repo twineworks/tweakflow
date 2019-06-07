@@ -37,6 +37,15 @@ public class ListConcatNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public ListConcatNode copy() {
+    ListConcatNode copy = new ListConcatNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

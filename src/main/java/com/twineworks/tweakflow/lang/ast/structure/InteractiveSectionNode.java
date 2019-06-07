@@ -45,6 +45,16 @@ public class InteractiveSectionNode implements SymbolNode {
   private Symbol symbol;
 
   @Override
+  public InteractiveSectionNode copy() {
+    InteractiveSectionNode copy = new InteractiveSectionNode();
+    copy.sourceInfo = sourceInfo;
+    copy.inScopeRef = inScopeRef.copy();
+    copy.vars = vars.copy();
+    copy.symbolName = symbolName;
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

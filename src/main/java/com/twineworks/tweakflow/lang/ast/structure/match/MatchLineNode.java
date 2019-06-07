@@ -43,6 +43,16 @@ public class MatchLineNode implements Node {
   private Scope scope;
 
   @Override
+  public MatchLineNode copy() {
+    MatchLineNode copy = new MatchLineNode();
+    copy.sourceInfo = sourceInfo;
+    copy.pattern = (MatchPatternNode) pattern.copy();
+    copy.guard = guard == null ? null : (ExpressionNode) guard.copy();
+    copy.expression = (ExpressionNode) expression.copy();
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

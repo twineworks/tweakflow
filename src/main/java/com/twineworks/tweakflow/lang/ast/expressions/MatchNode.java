@@ -42,6 +42,15 @@ public class MatchNode extends AExpressionNode implements ExpressionNode {
   private MatchLines matchLines = new MatchLines();
 
   @Override
+  public MatchNode copy() {
+    MatchNode copy = new MatchNode();
+    copy.sourceInfo = sourceInfo;
+    copy.subject = subject.copy();
+    copy.matchLines = matchLines.copy();
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Arrays.asList(subject, matchLines);
   }

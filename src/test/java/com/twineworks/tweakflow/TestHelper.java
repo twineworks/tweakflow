@@ -34,6 +34,7 @@ import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.*;
 import org.junit.jupiter.api.DynamicTest;
@@ -44,12 +45,15 @@ import static org.assertj.core.api.Fail.fail;
 
 public class TestHelper {
 
-  public static Collection<DynamicTest> dynamicTestsSpecModule(String path) {
+  public static Map<String, ParseResult> parseResultCache = new HashMap<>();
 
-    LoadPath loadPath = new LoadPath.Builder()
-        .addStdLocation()
-        .add(new ResourceLocation.Builder().build())
-        .build();
+  private static LoadPath loadPath = new LoadPath.Builder()
+      .addStdLocation()
+      .add(new ResourceLocation.Builder().build())
+      .withParseResultCache(parseResultCache)
+      .build();
+
+  public static Collection<DynamicTest> dynamicTestsSpecModule(String path) {
 
     Runtime runtime;
     List<String> paths = Collections.singletonList(path);
@@ -88,11 +92,6 @@ public class TestHelper {
   }
 
   public static void assertSpecModule(String path) {
-
-    LoadPath loadPath = new LoadPath.Builder()
-        .addStdLocation()
-        .add(new ResourceLocation.Builder().build())
-        .build();
 
     Runtime runtime;
     List<String> paths = Collections.singletonList(path);

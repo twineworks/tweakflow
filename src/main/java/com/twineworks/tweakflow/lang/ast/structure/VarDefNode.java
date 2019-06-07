@@ -161,4 +161,19 @@ public class VarDefNode implements MetaDataNode, SymbolNode, ForHeadElementNode,
   public Symbol getSymbol(){
     return getScope().getSymbols().get(getSymbolName());
   }
+
+  @Override
+  public VarDefNode copy() {
+    VarDefNode copy = new VarDefNode();
+    copy.sourceInfo = sourceInfo;
+    copy.declaredType = declaredType;
+    copy.isDeclaredProvided = isDeclaredProvided;
+    copy.docNode = docNode == null ? null : docNode.copy();
+    copy.metaNode = metaNode == null ? null : metaNode.copy();
+    copy.name = name;
+    copy.valueExpression = valueExpression.copy();
+
+    return copy;
+  }
+
 }

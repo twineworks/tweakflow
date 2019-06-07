@@ -43,6 +43,15 @@ public class DataTypePatternNode implements Node, MatchPatternNode {
   private CapturePatternNode capture;
 
   @Override
+  public DataTypePatternNode copy() {
+    DataTypePatternNode copy = new DataTypePatternNode();
+    copy.type = type;
+    copy.sourceInfo = sourceInfo;
+    copy.capture = capture == null ? null : capture.copy();
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

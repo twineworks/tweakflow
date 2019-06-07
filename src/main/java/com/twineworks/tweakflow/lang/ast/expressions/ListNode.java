@@ -37,6 +37,16 @@ public class ListNode extends AExpressionNode implements ExpressionNode {
   private List<ExpressionNode> elements = new ArrayList<>();
 
   @Override
+  public ListNode copy() {
+    ListNode copy = new ListNode();
+    copy.sourceInfo = sourceInfo;
+    for (ExpressionNode element : elements) {
+      copy.elements.add(element.copy());
+    }
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return elements;
   }

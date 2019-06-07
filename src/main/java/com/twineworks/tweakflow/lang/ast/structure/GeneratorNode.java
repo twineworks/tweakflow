@@ -46,6 +46,16 @@ public class GeneratorNode implements SymbolNode, ForHeadElementNode, NamedValue
   private String name;
   private Scope scope;
 
+  @Override
+  public GeneratorNode copy() {
+    GeneratorNode copy = new GeneratorNode();
+    copy.sourceInfo = sourceInfo;
+    copy.name = name;
+    copy.declaredType = declaredType;
+    copy.valueExpression = (ExpressionNode) valueExpression.copy();
+    return copy;
+  }
+
   public Type getDeclaredType() {
     return declaredType;
   }

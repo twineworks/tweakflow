@@ -38,6 +38,15 @@ public class ValueAndTypeEqualsNode extends AExpressionNode implements Expressio
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public ValueAndTypeEqualsNode copy() {
+    ValueAndTypeEqualsNode copy = new ValueAndTypeEqualsNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

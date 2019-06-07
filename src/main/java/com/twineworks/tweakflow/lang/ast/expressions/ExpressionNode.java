@@ -39,6 +39,9 @@ public interface ExpressionNode extends Node, ForHeadElementNode {
   @Override
   ExpressionNode accept(Visitor visitor);
 
+  @Override
+  ExpressionNode copy();
+
   // the type of value the expression evaluates to
   Type getValueType();
 

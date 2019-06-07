@@ -37,6 +37,15 @@ public class AndNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public AndNode copy() {
+    AndNode copy = new AndNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

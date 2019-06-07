@@ -45,6 +45,17 @@ public class ParameterNode implements Node, SymbolNode {
   private Scope scope;
 
   @Override
+  public ParameterNode copy() {
+    ParameterNode copy = new ParameterNode();
+    copy.sourceInfo = sourceInfo;
+    copy.name = name;
+    copy.index = index;
+    copy.declaredType = declaredType;
+    copy.defaultValue = defaultValue == null ? null : defaultValue.copy();
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

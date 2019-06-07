@@ -823,7 +823,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       else {
         // closing a sub-sequence?
         if (currentBase != null) {
-          results.add(currentBase.copy().setStringVal(builder.toString()));
+          results.add(currentBase.dup().setStringVal(builder.toString()));
           currentBase = null;
           builder = null;
         }
@@ -834,7 +834,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     // closing a trailing sequence?
     if (currentBase != null) {
-      results.add(currentBase.copy().setStringVal(builder.toString()));
+      results.add(currentBase.dup().setStringVal(builder.toString()));
     }
 
     return results;

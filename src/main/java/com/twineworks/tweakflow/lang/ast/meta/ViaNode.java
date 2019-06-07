@@ -78,4 +78,12 @@ public class ViaNode implements Node {
   public ViaNode accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
+  @Override
+  public ViaNode copy() {
+    ViaNode copy = new ViaNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    return copy;
+  }
 }

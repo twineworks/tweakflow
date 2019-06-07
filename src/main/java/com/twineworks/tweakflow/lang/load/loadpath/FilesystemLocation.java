@@ -40,6 +40,7 @@ public class FilesystemLocation implements LoadPathLocation {
     private final Path path;
     private boolean confineToPath = true;
     private boolean allowNativeFunctions = true;
+    private boolean allowCaching = true;
     private String defaultExtension = ".tf";
 
     public Builder(Path path) {
@@ -49,7 +50,7 @@ public class FilesystemLocation implements LoadPathLocation {
 
     @Override
     public FilesystemLocation build() {
-      return new FilesystemLocation(path, confineToPath, allowNativeFunctions, defaultExtension);
+      return new FilesystemLocation(path, confineToPath, allowNativeFunctions, allowCaching, defaultExtension);
     }
 
     public Builder confineToPath(boolean confineToPath) {
@@ -59,6 +60,11 @@ public class FilesystemLocation implements LoadPathLocation {
 
     public Builder allowNativeFunctions(boolean allowNativeFunctions) {
       this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public Builder allowCaching(boolean allowCaching) {
+      this.allowCaching = allowCaching;
       return this;
     }
 
@@ -76,16 +82,20 @@ public class FilesystemLocation implements LoadPathLocation {
   private final boolean strict;
   private final String defaultExtension;
   private final boolean allowNativeFunctions;
+  private final boolean allowCaching;
 
-
-  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, String defaultExtension){
+  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, boolean allowCaching, String defaultExtension){
     Objects.requireNonNull(rootPath, defaultExtension);
     this.rootPath = rootPath;
     this.absRootPath = rootPath.toAbsolutePath();
     this.strict = confineToPath;
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
+    this.allowCaching = allowCaching;
+  }
 
+  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, String defaultExtension){
+    this(rootPath, confineToPath, allowNativeFunctions, false, defaultExtension);
   }
 
   public Path getRootPath() {
@@ -136,6 +146,11 @@ public class FilesystemLocation implements LoadPathLocation {
   @Override
   public boolean allowsNativeFunctions() {
     return allowNativeFunctions;
+  }
+
+  @Override
+  public boolean allowsCaching() {
+    return allowCaching;
   }
 
 }

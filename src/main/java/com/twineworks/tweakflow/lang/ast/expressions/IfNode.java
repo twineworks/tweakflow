@@ -39,6 +39,17 @@ public class IfNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode thenExpression;
   private ExpressionNode elseExpression;
 
+
+  @Override
+  public IfNode copy() {
+    IfNode copy = new IfNode();
+    copy.sourceInfo = sourceInfo;
+    copy.condition = condition.copy();
+    copy.thenExpression = thenExpression.copy();
+    copy.elseExpression = elseExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getThenExpression() {
     return thenExpression;
   }

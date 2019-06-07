@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.embedding;
 
+import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.TweakFlow;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
@@ -79,6 +80,7 @@ public class EvalExpressionWithStdTest {
             .allowNativeFunctions(false)
             .add("userModule", userModule)
             .build())
+        .withParseResultCache(TestHelper.parseResultCache)
         .build();
 
     // compile the module

@@ -39,6 +39,18 @@ public class Arguments implements Node {
   private Scope scope;
   private boolean allPositional;
 
+  @Override
+  public Arguments copy() {
+    Arguments copy = new Arguments();
+    copy.sourceInfo = sourceInfo;
+    copy.allPositional = allPositional;
+    for (ArgumentNode argumentNode : list) {
+      copy.list.add(argumentNode.copy());
+    }
+
+    return copy;
+  }
+
   public List<ArgumentNode> getList() {
     return list;
   }

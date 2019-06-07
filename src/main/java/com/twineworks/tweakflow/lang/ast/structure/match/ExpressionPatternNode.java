@@ -43,6 +43,16 @@ public class ExpressionPatternNode implements Node, MatchPatternNode {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+
+  @Override
+  public ExpressionPatternNode copy() {
+    ExpressionPatternNode copy = new ExpressionPatternNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = (ExpressionNode) expression.copy();
+    copy.capture = capture == null ? null : capture.copy();
+    return copy;
+  }
+
   @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;

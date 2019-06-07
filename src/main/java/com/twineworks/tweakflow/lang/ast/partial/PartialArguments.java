@@ -41,6 +41,17 @@ public class PartialArguments implements Node {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+  @Override
+  public PartialArguments copy() {
+    PartialArguments copy = new PartialArguments();
+    copy.sourceInfo = sourceInfo;
+    for (PartialArgumentNode partialArgumentNode : list) {
+      copy.list.add(partialArgumentNode.copy());
+    }
+    copy.cook();
+    return copy;
+  }
+
   public List<PartialArgumentNode> getList() {
     return list;
   }

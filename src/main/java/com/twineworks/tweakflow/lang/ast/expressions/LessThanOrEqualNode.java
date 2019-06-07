@@ -37,6 +37,15 @@ public class LessThanOrEqualNode extends AExpressionNode implements ExpressionNo
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public LessThanOrEqualNode copy() {
+    LessThanOrEqualNode copy = new LessThanOrEqualNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

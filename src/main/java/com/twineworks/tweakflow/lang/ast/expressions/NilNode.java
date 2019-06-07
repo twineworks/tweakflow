@@ -35,6 +35,13 @@ import java.util.List;
 public class NilNode extends AExpressionNode implements ExpressionNode {
 
   @Override
+  public NilNode copy() {
+    NilNode copy = new NilNode();
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Collections.emptyList();
   }

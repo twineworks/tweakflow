@@ -48,6 +48,17 @@ public class FunctionNode extends AExpressionNode implements ExpressionNode {
   private Type declaredReturnType;
   private Value functionValue;
 
+  @Override
+  public FunctionNode copy() {
+    FunctionNode copy = new FunctionNode();
+    copy.sourceInfo = sourceInfo;
+    copy.parameters = parameters.copy();
+    copy.expression = expression == null ? null : expression.copy();
+    copy.via = via == null ? null : via.copy();
+    copy.declaredReturnType = declaredReturnType;
+    return copy;
+  }
+
   public Value getFunctionValue() {
     return functionValue;
   }

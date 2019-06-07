@@ -43,6 +43,19 @@ public class DictPatternNode implements Node, MatchPatternNode {
   private Scope scope;
 
   @Override
+  public DictPatternNode copy() {
+    DictPatternNode copy = new DictPatternNode();
+    copy.sourceInfo = sourceInfo;
+    for (String s : elements.keySet()) {
+      copy.elements.put(s, (MatchPatternNode) elements.get(s).copy());
+    }
+    copy.capture = capture == null ? null : capture.copy();
+
+    return copy;
+  }
+
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

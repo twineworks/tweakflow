@@ -41,6 +41,15 @@ public class PartialArgumentNode implements ArgumentNode {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+  @Override
+  public PartialArgumentNode copy() {
+    PartialArgumentNode copy = new PartialArgumentNode();
+    copy.sourceInfo = sourceInfo;
+    copy.name = name;
+    copy.expression = (ExpressionNode) expression.copy();
+    return copy;
+  }
+
   public String getName() {
     return name;
   }

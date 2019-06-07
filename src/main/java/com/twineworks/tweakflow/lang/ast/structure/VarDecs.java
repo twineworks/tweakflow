@@ -61,9 +61,7 @@ public class VarDecs implements Node {
 
   @Override
   public List<? extends Node> getChildren() {
-    List<Node> ret = new ArrayList<>();
-    ret.addAll(map.values());
-    return ret;
+    return new ArrayList<Node>(map.values());
   }
 
   @Override
@@ -80,5 +78,15 @@ public class VarDecs implements Node {
   @Override
   public VarDecs accept(Visitor visitor) {
     return visitor.visit(this);
+  }
+
+  @Override
+  public VarDecs copy() {
+    VarDecs copy = new VarDecs();
+    copy.sourceInfo = sourceInfo;
+    for (String s : map.keySet()) {
+      copy.map.put(s, map.get(s).copy());
+    }
+    return copy;
   }
 }

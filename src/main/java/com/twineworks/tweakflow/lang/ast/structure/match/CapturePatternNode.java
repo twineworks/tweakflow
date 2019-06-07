@@ -43,6 +43,14 @@ public class CapturePatternNode implements Node, MatchPatternNode, SymbolNode {
   private Scope scope;
 
   @Override
+  public CapturePatternNode copy() {
+    CapturePatternNode copy = new CapturePatternNode();
+    copy.name = name;
+    copy.sourceInfo= sourceInfo;
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

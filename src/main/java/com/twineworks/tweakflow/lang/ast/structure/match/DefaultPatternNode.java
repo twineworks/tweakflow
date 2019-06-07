@@ -40,6 +40,14 @@ public class DefaultPatternNode implements Node, MatchPatternNode {
   private PatternOp patternOp;
 
   @Override
+  public DefaultPatternNode copy() {
+    DefaultPatternNode copy = new DefaultPatternNode();
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

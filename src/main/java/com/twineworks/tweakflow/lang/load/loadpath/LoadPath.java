@@ -29,13 +29,11 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.relative.DefaultResolver;
 import com.twineworks.tweakflow.lang.load.relative.RelativeResolver;
 import com.twineworks.tweakflow.lang.load.relative.Resolved;
+import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class LoadPath {
 
@@ -43,12 +41,13 @@ public class LoadPath {
 
     private final List<LoadPathLocation> locations = new ArrayList<>();
     private RelativeResolver relativeResolver = new DefaultResolver();
+    private Map<String, ParseResult> parseResultCache;
 
     public Builder() { }
 
     @Override
     public LoadPath build() {
-      return new LoadPath(locations, relativeResolver);
+      return new LoadPath(locations, relativeResolver, parseResultCache);
     }
 
     public LoadPath.Builder add(LoadPathLocation location){
@@ -61,10 +60,16 @@ public class LoadPath {
       return this;
     }
 
+    public LoadPath.Builder withParseResultCache(Map<String, ParseResult> parseResultCache){
+      this.parseResultCache = parseResultCache;
+      return this;
+    }
+
     public LoadPath.Builder addStdLocation(){
       locations.add(
           new ResourceLocation.Builder()
               .path(Paths.get("com/twineworks/tweakflow/std"))
+              .allowCaching(true)
               .build()
       );
       return this;
@@ -83,15 +88,12 @@ public class LoadPath {
 
   private final List<LoadPathLocation> locations;
   private final RelativeResolver relativeResolver;
+  private final Map<String, ParseResult> parseResultCache;
 
-  private LoadPath(List<LoadPathLocation> locations){
-    this.locations = Collections.unmodifiableList(locations);
-    this.relativeResolver = new DefaultResolver();
-  }
-
-  private LoadPath(List<LoadPathLocation> locations, RelativeResolver relativeResolver){
+  private LoadPath(List<LoadPathLocation> locations, RelativeResolver relativeResolver, Map<String, ParseResult> parseResultCache){
     this.locations = Collections.unmodifiableList(locations);
     this.relativeResolver = relativeResolver;
+    this.parseResultCache = parseResultCache;
   }
 
   public Resolved resolve(String modulePath, LoadPathLocation pathLocation, String importPath) {
@@ -131,6 +133,10 @@ public class LoadPath {
     }
 
     throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+path);
+  }
+
+  public Map<String, ParseResult> getParseResultCache() {
+    return parseResultCache;
   }
 
 

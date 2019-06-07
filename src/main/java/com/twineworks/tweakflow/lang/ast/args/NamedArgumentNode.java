@@ -40,6 +40,15 @@ public class NamedArgumentNode implements ArgumentNode {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+  @Override
+  public NamedArgumentNode copy() {
+    NamedArgumentNode copy = new NamedArgumentNode();
+    copy.sourceInfo = sourceInfo;
+    copy.name = name;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public String getName() {
     return name;
   }

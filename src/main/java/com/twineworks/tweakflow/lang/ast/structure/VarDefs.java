@@ -88,6 +88,17 @@ public class VarDefs implements Node {
     return visitor.visit(this);
   }
 
+  @Override
+  public VarDefs copy() {
+    VarDefs copy = new VarDefs();
+    copy.sourceInfo = sourceInfo;
+    for (String s : map.keySet()) {
+      copy.map.put(s, map.get(s).copy());
+    }
+    copy.cook();
+    return copy;
+  }
+
   public void cook(){
     // make alternative representations
     array = new VarDefNode[map.size()];

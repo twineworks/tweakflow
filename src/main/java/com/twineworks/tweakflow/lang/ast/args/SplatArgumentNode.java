@@ -41,6 +41,15 @@ public class SplatArgumentNode implements ArgumentNode {
   private Scope scope;
 
   @Override
+  public SplatArgumentNode copy() {
+    SplatArgumentNode copy = new SplatArgumentNode();
+    copy.sourceInfo = sourceInfo;
+    copy.index = index;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

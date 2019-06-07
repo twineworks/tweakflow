@@ -78,4 +78,12 @@ public class MetaNode implements Node {
   public MetaNode accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
+  @Override
+  public MetaNode copy() {
+    MetaNode copy = new MetaNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = (ExpressionNode) expression.copy();
+    return copy;
+  }
 }

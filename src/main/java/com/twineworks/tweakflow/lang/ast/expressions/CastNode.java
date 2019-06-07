@@ -36,6 +36,15 @@ public class CastNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode expression;
   private Type targetType;
 
+  @Override
+  public CastNode copy() {
+    CastNode copy = new CastNode();
+    copy.sourceInfo = sourceInfo;
+    copy.targetType = targetType;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public Type getTargetType() {
     return targetType;
   }

@@ -41,6 +41,17 @@ public class DebugNode implements ExpressionNode {
   private Scope scope;
   private ExpressionOp op;
 
+  @Override
+  public DebugNode copy() {
+    DebugNode copy = new DebugNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expressions =  new ArrayList<>();
+    for (ExpressionNode expression : expressions) {
+      copy.expressions.add(expression.copy());
+    }
+    return copy;
+  }
+
   public DebugNode setExpressions(ArrayList<ExpressionNode> expressions) {
     this.expressions = expressions;
     return this;

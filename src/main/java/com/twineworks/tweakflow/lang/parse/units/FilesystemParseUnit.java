@@ -50,7 +50,11 @@ public class FilesystemParseUnit implements ParseUnit {
     if (programText == null){
 
       try{
-        programText = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+        String ret = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+        if (location.allowsCaching()){
+          programText = ret;
+        }
+        return ret;
       } catch (IOException e) {
         throw LangException.wrap(e, LangError.IO_ERROR);
       }

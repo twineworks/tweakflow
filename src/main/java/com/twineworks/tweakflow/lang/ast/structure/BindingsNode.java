@@ -39,6 +39,14 @@ public class BindingsNode implements Node {
   private Scope scope;
 
   @Override
+  public BindingsNode copy() {
+    BindingsNode copy = new BindingsNode();
+    copy.sourceInfo = sourceInfo;
+    copy.vars = vars.copy();
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

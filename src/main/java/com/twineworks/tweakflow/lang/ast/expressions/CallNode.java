@@ -38,6 +38,15 @@ public class CallNode extends AExpressionNode implements ExpressionNode {
   private Arguments arguments = new Arguments();
   private ExpressionNode expression;
 
+  @Override
+  public CallNode copy() {
+    CallNode copy = new CallNode();
+    copy.sourceInfo = sourceInfo;
+    copy.arguments = arguments.copy();
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

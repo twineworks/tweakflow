@@ -42,6 +42,16 @@ public class ExportNode implements SymbolNode {
   private String symbolName;
   private Scope scope;
 
+
+  @Override
+  public ExportNode copy() {
+    ExportNode copy = new ExportNode();
+    copy.symbolName = symbolName;
+    copy.sourceInfo = sourceInfo;
+    copy.source = source.copy();
+    return copy;
+  }
+
   @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
@@ -101,5 +111,6 @@ public class ExportNode implements SymbolNode {
   public ExportNode accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
 
 }

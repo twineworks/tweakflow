@@ -43,6 +43,18 @@ public class InteractiveNode implements UnitNode, SymbolNode {
   private List<InteractiveSectionNode> sections = new ArrayList<>();
 
   @Override
+  public InteractiveNode copy() {
+    InteractiveNode copy = new InteractiveNode();
+    copy.sourceInfo = sourceInfo;
+    for (InteractiveSectionNode section : sections) {
+      copy.sections.add(section.copy());
+    }
+
+    return copy;
+  }
+
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

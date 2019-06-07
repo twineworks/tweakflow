@@ -37,6 +37,13 @@ public class DateTimeNode extends AExpressionNode implements ExpressionNode {
 
   private DateTimeValue dateTime;
 
+  @Override
+  public DateTimeNode copy() {
+    DateTimeNode copy = new DateTimeNode(dateTime);
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
   public DateTimeNode(DateTimeValue dateTime) {
     setDateTime(dateTime);
   }

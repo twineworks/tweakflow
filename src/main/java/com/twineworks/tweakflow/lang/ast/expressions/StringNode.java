@@ -69,7 +69,14 @@ public class StringNode extends AExpressionNode implements ExpressionNode {
     return this;
   }
 
+  @Override
   public StringNode copy() {
+    StringNode copy = new StringNode(stringVal);
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+  public StringNode dup() {
     StringNode ret = new StringNode(stringVal);
     ret.setSourceInfo(sourceInfo.copy());
     return ret;

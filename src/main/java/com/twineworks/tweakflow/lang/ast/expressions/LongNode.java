@@ -37,6 +37,13 @@ public class LongNode extends AExpressionNode implements ExpressionNode {
   private Long longNum;
 
   @Override
+  public LongNode copy() {
+    LongNode copy = new LongNode(longNum);
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Collections.emptyList();
   }

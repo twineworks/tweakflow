@@ -182,6 +182,33 @@ public class ModuleNode implements MetaDataNode, SymbolNode, UnitNode {
     return visitor.visit(this);
   }
 
+  @Override
+  public ModuleNode copy() {
+    ModuleNode copy = new ModuleNode();
+    copy.sourceInfo = sourceInfo;
+    copy.docNode = docNode == null ? null : docNode.copy();
+    copy.metaNode = metaNode == null ? null : metaNode.copy();
+    copy.globalName = globalName;
+
+    for (AliasNode alias : aliases) {
+      copy.aliases.add(alias.copy());
+    }
+
+    for (ImportNode anImport : imports) {
+      copy.imports.add(anImport.copy());
+    }
+
+    for (ExportNode export : exports) {
+      copy.exports.add(export.copy());
+    }
+
+    for (ComponentNode component : components) {
+      copy.components.add((ComponentNode) component.copy());
+    }
+
+    return copy;
+  }
+
   public List<ComponentNode> getComponents() {
     return components;
   }

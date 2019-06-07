@@ -42,6 +42,21 @@ public class InitLastListPatternNode implements Node, MatchPatternNode {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+
+  @Override
+  public InitLastListPatternNode copy() {
+    InitLastListPatternNode copy = new InitLastListPatternNode();
+    copy.sourceInfo = sourceInfo;
+    copy.initCapture = initCapture.copy();
+    for (MatchPatternNode element : elements) {
+      copy.elements.add((MatchPatternNode) element.copy());
+    }
+    copy.capture = capture == null ? null : capture.copy();
+
+    return copy;
+  }
+
+
   @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;

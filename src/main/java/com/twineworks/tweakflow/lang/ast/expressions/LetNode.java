@@ -38,6 +38,15 @@ public class LetNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode expression;
 
   @Override
+  public LetNode copy() {
+    LetNode copy = new LetNode();
+    copy.sourceInfo = sourceInfo;
+    copy.bindings = bindings.copy();
+    copy.expression = expression.copy();
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Arrays.asList(bindings, expression);
   }

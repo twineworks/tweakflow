@@ -39,6 +39,15 @@ public class ForNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode expression;
 
   @Override
+  public ForNode copy() {
+    ForNode copy = new ForNode();
+    copy.sourceInfo = sourceInfo;
+    copy.head = head.copy();
+    copy.expression = expression.copy();
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Arrays.asList(head, expression);
   }

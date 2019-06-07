@@ -37,6 +37,15 @@ public class BitwiseZeroShiftRightNode extends AExpressionNode implements Expres
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public BitwiseZeroShiftRightNode copy() {
+    BitwiseZeroShiftRightNode copy = new BitwiseZeroShiftRightNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

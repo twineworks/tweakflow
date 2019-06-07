@@ -44,6 +44,18 @@ public class OpenDictPatternNode implements Node, MatchPatternNode {
   private Scope scope;
 
   @Override
+  public OpenDictPatternNode copy() {
+    OpenDictPatternNode copy = new OpenDictPatternNode();
+    copy.sourceInfo = sourceInfo;
+    copy.restCapture = restCapture.copy();
+    copy.capture = capture == null ? null : capture.copy();
+    for (String s : elements.keySet()) {
+      copy.elements.put(s, (MatchPatternNode) elements.get(s).copy());
+    }
+    return copy;
+  }
+
+  @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;
   }

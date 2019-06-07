@@ -39,6 +39,18 @@ public class Parameters implements Node {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+  @Override
+  public Parameters copy() {
+    Parameters copy = new Parameters();
+    copy.sourceInfo = sourceInfo;
+    copy.map = new LinkedHashMap<>();
+    for (String s : map.keySet()) {
+      copy.map.put(s, map.get(s).copy());
+    }
+
+    return copy;
+  }
+
   public LinkedHashMap<String, ParameterNode> getMap() {
     return map;
   }
@@ -81,4 +93,6 @@ public class Parameters implements Node {
   public Parameters accept(Visitor visitor) {
     return visitor.visit(this);
   }
+
+
 }

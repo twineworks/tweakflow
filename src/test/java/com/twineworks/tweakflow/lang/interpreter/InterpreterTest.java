@@ -63,6 +63,7 @@ public class InterpreterTest {
 
     LoadPath loadPath = new LoadPath.Builder()
         .add(new ResourceLocation.Builder().build())
+        .withParseResultCache(TestHelper.parseResultCache)
         .build();
 
     List<String> pathList = Arrays.asList(paths);
@@ -83,6 +84,7 @@ public class InterpreterTest {
 
     LoadPath loadPath = new LoadPath.Builder()
         .add(new ResourceLocation.Builder().build())
+        .withParseResultCache(TestHelper.parseResultCache)
         .build();
 
     List<String> pathList = new ArrayList<>(Arrays.asList(paths));

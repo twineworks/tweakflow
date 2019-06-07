@@ -37,6 +37,15 @@ public class IsNode extends AExpressionNode implements ExpressionNode {
   private ExpressionNode expression;
   private Type compareType;
 
+  @Override
+  public IsNode copy() {
+    IsNode copy = new IsNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    copy.compareType = compareType;
+    return copy;
+  }
+
   public Type getCompareType() {
     return compareType;
   }

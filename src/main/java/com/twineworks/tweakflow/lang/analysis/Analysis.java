@@ -77,7 +77,6 @@ public class Analysis {
     OpSpecialization.analyze(analysisSet);
   }
 
-
   public static AnalysisResult analyze(List<String> paths, LoadPath loadPath){
     long start = System.currentTimeMillis();
     try {

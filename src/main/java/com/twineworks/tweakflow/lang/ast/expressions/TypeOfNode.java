@@ -36,6 +36,14 @@ public class TypeOfNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode expression;
 
+  @Override
+  public TypeOfNode copy() {
+    TypeOfNode copy = new TypeOfNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = expression.copy();
+    return copy;
+  }
+
   public ExpressionNode getExpression() {
     return expression;
   }

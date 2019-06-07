@@ -39,6 +39,15 @@ public class ContainerAccessNode extends AExpressionNode implements ExpressionNo
   private ExpressionNode containerExpression;
 
   @Override
+  public ContainerAccessNode copy() {
+    ContainerAccessNode copy = new ContainerAccessNode();
+    copy.sourceInfo = sourceInfo;
+    copy.keysExpression = keysExpression.copy();
+    copy.containerExpression = containerExpression.copy();
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Arrays.asList(containerExpression, keysExpression);
   }

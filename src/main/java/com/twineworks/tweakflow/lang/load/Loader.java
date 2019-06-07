@@ -46,7 +46,6 @@ import java.util.Map;
 
 public class Loader {
 
-
   private static AnalysisUnit load(LoadPath loadPath, String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
 
     long loadStart = System.currentTimeMillis();
@@ -55,20 +54,42 @@ public class Loader {
       throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
     }
     ParseUnit parseUnit = pathLocation.getParseUnit(modulePath);
+    String parseUnitKey = parseUnit.getPath();
 
     // already done?
-    if (workSet.containsKey(parseUnit.getPath())){
-      return workSet.get(parseUnit.getPath());
+    if (workSet.containsKey(parseUnitKey)){
+      return workSet.get(parseUnitKey);
     }
 
-    Parser parser = new Parser(parseUnit);
-    ParseResult parseResult = parser.parseUnit();
+    ParseResult parseResult = null;
+    UnitNode unitNode;
 
-    if (!parseResult.isSuccess()){
-      throw parseResult.getException();
+    Map<String, ParseResult> parseResultCache = loadPath.getParseResultCache();
+    if (parseResultCache != null){
+      parseResult = parseResultCache.get(parseUnitKey);
     }
 
-    UnitNode unitNode = (UnitNode) parseResult.getNode();
+    if (parseResult == null){
+      Parser parser = new Parser(parseUnit);
+      parseResult = parser.parseUnit();
+      if (!parseResult.isSuccess()){
+        throw parseResult.getException();
+      }
+
+      if (parseResultCache != null && pathLocation.allowsCaching()){
+        parseResultCache.put(parseUnitKey, parseResult);
+        // cached the result, need to work with a copy of the parsed node
+        unitNode = (UnitNode) parseResult.getNode().copy();
+      }
+      else{
+        // not caching the result, use the node directly
+        unitNode = (UnitNode) parseResult.getNode();
+      }
+    }
+    else{
+      // found a result in cache, work with a copy of the parsed node
+      unitNode = (UnitNode) parseResult.getNode().copy();
+    }
 
     AnalysisUnit unit = new AnalysisUnit()
         .setLocation(pathLocation)
@@ -78,7 +99,7 @@ public class Loader {
         .setParseDurationMillis(parseResult.getParseDurationMillis())
         .setBuildDurationMillis(parseResult.getBuildDurationMillis());
 
-    workSet.put(parseUnit.getPath(), unit);
+    workSet.put(parseUnitKey, unit);
 
     long loadEnd = System.currentTimeMillis();
     unit.setLoadDurationMillis(loadEnd-loadStart);

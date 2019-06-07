@@ -43,4 +43,6 @@ public interface Node {
 
   Node accept(Visitor visitor);
 
+  Node copy();
+
 }

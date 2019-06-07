@@ -24,15 +24,19 @@
 
 package com.twineworks.tweakflow.lang.ast.imports;
 
-import com.twineworks.tweakflow.lang.ast.SymbolNode;
-import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
+import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
+import com.twineworks.tweakflow.lang.ast.SymbolNode;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 
 public interface ImportMemberNode extends SymbolNode {
 
   @Override
   ImportMemberNode accept(Visitor visitor);
+
+  @Override
+  ImportMemberNode copy();
+
   AnalysisUnit getImportedCompilationUnit();
   ImportMemberNode setImportedCompilationUnit(AnalysisUnit importedCompilationUnit);
   Symbol getSymbol();

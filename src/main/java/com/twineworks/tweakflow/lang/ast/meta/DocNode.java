@@ -24,9 +24,9 @@
 
 package com.twineworks.tweakflow.lang.ast.meta;
 
+import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
 
@@ -77,5 +77,13 @@ public class DocNode implements Node {
   @Override
   public DocNode accept(Visitor visitor) {
     return visitor.visit(this);
+  }
+
+  @Override
+  public DocNode copy() {
+    DocNode copy = new DocNode();
+    copy.sourceInfo = sourceInfo;
+    copy.expression = (ExpressionNode) expression.copy();
+    return copy;
   }
 }

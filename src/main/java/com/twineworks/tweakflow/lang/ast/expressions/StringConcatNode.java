@@ -66,6 +66,15 @@ public class StringConcatNode extends AExpressionNode implements ExpressionNode 
   }
 
   @Override
+  public StringConcatNode copy() {
+    StringConcatNode copy = new StringConcatNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
+  @Override
   public Type getValueType() {
     return Types.STRING;
   }

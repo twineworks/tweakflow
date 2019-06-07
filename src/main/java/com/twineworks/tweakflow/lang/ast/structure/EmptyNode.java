@@ -73,5 +73,10 @@ public class EmptyNode implements Node {
     return this;
   }
 
+  @Override
+  public EmptyNode copy() {
+    return this;
+  }
+
 
 }

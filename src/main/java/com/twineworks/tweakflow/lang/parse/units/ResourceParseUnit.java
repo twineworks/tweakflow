@@ -61,11 +61,15 @@ public class ResourceParseUnit implements ParseUnit {
     if (programText == null){
 
       try{
-        programText = InOut.readResourceAsString(
+        String ret = InOut.readResourceAsString(
             absPath,
             StandardCharsets.UTF_8,
             classLoader
         );
+        if (location.allowsCaching()){
+          programText = ret;
+        }
+        return ret;
 
       } catch (IOException e) {
         throw new LangException(LangError.IO_ERROR, "I/O error loading "+path+" as resource.");

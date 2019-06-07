@@ -28,9 +28,9 @@ import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 
 public class MemoryParseUnit implements ParseUnit {
 
-  private String programText;
-  private String programLocation;
-  private LoadPathLocation location;
+  private final String programText;
+  private final String programLocation;
+  private final LoadPathLocation location;
 
   public MemoryParseUnit(LoadPathLocation location, String programText, String path) {
     this.programText = programText;

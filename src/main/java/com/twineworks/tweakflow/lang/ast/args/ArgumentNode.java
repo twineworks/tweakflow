@@ -32,6 +32,10 @@ public interface ArgumentNode extends Node {
 
   @Override
   ArgumentNode accept(Visitor visitor);
+
+  @Override
+  ArgumentNode copy();
+
   ExpressionNode getExpression();
   boolean isPositional();
   boolean isSplat();

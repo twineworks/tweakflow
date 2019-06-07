@@ -39,6 +39,18 @@ public class MatchLines implements Node {
   private SourceInfo sourceInfo;
   private Scope scope;
 
+
+  @Override
+  public MatchLines copy() {
+    MatchLines copy = new MatchLines();
+    copy.sourceInfo = sourceInfo;
+    for (MatchLineNode element : elements) {
+      copy.elements.add(element.copy());
+    }
+
+    return copy;
+  }
+
   @Override
   public SourceInfo getSourceInfo() {
     return sourceInfo;

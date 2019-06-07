@@ -32,5 +32,6 @@ public interface LoadPathLocation {
   ParseUnit getParseUnit(String path);
   String resolve(String path);
   boolean allowsNativeFunctions();
+  boolean allowsCaching();
 
 }

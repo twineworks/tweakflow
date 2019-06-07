@@ -40,6 +40,7 @@ public class ResourceLocation implements LoadPathLocation {
 
     private Path path = ROOT_PATH;
     private boolean allowNativeFunctions = true;
+    private boolean allowCaching = true;
     private String defaultExtension = ".tf";
 
     public Builder() {
@@ -47,7 +48,7 @@ public class ResourceLocation implements LoadPathLocation {
 
     @Override
     public ResourceLocation build() {
-      return new ResourceLocation(path, allowNativeFunctions, defaultExtension);
+      return new ResourceLocation(path, allowNativeFunctions, allowCaching, defaultExtension);
     }
 
     public ResourceLocation.Builder path(Path path){
@@ -58,6 +59,11 @@ public class ResourceLocation implements LoadPathLocation {
 
     public ResourceLocation.Builder allowNativeFunctions(boolean allowNativeFunctions) {
       this.allowNativeFunctions = allowNativeFunctions;
+      return this;
+    }
+
+    public ResourceLocation.Builder allowCaching(boolean allowCaching) {
+      this.allowCaching = allowCaching;
       return this;
     }
 
@@ -74,11 +80,17 @@ public class ResourceLocation implements LoadPathLocation {
   private final static Path ROOT_PATH = Paths.get("");
   private final String defaultExtension;
   private final boolean allowNativeFunctions;
+  private final boolean allowCaching;
 
-  public ResourceLocation(Path rootPath, boolean allowNativeFunctions, String defaultExtension){
+  public ResourceLocation(Path rootPath, boolean allowNativeFunctions, boolean allowCaching, String defaultExtension){
     this.rootPath = rootPath;
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
+    this.allowCaching = allowCaching;
+  }
+
+  public ResourceLocation(Path rootPath, boolean allowNativeFunctions, String defaultExtension){
+    this(rootPath, allowNativeFunctions, true, defaultExtension);
   }
 
   public Path getRootPath() {
@@ -147,6 +159,11 @@ public class ResourceLocation implements LoadPathLocation {
   @Override
   public boolean allowsNativeFunctions() {
     return allowNativeFunctions;
+  }
+
+  @Override
+  public boolean allowsCaching() {
+    return allowCaching;
   }
 
 

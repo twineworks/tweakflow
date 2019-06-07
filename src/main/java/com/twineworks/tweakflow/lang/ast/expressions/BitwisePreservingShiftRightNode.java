@@ -37,6 +37,15 @@ public class BitwisePreservingShiftRightNode extends AExpressionNode implements 
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
 
+  @Override
+  public BitwisePreservingShiftRightNode copy() {
+    BitwisePreservingShiftRightNode copy = new BitwisePreservingShiftRightNode();
+    copy.sourceInfo = sourceInfo;
+    copy.leftExpression = leftExpression.copy();
+    copy.rightExpression = rightExpression.copy();
+    return copy;
+  }
+
   public ExpressionNode getLeftExpression() {
     return leftExpression;
   }

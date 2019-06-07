@@ -37,6 +37,13 @@ public class DoubleNode extends AExpressionNode implements ExpressionNode {
   private Double doubleNum;
 
   @Override
+  public DoubleNode copy() {
+    DoubleNode copy = new DoubleNode(doubleNum);
+    copy.sourceInfo = sourceInfo;
+    return copy;
+  }
+
+  @Override
   public List<? extends Node> getChildren() {
     return Collections.emptyList();
   }
