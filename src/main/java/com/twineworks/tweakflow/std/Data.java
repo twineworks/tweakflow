@@ -934,7 +934,7 @@ public final class Data {
       if (startLong >= xsList.size()) return Values.LONG_NEG_ONE;
       if (x.isFunction() || x.isDoubleNum() && x.doubleNum().isNaN()) return Values.LONG_NEG_ONE;
 
-      return Values.make(xsList.indexOf(x, startLong));
+      return xsList.indexOf(x, startLong);
     }
   }
 
@@ -990,7 +990,7 @@ public final class Data {
         endInt = (int) java.lang.Math.min(endLong, xsList.size()-1);
       }
 
-      return Values.make(xsList.lastIndexOf(x, endInt));
+      return xsList.lastIndexOf(x, endInt);
     }
   }
 
@@ -1276,7 +1276,7 @@ public final class Data {
       if (xs.isNil()) return Values.NIL;
       ListValue list = xs.list();
       if (list.size() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "list must not be empty");
-      return Values.make(list.head());
+      return list.head();
     }
   }
 
@@ -1289,7 +1289,7 @@ public final class Data {
       if (xs.isNil()) return Values.NIL;
       ListValue list = xs.list();
       if (list.size() == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "list must not be empty");
-      return Values.make(list.last());
+      return list.last();
     }
   }
 
