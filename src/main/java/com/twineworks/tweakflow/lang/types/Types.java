@@ -32,6 +32,7 @@ final public class Types {
   public static final VoidType VOID = new VoidType();
   public static final AnyType ANY = new AnyType();
   public static final BooleanType BOOLEAN = new BooleanType();
+  public static final BinaryType BINARY = new BinaryType();
   public static final StringType STRING = new StringType();
   public static final LongType LONG = new LongType();
   public static final ListType LIST = new ListType();
@@ -49,6 +50,7 @@ final public class Types {
     byName.put(STRING.name(), STRING);
     byName.put(LONG.name(), LONG);
     byName.put(BOOLEAN.name(), BOOLEAN);
+    byName.put(BINARY.name(), BINARY);
     byName.put(LIST.name(), LIST);
     byName.put(DICT.name(), DICT);
     byName.put(FUNCTION.name(), FUNCTION);

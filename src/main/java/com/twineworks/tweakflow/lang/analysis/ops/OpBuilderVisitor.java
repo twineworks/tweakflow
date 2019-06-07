@@ -444,6 +444,12 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
   }
 
   @Override
+  public BinaryNode visit(BinaryNode node) {
+    node.setOp(new ConstantOp(Values.make(node.getBytes())));
+    return node;
+  }
+
+  @Override
   public LongNode visit(LongNode node) {
     node.setOp(new ConstantOp(Values.make(node.getLongNum())));
     return node;

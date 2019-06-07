@@ -66,6 +66,13 @@ public class ValueInspector {
       return;
     }
 
+    if (v.type() == Types.BINARY){
+      out.append(leadingIndent)
+          .append("0b")
+          .append(LangUtil.bytesToHex(v.bytes()));
+      return;
+    }
+
     if (v.type() == Types.LONG){
       out.append(leadingIndent).append(v.longNum().toString());
       return;

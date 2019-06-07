@@ -93,4 +93,38 @@ public class CodeParseHelper {
   public static String key(ParseTree token){
     return identifier(token.getText().substring(1));
   }
+
+  private static byte[] nibbles = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+
+  private static byte nibbleForChar(char c){
+    if (c >= '0' && c <='9'){
+      return (byte) (c-'0');
+    } else if (c >= 'a' && c <= 'f'){
+      return (byte) (c-'a'+10);
+    }
+    else {
+      return (byte) (c-'A'+10);
+    }
+  }
+
+  // converts hex string of the form 0b03DaFaf9.. to byte array
+  // no validation on the input string is done
+  // this is assuming the lexer let through only good values
+  public static byte[] hexToBytes(String hex){
+
+    int strLen = hex.length();
+
+    int bytesLen = (strLen-2)/2;
+    byte[] bytes = new byte[bytesLen];
+
+    int p = 0;
+    for (int i = 2; i < strLen; i+=2){
+      byte u = nibbleForChar(hex.charAt(i));
+      byte l = nibbleForChar(hex.charAt(i+1));
+      bytes[p] = (byte) (u << 4 | l);
+      p++;
+    }
+
+    return bytes;
+  }
 }

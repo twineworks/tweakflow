@@ -56,6 +56,7 @@ PROVIDED: 'provided';
 FUNCTION: 'function';
 STRING: 'string';
 BOOLEAN: 'boolean';
+BINARY: 'binary';
 LONG: 'long';
 DICT: 'dict';
 LIST: 'list';
@@ -158,6 +159,10 @@ INT
 HEX
   : '0x' BYTE  BYTE? BYTE? BYTE?
          BYTE? BYTE? BYTE? BYTE?
+  ;
+
+BIN
+  : '0b' BYTE*
   ;
 
 fragment DIGIT: [0-9];

@@ -1535,6 +1535,15 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   }
 
+  byte[] parseBinLiteral(String hexString){
+    return hexToBytes(hexString);
+  }
+
+  @Override
+  public ExpressionNode visitBinaryLiteralExp(TweakFlowParser.BinaryLiteralExpContext ctx) {
+    String hexString = ctx.binaryLiteral().getText();
+    return new BinaryNode(parseBinLiteral(hexString)).setSourceInfo(srcOf(parseUnit, ctx));
+  }
 
   @Override
   public ExpressionNode visitPartialExp(TweakFlowParser.PartialExpContext ctx) {

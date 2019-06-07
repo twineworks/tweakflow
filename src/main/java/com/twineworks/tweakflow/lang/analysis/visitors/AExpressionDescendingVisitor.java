@@ -165,7 +165,12 @@ public class AExpressionDescendingVisitor implements Visitor {
   public ExpressionNode visit(BooleanNode node) {
     node.getChildren().forEach((m) -> m.accept(this));
     return node;
+  }
 
+  @Override
+  public ExpressionNode visit(BinaryNode node) {
+    node.getChildren().forEach((m) -> m.accept(this));
+    return node;
   }
 
   @Override

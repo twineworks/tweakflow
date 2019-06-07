@@ -137,6 +137,7 @@ provided
 literal
   : nilLiteral                                              # nilLiteralExp
   | booleanLiteral                                          # booleanLiteralExp
+  | binaryLiteral                                           # binaryLiteralExp
   | dateTimeLiteral                                         # dateTimeLiteralExp
   | stringConstant                                          # stringConstantExp
   | longLiteral                                             # longLiteralExp
@@ -288,6 +289,10 @@ longLiteral
   | HEX # hexLiteral
   ;
 
+binaryLiteral
+  : BIN     # binLiteral
+  ;
+
 doubleLiteral
   : DBL
   | '-' DBL
@@ -350,6 +355,7 @@ dataType
   | LIST
   | DATETIME
   | BOOLEAN
+  | BINARY
   | VOID
   | ANY
   ;

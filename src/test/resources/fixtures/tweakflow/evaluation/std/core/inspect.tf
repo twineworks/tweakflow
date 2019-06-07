@@ -33,6 +33,9 @@ library eval_spec {
   inspects_boolean:
     expect(inspect(true), to.be('true'));
 
+  inspects_binary:
+    expect(inspect(0b01020304), to.be('0b01020304'));
+
   inspects_function:
     expect(inspect(() -> 1), to.be("function"));
 

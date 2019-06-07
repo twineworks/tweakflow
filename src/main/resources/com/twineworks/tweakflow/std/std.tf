@@ -5721,3 +5721,164 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
   function decimal_symbols: (lang='en-US') -> dict via {:class "com.twineworks.tweakflow.std.Locale$decimalSymbols"};
 
 }
+
+
+doc
+~~~
+The bin library provides functions that operate on binary data.
+~~~
+
+export library bin {
+
+doc
+~~~
+`(list xs) -> binary`
+
+Expects a list of binary values. Returns a binary that contains all bytes of all binaries in given order.
+
+Returns `nil` if `xs` is `nil`.\
+Returns `nil` if any element of `xs` is `nil`.
+
+Throws an error if any element of `xs` is not a binary.
+
+```tweakflow
+> bin.concat([0b00, 0b01])
+0b0001
+
+> bin.concat([nil, 0b01])
+nil
+```
+~~~
+  function concat: (list xs) -> binary via {:class "com.twineworks.tweakflow.std.Bin$concat"};
+
+doc
+~~~
+`(binary x) -> long`
+
+Returns the number of bytes in `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> bin.size(0b)
+0
+
+> bin.size(0b01020304)
+4
+
+> bin.size(nil)
+nil
+```
+~~~
+
+  function size: (binary x) -> long via {:class "com.twineworks.tweakflow.std.Bin$size"};
+
+doc
+~~~
+`(binary x, long i) -> long`
+
+Returns the byte at byte offset `i` in binary `x` as a long between 0 and 255.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i>=size(x)`.
+
+```tweakflow
+> bin.byte_at(0b01020304, 3)
+4
+
+> bin.byte_at(0bFF, 0)
+255
+
+> bin.byte_at(0b, 10)
+nil
+```
+~~~
+
+  function byte_at: (binary x, long i) -> long via {:class "com.twineworks.tweakflow.std.Bin$byte_at"};
+
+doc
+~~~
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the word (16-bit integer value) at byte offset `i` in binary `x` as a long between 0 and 65535.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+1>=size(x)`.
+
+```tweakflow
+> bin.word_at(0b0100, 0)
+1
+
+> bin.word_at(0b0100, 0, true)
+256
+
+> bin.word_at(0b000F, 0)
+3840
+
+> bin.word_at(0b000F, 0, true)
+15
+
+> bin.word_at(0bFF, 0)
+nil
+```
+~~~
+
+  function word_at: (binary x, long i, boolean big_endian=false) -> long via {:class "com.twineworks.tweakflow.std.Bin$word_at"};
+
+doc
+~~~
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the double-word (32-bit integer value) at byte offset `i` in binary `x` as a long between 0 and 4294967295.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+3>=size(x)`.
+
+```tweakflow
+> bin.dword_at(0b01000000, 0)
+1
+
+> bin.dword_at(0b01000000, 0, true)
+16777216
+
+> bin.dword_at(0bFF, 0)
+nil
+```
+~~~
+
+  function dword_at: (binary x, long i, boolean big_endian=false) -> long via {:class "com.twineworks.tweakflow.std.Bin$dword_at"};
+
+doc
+~~~
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the long (64-bit integer value) at byte offset `i` in binary `x` as a signed long.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+7>=size(x)`.
+
+```tweakflow
+> bin.long_at(0b0100000000000000, 0)
+1
+
+> bin.long_at(0b0100000000000000, 0, true)
+72057594037927936
+
+> bin.long_at(0bFFFFFFFFFFFFFFFF, 0)
+-1
+
+> bin.long_at(0bFF, 0)
+nil
+```
+~~~
+
+  function long_at: (binary x, long i, boolean big_endian=false) -> long via {:class "com.twineworks.tweakflow.std.Bin$long_at"};
+
+
+}

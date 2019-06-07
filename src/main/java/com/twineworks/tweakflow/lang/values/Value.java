@@ -92,6 +92,10 @@ final public class Value implements ValueProvider {
     return (Boolean) value;
   }
 
+  public byte[] bytes() {
+    return (byte[]) value;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -148,6 +152,10 @@ final public class Value implements ValueProvider {
     return this.type == Types.BOOLEAN;
   }
 
+  public boolean isBinary() {
+    return this.type == Types.BINARY;
+  }
+
   public Value castTo(Type type){
     if (type == this.type || type == Types.ANY || this == Values.NIL) return this;     // no cast necessary
     return type.castFrom(this);
@@ -178,5 +186,6 @@ final public class Value implements ValueProvider {
   public String inspect(){
     return ValueInspector.inspect(this);
   }
+
 
 }

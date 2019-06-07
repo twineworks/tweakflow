@@ -43,6 +43,8 @@ final public class Values {
   public static final Value TRUE = new Value(Types.BOOLEAN, true);
   public static final Value FALSE = new Value(Types.BOOLEAN, false);
 
+  public static final Value EMPTY_BINARY = new Value(Types.BINARY, new byte[0]);
+
   public static final Value EPOCH = new Value(Types.DATETIME, new DateTimeValue(Instant.EPOCH));
 
   public static final Value NAN = new Value(Types.DOUBLE, Double.NaN);
@@ -72,6 +74,12 @@ final public class Values {
     if (s == null) return NIL;
     if (s.length() == 0) return EMPTY_STRING;
     return new Value(Types.STRING, s);
+  }
+
+  public static Value make(byte[] bin) {
+    if (bin == null) return NIL;
+    if (bin.length == 0) return EMPTY_BINARY;
+    return new Value(Types.BINARY, bin);
   }
 
   public static Value make(Long n) {
