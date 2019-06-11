@@ -160,6 +160,9 @@ final public class BooleanType implements Type {
     else if (srcType == Types.STRING){
       return (x.string().length() == 0) ? Values.FALSE : Values.TRUE;
     }
+    else if (srcType == Types.BINARY){
+      return (x.bytes().length == 0) ? Values.FALSE : Values.TRUE;
+    }
 
     throw new AssertionError("Unknown type "+srcType);
 

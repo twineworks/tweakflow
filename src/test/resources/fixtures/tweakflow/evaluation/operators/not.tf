@@ -21,6 +21,10 @@ library operator_spec {
   l1:   !1 == false;
   ln1: !-1 == false;
 
+  be:  !0b == true;
+  b0:  !0b00 == false;
+  b1:  !0b01 == false;
+
   d0:   !0.0    == true;
   d1:   !1.0    == false;
   dn1: !-1.0    == false;

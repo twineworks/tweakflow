@@ -34,6 +34,14 @@ library operator_spec {
   d1_l0: (1.0 != 0)    == true;
   d1_l1: (1.0 != 1)    == false;
 
+  be_be: (0b != 0b) == false;
+  be_b0: (0b != 0b00) == true;
+  b0_be: (0b00 != 0b) == true;
+  b0_b0: (0b00 != 0b00) == false;
+  b0_b1: (0b00 != 0b01) == true;
+  b1_b0: (0b01 != 0b00) == true;
+  b1_b1: (0b01 != 0b01) == false;
+
   nil_l0: (nil != 0)     == true;
   l0_nil:   (0 != nil)   == true;
 

@@ -57,6 +57,8 @@ library operator_spec {
   foo_bar: ("foo" && "bar") == true;
   l0_bar:      (0 && "bar") == false;
   bar_l0:  ("bar" && 0)     == false;
+  be_be:     (0b && 0b)     == false;
+  b0_b0:   (0b00 && 0b00)   == true;
 
   fu_fu:     (lib.f && lib.f) == true;
 

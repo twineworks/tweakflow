@@ -62,4 +62,39 @@ public class BinTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/long_at.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> float_at() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/float_at.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> double_at() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/double_at.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> slice() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/slice.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> to_hex() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/to_hex.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> from_hex() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/from_hex.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> base64_encode() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/base64_encode.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> base64_decode() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/bin/base64_decode.tf");
+  }
+
 }

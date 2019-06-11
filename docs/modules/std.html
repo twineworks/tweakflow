@@ -1038,6 +1038,85 @@ nil
       data-meta-tags='strings'
     ></div>
 
+<h3 id="strings-to_bytes">to_bytes</h3>
+
+<p><code>(string x, string charset=&quot;UTF-8&quot;) -&gt; binary</code></p>
+
+<p>Returns binary representing the bytes of string <code>x</code> using given <code>charset</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>charset</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.to_bytes(&quot;abc&quot;)
+0b616263
+
+&gt; strings.to_bytes(&quot;你好&quot;)
+0bE4BDA0E5A5BD
+
+&gt; strings.to_bytes(&quot;bäcker&quot;)
+0b62C3A4636B6572
+
+&gt; strings.to_bytes(&quot;bäcker&quot;, &quot;ISO-8859-1&quot;)
+0b62E4636B6572
+
+&gt; strings.to_bytes(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='strings-to_bytes'
+      data-meta-type='var'
+      data-meta-name='to_bytes'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-from_bytes">from_bytes</h3>
+
+<p><code>(binary x, string charset=&quot;UTF-8&quot;) -&gt; string</code></p>
+
+<p>Returns string represented by the bytes of <code>x</code> using given <code>charset</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>charset</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; strings.from_bytes(0b616263)
+&quot;abc&quot;
+
+&gt; strings.from_bytes(0bE4BDA0E5A5BD)
+&quot;你好&quot;
+
+&gt; strings.from_bytes(0b62C3A4636B6572)
+&quot;bäcker&quot;
+
+&gt; strings.from_bytes(0b62E4636B6572, &quot;ISO-8859-1&quot;)
+&quot;bäcker&quot;
+
+&gt; strings.from_bytes(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='strings-from_bytes'
+      data-meta-type='var'
+      data-meta-name='from_bytes'
+      data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-charsets">charsets</h3>
+
+<p><code>() -&gt; list</code></p>
+
+<p>Returns known charsets. Each item in the returned list is a charset name suitable for passing to
+functions requiring a charset name, such as <a href="#strings-to_bytes">to_bytes</a> and <a href="#strings-from_bytes">from_bytes</a>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='strings-charsets'
+      data-meta-type='var'
+      data-meta-name='charsets'
+      data-meta-tags='strings'
+    ></div>
+
 <h2 id="regex">library regex</h2>
 
 <p>The regex library provides functions to work with regular expressions.
@@ -6625,6 +6704,431 @@ The human readable names are given in the language tag passed as the locale para
       data-meta-type='var'
       data-meta-name='decimal_symbols'
       data-meta-tags='locale'
+    ></div>
+
+<h2 id="bin">library bin</h2>
+
+<p>The bin library provides functions that operate on binary data.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin'
+      data-meta-type='library'
+      data-meta-name='bin'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="bin-concat">concat</h3>
+
+<p><code>(list xs) -&gt; binary</code></p>
+
+<p>Expects a list of binary values. Returns a binary that contains all bytes of all binaries in given order.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.<br />
+Returns <code>nil</code> if any element of <code>xs</code> is <code>nil</code>.</p>
+
+<p>Throws an error if any element of <code>xs</code> is not a binary.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.concat([0b00, 0b01])
+0b0001
+
+&gt; bin.concat([nil, 0b01])
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-size">size</h3>
+
+<p><code>(binary x) -&gt; long</code></p>
+
+<p>Returns the number of bytes in <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.size(0b)
+0
+
+&gt; bin.size(0b01020304)
+4
+
+&gt; bin.size(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-size'
+      data-meta-type='var'
+      data-meta-name='size'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-byte_at">byte_at</h3>
+
+<p><code>(binary x, long i) -&gt; long</code></p>
+
+<p>Returns the byte at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 255.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.byte_at(0b01020304, 3)
+4
+
+&gt; bin.byte_at(0bFF, 0)
+255
+
+&gt; bin.byte_at(0b, 10)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-byte_at'
+      data-meta-type='var'
+      data-meta-name='byte_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-word_at">word_at</h3>
+
+<p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
+
+<p>Returns the word (16-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 65535.</p>
+
+<p>Interprets bytes as most significant last. If <code>big_endian</code> is <code>true</code>, interprets bytes as most significant first.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+1&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.word_at(0b0100, 0)
+1
+
+&gt; bin.word_at(0b0100, 0, true)
+256
+
+&gt; bin.word_at(0b000F, 0)
+3840
+
+&gt; bin.word_at(0b000F, 0, true)
+15
+
+&gt; bin.word_at(0bFF, 0)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-word_at'
+      data-meta-type='var'
+      data-meta-name='word_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-dword_at">dword_at</h3>
+
+<p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
+
+<p>Returns the double-word (32-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 4294967295.</p>
+
+<p>Interprets bytes as most significant last. If <code>big_endian</code> is <code>true</code>, interprets bytes as most significant first.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+3&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.dword_at(0b01000000, 0)
+1
+
+&gt; bin.dword_at(0b01000000, 0, true)
+16777216
+
+&gt; bin.dword_at(0bFF, 0)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-dword_at'
+      data-meta-type='var'
+      data-meta-name='dword_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-long_at">long_at</h3>
+
+<p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
+
+<p>Returns the long (64-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a signed long.</p>
+
+<p>Interprets bytes as most significant last. If <code>big_endian</code> is <code>true</code>, interprets bytes as most significant first.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+7&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.long_at(0b0100000000000000, 0)
+1
+
+&gt; bin.long_at(0b0100000000000000, 0, true)
+72057594037927936
+
+&gt; bin.long_at(0bFFFFFFFFFFFFFFFF, 0)
+-1
+
+&gt; bin.long_at(0bFF, 0)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-long_at'
+      data-meta-type='var'
+      data-meta-name='long_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-float_at">float_at</h3>
+
+<p><code>(binary x, long i, boolean big_endian=false) -&gt; double</code></p>
+
+<p>Returns the float (32-bit floating point value) at byte offset <code>i</code> in binary <code>x</code> as a double.</p>
+
+<p>Interprets bytes as most significant last. If <code>big_endian</code> is <code>true</code>, interprets bytes as most significant first.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+3&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.float_at(0b00000000, 0)
+0.0
+
+&gt; bin.float_at(0b0000803f, 0)
+1.0
+
+&gt; bin.float_at(0b0000803f, 0, true)
+4.600602988224807E-41
+
+&gt; bin.float_at(0b40490fdb, 0, true)
+3.1415927410125732
+
+&gt; bin.float_at(0b0000807f, 0)
+Infinity
+
+&gt; bin.float_at(0b0100C0ff, 0)
+NaN
+
+&gt; bin.float_at(0bFF, 0)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-float_at'
+      data-meta-type='var'
+      data-meta-name='float_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-double_at">double_at</h3>
+
+<p><code>(binary x, long i, boolean big_endian=false) -&gt; double</code></p>
+
+<p>Returns the double (64-bit floating point value) at byte offset <code>i</code> in binary <code>x</code> as a double.</p>
+
+<p>Interprets bytes as most significant last. If <code>big_endian</code> is <code>true</code>, interprets bytes as most significant first.</p>
+
+<p>Returns <code>nil</code> if any argument is <code>nil</code>.<br />
+Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+7&gt;=size(x)</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.double_at(0b0000000000000000, 0)
+0.0
+
+&gt; bin.double_at(0b000000000000f03f, 0)
+1.0
+
+&gt; bin.double_at(0bc000000000000000, 0, true)
+-2.0
+
+&gt; bin.double_at(0b000000000000f07f, 0)
+Infinity
+
+&gt; bin.double_at(0b000000000000f0ff, 0)
+-Infinity
+
+&gt; bin.double_at(0b010000000000f07f, 0)
+NaN
+
+&gt; bin.double_at(0b400921fb54442d18, 0, true)
+3.141592653589793
+
+&gt; bin.double_at(0bFF, 0)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-double_at'
+      data-meta-type='var'
+      data-meta-name='double_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-slice">slice</h3>
+
+<p><code>(binary x, long start=0, long end=nil) -&gt; list</code></p>
+
+<p>Returns a range of bytes from <code>x</code> starting at byte offset <code>start</code> inclusively, and extending to byte offset <code>end</code> exclusively.
+If <code>end</code> is <code>nil</code>, the range extends to the end of <code>x</code>.</p>
+
+<p>Returns a zero length binary if <code>start</code> is greater than the size of <code>x</code>.
+Returns a zero length binary if <code>start &gt;= end</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>start</code> is <code>nil</code> or <code>start &lt; 0</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.slice(0b00010203, 2)
+0b0203
+
+&gt; bin.slice(0b00010203040506, 1, 4)
+0b010203
+
+&gt; bin.slice(0b, 10, 20)
+0b
+
+&gt; bin.slice(0b0001020304, 1, 1)
+0b
+
+&gt; bin.slice(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-to_hex">to_hex</h3>
+
+<p><code>(binary x) -&gt; string</code></p>
+
+<p>Returns a hexadecimal string representing the binary value <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.to_hex(0b010A0B04)
+&quot;010a0b04&quot;
+
+&gt; bin.to_hex(0b)
+&quot;&quot;
+
+&gt; bin.to_hex(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-to_hex'
+      data-meta-type='var'
+      data-meta-name='to_hex'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-from_hex">from_hex</h3>
+
+<p><code>(string x) -&gt; binary</code></p>
+
+<p>Returns the binary value represented by given hexadecimal string <code>x</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>x</code> contains non-hexadecimal characters.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.from_hex(&quot;010a0b04&quot;)
+0b010A0B04
+
+&gt; bin.from_hex(&quot;&quot;)
+0b
+
+&gt; bin.from_hex(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-from_hex'
+      data-meta-type='var'
+      data-meta-name='from_hex'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-base64_encode">base64_encode</h3>
+
+<p><code>(binary x, variant='basic') -&gt; string</code></p>
+
+<p>Returns the base64 string representation of given binary data <code>x</code>.</p>
+
+<p>If <code>variant</code> is equal to <code>basic</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>url</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>mime</code>, the standard base64 alphabet of RFC 2045 is used.
+In addition the encoded output is represented in lines of no more than 76 characters each
+and uses a carriage return <code>\r</code> followed immediately by a linefeed <code>\n</code> as the line separator.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>variant</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>variant</code> is not <code>nil</code> and not equal to any supported variant.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.base64_encode(strings.to_bytes(&quot;Hello World&quot;))
+
+&gt; bin.base64_encode(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-base64_encode'
+      data-meta-type='var'
+      data-meta-name='base64_encode'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-base64_decode">base64_decode</h3>
+
+<p><code>(string x, variant='basic') -&gt; binary</code></p>
+
+<p>Returns the bytes encoded by given base64 string <code>x</code>.</p>
+
+<p>If <code>variant</code> is equal to <code>basic</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>url</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>mime</code>, the standard base64 alphabet of RFC 2045 is used. Any characters
+not found in the standard alphabet table are ignored.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>variant</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>variant</code> is not <code>nil</code> and not equal to any supported variant.<br />
+Throws an error if <code>variant</code> is <code>basic</code> or <code>url</code> and any non-alphabet characters are encountered.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.base64_decode(&quot;AA==&quot;)
+0b00
+
+&gt; bin.base64_decode(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-base64_decode'
+      data-meta-type='var'
+      data-meta-name='base64_decode'
+      data-meta-tags='bin'
     ></div>
 
         

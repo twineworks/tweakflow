@@ -27,6 +27,9 @@ library eval_spec {
   of_a:
     hash("a") === 97;
 
+  of_empty_binary:
+    hash(0b) === 1;
+
   of_empty_list:
     hash([]) === 1;
 

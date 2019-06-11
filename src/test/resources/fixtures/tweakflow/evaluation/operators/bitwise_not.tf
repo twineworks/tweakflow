@@ -15,6 +15,7 @@ library operator_spec {
   d1:   ~1.0    == -2;
   dn1: ~-1.0    == 0;
 
+  b0:    try   ~0b00  catch "error" == "error";
   foo:   try   ~"foo"  catch "error" == "error";
   f:     try   ~lib.f  catch "error" == "error";
   dt:    try   ~time.epoch catch "error" == "error";

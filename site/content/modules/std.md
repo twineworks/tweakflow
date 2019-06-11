@@ -938,6 +938,93 @@ nil
 	  data-meta-tags='strings'
     ></div>
 
+### to_bytes{#strings-to_bytes}
+
+`(string x, string charset="UTF-8") -> binary`
+
+Returns binary representing the bytes of string `x` using given `charset`.
+
+Returns `nil` if `x` is `nil` or `charset` is `nil`.
+
+```tweakflow
+> strings.to_bytes("abc")
+0b616263
+
+> strings.to_bytes("你好")
+0bE4BDA0E5A5BD
+
+> strings.to_bytes("bäcker")
+0b62C3A4636B6572
+
+> strings.to_bytes("bäcker", "ISO-8859-1")
+0b62E4636B6572
+
+> strings.to_bytes(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-to_bytes'
+      data-meta-type='var'
+      data-meta-name='to_bytes'
+	  data-meta-tags='strings'
+    ></div>
+
+### from_bytes{#strings-from_bytes}
+
+`(binary x, string charset="UTF-8") -> string`
+
+Returns string represented by the bytes of `x` using given `charset`.
+
+Returns `nil` if `x` is `nil` or `charset` is `nil`.
+
+```tweakflow
+> strings.from_bytes(0b616263)
+"abc"
+
+> strings.from_bytes(0bE4BDA0E5A5BD)
+"你好"
+
+> strings.from_bytes(0b62C3A4636B6572)
+"bäcker"
+
+> strings.from_bytes(0b62E4636B6572, "ISO-8859-1")
+"bäcker"
+
+> strings.from_bytes(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-from_bytes'
+      data-meta-type='var'
+      data-meta-name='from_bytes'
+	  data-meta-tags='strings'
+    ></div>
+
+### charsets{#strings-charsets}
+
+`() -> list`
+
+Returns known charsets. Each item in the returned list is a charset name suitable for passing to
+functions requiring a charset name, such as [to_bytes](#strings-to_bytes) and [from_bytes](#strings-from_bytes).
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-charsets'
+      data-meta-type='var'
+      data-meta-name='charsets'
+	  data-meta-tags='strings'
+    ></div>
+
 ## library regex{#regex}
 
 The regex library provides functions to work with regular expressions.
@@ -6868,5 +6955,471 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
       data-meta-type='var'
       data-meta-name='decimal_symbols'
 	  data-meta-tags='locale'
+    ></div>
+
+## library bin{#bin}
+
+The bin library provides functions that operate on binary data.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin'
+      data-meta-type='library'
+      data-meta-name='bin'
+	  data-meta-tags=''
+    ></div>
+
+### concat{#bin-concat}
+
+`(list xs) -> binary`
+
+Expects a list of binary values. Returns a binary that contains all bytes of all binaries in given order.
+
+Returns `nil` if `xs` is `nil`.\
+Returns `nil` if any element of `xs` is `nil`.
+
+Throws an error if any element of `xs` is not a binary.
+
+```tweakflow
+> bin.concat([0b00, 0b01])
+0b0001
+
+> bin.concat([nil, 0b01])
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	  data-meta-tags='bin'
+    ></div>
+
+### size{#bin-size}
+
+`(binary x) -> long`
+
+Returns the number of bytes in `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> bin.size(0b)
+0
+
+> bin.size(0b01020304)
+4
+
+> bin.size(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-size'
+      data-meta-type='var'
+      data-meta-name='size'
+	  data-meta-tags='bin'
+    ></div>
+
+### byte_at{#bin-byte_at}
+
+`(binary x, long i) -> long`
+
+Returns the byte at byte offset `i` in binary `x` as a long between 0 and 255.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i>=size(x)`.
+
+```tweakflow
+> bin.byte_at(0b01020304, 3)
+4
+
+> bin.byte_at(0bFF, 0)
+255
+
+> bin.byte_at(0b, 10)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-byte_at'
+      data-meta-type='var'
+      data-meta-name='byte_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### word_at{#bin-word_at}
+
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the word (16-bit integer value) at byte offset `i` in binary `x` as a long between 0 and 65535.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+1>=size(x)`.
+
+```tweakflow
+> bin.word_at(0b0100, 0)
+1
+
+> bin.word_at(0b0100, 0, true)
+256
+
+> bin.word_at(0b000F, 0)
+3840
+
+> bin.word_at(0b000F, 0, true)
+15
+
+> bin.word_at(0bFF, 0)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-word_at'
+      data-meta-type='var'
+      data-meta-name='word_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### dword_at{#bin-dword_at}
+
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the double-word (32-bit integer value) at byte offset `i` in binary `x` as a long between 0 and 4294967295.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+3>=size(x)`.
+
+```tweakflow
+> bin.dword_at(0b01000000, 0)
+1
+
+> bin.dword_at(0b01000000, 0, true)
+16777216
+
+> bin.dword_at(0bFF, 0)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-dword_at'
+      data-meta-type='var'
+      data-meta-name='dword_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### long_at{#bin-long_at}
+
+`(binary x, long i, boolean big_endian=false) -> long`
+
+Returns the long (64-bit integer value) at byte offset `i` in binary `x` as a signed long.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+7>=size(x)`.
+
+```tweakflow
+> bin.long_at(0b0100000000000000, 0)
+1
+
+> bin.long_at(0b0100000000000000, 0, true)
+72057594037927936
+
+> bin.long_at(0bFFFFFFFFFFFFFFFF, 0)
+-1
+
+> bin.long_at(0bFF, 0)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-long_at'
+      data-meta-type='var'
+      data-meta-name='long_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### float_at{#bin-float_at}
+
+`(binary x, long i, boolean big_endian=false) -> double`
+
+Returns the float (32-bit floating point value) at byte offset `i` in binary `x` as a double.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+3>=size(x)`.
+
+```tweakflow
+> bin.float_at(0b00000000, 0)
+0.0
+
+> bin.float_at(0b0000803f, 0)
+1.0
+
+> bin.float_at(0b0000803f, 0, true)
+4.600602988224807E-41
+
+> bin.float_at(0b40490fdb, 0, true)
+3.1415927410125732
+
+> bin.float_at(0b0000807f, 0)
+Infinity
+
+> bin.float_at(0b0100C0ff, 0)
+NaN
+
+> bin.float_at(0bFF, 0)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-float_at'
+      data-meta-type='var'
+      data-meta-name='float_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### double_at{#bin-double_at}
+
+`(binary x, long i, boolean big_endian=false) -> double`
+
+Returns the double (64-bit floating point value) at byte offset `i` in binary `x` as a double.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+7>=size(x)`.
+
+```tweakflow
+> bin.double_at(0b0000000000000000, 0)
+0.0
+
+> bin.double_at(0b000000000000f03f, 0)
+1.0
+
+> bin.double_at(0bc000000000000000, 0, true)
+-2.0
+
+> bin.double_at(0b000000000000f07f, 0)
+Infinity
+
+> bin.double_at(0b000000000000f0ff, 0)
+-Infinity
+
+> bin.double_at(0b010000000000f07f, 0)
+NaN
+
+> bin.double_at(0b400921fb54442d18, 0, true)
+3.141592653589793
+
+> bin.double_at(0bFF, 0)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-double_at'
+      data-meta-type='var'
+      data-meta-name='double_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### slice{#bin-slice}
+
+`(binary x, long start=0, long end=nil) -> list`
+
+Returns a range of bytes from `x` starting at byte offset `start` inclusively, and extending to byte offset `end` exclusively.
+If `end` is `nil`, the range extends to the end of `x`.
+
+Returns a zero length binary if `start` is greater than the size of `x`.
+Returns a zero length binary if `start >= end`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `start` is `nil` or `start < 0`.
+
+```tweakflow
+> bin.slice(0b00010203, 2)
+0b0203
+
+> bin.slice(0b00010203040506, 1, 4)
+0b010203
+
+> bin.slice(0b, 10, 20)
+0b
+
+> bin.slice(0b0001020304, 1, 1)
+0b
+
+> bin.slice(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+	  data-meta-tags='bin'
+    ></div>
+
+### to_hex{#bin-to_hex}
+
+`(binary x) -> string`
+
+Returns a hexadecimal string representing the binary value `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> bin.to_hex(0b010A0B04)
+"010a0b04"
+
+> bin.to_hex(0b)
+""
+
+> bin.to_hex(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-to_hex'
+      data-meta-type='var'
+      data-meta-name='to_hex'
+	  data-meta-tags='bin'
+    ></div>
+
+### from_hex{#bin-from_hex}
+
+`(string x) -> binary`
+
+Returns the binary value represented by given hexadecimal string `x`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `x` contains non-hexadecimal characters.
+
+```tweakflow
+> bin.from_hex("010a0b04")
+0b010A0B04
+
+> bin.from_hex("")
+0b
+
+> bin.from_hex(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-from_hex'
+      data-meta-type='var'
+      data-meta-name='from_hex'
+	  data-meta-tags='bin'
+    ></div>
+
+### base64_encode{#bin-base64_encode}
+
+`(binary x, variant='basic') -> string`
+
+Returns the base64 string representation of given binary data `x`.
+
+If `variant` is equal to `basic`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `url`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `mime`, the standard base64 alphabet of RFC 2045 is used.
+In addition the encoded output is represented in lines of no more than 76 characters each
+and uses a carriage return `\r` followed immediately by a linefeed `\n` as the line separator.
+
+Returns `nil` if `x` is `nil` or `variant` is `nil`.
+
+Throws an error if `variant` is not `nil` and not equal to any supported variant.
+
+```tweakflow
+> bin.base64_encode(strings.to_bytes("Hello World"))
+
+> bin.base64_encode(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-base64_encode'
+      data-meta-type='var'
+      data-meta-name='base64_encode'
+	  data-meta-tags='bin'
+    ></div>
+
+### base64_decode{#bin-base64_decode}
+
+`(string x, variant='basic') -> binary`
+
+Returns the bytes encoded by given base64 string `x`.
+
+If `variant` is equal to `basic`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `url`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `mime`, the standard base64 alphabet of RFC 2045 is used. Any characters
+not found in the standard alphabet table are ignored.
+
+Returns `nil` if `x` is `nil` or `variant` is `nil`.
+
+Throws an error if `variant` is not `nil` and not equal to any supported variant.\
+Throws an error if `variant` is `basic` or `url` and any non-alphabet characters are encountered.
+
+```tweakflow
+> bin.base64_decode("AA==")
+0b00
+
+> bin.base64_decode(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-base64_decode'
+      data-meta-type='var'
+      data-meta-name='base64_decode'
+	  data-meta-tags='bin'
     ></div>
 

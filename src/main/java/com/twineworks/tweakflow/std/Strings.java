@@ -29,10 +29,12 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.text.Collator;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -51,10 +53,9 @@ public final class Strings {
 
         Value value = x.castTo(Types.STRING);
 
-        if (value.isNil()){
+        if (value.isNil()) {
           b.append("nil");
-        }
-        else{
+        } else {
           b.append(value.string());
         }
 
@@ -75,46 +76,24 @@ public final class Strings {
   }
 
   // (string x) -> string
-  public static final class lowerCase implements UserFunction, Arity1UserFunction {
-
-    @Override
-    public Value call(UserCallContext context, Value x) {
-      String str = x.string();
-      if (str == null) return Values.NIL;
-      return Values.make(str.toLowerCase());
-    }
-  }
-
-  // (string x) -> string
-  public static final class upperCase implements UserFunction, Arity1UserFunction {
-
-    @Override
-    public Value call(UserCallContext context, Value x) {
-      String str = x.string();
-      if (str == null) return Values.NIL;
-      return Values.make(str.toUpperCase());
-    }
-  }
-
-  // (string x) -> string
   public static final class trim implements UserFunction, Arity1UserFunction {
 
-    int firstNonWhitespace(String s){
+    int firstNonWhitespace(String s) {
 
       int size = s.codePointCount(0, s.length());
-      for(int i=0;i<size;i++){
-        if (!Character.isWhitespace(s.codePointAt(i))){
+      for (int i = 0; i < size; i++) {
+        if (!Character.isWhitespace(s.codePointAt(i))) {
           return i;
         }
       }
       return -1;
     }
 
-    int lastNonWhitespace(String s){
+    int lastNonWhitespace(String s) {
 
       int size = s.codePointCount(0, s.length());
-      for(int i=size-1;i>=0;i--){
-        if (!Character.isWhitespace(s.codePointAt(i))){
+      for (int i = size - 1; i >= 0; i--) {
+        if (!Character.isWhitespace(s.codePointAt(i))) {
           return i;
         }
       }
@@ -129,11 +108,10 @@ public final class Strings {
       if (first == -1) return Values.EMPTY_STRING;
 
       int last = lastNonWhitespace(str);
-      if (last == -1){
+      if (last == -1) {
         str = str.substring(str.offsetByCodePoints(0, first));
-      }
-      else{
-        str = str.substring(str.offsetByCodePoints(0, first), str.offsetByCodePoints(0, last+1));
+      } else {
+        str = str.substring(str.offsetByCodePoints(0, first), str.offsetByCodePoints(0, last + 1));
       }
 
       return Values.make(str);
@@ -181,15 +159,15 @@ public final class Strings {
       for (Value v : xsList) {
 
         if (v == Values.NIL) {
-          throw new LangException(LangError.NIL_ERROR, "illegal nil code point at index: "+i);
+          throw new LangException(LangError.NIL_ERROR, "illegal nil code point at index: " + i);
         }
-        if (!v.isLongNum()){
+        if (!v.isLongNum()) {
           v = v.castTo(Types.LONG);
         }
         try {
           int c = java.lang.Math.toIntExact(v.longNum());
           codePoints[i] = c;
-        } catch (ArithmeticException e){
+        } catch (ArithmeticException e) {
           throw LangException.wrap(e, LangError.ILLEGAL_ARGUMENT);
         }
         i++;
@@ -215,7 +193,7 @@ public final class Strings {
 
       StringBuilder b = new StringBuilder();
 
-      int i=0;
+      int i = 0;
       for (Value x : list) {
 
         if (!emptySep && i > 0) b.append(sep);
@@ -247,7 +225,7 @@ public final class Strings {
       String str = x.string();
       if (str.isEmpty()) return Values.makeList(Values.EMPTY_STRING);
 
-      if (!str.contains(sep.string())){
+      if (!str.contains(sep.string())) {
         return Values.makeList(str);
       }
 
@@ -308,10 +286,9 @@ public final class Strings {
 
       if (x == Values.NIL) return Values.NIL;
 
-      if (pattern.matcher(x.string()).matches()){
+      if (pattern.matcher(x.string()).matches()) {
         return Values.TRUE;
-      }
-      else{
+      } else {
         return Values.FALSE;
       }
     }
@@ -336,9 +313,8 @@ public final class Strings {
                     Types.BOOLEAN),
                 new matcher_impl(p)));
 
-      }
-      catch (PatternSyntaxException e){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid regex pattern: "+e.getMessage());
+      } catch (PatternSyntaxException e) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid regex pattern: " + e.getMessage());
       }
 
     }
@@ -359,14 +335,14 @@ public final class Strings {
     @Override
     public Value call(UserCallContext context, Value a, Value b) {
 
-      if (a == Values.NIL){
-        if (b == Values.NIL){
+      if (a == Values.NIL) {
+        if (b == Values.NIL) {
           return eq;
         }
         return ab;
       }
 
-      if (b == Values.NIL){
+      if (b == Values.NIL) {
         return ba;
       }
 
@@ -396,10 +372,9 @@ public final class Strings {
 
       collator.setDecomposition(Collator.FULL_DECOMPOSITION);
 
-      if (caseSensitive){
+      if (caseSensitive) {
         collator.setStrength(Collator.IDENTICAL);
-      }
-      else{
+      } else {
         collator.setStrength(Collator.SECONDARY);
       }
 
@@ -455,12 +430,12 @@ public final class Strings {
       Long startIdx = start.longNum();
       int idx = 0;
 
-      if (startIdx > 0){
-        if (startIdx <= Integer.MAX_VALUE){
+      if (startIdx > 0) {
+        if (startIdx <= Integer.MAX_VALUE) {
           idx = startIdx.intValue();
         }
         // from index larger than possible string length
-        else{
+        else {
           return Values.make(-1);
         }
       }
@@ -485,7 +460,7 @@ public final class Strings {
       if (xIdx < 0 || xIdx >= len) return Values.NIL;
       int idx = (int) xIdx;
       int from = xStr.offsetByCodePoints(0, idx);
-      int to = xStr.offsetByCodePoints(0, idx+1);
+      int to = xStr.offsetByCodePoints(0, idx + 1);
       return Values.make(xStr.substring(from, to));
 
     }
@@ -532,10 +507,9 @@ public final class Strings {
       String subStr = sub.string();
 
       int idx = 0;
-      if (fromIdx > xStr.length()){
+      if (fromIdx > xStr.length()) {
         idx = xStr.length();
-      }
-      else {
+      } else {
         idx = fromIdx.intValue();
       }
 
@@ -551,7 +525,7 @@ public final class Strings {
 
       if (x == Values.NIL) return Values.NIL;
 
-      if (start == Values.NIL){
+      if (start == Values.NIL) {
         throw new LangException(LangError.NIL_ERROR, "start must not be nil");
       }
 
@@ -563,23 +537,23 @@ public final class Strings {
       int startIdx = 0;
       int endIdx = codePoints;
 
-      if (end != Values.NIL){
-        if (endLong <= 0){
+      if (end != Values.NIL) {
+        if (endLong <= 0) {
           return Values.EMPTY_STRING;
         }
-        if (endLong < codePoints){
+        if (endLong < codePoints) {
           endIdx = endLong.intValue();
         }
       }
 
-      if (startLong >= endIdx || startLong >= codePoints){
+      if (startLong >= endIdx || startLong >= codePoints) {
         return Values.EMPTY_STRING;
       }
 
       startIdx = startLong.intValue();
 
-      if (startIdx < 0){
-        throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "start must not be negative: "+ startLong);
+      if (startIdx < 0) {
+        throw new LangException(LangError.INDEX_OUT_OF_BOUNDS, "start must not be negative: " + startLong);
       }
 
       int startCodepoint = xStr.offsetByCodePoints(0, startIdx);
@@ -602,7 +576,53 @@ public final class Strings {
     }
   }
 
+  // (binary x, string charset='UTF-8') -> string
+  public static final class from_bytes implements UserFunction, Arity2UserFunction {
 
+    @Override
+    public Value call(UserCallContext context, Value x, Value charset) {
 
+      if (x == Values.NIL) return Values.NIL;
+      if (charset == Values.NIL) return Values.NIL;
+
+      Charset c = Charset.forName(charset.string());
+
+      CharBuffer decoded = c.decode(ByteBuffer.wrap(x.bytes()));
+      return Values.make(decoded.toString());
+
+    }
+  }
+
+  // (string x, string charset='UTF-8') -> binary
+  public static final class to_bytes implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value charset) {
+
+      if (x == Values.NIL) return Values.NIL;
+      if (charset == Values.NIL) return Values.NIL;
+
+      Charset c = Charset.forName(charset.string());
+
+      ByteBuffer encoded = c.encode(x.string());
+      return Values.make(Arrays.copyOf(encoded.array(), encoded.limit()));
+
+    }
+  }
+
+  // () -> list
+  public static final class charsets implements UserFunction, Arity0UserFunction {
+
+    @Override
+    public Value call(UserCallContext context) {
+
+      Set<String> charsetNames = Charset.availableCharsets().keySet();
+      List<String> charsets = new ArrayList<>(charsetNames);
+      charsets.sort(String.CASE_INSENSITIVE_ORDER);
+
+      return Values.makeList(charsets);
+
+    }
+  }
 
 }

@@ -63,13 +63,23 @@ library operator_spec {
   l0_s0:         0  == "0"   == false;
   s0_l0:        "0" == 0     == false;
 
+  be_be:      0b == 0b       == true;
+  b0_b0:      0b00 == 0b00   == true;
+  b0_b0000:   0b00 == 0b0000 == false;
+  b0_l0:      0b00 == 0      == false;
+  b0001_b01:  0b0001 == 0b01 == false;
+  b0001_b0100: 0b0001 == 0b0100 == false;
+  b0001_b0001: 0b0001 == 0b0001 == true;
+
   f_f:        lib.f == lib.f == false; # note that there is no function equality
 
   a_a:        [] == []      == true;
   al0_a:     [0] == []      == false;
   al0_al0:   [0] == [0]     == true;
   al0_ad0:   [0] == [0.0]   == true;
+  ab0_ab0:   [0b00] == [0b00] == true;
   ml0_md0:   {:a 0} == {:a 0.0} == true;
+  mb0_mb0:   {:a 0b00} == {:a 0b00} == true;
   ml0_ml1:   {:a 0} == {:a 1} == false;
   anan_anan: [NaN]      == [NaN]      == false;
   af_af:     [lib.f]    == [lib.f]    == false;

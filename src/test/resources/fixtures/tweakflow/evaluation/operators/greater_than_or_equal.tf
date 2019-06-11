@@ -51,6 +51,7 @@ library operator_spec {
   foo_bar: try   "foo" >= "bar"    catch "error" == "error";
   l0_bar:  try       0 >= "bar"    catch "error" == "error";
   bar_l0:  try   "bar" >= 0        catch "error" == "error";
+  b00_l0:  try    0b00 >= 0        catch "error" == "error";
 
   f_f:     try   lib.f >= lib.f    catch "error" == "error";
 

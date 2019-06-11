@@ -130,6 +130,24 @@ NaN
 "double"
 ```
 
+### Binary literals
+
+Binary literals represent an array of bytes. They are notated as `0b` followed by zero or more pairs of hex digits from `[0-9a-fA-F]`.
+ 
+```tweakflow
+# empty byte array
+> 0b 
+0b
+
+# single byte: 00
+> 0b00
+0b00
+
+# four bytes: 01, 02, 03, FF
+> 0b010203FF
+0b010203FF
+```
+
 ### String literals
 
 Strings can occur in many places of an expression or program, playing different semantic roles. Stings appear as keys in dictionaries, as computation values, or as documentation strings, for example. Tweakflow offers several ways to write a literal string. The notations are interchangeable. Each of the notations is valid at any place a string is valid.
@@ -1129,6 +1147,14 @@ Double as string
 For any other double value, the [conventions the Java language](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-) are used.
 
 Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/modules/std.html#math-formatter) to to convert double values to strings in a controlled output format.
+
+### Binary
+
+The `binary` type holds an array of bytes. Binary values are notated using [binary literals](#binary-literals). The following type casts are supported:
+
+Binary as boolean
+
+The empty binary of 0 bytes is converted to `false`. Any non-empty binary value is converted to `true`.
 
 ### String
 
@@ -4054,6 +4080,9 @@ The expression returns the name of a value's type. The possible results are: `"b
 
 > typeof 2017-03-12T
 "datetime"
+
+> typeof 0babcdef
+"binary"
 
 > typeof nil
 "void"

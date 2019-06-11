@@ -14,6 +14,7 @@ library operator_spec {
   m: ({} is dict)           == true;
   a: ([] is list)           == true;
   s: ("" is string)         == true;
+  b: (0b is binary)         == true;
   dt: (1970-01-01T00:00:00Z is datetime) == true;
 
   nnil: (!(nil is long))     == true;
@@ -23,6 +24,7 @@ library operator_spec {
   nm:  (!({} is long))       == true;
   na:  (!([] is long))       == true;
   ns: (!("" is long))        == true;
+  nb: (!(0b is long))         == true;
   ndt: (!(1970-01-01T00:00:00Z is long)) == true;
 
 }

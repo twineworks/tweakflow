@@ -15,6 +15,10 @@ library operator_spec {
   true_false:   (true === false)  == false;
   false_false: (false === false)  == true;
 
+  be_be:     (0b === 0b)   == true;
+  b00_b00: (0b00 === 0b00) == true;
+  b00_b01: (0b00 === 0b01) == false;
+
   l0_l1: (0 === 1)        == false;
   l1_l0: (1 === 0)        == false;
   l1_l1: (1 === 1)        == true;

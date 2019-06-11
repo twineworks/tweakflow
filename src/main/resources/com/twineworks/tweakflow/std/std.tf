@@ -754,6 +754,72 @@ nil
 
   function code_point_at: (string x, long i) -> long via {:class "com.twineworks.tweakflow.std.Strings$codePointAt"};
 
+doc
+~~~
+`(string x, string charset="UTF-8") -> binary`
+
+Returns binary representing the bytes of string `x` using given `charset`.
+
+Returns `nil` if `x` is `nil` or `charset` is `nil`.
+
+```tweakflow
+> strings.to_bytes("abc")
+0b616263
+
+> strings.to_bytes("你好")
+0bE4BDA0E5A5BD
+
+> strings.to_bytes("bäcker")
+0b62C3A4636B6572
+
+> strings.to_bytes("bäcker", "ISO-8859-1")
+0b62E4636B6572
+
+> strings.to_bytes(nil)
+nil
+```
+~~~
+
+  function to_bytes: (string x, string charset="UTF-8") -> binary via {:class "com.twineworks.tweakflow.std.Strings$to_bytes"};
+
+doc
+~~~
+`(binary x, string charset="UTF-8") -> string`
+
+Returns string represented by the bytes of `x` using given `charset`.
+
+Returns `nil` if `x` is `nil` or `charset` is `nil`.
+
+```tweakflow
+> strings.from_bytes(0b616263)
+"abc"
+
+> strings.from_bytes(0bE4BDA0E5A5BD)
+"你好"
+
+> strings.from_bytes(0b62C3A4636B6572)
+"bäcker"
+
+> strings.from_bytes(0b62E4636B6572, "ISO-8859-1")
+"bäcker"
+
+> strings.from_bytes(nil)
+nil
+```
+~~~
+
+  function from_bytes: (binary x, string charset="UTF-8") -> string via {:class "com.twineworks.tweakflow.std.Strings$from_bytes"};
+
+doc
+~~~
+`() -> list`
+
+Returns known charsets. Each item in the returned list is a charset name suitable for passing to
+functions requiring a charset name, such as [to_bytes](#strings-to_bytes) and [from_bytes](#strings-from_bytes).
+~~~
+
+  function charsets: () -> list via {:class "com.twineworks.tweakflow.std.Strings$charsets"};
+
 }
 
 doc
@@ -5880,5 +5946,225 @@ nil
 
   function long_at: (binary x, long i, boolean big_endian=false) -> long via {:class "com.twineworks.tweakflow.std.Bin$long_at"};
 
+doc
+~~~
+`(binary x, long i, boolean big_endian=false) -> double`
+
+Returns the float (32-bit floating point value) at byte offset `i` in binary `x` as a double.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+3>=size(x)`.
+
+```tweakflow
+> bin.float_at(0b00000000, 0)
+0.0
+
+> bin.float_at(0b0000803f, 0)
+1.0
+
+> bin.float_at(0b0000803f, 0, true)
+4.600602988224807E-41
+
+> bin.float_at(0b40490fdb, 0, true)
+3.1415927410125732
+
+> bin.float_at(0b0000807f, 0)
+Infinity
+
+> bin.float_at(0b0100C0ff, 0)
+NaN
+
+> bin.float_at(0bFF, 0)
+nil
+```
+~~~
+
+  function float_at: (binary x, long i, boolean big_endian=false) -> double via {:class "com.twineworks.tweakflow.std.Bin$float_at"};
+
+doc
+~~~
+`(binary x, long i, boolean big_endian=false) -> double`
+
+Returns the double (64-bit floating point value) at byte offset `i` in binary `x` as a double.
+
+Interprets bytes as most significant last. If `big_endian` is `true`, interprets bytes as most significant first.
+
+Returns `nil` if any argument is `nil`.\
+Returns `nil` if `i<0` or `i+7>=size(x)`.
+
+```tweakflow
+> bin.double_at(0b0000000000000000, 0)
+0.0
+
+> bin.double_at(0b000000000000f03f, 0)
+1.0
+
+> bin.double_at(0bc000000000000000, 0, true)
+-2.0
+
+> bin.double_at(0b000000000000f07f, 0)
+Infinity
+
+> bin.double_at(0b000000000000f0ff, 0)
+-Infinity
+
+> bin.double_at(0b010000000000f07f, 0)
+NaN
+
+> bin.double_at(0b400921fb54442d18, 0, true)
+3.141592653589793
+
+> bin.double_at(0bFF, 0)
+nil
+```
+~~~
+
+  function double_at: (binary x, long i, boolean big_endian=false) -> double via {:class "com.twineworks.tweakflow.std.Bin$double_at"};
+
+doc
+~~~
+`(binary x, long start=0, long end=nil) -> list`
+
+Returns a range of bytes from `x` starting at byte offset `start` inclusively, and extending to byte offset `end` exclusively.
+If `end` is `nil`, the range extends to the end of `x`.
+
+Returns a zero length binary if `start` is greater than the size of `x`.
+Returns a zero length binary if `start >= end`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `start` is `nil` or `start < 0`.
+
+```tweakflow
+> bin.slice(0b00010203, 2)
+0b0203
+
+> bin.slice(0b00010203040506, 1, 4)
+0b010203
+
+> bin.slice(0b, 10, 20)
+0b
+
+> bin.slice(0b0001020304, 1, 1)
+0b
+
+> bin.slice(nil)
+nil
+```
+~~~
+
+  function slice: (binary x, long start=0, long end=nil) -> binary via {:class "com.twineworks.tweakflow.std.Bin$slice"};
+
+doc
+~~~
+`(binary x) -> string`
+
+Returns a hexadecimal string representing the binary value `x`.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> bin.to_hex(0b010A0B04)
+"010a0b04"
+
+> bin.to_hex(0b)
+""
+
+> bin.to_hex(nil)
+nil
+```
+~~~
+
+  function to_hex: (binary x) -> string via {:class "com.twineworks.tweakflow.std.Bin$to_hex"};
+
+doc
+~~~
+`(string x) -> binary`
+
+Returns the binary value represented by given hexadecimal string `x`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `x` contains non-hexadecimal characters.
+
+```tweakflow
+> bin.from_hex("010a0b04")
+0b010A0B04
+
+> bin.from_hex("")
+0b
+
+> bin.from_hex(nil)
+nil
+```
+~~~
+
+  function from_hex: (string x) -> binary via {:class "com.twineworks.tweakflow.std.Bin$from_hex"};
+
+doc
+~~~
+`(binary x, string variant='basic') -> string`
+
+Returns the base64 string representation of given binary data `x`.
+
+If `variant` is equal to `'basic'`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `'url'`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `'mime'`, the standard base64 alphabet of RFC 2045 is used.
+In addition the encoded output is represented in lines of no more than 76 characters each
+and uses a carriage return `\r` followed immediately by a linefeed `\n` as the line separator.
+
+Returns `nil` if `x` is `nil` or `variant` is `nil`.
+
+Throws an error if `variant` is not `nil` and not equal to any supported variant.
+
+```tweakflow
+
+> bin.base64_encode(0b00010203)
+"AAECAw=="
+
+> bin.base64_encode(strings.to_bytes("Hello World"))
+"SGVsbG8gV29ybGQ="
+
+> bin.base64_encode(nil)
+nil
+```
+~~~
+
+  function base64_encode: (binary x, string variant='basic') -> string via {:class "com.twineworks.tweakflow.std.Bin$base64_encode"};
+
+doc
+~~~
+`(string x, string variant='basic') -> binary`
+
+Returns the bytes encoded by given base64 string `x`.
+
+If `variant` is equal to `'basic'`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `'url'`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `'mime'`, the standard base64 alphabet of RFC 2045 is used. Any characters
+not found in the standard alphabet table are ignored.
+
+Returns `nil` if `x` is `nil` or `variant` is `nil`.
+
+Throws an error if `variant` is not `nil` and not equal to any supported variant.\
+Throws an error if `variant` is `basic` or `url` and any non-alphabet characters are encountered.
+
+```tweakflow
+> bin.base64_decode("AA==")
+0b00
+
+> bin.base64_decode("SGVsbG8gV29ybGQh")
+0b48656c6c6f20576f726c6421
+
+> strings.from_bytes(bin.base64_decode("SGVsbG8gV29ybGQh"))
+"Hello World!"
+
+> bin.base64_decode(nil)
+nil
+```
+~~~
+
+  function base64_decode: (string x, string variant='basic') -> binary via {:class "com.twineworks.tweakflow.std.Bin$base64_decode"};
 
 }

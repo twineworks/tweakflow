@@ -94,8 +94,6 @@ public class CodeParseHelper {
     return identifier(token.getText().substring(1));
   }
 
-  private static byte[] nibbles = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
-
   private static byte nibbleForChar(char c){
     if (c >= '0' && c <='9'){
       return (byte) (c-'0');

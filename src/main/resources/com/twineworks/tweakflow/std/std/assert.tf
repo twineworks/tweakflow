@@ -149,6 +149,20 @@ export library to {
       expected
     ];
 
+  contain: (expected) -> (x) ->
+    ["to contain", (x is list || x is dict) && data.contains?(expected, x), expected];
+
+  contain_all: (list expected) -> (xs) ->
+    [
+      "to contain all",
+      (xs is list || xs is dict) &&
+        data.all?(
+          expected,
+          (e) -> data.contains?(xs, e)
+        ),
+      expected
+    ];
+
   not_be: (expected) -> (x) ->
     ["to not be", x !== expected, expected];
 

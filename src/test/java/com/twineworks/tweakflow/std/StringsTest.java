@@ -127,4 +127,19 @@ public class StringsTest {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/strings/of_code_points.tf");
   }
 
+  @TestFactory
+  public Collection<DynamicTest> to_bytes() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/strings/to_bytes.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> from_bytes() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/strings/from_bytes.tf");
+  }
+
+  @TestFactory
+  public Collection<DynamicTest> charsets() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/std/strings/charsets.tf");
+  }
+
 }

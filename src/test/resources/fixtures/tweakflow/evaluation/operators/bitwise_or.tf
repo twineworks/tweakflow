@@ -39,11 +39,13 @@ library operator_spec {
   nil_d0: (nil | 0.0)   == nil;
   d0_nil: (0.0 | nil)   == nil;
 
-  nil_bar: try   nil | "bar"    catch "error" == "error";
-  foo_nil: try   "foo" | nil    catch "error" == "error";
+  nil_bar: try     nil | "bar"    catch "error" == "error";
+  foo_nil: try   "foo" | nil      catch "error" == "error";
   foo_bar: try   "foo" | "bar"    catch "error" == "error";
   l0_bar:  try       0 | "bar"    catch "error" == "error";
   bar_l0:  try   "bar" | 0        catch "error" == "error";
+  b00_l0:  try    0b00 | 0        catch "error" == "error";
+  l0_b00:  try       0 | 0b00     catch "error" == "error";
 
   f_f:     try   lib.f | lib.f    catch "error" == "error";
 

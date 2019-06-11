@@ -61,6 +61,11 @@ library operator_spec {
   d0_nan:     (0.0 || NaN) == false;
   l0_nan:     (  1 || NaN) == true;
 
+  be_be:     (0b || 0b)     == false;
+  b0_be:   (0b00 || 0b)     == true;
+  be_b0:     (0b || 0b00)   == true;
+  b1_b0:   (0b01 || 0b00)   == true;
+
   foo_bar: ("foo" || "bar") == true;
   l0_bar:      (0 || "bar") == true;
   bar_l0:  ("bar" || 0)     == true;

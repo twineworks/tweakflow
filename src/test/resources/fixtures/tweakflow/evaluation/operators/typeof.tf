@@ -9,6 +9,7 @@ library operator_spec {
   nil_void: typeof nil      == "void";
 
   bool: typeof true         == "boolean";
+  b: typeof 0b              == "binary";
   l0: typeof 0              == "long";
   d0: typeof 0.0            == "double";
   f: typeof lib.f           == "function";

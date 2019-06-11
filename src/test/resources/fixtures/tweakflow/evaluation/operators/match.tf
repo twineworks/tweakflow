@@ -72,6 +72,15 @@ library match_expression_spec {
     )
     == "empty";
 
+  match_empty_binary: (
+      match 0b
+        [2,3,4] -> "two",
+        [] -> "empty list",
+        0b -> "empty",
+        default -> "unknown"
+    )
+    == "empty";
+
   match_predicate: (
       match [1,2,3]
         lib.is_list -> "list",

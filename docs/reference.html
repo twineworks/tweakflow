@@ -175,6 +175,7 @@
 <li><a href="#the-nil-literal">The nil literal</a></li>
 <li><a href="#long-literals">Long literals</a></li>
 <li><a href="#double-literals">Double literals</a></li>
+<li><a href="#binary-literals">Binary literals</a></li>
 <li><a href="#string-literals">String literals</a>
 <ul>
 <li><a href="#single-quoted-strings">Single-quoted strings</a></li>
@@ -212,6 +213,7 @@
 <li><a href="#boolean">Boolean</a></li>
 <li><a href="#long">Long</a></li>
 <li><a href="#double">Double</a></li>
+<li><a href="#binary">Binary</a></li>
 <li><a href="#string">String</a></li>
 <li><a href="#datetime">Datetime</a></li>
 <li><a href="#list">List</a></li>
@@ -451,6 +453,23 @@ NaN
 
 &gt; typeof NaN
 &quot;double&quot;
+</code></pre>
+
+<h3 id="binary-literals">Binary literals</h3>
+
+<p>Binary literals represent an array of bytes. They are notated as <code>0b</code> followed by zero or more pairs of hex digits from <code>[0-9a-fA-F]</code>.</p>
+
+<pre><code class="language-tweakflow"># empty byte array
+&gt; 0b 
+0b
+
+# single byte: 00
+&gt; 0b00
+0b00
+
+# four bytes: 01, 02, 03, FF
+&gt; 0b010203FF
+0b010203FF
 </code></pre>
 
 <h3 id="string-literals">String literals</h3>
@@ -1459,6 +1478,14 @@ foo.tf&gt; \meta bar.baz
 <p>For any other double value, the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-">conventions the Java language</a> are used.</p>
 
 <p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#math-formatter">formatters</a> to to convert double values to strings in a controlled output format.</p>
+
+<h3 id="binary">Binary</h3>
+
+<p>The <code>binary</code> type holds an array of bytes. Binary values are notated using <a href="#binary-literals">binary literals</a>. The following type casts are supported:</p>
+
+<p>Binary as boolean</p>
+
+<p>The empty binary of 0 bytes is converted to <code>false</code>. Any non-empty binary value is converted to <code>true</code>.</p>
 
 <h3 id="string">String</h3>
 
@@ -4546,6 +4573,9 @@ false
 
 &gt; typeof 2017-03-12T
 &quot;datetime&quot;
+
+&gt; typeof 0babcdef
+&quot;binary&quot;
 
 &gt; typeof nil
 &quot;void&quot;
