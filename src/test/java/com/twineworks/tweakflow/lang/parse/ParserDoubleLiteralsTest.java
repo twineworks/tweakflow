@@ -209,6 +209,30 @@ public class ParserDoubleLiteralsTest {
   }
 
   @Test
+  void parses_spacer_pi_variants() {
+
+//    space_pi1: 3.13_15;
+//    space_pi2: 3_.1_31_5_____;
+//    space_pi3: 3_.1_3_15;
+//    space_pi4: +3_1_3_1_5_e-4_;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/doubles.tf");
+
+    ExpressionNode space_pi1 = varDefMap.get("space_pi1").getValueExpression();
+    ExpressionNode space_pi2 = varDefMap.get("space_pi2").getValueExpression();
+    ExpressionNode space_pi3 = varDefMap.get("space_pi3").getValueExpression();
+    ExpressionNode space_pi4 = varDefMap.get("space_pi4").getValueExpression();
+
+    assertThat(space_pi1).hasSameStructureAs(space_pi2);
+    assertThat(space_pi1).hasSameStructureAs(space_pi3);
+    assertThat(space_pi1).hasSameStructureAs(space_pi4);
+
+    assertThat(space_pi1.getValueType()).isSameAs(Types.DOUBLE);
+    assertThat(space_pi1).isInstanceOf(DoubleNode.class);
+    assertThat(((DoubleNode) space_pi1).getDoubleNum()).isEqualTo(3.1315);
+
+  }
+
+  @Test
   void parses_inf() {
 
 //    inf: Infinity;

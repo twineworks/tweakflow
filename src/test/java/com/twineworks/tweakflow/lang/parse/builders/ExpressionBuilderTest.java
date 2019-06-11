@@ -411,6 +411,7 @@ public class ExpressionBuilderTest {
     assertThat(x.parseBinLiteral("0b")).hasSize(0);
     assertThat(x.parseBinLiteral("0b01")).isEqualTo(new byte[] {1});
     assertThat(x.parseBinLiteral("0b0102030405060708")).isEqualTo(new byte[] {1,2,3,4,5, 6,7,8});
+    assertThat(x.parseBinLiteral("0b_01020304_05060708_")).isEqualTo(new byte[] {1,2,3,4,5, 6,7,8});
     assertThat(x.parseBinLiteral("0bFF")).isEqualTo(new byte[] {-1});
     assertThat(x.parseBinLiteral("0bfF")).isEqualTo(new byte[] {-1});
     assertThat(x.parseBinLiteral("0bFFFFFFFFFF")).isEqualTo(new byte[] {-1, -1, -1, -1, -1});

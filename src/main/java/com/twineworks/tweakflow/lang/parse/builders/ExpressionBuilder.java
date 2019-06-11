@@ -151,7 +151,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     SourceInfo sourceInfo = srcOf(parseUnit, ctx);
 
     try {
-      Long decLiteral = parseDecLiteral(ctx.getText());
+      Long decLiteral = parseDecLiteral(ctx.getText().replace("_", ""));
       return new LongNode(decLiteral).setSourceInfo(sourceInfo);
     } catch (NumberFormatException e) {
       throw new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
@@ -174,7 +174,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   }
 
   private Double parseDoubleLiteral(String text) {
-    return Double.parseDouble(text);
+    return Double.parseDouble(text.replace("_", ""));
   }
 
   Long parseHexLiteral(String text) {
@@ -1536,7 +1536,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   }
 
   byte[] parseBinLiteral(String hexString){
-    return hexToBytes(hexString);
+    return hexToBytes(hexString.replace("_", ""));
   }
 
   @Override

@@ -8,4 +8,5 @@ library lib
   bin_aAbB: 0baAbB;
   bin_fAcE: 0bfAcE;
   bin_all: 0b0123456789abcdef;
+  bin_all_spacers: 0b____01_23_45_67_89_abcdef___;
 }

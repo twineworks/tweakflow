@@ -18,6 +18,10 @@ library lib
   pos_pi2: +0.31315e1;
   pos_pi3: +.31315e1;
   pos_pi4: +31315e-4;
+  space_pi1: 3.13_15;
+  space_pi2: 3_.1_31_5_____;
+  space_pi3: 3_.1_3_15;
+  space_pi4: +3_1_3_1_5_e-4_;
   inf: Infinity;
   pos_inf: +Infinity;
   neg_inf: -Infinity;

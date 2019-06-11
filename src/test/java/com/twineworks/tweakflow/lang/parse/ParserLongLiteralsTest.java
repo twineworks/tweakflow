@@ -129,12 +129,38 @@ public class ParserLongLiteralsTest {
   }
 
   @Test
+  void parses_dec_max_spacers() {
+
+//      dec_max_spacers: 9_223_372_036_854_775_807;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/longs.tf");
+
+    ExpressionNode expNode = varDefMap.get("dec_max_spacers").getValueExpression();
+    assertThat(expNode).isInstanceOf(LongNode.class);
+    LongNode node = (LongNode) expNode;
+    assertThat(node.getLongNum()).isEqualTo(9223372036854775807L);
+
+  }
+
+  @Test
   void parses_dec_min() {
 
 //      dec_min: -9223372036854775808;
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/longs.tf");
 
     ExpressionNode expNode = varDefMap.get("dec_min").getValueExpression();
+    assertThat(expNode).isInstanceOf(LongNode.class);
+    LongNode node = (LongNode) expNode;
+    assertThat(node.getLongNum()).isEqualTo(-9223372036854775808L);
+
+  }
+
+  @Test
+  void parses_dec_min_spacers() {
+
+//      dec_min_spacers: -9_223_372_036_854_775_808;
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/longs.tf");
+
+    ExpressionNode expNode = varDefMap.get("dec_min_spacers").getValueExpression();
     assertThat(expNode).isInstanceOf(LongNode.class);
     LongNode node = (LongNode) expNode;
     assertThat(node.getLongNum()).isEqualTo(-9223372036854775808L);

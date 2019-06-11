@@ -46,11 +46,13 @@ The `nil` literal represents the singleton [nil value](#nil).
 ### Long literals
 
 Decimal digits are read as 64-bit signed integers of type `long`. A prefix of `-` or `+` indicates a negative or positive value respectively.
+Non-leading `_` characters can be used to help visually format the number.
 
 ```tweakflow
 42
 -2
 +3
+100_000
 ```
 
 Long literals can also be written in hexadecimal form. They are notated as `0x` followed by up to  8 bytes. Each byte consists of two hexadecimal digits from `[0-9a-fA-F]`. The bytes are given in  big-endian order, meaning that the most significant byte is written first. If less than 8 bytes are provided, missing leading bytes are filled up with zeros. The resulting bit pattern is interpreted as a [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) signed 64-bit integer, exactly like a Java long value.
@@ -86,11 +88,16 @@ There are several ways to notate a double literal:
 - As integer followed by exponent notation
 
 Exponent notation is given by an `e` or `E` character and followed by the powers of ten to multiply with.
+Non-empty digit sequences denoting the integer, fraction, or exponent can additionally contain 
+`_` characters in non-leading positions to visually format the number.
 
 ```tweakflow
 # various ways to write the decimal number 3.1315
 
 > 3.1315
+3.1315
+
+> 3.13_15
 3.1315
 
 > 0.31315e1
@@ -99,7 +106,7 @@ Exponent notation is given by an `e` or `E` character and followed by the powers
 > .31315E1
 3.1315
 
-> 31315e-4
+> 31315_e-4
 3.1315
 ```
 
@@ -132,7 +139,10 @@ NaN
 
 ### Binary literals
 
-Binary literals represent an array of bytes. They are notated as `0b` followed by zero or more pairs of hex digits from `[0-9a-fA-F]`.
+Binary literals represent sequence of of bytes. They are notated as `0b` followed by zero or more pairs of hex digits from `[0-9a-fA-F]`.
+The separator character `_` can used to separate the hex-digit pairs and visually format the data. 
+It can appear after the `0b` prefix in leading position, trailing position, and before and after any hex-digit pair.
+The separator character may be repeated. 
  
 ```tweakflow
 # empty byte array
@@ -146,6 +156,10 @@ Binary literals represent an array of bytes. They are notated as `0b` followed b
 # four bytes: 01, 02, 03, FF
 > 0b010203FF
 0b010203FF
+
+# eight bytes: 40, 09, 21, fb, 54, 44, 2d, 18
+> 0b_4009_21fb__5444_2d18
+0b8400b821fb8544682d18
 ```
 
 ### String literals
@@ -266,7 +280,7 @@ Tweakflow allows symbol notation for strings. It can be useful to visually disti
 A symbol string is written as:
 
 ```text
-:[a-zA-Z_0-9?]+
+:[-+/a-zA-Z_0-9?]+
 ```
 
 The escaped form with backticks allows an unconstrained set of characters, with the exception of the backtick itself:

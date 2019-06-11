@@ -153,7 +153,7 @@ fragment TZ: '@' (TZ_NAME | ID_ESCAPED | ID);
 fragment TZ_NAME: [a-zA-Z_]+('/'[a-zA-Z0-9_?]+)+;
 
 INT
-  : DIGIT DIGIT*
+  : DIGIT ('_'|DIGIT)*
   ;
 
 HEX
@@ -162,7 +162,7 @@ HEX
   ;
 
 BIN
-  : '0b' BYTE*
+  : '0b' (BYTE | '_')*
   ;
 
 fragment DIGIT: [0-9];

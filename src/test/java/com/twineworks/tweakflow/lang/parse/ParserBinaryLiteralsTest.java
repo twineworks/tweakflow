@@ -159,4 +159,16 @@ public class ParserBinaryLiteralsTest {
 
   }
 
+  @Test
+  void parses_0b____01_23_45_67_89_abcdef___() {
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/binaries.tf");
+
+    ExpressionNode expNode = varDefMap.get("bin_all_spacers").getValueExpression();
+    assertThat(expNode).isInstanceOf(BinaryNode.class);
+    BinaryNode node = (BinaryNode) expNode;
+    assertThat(node.getBytes()).isEqualTo(new byte[] {0x01, 0x23, 0x45, 0x67, (byte)0x89, (byte)0xab, (byte)0xcd, (byte)0xef});
+
+  }
+
 }
