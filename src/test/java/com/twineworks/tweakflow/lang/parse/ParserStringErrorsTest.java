@@ -45,6 +45,16 @@ public class ParserStringErrorsTest {
   }
 
   @Test
+  void fails_on_key_invalid_char(){
+
+    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_key_invalid_char.tf");
+    LangException e = r.getException();
+    StrictAssertions.assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
+    StrictAssertions.assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("2:10");
+
+  }
+
+  @Test
   void fails_on_single_unterminated(){
 
     ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/string_single_unterminated.tf");

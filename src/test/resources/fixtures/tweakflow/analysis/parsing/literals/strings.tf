@@ -37,5 +37,7 @@ Here ~~~ String
   key: :key;
   quoted_key: :`quoted key`;
   digit_key: :123;
-
+  dash_key: :content-type;
+  plus_key: :+and+;
+  slash_key: :/slash/;
 }
