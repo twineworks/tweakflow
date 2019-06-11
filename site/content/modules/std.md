@@ -7358,13 +7358,13 @@ nil
 
 ### base64_encode{#bin-base64_encode}
 
-`(binary x, variant='basic') -> string`
+`(binary x, string variant='basic') -> string`
 
 Returns the base64 string representation of given binary data `x`.
 
-If `variant` is equal to `basic`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
-If `variant` is equal to `url`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
-If `variant` is equal to `mime`, the standard base64 alphabet of RFC 2045 is used.
+If `variant` is equal to `'basic'`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `'url'`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `'mime'`, the standard base64 alphabet of RFC 2045 is used.
 In addition the encoded output is represented in lines of no more than 76 characters each
 and uses a carriage return `\r` followed immediately by a linefeed `\n` as the line separator.
 
@@ -7373,7 +7373,12 @@ Returns `nil` if `x` is `nil` or `variant` is `nil`.
 Throws an error if `variant` is not `nil` and not equal to any supported variant.
 
 ```tweakflow
+
+> bin.base64_encode(0b00010203)
+"AAECAw=="
+
 > bin.base64_encode(strings.to_bytes("Hello World"))
+"SGVsbG8gV29ybGQ="
 
 > bin.base64_encode(nil)
 nil
@@ -7391,13 +7396,13 @@ nil
 
 ### base64_decode{#bin-base64_decode}
 
-`(string x, variant='basic') -> binary`
+`(string x, string variant='basic') -> binary`
 
 Returns the bytes encoded by given base64 string `x`.
 
-If `variant` is equal to `basic`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
-If `variant` is equal to `url`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
-If `variant` is equal to `mime`, the standard base64 alphabet of RFC 2045 is used. Any characters
+If `variant` is equal to `'basic'`, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.\
+If `variant` is equal to `'url'`, the "URL and Filename safe" base64 alphabet of RFC 4648 is used.\
+If `variant` is equal to `'mime'`, the standard base64 alphabet of RFC 2045 is used. Any characters
 not found in the standard alphabet table are ignored.
 
 Returns `nil` if `x` is `nil` or `variant` is `nil`.
@@ -7408,6 +7413,12 @@ Throws an error if `variant` is `basic` or `url` and any non-alphabet characters
 ```tweakflow
 > bin.base64_decode("AA==")
 0b00
+
+> bin.base64_decode("SGVsbG8gV29ybGQh")
+0b48656c6c6f20576f726c6421
+
+> strings.from_bytes(bin.base64_decode("SGVsbG8gV29ybGQh"))
+"Hello World!"
 
 > bin.base64_decode(nil)
 nil
