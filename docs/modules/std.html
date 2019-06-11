@@ -7072,13 +7072,13 @@ nil
 
 <h3 id="bin-base64_encode">base64_encode</h3>
 
-<p><code>(binary x, variant='basic') -&gt; string</code></p>
+<p><code>(binary x, string variant='basic') -&gt; string</code></p>
 
 <p>Returns the base64 string representation of given binary data <code>x</code>.</p>
 
-<p>If <code>variant</code> is equal to <code>basic</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
-If <code>variant</code> is equal to <code>url</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
-If <code>variant</code> is equal to <code>mime</code>, the standard base64 alphabet of RFC 2045 is used.
+<p>If <code>variant</code> is equal to <code>'basic'</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>'url'</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>'mime'</code>, the standard base64 alphabet of RFC 2045 is used.
 In addition the encoded output is represented in lines of no more than 76 characters each
 and uses a carriage return <code>\r</code> followed immediately by a linefeed <code>\n</code> as the line separator.</p>
 
@@ -7086,7 +7086,12 @@ and uses a carriage return <code>\r</code> followed immediately by a linefeed <c
 
 <p>Throws an error if <code>variant</code> is not <code>nil</code> and not equal to any supported variant.</p>
 
-<pre><code class="language-tweakflow">&gt; bin.base64_encode(strings.to_bytes(&quot;Hello World&quot;))
+<pre><code class="language-tweakflow">
+&gt; bin.base64_encode(0b00010203)
+&quot;AAECAw==&quot;
+
+&gt; bin.base64_encode(strings.to_bytes(&quot;Hello World&quot;))
+&quot;SGVsbG8gV29ybGQ=&quot;
 
 &gt; bin.base64_encode(nil)
 nil
@@ -7102,13 +7107,13 @@ nil
 
 <h3 id="bin-base64_decode">base64_decode</h3>
 
-<p><code>(string x, variant='basic') -&gt; binary</code></p>
+<p><code>(string x, string variant='basic') -&gt; binary</code></p>
 
 <p>Returns the bytes encoded by given base64 string <code>x</code>.</p>
 
-<p>If <code>variant</code> is equal to <code>basic</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
-If <code>variant</code> is equal to <code>url</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
-If <code>variant</code> is equal to <code>mime</code>, the standard base64 alphabet of RFC 2045 is used. Any characters
+<p>If <code>variant</code> is equal to <code>'basic'</code>, the standard base64 alphabet of RFC 2045 and RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>'url'</code>, the &ldquo;URL and Filename safe&rdquo; base64 alphabet of RFC 4648 is used.<br />
+If <code>variant</code> is equal to <code>'mime'</code>, the standard base64 alphabet of RFC 2045 is used. Any characters
 not found in the standard alphabet table are ignored.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code> or <code>variant</code> is <code>nil</code>.</p>
@@ -7118,6 +7123,12 @@ Throws an error if <code>variant</code> is <code>basic</code> or <code>url</code
 
 <pre><code class="language-tweakflow">&gt; bin.base64_decode(&quot;AA==&quot;)
 0b00
+
+&gt; bin.base64_decode(&quot;SGVsbG8gV29ybGQh&quot;)
+0b48656c6c6f20576f726c6421
+
+&gt; strings.from_bytes(bin.base64_decode(&quot;SGVsbG8gV29ybGQh&quot;))
+&quot;Hello World!&quot;
 
 &gt; bin.base64_decode(nil)
 nil

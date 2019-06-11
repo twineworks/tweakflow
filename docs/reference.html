@@ -372,11 +372,13 @@
 
 <h3 id="long-literals">Long literals</h3>
 
-<p>Decimal digits are read as 64-bit signed integers of type <code>long</code>. A prefix of <code>-</code> or <code>+</code> indicates a negative or positive value respectively.</p>
+<p>Decimal digits are read as 64-bit signed integers of type <code>long</code>. A prefix of <code>-</code> or <code>+</code> indicates a negative or positive value respectively.
+Non-leading <code>_</code> characters can be used to help visually format the number.</p>
 
 <pre><code class="language-tweakflow">42
 -2
 +3
+100_000
 </code></pre>
 
 <p>Long literals can also be written in hexadecimal form. They are notated as <code>0x</code> followed by up to  8 bytes. Each byte consists of two hexadecimal digits from <code>[0-9a-fA-F]</code>. The bytes are given in  big-endian order, meaning that the most significant byte is written first. If less than 8 bytes are provided, missing leading bytes are filled up with zeros. The resulting bit pattern is interpreted as a <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two&rsquo;s complement</a> signed 64-bit integer, exactly like a Java long value.</p>
@@ -412,11 +414,16 @@
 <li>As integer followed by exponent notation</li>
 </ul>
 
-<p>Exponent notation is given by an <code>e</code> or <code>E</code> character and followed by the powers of ten to multiply with.</p>
+<p>Exponent notation is given by an <code>e</code> or <code>E</code> character and followed by the powers of ten to multiply with.
+Non-empty digit sequences denoting the integer, fraction, or exponent can additionally contain
+<code>_</code> characters in non-leading positions to visually format the number.</p>
 
 <pre><code class="language-tweakflow"># various ways to write the decimal number 3.1315
 
 &gt; 3.1315
+3.1315
+
+&gt; 3.13_15
 3.1315
 
 &gt; 0.31315e1
@@ -425,7 +432,7 @@
 &gt; .31315E1
 3.1315
 
-&gt; 31315e-4
+&gt; 31315_e-4
 3.1315
 </code></pre>
 
@@ -457,7 +464,10 @@ NaN
 
 <h3 id="binary-literals">Binary literals</h3>
 
-<p>Binary literals represent an array of bytes. They are notated as <code>0b</code> followed by zero or more pairs of hex digits from <code>[0-9a-fA-F]</code>.</p>
+<p>Binary literals represent sequence of of bytes. They are notated as <code>0b</code> followed by zero or more pairs of hex digits from <code>[0-9a-fA-F]</code>.
+The separator character <code>_</code> can used to separate the hex-digit pairs and visually format the data.
+It can appear after the <code>0b</code> prefix in leading position, trailing position, and before and after any hex-digit pair.
+The separator character may be repeated.</p>
 
 <pre><code class="language-tweakflow"># empty byte array
 &gt; 0b 
@@ -470,6 +480,10 @@ NaN
 # four bytes: 01, 02, 03, FF
 &gt; 0b010203FF
 0b010203FF
+
+# eight bytes: 40, 09, 21, fb, 54, 44, 2d, 18
+&gt; 0b_4009_21fb__5444_2d18
+0b8400b821fb8544682d18
 </code></pre>
 
 <h3 id="string-literals">String literals</h3>
@@ -629,7 +643,7 @@ Hello World
 
 <p>A symbol string is written as:</p>
 
-<pre><code class="language-text">:[a-zA-Z_0-9?]+
+<pre><code class="language-text">:[-+/a-zA-Z_0-9?]+
 </code></pre>
 
 <p>The escaped form with backticks allows an unconstrained set of characters, with the exception of the backtick itself:</p>
