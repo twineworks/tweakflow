@@ -33,6 +33,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
+import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.util.LangUtil;
 
@@ -41,6 +42,7 @@ import java.util.*;
 
 public class ReplState {
 
+  private Map<String, ParseResult> parseCache = new HashMap<>();
   private final String stdlibPath = "std.tf";
 
   // currently loaded module
@@ -50,6 +52,8 @@ public class ReplState {
 
   // file system load path
   private List<String> loadPathElements = new ArrayList<>();
+  // resources load path
+  private List<String> resourceLoadPathElements = new ArrayList<>();
 
   // interactive expression evaluation and variable prompt
   private final String interactivePath = "[interactive]";
@@ -201,23 +205,50 @@ public class ReplState {
 
     copy.varDefs.putAll(varDefs);
     copy.loadPathElements.addAll(loadPathElements);
+    copy.resourceLoadPathElements.addAll(resourceLoadPathElements);
+    copy.parseCache.putAll(parseCache);
     return copy;
+  }
+
+  public List<String> getResourceLoadPathElements() {
+    return resourceLoadPathElements;
   }
 
   private LoadPath.Builder nonInteractiveLoadPath(){
     LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
 
     // std resources are first
-    loadPathBuilder.add(new ResourceLocation.Builder().path(Paths.get("com/twineworks/tweakflow/std")).build());
+    loadPathBuilder.add(new ResourceLocation.Builder()
+        .allowCaching(true)
+        .allowNativeFunctions(true)
+        .path(Paths.get("com/twineworks/tweakflow/std"))
+        .build()
+    );
+
+    // add resource paths
+    for (String s : getResourceLoadPathElements()) {
+      loadPathBuilder.add(new ResourceLocation.Builder()
+          .allowCaching(true)
+          .allowNativeFunctions(true)
+          .path(Paths.get(s))
+          .build());
+    }
+
+    // all file-system locations not cached
 
     // default if none given
     if (getLoadPathElements().size() == 0){
-      loadPathBuilder.addCurrentWorkingDirectory();
+      loadPathBuilder.add(new FilesystemLocation.Builder(Paths.get(".").toAbsolutePath())
+          .confineToPath(false)
+          .allowCaching(false)
+          .allowNativeFunctions(true)
+          .build());
     }
 
     // all file system loading locations mentioned in state
     for (String s : getLoadPathElements()) {
       FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(s))
+          .allowCaching(false)
           .confineToPath(true)
           .allowNativeFunctions(true)
           .build();
@@ -242,6 +273,8 @@ public class ReplState {
         .build();
 
     loadPathBuilder.add(interactiveLocation);
+
+    loadPathBuilder.withParseResultCache(parseCache);
     return loadPathBuilder.build();
 
   }

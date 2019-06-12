@@ -56,6 +56,12 @@ public class Repl {
         .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
+    parser.addArgument("-R", "--resource_load_path")
+        .required(false)
+        .type(String.class)
+        .setDefault(new ArrayList<String>())
+        .action(Arguments.append());
+
     parser.addArgument("module")
         .setDefault(Collections.singletonList(new ReplState().getMainModulePath()))
         .nargs("*")
@@ -105,17 +111,22 @@ public class Repl {
 
       // put load path in state
       List loadPathArgs = (List) res.getAttrs().get("load_path");
-      List<String> loadPath = state.getLoadPathElements();
+      List<String> loadPathElements = state.getLoadPathElements();
 
       // custom load path
       for (Object loadPathArg : loadPathArgs) {
-        loadPath.add(loadPathArg.toString());
+        loadPathElements.add(loadPathArg.toString());
+      }
+
+      List resourceLoadPathArgs = (List) res.getAttrs().get("resource_load_path");
+      List<String> resourceLoadPathElements = state.getResourceLoadPathElements();
+      for (Object loadPathArg : resourceLoadPathArgs) {
+        resourceLoadPathElements.add(loadPathArg.toString());
       }
 
       // put current module path in state
       List<String> modules = res.getList("module");
       state.setModulePaths(modules);
-
 
     } catch (ArgumentParserException e) {
       parser.handleError(e);

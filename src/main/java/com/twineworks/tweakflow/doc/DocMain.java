@@ -30,6 +30,7 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
+import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Arity1CallSite;
@@ -58,6 +59,12 @@ public class DocMain {
     ArgumentParser parser = ArgumentParsers.newFor("doc").build();
 
     parser.addArgument("-I", "--load_path")
+        .required(false)
+        .type(String.class)
+        .setDefault(new ArrayList<String>())
+        .action(Arguments.append());
+
+    parser.addArgument("-R", "--resource_load_path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
@@ -95,16 +102,24 @@ public class DocMain {
 
       // load path
       Namespace res = parser.parseArgs(args);
+
+      LoadPath.Builder loadPathBuilder = new LoadPath.Builder()
+          .addStdLocation();
+
+      List resourceLoadPathArgs = (List) res.getAttrs().get("resource_load_path");
+      for (Object o : resourceLoadPathArgs) {
+        loadPathBuilder.add(new ResourceLocation.Builder()
+            .path(Paths.get(o.toString()))
+            .allowNativeFunctions(true)
+            .build());
+      }
+
       List loadPathArgs = (List) res.getAttrs().get("load_path");
 
       if (loadPathArgs.size() == 0) {
         // default load path
-        loadPath = new LoadPath.Builder()
-            .addStdLocation()
-            .addCurrentWorkingDirectory()
-            .build();
+        loadPathBuilder.addCurrentWorkingDirectory();
       } else {
-        LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
         // custom load path
         for (Object loadPathArg : loadPathArgs) {
           FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(loadPathArg.toString()))
@@ -113,8 +128,9 @@ public class DocMain {
               .build();
           loadPathBuilder.add(location);
         }
-        loadPath = loadPathBuilder.build();
       }
+
+      loadPath = loadPathBuilder.build();
 
       // output path
       String output = (String) res.getAttrs().getOrDefault("output", null);

@@ -79,6 +79,7 @@ public class LoadPath {
       locations.add(
           new FilesystemLocation.Builder(Paths.get(".").toAbsolutePath())
               .confineToPath(false)
+              .allowCaching(true)
               .allowNativeFunctions(true)
               .build()
       );

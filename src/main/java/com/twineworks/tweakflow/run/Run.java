@@ -33,6 +33,7 @@ import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.load.loadpath.FilesystemLocation;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
+import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
@@ -84,6 +85,12 @@ public class Run {
     ArgumentParser parser = ArgumentParsers.newFor("run").build();
 
     parser.addArgument("-I", "--load_path")
+        .required(false)
+        .type(String.class)
+        .setDefault(new ArrayList<String>())
+        .action(Arguments.append());
+
+    parser.addArgument("-R", "--resource_load_path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
@@ -178,6 +185,18 @@ public class Run {
       List loadPathArgs = (List) res.getAttrs().get("load_path");
       modules = res.getList("module");
 
+      // add resource locations to loadpath
+      List resourceLoadPathArgs = (List) res.getAttrs().get("resource_load_path");
+      for (Object o : resourceLoadPathArgs) {
+        ResourceLocation location = new ResourceLocation.Builder()
+            .path(Paths.get(o.toString()))
+            .allowCaching(true)
+            .allowNativeFunctions(true)
+            .build();
+        loadPathBuilder.add(location);
+      }
+
+
       if (loadPathArgs.size() == 0){
         // default load path
         loadPathBuilder.addCurrentWorkingDirectory();
@@ -186,6 +205,7 @@ public class Run {
         // custom load path
         for (Object loadPathArg : loadPathArgs) {
           FilesystemLocation location = new FilesystemLocation.Builder(Paths.get(loadPathArg.toString()))
+              .allowCaching(true)
               .allowNativeFunctions(true)
               .confineToPath(true)
               .build();
