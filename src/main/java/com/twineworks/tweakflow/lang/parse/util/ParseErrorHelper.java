@@ -153,9 +153,13 @@ public class ParseErrorHelper {
     RuleContext ctx = e.getCtx();
     Set<Integer> exp = e.getExpectedTokens().toSet();
 
-
+    // an unexpected trailing ;
+    if (offendingToken.getType() == TweakFlowParser.END_OF_STATEMENT && exp.contains(TweakFlowParser.EOF)){
+      String offendingTokenName = parser.getVocabulary().getLiteralName(offendingToken.getType());
+      msg.append("unexpected trailing ").append(offendingTokenName);
+    }
     // only one expected possibility, usually some delimiter or keyword
-    if (exp.size() == 1 && !exp.contains(TweakFlowParser.EOF)) {
+    else if (exp.size() == 1 && !exp.contains(TweakFlowParser.EOF)) {
       int t = exp.iterator().next();
       String expectedToken = parser.getVocabulary().getLiteralName(t);
       msg.append("expecting ").append(expectedToken);

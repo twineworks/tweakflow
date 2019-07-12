@@ -26,47 +26,39 @@ package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
-import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
+import com.twineworks.tweakflow.lang.load.loadpath.MemoryLocation;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParserLibraryErrorsTest {
+public class ParserExpressionErrorsTest {
 
-  private ParseResult parseFailing(String fixturePath){
+  private ParseResult parseFailing(String text){
+    HashMap<String, String> content = new HashMap<>();
+    content.put("<test>", text);
+    MemoryLocation mem = new MemoryLocation(true, false, content);
+
     Parser p = new Parser(
-        new ResourceParseUnit(new ResourceLocation.Builder().build(), fixturePath)
+        mem.getParseUnit("<test>")
     );
-    ParseResult result = p.parseUnit();
+    ParseResult result = p.parseExpression();
     assertThat(result.isSuccess()).isFalse();
     return result;
   }
 
   @Test
-  public void fails_on_missing_vardef_eos() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/library_missing_vardef_eos.tf");
+  void fails_on_trailing_eos(){
+
+    ParseResult r = parseFailing("1;");
     LangException e = r.getException();
     assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getMessage()).matches(Pattern.compile(".*unterminated.*variable.*"));
+    assertThat(e.getSourceInfo().getShortLocation()).isEqualTo("1:2");
+    assertThat(e.getMessage()).matches(Pattern.compile(".*unexpected.*';'.*"));
+
   }
 
-  @Test
-  public void fails_on_multiple_vardef_eos() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/library_multiple_vardef_eos.tf");
-    LangException e = r.getException();
-    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getMessage()).matches(Pattern.compile(".*expecting.*'}'.*"));
-  }
-
-  @Test
-  public void fails_on_malformed_vardef() throws Exception {
-    ParseResult r = parseFailing("fixtures/tweakflow/analysis/parsing/errors/library_malformed_vardef.tf");
-    LangException e = r.getException();
-    assertThat(e.getCode()).isEqualTo(LangError.PARSE_ERROR);
-    assertThat(e.getMessage()).matches(Pattern.compile(".*malformed variable.*"));
-  }
 
 }
