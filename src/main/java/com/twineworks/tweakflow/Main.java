@@ -27,13 +27,14 @@ package com.twineworks.tweakflow;
 import com.twineworks.tweakflow.doc.DocMain;
 import com.twineworks.tweakflow.repl.Repl;
 import com.twineworks.tweakflow.run.Run;
+import com.twineworks.tweakflow.spec.Spec;
 
 import java.util.Arrays;
 
 public class Main {
 
   private static void printUsage(){
-    System.out.println("usage: tweakflow [repl | run | doc | --version] [args]");
+    System.out.println("usage: tweakflow [repl | run | doc | spec | --version] [args]");
   }
 
   public static void main(String[] args){
@@ -50,6 +51,9 @@ public class Main {
     }
     else if (args[0].equals("doc")){
       DocMain.main(Arrays.copyOfRange(args, 1, args.length));
+    }
+    else if (args[0].equals("spec")){
+      Spec.main(Arrays.copyOfRange(args, 1, args.length));
     }
     else if (args[0].equals("--version")){
       String version = Main.class.getPackage().getImplementationVersion();
