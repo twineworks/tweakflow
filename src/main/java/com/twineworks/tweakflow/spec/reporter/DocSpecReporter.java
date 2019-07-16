@@ -24,43 +24,75 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
-import com.twineworks.tweakflow.spec.nodes.DescribeNode;
-import com.twineworks.tweakflow.spec.nodes.ItNode;
+import com.twineworks.tweakflow.spec.nodes.*;
+import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
+import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
+import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class DocSpecReporter implements SpecReporter {
 
   private String indent = "  ";
   private int depth = 0;
-  private PrintStream out;
-  private int errors = 0;
+  private int failing = 0;
   private int passing = 0;
   private int pending = 0;
-  private ArrayList<ItNode> errorNodes = new ArrayList<>();
+  private int errors = 0;
 
-  public DocSpecReporter(PrintStream out) {
-    this.out = out;
+  private DescribeNode currentDescribe;
+
+  private PrintStream out;
+  private ArrayList<SpecNode> errorNodes = new ArrayList<>();
+
+  public DocSpecReporter() {
+    this.out = System.out;
   }
 
   @Override
-  public void onEnterSuite() {
+  public void onEnterSuite(SuiteNode node) {
     depth++;
   }
 
   @Override
   public void onEnterDescribe(DescribeNode node) {
-    if (depth == 1){
+
+    currentDescribe = node;
+
+    if (depth == 1) {
       out.println();
     }
+
     printIndent();
     out.println(node.getName());
     depth++;
   }
 
-  private void printIndent(){
-    for(int i=0;i<depth;i++) out.print(indent);
+  @Override
+  public void onEnterBefore(BeforeNode node) {
+
+  }
+
+  @Override
+  public void onLeaveBefore(BeforeNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      depth--;
+      printIndent();
+      depth++;
+      out.print(ConsoleColors.RED);
+      out.print("✗");
+      out.print(" ");
+      out.println("before hook failed: "+node.getErrorMessage());
+      out.print(ConsoleColors.RESET);
+    }
+  }
+
+  private void printIndent() {
+    for (int i = 0; i < depth; i++) out.print(indent);
   }
 
   @Override
@@ -74,8 +106,9 @@ public class DocSpecReporter implements SpecReporter {
 
   @Override
   public void onLeaveIt(ItNode node) {
+
     printIndent();
-    if (node.isPending()){
+    if (node.isPending()) {
       pending++;
       out.print(ConsoleColors.YELLOW);
       out.print("~");
@@ -84,8 +117,7 @@ public class DocSpecReporter implements SpecReporter {
       out.print(ConsoleColors.FAINT);
       out.println(node.getName());
       out.print(ConsoleColors.RESET);
-    }
-    else if (node.isSuccess()){
+    } else if (node.isSuccess()) {
       passing++;
       out.print(ConsoleColors.GREEN);
       out.print("✓");
@@ -94,13 +126,16 @@ public class DocSpecReporter implements SpecReporter {
       out.print(ConsoleColors.FAINT);
       out.println(node.getName());
       out.print(ConsoleColors.RESET);
-    }
-    else {
-      errorNodes.add(node);
-      errors++;
+    } else {
+      if (node.didRun()) {
+        errorNodes.add(node);
+      }
+      failing++;
       out.print(ConsoleColors.RED);
       out.print("✗");
       out.print(" ");
+      out.print(ConsoleColors.RESET);
+      out.print(ConsoleColors.FAINT);
       out.println(node.getName());
       out.print(ConsoleColors.RESET);
     }
@@ -108,34 +143,49 @@ public class DocSpecReporter implements SpecReporter {
   }
 
   @Override
-  public void onLeaveSuite() {
+  public void onLeaveSuite(SuiteNode node) {
 
     out.println();
     printIndent();
     depth--;
-
-    out.print(passing+" passing");
-    if (pending > 0){
-      out.print(", "+pending+" pending");
+    out.print(ConsoleColors.GREEN);
+    out.print(passing + " passing");
+    out.print(ConsoleColors.RESET);
+    if (pending > 0) {
+      out.print(", ");
+      out.print(ConsoleColors.YELLOW);
+      out.print(pending + " pending");
+      out.print(ConsoleColors.RESET);
+    }
+    if (failing > 0) {
+      out.print(", ");
+      out.print(ConsoleColors.RED);
+      out.print(failing + " failing");
+      out.print(ConsoleColors.RESET);
     }
     if (errors > 0){
-      out.print(", "+errors+" failures");
+      out.print(" and ");
+      out.print(ConsoleColors.RED);
+      out.print(errors + " error");
+      if (errors > 1) out.print("s");
+      out.print(ConsoleColors.RESET);
     }
 
+    out.print(" in ");
+    out.print(HumanReadable.formatDuration(node.getDurationMillis()));
     out.println();
 
-    int i=1;
-    for (ItNode errorNode : errorNodes) {
+    int i = 1;
+    for (SpecNode errorNode : errorNodes) {
       out.println();
-      out.println("Spec failure #"+i+": ");
-      out.print("  ✗ ");
-      out.println(errorNode.getName());
-      out.print("  at ");
-      out.println(errorNode.getErrorLocation());
-      out.print("  ");
-      out.println(errorNode.getErrorMessage());
+      out.println(ErrorReporter.errorFor(i, errorNode, true));
       i++;
     }
+
+  }
+
+  @Override
+  public void setOptions(Map<String, String> options) {
 
   }
 }

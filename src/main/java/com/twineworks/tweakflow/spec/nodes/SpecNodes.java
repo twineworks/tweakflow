@@ -52,19 +52,28 @@ public class SpecNodes {
         return makeDescribeNode(value, effects, runtime);
       case "it":
         return makeItNode(value);
-      case "before":
-      case "after":
       case "effect":
-        return makeEffectNode(value, effects, runtime);
+        return makeEffectNode(value, effects);
       case "subject":
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "spec node type: "+type+" not supported yet");
+        return makeSubjectNode(value);
+      case "subject_transform":
+        return makeSubjectTransformNode(value);
+      case "subject_effect":
+        return makeSubjectEffectNode(value, effects);
+      case "before":
+        return makeBeforeNode(value, effects);
+      case "after":
+        return makeAfterNode(value, effects);
       default:
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "spec node must have a valid type: "+value);
     }
 
   }
 
-  private static SpecNode makeEffectNode(Value value, HashMap<String, SpecEffect> effects, Runtime runtime) {
+  private static EffectNode makeEffectNode(Value value, HashMap<String, SpecEffect> effects) {
+    if (value.isNil()) {
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "effect node must not be nil");
+    }
     DictValue d = value.dict();
     Value effectNode = d.get("effect");
     if (!effectNode.isDict()){
@@ -81,7 +90,50 @@ public class SpecNodes {
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "effect node has unknown type: "+effectNode);
     }
 
-    return fromValue(effects.get(type).execute(runtime, effectNode), effects, runtime);
+    return new EffectNode().setEffect(effectNode, effects.get(type));
+  }
+
+  private static SubjectEffectNode makeSubjectEffectNode(Value value, HashMap<String, SpecEffect> effects) {
+    DictValue d = value.dict();
+    EffectNode effectNode = makeEffectNode(d.get("effect"), effects);
+
+    return new SubjectEffectNode().setEffect(effectNode);
+  }
+
+  private static BeforeNode makeBeforeNode(Value value, HashMap<String, SpecEffect> effects) {
+    DictValue d = value.dict();
+    EffectNode effectNode = makeEffectNode(d.get("effect"), effects);
+    Value vName = d.get("name");
+    String name = "before";
+    if (!vName.isNil() && vName.isString()){
+      name = vName.string();
+    }
+
+    Value vAt = d.get("at");
+    if (!vAt.isNil() && !vAt.isString()){
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "before node must have valid at: "+value);
+    }
+    String at = vAt.string();
+
+    return new BeforeNode().setName(name).setAt(NodeLocation.at(at)).setEffect(effectNode);
+  }
+
+  private static AfterNode makeAfterNode(Value value, HashMap<String, SpecEffect> effects) {
+    DictValue d = value.dict();
+    EffectNode effectNode = makeEffectNode(d.get("effect"), effects);
+    Value vName = d.get("name");
+    String name = "after";
+    if (!vName.isNil() && vName.isString()){
+      name = vName.string();
+    }
+
+    Value vAt = d.get("at");
+    if (!vAt.isNil() && !vAt.isString()){
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "after node must have valid at: "+value);
+    }
+    String at = vAt.string();
+
+    return new AfterNode().setName(name).setAt(NodeLocation.at(at)).setEffect(effectNode);
   }
 
   private static DescribeNode makeDescribeNode(Value value, HashMap<String, SpecEffect> effects, Runtime runtime){
@@ -90,19 +142,68 @@ public class SpecNodes {
     if (vName.isNil() || !vName.isString()){
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "describe node must have a valid name: "+value);
     }
+    String name = vName.string();
 
     Value vSpec = d.get("spec");
     if (!vSpec.isList() && !vSpec.isNil()){
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "describe node must have a valid spec: "+value);
     }
+
+    Value vAt = d.get("at");
+    if (!vAt.isNil() && !vAt.isString()){
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "describe node must have valid at: "+value);
+    }
+    String at = vAt.string();
+
     ArrayList<SpecNode> nodes = new ArrayList<>();
+    ArrayList<BeforeNode> beforeNodes = new ArrayList<>();
+    ArrayList<AfterNode> afterNodes = new ArrayList<>();
+    SpecNode subjectNode = null;
+
     if (vSpec.isList()){
       for (Value node : vSpec.list()) {
-        nodes.add(fromValue(node, effects, runtime));
+        SpecNode specNode = fromValue(node, effects, runtime);
+
+        // resolve effect nodes
+        if (specNode.getType() == SpecNodeType.EFFECT){
+          EffectNode effectNode = (EffectNode) specNode;
+          specNode = fromValue(effectNode.execute(runtime), effects, runtime);
+        }
+
+        switch (specNode.getType()){
+          case BEFORE:
+            beforeNodes.add((BeforeNode) specNode);
+            break;
+          case AFTER:
+            afterNodes.add((AfterNode) specNode);
+            break;
+          case DESCRIBE:
+          case IT:
+            nodes.add(specNode);
+            break;
+          case SUBJECT:
+          case SUBJECT_TRANSFORM:
+          case SUBJECT_EFFECT:
+            if (subjectNode != null){
+              throw new LangException(LangError.ILLEGAL_ARGUMENT, "only one subject definition allowed in describe block: "+name);
+            }
+            if (nodes.size() > 0){
+              throw new LangException(LangError.ILLEGAL_ARGUMENT, "subject definition must precede any 'it' or nested describe blocks in describe block: "+name);
+            }
+            subjectNode = specNode;
+            break;
+          default:
+            throw new LangException(LangError.ILLEGAL_ARGUMENT, "Illegal node in describe block: "+specNode.getType());
+        }
+
       }
     }
     DescribeNode node = new DescribeNode();
-    node.setName(vName.string());
+    node.setBeforeNodes(beforeNodes);
+    node.setAfterNodes(afterNodes);
+    node.setSubjectNode(subjectNode);
+    node.setName(name);
+    node.setAt(NodeLocation.at(at));
     node.setNodes(nodes);
     return node;
   }
@@ -119,10 +220,33 @@ public class SpecNodes {
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "it node must have a valid spec: "+value);
     }
 
+    Value vAt = d.get("at");
+    if (!vAt.isNil() && !vAt.isString()){
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "it node must have valid at: "+value);
+    }
+
     ItNode node = new ItNode();
     node.setName(vName.string());
     node.setSpec(vSpec);
+    node.setAt(NodeLocation.at(vAt.string()));
     return node;
+  }
+
+  private static SubjectNode makeSubjectNode(Value value){
+    DictValue d = value.dict();
+    Value data = d.get("data");
+    return new SubjectNode().setData(data);
+  }
+
+  private static SubjectTransformNode makeSubjectTransformNode(Value value){
+    DictValue d = value.dict();
+    Value transform = d.get("transform");
+
+    if (!transform.isFunction()){
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "subject transform must be a function: "+value);
+    }
+
+    return new SubjectTransformNode().setTransform(transform);
   }
 
 

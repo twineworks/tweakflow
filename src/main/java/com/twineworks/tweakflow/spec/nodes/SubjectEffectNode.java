@@ -22,14 +22,59 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.nodes;
 
-public class ConsoleColors {
-  // Reset
-  public static final String RESET = "\033[0m";
-  public static final String BOLD = "\033[1m";
-  public static final String FAINT = "\033[2m";
-  public static final String YELLOW = "\033[0;33m";  // YELLOW
-  public static final String GREEN = "\033[0;32m";   // GREEN
-  public static final String RED = "\033[0;31m";     // RED
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.spec.runner.SpecContext;
+
+public class SubjectEffectNode implements SpecNode {
+
+  private String name = "subject_effect";
+  private EffectNode effectNode;
+
+  public SubjectEffectNode setEffect(EffectNode effectNode){
+    this.effectNode = effectNode;
+    return this;
+  }
+
+  @Override
+  public SpecNodeType getType() {
+    return SpecNodeType.SUBJECT_EFFECT;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void run(SpecContext context) {
+    Value newSubject = effectNode.execute(context);
+    context.setSubject(newSubject);
+  }
+
+  @Override
+  public void fail(String errorMessage, Throwable cause) {
+
+  }
+
+  @Override
+  public boolean didRun() {
+    return false;
+  }
+
+  @Override
+  public boolean isSuccess() {
+    return false;
+  }
+
+  @Override
+  public String getErrorMessage() {
+    return null;
+  }
+
+  @Override
+  public Throwable getCause() {
+    return null;
+  }
+
 }

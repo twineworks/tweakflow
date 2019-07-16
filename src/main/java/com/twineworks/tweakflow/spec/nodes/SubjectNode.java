@@ -22,19 +22,59 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.nodes;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.DictValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-import java.time.ZonedDateTime;
+public class SubjectNode implements SpecNode {
 
-public class ClockEffect implements SpecEffect {
-  @Override
-  public Value execute(Runtime runtime, Value effectNode, Value subject) {
-    DictValue d = effectNode.dict();
-    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
+  private String name = "subject";
+  private Value data = Values.NIL;
+
+  public SubjectNode setData(Value value){
+    this.data = value;
+    return this;
   }
+
+  @Override
+  public SpecNodeType getType() {
+    return SpecNodeType.SUBJECT;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void run(SpecContext context) {
+    context.setSubject(data);
+  }
+
+  @Override
+  public void fail(String errorMessage, Throwable cause) {
+
+  }
+
+  @Override
+  public boolean didRun() {
+    return true;
+  }
+
+  @Override
+  public boolean isSuccess() {
+    return true;
+  }
+
+  @Override
+  public String getErrorMessage() {
+    return "OK";
+  }
+
+  @Override
+  public Throwable getCause() {
+    return null;
+  }
+
 }

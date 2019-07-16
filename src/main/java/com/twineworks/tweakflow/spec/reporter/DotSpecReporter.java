@@ -24,11 +24,15 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
+import com.twineworks.tweakflow.spec.nodes.BeforeNode;
 import com.twineworks.tweakflow.spec.nodes.DescribeNode;
 import com.twineworks.tweakflow.spec.nodes.ItNode;
+import com.twineworks.tweakflow.spec.nodes.SuiteNode;
+import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class DotSpecReporter implements SpecReporter {
 
@@ -40,17 +44,27 @@ public class DotSpecReporter implements SpecReporter {
   private int pending = 0;
   private ArrayList<ItNode> errorNodes = new ArrayList<>();
 
-  public DotSpecReporter(PrintStream out) {
-    this.out = out;
+  public DotSpecReporter() {
+    this.out = System.out;
   }
 
   @Override
-  public void onEnterSuite() {
+  public void onEnterSuite(SuiteNode node) {
 
   }
 
   @Override
   public void onEnterDescribe(DescribeNode node) {
+  }
+
+  @Override
+  public void onEnterBefore(BeforeNode node) {
+
+  }
+
+  @Override
+  public void onLeaveBefore(BeforeNode node) {
+
   }
 
   private void printIndent(){
@@ -98,7 +112,7 @@ public class DotSpecReporter implements SpecReporter {
   }
 
   @Override
-  public void onLeaveSuite() {
+  public void onLeaveSuite(SuiteNode node) {
 
     out.println();
     out.println();
@@ -126,6 +140,11 @@ public class DotSpecReporter implements SpecReporter {
       out.println(errorNode.getErrorMessage());
       i++;
     }
+
+  }
+
+  @Override
+  public void setOptions(Map<String, String> options) {
 
   }
 }

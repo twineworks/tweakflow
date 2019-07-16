@@ -25,6 +25,8 @@
 package com.twineworks.tweakflow.spec;
 
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.spec.effects.helpers.EffectFactory;
+import com.twineworks.tweakflow.spec.reporter.helpers.ReporterFactory;
 import com.twineworks.tweakflow.spec.runner.SpecRunner;
 import com.twineworks.tweakflow.spec.runner.SpecRunnerOptions;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -34,6 +36,8 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Spec {
@@ -54,6 +58,34 @@ public class Spec {
         .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
+    parser.addArgument("-r", "--reporter")
+        .required(false)
+        .dest("reporters")
+        .setDefault(new ArrayList<String>())
+        .type(String.class)
+        .action(Arguments.append());
+
+    parser.addArgument("-ro", "--reporter_option")
+        .required(false)
+        .action(Arguments.append())
+        .setDefault(new ArrayList<String>())
+        .dest("reporter_options")
+        .type(String.class)
+        .nargs(2);
+
+    parser.addArgument("-e", "--effect")
+        .required(false)
+        .dest("effects")
+        .setDefault(new ArrayList<String>())
+        .type(String.class)
+        .action(Arguments.append())
+        .nargs(2);
+
+    parser.addArgument("--color")
+        .setDefault(Boolean.FALSE)
+        .action(Arguments.storeTrue())
+        .type(Boolean.class);
+
     parser.addArgument("module")
         .type(String.class)
         .nargs("+");
@@ -66,24 +98,67 @@ public class Spec {
 
     ArgumentParser parser = createMainArgumentParser();
 
-    SpecRunnerOptions specRunnerOptions = new SpecRunnerOptions();
+    SpecRunnerOptions options = new SpecRunnerOptions();
 
     try {
 
       Namespace res = parser.parseArgs(args);
 
-      List loadPathArgs = (List) res.getAttrs().get("load_path");
-      List resourceLoadPathArgs = (List) res.getAttrs().get("resource_load_path");
+      // load path
+      List<String> loadPathArgs = res.getList("load_path");
+      options.loadPathOptions.loadPath.addAll(loadPathArgs);
 
-      for (Object loadPathArg : loadPathArgs) {
-        specRunnerOptions.loadPathOptions.loadPath.add(loadPathArg.toString());
+      List<String> resourceLoadPathArgs = res.getList("resource_load_path");
+      options.loadPathOptions.resourceLoadPath.addAll(resourceLoadPathArgs);
+
+      // filters
+      List<String> filters = res.getList("filters");
+      if (filters == null){
+        filters = Collections.emptyList();
+      }
+      options.filters.addAll(filters);
+
+      // reporter options
+      List<ArrayList<String>> reporterOptions = res.getList("reporter_options");
+
+      HashMap<String, String> reporterOpts = new HashMap<>();
+      for (ArrayList<String> option : reporterOptions) {
+        String name = option.get(0);
+        String value = option.get(1);
+        reporterOpts.put(name, value);
       }
 
-      for (Object resourceLoadPathArg : resourceLoadPathArgs) {
-        specRunnerOptions.loadPathOptions.resourceLoadPath.add(resourceLoadPathArg.toString());
+      // --color as shortcut for -reporter_option color true
+      if (res.getBoolean("color")){
+        reporterOpts.put("color", "true");
       }
 
-      specRunnerOptions.modules.addAll(res.getList("module"));
+      // color auto-detection
+      String colorOption = reporterOpts.get("color");
+      if (colorOption == null || colorOption.equalsIgnoreCase("auto")){
+        reporterOpts.put("color", System.console() == null ? "false" : "true");
+      }
+
+      // reporters
+      List<String> reporters = res.getList("reporters");
+      for (String reporter : reporters) {
+        options.reporters.add(ReporterFactory.makeReporter(reporter, reporterOpts));
+      }
+
+      // default reporter, if none given
+      if (options.reporters.size() == 0){
+        options.reporters.add(ReporterFactory.makeReporter("doc", reporterOpts));
+      }
+
+      // effects
+      List<ArrayList<String>> effects = res.getList("effects");
+      for (ArrayList<String> effect : effects) {
+        String name = effect.get(0);
+        String impl = effect.get(1);
+        options.effects.put(name, EffectFactory.makeEffect(impl));
+      }
+
+      options.modules.addAll(res.getList("module"));
 
     } catch (ArgumentParserException e) {
       parser.handleError(e);
@@ -92,7 +167,7 @@ public class Spec {
 
     try {
 
-      SpecRunner specRunner = new SpecRunner(specRunnerOptions);
+      SpecRunner specRunner = new SpecRunner(options);
       specRunner.run();
       if (specRunner.hasErrors()){
         System.exit(1);

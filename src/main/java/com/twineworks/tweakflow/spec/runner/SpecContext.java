@@ -25,20 +25,43 @@
 package com.twineworks.tweakflow.spec.runner;
 
 import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.spec.nodes.SpecNode;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.SpecReporter;
 
-public class SpecContext {
-  private final Runtime runtime;
-  private final SpecReporter reporter;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Map;
 
-  public SpecContext(Runtime runtime, SpecReporter reporter) {
+public class SpecContext implements SpecReporter {
+
+  private final ArrayDeque<Value> subjects = new ArrayDeque<>();
+  private final ArrayList<SpecReporter> reporters;
+  private final Runtime runtime;
+  private int errors = 0;
+
+  public SpecContext(Runtime runtime, ArrayList<SpecReporter> reporters) {
     this.runtime = runtime;
-    this.reporter = reporter;
+    this.reporters = reporters;
   }
 
   public void run(SpecNode node){
-    node.run(this);
+    if (node instanceof DescribeNode){
+      DescribeNode dNode = (DescribeNode) node;
+      if (dNode.isSelected()){
+        node.run(this);
+      }
+    }
+    else if (node instanceof ItNode){
+      ItNode itNode = (ItNode) node;
+      if (itNode.isSelected()){
+        node.run(this);
+      }
+    }
+    else {
+      node.run(this);
+    }
   }
 
   public Runtime getRuntime(){
@@ -46,6 +69,102 @@ public class SpecContext {
   }
 
   public SpecReporter getReporter() {
-    return reporter;
+    return this;
+  }
+
+  public Value getSubject() {
+    return subjects.peek();
+  }
+
+  public void setSubject(Value subject) {
+    // replace current subject
+    subjects.pop();
+    subjects.push(subject);
+  }
+
+  //
+  // reporter delegation
+  //
+
+  @Override
+  public void onEnterSuite(SuiteNode node) {
+    subjects.push(Values.NIL);
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterSuite(node);
+    }
+  }
+
+  @Override
+  public void onEnterDescribe(DescribeNode node) {
+    // inherit current subject
+    subjects.push(subjects.peek());
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterDescribe(node);
+    }
+
+  }
+
+  @Override
+  public void onEnterBefore(BeforeNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterBefore(node);
+    }
+  }
+
+  @Override
+  public void onLeaveBefore(BeforeNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveBefore(node);
+    }
+    if (node.didRun() && !node.isSuccess()) errors++;
+  }
+
+  @Override
+  public void onLeaveDescribe(DescribeNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveDescribe(node);
+    }
+
+    subjects.pop();
+
+    if (node.didRun() && !node.isSuccess()) errors++;
+  }
+
+  @Override
+  public void onEnterIt(ItNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterIt(node);
+    }
+
+  }
+
+  @Override
+  public void onLeaveIt(ItNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveIt(node);
+      if (!node.isPending() && node.didRun() && !node.isSuccess()) {
+        errors++;
+      }
+    }
+
+  }
+
+  @Override
+  public void onLeaveSuite(SuiteNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveSuite(node);
+    }
+    subjects.pop();
+  }
+
+  @Override
+  public void setOptions(Map<String, String> options) {
+    for (SpecReporter reporter : reporters) {
+      reporter.setOptions(options);
+    }
+  }
+
+  public boolean hasErrors() {
+    return errors > 0;
   }
 }

@@ -5,6 +5,9 @@ export assert.expect_error as expect_error;
 
 export spec.describe as describe;
 export spec.it as it;
+export spec.subject as subject;
+export spec.before as before;
+export spec.after as after;
 
 alias data.size as size;
 alias data.delete as delete;
@@ -79,9 +82,9 @@ library assert {
   function expect: (x, f, _stack_offset=3) ->
     let {
       result: f(x);
-      semantic: result[0];
-      success: result[1];
-      expected: result[2];
+      semantic: if result is list then result[0] else result[:semantic];
+      success: if result is list then result[1] else result[:success];
+      expected: if result is list then result[2] else result[:expected];
     }
     if !success
       let {
@@ -103,17 +106,52 @@ library assert {
 
 library spec {
 
+  function before: (any effect, string name) -> {
+    :type "before",
+    :name name default "before",
+    :effect effect,
+    :at (try throw "err" catch _, trace trace[:stack, 1])
+  };
+
+  function after: (any effect, string name) -> {
+    :type "after",
+    :name name default "after",
+    :effect effect,
+    :at (try throw "err" catch _, trace trace[:stack, 1])
+  };
+
   function describe: (string name, any spec) -> {
     :type 'describe',
     :name name,
-    :spec spec
+    :spec spec,
+    :at (try throw "err" catch _, trace trace[:stack, 1])
   };
 
   function it: (string name, any spec) -> {
     :type 'it',
     :name name,
-    :spec spec
+    :spec spec,
+    :at (try throw "err" catch _, trace trace[:stack, 1])
   };
+
+  function subject: (any data, any transform, any effect) ->
+
+    if (transform != nil)
+      {
+        :type 'subject_transform',
+        :transform transform,
+      }
+    if (effect != nil)
+      {
+        :type 'subject_effect',
+        :effect effect,
+      }
+    else
+      {
+        :type 'subject',
+        :data data,
+      }
+  ;
 
 }
 
@@ -189,10 +227,16 @@ export library to {
     ["to be nil", x === nil, "x === nil"];
 
   not_be_nil: () -> (x) ->
-    ["to not be nil", x !== nil, "x !=== nil"];
+    ["to not be nil", x !== nil, "x !== nil"];
 
-  be_true: () -> (x) ->
-    ["to be true", x === true, "x === true"];
+  be_true: () -> (x) -> let {
+      success: x === true;
+    }
+    {
+      :semantic "to be",
+      :expected true,
+      :success success
+    };
 
   be_false: () -> (x) ->
     ["to be false", x === false, "x === false"];
@@ -201,6 +245,11 @@ export library to {
     ["to be NaN", math.NaN?(x), "math.NaN?(x)"];
 
   be_function: () -> (x) ->
-    ["to be function", x is function, "x is function"];
+    {
+      :semantic "to be",
+      :expected "a function",
+      :success x is function
+    };
+
 
 }

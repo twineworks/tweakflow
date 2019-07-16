@@ -24,15 +24,23 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
+import com.twineworks.tweakflow.spec.nodes.BeforeNode;
 import com.twineworks.tweakflow.spec.nodes.DescribeNode;
 import com.twineworks.tweakflow.spec.nodes.ItNode;
+import com.twineworks.tweakflow.spec.nodes.SuiteNode;
+
+import java.util.Map;
 
 public interface SpecReporter {
-//  void onCompilationError();
-  void onEnterSuite();
+
+  void onEnterSuite(SuiteNode node);
   void onEnterDescribe(DescribeNode node);
+  void onEnterBefore(BeforeNode node);
+  void onLeaveBefore(BeforeNode node);
   void onLeaveDescribe(DescribeNode node);
   void onEnterIt(ItNode node);
   void onLeaveIt(ItNode node);
-  void onLeaveSuite();
+  void onLeaveSuite(SuiteNode node);
+
+  void setOptions(Map<String, String> options);
 }

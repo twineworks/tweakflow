@@ -28,5 +28,5 @@ import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
 
 public interface SpecEffect {
-  Value execute(Runtime runtime, Value effectNode);
+  Value execute(Runtime runtime, Value effectNode, Value subject);
 }

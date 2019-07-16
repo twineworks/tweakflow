@@ -34,12 +34,21 @@ import com.twineworks.tweakflow.spec.runner.SpecContext;
 public class ItNode implements SpecNode {
 
   private String name = "unknown";
+  private boolean selected = true;
   private Value spec;
-  private boolean success;
+
+  private NodeLocation at;
+  private DescribeNode parent;
+  private String fullName;
+
+  private boolean success = true;
+  private boolean didRun = false;
+
   private String errorMessage;
   private String errorLocation;
   private Value thrownValue;
-  private LangException error;
+  private Throwable cause;
+
 
   public ItNode setName(String name){
     this.name = name;
@@ -49,6 +58,36 @@ public class ItNode implements SpecNode {
   public ItNode setSpec(Value value){
     this.spec = value;
     return this;
+  }
+
+  public ItNode setAt(NodeLocation at){
+    this.at = at;
+    return this;
+  }
+
+  public ItNode setParent(DescribeNode parent){
+    this.parent = parent;
+    return this;
+  }
+
+  public DescribeNode getParent() {
+    return parent;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
+  }
+
+  public String getFullName() {
+    if (fullName == null){
+      if (parent == null) return name;
+      fullName = parent.getFullName() + " " + name;
+    }
+    return fullName;
   }
 
   @Override
@@ -63,52 +102,75 @@ public class ItNode implements SpecNode {
   @Override
   public void run(SpecContext context) {
 
-    context.getReporter().onEnterIt(this);
-    if (spec == Values.NIL) {
-      // pending
-    }
-    else {
-      CallContext cc = context.getRuntime().createCallContext();
-      int paramCount = spec.function().getSignature().getParameterList().size();
+    context.onEnterIt(this);
 
-      try {
-        if (paramCount == 0){
-          cc.call(spec);
-        }
-        else {
-          // TODO: pass current subject
-          cc.call(spec, Values.NIL);
-        }
-        success = true;
-      } catch (LangException e){
-        // extract useful info
-        success = false;
-        error = e;
-        thrownValue = (Value) e.getProperties().getOrDefault("value", Values.NIL);
+    if (success){
+      didRun = true;
+      if (spec == Values.NIL) {
+        // pending
+      }
+      else {
+        CallContext cc = context.getRuntime().createCallContext();
+        int paramCount = spec.function().getSignature().getParameterList().size();
 
-        if (thrownValue.isDict()){
-          DictValue dict = thrownValue.dict();
-          Value code = dict.get("code");
-          if (code.isString() && code.string().equals("ASSERTION_ERROR")){
-            // construct a matcher-specific error message
-            errorMessage = "expected: " + dict.get("x") + " " + dict.get("semantic").string() + ": "+ dict.get("expected");
-            errorLocation = dict.get("location").string();
+        try {
+          if (paramCount == 0){
+            cc.call(spec);
           }
-          else if (code.isString() && code.string().equals("ERROR_EXPECTED")){
-            // construct a matcher-specific error message
-            errorMessage = "expected an error, but no error was thrown";
-            errorLocation = dict.get("location").string();
+          else {
+            cc.call(spec, context.getSubject());
           }
-        }
-
-        if (errorMessage == null){
-          errorMessage = e.getDigestMessage();
-          errorLocation = e.getSourceInfo().getFullLocation();
+        } catch (LangException e){
+          fail(e.getMessage(), e);
         }
       }
     }
-    context.getReporter().onLeaveIt(this);
 
+    context.onLeaveIt(this);
+
+  }
+
+  @Override
+  public void fail(String errorMessage, Throwable cause) {
+    success = false;
+
+    // extract useful info
+    this.cause = cause;
+
+    if (cause instanceof LangException){
+      LangException e = (LangException) cause;
+
+      thrownValue = (Value) e.getProperties().getOrDefault("value", Values.NIL);
+
+      if (thrownValue.isDict()){
+        DictValue dict = thrownValue.dict();
+        Value code = dict.get("code");
+        if (code.isString() && code.string().equals("ASSERTION_ERROR")){
+          // construct a matcher-specific error message
+          this.errorMessage = "expected " + dict.get("x") + " " + dict.get("semantic").string() + " "+ dict.get("expected");
+          errorLocation = dict.get("location").string();
+        }
+        else if (code.isString() && code.string().equals("ERROR_EXPECTED")){
+          // construct a matcher-specific error message
+          this.errorMessage = "expected an error, but no error was thrown";
+          errorLocation = dict.get("location").string();
+        }
+      }
+
+      if (this.errorMessage == null){
+        this.errorMessage = e.getDigestMessage();
+        errorLocation = e.getSourceInfo().getFullLocation();
+      }
+    }
+    else{
+      this.errorMessage = errorMessage;
+    }
+
+  }
+
+  @Override
+  public boolean didRun() {
+    return didRun;
   }
 
   public boolean isPending(){
@@ -123,7 +185,16 @@ public class ItNode implements SpecNode {
     return errorMessage;
   }
 
+  @Override
+  public Throwable getCause() {
+    return cause;
+  }
+
   public String getErrorLocation() {
     return errorLocation;
+  }
+
+  public NodeLocation at() {
+    return at;
   }
 }

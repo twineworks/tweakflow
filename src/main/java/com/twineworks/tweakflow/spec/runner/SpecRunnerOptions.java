@@ -24,9 +24,7 @@
 
 package com.twineworks.tweakflow.spec.runner;
 
-import com.twineworks.tweakflow.spec.effects.ClockEffect;
 import com.twineworks.tweakflow.spec.effects.SpecEffect;
-import com.twineworks.tweakflow.spec.reporter.DocSpecReporter;
 import com.twineworks.tweakflow.spec.reporter.SpecReporter;
 
 import java.util.ArrayList;
@@ -37,9 +35,8 @@ public class SpecRunnerOptions {
   public final ArrayList<String> modules = new ArrayList<>();
   public final ArrayList<SpecReporter> reporters = new ArrayList<>();
   public final HashMap<String, SpecEffect> effects = new HashMap<>();
+  public final ArrayList<String> filters = new ArrayList<>();
 
   public SpecRunnerOptions() {
-    reporters.add(new DocSpecReporter(System.out));
-    effects.put("clock", new ClockEffect());
   }
 }

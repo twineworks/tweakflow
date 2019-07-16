@@ -22,19 +22,50 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+public class HumanReadable {
 
-import java.time.ZonedDateTime;
+  /**
+   * Returns a string of format hh:mm:ss.SSS
+   * @param ms
+   * @return
+   */
+  public static String formatDuration(long ms){
 
-public class ClockEffect implements SpecEffect {
-  @Override
-  public Value execute(Runtime runtime, Value effectNode, Value subject) {
-    DictValue d = effectNode.dict();
-    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
+    StringBuilder s = new StringBuilder();
+    long hours = ms / 1000 / 60 / 60;
+    long minutes = (ms - (hours * 1000 * 60 * 60)) / 1000 / 60;
+    long seconds = (ms - (hours * 1000 * 60 * 60) - (minutes * 1000 * 60)) / 1000;
+
+    boolean showHours = hours > 0;
+    boolean showMinutes = showHours || minutes > 0;
+
+    if (showHours){
+      if (hours < 10){
+        s.append("0");
+      }
+      s.append(hours).append("h ");
+    }
+
+    if (showMinutes){
+      if (minutes < 10){
+        s.append("0");
+      }
+      s.append(minutes).append("m ");
+    }
+    if (showMinutes){
+      if (seconds < 10){
+        s.append("0");
+      }
+    }
+    if (!showHours && !showMinutes && seconds == 0){
+      s.append("<1").append("s");
+    }
+    else{
+      s.append(seconds).append("s");
+    }
+
+    return s.toString();
   }
 }

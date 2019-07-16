@@ -22,19 +22,14 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
-
-import java.time.ZonedDateTime;
-
-public class ClockEffect implements SpecEffect {
-  @Override
-  public Value execute(Runtime runtime, Value effectNode, Value subject) {
-    DictValue d = effectNode.dict();
-    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
-  }
+public class ConsoleColors {
+  // Reset
+  public static final String RESET = "\033[0m";
+  public static final String BOLD = "\033[1m";
+  public static final String FAINT = "\033[2m";
+  public static final String YELLOW = "\033[0;33m";  // YELLOW
+  public static final String GREEN = "\033[0;32m";   // GREEN
+  public static final String RED = "\033[0;31m";     // RED
 }

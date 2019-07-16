@@ -22,19 +22,44 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.nodes;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+public class NodeLocation {
+  public final String file;
+  public final int line;
+  public final int charInLine;
 
-import java.time.ZonedDateTime;
+  public static NodeLocation at(String at){
+    String file = "<none>";
+    int line = 0;
+    int charInLine = 0;
 
-public class ClockEffect implements SpecEffect {
-  @Override
-  public Value execute(Runtime runtime, Value effectNode, Value subject) {
-    DictValue d = effectNode.dict();
-    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
+    if (at == null) return new NodeLocation(file, line, charInLine);
+
+    String[] split = at.split(":");
+
+    if (split.length >= 1){
+      file = split[0];
+    }
+
+    if (split.length >= 2){
+      line = Integer.parseInt(split[1], 10);
+    }
+
+    if (split.length >= 3){
+      charInLine = Integer.parseInt(split[2], 10);
+    }
+
+    return new NodeLocation(file, line, charInLine);
+  }
+
+  public NodeLocation(){
+    this("none", 0, 0);
+  }
+
+  public NodeLocation(String file, int line, int charInLine) {
+    this.file = file;
+    this.line = line;
+    this.charInLine = charInLine;
   }
 }

@@ -29,4 +29,9 @@ import com.twineworks.tweakflow.spec.runner.SpecContext;
 public interface SpecNode {
   SpecNodeType getType();
   void run(SpecContext context);
+  void fail(String errorMessage, Throwable cause);
+  boolean didRun();
+  boolean isSuccess();
+  String getErrorMessage();
+  Throwable getCause();
 }
