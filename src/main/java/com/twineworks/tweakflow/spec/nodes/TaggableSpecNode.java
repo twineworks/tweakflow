@@ -22,34 +22,11 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.nodes;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+import java.util.Set;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-public class ReadFileEffect implements SpecEffect {
-
-  @Override
-  public Value execute(Runtime runtime, Value effectNode, Value subject) {
-
-    DictValue d = effectNode.dict();
-    String path = d.get("file").string();
-    String charset = d.get("charset").string();
-    Value cb = d.get("callback");
-
-    try {
-      String s = new String(Files.readAllBytes(Paths.get(path)), Charset.forName(charset));
-      return runtime.createCallContext().call(cb, Values.make(s));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-  }
+public interface TaggableSpecNode extends SpecNode {
+  Set<String> getTags();
+  Set<String> getOwnTags();
 }

@@ -27,15 +27,22 @@ package com.twineworks.tweakflow.spec.runner.helpers;
 import com.twineworks.tweakflow.spec.nodes.DescribeNode;
 import com.twineworks.tweakflow.spec.nodes.ItNode;
 import com.twineworks.tweakflow.spec.nodes.SpecNode;
+import com.twineworks.tweakflow.spec.nodes.TaggableSpecNode;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 public class Filter {
 
   private final ArrayList<String> filters;
+  private final ArrayList<String> tags;
+  private final boolean runUnTagged;
 
-  public Filter(ArrayList<String> filters) {
+  public Filter(ArrayList<String> filters, ArrayList<String> tags, boolean runUnTagged) {
     this.filters = filters;
+    this.tags = tags;
+    this.runUnTagged = runUnTagged;
   }
 
   private boolean filtersMatch(String name) {
@@ -46,6 +53,15 @@ public class Filter {
     return true;
   }
 
+  private boolean tagsMatch(TaggableSpecNode node){
+    Set<String> tagsOnNode = node.getTags();
+    if (tagsOnNode.isEmpty()) return runUnTagged;
+    for (String tag : tags) {
+      if (tagsOnNode.contains(tag)) return true;
+    }
+    return false;
+  }
+
   private void select(DescribeNode node, boolean flag) {
 
     node.setSelected(flag);
@@ -53,10 +69,12 @@ public class Filter {
     if (flag){
       // set all parents
       DescribeNode parent = node.getParent();
-      do {
-        parent.setSelected(true);
+      if (parent != null){
+        do {
+          parent.setSelected(true);
+        }
+        while ((parent = parent.getParent()) != null);
       }
-      while ((parent = parent.getParent()) != null);
 
       // set all children
       selectRec(node, true);
@@ -90,21 +108,19 @@ public class Filter {
     }
   }
 
-  public void filter(ArrayList<SpecNode> nodes) {
+  public void filter(Collection<SpecNode> nodes) {
     for (SpecNode node : nodes) {
       if (node instanceof DescribeNode) {
         DescribeNode dNode = (DescribeNode) node;
         String fullName = dNode.getFullName();
-        boolean match = filtersMatch(fullName);
+        boolean match = filtersMatch(fullName) && tagsMatch(dNode);
         select(dNode, match);
-        if (!match) {
-          // children may still match
-          filter(dNode.getNodes());
-        }
+        filter(dNode.getNodes());
+
       } else if (node instanceof ItNode) {
         ItNode itNode = (ItNode) node;
         String fullName = itNode.getFullName();
-        boolean match = filtersMatch(fullName);
+        boolean match = filtersMatch(fullName) && tagsMatch(itNode);
         select(itNode, match);
       }
     }

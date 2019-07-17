@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 import java.util.ArrayList;
@@ -31,20 +32,29 @@ import java.util.ArrayList;
 public class SuiteNode implements SpecNode {
 
   private String name = "suite";
-  private ArrayList<SpecNode> nodes;
+  private ArrayList<FileNode> nodes;
   private long startedMillis;
   private long endedMillis;
 
-  private boolean success;
+  private boolean success = true;
+  private boolean didRun = false;
 
+  private Throwable cause;
+  private String errorMessage = "OK";
+  private Value source;
 
-  public SuiteNode setName(String name){
-    this.name = name;
+  public SuiteNode setNodes(ArrayList<FileNode> nodes) {
+    this.nodes = nodes;
     return this;
   }
 
-  public SuiteNode setNodes(ArrayList<SpecNode> nodes) {
-    this.nodes = nodes;
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public SuiteNode setSource(Value source) {
+    this.source = source;
     return this;
   }
 
@@ -57,13 +67,19 @@ public class SuiteNode implements SpecNode {
     return name;
   }
 
+  public SuiteNode setName(String name) {
+    this.name = name;
+    return this;
+  }
+
   @Override
   public void run(SpecContext context) {
+    didRun = true;
     startedMillis = System.currentTimeMillis();
     context.onEnterSuite(this);
     for (SpecNode node : nodes) {
       context.run(node);
-      if (!node.isSuccess()){
+      if (!node.isSuccess()) {
         success = false;
       }
     }
@@ -74,11 +90,13 @@ public class SuiteNode implements SpecNode {
   @Override
   public void fail(String errorMessage, Throwable cause) {
     success = false;
+    this.errorMessage = errorMessage;
+    this.cause = cause;
   }
 
   @Override
   public boolean didRun() {
-    return true;
+    return didRun;
   }
 
   @Override
@@ -88,16 +106,17 @@ public class SuiteNode implements SpecNode {
 
   @Override
   public String getErrorMessage() {
-    return "";
+    return errorMessage;
   }
 
   @Override
   public Throwable getCause() {
-    return null;
+    return cause;
   }
 
-  public long getDurationMillis(){
-    return endedMillis-startedMillis;
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
   }
 
 }

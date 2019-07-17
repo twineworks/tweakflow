@@ -24,35 +24,48 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class DescribeNode implements SpecNode {
+public class DescribeNode implements SpecNode, TaggableSpecNode {
 
   private boolean selected = true;
   private String name = "unknown";
   private ArrayList<SpecNode> nodes;
   private ArrayList<BeforeNode> beforeNodes;
   private ArrayList<AfterNode> afterNodes;
-  private SpecNode subjectNode;
+  private SubjectSpecNode subjectNode;
   private NodeLocation at = new NodeLocation();
   private DescribeNode parent;
   private String fullName;
+
+  private long startedMillis;
+  private long endedMillis;
 
   private boolean success = true;
   private boolean didRun = false;
   private String errorMessage;
   private Throwable cause;
+  private Value source;
+
+  private Set<String> tags;
+  private Set<String> fullTags;
+
+  public ArrayList<SpecNode> getNodes() {
+    return nodes;
+  }
 
   public DescribeNode setNodes(ArrayList<SpecNode> nodes) {
     this.nodes = nodes;
 
     for (SpecNode node : this.nodes) {
-      if (node instanceof ItNode){
+      if (node instanceof ItNode) {
         ((ItNode) node).setParent(this);
-      }
-      else if (node instanceof DescribeNode){
+      } else if (node instanceof DescribeNode) {
         ((DescribeNode) node).setParent(this);
       }
     }
@@ -60,21 +73,12 @@ public class DescribeNode implements SpecNode {
     return this;
   }
 
-  public ArrayList<SpecNode> getNodes() {
-    return nodes;
-  }
-
   public String getFullName() {
-    if (fullName == null){
+    if (fullName == null) {
       if (parent == null) return name;
       fullName = parent.getFullName() + " " + name;
     }
     return fullName;
-  }
-
-  public DescribeNode setParent(DescribeNode parent){
-    this.parent = parent;
-    return this;
   }
 
   public boolean isSelected() {
@@ -91,6 +95,11 @@ public class DescribeNode implements SpecNode {
 
   public DescribeNode getParent() {
     return parent;
+  }
+
+  public DescribeNode setParent(DescribeNode parent) {
+    this.parent = parent;
+    return this;
   }
 
   public DescribeNode setAt(NodeLocation at) {
@@ -114,18 +123,19 @@ public class DescribeNode implements SpecNode {
 
   @Override
   public void run(SpecContext context) {
+    startedMillis = System.currentTimeMillis();
     context.onEnterDescribe(this);
 
-    if (success){
+    if (success) {
 
       didRun = true;
 
       if (beforeNodes != null) {
         for (BeforeNode beforeNode : beforeNodes) {
           context.run(beforeNode);
-          if (!beforeNode.isSuccess()){
+          if (!beforeNode.isSuccess()) {
             BeforeNode failedBeforeNode = beforeNode;
-            fail("failed to run before hook: "+failedBeforeNode.getErrorMessage(), failedBeforeNode.getCause());
+            fail("failed to run before hook: " + failedBeforeNode.getErrorMessage(), failedBeforeNode.getCause());
             break;
           }
         }
@@ -133,10 +143,10 @@ public class DescribeNode implements SpecNode {
 
       if (subjectNode != null) {
         context.run(subjectNode);
-        if (success){
-          if (!subjectNode.isSuccess()){
-            SpecNode failedSubjectNode = subjectNode;
-            fail("failed to evaluate subject: "+failedSubjectNode.getErrorMessage(), failedSubjectNode.getCause());
+        if (success) {
+          if (!subjectNode.isSuccess()) {
+            SubjectSpecNode failedSubjectNode = subjectNode;
+            fail("failed to evaluate subject: " + failedSubjectNode.getErrorMessage(), failedSubjectNode.getCause());
           }
         }
       }
@@ -154,8 +164,18 @@ public class DescribeNode implements SpecNode {
       }
 
     }
-
+    endedMillis = System.currentTimeMillis();
     context.onLeaveDescribe(this);
+  }
+
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public DescribeNode setSource(Value source) {
+    this.source = source;
+    return this;
   }
 
   @Override
@@ -193,6 +213,9 @@ public class DescribeNode implements SpecNode {
   }
 
   public void setBeforeNodes(ArrayList<BeforeNode> beforeNodes) {
+    for (BeforeNode beforeNode : beforeNodes) {
+      beforeNode.setParent(this);
+    }
     this.beforeNodes = beforeNodes;
   }
 
@@ -200,8 +223,36 @@ public class DescribeNode implements SpecNode {
     this.afterNodes = afterNodes;
   }
 
-  public void setSubjectNode(SpecNode subjectNode) {
+  public void setSubjectNode(SubjectSpecNode subjectNode) {
+    if (subjectNode != null){
+      subjectNode.setParent(this);
+    }
     this.subjectNode = subjectNode;
   }
 
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
+  public DescribeNode setTags(Set<String> tags) {
+    this.tags = tags;
+    return this;
+  }
+
+  @Override
+  public Set<String> getTags() {
+
+    if (fullTags == null) {
+      if (parent == null) return tags;
+      fullTags = new HashSet<>(parent.getTags());
+      fullTags.addAll(tags);
+    }
+    return fullTags;
+  }
+
+  @Override
+  public Set<String> getOwnTags() {
+    return tags;
+  }
 }

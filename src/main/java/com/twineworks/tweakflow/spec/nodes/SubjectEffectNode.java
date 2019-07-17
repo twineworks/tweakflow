@@ -27,13 +27,36 @@ package com.twineworks.tweakflow.spec.nodes;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-public class SubjectEffectNode implements SpecNode {
+public class SubjectEffectNode implements SpecNode, SubjectSpecNode {
 
   private String name = "subject_effect";
   private EffectNode effectNode;
+  private DescribeNode parent;
 
-  public SubjectEffectNode setEffect(EffectNode effectNode){
+  private NodeLocation at;
+
+  private boolean success = true;
+  private boolean didRun = false;
+
+  private String errorMessage;
+  private Throwable cause;
+  private Value source;
+
+  private long startedMillis;
+  private long endedMillis;
+
+  public SubjectEffectNode setEffect(EffectNode effectNode) {
     this.effectNode = effectNode;
+    return this;
+  }
+
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public SubjectEffectNode setSource(Value source) {
+    this.source = source;
     return this;
   }
 
@@ -48,33 +71,74 @@ public class SubjectEffectNode implements SpecNode {
 
   @Override
   public void run(SpecContext context) {
-    Value newSubject = effectNode.execute(context);
-    context.setSubject(newSubject);
+    startedMillis = System.currentTimeMillis();
+    context.onEnterSubject(this);
+    if (success) {
+      didRun = true;
+      try {
+        Value newSubject = effectNode.execute(context);
+        context.setSubject(newSubject);
+      } catch (Throwable e) {
+        fail(e.getMessage(), e);
+      }
+    }
+    endedMillis = System.currentTimeMillis();
+    context.onLeaveSubject(this);
   }
 
   @Override
   public void fail(String errorMessage, Throwable cause) {
-
+    success = false;
+    this.errorMessage = errorMessage;
+    this.cause = cause;
   }
 
   @Override
   public boolean didRun() {
-    return false;
+    return didRun;
   }
 
   @Override
   public boolean isSuccess() {
-    return false;
+    return success;
   }
 
   @Override
   public String getErrorMessage() {
-    return null;
+    return errorMessage;
   }
 
   @Override
   public Throwable getCause() {
-    return null;
+    return cause;
   }
 
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
+  @Override
+  public DescribeNode getParent() {
+    return parent;
+  }
+
+  @Override
+  public void setParent(DescribeNode parent) {
+    this.parent = parent;
+  }
+
+  @Override
+  public String getErrorLocation() {
+    return at.file+":"+at.line+":"+at.charInLine;
+  }
+
+  public NodeLocation at(){
+    return at;
+  }
+
+  public SubjectEffectNode setAt(NodeLocation at) {
+    this.at = at;
+    return this;
+  }
 }

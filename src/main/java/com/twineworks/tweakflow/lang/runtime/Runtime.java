@@ -302,6 +302,20 @@ public class Runtime {
       throw new AssertionError("unexpected cell content");
     }
 
+    public boolean hasLibrary(String name){
+      Cell entityCell = cell.getCells().gets(name);
+
+      if (entityCell == null){
+        return false;
+      }
+
+      if (entityCell.isLibrary()){
+        return true;
+      }
+
+      return false;
+    }
+
     public Library getLibrary(String name){
 
       Cell entityCell = cell.getCells().gets(name);

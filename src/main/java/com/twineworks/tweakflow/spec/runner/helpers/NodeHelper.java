@@ -36,36 +36,39 @@ import java.util.Map;
 
 public class NodeHelper {
 
-  public static ArrayList<Value> evalValueNodes(Runtime runtime, ArrayList<String> modules){
+  public static HashMap<String, Value> evalValueNodes(Runtime runtime, ArrayList<String> modules){
 
     Map<String, Runtime.Module> runtimeModules = runtime.getModules();
 
-    ArrayList<Value> valueNodes = new ArrayList<>();
+    HashMap<String, Value> valueNodes = new HashMap<>();
 
     for (String moduleName : modules) {
       Runtime.Module module = runtimeModules.get(runtime.unitKey(moduleName));
+
+      if (!module.hasLibrary("spec")) {
+        continue;
+      }
+
       Runtime.Library mainLib = module.getLibrary("spec");
-      if (mainLib == null) {
+
+      if (!mainLib.hasVar("spec")){
         continue;
       }
 
       Runtime.Var mainVar = mainLib.getVar("spec");
-      if (mainVar == null) {
-        continue;
-      }
 
       mainVar.evaluate();
-      valueNodes.add(mainVar.getValue());
+      valueNodes.put(moduleName, mainVar.getValue());
 
     }
     return valueNodes;
   }
 
-  public static ArrayList<SpecNode> parseNodes(ArrayList<Value> nodes, HashMap<String, SpecEffect> effects, Runtime runtime) {
+  public static HashMap<String, SpecNode> parseNodes(HashMap<String, Value> nodes, HashMap<String, SpecEffect> effects, Runtime runtime) {
 
-    ArrayList<SpecNode> ret = new ArrayList<>();
-    for (Value node : nodes) {
-      ret.add(parseNode(node, effects, runtime));
+    HashMap<String, SpecNode> ret = new HashMap<>();
+    for (String key : nodes.keySet()) {
+      ret.put(key, parseNode(nodes.get(key), effects, runtime));
     }
     return ret;
   }

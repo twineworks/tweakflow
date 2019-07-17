@@ -24,21 +24,20 @@
 
 package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.spec.nodes.ItNode;
-import com.twineworks.tweakflow.spec.nodes.SpecNode;
+import com.twineworks.tweakflow.spec.nodes.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ErrorReporter {
 
-  private static String indented(String message){
+  public static String indented(String indent, String message){
     if (message == null) return "null";
     String[] parts = message.split("\\r?\\n");
     String nl = System.lineSeparator();
     StringBuilder out = new StringBuilder();
     for (int i = 0; i < parts.length; i++) {
-      if (i > 0) out.append(nl).append("         ");
+      if (i > 0) out.append(nl).append(indent);
       String part = parts[i];
       out.append(part);
     }
@@ -49,9 +48,82 @@ public class ErrorReporter {
     if (node instanceof ItNode){
       return errorForItNode(errorNr, (ItNode) node, color);
     }
+    else if (node instanceof BeforeNode){
+      return errorForBeforeNode(errorNr, (BeforeNode) node, color);
+    }
+    else if (node instanceof SubjectSpecNode){
+      return errorForSubjectSpecNode(errorNr, (SubjectSpecNode) node, color);
+    }
     else {
       return node.getErrorMessage();
     }
+  }
+
+
+  private static String errorForSubjectSpecNode(int errorNr, SubjectSpecNode node, boolean color){
+    StringBuilder sb = new StringBuilder();
+    String nl = System.lineSeparator();
+    String errorLocation = node.getErrorLocation();
+
+    try {
+      Path currentDir = Paths.get(".").toAbsolutePath();
+      errorLocation = currentDir.relativize(Paths.get(errorLocation)).toString();
+    } catch (Exception ignored){}
+
+    if (color) sb.append(ConsoleColors.RED);
+    sb.append("  #").append(errorNr).append(" Subject evaluation failure. The entire describe block is marked as failed.").append(nl);
+    if (color) sb.append(ConsoleColors.RESET);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("     spec: ");
+    if (color) sb.append(ConsoleColors.RESET);
+    sb.append(node.getParent().getFullName()).append(nl);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("       at: ");
+    if (color) sb.append(ConsoleColors.RESET);
+    sb.append(errorLocation).append(nl);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("    error: ");
+    if (color) sb.append(ConsoleColors.RESET);
+
+    sb.append(indented("           ", node.getErrorMessage()));
+
+    return sb.toString();
+  }
+
+  private static String errorForBeforeNode(int errorNr, BeforeNode node, boolean color){
+    StringBuilder sb = new StringBuilder();
+    String nl = System.lineSeparator();
+    String errorLocation = node.at().file+":"+node.at().line;
+
+    try {
+      Path currentDir = Paths.get(".").toAbsolutePath();
+      errorLocation = currentDir.relativize(Paths.get(node.at().file)).toString()+":"+node.at().line;
+    } catch (Exception ignored){}
+
+    if (color) sb.append(ConsoleColors.RED);
+    sb.append("  #").append(errorNr).append(" Before hook failure. The entire describe block is marked as failed.").append(nl);
+    if (color) sb.append(ConsoleColors.RESET);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("     spec: ");
+    if (color) sb.append(ConsoleColors.RESET);
+    sb.append(node.getParent().getFullName()).append(nl);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("       at: ");
+    if (color) sb.append(ConsoleColors.RESET);
+    sb.append(errorLocation).append(nl);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("    error: ");
+    if (color) sb.append(ConsoleColors.RESET);
+
+    sb.append(indented("           ", node.getErrorMessage()));
+
+    return sb.toString();
   }
 
   private static String errorForItNode(int errorNr, ItNode node, boolean color){
@@ -64,25 +136,34 @@ public class ErrorReporter {
       errorLocation = currentDir.relativize(Paths.get(node.getErrorLocation())).toString();
     } catch (Exception ignored){}
 
+    String ind = "           ";
+
     if (color) sb.append(ConsoleColors.RED);
-    sb.append("Spec failure #").append(errorNr).append(nl);
+    sb.append("  #").append(errorNr);
+    sb.append(" Spec failure").append(nl);
     if (color) sb.append(ConsoleColors.RESET);
 
     if (color) sb.append(ConsoleColors.FAINT);
-    sb.append("   spec: ");
+    sb.append("     spec: ");
     if (color) sb.append(ConsoleColors.RESET);
     sb.append(node.getFullName()).append(nl);
 
     if (color) sb.append(ConsoleColors.FAINT);
-    sb.append("     at: ");
+    sb.append("       at: ");
     if (color) sb.append(ConsoleColors.RESET);
     sb.append(errorLocation).append(nl);
 
     if (color) sb.append(ConsoleColors.FAINT);
-    sb.append("  error: ");
+    sb.append("    error: ");
     if (color) sb.append(ConsoleColors.RESET);
 
-    sb.append(indented(node.getErrorMessage()));
+    sb.append(indented(ind, node.getErrorMessage())).append(nl);
+
+    if (color) sb.append(ConsoleColors.FAINT);
+    sb.append("     body: ");
+    if (color) sb.append(ConsoleColors.RESET);
+
+    sb.append(indented(ind, node.getBody()));
 
     return sb.toString();
   }

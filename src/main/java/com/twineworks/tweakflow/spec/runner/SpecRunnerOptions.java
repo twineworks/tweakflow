@@ -36,6 +36,8 @@ public class SpecRunnerOptions {
   public final ArrayList<SpecReporter> reporters = new ArrayList<>();
   public final HashMap<String, SpecEffect> effects = new HashMap<>();
   public final ArrayList<String> filters = new ArrayList<>();
+  public final ArrayList<String> tags = new ArrayList<>();
+  public boolean runNotTagged = true;
 
   public SpecRunnerOptions() {
   }

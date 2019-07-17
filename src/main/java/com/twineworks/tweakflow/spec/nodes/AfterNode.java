@@ -24,18 +24,25 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 public class AfterNode implements SpecNode {
 
+  private Value source;
+
   private String name = "after";
   private EffectNode effectNode;
 
+  private long startedMillis;
+  private long endedMillis;
+
   private boolean success = true;
   private String errorMessage;
+  private Throwable cause;
+
   private NodeLocation at;
   private boolean didRun = false;
-
 
   public AfterNode setAt(NodeLocation at) {
     this.at = at;
@@ -52,6 +59,16 @@ public class AfterNode implements SpecNode {
     return SpecNodeType.AFTER;
   }
 
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public AfterNode setSource(Value source) {
+    this.source = source;
+    return this;
+  }
+
   public String getName() {
     return name;
   }
@@ -63,25 +80,36 @@ public class AfterNode implements SpecNode {
 
   @Override
   public void run(SpecContext context) {
-    if (success){
+    startedMillis = System.currentTimeMillis();
+    context.onEnterAfter(this);
+    boolean didCrash = false;
+    if (success) {
       didRun = true;
       try {
         effectNode.execute(context);
-      } catch(Throwable e){
+      } catch (Throwable e) {
         fail(e.getMessage(), e);
-        throw e;
+        didCrash = true;
       }
     }
+    endedMillis = System.currentTimeMillis();
+    context.onLeaveAfter(this);
+    if (didCrash){
+      throw new RuntimeException("Failed to run after hook. Failed running " + source + " with error: " + errorMessage, cause);
+    }
+
   }
 
   @Override
   public void fail(String errorMessage, Throwable cause) {
-
+    success = false;
+    this.errorMessage = errorMessage;
+    this.cause = cause;
   }
 
   @Override
   public boolean didRun() {
-    return false;
+    return didRun;
   }
 
   public boolean isSuccess() {
@@ -94,11 +122,17 @@ public class AfterNode implements SpecNode {
 
   @Override
   public Throwable getCause() {
-    return null;
+    return cause;
   }
 
   public NodeLocation at() {
     return at;
   }
+
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
 
 }

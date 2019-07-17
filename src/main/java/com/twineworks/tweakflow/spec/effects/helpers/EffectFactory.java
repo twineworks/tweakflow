@@ -24,16 +24,15 @@
 
 package com.twineworks.tweakflow.spec.effects.helpers;
 
-import com.twineworks.tweakflow.spec.effects.ClockEffect;
-import com.twineworks.tweakflow.spec.effects.SpecEffect;
+import com.twineworks.tweakflow.spec.effects.SpecEffects;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 public class EffectFactory {
 
-  public static SpecEffect makeEffect(String name){
-    Class<? extends SpecEffect> clazz = ensureClassLoaded(name);
+  public static SpecEffects makeEffects(String name) {
+    Class<? extends SpecEffects> clazz = ensureClassLoaded(name);
     try {
       return clazz.getDeclaredConstructor().newInstance();
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -42,26 +41,19 @@ public class EffectFactory {
   }
 
   @SuppressWarnings("unchecked")
-  private static Class<? extends SpecEffect> ensureClassLoaded(String name){
+  private static Class<? extends SpecEffects> ensureClassLoaded(String name) {
     Objects.requireNonNull(name, "effect class name cannot be null");
-    switch(name.toLowerCase()){
-      case "clock":
-        return ClockEffect.class;
-      default: {
-        try {
-          Class<?> aClass = EffectFactory.class.getClassLoader().loadClass(name);
-          if (SpecEffect.class.isAssignableFrom(aClass)){
-            return (Class<? extends SpecEffect>) aClass;
-          }
-          else{
-            throw new IllegalArgumentException("Class "+name+" does not implement the SpecEffect interface");
-          }
-        } catch (ClassNotFoundException e) {
-          throw new RuntimeException(e.getMessage(), e);
-        }
+    try {
+      Class<?> aClass = EffectFactory.class.getClassLoader().loadClass(name);
+      if (SpecEffects.class.isAssignableFrom(aClass)) {
+        return (Class<? extends SpecEffects>) aClass;
+      } else {
+        throw new IllegalArgumentException("Class " + name + " does not implement the SpecEffects interface");
       }
-
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e.getMessage(), e);
     }
+
   }
 
 }

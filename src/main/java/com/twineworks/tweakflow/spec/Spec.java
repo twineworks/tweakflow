@@ -36,7 +36,6 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,11 +64,18 @@ public class Spec {
         .type(String.class)
         .action(Arguments.append());
 
+    parser.addArgument("-f", "--filter")
+        .required(false)
+        .dest("filters")
+        .setDefault(new ArrayList<String>())
+        .type(String.class)
+        .action(Arguments.append());
+
     parser.addArgument("-ro", "--reporter_option")
         .required(false)
         .action(Arguments.append())
         .setDefault(new ArrayList<String>())
-        .dest("reporter_options")
+        .dest("reporter_option")
         .type(String.class)
         .nargs(2);
 
@@ -78,13 +84,24 @@ public class Spec {
         .dest("effects")
         .setDefault(new ArrayList<String>())
         .type(String.class)
-        .action(Arguments.append())
-        .nargs(2);
+        .action(Arguments.append());
 
     parser.addArgument("--color")
         .setDefault(Boolean.FALSE)
         .action(Arguments.storeTrue())
         .type(Boolean.class);
+
+    parser.addArgument("--untagged")
+        .setDefault(Boolean.FALSE)
+        .action(Arguments.storeTrue())
+        .type(Boolean.class);
+
+    parser.addArgument("-t", "--tag")
+        .required(false)
+        .dest("tags")
+        .setDefault(new ArrayList<String>())
+        .type(String.class)
+        .action(Arguments.append());
 
     parser.addArgument("module")
         .type(String.class)
@@ -113,13 +130,21 @@ public class Spec {
 
       // filters
       List<String> filters = res.getList("filters");
-      if (filters == null){
-        filters = Collections.emptyList();
-      }
       options.filters.addAll(filters);
 
+      // tags
+      List<String> tags = res.getList("tags");
+      options.tags.addAll(tags);
+
+      if (tags.isEmpty()){
+        options.runNotTagged = true;
+      }
+      else{
+        options.runNotTagged = res.getBoolean("untagged");
+      }
+
       // reporter options
-      List<ArrayList<String>> reporterOptions = res.getList("reporter_options");
+      List<ArrayList<String>> reporterOptions = res.getList("reporter_option");
 
       HashMap<String, String> reporterOpts = new HashMap<>();
       for (ArrayList<String> option : reporterOptions) {
@@ -151,11 +176,9 @@ public class Spec {
       }
 
       // effects
-      List<ArrayList<String>> effects = res.getList("effects");
-      for (ArrayList<String> effect : effects) {
-        String name = effect.get(0);
-        String impl = effect.get(1);
-        options.effects.put(name, EffectFactory.makeEffect(impl));
+      List<String> effects = res.getList("effects");
+      for (String ef : effects) {
+        options.effects.putAll(EffectFactory.makeEffects(ef).getEffects());
       }
 
       options.modules.addAll(res.getList("module"));
@@ -171,9 +194,6 @@ public class Spec {
       specRunner.run();
       if (specRunner.hasErrors()){
         System.exit(1);
-      }
-      else {
-        System.exit(0);
       }
 
     }

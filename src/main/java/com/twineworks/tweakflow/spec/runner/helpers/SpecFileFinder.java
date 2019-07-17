@@ -29,18 +29,25 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 
-public class GlobFileFinder {
+public class SpecFileFinder {
 
   public static ArrayList<String> findModules(ArrayList<String> patterns){
     ArrayList<String> modules = new ArrayList<>();
-    Path pwd = Paths.get(".");
 
     try {
       for (String m : patterns) {
-        ArrayList<Path> paths = GlobFileFinder.find("glob:" + m, pwd);
-        for (Path path : paths) {
-          modules.add(path.toString());
+
+        Path p = Paths.get(m);
+        if (Files.isDirectory(p)){ /* dir, find all spec files in it */
+          ArrayList<Path> paths = SpecFileFinder.find("glob:**/*.spec.tf", p);
+          for (Path path : paths) {
+            modules.add(path.toString());
+          }
         }
+        else { /* interpret as something on the load path */
+          modules.add(m);
+        }
+
       }
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
@@ -48,7 +55,7 @@ public class GlobFileFinder {
     return modules;
   }
 
-  public static ArrayList<Path> find(String glob, Path rel) throws IOException {
+  private static ArrayList<Path> find(String glob, Path rel) throws IOException {
 
     final PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(glob);
     final ArrayList<Path> ret = new ArrayList<>();

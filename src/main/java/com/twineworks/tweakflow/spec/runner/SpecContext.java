@@ -120,6 +120,35 @@ public class SpecContext implements SpecReporter {
   }
 
   @Override
+  public void onEnterAfter(AfterNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterAfter(node);
+    }
+  }
+
+  @Override
+  public void onLeaveAfter(AfterNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveAfter(node);
+    }
+  }
+
+  @Override
+  public void onEnterSubject(SpecNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterSubject(node);
+    }
+  }
+
+  @Override
+  public void onLeaveSubject(SpecNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveSubject(node);
+    }
+    if (node.didRun() && !node.isSuccess()) errors++;
+  }
+
+  @Override
   public void onLeaveDescribe(DescribeNode node) {
     for (SpecReporter reporter : reporters) {
       reporter.onLeaveDescribe(node);
@@ -155,6 +184,20 @@ public class SpecContext implements SpecReporter {
       reporter.onLeaveSuite(node);
     }
     subjects.pop();
+  }
+
+  @Override
+  public void onEnterFile(FileNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterFile(node);
+    }
+  }
+
+  @Override
+  public void onLeaveFile(FileNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveFile(node);
+    }
   }
 
   @Override

@@ -28,46 +28,42 @@ import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 public class DocSpecReporter implements SpecReporter {
 
-  private String indent = "  ";
   private int depth = 0;
   private int failing = 0;
   private int passing = 0;
   private int pending = 0;
   private int errors = 0;
-
-  private DescribeNode currentDescribe;
+  private boolean color = false;
 
   private PrintStream out;
   private ArrayList<SpecNode> errorNodes = new ArrayList<>();
 
   public DocSpecReporter() {
-    this.out = System.out;
-  }
-
-  @Override
-  public void onEnterSuite(SuiteNode node) {
-    depth++;
   }
 
   @Override
   public void onEnterDescribe(DescribeNode node) {
-
-    currentDescribe = node;
 
     if (depth == 1) {
       out.println();
     }
 
     printIndent();
-    out.println(node.getName());
+    out.print(node.getName());
+    printTags(node);
+    out.println();
     depth++;
+    out.flush();
+
   }
 
   @Override
@@ -83,16 +79,61 @@ public class DocSpecReporter implements SpecReporter {
       depth--;
       printIndent();
       depth++;
-      out.print(ConsoleColors.RED);
-      out.print("✗");
-      out.print(" ");
-      out.println("before hook failed: "+node.getErrorMessage());
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RED);
+      out.print("#");
+      out.print(errorNodes.size());
+      out.print(" before hook failed: ");
+      out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
+      if (color) out.print(ConsoleColors.RESET);
+      out.println();
+
     }
   }
 
-  private void printIndent() {
-    for (int i = 0; i < depth; i++) out.print(indent);
+  @Override
+  public void onEnterAfter(AfterNode node) {
+
+  }
+
+  @Override
+  public void onLeaveAfter(AfterNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      depth--;
+      printIndent();
+      depth++;
+      if (color) out.print(ConsoleColors.RED);
+      out.print("#");
+      out.print(errorNodes.size());
+      out.print(" after hook failed, aborting: ");
+      out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
+      if (color) out.print(ConsoleColors.RESET);
+      out.println();
+    }
+  }
+
+  @Override
+  public void onEnterSubject(SpecNode node) {
+
+  }
+
+  @Override
+  public void onLeaveSubject(SpecNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      depth--;
+      printIndent();
+      if (color) out.print(ConsoleColors.RED);
+      out.print("#");
+      out.print(errorNodes.size());
+      out.print(" subject evaluation failed: ");
+      out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
+      if (color) out.print(ConsoleColors.RESET);
+      out.println();
+      depth++;
+    }
   }
 
   @Override
@@ -110,36 +151,50 @@ public class DocSpecReporter implements SpecReporter {
     printIndent();
     if (node.isPending()) {
       pending++;
-      out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleColors.YELLOW);
       out.print("~");
       out.print(" ");
-      out.print(ConsoleColors.RESET);
-      out.print(ConsoleColors.FAINT);
-      out.println(node.getName());
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.FAINT);
+      out.print(node.getName());
+      if (color) out.print(ConsoleColors.RESET);
     } else if (node.isSuccess()) {
       passing++;
-      out.print(ConsoleColors.GREEN);
+      if (color) out.print(ConsoleColors.GREEN);
       out.print("✓");
       out.print(" ");
-      out.print(ConsoleColors.RESET);
-      out.print(ConsoleColors.FAINT);
-      out.println(node.getName());
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.FAINT);
+      out.print(node.getName());
+      if (color) out.print(ConsoleColors.RESET);
     } else {
       if (node.didRun()) {
         errorNodes.add(node);
       }
       failing++;
-      out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleColors.RED);
       out.print("✗");
       out.print(" ");
-      out.print(ConsoleColors.RESET);
-      out.print(ConsoleColors.FAINT);
-      out.println(node.getName());
-      out.print(ConsoleColors.RESET);
+      if (node.didRun()){
+        out.print("#");
+        out.print(errorNodes.size());
+        out.print(" ");
+      }
+      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.FAINT);
+      out.print(node.getName());
+      if (color) out.print(ConsoleColors.RESET);
     }
 
+    printTags(node);
+    out.println();
+    out.flush();
+
+  }
+
+  @Override
+  public void onEnterSuite(SuiteNode node) {
+    depth++;
   }
 
   @Override
@@ -147,45 +202,121 @@ public class DocSpecReporter implements SpecReporter {
 
     out.println();
     printIndent();
-    depth--;
-    out.print(ConsoleColors.GREEN);
+    if (color) out.print(ConsoleColors.GREEN);
     out.print(passing + " passing");
-    out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleColors.RESET);
     if (pending > 0) {
       out.print(", ");
-      out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleColors.YELLOW);
       out.print(pending + " pending");
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RESET);
     }
     if (failing > 0) {
       out.print(", ");
-      out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleColors.RED);
       out.print(failing + " failing");
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RESET);
     }
     if (errors > 0){
       out.print(" and ");
-      out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleColors.RED);
       out.print(errors + " error");
       if (errors > 1) out.print("s");
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.RESET);
     }
 
-    out.print(" in ");
+    if (color) out.print(ConsoleColors.FAINT);
+    out.print(" (");
     out.print(HumanReadable.formatDuration(node.getDurationMillis()));
+    out.print(")");
+    if (color) out.print(ConsoleColors.RESET);
     out.println();
 
     int i = 1;
     for (SpecNode errorNode : errorNodes) {
       out.println();
-      out.println(ErrorReporter.errorFor(i, errorNode, true));
+      out.println(ErrorReporter.errorFor(i, errorNode, color));
       i++;
     }
 
+    out.println();
+  }
+
+  @Override
+  public void onEnterFile(FileNode node) {
+    out.println();
+    printIndent();
+    out.print(node.getName());
+    out.println();
+    out.println();
+    depth++;
+
+  }
+
+  @Override
+  public void onLeaveFile(FileNode node) {
+    depth--;
+  }
+
+  private void printTags(TaggableSpecNode node){
+    Set<String> tags = node.getOwnTags();
+
+    if (tags.isEmpty()) return;
+
+    if (color) out.print(ConsoleColors.YELLOW);
+    out.print(" {");
+    int i=0;
+    for (String tag : tags) {
+      if (i>0) out.print(", ");
+      out.print(tag);
+      i++;
+    }
+    out.print("}");
+    if (color) out.print(ConsoleColors.RESET);
+  }
+
+  private void printIndent() {
+    String indent = "  ";
+    for (int i = 0; i < depth; i++) out.print(indent);
+  }
+
+  private String getIndent(){
+    switch(depth){
+      case 0: return "";
+      case 1: return "  ";
+      case 2: return "    ";
+      case 3: return "      ";
+      case 4: return "        ";
+      case 5: return "          ";
+      case 6: return "            ";
+      case 7: return "              ";
+      case 8: return "                ";
+      case 9: return "                  ";
+      case 10: return "                    ";
+      default:{
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<depth;i++){
+          sb.append("  ");
+        }
+        return sb.toString();
+      }
+    }
   }
 
   @Override
   public void setOptions(Map<String, String> options) {
 
+    // turn on colored output?
+    if (options.getOrDefault("color", "false").equalsIgnoreCase("true")){
+      color = true;
+    }
+
+    if (color && System.getProperty("os.name").toLowerCase().startsWith("win")){
+      this.out = AnsiConsole.out;
+    }
+    else {
+      this.out = System.out;
+    }
   }
+
 }

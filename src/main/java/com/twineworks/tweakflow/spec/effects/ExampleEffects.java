@@ -22,44 +22,23 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.nodes;
+package com.twineworks.tweakflow.spec.effects;
 
-public class NodeLocation {
-  public final String file;
-  public final int line;
-  public final int charInLine;
+import java.util.HashMap;
+import java.util.Map;
 
-  public NodeLocation() {
-    this("none", 0, 0);
+public class ExampleEffects implements SpecEffects {
+
+  private final Map<String, SpecEffect> effects;
+
+  public ExampleEffects() {
+    effects = new HashMap<>();
+    effects.put("clock", new ClockEffect());
+    effects.put("fail", new FailingEffect());
   }
 
-  public NodeLocation(String file, int line, int charInLine) {
-    this.file = file;
-    this.line = line;
-    this.charInLine = charInLine;
-  }
-
-  public static NodeLocation at(String at) {
-    String file = "<none>";
-    int line = 0;
-    int charInLine = 0;
-
-    if (at == null) return new NodeLocation(file, line, charInLine);
-
-    String[] split = at.split(":");
-
-    if (split.length >= 1) {
-      file = split[0];
-    }
-
-    if (split.length >= 2) {
-      line = Integer.parseInt(split[1], 10);
-    }
-
-    if (split.length >= 3) {
-      charInLine = Integer.parseInt(split[2], 10);
-    }
-
-    return new NodeLocation(file, line, charInLine);
+  @Override
+  public Map<String, SpecEffect> getEffects() {
+    return effects;
   }
 }

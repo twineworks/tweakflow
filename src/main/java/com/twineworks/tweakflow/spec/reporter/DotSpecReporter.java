@@ -24,11 +24,11 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
-import com.twineworks.tweakflow.spec.nodes.BeforeNode;
-import com.twineworks.tweakflow.spec.nodes.DescribeNode;
-import com.twineworks.tweakflow.spec.nodes.ItNode;
-import com.twineworks.tweakflow.spec.nodes.SuiteNode;
+import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
+import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
+import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -36,21 +36,17 @@ import java.util.Map;
 
 public class DotSpecReporter implements SpecReporter {
 
-  private String indent = "  ";
-  private int total = 0;
-  private PrintStream out;
-  private int errors = 0;
+  private int failing = 0;
   private int passing = 0;
   private int pending = 0;
-  private ArrayList<ItNode> errorNodes = new ArrayList<>();
+  private int errors = 0;
+  private boolean color = false;
+  private int dots = 0;
+
+  private PrintStream out;
+  private ArrayList<SpecNode> errorNodes = new ArrayList<>();
 
   public DotSpecReporter() {
-    this.out = System.out;
-  }
-
-  @Override
-  public void onEnterSuite(SuiteNode node) {
-
   }
 
   @Override
@@ -64,51 +60,91 @@ public class DotSpecReporter implements SpecReporter {
 
   @Override
   public void onLeaveBefore(BeforeNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      if (color) out.print(ConsoleColors.RED);
+      dot("!");
+      if (color) out.print(ConsoleColors.RESET);
+    }
+  }
+
+  @Override
+  public void onEnterAfter(AfterNode node) {
+  }
+
+  @Override
+  public void onLeaveAfter(AfterNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      if (color) out.print(ConsoleColors.RED);
+      dot("!");
+      if (color) out.print(ConsoleColors.RESET);
+    }
+  }
+
+  @Override
+  public void onEnterSubject(SpecNode node) {
 
   }
 
-  private void printIndent(){
-    out.print(indent);
+  @Override
+  public void onLeaveSubject(SpecNode node) {
+    if (!node.isSuccess() && node.didRun()){
+      errors++;
+      errorNodes.add(node);
+      if (color) out.print(ConsoleColors.RED);
+      dot("!");
+      if (color) out.print(ConsoleColors.RESET);
+    }
   }
 
   @Override
   public void onLeaveDescribe(DescribeNode node) {
-
   }
 
   @Override
   public void onEnterIt(ItNode node) {
   }
 
+  private void dot(String c){
+    if (dots++ % 50 == 0){
+      out.println();
+      out.print(getIndent());
+    }
+    out.print(c);
+    out.flush();
+
+  }
+
   @Override
   public void onLeaveIt(ItNode node) {
 
-    if (total % 50 == 0){
-      out.println();
-      printIndent();
-    }
-
-    total++;
-
-    if (node.isPending()){
+    if (node.isPending()) {
       pending++;
-      out.print(ConsoleColors.YELLOW);
-      out.print("~");
-      out.print(ConsoleColors.RESET);
-    }
-    else if (node.isSuccess()){
+      if (color) out.print(ConsoleColors.YELLOW);
+      dot("~");
+      if (color) out.print(ConsoleColors.RESET);
+    } else if (node.isSuccess()) {
       passing++;
-      out.print(ConsoleColors.GREEN);
-      out.print(".");
-      out.print(ConsoleColors.RESET);
-    }
-    else {
-      errors++;
-      out.print(ConsoleColors.RED);
-      out.print("✗");
-      out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleColors.GREEN);
+      dot(".");
+      if (color) out.print(ConsoleColors.RESET);
+    } else {
+      if (node.didRun()) {
+        errorNodes.add(node);
+      }
+      failing++;
+      if (color) out.print(ConsoleColors.RED);
+      dot("!");
+      if (color) out.print(ConsoleColors.RESET);
     }
 
+  }
+
+  @Override
+  public void onEnterSuite(SuiteNode node) {
   }
 
   @Override
@@ -117,34 +153,76 @@ public class DotSpecReporter implements SpecReporter {
     out.println();
     out.println();
     printIndent();
-
-    out.print(passing+" passing");
-    if (pending > 0){
-      out.print(", "+pending+" pending");
+    if (color) out.print(ConsoleColors.GREEN);
+    out.print(passing + " passing");
+    if (color) out.print(ConsoleColors.RESET);
+    if (pending > 0) {
+      out.print(", ");
+      if (color) out.print(ConsoleColors.YELLOW);
+      out.print(pending + " pending");
+      if (color) out.print(ConsoleColors.RESET);
+    }
+    if (failing > 0) {
+      out.print(", ");
+      if (color) out.print(ConsoleColors.RED);
+      out.print(failing + " failing");
+      if (color) out.print(ConsoleColors.RESET);
     }
     if (errors > 0){
-      out.print(", "+errors+" failures");
+      out.print(" and ");
+      if (color) out.print(ConsoleColors.RED);
+      out.print(errors + " error");
+      if (errors > 1) out.print("s");
+      if (color) out.print(ConsoleColors.RESET);
     }
 
+    if (color) out.print(ConsoleColors.FAINT);
+    out.print(" (");
+    out.print(HumanReadable.formatDuration(node.getDurationMillis()));
+    out.print(")");
+    if (color) out.print(ConsoleColors.RESET);
     out.println();
 
-    int i=1;
-    for (ItNode errorNode : errorNodes) {
+    int i = 1;
+    for (SpecNode errorNode : errorNodes) {
       out.println();
-      out.println("Spec failure #"+i+": ");
-      out.print("  ✗ ");
-      out.println(errorNode.getName());
-      out.print("  at ");
-      out.println(errorNode.getErrorLocation());
-      out.print("  ");
-      out.println(errorNode.getErrorMessage());
+      out.println(ErrorReporter.errorFor(i, errorNode, color));
       i++;
     }
 
+    out.println();
+  }
+
+  @Override
+  public void onEnterFile(FileNode node) {
+  }
+
+  @Override
+  public void onLeaveFile(FileNode node) {
+  }
+
+  private void printIndent() {
+    out.print("  ");
+  }
+
+  private String getIndent(){
+    return "  ";
   }
 
   @Override
   public void setOptions(Map<String, String> options) {
 
+    // turn on colored output?
+    if (options.getOrDefault("color", "false").equalsIgnoreCase("true")){
+      color = true;
+    }
+
+    if (color && System.getProperty("os.name").toLowerCase().startsWith("win")){
+      this.out = AnsiConsole.out;
+    }
+    else {
+      this.out = System.out;
+    }
   }
+
 }

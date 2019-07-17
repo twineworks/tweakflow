@@ -28,12 +28,23 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-public class SubjectNode implements SpecNode {
+public class SubjectNode implements SpecNode, SubjectSpecNode {
 
   private String name = "subject";
   private Value data = Values.NIL;
+  private DescribeNode parent;
 
-  public SubjectNode setData(Value value){
+  private String errorMessage = "OK";
+  private Throwable cause;
+  private boolean success = true;
+  private boolean didRun = false;
+  private Value source;
+
+  private long startedMillis;
+  private long endedMillis;
+  private NodeLocation at;
+
+  public SubjectNode setData(Value value) {
     this.data = value;
     return this;
   }
@@ -49,32 +60,84 @@ public class SubjectNode implements SpecNode {
 
   @Override
   public void run(SpecContext context) {
-    context.setSubject(data);
+    startedMillis = System.currentTimeMillis();
+    context.onEnterSubject(this);
+    if (success) {
+      try {
+        didRun = true;
+        context.setSubject(data);
+      } catch (Throwable e) {
+        fail(e.getMessage(), e);
+      }
+    }
+    endedMillis = System.currentTimeMillis();
+    context.onLeaveSubject(this);
+  }
+
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public SubjectNode setSource(Value source) {
+    this.source = source;
+    return this;
   }
 
   @Override
   public void fail(String errorMessage, Throwable cause) {
-
+    this.success = false;
+    this.errorMessage = errorMessage;
+    this.cause = cause;
   }
 
   @Override
   public boolean didRun() {
-    return true;
+    return didRun;
   }
 
   @Override
   public boolean isSuccess() {
-    return true;
+    return success;
   }
 
   @Override
   public String getErrorMessage() {
-    return "OK";
+    return errorMessage;
   }
 
   @Override
   public Throwable getCause() {
-    return null;
+    return cause;
   }
 
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
+
+  @Override
+  public DescribeNode getParent() {
+    return parent;
+  }
+
+  @Override
+  public void setParent(DescribeNode parent) {
+    this.parent = parent;
+  }
+
+  @Override
+  public String getErrorLocation() {
+    return at.file+":"+at.line+":"+at.charInLine;
+  }
+
+  public NodeLocation at(){
+    return at;
+  }
+
+  public SubjectNode setAt(NodeLocation at) {
+    this.at = at;
+    return this;
+  }
 }

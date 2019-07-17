@@ -25,18 +25,25 @@
 package com.twineworks.tweakflow.spec.runner;
 
 import com.twineworks.tweakflow.lang.TweakFlow;
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.SimpleDebugHandler;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.spec.nodes.DescribeNode;
+import com.twineworks.tweakflow.spec.nodes.FileNode;
 import com.twineworks.tweakflow.spec.nodes.SpecNode;
 import com.twineworks.tweakflow.spec.nodes.SuiteNode;
 import com.twineworks.tweakflow.spec.runner.helpers.Filter;
-import com.twineworks.tweakflow.spec.runner.helpers.GlobFileFinder;
 import com.twineworks.tweakflow.spec.runner.helpers.LoadPathHelper;
 import com.twineworks.tweakflow.spec.runner.helpers.NodeHelper;
+import com.twineworks.tweakflow.spec.runner.helpers.SpecFileFinder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 public class SpecRunner {
 
@@ -50,28 +57,38 @@ public class SpecRunner {
   public void run() {
 
     LoadPath loadPath = new LoadPathHelper(options.loadPathOptions).build();
-    ArrayList<String> modules = GlobFileFinder.findModules(options.modules);
+    ArrayList<String> modules = SpecFileFinder.findModules(options.modules);
     Runtime runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
 
     // evaluate
-    ArrayList<Value> valueNodes = NodeHelper.evalValueNodes(runtime, modules);
+    HashMap<String, Value> valueNodes = NodeHelper.evalValueNodes(runtime, modules);
 
     // parse into nodes, evaluating pre-effects
-    ArrayList<SpecNode> nodes = NodeHelper.parseNodes(valueNodes, options.effects, runtime);
-
-    // TODO: handle errors during before hooks [abort - sensible error message]
-    // TODO: handle errors during after hooks  [abort - sensible error message]
-    // TODO: handle errors during effects (pre) [abort - sensible error message]
-    // TODO: handle errors during effects (during) [abort - sensible error message]
-    // TODO: handle tags inclusion, anything tagged is excluded by default
-    // TODO: measure duration of everything
+    HashMap<String, SpecNode> nodes = NodeHelper.parseNodes(valueNodes, options.effects, runtime);
 
     // filtering
-    if (options.filters.size() > 0) {
-      new Filter(options.filters).filter(nodes);
+
+    new Filter(options.filters, options.tags, options.runNotTagged)
+        .filter(nodes.values());
+
+    // for every selected describe node, wrap it in a File Node and add to suite
+    ArrayList<FileNode> fileNodes = new ArrayList<>();
+    for (String key : nodes.keySet()) {
+      SpecNode specNode = nodes.get(key);
+      if (!(specNode instanceof DescribeNode)){
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "file "+key+": spec must begin with describe(...)");
+      }
+      DescribeNode dNode = (DescribeNode) specNode;
+      if (dNode.isSelected()){
+        fileNodes.add(
+            new FileNode()
+                .setName(key)
+                .setNodes(Collections.singletonList(dNode)));
+      }
     }
 
-    SuiteNode suite = new SuiteNode().setNodes(nodes);
+    fileNodes.sort(Comparator.comparing(FileNode::getName));
+    SuiteNode suite = new SuiteNode().setNodes(fileNodes);
 
     // execution
     specContext = new SpecContext(runtime, options.reporters);

@@ -24,40 +24,28 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.spec.effects.SpecEffect;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-public class EffectNode implements SpecNode {
+import java.util.List;
 
-  private String name = "effect";
-  private SpecEffect effect;
-  private Value effectNode;
+public class FileNode implements SpecNode {
 
-  private String errorMessage;
-  private Throwable cause;
-  private boolean success = true;
-  private boolean didRun = false;
-  private Value source;
-
+  private String name = "file";
+  private List<SpecNode> nodes;
   private long startedMillis;
   private long endedMillis;
 
-  public EffectNode setEffect(Value effectNode, SpecEffect effect) {
-    this.effectNode = effectNode;
-    this.effect = effect;
+  private boolean success = true;
+  private boolean didRun = false;
+
+  private Throwable cause;
+  private String errorMessage = "OK";
+  private Value source;
+
+  public FileNode setNodes(List<SpecNode> nodes) {
+    this.nodes = nodes;
     return this;
-  }
-
-  @Override
-  public SpecNodeType getType() {
-    return SpecNodeType.EFFECT;
-  }
-
-  public String getName() {
-    return name;
   }
 
   @Override
@@ -65,14 +53,38 @@ public class EffectNode implements SpecNode {
     return source;
   }
 
-  public EffectNode setSource(Value source) {
+  public FileNode setSource(Value source) {
     this.source = source;
     return this;
   }
 
   @Override
+  public SpecNodeType getType() {
+    return SpecNodeType.FILE;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public FileNode setName(String name) {
+    this.name = name;
+    return this;
+  }
+
+  @Override
   public void run(SpecContext context) {
-    throw new IllegalStateException("Effect nodes do not run directly as part of the test suite. Their execution is orchestrated through other nodes.");
+    didRun = true;
+    startedMillis = System.currentTimeMillis();
+    context.onEnterFile(this);
+    for (SpecNode node : nodes) {
+      context.run(node);
+      if (!node.isSuccess()) {
+        success = false;
+      }
+    }
+    endedMillis = System.currentTimeMillis();
+    context.onLeaveFile(this);
   }
 
   @Override
@@ -100,36 +112,6 @@ public class EffectNode implements SpecNode {
   @Override
   public Throwable getCause() {
     return cause;
-  }
-
-  public Value execute(SpecContext context) {
-    startedMillis = System.currentTimeMillis();
-    try {
-      didRun = true;
-      return effect.execute(context.getRuntime(), effectNode, context.getSubject());
-    } catch (Throwable e) {
-      fail(e.getMessage(), e);
-      throw e;
-    }
-    finally {
-      endedMillis = System.currentTimeMillis();
-    }
-
-  }
-
-  public Value execute(Runtime runtime) {
-    startedMillis = System.currentTimeMillis();
-    try {
-      didRun = true;
-      return effect.execute(runtime, effectNode, Values.NIL);
-    } catch (Throwable e) {
-      fail(e.getMessage(), e);
-      throw e;
-    }
-    finally {
-      endedMillis = System.currentTimeMillis();
-    }
-
   }
 
   @Override

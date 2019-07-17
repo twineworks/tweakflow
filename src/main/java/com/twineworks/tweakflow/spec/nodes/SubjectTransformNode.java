@@ -24,17 +24,31 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-public class SubjectTransformNode implements SpecNode {
+public class SubjectTransformNode implements SpecNode, SubjectSpecNode {
 
   private String name = "subject_transform";
   private Value transform = Values.NIL;
+  private DescribeNode parent;
 
-  public SubjectTransformNode setTransform(Value value){
+  private boolean success = true;
+  private boolean didRun = false;
+
+  private String errorMessage;
+  private String errorLocation;
+  private Throwable cause;
+  private Value source;
+
+  private long startedMillis;
+  private long endedMillis;
+  private NodeLocation at;
+
+  public SubjectTransformNode setTransform(Value value) {
     this.transform = value;
     return this;
   }
@@ -49,42 +63,106 @@ public class SubjectTransformNode implements SpecNode {
   }
 
   @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public SubjectTransformNode setSource(Value source) {
+    this.source = source;
+    return this;
+  }
+
+  @Override
   public void run(SpecContext context) {
-    CallContext cc = context.getRuntime().createCallContext();
-    int paramCount = transform.function().getSignature().getParameterList().size();
-    Value newSubject;
-    if (paramCount > 0){
-      newSubject = cc.call(transform, context.getSubject());
+    startedMillis = System.currentTimeMillis();
+    context.onEnterSubject(this);
+
+    if (success) {
+      didRun = true;
+      try {
+        CallContext cc = context.getRuntime().createCallContext();
+        int paramCount = transform.function().getSignature().getParameterList().size();
+        Value newSubject;
+        if (paramCount > 0) {
+          newSubject = cc.call(transform, context.getSubject());
+        } else {
+          newSubject = cc.call(transform);
+        }
+        context.setSubject(newSubject);
+
+      } catch (Throwable e) {
+        fail(e.getMessage(), e);
+      }
     }
-    else{
-      newSubject = cc.call(transform);
-    }
-    context.setSubject(newSubject);
+    endedMillis = System.currentTimeMillis();
+    context.onLeaveSubject(this);
   }
 
   @Override
   public void fail(String errorMessage, Throwable cause) {
+    success = false;
+    this.errorMessage = errorMessage;
+    this.errorLocation = at.file+":"+at.line+":"+at.charInLine;
+    this.cause = cause;
+
+    if (cause instanceof LangException) {
+      LangException e = (LangException) cause;
+      this.errorMessage = e.getDigestMessage();
+      if (e.getSourceInfo() != null){
+        this.errorLocation = e.getSourceInfo().getFullLocation();
+      }
+    }
 
   }
 
   @Override
   public boolean didRun() {
-    return false;
+    return didRun;
   }
 
   @Override
   public boolean isSuccess() {
-    return false;
+    return success;
   }
 
   @Override
   public String getErrorMessage() {
-    return null;
+    return errorMessage;
   }
 
   @Override
   public Throwable getCause() {
-    return null;
+    return cause;
+  }
+
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
+
+  @Override
+  public DescribeNode getParent() {
+    return parent;
+  }
+
+  @Override
+  public void setParent(DescribeNode parent) {
+    this.parent = parent;
+  }
+
+  @Override
+  public String getErrorLocation() {
+    return errorLocation;
+  }
+
+  public NodeLocation at(){
+    return at;
+  }
+
+  public SubjectTransformNode setAt(NodeLocation at) {
+    this.at = at;
+    return this;
   }
 
 }

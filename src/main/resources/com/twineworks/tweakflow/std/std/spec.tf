@@ -1,6 +1,7 @@
 import core, fun, data, regex, strings, math, time from 'std.tf';
 
 export assert.expect as expect;
+export assert.assert as assert;
 export assert.expect_error as expect_error;
 
 export spec.describe as describe;
@@ -81,7 +82,7 @@ library assert {
 
   function expect: (x, f, _stack_offset=3) ->
     let {
-      result: f(x);
+      result: (f default to.be_true())(x);
       semantic: if result is list then result[0] else result[:semantic];
       success: if result is list then result[1] else result[:success];
       expected: if result is list then result[2] else result[:expected];
@@ -102,54 +103,68 @@ library assert {
       true
     ;
 
+  function assert: expect;
+
 }
 
 library spec {
 
-  function before: (any effect, string name) -> {
+  function before: (any effect, string name, any context) -> {
     :type "before",
     :name name default "before",
     :effect effect,
-    :at (try throw "err" catch _, trace trace[:stack, 1])
+    :at (try throw "err" catch _, trace trace[:stack, 1]),
+    :context context
   };
 
-  function after: (any effect, string name) -> {
+  function after: (any effect, string name, any context) -> {
     :type "after",
     :name name default "after",
     :effect effect,
-    :at (try throw "err" catch _, trace trace[:stack, 1])
+    :at (try throw "err" catch _, trace trace[:stack, 1]),
+    :context context
   };
 
-  function describe: (string name, any spec) -> {
+  function describe: (string name, any spec, any context, any tags) -> {
     :type 'describe',
     :name name,
     :spec spec,
-    :at (try throw "err" catch _, trace trace[:stack, 1])
+    :at (try throw "err" catch _, trace trace[:stack, 1]),
+    :context context,
+    :tags tags
   };
 
-  function it: (string name, any spec) -> {
+  function it: (string name, any spec, any context, any tags) -> {
     :type 'it',
     :name name,
     :spec spec,
-    :at (try throw "err" catch _, trace trace[:stack, 1])
+    :at (try throw "err" catch _, trace trace[:stack, 1]),
+    :context context,
+    :tags tags
   };
 
-  function subject: (any data, any transform, any effect) ->
+  function subject: (any data, any transform, any effect, any context) ->
 
     if (transform != nil)
       {
         :type 'subject_transform',
         :transform transform,
+        :at (try throw "err" catch _, trace trace[:stack, 1]),
+        :context context
       }
     if (effect != nil)
       {
         :type 'subject_effect',
         :effect effect,
+        :at (try throw "err" catch _, trace trace[:stack, 1]),
+        :context context
       }
     else
       {
         :type 'subject',
         :data data,
+        :at (try throw "err" catch _, trace trace[:stack, 1]),
+        :context context
       }
   ;
 
@@ -158,91 +173,162 @@ library spec {
 export library to {
 
   have_code: (expected) -> (err) ->
-    ["to have code", err is dict && err[:code] == expected, expected];
+    {
+      :semantic "to have code",
+      :expected expected,
+      :success err is dict && err[:code] === expected
+    };
 
   equal: (expected) -> (x) ->
-    ["to equal", (x == expected), expected];
+    {
+      :semantic "to equal",
+      :expected expected,
+      :success x == expected
+    };
 
   not_equal: (expected) -> (x) ->
-    ["to not equal", (x != expected), expected];
+    {
+      :semantic "to not equal",
+      :expected expected,
+      :success x != expected
+    };
 
   be: (expected) -> (x) ->
-    ["to be", x === expected, expected];
+    {
+      :semantic "to be",
+      :expected expected,
+      :success x === expected
+    };
 
   be_greater_than: (expected) -> (x) ->
-    ["to be greater than", x > expected, "x > #{expected}"];
+    {
+      :semantic "to be greater than",
+      :expected expected,
+      :success x > expected
+    };
 
   be_less_than: (expected) -> (x) ->
-    ["to be less than", x < expected, "x < #{expected}"];
+    {
+      :semantic "to be less than",
+      :expected expected,
+      :success x < expected
+    };
 
-  be_between: (expected_low, expected_high) -> (x) ->
-    ["to be between", expected_low <= x && x < expected_high, "#{expected_low} <= x < #{expected_high}"];
+  be_between: (expected_low, expected_high, low_inclusive=true, high_inclusive=true) -> (x) ->
+    {
+      :semantic "to be between",
+      :expected [expected_low, expected_high],
+      :success (if low_inclusive (expected_low <= x) else (expected_low < x)) &&
+               (if high_inclusive (x <= expected_high) else (x < expected_high))
+    };
 
   be_close_to: (double expected, double precision=1e-15) -> (x) ->
-    ["to be close to", math.abs(expected-x) <= precision, "abs(#{expected} - x) <= #{precision}"];
+    {
+      :semantic "to be within #{precision} of",
+      :expected expected,
+      :success math.abs(expected-x) <= precision
+    };
+    #["to be close to", math.abs(expected-x) <= precision, "abs(#{expected} - x) <= #{precision}"];
 
   be_permutation_of: (list expected) -> (x) ->
-    [
-      "to be permutation of",
-      x is list && util.permutations?(expected, x),
-      expected
-    ];
+    {
+      :semantic "to be a permutation of",
+      :expected expected,
+      :success x is list && util.permutations?(expected, x),
+    };
 
   be_superset_of: (dict expected) -> (x) ->
-    [
-      "to be superset of",
-      x is dict &&
-        data.all?(
-          data.keys(expected),
-          (k) -> data.has?(x, k) && x[k] === expected[k]
-        ),
-      expected
-    ];
+    {
+      :semantic "to be a superset of",
+      :expected expected,
+      :success
+        x is dict &&
+          data.all?(
+            data.keys(expected),
+            (k) -> data.has?(x, k) && x[k] === expected[k]
+          )
+    };
+
+  be_subset_of: (dict expected) -> (x) ->
+    {
+      :semantic "to be a subset of",
+      :expected expected,
+      :success
+        x is dict &&
+          data.all?(
+            data.keys(x),
+            (k) -> data.has?(expected, k) && x[k] === expected[k]
+          )
+    };
 
   be_one_of: (list expected) -> (x) ->
-    [
-      "to be one of",
-      data.contains?(expected, x),
-      expected
-    ];
+    {
+      :semantic "to be one of",
+      :expected expected,
+      :success data.contains?(expected, x),
+    };
 
   contain: (expected) -> (x) ->
-    ["to contain", (x is list || x is dict) && data.contains?(expected, x), expected];
+    {
+      :semantic "to contain",
+      :expected expected,
+      :success
+        (x is list || x is dict) && data.contains?(x, expected)
+    };
 
   contain_all: (list expected) -> (xs) ->
-    [
-      "to contain all",
-      (xs is list || xs is dict) &&
-        data.all?(
-          expected,
-          (e) -> data.contains?(xs, e)
-        ),
-      expected
-    ];
+    {
+      :semantic "to contain all",
+      :expected expected,
+      :success
+        (xs is list || xs is dict) &&
+          data.all?(
+            expected,
+            (e) -> data.contains?(xs, e)
+          )
+    };
 
   not_be: (expected) -> (x) ->
-    ["to not be", x !== expected, expected];
+    {
+      :semantic "to not be",
+      :expected expected,
+      :success x !== expected
+    };
 
   be_nil: () -> (x) ->
-    ["to be nil", x === nil, "x === nil"];
+    {
+      :semantic "to be",
+      :expected nil,
+      :success x === nil
+    };
 
   not_be_nil: () -> (x) ->
-    ["to not be nil", x !== nil, "x !== nil"];
+    {
+      :semantic "to not be",
+      :expected nil,
+      :success x !== nil
+    };
 
-  be_true: () -> (x) -> let {
-      success: x === true;
-    }
+  be_true: () -> (x) ->
     {
       :semantic "to be",
       :expected true,
-      :success success
+      :success x === true
     };
 
   be_false: () -> (x) ->
-    ["to be false", x === false, "x === false"];
+    {
+      :semantic "to be",
+      :expected false,
+      :success x === false
+    };
 
   be_NaN: () -> (x) ->
-    ["to be NaN", math.NaN?(x), "math.NaN?(x)"];
+    {
+      :semantic "to be",
+      :expected NaN,
+      :success math.NaN?(x)
+    };
 
   be_function: () -> (x) ->
     {

@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 public class BeforeNode implements SpecNode {
@@ -33,9 +34,14 @@ public class BeforeNode implements SpecNode {
   private String errorMessage;
   private Throwable cause;
   private NodeLocation at;
+  private DescribeNode parent;
+
+  private long startedMillis;
+  private long endedMillis;
 
   private boolean success = true;
   private boolean didRun = false;
+  private Value source;
 
   public BeforeNode setEffect(EffectNode effectNode) {
     this.effectNode = effectNode;
@@ -45,6 +51,25 @@ public class BeforeNode implements SpecNode {
   public BeforeNode setAt(NodeLocation at) {
     this.at = at;
     return this;
+  }
+
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public BeforeNode setSource(Value source) {
+    this.source = source;
+    return this;
+  }
+
+  public BeforeNode setParent(DescribeNode parent){
+    this.parent = parent;
+    return this;
+  }
+
+  public DescribeNode getParent(){
+    return parent;
   }
 
   @Override
@@ -63,6 +88,7 @@ public class BeforeNode implements SpecNode {
 
   @Override
   public void run(SpecContext context) {
+    startedMillis = System.currentTimeMillis();
     context.onEnterBefore(this);
     if (success) {
       didRun = true;
@@ -72,6 +98,7 @@ public class BeforeNode implements SpecNode {
         fail(e.getMessage(), e);
       }
     }
+    endedMillis = System.currentTimeMillis();
     context.onLeaveBefore(this);
 
   }
@@ -103,5 +130,10 @@ public class BeforeNode implements SpecNode {
 
   public NodeLocation at() {
     return at;
+  }
+
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
   }
 }

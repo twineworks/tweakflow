@@ -28,10 +28,14 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.interpreter.CallContext;
 import com.twineworks.tweakflow.lang.values.DictValue;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
-public class ItNode implements SpecNode {
+import java.util.HashSet;
+import java.util.Set;
+
+public class ItNode implements SpecNode, TaggableSpecNode {
 
   private String name = "unknown";
   private boolean selected = true;
@@ -41,6 +45,9 @@ public class ItNode implements SpecNode {
   private DescribeNode parent;
   private String fullName;
 
+  private long startedMillis;
+  private long endedMillis;
+
   private boolean success = true;
   private boolean didRun = false;
 
@@ -48,30 +55,38 @@ public class ItNode implements SpecNode {
   private String errorLocation;
   private Value thrownValue;
   private Throwable cause;
+  private Value source;
 
+  private Set<String> tags;
+  private Set<String> fullTags;
 
-  public ItNode setName(String name){
-    this.name = name;
-    return this;
-  }
-
-  public ItNode setSpec(Value value){
+  public ItNode setSpec(Value value) {
     this.spec = value;
     return this;
   }
 
-  public ItNode setAt(NodeLocation at){
+  public ItNode setAt(NodeLocation at) {
     this.at = at;
     return this;
   }
 
-  public ItNode setParent(DescribeNode parent){
-    this.parent = parent;
+  @Override
+  public Value getSource() {
+    return source;
+  }
+
+  public ItNode setSource(Value source) {
+    this.source = source;
     return this;
   }
 
   public DescribeNode getParent() {
     return parent;
+  }
+
+  public ItNode setParent(DescribeNode parent) {
+    this.parent = parent;
+    return this;
   }
 
   public boolean isSelected() {
@@ -83,7 +98,7 @@ public class ItNode implements SpecNode {
   }
 
   public String getFullName() {
-    if (fullName == null){
+    if (fullName == null) {
       if (parent == null) return name;
       fullName = parent.getFullName() + " " + name;
     }
@@ -99,33 +114,37 @@ public class ItNode implements SpecNode {
     return name;
   }
 
+  public ItNode setName(String name) {
+    this.name = name;
+    return this;
+  }
+
   @Override
   public void run(SpecContext context) {
-
+    startedMillis = System.currentTimeMillis();
     context.onEnterIt(this);
 
-    if (success){
+    if (success) {
       didRun = true;
       if (spec == Values.NIL) {
         // pending
-      }
-      else {
+      } else {
         CallContext cc = context.getRuntime().createCallContext();
         int paramCount = spec.function().getSignature().getParameterList().size();
 
         try {
-          if (paramCount == 0){
+          if (paramCount == 0) {
             cc.call(spec);
-          }
-          else {
+          } else {
             cc.call(spec, context.getSubject());
           }
-        } catch (LangException e){
+        } catch (LangException e) {
           fail(e.getMessage(), e);
         }
       }
     }
 
+    endedMillis = System.currentTimeMillis();
     context.onLeaveIt(this);
 
   }
@@ -137,35 +156,39 @@ public class ItNode implements SpecNode {
     // extract useful info
     this.cause = cause;
 
-    if (cause instanceof LangException){
+    if (cause instanceof LangException) {
       LangException e = (LangException) cause;
 
       thrownValue = (Value) e.getProperties().getOrDefault("value", Values.NIL);
 
-      if (thrownValue.isDict()){
+      if (thrownValue.isDict()) {
         DictValue dict = thrownValue.dict();
         Value code = dict.get("code");
-        if (code.isString() && code.string().equals("ASSERTION_ERROR")){
+        if (code.isString() && code.string().equals("ASSERTION_ERROR")) {
           // construct a matcher-specific error message
-          this.errorMessage = "expected " + dict.get("x") + " " + dict.get("semantic").string() + " "+ dict.get("expected");
+          this.errorMessage = "expected " + dict.get("x") + " " + dict.get("semantic").string() + " " + dict.get("expected");
           errorLocation = dict.get("location").string();
-        }
-        else if (code.isString() && code.string().equals("ERROR_EXPECTED")){
+        } else if (code.isString() && code.string().equals("ERROR_EXPECTED")) {
           // construct a matcher-specific error message
           this.errorMessage = "expected an error, but no error was thrown";
           errorLocation = dict.get("location").string();
         }
       }
 
-      if (this.errorMessage == null){
+      if (this.errorMessage == null) {
         this.errorMessage = e.getDigestMessage();
-        errorLocation = e.getSourceInfo().getFullLocation();
+        if (e.getSourceInfo() != null){
+          errorLocation = e.getSourceInfo().getFullLocation();
+        }
       }
-    }
-    else{
+    } else {
       this.errorMessage = errorMessage;
     }
 
+  }
+
+  public String getBody(){
+    return ValueInspector.inspect(spec, true).trim();
   }
 
   @Override
@@ -173,7 +196,7 @@ public class ItNode implements SpecNode {
     return didRun;
   }
 
-  public boolean isPending(){
+  public boolean isPending() {
     return spec == Values.NIL;
   }
 
@@ -196,5 +219,31 @@ public class ItNode implements SpecNode {
 
   public NodeLocation at() {
     return at;
+  }
+
+  @Override
+  public long getDurationMillis() {
+    return endedMillis - startedMillis;
+  }
+
+  @Override
+  public Set<String> getTags() {
+
+    if (fullTags == null) {
+      if (parent == null) return tags;
+      fullTags = new HashSet<>(parent.getTags());
+      fullTags.addAll(tags);
+    }
+    return fullTags;
+  }
+
+  @Override
+  public Set<String> getOwnTags() {
+    return tags;
+  }
+
+  public ItNode setTags(Set<String> tags) {
+    this.tags = tags;
+    return this;
   }
 }

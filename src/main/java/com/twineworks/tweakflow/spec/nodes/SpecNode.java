@@ -24,11 +24,14 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 public interface SpecNode {
   SpecNodeType getType();
+  Value getSource();
   void run(SpecContext context);
+  long getDurationMillis();
   void fail(String errorMessage, Throwable cause);
   boolean didRun();
   boolean isSuccess();
