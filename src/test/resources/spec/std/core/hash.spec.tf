@@ -1,5 +1,5 @@
 import core, data from "std";
-import expect, expect_error, to, describe, it, subject, before, after from "std/spec.tf";
+import assert, expect, expect_error, to, describe, it, subject, before, after from "std/spec";
 
 alias core.hash as hash;
 
@@ -84,13 +84,5 @@ library spec {
       ),
     ]),
 
-    describe("failing before blocks", [
-      before({:type 'effect', :effect {:type 'file', :file 'missing.file.txt', :charset 'UTF-8'}}),
-      it("should not even execute", () ->
-        expect(true, to.be_true())
-      )
-    ])
-
   ]);
-
 }
