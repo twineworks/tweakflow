@@ -437,12 +437,13 @@ public final class Math {
     }
   }
 
-  // nan?: (double x) -> boolean
+  // nan?: (any x) -> boolean
   public static final class nan implements UserFunction, Arity1UserFunction {
 
     @Override
     public Value call(UserCallContext context, Value x) {
       if (x.isNil()) return Values.FALSE;
+      if (!x.isDoubleNum()) return Values.FALSE;
       return Double.isNaN(x.doubleNum()) ? Values.TRUE : Values.FALSE;
     }
   }

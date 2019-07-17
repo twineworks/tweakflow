@@ -4973,7 +4973,7 @@ false
 ```
 ~~~
 
-  function NaN?:  (double x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"};
+  function NaN?:  (any x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$nan"};
 
 doc
 ~~~
