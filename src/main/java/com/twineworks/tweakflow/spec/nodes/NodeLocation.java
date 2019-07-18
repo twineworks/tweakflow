@@ -24,6 +24,9 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class NodeLocation {
   public final String file;
   public final int line;
@@ -46,19 +49,19 @@ public class NodeLocation {
 
     if (at == null) return new NodeLocation(file, line, charInLine);
 
-    String[] split = at.split(":");
+    // split off path:line:char_in_line such that the path may contain the : character
+    int splitIdx;
+    ArrayList<String> parts = new ArrayList<>();
 
-    if (split.length >= 1) {
-      file = split[0];
+    while (parts.size() < 3 && (splitIdx = at.lastIndexOf(":")) > -1){
+      String part = at.substring(splitIdx+1);
+      at = at.substring(0, splitIdx);
+      parts.add(part);
     }
-
-    if (split.length >= 2) {
-      line = Integer.parseInt(split[1], 10);
-    }
-
-    if (split.length >= 3) {
-      charInLine = Integer.parseInt(split[2], 10);
-    }
+    Collections.reverse(parts);
+    if (parts.size() > 0) file = parts.get(0);
+    if (parts.size() > 1) line = Integer.parseInt(parts.get(1), 10);
+    if (parts.size() > 2) charInLine = Integer.parseInt(parts.get(2), 10);
 
     return new NodeLocation(file, line, charInLine);
   }
