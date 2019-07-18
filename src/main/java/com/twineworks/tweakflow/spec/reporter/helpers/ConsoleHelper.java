@@ -25,15 +25,22 @@
 package com.twineworks.tweakflow.spec.reporter.helpers;
 
 public class ConsoleHelper {
-  // Reset
   public static final String RESET = "\033[0m";
   public static final String BOLD = "\033[1m";
   public static final String FAINT = "\033[2m";
   public static final String YELLOW = "\033[0;33m";
   public static final String GREEN = "\033[0;32m";
   public static final String RED = "\033[0;31m";
-  public static final String CURSOR_LEFT = "\033[1;D";
 
+  public static String cursorUp(int n){
+    return "\033["+n+";A";
+  }
+  public static String cursorDown(int n){
+    return "\033["+n+";B";
+  }
+  public static String cursorRight(int n){
+    return "\033["+n+";C";
+  }
   public static String cursorLeft(int n){
     return "\033["+n+";D";
   }
