@@ -66,6 +66,11 @@ public class AVisitor implements Visitor {
   }
 
   @Override
+  public ModuleHeadNode visit(ModuleHeadNode node) {
+    return node;
+  }
+
+  @Override
   public LibraryNode visit(LibraryNode node) {
     return node;
   }

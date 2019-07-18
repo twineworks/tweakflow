@@ -39,10 +39,11 @@ import com.twineworks.tweakflow.util.LangUtil;
 
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ReplState {
 
-  private Map<String, ParseResult> parseCache = new HashMap<>();
+  private ConcurrentHashMap<String, ParseResult> parseCache = new ConcurrentHashMap<>();
   private final String stdlibPath = "std.tf";
 
   // currently loaded module

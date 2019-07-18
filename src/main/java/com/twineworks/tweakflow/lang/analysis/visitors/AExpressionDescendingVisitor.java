@@ -66,6 +66,11 @@ public class AExpressionDescendingVisitor implements Visitor {
   }
 
   @Override
+  public ModuleHeadNode visit(ModuleHeadNode node) {
+    return node;
+  }
+
+  @Override
   public LibraryNode visit(LibraryNode node) {
     node.getChildren().forEach((m) -> m.accept(this));
     return node;

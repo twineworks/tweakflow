@@ -28,10 +28,11 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SpecFileFinder {
 
-  public static ArrayList<String> findModules(ArrayList<String> patterns){
+  public static ArrayList<String> findModules(List<String> patterns){
     ArrayList<String> modules = new ArrayList<>();
 
     try {

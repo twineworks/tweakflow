@@ -194,6 +194,7 @@ public class LangException extends RuntimeException {
   }
 
   private String makeTraceString(Stack stack) {
+
     StringBuilder trace = new StringBuilder();
 
     trace.append("ERROR: \n");
@@ -274,7 +275,7 @@ public class LangException extends RuntimeException {
 
 
   public Value toTraceValue(){
-    //    printStackTrace();
+//        printStackTrace();
 
     // custom properties
     TransientDictValue dict = new TransientDictValue();

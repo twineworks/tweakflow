@@ -32,6 +32,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.builders.ExpressionBuilder;
+import com.twineworks.tweakflow.lang.parse.builders.ModuleHeadBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.UnitBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.VarDefBuilder;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
@@ -155,4 +156,10 @@ public class BailParser {
 
   }
 
+  public ParseResult parseModuleHead() {
+    return parse(
+        TweakFlowParser::moduleHead,
+        (ParserRuleContext ctx) -> new ModuleHeadBuilder(parseUnit).visit(ctx)
+    );
+  }
 }

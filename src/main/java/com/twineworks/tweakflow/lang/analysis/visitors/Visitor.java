@@ -51,6 +51,7 @@ public interface Visitor {
   InteractiveSectionNode visit(InteractiveSectionNode node);
 
   ModuleNode visit(ModuleNode node);
+  ModuleHeadNode visit(ModuleHeadNode node);
   LibraryNode visit(LibraryNode node);
   ComponentNode visit(ComponentNode node);
   VarDefNode visit(VarDefNode node);

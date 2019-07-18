@@ -34,7 +34,7 @@ import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolver;
 import com.twineworks.tweakflow.lang.analysis.scope.Linker;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilder;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.load.Loader;
+import com.twineworks.tweakflow.lang.load.ParallelLoader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 
 import java.util.List;
@@ -81,7 +81,8 @@ public class Analysis {
     long start = System.currentTimeMillis();
     try {
       AnalysisSet analysisSet = new AnalysisSet(loadPath);
-      Loader.load(loadPath, paths, analysisSet.getUnits(), true);
+      ParallelLoader pl = new ParallelLoader(loadPath);
+      analysisSet.getUnits().putAll(pl.load(paths));
       return analyze(analysisSet, start);
     } catch (RuntimeException e){
       long end = System.currentTimeMillis();

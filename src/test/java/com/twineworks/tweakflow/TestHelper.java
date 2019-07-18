@@ -40,12 +40,13 @@ import com.twineworks.tweakflow.lang.values.*;
 import org.junit.jupiter.api.DynamicTest;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.assertj.core.api.Fail.fail;
 
 public class TestHelper {
 
-  public static Map<String, ParseResult> parseResultCache = new HashMap<>();
+  public static ConcurrentHashMap<String, ParseResult> parseResultCache = new ConcurrentHashMap<>();
 
   private static LoadPath loadPath = new LoadPath.Builder()
       .addStdLocation()

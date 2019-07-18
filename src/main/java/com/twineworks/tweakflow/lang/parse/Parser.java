@@ -51,4 +51,9 @@ final public class Parser extends TweakFlowParserBaseListener {
   public ParseResult parseExpression(){
     return new BailParser(parseUnit).parseExpression();
   }
+
+  public ParseResult parseModuleHead(){
+    return new BailParser(parseUnit).parseModuleHead();
+  }
+
 }
