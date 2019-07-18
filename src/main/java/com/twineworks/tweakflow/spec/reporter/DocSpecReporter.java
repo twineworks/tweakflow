@@ -53,6 +53,12 @@ public class DocSpecReporter implements SpecReporter {
   private boolean tty;
   private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
 
+  private final boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
+
+  private final String OK = isWindows ? "√" : "✓";
+  private final String ERR = isWindows ? "×" : "✗";
+  private final String PEN = "~";
+
   public DocSpecReporter() {
   }
 
@@ -158,7 +164,7 @@ public class DocSpecReporter implements SpecReporter {
     if (node.isPending()) {
       pending++;
       if (color) out.print(ConsoleHelper.YELLOW);
-      out.print("~");
+      out.print(PEN);
       out.print(" ");
       if (color) out.print(ConsoleHelper.RESET);
       if (color) out.print(ConsoleHelper.FAINT);
@@ -167,7 +173,7 @@ public class DocSpecReporter implements SpecReporter {
     } else if (node.isSuccess()) {
       passing++;
       if (color) out.print(ConsoleHelper.GREEN);
-      out.print("✓");
+      out.print(OK);
       out.print(" ");
       if (color) out.print(ConsoleHelper.RESET);
       if (color) out.print(ConsoleHelper.FAINT);
@@ -179,7 +185,7 @@ public class DocSpecReporter implements SpecReporter {
       }
       failing++;
       if (color) out.print(ConsoleHelper.RED);
-      out.print("✗");
+      out.print(ERR);
       out.print(" ");
       if (node.didRun()){
         out.print("#");

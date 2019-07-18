@@ -52,7 +52,7 @@ public class DotBarAnimation implements ConsoleAnimation {
 
     frames = new ArrayList<>();
     for (int i=0;i<width-2+1;i++){
-      String frame = "["+AnimHelper.repeat(i, "·")+AnimHelper.repeat(width-2-i, ".")+"]";
+      String frame = "["+AnimHelper.repeat(i, "-")+AnimHelper.repeat(width-2-i, ".")+"]";
       frames.add(frame);
     }
   }
