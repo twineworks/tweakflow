@@ -22,32 +22,38 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.reporter.anim;
 
-import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.runner.SpecRunner;
+import java.io.PrintStream;
 
-import java.util.Map;
+public class DotWaitAnimation implements ConsoleAnimation {
 
-public interface SpecReporter {
+  private PrintStream out;
+  private long lastTick;
 
-  void onFoundSpecModules(SpecRunner specRunner);
-  void onCompiledSpecModules(SpecRunner specRunner);
+  public DotWaitAnimation(PrintStream out) {
+    this.out = out;
+  }
 
-  void onEnterSuite(SuiteNode node);
-  void onLeaveSuite(SuiteNode node);
-  void onEnterFile(FileNode node);
-  void onLeaveFile(FileNode node);
-  void onEnterDescribe(DescribeNode node);
-  void onEnterBefore(BeforeNode node);
-  void onLeaveBefore(BeforeNode node);
-  void onEnterAfter(AfterNode node);
-  void onLeaveAfter(AfterNode node);
-  void onEnterSubject(SpecNode node);
-  void onLeaveSubject(SpecNode node);
-  void onLeaveDescribe(DescribeNode node);
-  void onEnterIt(ItNode node);
-  void onLeaveIt(ItNode node);
+  @Override
+  public void start() {
+    lastTick = System.currentTimeMillis();
+    out.print("[");
 
-  void setOptions(Map<String, String> options);
+  }
+
+  @Override
+  public void tick() {
+    long time = System.currentTimeMillis();
+    if (time - lastTick >= 950){
+      lastTick = time;
+      out.print(".");
+      out.flush();
+    }
+  }
+
+  @Override
+  public void finish() {
+    out.print("]");
+  }
 }

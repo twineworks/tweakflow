@@ -22,32 +22,47 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.reporter.anim;
 
-import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.runner.SpecRunner;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import java.util.Map;
+public class ConsoleAnimator {
 
-public interface SpecReporter {
+  private Timer timer;
+  private final Object timerLock = new Object();
+  private boolean timerActive;
+  private ConsoleAnimation animation;
 
-  void onFoundSpecModules(SpecRunner specRunner);
-  void onCompiledSpecModules(SpecRunner specRunner);
+  public void startAnimation(ConsoleAnimation a){
+    this.animation = a;
+    this.animation.start();
+    timer = new Timer();
+    timerActive = true;
+    timer.scheduleAtFixedRate(new TimerTask() {
+      @Override
+      public void run() {
+        synchronized (timerLock){
+          if (timerActive){
+            animation.tick();
+          }
+        }
+      }
+    }, 0, 500);
+  }
 
-  void onEnterSuite(SuiteNode node);
-  void onLeaveSuite(SuiteNode node);
-  void onEnterFile(FileNode node);
-  void onLeaveFile(FileNode node);
-  void onEnterDescribe(DescribeNode node);
-  void onEnterBefore(BeforeNode node);
-  void onLeaveBefore(BeforeNode node);
-  void onEnterAfter(AfterNode node);
-  void onLeaveAfter(AfterNode node);
-  void onEnterSubject(SpecNode node);
-  void onLeaveSubject(SpecNode node);
-  void onLeaveDescribe(DescribeNode node);
-  void onEnterIt(ItNode node);
-  void onLeaveIt(ItNode node);
-
-  void setOptions(Map<String, String> options);
+  public void finishAnimation(){
+    // cancel any compilation animation
+    if (timer != null){
+      synchronized (timerLock){
+        timer.cancel();
+        timer = null;
+        timerActive = false;
+        if (animation != null){
+          animation.finish();
+          animation = null;
+        }
+      }
+    }
+  }
 }

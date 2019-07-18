@@ -25,9 +25,13 @@
 package com.twineworks.tweakflow.spec.reporter;
 
 import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
+import com.twineworks.tweakflow.spec.reporter.anim.ConsoleAnimator;
+import com.twineworks.tweakflow.spec.reporter.anim.DotWaitAnimation;
+import com.twineworks.tweakflow.spec.reporter.anim.DotBarAnimation;
+import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleHelper;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import com.twineworks.tweakflow.spec.runner.SpecRunner;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.PrintStream;
@@ -46,6 +50,8 @@ public class DocSpecReporter implements SpecReporter {
 
   private PrintStream out;
   private ArrayList<SpecNode> errorNodes = new ArrayList<>();
+  private boolean tty;
+  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
 
   public DocSpecReporter() {
   }
@@ -79,12 +85,12 @@ public class DocSpecReporter implements SpecReporter {
       depth--;
       printIndent();
       depth++;
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print("#");
       out.print(errorNodes.size());
       out.print(" before hook failed: ");
       out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.println();
 
     }
@@ -103,12 +109,12 @@ public class DocSpecReporter implements SpecReporter {
       depth--;
       printIndent();
       depth++;
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print("#");
       out.print(errorNodes.size());
       out.print(" after hook failed, aborting: ");
       out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.println();
     }
   }
@@ -125,12 +131,12 @@ public class DocSpecReporter implements SpecReporter {
       errorNodes.add(node);
       depth--;
       printIndent();
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print("#");
       out.print(errorNodes.size());
       out.print(" subject evaluation failed: ");
       out.print(ErrorReporter.indented(getIndent(), node.getErrorMessage()));
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.println();
       depth++;
     }
@@ -151,28 +157,28 @@ public class DocSpecReporter implements SpecReporter {
     printIndent();
     if (node.isPending()) {
       pending++;
-      if (color) out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleHelper.YELLOW);
       out.print("~");
       out.print(" ");
-      if (color) out.print(ConsoleColors.RESET);
-      if (color) out.print(ConsoleColors.FAINT);
+      if (color) out.print(ConsoleHelper.RESET);
+      if (color) out.print(ConsoleHelper.FAINT);
       out.print(node.getName());
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     } else if (node.isSuccess()) {
       passing++;
-      if (color) out.print(ConsoleColors.GREEN);
+      if (color) out.print(ConsoleHelper.GREEN);
       out.print("✓");
       out.print(" ");
-      if (color) out.print(ConsoleColors.RESET);
-      if (color) out.print(ConsoleColors.FAINT);
+      if (color) out.print(ConsoleHelper.RESET);
+      if (color) out.print(ConsoleHelper.FAINT);
       out.print(node.getName());
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     } else {
       if (node.didRun()) {
         errorNodes.add(node);
       }
       failing++;
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print("✗");
       out.print(" ");
       if (node.didRun()){
@@ -180,13 +186,43 @@ public class DocSpecReporter implements SpecReporter {
         out.print(errorNodes.size());
         out.print(" ");
       }
-      if (color) out.print(ConsoleColors.RESET);
-      if (color) out.print(ConsoleColors.FAINT);
+      if (color) out.print(ConsoleHelper.RESET);
+      if (color) out.print(ConsoleHelper.FAINT);
       out.print(node.getName());
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
 
     printTags(node);
+    out.println();
+    out.flush();
+
+  }
+
+  @Override
+  public void onFoundSpecModules(SpecRunner specRunner) {
+    int moduleCount = specRunner.getModules().size();
+    out.println();
+    printIndent();
+    out.print("compiling "+moduleCount+" spec modules ");
+
+    // little waiting animation
+    consoleAnimator.startAnimation(tty ? new DotBarAnimation(out, Math.min(Math.max(moduleCount+2, 5), 12)) : new DotWaitAnimation(out));
+    out.flush();
+  }
+
+  @Override
+  public void onCompiledSpecModules(SpecRunner specRunner) {
+    consoleAnimator.finishAnimation();
+    long compilationMillis = specRunner.getRuntime().getAnalysisResult().getAnalysisDurationMillis();
+    out.println();
+    printIndent();
+    out.print("compilation complete ");
+
+    if (color) out.print(ConsoleHelper.FAINT);
+    out.print(" (");
+    out.print(HumanReadable.formatDuration(compilationMillis));
+    out.print(")");
+    if (color) out.print(ConsoleHelper.RESET);
     out.println();
     out.flush();
 
@@ -202,34 +238,34 @@ public class DocSpecReporter implements SpecReporter {
 
     out.println();
     printIndent();
-    if (color) out.print(ConsoleColors.GREEN);
+    if (color) out.print(ConsoleHelper.GREEN);
     out.print(passing + " passing");
-    if (color) out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleHelper.RESET);
     if (pending > 0) {
       out.print(", ");
-      if (color) out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleHelper.YELLOW);
       out.print(pending + " pending");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
     if (failing > 0) {
       out.print(", ");
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print(failing + " failing");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
     if (errors > 0){
       out.print(" and ");
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print(errors + " error");
       if (errors > 1) out.print("s");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
 
-    if (color) out.print(ConsoleColors.FAINT);
+    if (color) out.print(ConsoleHelper.FAINT);
     out.print(" (");
     out.print(HumanReadable.formatDuration(node.getDurationMillis()));
     out.print(")");
-    if (color) out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleHelper.RESET);
     out.println();
 
     int i = 1;
@@ -263,7 +299,7 @@ public class DocSpecReporter implements SpecReporter {
 
     if (tags.isEmpty()) return;
 
-    if (color) out.print(ConsoleColors.YELLOW);
+    if (color) out.print(ConsoleHelper.YELLOW);
     out.print(" {");
     int i=0;
     for (String tag : tags) {
@@ -272,7 +308,7 @@ public class DocSpecReporter implements SpecReporter {
       i++;
     }
     out.print("}");
-    if (color) out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleHelper.RESET);
   }
 
   private void printIndent() {
@@ -309,6 +345,11 @@ public class DocSpecReporter implements SpecReporter {
     // turn on colored output?
     if (options.getOrDefault("color", "false").equalsIgnoreCase("true")){
       color = true;
+    }
+
+    // turn on tty animation?
+    if (options.getOrDefault("tty", "false").equalsIgnoreCase("true")){
+      tty = true;
     }
 
     if (color && System.getProperty("os.name").toLowerCase().startsWith("win")){

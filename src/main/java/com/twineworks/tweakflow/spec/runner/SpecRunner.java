@@ -35,6 +35,8 @@ import com.twineworks.tweakflow.spec.nodes.DescribeNode;
 import com.twineworks.tweakflow.spec.nodes.FileNode;
 import com.twineworks.tweakflow.spec.nodes.SpecNode;
 import com.twineworks.tweakflow.spec.nodes.SuiteNode;
+import com.twineworks.tweakflow.spec.reporter.SpecReporter;
+import com.twineworks.tweakflow.spec.reporter.helpers.SpecReporterDelegate;
 import com.twineworks.tweakflow.spec.runner.helpers.Filter;
 import com.twineworks.tweakflow.spec.runner.helpers.LoadPathHelper;
 import com.twineworks.tweakflow.spec.runner.helpers.NodeHelper;
@@ -49,6 +51,8 @@ public class SpecRunner {
 
   private final SpecRunnerOptions options;
   private SpecContext specContext;
+  private ArrayList<String> modules;
+  private Runtime runtime;
 
   public SpecRunner(SpecRunnerOptions options) {
     this.options = options;
@@ -56,9 +60,14 @@ public class SpecRunner {
 
   public void run() {
 
+    SpecReporter reporter = new SpecReporterDelegate(options.reporters);
     LoadPath loadPath = new LoadPathHelper(options.loadPathOptions).build();
-    ArrayList<String> modules = SpecFileFinder.findModules(options.modules);
-    Runtime runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
+
+    modules = SpecFileFinder.findModules(options.modules);
+    reporter.onFoundSpecModules(this);
+
+    runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
+    reporter.onCompiledSpecModules(this);
 
     // evaluate
     HashMap<String, Value> valueNodes = NodeHelper.evalValueNodes(runtime, modules);
@@ -67,7 +76,6 @@ public class SpecRunner {
     HashMap<String, SpecNode> nodes = NodeHelper.parseNodes(valueNodes, options.effects, runtime);
 
     // filtering
-
     new Filter(options.filters, options.tags, options.runNotTagged)
         .filter(nodes.values());
 
@@ -91,12 +99,24 @@ public class SpecRunner {
     SuiteNode suite = new SuiteNode().setNodes(fileNodes);
 
     // execution
-    specContext = new SpecContext(runtime, options.reporters);
+    specContext = new SpecContext(runtime, reporter);
     specContext.run(suite);
   }
 
   public boolean hasErrors(){
     return specContext.hasErrors();
+  }
+
+  public SpecRunnerOptions getOptions() {
+    return options;
+  }
+
+  public ArrayList<String> getModules() {
+    return modules;
+  }
+
+  public Runtime getRuntime() {
+    return runtime;
   }
 
 }

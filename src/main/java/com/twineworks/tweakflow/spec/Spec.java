@@ -45,13 +45,13 @@ public class Spec {
 
     ArgumentParser parser = ArgumentParsers.newFor("spec").build();
 
-    parser.addArgument("-I", "--load_path")
+    parser.addArgument("-I", "--load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
-    parser.addArgument("-R", "--resource_load_path")
+    parser.addArgument("-R", "--resource-load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
@@ -71,7 +71,7 @@ public class Spec {
         .type(String.class)
         .action(Arguments.append());
 
-    parser.addArgument("-ro", "--reporter_option")
+    parser.addArgument("-ro", "--reporter-option")
         .required(false)
         .action(Arguments.append())
         .setDefault(new ArrayList<String>())
@@ -87,6 +87,11 @@ public class Spec {
         .action(Arguments.append());
 
     parser.addArgument("--color")
+        .setDefault(Boolean.FALSE)
+        .action(Arguments.storeTrue())
+        .type(Boolean.class);
+
+    parser.addArgument("--tty")
         .setDefault(Boolean.FALSE)
         .action(Arguments.storeTrue())
         .type(Boolean.class);
@@ -158,10 +163,21 @@ public class Spec {
         reporterOpts.put("color", "true");
       }
 
+      // --tty as shortcut for -reporter_option tty true
+      if (res.getBoolean("tty")){
+        reporterOpts.put("tty", "true");
+      }
+
       // color auto-detection
       String colorOption = reporterOpts.get("color");
       if (colorOption == null || colorOption.equalsIgnoreCase("auto")){
         reporterOpts.put("color", System.console() == null ? "false" : "true");
+      }
+
+      // tty auto-detection
+      String ttyOption = reporterOpts.get("tty");
+      if (ttyOption == null || ttyOption.equalsIgnoreCase("auto")){
+        reporterOpts.put("tty", System.console() == null ? "false" : "true");
       }
 
       // reporters

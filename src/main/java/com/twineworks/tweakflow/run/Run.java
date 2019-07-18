@@ -84,13 +84,13 @@ public class Run {
 
     ArgumentParser parser = ArgumentParsers.newFor("run").build();
 
-    parser.addArgument("-I", "--load_path")
+    parser.addArgument("-I", "--load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
-    parser.addArgument("-R", "--resource_load_path")
+    parser.addArgument("-R", "--resource-load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
@@ -111,7 +111,7 @@ public class Run {
         .type(StringArg.class)
         .action(Arguments.append());
 
-    parser.addArgument("-ea", "--eval_arg")
+    parser.addArgument("-ea", "--eval-arg")
         .required(false)
         .dest("arg")
         .type(EvalArg.class)

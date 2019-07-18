@@ -22,32 +22,19 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.runner.SpecRunner;
+public class ConsoleHelper {
+  // Reset
+  public static final String RESET = "\033[0m";
+  public static final String BOLD = "\033[1m";
+  public static final String FAINT = "\033[2m";
+  public static final String YELLOW = "\033[0;33m";
+  public static final String GREEN = "\033[0;32m";
+  public static final String RED = "\033[0;31m";
+  public static final String CURSOR_LEFT = "\033[1;D";
 
-import java.util.Map;
-
-public interface SpecReporter {
-
-  void onFoundSpecModules(SpecRunner specRunner);
-  void onCompiledSpecModules(SpecRunner specRunner);
-
-  void onEnterSuite(SuiteNode node);
-  void onLeaveSuite(SuiteNode node);
-  void onEnterFile(FileNode node);
-  void onLeaveFile(FileNode node);
-  void onEnterDescribe(DescribeNode node);
-  void onEnterBefore(BeforeNode node);
-  void onLeaveBefore(BeforeNode node);
-  void onEnterAfter(AfterNode node);
-  void onLeaveAfter(AfterNode node);
-  void onEnterSubject(SpecNode node);
-  void onLeaveSubject(SpecNode node);
-  void onLeaveDescribe(DescribeNode node);
-  void onEnterIt(ItNode node);
-  void onLeaveIt(ItNode node);
-
-  void setOptions(Map<String, String> options);
+  public static String cursorLeft(int n){
+    return "\033["+n+";D";
+  }
 }

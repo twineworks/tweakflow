@@ -22,32 +22,18 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.reporter.anim;
 
-import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.runner.SpecRunner;
+public class AnimHelper {
 
-import java.util.Map;
+  public static String repeat(int times, String str){
+    if (times <= 0) return "";
+    if (times == 1) return str;
 
-public interface SpecReporter {
-
-  void onFoundSpecModules(SpecRunner specRunner);
-  void onCompiledSpecModules(SpecRunner specRunner);
-
-  void onEnterSuite(SuiteNode node);
-  void onLeaveSuite(SuiteNode node);
-  void onEnterFile(FileNode node);
-  void onLeaveFile(FileNode node);
-  void onEnterDescribe(DescribeNode node);
-  void onEnterBefore(BeforeNode node);
-  void onLeaveBefore(BeforeNode node);
-  void onEnterAfter(AfterNode node);
-  void onLeaveAfter(AfterNode node);
-  void onEnterSubject(SpecNode node);
-  void onLeaveSubject(SpecNode node);
-  void onLeaveDescribe(DescribeNode node);
-  void onEnterIt(ItNode node);
-  void onLeaveIt(ItNode node);
-
-  void setOptions(Map<String, String> options);
+    StringBuilder sb = new StringBuilder();
+    while(times-- > 0){
+      sb.append(str);
+    }
+    return sb.toString();
+  }
 }

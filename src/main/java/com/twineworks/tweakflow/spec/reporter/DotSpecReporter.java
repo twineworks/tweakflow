@@ -25,9 +25,13 @@
 package com.twineworks.tweakflow.spec.reporter;
 
 import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleColors;
+import com.twineworks.tweakflow.spec.reporter.anim.ConsoleAnimator;
+import com.twineworks.tweakflow.spec.reporter.anim.DotWaitAnimation;
+import com.twineworks.tweakflow.spec.reporter.anim.DotBarAnimation;
+import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleHelper;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import com.twineworks.tweakflow.spec.runner.SpecRunner;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.PrintStream;
@@ -41,8 +45,10 @@ public class DotSpecReporter implements SpecReporter {
   private int pending = 0;
   private int errors = 0;
   private boolean color = false;
+  private boolean tty = false;
   private int dots = 0;
 
+  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
   private PrintStream out;
   private ArrayList<SpecNode> errorNodes = new ArrayList<>();
 
@@ -63,9 +69,9 @@ public class DotSpecReporter implements SpecReporter {
     if (!node.isSuccess() && node.didRun()){
       errors++;
       errorNodes.add(node);
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       dot("!");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.flush();
     }
   }
@@ -79,9 +85,9 @@ public class DotSpecReporter implements SpecReporter {
     if (!node.isSuccess() && node.didRun()){
       errors++;
       errorNodes.add(node);
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       dot("!");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.flush();
     }
   }
@@ -96,9 +102,9 @@ public class DotSpecReporter implements SpecReporter {
     if (!node.isSuccess() && node.didRun()){
       errors++;
       errorNodes.add(node);
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       dot("!");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
       out.flush();
     }
   }
@@ -125,23 +131,53 @@ public class DotSpecReporter implements SpecReporter {
 
     if (node.isPending()) {
       pending++;
-      if (color) out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleHelper.YELLOW);
       dot("~");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     } else if (node.isSuccess()) {
       passing++;
-      if (color) out.print(ConsoleColors.GREEN);
+      if (color) out.print(ConsoleHelper.GREEN);
       dot(".");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     } else {
       if (node.didRun()) {
         errorNodes.add(node);
       }
       failing++;
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       dot("!");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
+    out.flush();
+
+  }
+
+  @Override
+  public void onFoundSpecModules(SpecRunner specRunner) {
+    int moduleCount = specRunner.getModules().size();
+    out.println();
+    printIndent();
+    out.print("compiling "+moduleCount+" spec modules ");
+
+    // little waiting animation
+    consoleAnimator.startAnimation(tty ? new DotBarAnimation(out, Math.min(Math.max(moduleCount+2, 5), 12)) : new DotWaitAnimation(out));
+    out.flush();
+  }
+
+  @Override
+  public void onCompiledSpecModules(SpecRunner specRunner) {
+    consoleAnimator.finishAnimation();
+    long compilationMillis = specRunner.getRuntime().getAnalysisResult().getAnalysisDurationMillis();
+    out.println();
+    printIndent();
+    out.print("compilation complete ");
+
+    if (color) out.print(ConsoleHelper.FAINT);
+    out.print(" (");
+    out.print(HumanReadable.formatDuration(compilationMillis));
+    out.print(")");
+    if (color) out.print(ConsoleHelper.RESET);
+    out.println();
     out.flush();
 
   }
@@ -156,34 +192,34 @@ public class DotSpecReporter implements SpecReporter {
     out.println();
     out.println();
     printIndent();
-    if (color) out.print(ConsoleColors.GREEN);
+    if (color) out.print(ConsoleHelper.GREEN);
     out.print(passing + " passing");
-    if (color) out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleHelper.RESET);
     if (pending > 0) {
       out.print(", ");
-      if (color) out.print(ConsoleColors.YELLOW);
+      if (color) out.print(ConsoleHelper.YELLOW);
       out.print(pending + " pending");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
     if (failing > 0) {
       out.print(", ");
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print(failing + " failing");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
     if (errors > 0){
       out.print(" and ");
-      if (color) out.print(ConsoleColors.RED);
+      if (color) out.print(ConsoleHelper.RED);
       out.print(errors + " error");
       if (errors > 1) out.print("s");
-      if (color) out.print(ConsoleColors.RESET);
+      if (color) out.print(ConsoleHelper.RESET);
     }
 
-    if (color) out.print(ConsoleColors.FAINT);
+    if (color) out.print(ConsoleHelper.FAINT);
     out.print(" (");
     out.print(HumanReadable.formatDuration(node.getDurationMillis()));
     out.print(")");
-    if (color) out.print(ConsoleColors.RESET);
+    if (color) out.print(ConsoleHelper.RESET);
     out.println();
 
     int i = 1;
@@ -221,7 +257,12 @@ public class DotSpecReporter implements SpecReporter {
       color = true;
     }
 
-    if (color && System.getProperty("os.name").toLowerCase().startsWith("win")){
+    // turn on ansi tty animations?
+    if (options.getOrDefault("tty", "false").equalsIgnoreCase("true")){
+      tty = true;
+    }
+
+    if ((color || tty) && System.getProperty("os.name").toLowerCase().startsWith("win")){
       this.out = AnsiConsole.out;
     }
     else {

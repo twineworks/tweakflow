@@ -82,15 +82,15 @@ public class Analysis {
     try {
       AnalysisSet analysisSet = new AnalysisSet(loadPath);
       Loader.load(loadPath, paths, analysisSet.getUnits(), true);
-      return analyze(analysisSet);
+      return analyze(analysisSet, start);
     } catch (RuntimeException e){
       long end = System.currentTimeMillis();
       return AnalysisResult.error(LangException.wrap(e), end-start);
     }
   }
 
-  public static AnalysisResult analyze(AnalysisSet analysisSet){
-    long start = System.currentTimeMillis();
+  public static AnalysisResult analyze(AnalysisSet analysisSet, long startMillis){
+    long start = startMillis;
     try {
       analyzeMetaData(analysisSet);
       buildScope(analysisSet);

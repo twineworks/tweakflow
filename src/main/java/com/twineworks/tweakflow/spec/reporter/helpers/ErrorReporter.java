@@ -70,23 +70,23 @@ public class ErrorReporter {
       errorLocation = currentDir.relativize(Paths.get(errorLocation)).toString();
     } catch (Exception ignored){}
 
-    if (color) sb.append(ConsoleColors.RED);
+    if (color) sb.append(ConsoleHelper.RED);
     sb.append("  #").append(errorNr).append(" Subject evaluation failure. The entire describe block is marked as failed.").append(nl);
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("     spec: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(node.getParent().getFullName()).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("       at: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(errorLocation).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("    error: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
     sb.append(indented("           ", node.getErrorMessage()));
 
@@ -103,23 +103,23 @@ public class ErrorReporter {
       errorLocation = currentDir.relativize(Paths.get(node.at().file)).toString()+":"+node.at().line;
     } catch (Exception ignored){}
 
-    if (color) sb.append(ConsoleColors.RED);
+    if (color) sb.append(ConsoleHelper.RED);
     sb.append("  #").append(errorNr).append(" Before hook failure. The entire describe block is marked as failed.").append(nl);
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("     spec: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(node.getParent().getFullName()).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("       at: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(errorLocation).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("    error: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
     sb.append(indented("           ", node.getErrorMessage()));
 
@@ -138,30 +138,30 @@ public class ErrorReporter {
 
     String ind = "           ";
 
-    if (color) sb.append(ConsoleColors.RED);
+    if (color) sb.append(ConsoleHelper.RED);
     sb.append("  #").append(errorNr);
     sb.append(" Spec failure").append(nl);
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("     spec: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(node.getFullName()).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("       at: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
     sb.append(errorLocation).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("    error: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
     sb.append(indented(ind, node.getErrorMessage())).append(nl);
 
-    if (color) sb.append(ConsoleColors.FAINT);
+    if (color) sb.append(ConsoleHelper.FAINT);
     sb.append("     body: ");
-    if (color) sb.append(ConsoleColors.RESET);
+    if (color) sb.append(ConsoleHelper.RESET);
 
     sb.append(indented(ind, node.getBody()));
 

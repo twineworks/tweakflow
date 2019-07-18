@@ -58,13 +58,13 @@ public class DocMain {
 
     ArgumentParser parser = ArgumentParsers.newFor("doc").build();
 
-    parser.addArgument("-I", "--load_path")
+    parser.addArgument("-I", "--load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())
         .action(Arguments.append());
 
-    parser.addArgument("-R", "--resource_load_path")
+    parser.addArgument("-R", "--resource-load-path")
         .required(false)
         .type(String.class)
         .setDefault(new ArrayList<String>())

@@ -22,169 +22,145 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.runner;
+package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.SpecReporter;
+import com.twineworks.tweakflow.spec.runner.SpecRunner;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
-public class SpecContext implements SpecReporter {
+public class SpecReporterDelegate implements SpecReporter {
 
-  private final ArrayDeque<Value> subjects = new ArrayDeque<>();
-  private final Runtime runtime;
-  private int errors = 0;
-  private final SpecReporter reporter;
+  private final ArrayList<SpecReporter> reporters;
 
-  public SpecContext(Runtime runtime, SpecReporter reporter) {
-    this.runtime = runtime;
-    this.reporter = reporter;
+  public SpecReporterDelegate(Collection<SpecReporter> reporters) {
+    this.reporters = new ArrayList<>(reporters);
   }
-
-  public void run(SpecNode node){
-    if (node instanceof DescribeNode){
-      DescribeNode dNode = (DescribeNode) node;
-      if (dNode.isSelected()){
-        node.run(this);
-      }
-    }
-    else if (node instanceof ItNode){
-      ItNode itNode = (ItNode) node;
-      if (itNode.isSelected()){
-        node.run(this);
-      }
-    }
-    else {
-      node.run(this);
-    }
-  }
-
-  public Runtime getRuntime(){
-    return runtime;
-  }
-
-  public SpecReporter getReporter() {
-    return this;
-  }
-
-  public Value getSubject() {
-    return subjects.peek();
-  }
-
-  public void setSubject(Value subject) {
-    // replace current subject
-    subjects.pop();
-    subjects.push(subject);
-  }
-
-  //
-  // reporter delegation
-  //
 
   @Override
   public void onFoundSpecModules(SpecRunner specRunner) {
 
+    for (SpecReporter reporter : reporters) {
+      reporter.onFoundSpecModules(specRunner);
+    }
   }
 
   @Override
   public void onCompiledSpecModules(SpecRunner specRunner) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onCompiledSpecModules(specRunner);
+    }
 
   }
 
   @Override
   public void onEnterSuite(SuiteNode node) {
-    subjects.push(Values.NIL);
-    reporter.onEnterSuite(node);
+
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterSuite(node);
+    }
   }
 
   @Override
   public void onEnterDescribe(DescribeNode node) {
-    // inherit current subject
-    subjects.push(subjects.peek());
-    reporter.onEnterDescribe(node);
-
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterDescribe(node);
+    }
   }
 
   @Override
   public void onEnterBefore(BeforeNode node) {
-    reporter.onEnterBefore(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterBefore(node);
+    }
   }
 
   @Override
   public void onLeaveBefore(BeforeNode node) {
-    reporter.onLeaveBefore(node);
-    if (node.didRun() && !node.isSuccess()) errors++;
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveBefore(node);
+    }
   }
 
   @Override
   public void onEnterAfter(AfterNode node) {
-    reporter.onEnterAfter(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterAfter(node);
+    }
   }
 
   @Override
   public void onLeaveAfter(AfterNode node) {
-    reporter.onLeaveAfter(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveAfter(node);
+    }
   }
 
   @Override
   public void onEnterSubject(SpecNode node) {
-    reporter.onEnterSubject(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterSubject(node);
+    }
   }
 
   @Override
   public void onLeaveSubject(SpecNode node) {
-    reporter.onLeaveSubject(node);
-    if (node.didRun() && !node.isSuccess()) errors++;
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveSubject(node);
+    }
   }
 
   @Override
   public void onLeaveDescribe(DescribeNode node) {
-    reporter.onLeaveDescribe(node);
-    subjects.pop();
-    if (node.didRun() && !node.isSuccess()) errors++;
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveDescribe(node);
+    }
   }
 
   @Override
   public void onEnterIt(ItNode node) {
-    reporter.onEnterIt(node);
-  }
-
-  @Override
-  public void onLeaveIt(ItNode node) {
-    reporter.onLeaveIt(node);
-
-    if (!node.isPending() && node.didRun() && !node.isSuccess()) {
-      errors++;
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterIt(node);
     }
 
   }
 
   @Override
+  public void onLeaveIt(ItNode node) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveIt(node);
+    }
+  }
+
+  @Override
   public void onLeaveSuite(SuiteNode node) {
-    reporter.onLeaveSuite(node);
-    subjects.pop();
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveSuite(node);
+    }
   }
 
   @Override
   public void onEnterFile(FileNode node) {
-    reporter.onEnterFile(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onEnterFile(node);
+    }
   }
 
   @Override
   public void onLeaveFile(FileNode node) {
-    reporter.onLeaveFile(node);
+    for (SpecReporter reporter : reporters) {
+      reporter.onLeaveFile(node);
+    }
   }
 
   @Override
   public void setOptions(Map<String, String> options) {
-    reporter.setOptions(options);
+    for (SpecReporter reporter : reporters) {
+      reporter.setOptions(options);
+    }
   }
 
-  public boolean hasErrors() {
-    return errors > 0;
-  }
 }
