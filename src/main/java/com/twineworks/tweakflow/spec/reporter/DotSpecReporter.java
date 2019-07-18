@@ -66,6 +66,7 @@ public class DotSpecReporter implements SpecReporter {
       if (color) out.print(ConsoleColors.RED);
       dot("!");
       if (color) out.print(ConsoleColors.RESET);
+      out.flush();
     }
   }
 
@@ -81,6 +82,7 @@ public class DotSpecReporter implements SpecReporter {
       if (color) out.print(ConsoleColors.RED);
       dot("!");
       if (color) out.print(ConsoleColors.RESET);
+      out.flush();
     }
   }
 
@@ -97,6 +99,7 @@ public class DotSpecReporter implements SpecReporter {
       if (color) out.print(ConsoleColors.RED);
       dot("!");
       if (color) out.print(ConsoleColors.RESET);
+      out.flush();
     }
   }
 
@@ -114,7 +117,6 @@ public class DotSpecReporter implements SpecReporter {
       out.print(getIndent());
     }
     out.print(c);
-    out.flush();
 
   }
 
@@ -140,6 +142,7 @@ public class DotSpecReporter implements SpecReporter {
       dot("!");
       if (color) out.print(ConsoleColors.RESET);
     }
+    out.flush();
 
   }
 
@@ -191,6 +194,7 @@ public class DotSpecReporter implements SpecReporter {
     }
 
     out.println();
+    out.flush();
   }
 
   @Override
