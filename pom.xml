@@ -273,6 +273,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipTests}</skip>
                             <classpathScope>test</classpathScope>
                             <mainClass>com.twineworks.tweakflow.spec.Spec</mainClass>
                             <arguments>
