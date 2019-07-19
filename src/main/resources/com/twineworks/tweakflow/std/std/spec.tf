@@ -1,4 +1,4 @@
-import data, math from 'std';
+import data, math, regex from 'std';
 
 export assert.expect as expect;
 export assert.assert as assert;
@@ -180,6 +180,15 @@ export library to {
       :expected expected,
       :success x === expected
     };
+
+  match_regex: (string expected) -> (x) ->
+    {
+      :semantic "to match regular expression",
+      :expected expected,
+      :success x is string && regex.matching(expected)(x)
+    };
+
+  be_like: match_regex;
 
   be_greater_than: (expected) -> (x) ->
     {
