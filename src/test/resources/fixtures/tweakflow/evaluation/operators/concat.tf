@@ -1,4 +1,4 @@
-import expect, expect_error, to from "std/assert.tf";
+import expect, expect_error, to from "std/spec";
 
 library lib {
   string a: "alice";

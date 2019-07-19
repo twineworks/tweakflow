@@ -1,5 +1,5 @@
 import fun, core, data, math from "std";
-import expect, expect_error, to from "std/assert.tf";
+import expect, expect_error, to from "std/spec";
 
 alias fun.signature as sig;
 alias data.map as map;

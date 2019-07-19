@@ -1,4 +1,4 @@
-import core, fun, data, regex, strings, math, time from 'std.tf';
+import data, math from 'std';
 
 export assert.expect as expect;
 export assert.assert as assert;
@@ -13,7 +13,6 @@ export spec.after as after;
 alias data.size as size;
 alias data.delete as delete;
 alias data.reduce_until as reduce_until;
-alias core.hash as hash;
 
 library util {
 
@@ -40,24 +39,6 @@ library util {
       );
     }
     !check[:abort] && check[:ys] === [];
-
-  path_sep: "/";
-
-  path_line_char:
-    regex.splitting(":");
-
-  path_elements:
-    regex.splitting(path_sep);
-
-  linkable_trace_line: (t) ->
-    let {
-      parts: data.zip_dict(["path", "line", "char"], path_line_char(t));
-      elements: path_elements(parts[:path]);
-      line: parts[:line];
-      dir_path: strings.join(data.init(elements), path_sep);
-      filename: data.last(elements);
-    }
-    "  at . #{dir_path}#{path_sep}(#{filename}:#{line})";
 
 }
 
