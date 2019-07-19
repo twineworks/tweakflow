@@ -185,21 +185,24 @@ export library to {
     {
       :semantic "to be greater than",
       :expected expected,
-      :success x > expected
+      :success (x is double || x is long) && (expected is double || expected is long) && x > expected
     };
 
   be_less_than: (expected) -> (x) ->
     {
       :semantic "to be less than",
       :expected expected,
-      :success x < expected
+      :success (x is double || x is long) && (expected is double || expected is long)  && x < expected
     };
 
-  be_between: (expected_low, expected_high, low_inclusive=true, high_inclusive=true) -> (x) ->
+  be_between: (expected_low, expected_high, boolean low_inclusive=true, boolean high_inclusive=true) -> (x) ->
     {
       :semantic "to be between",
       :expected [expected_low, expected_high],
-      :success (if low_inclusive (expected_low <= x) else (expected_low < x)) &&
+      :success (expected_low is long || expected_low is double) &&
+               (expected_high is long || expected_high is double) &&
+               (x is long || x is double) &&
+               (if low_inclusive (expected_low <= x) else (expected_low < x)) &&
                (if high_inclusive (x <= expected_high) else (x < expected_high))
     };
 
@@ -207,9 +210,17 @@ export library to {
     {
       :semantic "to be within #{precision} of",
       :expected expected,
-      :success math.abs(expected-x) <= precision
+      :success
+        (x is long || x is double) &&
+        (expected is long || expected is double) &&
+        (!math.NaN?(expected)) &&
+        (!math.NaN?(x)) &&
+        (!math.NaN?(precision)) &&
+        (
+          (precision == Infinity) ||
+          (math.abs(expected-x) <= precision)
+        )
     };
-    #["to be close to", math.abs(expected-x) <= precision, "abs(#{expected} - x) <= #{precision}"];
 
   be_permutation_of: (list expected) -> (x) ->
     {
@@ -318,5 +329,67 @@ export library to {
       :success x is function
     };
 
+  be_numeric: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a long or double",
+      :success x is long || x is double
+    };
+
+  be_long: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a long",
+      :success x is long
+    };
+
+  be_double: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a double",
+      :success x is double
+    };
+
+  be_string: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a string",
+      :success x is string
+    };
+
+  be_binary: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a binary",
+      :success x is binary
+    };
+
+  be_boolean: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a boolean",
+      :success x is boolean
+    };
+
+  be_dict: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a dict",
+      :success x is dict
+    };
+
+  be_list: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a list",
+      :success x is list
+    };
+
+  be_datetime: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a datetime",
+      :success x is datetime
+    };
 
 }
