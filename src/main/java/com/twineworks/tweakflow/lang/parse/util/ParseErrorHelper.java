@@ -162,9 +162,17 @@ public class ParseErrorHelper {
     else if (exp.size() == 1 && !exp.contains(TweakFlowParser.EOF)) {
       int t = exp.iterator().next();
       String expectedToken = parser.getVocabulary().getLiteralName(t);
-      msg.append("expecting ").append(expectedToken);
+      if (expectedToken != null){
+        msg.append("expecting ").append(expectedToken);
+      }
+      else{
+        msg.append("parse error");
+      }
 
       switch (t) {
+        case TweakFlowParser.IDENTIFIER:
+          msg.append(" - expecting identifier");
+          break;
         case TweakFlowParser.RP:
         case TweakFlowParser.LP:
           if (ctx instanceof TweakFlowParser.ExpressionContext) {
