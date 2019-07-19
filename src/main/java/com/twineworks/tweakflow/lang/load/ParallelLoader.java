@@ -41,23 +41,43 @@ import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParallelLoader {
 
   private final LoadPath loadPath;
-  public ConcurrentHashMap<String, AnalysisUnit> analysisUnits = new ConcurrentHashMap<>();
-  public ConcurrentHashMap<String, ParseUnit> parseUnits = new ConcurrentHashMap<>();
-  public ConcurrentHashMap<String, Throwable> errors = new ConcurrentHashMap<>();
+  private final ExecutorService es;
+  private final ConcurrentHashMap<String, AnalysisUnit> analysisUnits = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, ParseUnit> parseUnits = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Throwable> errors = new ConcurrentHashMap<>();
 
-  private final ForkJoinPool es;
+  private final AtomicInteger taskCount = new AtomicInteger(0);
 
   public ParallelLoader(LoadPath loadPath) {
     this.loadPath = loadPath;
-    es = (ForkJoinPool) Executors.newWorkStealingPool();
+    synchronized (ParallelLoader.class) {
+      es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    }
+  }
+
+  private void waitForTasks() {
+    synchronized (taskCount) {
+      while (taskCount.get() != 0) {
+        try {
+          taskCount.wait();
+        } catch (InterruptedException e) {
+          throw LangException.wrap(e);
+        }
+      }
+    }
   }
 
   public Map<String, AnalysisUnit> load(List<String> modulePaths) {
@@ -68,31 +88,36 @@ public class ParallelLoader {
         es.submit(new Resolver(modulePath));
       }
 
-      es.awaitQuiescence(Long.MAX_VALUE, TimeUnit.SECONDS);
+      waitForTasks();
 
       // examine errors
-      if (!errors.isEmpty()){
+      if (!errors.isEmpty()) {
         // pick any error and rethrow
         throw LangException.wrap(errors.values().iterator().next());
       }
 
       // no errors, parse all units in parallel
+      ArrayList<Loader> loaderTasks = new ArrayList<>();
       for (ParseUnit parseUnit : parseUnits.values()) {
-        es.submit(new Loader(parseUnit));
+        loaderTasks.add(new Loader(parseUnit));
       }
 
-      es.awaitQuiescence(Long.MAX_VALUE, TimeUnit.SECONDS);
+      try {
+        es.invokeAll(loaderTasks);
+      } catch (InterruptedException e) {
+        throw LangException.wrap(e);
+      }
 
       // examine errors
-      if (!errors.isEmpty()){
+      if (!errors.isEmpty()) {
         // pick any error and rethrow
         throw LangException.wrap(errors.values().iterator().next());
       }
 
       // all units are loaded, link import units
       for (AnalysisUnit unit : analysisUnits.values()) {
-        if (unit.getUnit() instanceof ModuleNode){
-          ModuleNode m = (ModuleNode)unit.getUnit();
+        if (unit.getUnit() instanceof ModuleNode) {
+          ModuleNode m = (ModuleNode) unit.getUnit();
           for (ImportNode anImport : m.getImports()) {
             String importPath = ((StringNode) anImport.getModulePath()).getStringVal();
 
@@ -100,8 +125,7 @@ public class ParallelLoader {
             if (importPath.startsWith(".")) {
               Resolved resolved = loadPath.resolve(unit.getPath(), unit.getLocation(), importPath);
               key = resolved.location.getParseUnit(resolved.path).getPath();
-            }
-            else{
+            } else {
               key = loadPath.findParseUnit(importPath).getPath();
             }
 
@@ -128,57 +152,61 @@ public class ParallelLoader {
 
     @Override
     public Boolean call() {
-
       long loadStart = System.currentTimeMillis();
       String parseUnitKey = parseUnit.getPath();
 
-      ParseResult parseResult = null;
-      UnitNode unitNode;
+      try {
 
-      Map<String, ParseResult> parseResultCache = loadPath.getParseResultCache();
-      if (parseResultCache != null){
-        parseResult = parseResultCache.get(parseUnitKey);
-      }
+        ParseResult parseResult = null;
+        UnitNode unitNode;
 
-      if (parseResult == null){
-        Parser parser = new Parser(parseUnit);
-        parseResult = parser.parseUnit();
-
-        if (!parseResult.isSuccess()){
-          errors.putIfAbsent(parseUnitKey, parseResult.getException());
-          return Boolean.FALSE;
+        Map<String, ParseResult> parseResultCache = loadPath.getParseResultCache();
+        if (parseResultCache != null) {
+          parseResult = parseResultCache.get(parseUnitKey);
         }
 
-        if (parseResultCache != null && parseUnit.getLocation().allowsCaching()){
-          parseResultCache.put(parseUnitKey, parseResult);
-          // cached the result, need to work with a copy of the parsed node
+        if (parseResult == null) {
+          Parser parser = new Parser(parseUnit);
+          parseResult = parser.parseUnit();
+
+          if (!parseResult.isSuccess()) {
+            errors.putIfAbsent(parseUnitKey, parseResult.getException());
+            return Boolean.FALSE;
+          }
+
+          if (parseResultCache != null && parseUnit.getLocation().allowsCaching()) {
+            parseResultCache.put(parseUnitKey, parseResult);
+            // cached the result, need to work with a copy of the parsed node
+            unitNode = (UnitNode) parseResult.getNode().copy();
+          } else {
+            // not caching the result, use the node directly
+            unitNode = (UnitNode) parseResult.getNode();
+          }
+        } else {
+          // found a result in cache, work with a copy of the parsed node
           unitNode = (UnitNode) parseResult.getNode().copy();
         }
-        else{
-          // not caching the result, use the node directly
-          unitNode = (UnitNode) parseResult.getNode();
-        }
+
+        AnalysisUnit unit = new AnalysisUnit()
+            .setLocation(parseUnit.getLocation())
+            .setPath(parseUnit.getPath())
+            .setUnit(unitNode)
+            .setStage(AnalysisStage.PARSED)
+            .setParseDurationMillis(parseResult.getParseDurationMillis())
+            .setBuildDurationMillis(parseResult.getBuildDurationMillis());
+
+        long loadEnd = System.currentTimeMillis();
+
+        unit.setLoadDurationMillis(loadEnd - loadStart);
+        unit.setTotalLoadDurationMillis(loadEnd - loadStart);
+
+        analysisUnits.put(parseUnit.getPath(), unit);
+        return Boolean.TRUE;
+
+      } catch (Throwable e) {
+        errors.put(parseUnitKey, e);
+        return Boolean.FALSE;
       }
-      else{
-        // found a result in cache, work with a copy of the parsed node
-        unitNode = (UnitNode) parseResult.getNode().copy();
-      }
-
-      AnalysisUnit unit = new AnalysisUnit()
-          .setLocation(parseUnit.getLocation())
-          .setPath(parseUnit.getPath())
-          .setUnit(unitNode)
-          .setStage(AnalysisStage.PARSED)
-          .setParseDurationMillis(parseResult.getParseDurationMillis())
-          .setBuildDurationMillis(parseResult.getBuildDurationMillis());
-
-      long loadEnd = System.currentTimeMillis();
-
-      unit.setLoadDurationMillis(loadEnd-loadStart);
-      unit.setTotalLoadDurationMillis(loadEnd-loadStart);
-
-      analysisUnits.put(parseUnit.getPath(), unit);
-      return Boolean.TRUE;
     }
 
   }
@@ -189,28 +217,29 @@ public class ParallelLoader {
     private LoadPathLocation pathLocation;
 
     private Resolver(String modulePath) {
-      this.modulePath = modulePath;
-      this.pathLocation = null;
+      this(modulePath, null);
     }
 
     private Resolver(String modulePath, LoadPathLocation pathLocation) {
       this.modulePath = modulePath;
       this.pathLocation = pathLocation;
+      synchronized (taskCount) {
+        taskCount.incrementAndGet();
+      }
     }
 
     @Override
     public Boolean call() {
       try {
 
-        if (pathLocation == null){
+        if (pathLocation == null) {
           pathLocation = loadPath.pathLocationFor(modulePath);
-          if (pathLocation == null){
-            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
+          if (pathLocation == null) {
+            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
           }
-        }
-        else {
-          if (!pathLocation.pathExists(modulePath)){
-            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
+        } else {
+          if (!pathLocation.pathExists(modulePath)) {
+            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
           }
         }
 
@@ -220,31 +249,31 @@ public class ParallelLoader {
         ParseUnit prev = parseUnits.putIfAbsent(key, parseUnit);
 
         // if that unit is already taken care of, don't process
-        if (prev != null) return Boolean.TRUE;
+        if (prev != null) {
+          return Boolean.TRUE;
+        }
 
         List<ImportNode> imports = null;
 
         // already have this unit parsed in cache?
         Map<String, ParseResult> parseResultCache = loadPath.getParseResultCache();
-        if (parseResultCache != null && parseResultCache.containsKey(key)){
+        if (parseResultCache != null && parseResultCache.containsKey(key)) {
 
           UnitNode node = (UnitNode) parseResultCache.get(key).getNode();
 
-          if (node instanceof ModuleNode){
+          if (node instanceof ModuleNode) {
             ModuleNode m = (ModuleNode) node;
             imports = m.getImports();
-          }
-          else{
+          } else {
             // no imports to process
             return Boolean.TRUE;
           }
-        }
-        else{
+        } else {
           // parse just the module head
           Parser parser = new Parser(parseUnit);
           ParseResult parseResult = parser.parseModuleHead();
 
-          if (!parseResult.isSuccess()){
+          if (!parseResult.isSuccess()) {
             throw parseResult.getException();
           }
 
@@ -258,7 +287,7 @@ public class ParallelLoader {
           ExpressionNode pathExp = anImport.getModulePath();
 
           // expect path expression to be a constant string
-          if (!(pathExp instanceof StringNode)){
+          if (!(pathExp instanceof StringNode)) {
             throw new LangException(LangError.INVALID_IMPORT_PATH, pathExp.getSourceInfo());
           }
 
@@ -267,19 +296,24 @@ public class ParallelLoader {
           if (importPath.startsWith(".")) {
             Resolved resolved = loadPath.resolve(modulePath, pathLocation, importPath);
             es.submit(new Resolver(resolved.path, resolved.location));
-          }
-          else {
+          } else {
             es.submit(new Resolver(importPath));
           }
 
         }
+        return Boolean.TRUE;
 
       } catch (Throwable e) {
         errors.put(modulePath, e);
         return Boolean.FALSE;
+      } finally {
+        synchronized (taskCount) {
+          int tasksLeft = taskCount.decrementAndGet();
+          if (tasksLeft == 0) {
+            taskCount.notifyAll();
+          }
+        }
       }
-
-      return Boolean.TRUE;
 
     }
 
