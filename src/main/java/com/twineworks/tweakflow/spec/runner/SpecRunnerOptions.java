@@ -33,6 +33,7 @@ import java.util.HashMap;
 public class SpecRunnerOptions {
   public final LoadPathOptions loadPathOptions = new LoadPathOptions();
   public final ArrayList<String> modules = new ArrayList<>();
+  public final ArrayList<String> globalModules = new ArrayList<>();
   public final ArrayList<SpecReporter> reporters = new ArrayList<>();
   public final HashMap<String, SpecEffect> effects = new HashMap<>();
   public final ArrayList<String> filters = new ArrayList<>();

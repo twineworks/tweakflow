@@ -64,6 +64,13 @@ public class Spec {
         .type(String.class)
         .action(Arguments.append());
 
+    parser.addArgument("-g", "--global")
+        .required(false)
+        .dest("globalModules")
+        .setDefault(new ArrayList<String>())
+        .type(String.class)
+        .action(Arguments.append());
+
     parser.addArgument("-f", "--filter")
         .required(false)
         .dest("filters")
@@ -132,6 +139,10 @@ public class Spec {
 
       List<String> resourceLoadPathArgs = res.getList("resource_load_path");
       options.loadPathOptions.resourceLoadPath.addAll(resourceLoadPathArgs);
+
+      // globals
+      List<String> globalModules = res.getList("globalModules");
+      options.globalModules.addAll(globalModules);
 
       // filters
       List<String> filters = res.getList("filters");

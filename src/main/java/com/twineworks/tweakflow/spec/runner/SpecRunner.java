@@ -78,6 +78,7 @@ public class SpecRunner {
       // compile
       ArrayList<String> toCompile = new ArrayList<>();
       toCompile.add(module);
+      toCompile.addAll(options.globalModules);
 
       Runtime runtime;
       try {
