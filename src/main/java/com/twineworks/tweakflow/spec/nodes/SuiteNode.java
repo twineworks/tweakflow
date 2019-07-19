@@ -24,7 +24,9 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.spec.reporter.SpecReporter;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 public class SuiteNode implements SpecNode {
 
   private String name = "suite";
-  private ArrayList<FileNode> nodes;
+  private ArrayList<FileNode> nodes = new ArrayList<>();
   private long startedMillis;
   private long endedMillis;
 
@@ -43,9 +45,20 @@ public class SuiteNode implements SpecNode {
   private String errorMessage = "OK";
   private Value source;
 
-  public SuiteNode setNodes(ArrayList<FileNode> nodes) {
-    this.nodes = nodes;
-    return this;
+  public void runNode(Runtime runtime, FileNode node, SpecReporter reporter) {
+    this.nodes.add(node);
+
+    SpecContext specContext = new SpecContext(runtime, reporter);
+    specContext.run(node);
+
+    if (!node.isSuccess()){
+      success = false;
+    }
+
+  }
+
+  public ArrayList<FileNode> getNodes() {
+    return nodes;
   }
 
   @Override
@@ -72,19 +85,17 @@ public class SuiteNode implements SpecNode {
     return this;
   }
 
-  @Override
-  public void run(SpecContext context) {
+  public void open(){
     didRun = true;
     startedMillis = System.currentTimeMillis();
-    context.onEnterSuite(this);
-    for (SpecNode node : nodes) {
-      context.run(node);
-      if (!node.isSuccess()) {
-        success = false;
-      }
-    }
+  }
+
+  public void finish(){
     endedMillis = System.currentTimeMillis();
-    context.onLeaveSuite(this);
+  }
+
+  @Override
+  public void run(SpecContext context) {
   }
 
   @Override
@@ -102,6 +113,10 @@ public class SuiteNode implements SpecNode {
   @Override
   public boolean isSuccess() {
     return success;
+  }
+
+  public boolean hasErrors(){
+    return !success;
   }
 
   @Override

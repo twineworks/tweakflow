@@ -30,13 +30,13 @@ import com.twineworks.tweakflow.spec.effects.SpecEffect;
 import com.twineworks.tweakflow.spec.nodes.SpecNode;
 import com.twineworks.tweakflow.spec.nodes.SpecNodes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NodeHelper {
 
-  public static HashMap<String, Value> evalValueNodes(Runtime runtime, ArrayList<String> modules){
+  public static HashMap<String, Value> evalValueNodes(Runtime runtime, List<String> modules) {
 
     Map<String, Runtime.Module> runtimeModules = runtime.getModules();
 
@@ -51,7 +51,7 @@ public class NodeHelper {
 
       Runtime.Library mainLib = module.getLibrary("spec");
 
-      if (!mainLib.hasVar("spec")){
+      if (!mainLib.hasVar("spec")) {
         continue;
       }
 
@@ -64,6 +64,29 @@ public class NodeHelper {
     return valueNodes;
   }
 
+  public static Value evalSpecNode(Runtime runtime, String moduleName) {
+
+    Map<String, Runtime.Module> runtimeModules = runtime.getModules();
+
+    Runtime.Module module = runtimeModules.get(runtime.unitKey(moduleName));
+
+    if (!module.hasLibrary("spec")) {
+      return null;
+    }
+
+    Runtime.Library mainLib = module.getLibrary("spec");
+
+    if (!mainLib.hasVar("spec")) {
+      return null;
+    }
+
+    Runtime.Var mainVar = mainLib.getVar("spec");
+
+    mainVar.evaluate();
+    return mainVar.getValue();
+
+  }
+
   public static HashMap<String, SpecNode> parseNodes(HashMap<String, Value> nodes, HashMap<String, SpecEffect> effects, Runtime runtime) {
 
     HashMap<String, SpecNode> ret = new HashMap<>();
@@ -73,7 +96,7 @@ public class NodeHelper {
     return ret;
   }
 
-  private static SpecNode parseNode(Value node, HashMap<String, SpecEffect> effects, Runtime runtime) {
+  public static SpecNode parseNode(Value node, HashMap<String, SpecEffect> effects, Runtime runtime) {
     return SpecNodes.fromValue(node, effects, runtime);
   }
 }

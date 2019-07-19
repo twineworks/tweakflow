@@ -27,7 +27,6 @@ package com.twineworks.tweakflow.spec.reporter.helpers;
 public class HumanReadable {
 
   /**
-   * Returns a string of format hh:mm:ss.SSS
    * @param ms
    * @return
    */
@@ -60,10 +59,15 @@ public class HumanReadable {
       }
     }
     if (!showHours && !showMinutes && seconds == 0){
-      s.append("<1").append("s");
+      s.append(ms).append("ms");
     }
     else{
-      s.append(seconds).append("s");
+      long millis = ms%1000;
+      s.append(seconds).append(".");
+      if (millis < 100) s.append("0");
+      if (millis < 10) s.append("0");
+          s.append(millis)
+          .append("s");
     }
 
     return s.toString();

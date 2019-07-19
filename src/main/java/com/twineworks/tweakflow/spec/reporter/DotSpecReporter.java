@@ -24,13 +24,13 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.anim.ConsoleAnimator;
-import com.twineworks.tweakflow.spec.reporter.anim.DotWaitAnimation;
-import com.twineworks.tweakflow.spec.reporter.anim.DotBarAnimation;
 import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleHelper;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import com.twineworks.tweakflow.spec.reporter.helpers.PlatformHelper;
 import com.twineworks.tweakflow.spec.runner.SpecRunner;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -157,29 +157,12 @@ public class DotSpecReporter implements SpecReporter {
     int moduleCount = specRunner.getModules().size();
     out.println();
     printIndent();
-    out.print("compiling "+moduleCount+" spec modules ");
+    out.print("running "+moduleCount+" spec modules ");
+    out.println();
 
     // little waiting animation
-    consoleAnimator.startAnimation(tty ? new DotBarAnimation(out, Math.min(Math.max(moduleCount+2, 5), 12)) : new DotWaitAnimation(out));
+    //    consoleAnimator.startAnimation(tty ? new DotBarAnimation(out, Math.min(Math.max(moduleCount+2, 5), 12)) : new DotWaitAnimation(out));
     out.flush();
-  }
-
-  @Override
-  public void onCompiledSpecModules(SpecRunner specRunner) {
-    consoleAnimator.finishAnimation();
-    long compilationMillis = specRunner.getRuntime().getAnalysisResult().getAnalysisDurationMillis();
-    out.println();
-    printIndent();
-    out.print("compilation complete ");
-
-    if (color) out.print(ConsoleHelper.FAINT);
-    out.print(" (");
-    out.print(HumanReadable.formatDuration(compilationMillis));
-    out.print(")");
-    if (color) out.print(ConsoleHelper.RESET);
-    out.println();
-    out.flush();
-
   }
 
   @Override
@@ -262,12 +245,27 @@ public class DotSpecReporter implements SpecReporter {
       tty = true;
     }
 
-    if ((color || tty) && System.getProperty("os.name").toLowerCase().startsWith("win")){
+    if ((color || tty) && PlatformHelper.isWindows()){
       this.out = AnsiConsole.out;
     }
     else {
       this.out = System.out;
     }
+  }
+
+  @Override
+  public void onModuleCompiled(String module, Runtime runtime) {
+
+  }
+
+  @Override
+  public void onModuleFailedToCompile(FileNode node, Throwable error) {
+    errors++;
+    errorNodes.add(node);
+    if (color) out.print(ConsoleHelper.RED);
+    dot("!");
+    if (color) out.print(ConsoleHelper.RESET);
+    out.flush();
   }
 
 }

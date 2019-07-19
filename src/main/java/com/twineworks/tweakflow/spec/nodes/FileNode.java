@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.spec.nodes;
 
+import com.twineworks.tweakflow.lang.analysis.AnalysisResult;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.spec.runner.SpecContext;
 
@@ -42,11 +43,13 @@ public class FileNode implements SpecNode {
   private Throwable cause;
   private String errorMessage = "OK";
   private Value source;
+  private AnalysisResult analysisResult;
 
   public FileNode setNodes(List<SpecNode> nodes) {
     this.nodes = nodes;
     return this;
   }
+
 
   @Override
   public Value getSource() {
@@ -119,4 +122,12 @@ public class FileNode implements SpecNode {
     return endedMillis - startedMillis;
   }
 
+  public AnalysisResult getAnalysisResult() {
+    return analysisResult;
+  }
+
+  public FileNode setAnalysisResult(AnalysisResult analysisResult) {
+    this.analysisResult = analysisResult;
+    return this;
+  }
 }

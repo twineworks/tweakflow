@@ -22,35 +22,11 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.reporter;
+package com.twineworks.tweakflow.spec.reporter.helpers;
 
-import com.twineworks.tweakflow.lang.runtime.Runtime;
-import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.runner.SpecRunner;
+public class PlatformHelper {
 
-import java.util.Map;
-
-public interface SpecReporter {
-
-  void onFoundSpecModules(SpecRunner specRunner);
-
-  void onEnterSuite(SuiteNode node);
-  void onLeaveSuite(SuiteNode node);
-  void onEnterFile(FileNode node);
-  void onLeaveFile(FileNode node);
-  void onEnterDescribe(DescribeNode node);
-  void onEnterBefore(BeforeNode node);
-  void onLeaveBefore(BeforeNode node);
-  void onEnterAfter(AfterNode node);
-  void onLeaveAfter(AfterNode node);
-  void onEnterSubject(SpecNode node);
-  void onLeaveSubject(SpecNode node);
-  void onLeaveDescribe(DescribeNode node);
-  void onEnterIt(ItNode node);
-  void onLeaveIt(ItNode node);
-
-  void setOptions(Map<String, String> options);
-
-  void onModuleCompiled(String module, Runtime runtime);
-  void onModuleFailedToCompile(FileNode module, Throwable error);
+  public static boolean isWindows(){
+    return System.getProperty("os.name").toLowerCase().startsWith("win");
+  }
 }

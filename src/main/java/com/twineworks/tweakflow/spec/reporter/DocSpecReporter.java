@@ -24,13 +24,13 @@
 
 package com.twineworks.tweakflow.spec.reporter;
 
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.anim.ConsoleAnimator;
-import com.twineworks.tweakflow.spec.reporter.anim.DotWaitAnimation;
-import com.twineworks.tweakflow.spec.reporter.anim.DotBarAnimation;
 import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleHelper;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
+import com.twineworks.tweakflow.spec.reporter.helpers.PlatformHelper;
 import com.twineworks.tweakflow.spec.runner.SpecRunner;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -53,7 +53,7 @@ public class DocSpecReporter implements SpecReporter {
   private boolean tty;
   private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
 
-  private final boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
+  private final boolean isWindows = PlatformHelper.isWindows();
 
   private final String OK = isWindows ? "√" : "✓";
   private final String ERR = isWindows ? "×" : "✗";
@@ -209,29 +209,9 @@ public class DocSpecReporter implements SpecReporter {
     int moduleCount = specRunner.getModules().size();
     out.println();
     printIndent();
-    out.print("compiling "+moduleCount+" spec modules ");
-
-    // little waiting animation
-    consoleAnimator.startAnimation(tty ? new DotBarAnimation(out, Math.min(Math.max(moduleCount+2, 5), 12)) : new DotWaitAnimation(out));
-    out.flush();
-  }
-
-  @Override
-  public void onCompiledSpecModules(SpecRunner specRunner) {
-    consoleAnimator.finishAnimation();
-    long compilationMillis = specRunner.getRuntime().getAnalysisResult().getAnalysisDurationMillis();
-    out.println();
-    printIndent();
-    out.print("compilation complete ");
-
-    if (color) out.print(ConsoleHelper.FAINT);
-    out.print(" (");
-    out.print(HumanReadable.formatDuration(compilationMillis));
-    out.print(")");
-    if (color) out.print(ConsoleHelper.RESET);
+    out.print("running "+moduleCount+" spec modules ");
     out.println();
     out.flush();
-
   }
 
   @Override
@@ -285,10 +265,41 @@ public class DocSpecReporter implements SpecReporter {
   }
 
   @Override
+  public void onModuleCompiled(String module, Runtime runtime) {
+
+  }
+
+  @Override
+  public void onModuleFailedToCompile(FileNode node, Throwable error) {
+
+    out.println();
+    errors++;
+    errorNodes.add(node);
+    printIndent();
+    if (color) out.print(ConsoleHelper.RED);
+    out.print("#");
+    out.print(errorNodes.size());
+    out.println(" error processing file: "+node.getName());
+    out.println();
+    depth++;
+    printIndent();
+    out.print(ErrorReporter.indented(getIndent(), ErrorReporter.errorMessageForNode(node)));
+    depth--;
+    if (color) out.print(ConsoleHelper.RESET);
+    out.println();
+    out.flush();
+  }
+
+  @Override
   public void onEnterFile(FileNode node) {
     out.println();
     printIndent();
     out.print(node.getName());
+    if (color) out.print(ConsoleHelper.FAINT);
+    out.print(" (");
+    out.print(HumanReadable.formatDuration(node.getAnalysisResult().getAnalysisDurationMillis()));
+    out.print(")");
+    if (color) out.print(ConsoleHelper.RESET);
     out.println();
     out.println();
     depth++;
@@ -358,12 +369,14 @@ public class DocSpecReporter implements SpecReporter {
       tty = true;
     }
 
-    if (color && System.getProperty("os.name").toLowerCase().startsWith("win")){
+    if ((color || tty) && PlatformHelper.isWindows()){
       this.out = AnsiConsole.out;
     }
     else {
       this.out = System.out;
     }
   }
+
+
 
 }

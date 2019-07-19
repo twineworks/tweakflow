@@ -45,17 +45,18 @@ import com.twineworks.tweakflow.spec.runner.helpers.SpecFileFinder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class SpecRunner {
 
   private final SpecRunnerOptions options;
-  private SpecContext specContext;
   private ArrayList<String> modules;
-  private Runtime runtime;
+  private SuiteNode suite;
+  private Filter filter;
 
   public SpecRunner(SpecRunnerOptions options) {
     this.options = options;
+    suite = new SuiteNode();
+    filter = new Filter(options.filters, options.tags, options.runNotTagged);
   }
 
   public void run() {
@@ -63,48 +64,77 @@ public class SpecRunner {
     SpecReporter reporter = new SpecReporterDelegate(options.reporters);
     LoadPath loadPath = new LoadPathHelper(options.loadPathOptions).build();
 
+    suite.open();
+
+    reporter.onEnterSuite(suite);
+
     modules = SpecFileFinder.findModules(options.modules);
     reporter.onFoundSpecModules(this);
 
-    runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
-    reporter.onCompiledSpecModules(this);
+    modules.sort(Comparator.naturalOrder());
 
-    // evaluate
-    HashMap<String, Value> valueNodes = NodeHelper.evalValueNodes(runtime, modules);
+    for (String module : modules) {
 
-    // parse into nodes, evaluating pre-effects
-    HashMap<String, SpecNode> nodes = NodeHelper.parseNodes(valueNodes, options.effects, runtime);
+      // compile
+      ArrayList<String> toCompile = new ArrayList<>();
+      toCompile.add(module);
 
-    // filtering
-    new Filter(options.filters, options.tags, options.runNotTagged)
-        .filter(nodes.values());
+      Runtime runtime;
+      try {
+        runtime = TweakFlow.compile(loadPath, toCompile, new SimpleDebugHandler());
+        reporter.onModuleCompiled(module, runtime);
+      } catch (Throwable e){
 
-    // for every selected describe node, wrap it in a File Node and add to suite
-    ArrayList<FileNode> fileNodes = new ArrayList<>();
-    for (String key : nodes.keySet()) {
-      SpecNode specNode = nodes.get(key);
-      if (!(specNode instanceof DescribeNode)){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "file "+key+": spec must begin with describe(...)");
+        FileNode fileNode = new FileNode()
+            .setName(module);
+        fileNode.fail(e.getMessage(), e);
+
+        reporter.onModuleFailedToCompile(fileNode, e);
+        suite.fail(e.getMessage(), e);
+        continue;
       }
-      DescribeNode dNode = (DescribeNode) specNode;
-      if (dNode.isSelected()){
-        fileNodes.add(
-            new FileNode()
-                .setName(key)
-                .setNodes(Collections.singletonList(dNode)));
+
+      // evaluate
+      Value specNode = NodeHelper.evalSpecNode(runtime, module);
+      if (specNode == null) {
+        // no spec.spec found in module
+        continue;
       }
+
+      // parse into spec node, evaluating pre-effects
+      SpecNode node = NodeHelper.parseNode(specNode, options.effects, runtime);
+
+      // filtering
+      filter.filter(Collections.singletonList(node));
+
+      // if node is selected run it
+
+      if (!(node instanceof DescribeNode)) {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "file " + module + ": spec must begin with describe(...)");
+      }
+      DescribeNode dNode = (DescribeNode) node;
+      if (dNode.isSelected()) {
+
+        FileNode fileNode = new FileNode()
+            .setName(module)
+            .setNodes(Collections.singletonList(dNode))
+            .setAnalysisResult(runtime.getAnalysisResult());
+
+
+        suite.runNode(runtime, fileNode, reporter);
+
+      }
+
     }
 
-    fileNodes.sort(Comparator.comparing(FileNode::getName));
-    SuiteNode suite = new SuiteNode().setNodes(fileNodes);
+    suite.finish();
+    reporter.onLeaveSuite(suite);
 
-    // execution
-    specContext = new SpecContext(runtime, reporter);
-    specContext.run(suite);
   }
 
-  public boolean hasErrors(){
-    return specContext.hasErrors();
+
+  public boolean hasErrors() {
+    return suite.hasErrors();
   }
 
   public SpecRunnerOptions getOptions() {
@@ -115,8 +145,5 @@ public class SpecRunner {
     return modules;
   }
 
-  public Runtime getRuntime() {
-    return runtime;
-  }
 
 }

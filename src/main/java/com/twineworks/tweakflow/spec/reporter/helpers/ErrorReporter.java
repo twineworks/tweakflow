@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.spec.reporter.helpers;
 
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.spec.nodes.*;
 
 import java.nio.file.Path;
@@ -53,6 +54,9 @@ public class ErrorReporter {
     }
     else if (node instanceof SubjectSpecNode){
       return errorForSubjectSpecNode(errorNr, (SubjectSpecNode) node, color);
+    }
+    else if (node instanceof FileNode){
+      return errorForFileNode(errorNr, (FileNode) node, color);
     }
     else {
       return node.getErrorMessage();
@@ -88,7 +92,7 @@ public class ErrorReporter {
     sb.append("    error: ");
     if (color) sb.append(ConsoleHelper.RESET);
 
-    sb.append(indented("           ", node.getErrorMessage()));
+    sb.append(indented("           ", errorMessageForNode(node)));
 
     return sb.toString();
   }
@@ -121,9 +125,57 @@ public class ErrorReporter {
     sb.append("    error: ");
     if (color) sb.append(ConsoleHelper.RESET);
 
-    sb.append(indented("           ", node.getErrorMessage()));
+    sb.append(indented("           ", errorMessageForNode(node)));
 
     return sb.toString();
+  }
+
+  private static String errorForFileNode(int errorNr, FileNode node, boolean color){
+    StringBuilder sb = new StringBuilder();
+    String nl = System.lineSeparator();
+    String errorLocation = node.getName();
+
+    try {
+      Path currentDir = Paths.get(".").toAbsolutePath();
+      errorLocation = currentDir.relativize(Paths.get(errorLocation)).toString();
+    } catch (Exception ignored){}
+
+    if (color) sb.append(ConsoleHelper.RED);
+    sb.append("  #").append(errorNr).append(" Problem processing spec file. The entire file is skipped.").append(nl);
+    if (color) sb.append(ConsoleHelper.RESET);
+
+    if (color) sb.append(ConsoleHelper.FAINT);
+    sb.append("     file: ");
+    if (color) sb.append(ConsoleHelper.RESET);
+    sb.append(node.getName()).append(nl);
+
+    if (color) sb.append(ConsoleHelper.FAINT);
+    sb.append("       at: ");
+    if (color) sb.append(ConsoleHelper.RESET);
+    sb.append(errorLocation).append(nl);
+
+    if (color) sb.append(ConsoleHelper.FAINT);
+    sb.append("    error: ");
+    if (color) sb.append(ConsoleHelper.RESET);
+
+    String errorMessage = errorMessageForNode(node);
+    sb.append(indented("           ", errorMessage));
+
+    return sb.toString();
+  }
+
+  public static String errorMessageForNode(SpecNode node){
+    // ItNodes construct error messages taking into account
+    // matcher errors
+
+    if (node instanceof ItNode) return node.getErrorMessage();
+    String errorMessage = node.getErrorMessage();
+    Throwable t = node.getCause();
+    if (t instanceof LangException){
+      LangException e = (LangException) t;
+      errorMessage = e.getDigestMessage();
+    }
+    return errorMessage;
   }
 
   private static String errorForItNode(int errorNr, ItNode node, boolean color){

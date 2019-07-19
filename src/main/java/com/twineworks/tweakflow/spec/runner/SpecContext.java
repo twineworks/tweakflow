@@ -87,18 +87,10 @@ public class SpecContext implements SpecReporter {
 
   @Override
   public void onFoundSpecModules(SpecRunner specRunner) {
-
-  }
-
-  @Override
-  public void onCompiledSpecModules(SpecRunner specRunner) {
-
   }
 
   @Override
   public void onEnterSuite(SuiteNode node) {
-    subjects.push(Values.NIL);
-    reporter.onEnterSuite(node);
   }
 
   @Override
@@ -165,23 +157,32 @@ public class SpecContext implements SpecReporter {
 
   @Override
   public void onLeaveSuite(SuiteNode node) {
-    reporter.onLeaveSuite(node);
-    subjects.pop();
   }
 
   @Override
   public void onEnterFile(FileNode node) {
+    subjects.push(Values.NIL);
     reporter.onEnterFile(node);
   }
 
   @Override
   public void onLeaveFile(FileNode node) {
     reporter.onLeaveFile(node);
+    subjects.pop();
   }
 
   @Override
   public void setOptions(Map<String, String> options) {
     reporter.setOptions(options);
+  }
+
+  @Override
+  public void onModuleCompiled(String module, Runtime runtime) {
+  }
+
+  @Override
+  public void onModuleFailedToCompile(FileNode module, Throwable error) {
+
   }
 
   public boolean hasErrors() {

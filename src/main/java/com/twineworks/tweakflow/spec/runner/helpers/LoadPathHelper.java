@@ -30,6 +30,7 @@ import com.twineworks.tweakflow.lang.load.loadpath.ResourceLocation;
 import com.twineworks.tweakflow.spec.runner.LoadPathOptions;
 
 import java.nio.file.Paths;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LoadPathHelper {
 
@@ -68,6 +69,8 @@ public class LoadPathHelper {
         builder.add(location);
       }
     }
+
+    builder.withParseResultCache(new ConcurrentHashMap<>());
 
     return builder.build();
   }

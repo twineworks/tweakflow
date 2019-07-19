@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.spec.reporter.helpers;
 
+import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.spec.nodes.*;
 import com.twineworks.tweakflow.spec.reporter.SpecReporter;
 import com.twineworks.tweakflow.spec.runner.SpecRunner;
@@ -46,14 +47,6 @@ public class SpecReporterDelegate implements SpecReporter {
     for (SpecReporter reporter : reporters) {
       reporter.onFoundSpecModules(specRunner);
     }
-  }
-
-  @Override
-  public void onCompiledSpecModules(SpecRunner specRunner) {
-    for (SpecReporter reporter : reporters) {
-      reporter.onCompiledSpecModules(specRunner);
-    }
-
   }
 
   @Override
@@ -161,6 +154,21 @@ public class SpecReporterDelegate implements SpecReporter {
     for (SpecReporter reporter : reporters) {
       reporter.setOptions(options);
     }
+  }
+
+  @Override
+  public void onModuleCompiled(String module, Runtime runtime) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onModuleCompiled(module, runtime);
+    }
+  }
+
+  @Override
+  public void onModuleFailedToCompile(FileNode module, Throwable error) {
+    for (SpecReporter reporter : reporters) {
+      reporter.onModuleFailedToCompile(module, error);
+    }
+
   }
 
 }
