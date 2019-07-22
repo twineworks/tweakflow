@@ -1,4 +1,4 @@
-import store from "./../../data.tf";
+import store from "./../data.tf";
 import data from "std";
 import assert, expect, expect_error, to, describe, it, subject, before, after from "std/spec";
 
