@@ -33,7 +33,6 @@ library spec {
       describe("evaluates while building test-suite", [
 
         # generate a random amount of passing test cases
-        # and splat them in
         rand((nr) ->
           let {
             specNrs: data.range(1, (nr*10+1) as long);

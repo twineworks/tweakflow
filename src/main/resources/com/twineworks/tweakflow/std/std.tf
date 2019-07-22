@@ -22,7 +22,7 @@
 
 doc
 ~~~
-The standard module contains libraries for general computing tasks.
+The `std` module contains libraries for general computing tasks.
 ~~~
 
 module;
