@@ -285,6 +285,8 @@
                                 <argument>--reporter-option</argument>
                                 <argument>tty</argument>
                                 <argument>false</argument>
+                                <argument>-e</argument>
+                                <argument>com.twineworks.tweakflow.spec.effects.example.ExampleEffects</argument>
                                 <argument>src/test/resources/spec</argument>
                             </arguments>
                         </configuration>
