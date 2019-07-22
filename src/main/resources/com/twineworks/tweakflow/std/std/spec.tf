@@ -99,7 +99,7 @@ false
 
 doc
 ~~~
-The library contains function useful for defining assertions.
+The library contains functions useful for defining assertions.
 ~~~
 library assert {
 
