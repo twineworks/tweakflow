@@ -64,9 +64,9 @@ library assert {
   function expect: (x, f, _stack_offset=3) ->
     let {
       result: (f default to.be_true())(x);
-      semantic: if result is list then result[0] else result[:semantic];
-      success: if result is list then result[1] else result[:success];
-      expected: if result is list then result[2] else result[:expected];
+      semantic: result[:semantic];
+      success: result[:success];
+      expected: result[:expected];
     }
     if !success
       let {
