@@ -1,4 +1,4 @@
-# Tweakflow - safe embeddable scripting for the JVM 
+# Tweakflow - safe embeddable scripting for the JVM
 
 [![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
@@ -9,7 +9,7 @@
 
 Applications can use tweakflow to expose runtime information to an expression-based scripting runtime, allowing users to safely interact with the provided data and collect scripted results.
 
-Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals. 
+Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.
 
 ## Requirements
 Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
@@ -21,7 +21,7 @@ Get the latest release jar from [github](https://github.com/twineworks/tweakflow
 
 Start the REPL using:
 ```bash
-$ java -jar tweakflow-0.14.0.jar repl
+$ java -jar tweakflow-0.15.0.jar repl
 ```
 
 Start typing expressions for the REPL to evaluate:

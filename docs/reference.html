@@ -51,7 +51,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.14.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.15.0</a>
           </li>
         </ul>
         </nav>
@@ -68,8 +68,6 @@
           
           <a class="dropdown-item" href="./tools.html">Tools</a>
           
-          <a class="dropdown-item" href="./modules/std.html">Docs</a>
-          
           <a class="dropdown-item" href="./embedding.html">Embedding</a>
           
           <a class="dropdown-item" href="./reference.html">Reference</a>
@@ -80,6 +78,10 @@
           <hr class="dropdown-divider" />
           
           
+          
+          <a class="dropdown-item" href="./modules/std.html">std</a>
+          
+          <a class="dropdown-item" href="./modules/std/spec.html">std/spec</a>
           
           <a class="dropdown-item" href="https://github.com/twineworks/tweakflow/">GitHub</a>
           
@@ -98,7 +100,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v0.14.0</a
+            ><b>Tweakflow</b> v0.15.0</a
           >
         </li>
         
@@ -110,10 +112,6 @@
         
         <li class="menu__item">
           <a class="menu__item-link" href="./tools.html">Tools</a>
-        </li>
-        
-        <li class="menu__item">
-          <a class="menu__item-link" href="./modules/std.html">Docs</a>
         </li>
         
         <li class="menu__item">
@@ -135,6 +133,14 @@
       <ul class="menu__items">
         
         
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./modules/std.html">std</a>
+        </li>
+        
+        <li class="menu__item">
+          <a class="menu__item-link" href="./modules/std/spec.html">std/spec</a>
+        </li>
         
         <li class="menu__item">
           <a class="menu__item-link" href="https://github.com/twineworks/tweakflow/">GitHub</a>
@@ -319,6 +325,20 @@
 </ul></li>
 <li><a href="#debugging">Debugging</a></li>
 </ul></li>
+<li><a href="#specs">Specs</a>
+<ul>
+<li><a href="#describe">Describe</a></li>
+<li><a href="#subject">Subject</a>
+<ul>
+<li><a href="#constant-subject">Constant subject</a></li>
+<li><a href="#transform-subject">Transform subject</a></li>
+<li><a href="#effect-subject">Effect subject</a></li>
+</ul></li>
+<li><a href="#it">It</a></li>
+<li><a href="#effect">Effect</a></li>
+<li><a href="#before">Before</a></li>
+<li><a href="#after">After</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -470,7 +490,7 @@ It can appear after the <code>0b</code> prefix in leading position, trailing pos
 The separator character may be repeated.</p>
 
 <pre><code class="language-tweakflow"># empty byte array
-&gt; 0b 
+&gt; 0b
 0b
 
 # single byte: 00
@@ -5066,6 +5086,249 @@ DEBUG: calculating sign of x: 0
 DEBUG: x is zero or nil 0
 0
 </code></pre>
+
+<h2 id="specs">Specs</h2>
+
+<p>A spec module contains a library named <code>spec</code> which in turn includes a <code>spec</code> variable. The <code>spec.spec</code> variable contains the definition of the test suite.</p>
+
+<p>See the <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/resources/spec/std/core/hash.spec.tf">test module</a> for the standard library function <a href="./modules/std.html#core-hash">core.hash</a> for reference.</p>
+
+<p>A test suite consists of a tree of nodes. Each node is a dict. The root of the tree must be a <a href="#describe">describe</a> node.</p>
+
+<p>The <a href="./modules/std/spec.html#nodes">nodes</a> library contains functions that create correct node structures.</p>
+
+<h3 id="describe">Describe</h3>
+
+<p>Describe nodes serve as nestable containers for related test cases. They can define a consistent test subject value for all descendant test cases. They can also provide before and after hooks for test suites involving effects.</p>
+
+<p>Describe nodes have the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'describe',
+  :name string,
+  :spec [effect|before|subject|subject_transform|subject_effect|describe|it|after],
+  :at string,
+  :tags [string],
+  :context *
+}
+</code></pre>
+
+<p>The <code>name</code> of the node contributes to the full name of any child <code>describe</code> and <code>it</code> blocks.</p>
+
+<p>The <code>spec</code> key holds a list of child nodes. The following node types are permitted:</p>
+
+<ul>
+<li><a href="#effect">effect</a></li>
+<li><a href="#before">before</a></li>
+<li><a href="#constant-subject">subject</a></li>
+<li><a href="#transform-subject">subject_transform</a></li>
+<li><a href="#effect-subject">subject_effect</a></li>
+<li><a href="#describe">describe</a></li>
+<li><a href="#it">it</a></li>
+<li><a href="#after">after</a></li>
+</ul>
+
+<p>Any <a href="#effect">effect</a> nodes are invoked immediately after construction. The result of the call replaces the effect node in the list. This feature is useful to dynamically generate a nested describe block with tests that depend on an effect, such as filesystem information.</p>
+
+<p>At most one node of type <a href="#constant-subject">subject</a>, <a href="#transform-subject">subject_transform</a>, or <a href="#effect-subject">subject_effect</a> is permitted. If any such node is present, it must precede any nested <a href="#describe">describe</a> and <a href="#it">it</a> blocks.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>tags</code> list contains strings with which the node is tagged.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, describe nodes execute their child nodes in the following order:</p>
+
+<ul>
+<li>any <a href="#before">before</a> nodes, in given order</li>
+<li>any <a href="#constant-subject">subject</a>, <a href="#transform-subject">subject_transform</a>, or <a href="#effect-subject">subject_effect</a> node</li>
+<li>any <a href="#describe">describe</a> and <a href="#it">it</a> nodes</li>
+<li>any <a href="#after">after</a> nodes, in given order</li>
+</ul>
+
+<h3 id="subject">Subject</h3>
+
+<p>Subject nodes define the subject value under test. At most one subject can be defined per <a href="#describe">describe</a> node. Variants of the subject node differ in how the value of the subject is determined.</p>
+
+<h4 id="constant-subject">Constant subject</h4>
+
+<p>A constant subject node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'subject',
+  :data data,
+  :at string,
+  :context *
+}
+</code></pre>
+
+<p>The <code>data</code> key holds the subject value.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, the subject node returns the value at its <code>data</code> key, which defines the test subject.</p>
+
+<h4 id="transform-subject">Transform subject</h4>
+
+<p>A transform subject form takes an existing subject value inherited from a parent describe node, and transforms it into another value.</p>
+
+<p>A transform subject node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'subject_transform',
+  :transform function,
+  :at string,
+  :context *
+}
+</code></pre>
+
+<p>The <code>transform</code> key holds a function accepting a single argument.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, the node calls the function on its <code>transform</code> key with the current subject as argument. The function returns a value that becomes the new test subject.</p>
+
+<h4 id="effect-subject">Effect subject</h4>
+
+<p>An effect subject node determines the value of the subject by invoking an effect.</p>
+
+<p>An effect subject node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'subject_effect',
+  :effect effect,
+  :at string,
+  :context *
+}
+</code></pre>
+
+<p>The <code>effect</code> key holds an effect node.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, the node invokes the effect node on its <code>effect</code> key, and the resulting value becomes the new test subject.</p>
+
+<h3 id="it">It</h3>
+
+<p>It nodes define functions that assert expected facts about the current test subject.</p>
+
+<p>It nodes have the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'it',
+  :name string,
+  :spec function,
+  :at string,
+  :tags [string],
+  :context *
+}
+</code></pre>
+
+<p>The <code>name</code> of the node contributes to the full name of the <code>it</code> block.</p>
+
+<p>The <code>spec</code> key holds a function accepting zero or one arguments. This is the test function containing any assertions.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>tags</code> list contains strings with which the node is tagged.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, <code>it</code> nodes invoke their <code>spec</code> function passing the current subject as the first argument. If the <code>spec</code> function returns normally, the node passes. If the function throws, the  node fails.</p>
+
+<h3 id="effect">Effect</h3>
+
+<p>Effect nodes describe values that are generated through code involving side effects.</p>
+
+<p>An effect node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type 'effect',
+  :effect {
+    :type string,
+    *
+  }
+}
+</code></pre>
+
+<p>The type string corresponds with keys in registered <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffects.java">SpecEffects</a> maps.</p>
+
+<p>Additional keys on the nested effect dict typically contain effect-specific configuration.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, an effect node finds the instance of the effect using the type key, and invokes the effect&rsquo;s <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffect.java">execute</a> method, passing in the runtime, the effect dict, and the current subject value. The return value of this call is the return value of the effect.</p>
+
+<h3 id="before">Before</h3>
+
+<p>Before nodes are used to trigger side-effects before any tests of a describe block are run. The return value of a before effect is discarded.</p>
+
+<p>A before node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type &quot;before&quot;,
+  :name string,
+  :effect effect,
+  :at string,
+  :context *
+}
+</code></pre>
+
+<p>The <code>name</code> of the node is used in reporter messages.</p>
+
+<p>The <code>effect</code> key contains an effect node.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, a before node executes its nested effect and discards the return value. If the effect execution throws an exception, any contained tests in the current describe block are marked as failed, and are not executed.</p>
+
+<h3 id="after">After</h3>
+
+<p>After nodes are used to trigger side-effects after all tests of a describe block have run. The return value of an after effect is discarded.</p>
+
+<p>An after node has the following structure:</p>
+
+<pre><code class="language-tweakflow">{
+  :type &quot;after&quot;,
+  :name string,
+  :effect effect,
+  :at string,
+  :context *
+}
+</code></pre>
+
+<p>The <code>name</code> of the node is used in reporter messages.</p>
+
+<p>The <code>effect</code> key contains an effect node.</p>
+
+<p>The <code>at</code> string contains a human readable source location for the node.</p>
+
+<p>The <code>context</code> key holds arbitrary data that can be used to communicate additional data to reporters.</p>
+
+<p><strong>Execution</strong></p>
+
+<p>When run, an after node executes its nested effect and discards the return value. If the effect execution throws an exception, the entire test-suite aborts with an error.</p>
 
         
 <footer>

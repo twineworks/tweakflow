@@ -318,8 +318,15 @@ h6[id]:before {
   margin-top: -50px;
 } */
 
+h2[id]
+{
+  padding-top: 70px;
+  margin-top: -35px;
+  -webkit-background-clip: content-box;
+  background-clip: content-box;
+}
+
 h1[id],
-h2[id],
 h3[id],
 h4[id],
 h5[id],
