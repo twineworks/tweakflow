@@ -268,6 +268,7 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <id>spec:std</id>
                         <phase>test</phase>
                         <goals>
                             <goal>java</goal>
@@ -285,9 +286,33 @@
                                 <argument>--reporter-option</argument>
                                 <argument>tty</argument>
                                 <argument>false</argument>
+                                <argument>src/test/resources/spec/std</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>spec:examples</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipTests}</skip>
+                            <classpathScope>test</classpathScope>
+                            <mainClass>com.twineworks.tweakflow.spec.Spec</mainClass>
+                            <arguments>
+                                <argument>--reporter</argument>
+                                <argument>doc</argument>
+                                <argument>--reporter-option</argument>
+                                <argument>color</argument>
+                                <argument>false</argument>
+                                <argument>--reporter-option</argument>
+                                <argument>tty</argument>
+                                <argument>false</argument>
                                 <argument>-e</argument>
                                 <argument>com.twineworks.tweakflow.spec.effects.example.ExampleEffects</argument>
-                                <argument>src/test/resources/spec</argument>
+                                <argument>src/test/resources/spec/examples</argument>
                             </arguments>
                         </configuration>
                     </execution>
