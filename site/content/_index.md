@@ -28,6 +28,9 @@ Tweakflow has values and functions acting on them. All language constructs like 
 ### Batteries included
 Tweakflow comes with a [standard library](/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
+### Test framework included
+Tweakflow comes with an extensible [spec framework](/tools.html#spec-runner) similar to mocha, rspec, etc. The [tests for the standard library](https://github.com/twineworks/tweakflow/tree/master/src/test/resources/spec/std) are implemented with it.
+
 ## Dynamically typed
 Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
 

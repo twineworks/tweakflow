@@ -56,6 +56,9 @@ All functions in tweakflow are pure and free of observable side-effects. A tweak
 ### Batteries included
 Tweakflow comes with a [standard library](https://twineworks.github.io/tweakflow/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
+### Test framework included
+Tweakflow comes with an extensible [spec framework](https://twineworks.github.io/tweakflow/tools.html#spec-runner) similar to mocha, rspec, etc. The [tests for the standard library](https://github.com/twineworks/tweakflow/tree/master/src/test/resources/spec/std) are implemented with it.
+
 ### Automatic dependency tracking
 When the application changes an input variable, tweakflow efficiently recalculates the values of any user variables that depend on it. Much like a spreadsheet application updates dependent formula cells when a cell changes.
 
