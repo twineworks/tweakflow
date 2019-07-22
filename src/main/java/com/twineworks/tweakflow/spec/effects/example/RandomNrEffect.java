@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.effects.example;
 
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.lang.values.DictValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.spec.effects.SpecEffect;
 
-import java.time.ZonedDateTime;
+import java.util.Random;
 
-public class ClockEffect implements SpecEffect {
+public class RandomNrEffect implements SpecEffect {
   @Override
   public Value execute(Runtime runtime, Value effectNode, Value subject) {
     DictValue d = effectNode.dict();
-    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
+    return runtime.createCallContext().call(d.get("callback"), Values.make(new Random().nextDouble()));
   }
 }

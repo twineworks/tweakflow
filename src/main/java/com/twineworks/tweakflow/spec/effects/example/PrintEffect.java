@@ -22,14 +22,19 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.effects.example;
 
 import com.twineworks.tweakflow.lang.runtime.Runtime;
+import com.twineworks.tweakflow.lang.values.DictValue;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.spec.effects.SpecEffect;
 
-public class FailingEffect implements SpecEffect {
+public class PrintEffect implements SpecEffect {
   @Override
   public Value execute(Runtime runtime, Value effectNode, Value subject) {
-    throw new RuntimeException("failing with error: "+effectNode.dict().get("error"));
+    DictValue d = effectNode.dict();
+    System.out.println(d.get("text").humanReadable());
+    return Values.NIL;
   }
 }

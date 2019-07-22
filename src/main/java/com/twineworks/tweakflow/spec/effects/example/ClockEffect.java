@@ -22,23 +22,20 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.spec.effects;
+package com.twineworks.tweakflow.spec.effects.example;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.twineworks.tweakflow.lang.runtime.Runtime;
+import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.spec.effects.SpecEffect;
 
-public class ExampleEffects implements SpecEffects {
+import java.time.ZonedDateTime;
 
-  private final Map<String, SpecEffect> effects;
-
-  public ExampleEffects() {
-    effects = new HashMap<>();
-    effects.put("clock", new ClockEffect());
-    effects.put("fail", new FailingEffect());
-  }
-
+public class ClockEffect implements SpecEffect {
   @Override
-  public Map<String, SpecEffect> getEffects() {
-    return effects;
+  public Value execute(Runtime runtime, Value effectNode, Value subject) {
+    DictValue d = effectNode.dict();
+    return runtime.createCallContext().call(d.get("callback"), Values.make(ZonedDateTime.now()));
   }
 }
