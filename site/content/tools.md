@@ -4,7 +4,7 @@ title: Tools
 
 # Language Tools
 
-The tweakflow jar offers entry points for some language tools that can be executed standalone. An interactive REPL, a runner that evaluates all given modules and calls a main function, and a documentation tool that extracts doc and metadata from modules.
+The tweakflow jar offers entry points for some language tools that can be executed standalone. An interactive REPL, a spec runner that executes tests, a runner that evaluates all given modules and calls a main function, and a documentation tool that extracts doc and metadata from modules.
 
 ## Interactive REPL
 
@@ -251,6 +251,133 @@ The REPL accepts a number of command line arguments that influence which modules
 
 ```bash
 $ java -jar tweakflow-{{< version >}}.jar repl --help
+```
+
+
+## Spec runner
+
+The spec runner runs modules that [contain tests](/reference.html#specs). You can specify which modules to include, which tests to execute, and how to format the output.
+
+Run the following command to view the command line options:
+```bash
+$ java -jar tweakflow-{{< version >}}.jar spec -h
+```
+
+### Running spec modules
+
+You specify the spec modules to run by supplying paths. If the given path is a file, it is run as a spec module.
+If the given path is a directory, the runner recursively finds and runs all `*.spec.tf` files within that directory.
+
+```bash
+# runs specific files
+$ java -jar tweakflow-{{< version >}}.jar spec /path/to/t_1.spec.tf /path/to/t_2.spec.tf
+
+# recursively runs all *.spec.tf files in ./tests
+$ java -jar tweakflow-{{< version >}}.jar spec ./tests
+```
+
+### Global modules
+You can include global modules to be available in specs using the `-g` switch.
+
+```bash
+# include the ./conf/test.tf global module in each spec
+$ java -jar tweakflow-{{< version >}}.jar spec -g ./conf/test.tf ./tests
+```
+
+### Filtering specs
+
+Use the `-f` switch to execute only tests that contain the given string in their full name. A test's full name consists of all its parent describe block's names and its own name.
+
+In order to recursively execute all tests in a given describe block you can specify the describe block's name as a filter.
+
+In order to execute a single test only, you could specify a unique string from its own name.
+
+You can specify multiple `-f` switches. A test must satisfy all filters in order to run.
+
+```bash
+# only run tests that have 'nil' somewhere in their name
+$ java -jar tweakflow-{{< version >}}.jar spec -f nil ./tests
+```
+
+### Running tagged specs
+
+If you have tagged describe blocks or tests, they are not executed by default. You need to specify that you wish to run tagged tests by providing the desired tag using the `-t` switch.
+
+```bash
+# run tests that are tagged 'nightly'
+$ java -jar tweakflow-{{< version >}}.jar spec -t nightly ./tests
+```
+
+You can specify multiple `-t` switches. A test will run if it is tagged with any of the given tags.
+
+If you specify a `-t` switch, untagged tests will not run. If you wish to include them, use the `--untagged` switch.
+
+```bash
+# run regular test-suite plus nightly tests
+$ java -jar tweakflow-{{< version >}}.jar spec --untagged -t nightly ./tests
+```
+
+### Reporters
+
+Spec reporters determine the output of a spec run. You can specify the reporter to use with the `-r` switch.
+
+The following reporters are built-in:
+
+| Reporter                    | Output                              |
+| ----------------------------|------------------------------------ |
+| doc (default)               | Hierarchical view of tests  |
+| dot                         | Minimal output with a single character printed for each test |
+
+```bash
+# use the dot reporter
+$ java -jar tweakflow-{{< version >}}.jar spec -r dot ./tests
+```
+
+You can specify your own reporter that implements the [SpecReporter](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/spec/reporter/SpecReporter.java) interface. Make sure your imeplementation is on the class path and provide the fully qualified class name.
+
+```bash
+# use a custom reporter
+$ java -cp <your cp> com.twineworks.tweakflow.Main spec -r com.your.ReporterClass ./tests
+```
+
+#### Multiple reporters
+
+You can specify more than one reporter by supplying more than one `-r` switch. The specified reporters should not interfere with each other, for example one should write to console, while the other should generate a file.
+
+#### Reporter options
+
+You can supply options to reporters using `-ro <OPTION_NAME> <OPTION_VALUE>`. Options specified in this way are made available to all reporters as string properties.
+
+The built-in reporters understand the following options:
+
+| Option              | Values           | Description                         |
+| --------------------|------------------|------------------------------------ |
+| color               | `true` / `false` | whether reporter may use ANSI escape sequences to generate colored output  |
+| tty                 | `true` / `false` | whether reporter may use ANSI escape sequences for cursor repositioning, potentially enabling the use of console animation |
+
+By default the runner tries to detect whether it runs on a console and enables the above options dynamically.
+
+You can use the following shortucts for specifying reporter options:
+
+  - use `--color` as a shortcut for `-ro color true`
+  - use `--tty` as a shortcut for `-ro tty true`
+
+### Effects
+Tweakflow is side-effect free. If you wish to trigger side effects in the test suite, you can supply a set of effects by implementing the [SpecEffects](https://github.com/twineworks/tweakflow/blob/{{<gitRef>}}/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffects.java) interface. To use your class, use the `-e` switch and supply the fully qualified name of the class implementing the interface.
+
+See the [effects example module](https://github.com/twineworks/tweakflow/blob/{{<gitRef>}}/src/test/resources/spec/examples/effects.spec.tf) for a demonstration on how to use effects. You can run the module using the following command:
+
+```bash
+$ java -jar tweakflow-{{< version >}}.jar spec -e com.twineworks.tweakflow.spec.effects.example.ExampleEffects src/test/resources/spec/examples/effects.spec.tf
+```
+
+### Standard library test suite
+
+The test suite for the tweakflow standard library is located at [src/test/resources/spec/std](https://github.com/twineworks/tweakflow/tree/{{< gitRef >}}/src/test/resources/spec/std)
+
+You can run it with the following command:
+```bash
+$ java -jar tweakflow-{{< version >}}.jar spec src/test/resources/spec/std
 ```
 
 ## Runner

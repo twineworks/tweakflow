@@ -88,7 +88,7 @@ There are several ways to notate a double literal:
 - As integer followed by exponent notation
 
 Exponent notation is given by an `e` or `E` character and followed by the powers of ten to multiply with.
-Non-empty digit sequences denoting the integer, fraction, or exponent can additionally contain 
+Non-empty digit sequences denoting the integer, fraction, or exponent can additionally contain
 `_` characters in non-leading positions to visually format the number.
 
 ```tweakflow
@@ -140,13 +140,13 @@ NaN
 ### Binary literals
 
 Binary literals represent sequence of of bytes. They are notated as `0b` followed by zero or more pairs of hex digits from `[0-9a-fA-F]`.
-The separator character `_` can used to separate the hex-digit pairs and visually format the data. 
+The separator character `_` can used to separate the hex-digit pairs and visually format the data.
 It can appear after the `0b` prefix in leading position, trailing position, and before and after any hex-digit pair.
-The separator character may be repeated. 
- 
+The separator character may be repeated.
+
 ```tweakflow
 # empty byte array
-> 0b 
+> 0b
 0b
 
 # single byte: 00
@@ -4409,3 +4409,246 @@ DEBUG: x is zero or nil 0
 0
 ```
 
+## Specs
+
+A spec module contains a library named `spec` which in turn includes a `spec` variable. The `spec.spec` variable contains the definition of the test suite.
+
+See the [test module](https://github.com/twineworks/tweakflow/blob/{{<gitRef>}}/src/test/resources/spec/std/core/hash.spec.tf) for the standard library function [core.hash](/modules/std.html#core-hash) for reference.
+
+A test suite consists of a tree of nodes. Each node is a dict. The root of the tree must be a [describe](#describe) node.
+
+The [nodes](/modules/std/spec.html#nodes) library contains functions that create correct node structures.
+
+### Describe
+
+Describe nodes serve as nestable containers for related test cases. They can define a consistent test subject value for all descendant test cases. They can also provide before and after hooks for test suites involving effects.
+
+Describe nodes have the following structure:
+
+```tweakflow
+{
+  :type 'describe',
+  :name string,
+  :spec [effect|before|subject|subject_transform|subject_effect|describe|it|after],
+  :at string,
+  :tags [string],
+  :context *
+}
+```
+
+The `name` of the node contributes to the full name of any child `describe` and `it` blocks.
+
+The `spec` key holds a list of child nodes. The following node types are permitted:
+
+  - [effect](#effect)
+  - [before](#before)
+  - [subject](#constant-subject)
+  - [subject_transform](#transform-subject)
+  - [subject_effect](#effect-subject)
+  - [describe](#describe)
+  - [it](#it)
+  - [after](#after)
+
+Any [effect](#effect) nodes are invoked immediately after construction. The result of the call replaces the effect node in the list. This feature is useful to dynamically generate a nested describe block with tests that depend on an effect, such as filesystem information.
+
+At most one node of type [subject](#constant-subject), [subject_transform](#transform-subject), or [subject_effect](#effect-subject) is permitted. If any such node is present, it must precede any nested [describe](#describe) and [it](#it) blocks.
+
+The `at` string contains a human readable source location for the node.
+
+The `tags` list contains strings with which the node is tagged.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, describe nodes execute their child nodes in the following order:
+
+  - any [before](#before) nodes, in given order
+  - any [subject](#constant-subject), [subject_transform](#transform-subject), or [subject_effect](#effect-subject) node
+  - any [describe](#describe) and [it](#it) nodes
+  - any [after](#after) nodes, in given order
+
+### Subject
+
+Subject nodes define the subject value under test. At most one subject can be defined per [describe](#describe) node. Variants of the subject node differ in how the value of the subject is determined.
+
+#### Constant subject
+
+A constant subject node has the following structure:
+
+```tweakflow
+{
+  :type 'subject',
+  :data data,
+  :at string,
+  :context *
+}
+```
+
+The `data` key holds the subject value.
+
+The `at` string contains a human readable source location for the node.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, the subject node returns the value at its `data` key, which defines the test subject.
+
+#### Transform subject
+
+A transform subject form takes an existing subject value inherited from a parent describe node, and transforms it into another value.
+
+A transform subject node has the following structure:
+
+```tweakflow
+{
+  :type 'subject_transform',
+  :transform function,
+  :at string,
+  :context *
+}
+```
+
+The `transform` key holds a function accepting a single argument.
+
+The `at` string contains a human readable source location for the node.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, the node calls the function on its `transform` key with the current subject as argument. The function returns a value that becomes the new test subject.
+
+#### Effect subject
+
+An effect subject node determines the value of the subject by invoking an effect.
+
+An effect subject node has the following structure:
+
+```tweakflow
+{
+  :type 'subject_effect',
+  :effect effect,
+  :at string,
+  :context *
+}
+```
+
+The `effect` key holds an effect node.
+
+The `at` string contains a human readable source location for the node.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, the node invokes the effect node on its `effect` key, and the resulting value becomes the new test subject.
+
+### It
+
+It nodes define functions that assert expected facts about the current test subject.
+
+It nodes have the following structure:
+
+```tweakflow
+{
+  :type 'it',
+  :name string,
+  :spec function,
+  :at string,
+  :tags [string],
+  :context *
+}
+```
+
+The `name` of the node contributes to the full name of the `it` block.
+
+The `spec` key holds a function accepting zero or one arguments. This is the test function containing any assertions.
+
+The `at` string contains a human readable source location for the node.
+
+The `tags` list contains strings with which the node is tagged.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, `it` nodes invoke their `spec` function passing the current subject as the first argument. If the `spec` function returns normally, the node passes. If the function throws, the  node fails.
+
+### Effect
+
+Effect nodes describe values that are generated through code involving side effects.
+
+An effect node has the following structure:
+
+```tweakflow
+{
+  :type 'effect',
+  :effect {
+    :type string,
+    *
+  }
+}
+```
+The type string corresponds with keys in registered [SpecEffects](https://github.com/twineworks/tweakflow/blob/{{<gitRef>}}/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffects.java) maps.
+
+Additional keys on the nested effect dict typically contain effect-specific configuration.
+
+**Execution**
+
+When run, an effect node finds the instance of the effect using the type key, and invokes the effect's [execute](https://github.com/twineworks/tweakflow/blob/{{<gitRef>}}/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffect.java) method, passing in the runtime, the effect dict, and the current subject value. The return value of this call is the return value of the effect.
+
+### Before
+Before nodes are used to trigger side-effects before any tests of a describe block are run. The return value of a before effect is discarded.
+
+A before node has the following structure:
+
+```tweakflow
+{
+  :type "before",
+  :name string,
+  :effect effect,
+  :at string,
+  :context *
+}
+```
+
+The `name` of the node is used in reporter messages.
+
+The `effect` key contains an effect node.
+
+The `at` string contains a human readable source location for the node.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, a before node executes its nested effect and discards the return value. If the effect execution throws an exception, any contained tests in the current describe block are marked as failed, and are not executed.
+
+### After
+After nodes are used to trigger side-effects after all tests of a describe block have run. The return value of an after effect is discarded.
+
+An after node has the following structure:
+
+```tweakflow
+{
+  :type "after",
+  :name string,
+  :effect effect,
+  :at string,
+  :context *
+}
+```
+
+The `name` of the node is used in reporter messages.
+
+The `effect` key contains an effect node.
+
+The `at` string contains a human readable source location for the node.
+
+The `context` key holds arbitrary data that can be used to communicate additional data to reporters.
+
+**Execution**
+
+When run, an after node executes its nested effect and discards the return value. If the effect execution throws an exception, the entire test-suite aborts with an error.

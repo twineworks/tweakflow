@@ -14,10 +14,6 @@ menu:
       URL: "/tools.html"
       Weight: -400
 
-    - Name: "Docs"
-      URL: "/modules/std.html"
-      Weight: -300
-
     - Name: "Embedding"
       URL: "/embedding.html"
       Weight: -200
@@ -31,6 +27,14 @@ menu:
       Weight: 0
 
   mainright:
+
+    - Name: "std"
+      URL: "/modules/std.html"
+      Weight: -300
+
+    - Name: "std/spec"
+      URL: "/modules/std/spec.html"
+      Weight: -250
 
     - Name: "GitHub"
       URL: "https://github.com/twineworks/tweakflow/"
