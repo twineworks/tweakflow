@@ -53,10 +53,16 @@ public class NodeLocation {
     int splitIdx;
     ArrayList<String> parts = new ArrayList<>();
 
-    while (parts.size() < 3 && (splitIdx = at.lastIndexOf(":")) > -1){
-      String part = at.substring(splitIdx+1);
-      at = at.substring(0, splitIdx);
-      parts.add(part);
+    while (parts.size() < 3){
+      if ((splitIdx = at.lastIndexOf(":")) > -1){
+        String part = at.substring(splitIdx+1);
+        at = at.substring(0, splitIdx);
+        parts.add(part);
+      }
+      else{
+        parts.add(at);
+        break;
+      }
     }
     Collections.reverse(parts);
     if (parts.size() > 0) file = parts.get(0);
