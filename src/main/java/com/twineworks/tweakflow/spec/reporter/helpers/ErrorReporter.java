@@ -75,7 +75,7 @@ public class ErrorReporter {
     } catch (Exception ignored){}
 
     if (color) sb.append(ConsoleHelper.RED);
-    sb.append("  #").append(errorNr).append(" Subject evaluation failure. The entire describe block is marked as failed.").append(nl);
+    sb.append("  #").append(errorNr).append(" Subject evaluation failure").append(nl);
     if (color) sb.append(ConsoleHelper.RESET);
 
     if (color) sb.append(ConsoleHelper.FAINT);
@@ -108,7 +108,7 @@ public class ErrorReporter {
     } catch (Exception ignored){}
 
     if (color) sb.append(ConsoleHelper.RED);
-    sb.append("  #").append(errorNr).append(" Before hook failure. The entire describe block is marked as failed.").append(nl);
+    sb.append("  #").append(errorNr).append(" Before hook failure").append(nl);
     if (color) sb.append(ConsoleHelper.RESET);
 
     if (color) sb.append(ConsoleHelper.FAINT);
@@ -141,7 +141,7 @@ public class ErrorReporter {
     } catch (Exception ignored){}
 
     if (color) sb.append(ConsoleHelper.RED);
-    sb.append("  #").append(errorNr).append(" Problem processing spec file. The entire file is skipped.").append(nl);
+    sb.append("  #").append(errorNr).append(" Problem processing spec file").append(nl);
     if (color) sb.append(ConsoleHelper.RESET);
 
     if (color) sb.append(ConsoleHelper.FAINT);
