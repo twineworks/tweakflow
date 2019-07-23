@@ -153,6 +153,9 @@ public class DescribeNode implements SpecNode, TaggableSpecNode {
 
       for (SpecNode node : nodes) {
         context.run(node);
+        if (!node.isSuccess()){
+          success = false;
+        }
       }
 
       // after nodes are run, if before nodes started to run
