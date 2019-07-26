@@ -141,13 +141,11 @@ public class DescribeNode implements SpecNode, TaggableSpecNode {
         }
       }
 
-      if (subjectNode != null) {
+      if (success && subjectNode != null) {
         context.run(subjectNode);
-        if (success) {
-          if (!subjectNode.isSuccess()) {
-            SubjectSpecNode failedSubjectNode = subjectNode;
-            fail("failed to evaluate subject: " + failedSubjectNode.getErrorMessage(), failedSubjectNode.getCause());
-          }
+        if (!subjectNode.isSuccess()) {
+          SubjectSpecNode failedSubjectNode = subjectNode;
+          fail("failed to evaluate subject: " + failedSubjectNode.getErrorMessage(), failedSubjectNode.getCause());
         }
       }
 
@@ -166,6 +164,13 @@ public class DescribeNode implements SpecNode, TaggableSpecNode {
         }
       }
 
+    }
+    else{
+      // this describe node has failed before being started, enter child nodes
+      // so reporters have a chance to flag children individually as failed
+      for (SpecNode node : nodes) {
+        context.run(node);
+      }
     }
     endedMillis = System.currentTimeMillis();
     context.onLeaveDescribe(this);
