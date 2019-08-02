@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.15.1</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.15.2</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v0.15.1</a
+            ><b>Tweakflow</b> v0.15.2</a
           >
         </li>
         
@@ -2220,6 +2220,42 @@ nil
       data-meta-tags='data'
     ></div>
 
+<h3 id="data-omit">omit</h3>
+
+<p><code>(dict xs, list keys) -&gt;</code></p>
+
+<p>Returns a copy of <code>xs</code> in which all keys given in <code>keys</code> are omitted.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code> or <code>keys</code> is <code>nil</code>.</p>
+
+<p>Throws an error if any key in <code>keys</code> cannot be cast to <code>string</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; data.omit({:a 1, :b 2, :c 3}, [&quot;a&quot;, &quot;c&quot;])
+{
+  :b 2
+}
+
+&gt; data.omit({:a 1, :b 2, :c 3}, [&quot;a&quot;, &quot;foo&quot;])
+{
+  :b 2,
+  :c 3
+}
+
+&gt; data.omit(nil, [&quot;a&quot;])
+nil
+
+&gt; data.omit({:a 1, :b 2}, nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='data-omit'
+      data-meta-type='var'
+      data-meta-name='omit'
+      data-meta-tags='data'
+    ></div>
+
 <h3 id="data-filter">filter</h3>
 
 <p><code>(xs, function p) -&gt;</code></p>
@@ -3547,6 +3583,66 @@ nil
       data-meta-id='data-zip_dict'
       data-meta-type='var'
       data-meta-name='zip_dict'
+      data-meta-tags='data'
+    ></div>
+
+<h3 id="data-index_by">index_by</h3>
+
+<p><code>(xs, function f) -&gt; dict</code></p>
+
+<p>Returns a <code>dict</code> that contains all values from <code>xs</code>. Each <code>x</code> in <code>xs</code> is indexed by key <code>f(x)</code>.</p>
+
+<p>If <code>xs</code> is a list:<br />
+If <code>f</code> accepts one argument, <code>x</code> is passed.<br />
+If <code>f</code> accepts two arguments, <code>x</code> and its index are passed.</p>
+
+<p>If <code>xs</code> is a dict:<br />
+If <code>f</code> accepts one argument, each entry&rsquo;s value is passed.<br />
+If <code>f</code> accepts two arguments, each entry&rsquo;s value and key are passed.</p>
+
+<p>The indexing function <code>f</code> must return a string, or a value that can be cast to string.</p>
+
+<p>In case <code>f(x)</code> returns the same key for multiple <code>x</code>, only one of such <code>x</code> will be indexed in the returned dict.
+In such cases it is undefined which <code>x</code> is preserved in the returned dict.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>xs</code> is neither a <code>list</code> nor a <code>dict</code>.</p>
+
+<p>Throws an error if <code>f</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; data.index_by([{:id 'id_1', :name &quot;Sherlock Holmes&quot;}, {:id 'id_2', :name &quot;Dr. Watson&quot;}], (x) -&gt; x[:id])
+{
+  :id_1 {
+    :name &quot;Sherlock Holmes&quot;,
+    :id &quot;id_1&quot;
+  },
+  :id_2 {
+    :name &quot;Dr. Watson&quot;,
+    :id &quot;id_2&quot;
+  }
+}
+
+&gt; data.index_by({:a1 1, :a2 2, :a3 3}, (x) -&gt; &quot;b&quot;..x)
+{
+  :b1 1,
+  :b2 2,
+  :b3 3
+}
+
+&gt; data.index_by({:a1 1, :a2 2, :a3 3}, (x, k) -&gt; &quot;_&quot; .. k)
+{
+  :_a1 1,
+  :_a2 2,
+  :_a3 3
+}
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='data-index_by'
+      data-meta-type='var'
+      data-meta-name='index_by'
       data-meta-tags='data'
     ></div>
 
