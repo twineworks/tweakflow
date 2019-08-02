@@ -113,6 +113,14 @@
     </distributionManagement>
 
     <profiles>
+
+        <profile>
+            <id>skipTests</id>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+
         <profile>
             <id>release</id>
             <build>
