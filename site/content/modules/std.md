@@ -2202,6 +2202,45 @@ nil
 	  data-meta-tags='data'
     ></div>
 
+### omit{#data-omit}
+
+`(dict xs, list keys) ->`
+
+Returns a copy of `xs` in which all keys given in `keys` are omitted.
+
+Returns `nil` if `xs` is `nil` or `keys` is `nil`.
+
+Throws an error if any key in `keys` cannot be cast to `string`.
+
+```tweakflow
+> data.omit({:a 1, :b 2, :c 3}, ["a", "c"])
+{
+  :b 2
+}
+
+> data.omit({:a 1, :b 2, :c 3}, ["a", "foo"])
+{
+  :b 2,
+  :c 3
+}
+
+> data.omit(nil, ["a"])
+nil
+
+> data.omit({:a 1, :b 2}, nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-omit'
+      data-meta-type='var'
+      data-meta-name='omit'
+	  data-meta-tags='data'
+    ></div>
+
 ### filter{#data-filter}
 
 `(xs, function p) ->`
@@ -3632,6 +3671,70 @@ nil
       data-meta-id='data-zip_dict'
       data-meta-type='var'
       data-meta-name='zip_dict'
+	  data-meta-tags='data'
+    ></div>
+
+### index_by{#data-index_by}
+
+`(xs, function f) -> dict`
+
+Returns a `dict` that contains all values from `xs`. Each `x` in `xs` is indexed by key `f(x)`.
+
+If `xs` is a list:\
+If `f` accepts one argument, `x` is passed.\
+If `f` accepts two arguments, `x` and its index are passed.
+
+If `xs` is a dict:\
+If `f` accepts one argument, each entry's value is passed.\
+If `f` accepts two arguments, each entry's value and key are passed.
+
+The indexing function `f` must return a string, or a value that can be cast to string.
+
+In case `f(x)` returns the same key for multiple `x`, only one of such `x` will be indexed in the returned dict.
+In such cases it is undefined which `x` is preserved in the returned dict.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
+
+```tweakflow
+> data.index_by([{:id 'id_1', :name "Sherlock Holmes"}, {:id 'id_2', :name "Dr. Watson"}], (x) -> x[:id])
+{
+  :id_1 {
+    :name "Sherlock Holmes",
+    :id "id_1"
+  },
+  :id_2 {
+    :name "Dr. Watson",
+    :id "id_2"
+  }
+}
+
+> data.index_by({:a1 1, :a2 2, :a3 3}, (x) -> "b"..x)
+{
+  :b1 1,
+  :b2 2,
+  :b3 3
+}
+
+> data.index_by({:a1 1, :a2 2, :a3 3}, (x, k) -> "_" .. k)
+{
+  :_a1 1,
+  :_a2 2,
+  :_a3 3
+}
+```
+
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-index_by'
+      data-meta-type='var'
+      data-meta-name='index_by'
 	  data-meta-tags='data'
     ></div>
 

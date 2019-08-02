@@ -1984,5 +1984,115 @@ public final class Data {
     }
   }
 
+  // function index_by: (xs, function f) -> dict
+  public static final class index_by implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value f) {
+
+      if (xs.isNil()) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least one argument");
+
+      if (xs.isList()){
+
+        boolean withIndex = paramCount >= 2;
+        TransientDictValue t = new TransientDictValue();
+
+        ListValue list = xs.list();
+
+        if (withIndex){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value key = fcs.call(x, Values.make(i));
+            t.put(key.castTo(Types.STRING).string(), x);
+          }
+        }
+        else{
+          Arity1CallSite fcs = context.createArity1CallSite(f);
+
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value key = fcs.call(x);
+            t.put(key.castTo(Types.STRING).string(), x);
+          }
+        }
+
+        return Values.make(t.persistent());
+      }
+      else if (xs.isDict()){
+
+        boolean withKey = paramCount >= 2;
+
+        TransientDictValue t = new TransientDictValue();
+        DictValue map = xs.dict();
+        if (withKey){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (String key : map.keys()) {
+            Value x = map.get(key);
+            Value k = fcs.call(x, Values.make(key));
+            t.put(k.castTo(Types.STRING).string(), x);
+          }
+
+        }
+        else{
+
+          for (String key : map.keys()) {
+            Arity1CallSite fcs = context.createArity1CallSite(f);
+            Value x = map.get(key);
+            Value k = fcs.call(x);
+            t.put(k.castTo(Types.STRING).string(), x);
+          }
+
+        }
+
+        return Values.make(t.persistent());
+
+      }
+      else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "index_by is not defined for type "+xs.type().name());
+      }
+
+    }
+  }
+
+  // function omit: (dict xs, list keys) -> dict
+  public static final class omit implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value keys) {
+
+      if (xs.isNil()) return Values.NIL;
+      if (keys.isNil()) return Values.NIL;
+
+      ListValue keyList = keys.list();
+      DictValue xsDict = xs.dict();
+
+      // nothing to omit
+      if (keyList.isEmpty()) return xs;
+
+      // nothing to remove
+      if (xsDict.isEmpty()) return Values.EMPTY_DICT;
+
+      HashSet<String> keySet = new HashSet<>();
+      for (Value value : keyList) {
+        keySet.add(value.castTo(Types.STRING).string());
+      }
+
+      TransientDictValue t = new TransientDictValue();
+      for (String key : xsDict.keys()) {
+        if (!keySet.contains(key)){
+          t.put(key, xsDict.get(key));
+        }
+      }
+
+      return Values.make(t.persistent());
+
+    }
+  }
+
 
 }
