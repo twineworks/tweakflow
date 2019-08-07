@@ -95,6 +95,11 @@ final public class Values {
     return make(i.longValue());
   }
 
+  public static Value make(Short i) {
+    if (i == null) return NIL;
+    return make(i.longValue());
+  }
+
   public static Value make(Double d) {
     if (d == null) return NIL;
     if (Double.isNaN(d)) return NAN;
@@ -106,6 +111,19 @@ final public class Values {
       }
     }
     return new Value(Types.DOUBLE, d);
+  }
+
+  public static Value make(Float f) {
+    if (f == null) return NIL;
+    if (Float.isNaN(f)) return NAN;
+    if (Float.isInfinite(f)) {
+      if (f == Float.POSITIVE_INFINITY) {
+        return INFINITY;
+      } else {
+        return NEG_INFINITY;
+      }
+    }
+    return new Value(Types.DOUBLE, f.doubleValue());
   }
 
   public static Value make(Character c) {
