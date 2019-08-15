@@ -30,11 +30,25 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
-final public class StringType implements Type {
+import java.math.BigDecimal;
+import java.util.regex.Pattern;
+
+final public class DecimalType implements Type {
+
+  private String parseRegexPattern =
+      "[\\x00-\\x20]*" +                            // optional leading whitespace
+      "[-+]?" +                                     // optional sign
+      "(" +
+      "([0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?)|" +   // digits.digits(E+-exponent)?
+      "(\\.[0-9]+([eE][-+]?[0-9]+)?)" +             // .digits(E+-exponent)?
+      ")" +
+      "[\\x00-\\x20]*";                             // optional trailing whitespace
+
+  private Pattern parseRegex = Pattern.compile(parseRegexPattern);
 
   @Override
   public String name() {
-    return "string";
+    return "decimal";
   }
 
   @Override
@@ -49,12 +63,12 @@ final public class StringType implements Type {
 
   @Override
   public boolean isString() {
-    return true;
+    return false;
   }
 
   @Override
   public boolean isNumeric() {
-    return false;
+    return true;
   }
 
   @Override
@@ -74,7 +88,7 @@ final public class StringType implements Type {
 
   @Override
   public boolean isDecimal() {
-    return false;
+    return true;
   }
 
   @Override
@@ -114,15 +128,13 @@ final public class StringType implements Type {
 
   @Override
   public boolean canAttemptCastFrom(Type type) {
-    return type == Types.STRING
+    return type == Types.DECIMAL
+        || type == Types.DOUBLE
         || type == Types.ANY
-        || type == Types.VOID
         || type == Types.BOOLEAN
         || type == Types.LONG
-        || type == Types.DOUBLE
-        || type == Types.DECIMAL
-        || type == Types.DATETIME;
-
+        || type == Types.STRING
+        || type == Types.VOID;
   }
 
   @Override
@@ -131,51 +143,85 @@ final public class StringType implements Type {
     if (x == Values.NIL) return x;
 
     Type srcType = x.type();
-    if (srcType == this) return x;
-    if (srcType == Types.BOOLEAN){
-      return (x == Values.TRUE) ? Values.make("true") : Values.make("false");
+    if (srcType == Types.DECIMAL) return x;
+
+    if (srcType == Types.BOOLEAN) {
+      return (x == Values.TRUE) ? Values.DECIMAL_ONE : Values.DECIMAL_ZERO;
     }
 
-    if (srcType == Types.LONG){
-      return Values.make(x.longNum().toString());
+    if (srcType == Types.STRING){
+      String s = x.string();
+      if (parseRegex.matcher(s).matches()){
+        return Values.make(new BigDecimal(s.trim()));
+      }
+      else {
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+name());
+      }
     }
 
     if (srcType == Types.DOUBLE){
-      return Values.make(x.doubleNum().toString());
+      double d = x.doubleNum();
+      if (Double.isFinite(d)){
+        return Values.make(BigDecimal.valueOf(x.doubleNum()));
+      }
+      else {
+        // +-Infinity and NaN cast to 0
+        return Values.DECIMAL_ZERO;
+      }
     }
 
-    if (srcType == Types.DECIMAL){
-      return Values.make(x.decimal().toString());
+    if (srcType == Types.LONG){
+      return Values.make(BigDecimal.valueOf(x.longNum()));
     }
 
-    if (srcType == Types.DATETIME){
-      return Values.make(x.dateTime().toString());
-    }
-
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x) +" to "+name());
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
   }
 
   @Override
   public int valueHash(Value x) {
-    return x.string().hashCode();
+    // always share the hashcode with doubles
+    return Double.hashCode(x.decimal().doubleValue());
   }
-
   @Override
   public boolean valueEquals(Value x, Value o) {
-    // strings are only equal to strings
-    return o.type() == this &&
-        valueHash(x) == valueHash(o) &&
-        x.string().equals(o.string());
+
+    // decimals may be equal to other decimals, doubles, and longs
+    BigDecimal dec = x.decimal();
+
+    //  comparing to another decimal?
+    if (o.type() == this){
+      return dec.compareTo(o.decimal()) == 0;
+    }
+    // comparing to a long?
+    else if (o.type() == Types.LONG){
+      return dec.compareTo(BigDecimal.valueOf(o.longNum())) == 0;
+    }
+    // comparing to a double?
+    else if (o.type() == Types.DOUBLE){
+      if (Double.isFinite(o.doubleNum())){
+        return dec.compareTo(BigDecimal.valueOf(o.doubleNum())) == 0;
+      }
+      else {
+        return false;
+      }
+    }
+    // anything else is not equal to a decimal
+    return false;
   }
 
   @Override
   public boolean valueAndTypeEquals(Value x, Value o) {
-    return valueEquals(x, o);
+    return o.type() == this && (x.decimal().compareTo(o.decimal()) == 0);
   }
 
   @Override
   public boolean valueIdentical(Value x, Value o) {
-    return valueAndTypeEquals(x, o);
+    if (x == o) return true;
+    if (o.type() != this) return false;
+
+    BigDecimal d_x = x.decimal();
+    BigDecimal d_o = o.decimal();
+    return d_x.compareTo(d_o) == 0;
   }
 
   @Override

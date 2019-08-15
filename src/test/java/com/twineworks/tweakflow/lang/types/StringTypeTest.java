@@ -31,6 +31,8 @@ import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringTypeTest {
@@ -69,6 +71,14 @@ public class StringTypeTest {
   }
 
   @Test
+  public void casts_from_decimal() throws Exception {
+    assertThat(Types.STRING.canAttemptCastFrom(Types.DECIMAL)).isTrue();
+    assertThat(Types.STRING.castFrom(Values.DECIMAL_ONE)).isEqualTo(Values.make("1"));
+    assertThat(Types.STRING.castFrom(Values.DECIMAL_ZERO)).isEqualTo(Values.make("0"));
+    assertThat(Types.STRING.castFrom(Values.make(new BigDecimal("1234.5678")))).isEqualTo(Values.make("1234.5678"));
+  }
+
+  @Test
   public void cannot_cast_from_function() throws Exception {
     Assertions.assertThrows(LangException.class, () -> {
       assertThat(Types.STRING.canAttemptCastFrom(Types.FUNCTION)).isFalse();
@@ -92,6 +102,7 @@ public class StringTypeTest {
     });
   }
 
+  @Test
   public void casts_from_datetime() throws Exception {
     assertThat(Types.STRING.canAttemptCastFrom(Types.DATETIME)).isTrue();
     assertThat(Types.STRING.castFrom(Values.EPOCH)).isEqualTo(Values.make("1970-01-01T00:00:00Z@UTC"));

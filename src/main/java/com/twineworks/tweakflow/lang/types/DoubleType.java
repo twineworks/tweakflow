@@ -30,6 +30,7 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 final public class DoubleType implements Type {
@@ -88,12 +89,7 @@ final public class DoubleType implements Type {
   }
 
   @Override
-  public boolean isBigInteger() {
-    return false;
-  }
-
-  @Override
-  public boolean isBigDecimal() {
+  public boolean isDecimal() {
     return false;
   }
 
@@ -118,11 +114,6 @@ final public class DoubleType implements Type {
   }
 
   @Override
-  public boolean isSet() {
-    return false;
-  }
-
-  @Override
   public boolean isContainer() {
     return false;
   }
@@ -143,6 +134,7 @@ final public class DoubleType implements Type {
         || type == Types.ANY
         || type == Types.BOOLEAN
         || type == Types.LONG
+        || type == Types.DECIMAL
         || type == Types.STRING
         || type == Types.VOID;
   }
@@ -162,7 +154,7 @@ final public class DoubleType implements Type {
     if (srcType == Types.STRING){
       String s = x.string();
       if (parseRegex.matcher(s).matches()){
-        return Values.make(Double.valueOf(s));
+        return Values.make(Double.valueOf(s.trim()));
       }
       else {
         throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+name());
@@ -171,6 +163,10 @@ final public class DoubleType implements Type {
 
     if (srcType == Types.LONG){
       return Values.make((double) x.longNum());
+    }
+
+    if (srcType == Types.DECIMAL){
+      return Values.make(x.decimal().doubleValue());
     }
 
     throw new LangException(LangError.CAST_ERROR, "Cannot cast "+srcType.name()+" to "+name());
@@ -184,7 +180,7 @@ final public class DoubleType implements Type {
   @Override
   public boolean valueEquals(Value x, Value o) {
 
-    // doubles may be equal to other doubles and can equal longs
+    // doubles may be equal to other doubles and can equal longs and decimals
     double d = x.doubleNum();
 
     //  comparing to a double?
@@ -194,6 +190,10 @@ final public class DoubleType implements Type {
     // comparing to a long?
     else if (o.type() == Types.LONG){
       return d == (double) o.longNum();
+    }
+    // comparing to a decimal?
+    else if (o.type() == Types.DECIMAL){
+      return BigDecimal.valueOf(d).compareTo(o.decimal()) == 0;
     }
     // anything else is not equal to a double
     return false;

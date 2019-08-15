@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.values;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import static com.twineworks.tweakflow.lang.values.Values.NIL;
@@ -96,6 +97,10 @@ final public class Value implements ValueProvider {
     return (byte[]) value;
   }
 
+  public BigDecimal decimal() {
+    return (BigDecimal) value;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -126,7 +131,6 @@ final public class Value implements ValueProvider {
     return type.valueIdentical(this, other);
   }
 
-
   @Override
   public String toString() {
     return ValueInspector.inspect(this);
@@ -142,6 +146,10 @@ final public class Value implements ValueProvider {
 
   public boolean isDoubleNum(){
     return this.type == Types.DOUBLE;
+  }
+
+  public boolean isDecimal(){
+    return this.type == Types.DECIMAL;
   }
 
   public boolean isDateTime(){

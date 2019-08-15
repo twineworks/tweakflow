@@ -22,48 +22,55 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.types;
+package com.twineworks.tweakflow.lang.interpreter.ops;
 
+import com.twineworks.tweakflow.lang.ast.expressions.PlusNode;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
-public interface Type {
+import java.math.BigDecimal;
 
-  String name();
+final public class PlusOpDecDec implements ExpressionOp {
 
-  boolean isAny();
-  boolean isVoid();
-  boolean isString();
+  private final PlusNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
-  boolean isNumeric();
-  boolean isLong();
-  boolean isDouble();
-  boolean isDateTime();
-  boolean isDecimal();
 
-  boolean isBoolean();
+  public PlusOpDecDec(PlusNode node) {
+    this.node = node;
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
+  }
 
-  boolean isBinary();
+  @Override
+  public Value eval(Stack stack, EvaluationContext context) {
 
-  boolean isDict();
-  boolean isList();
+    BigDecimal left = leftOp.eval(stack, context).decimal();
+    if (left == null) return Values.NIL;
 
-  boolean isContainer();
+    BigDecimal right = rightOp.eval(stack, context).decimal();
+    if (right == null) return Values.NIL;
 
-  boolean isFunction();
+    return Values.make(left.add(right));
 
-  boolean canAttemptCastTo(Type type);
-  boolean canAttemptCastFrom(Type type);
+  }
 
-  Value castFrom(Value x);
+  @Override
+  public boolean isConstant() {
+    return false;
+  }
 
-  int valueHash(Value x);
+  @Override
+  public ExpressionOp specialize() {
+    return new PlusOpDecDec(node);
+  }
 
-  // ==
-  boolean valueEquals(Value x, Value o);
+  @Override
+  public ExpressionOp refresh() {
+    return new PlusOpDecDec(node);
+  }
 
-  // ===
-  boolean valueAndTypeEquals(Value x, Value o);
-
-  // valueIdentical(NaN, NaN) == true
-  boolean valueIdentical(Value x, Value o);
 }

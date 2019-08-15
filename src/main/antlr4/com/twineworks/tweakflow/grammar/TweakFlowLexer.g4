@@ -58,9 +58,10 @@ STRING: 'string';
 BOOLEAN: 'boolean';
 BINARY: 'binary';
 LONG: 'long';
+DOUBLE: 'double';
+DECIMAL: 'decimal';
 DICT: 'dict';
 LIST: 'list';
-DOUBLE: 'double';
 DATETIME: 'datetime';
 ANY: 'any';
 VOID: 'void';
@@ -169,12 +170,19 @@ fragment DIGIT: [0-9];
 fragment BYTE: HEXDIGIT HEXDIGIT;
 fragment HEXDIGIT: DIGIT|[a-fA-F];
 
+DEC
+  : INT ('d'|'D')
+  | INT? '.' INT EXP? ('d'|'D')
+  | INT ('.'INT)? EXP ('d'|'D')
+  ;
+
 DBL
   : INT? '.' INT EXP?
   | INT ('.'INT)? EXP
   | NAN
   | INFINITY
   ;
+
 
 fragment EXP: ('e'|'E')('+'|'-')? INT;
 fragment NAN: 'NaN';

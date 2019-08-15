@@ -142,6 +142,7 @@ literal
   | stringConstant                                          # stringConstantExp
   | longLiteral                                             # longLiteralExp
   | doubleLiteral                                           # doubleLiteralExp
+  | decimalLiteral                                          # decimalLiteralExp
   | listLiteral                                             # listLiteralExp
   | dictLiteral                                             # dictLiteralExp
   | functionLiteral                                         # functionLiteralExp
@@ -283,9 +284,9 @@ unrecognizedEscapeSequence
   ;
 
 longLiteral
-  : INT     # decLiteral
-  | '-' INT # decLiteral
-  | '+' INT # decLiteral
+  : INT     # longDecLiteral
+  | '-' INT # longDecLiteral
+  | '+' INT # longDecLiteral
   | HEX # hexLiteral
   ;
 
@@ -297,6 +298,12 @@ doubleLiteral
   : DBL
   | '-' DBL
   | '+' DBL
+  ;
+
+decimalLiteral
+  : DEC
+  | '-' DEC
+  | '+' DEC
   ;
 
 booleanLiteral
@@ -351,6 +358,7 @@ dataType
   | STRING
   | LONG
   | DOUBLE
+  | DECIMAL
   | DICT
   | LIST
   | DATETIME

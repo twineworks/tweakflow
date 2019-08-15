@@ -35,6 +35,8 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.math.BigDecimal;
+
 final public class PlusOp implements ExpressionOp {
 
   private final PlusNode node;
@@ -68,6 +70,9 @@ final public class PlusOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum() + right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        return Values.make(BigDecimal.valueOf(left.longNum()).add(right.decimal()));
+      }
     }
     if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
@@ -76,7 +81,20 @@ final public class PlusOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.doubleNum() + right.doubleNum());
       }
-
+      if (rightType == Types.DECIMAL){
+        return Values.make(BigDecimal.valueOf(left.doubleNum()).add(right.decimal()));
+      }
+    }
+    if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        return Values.make(left.decimal().add(BigDecimal.valueOf(right.longNum())));
+      }
+      if (rightType == Types.DOUBLE){
+        return Values.make(left.decimal().add(BigDecimal.valueOf(right.doubleNum())));
+      }
+      if (rightType == Types.DECIMAL){
+        return Values.make(left.decimal().add(right.decimal()));
+      }
     }
     throw new LangException(LangError.CAST_ERROR, "Cannot add types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
@@ -86,8 +104,8 @@ final public class PlusOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 
@@ -121,6 +139,9 @@ final public class PlusOp implements ExpressionOp {
             }
           }
           return new PlusOpLL(node);
+        }
+        if (leftType == Types.DECIMAL){
+          return new PlusOpDecDec(node);
         }
       }
     } catch (LangException ignored){}

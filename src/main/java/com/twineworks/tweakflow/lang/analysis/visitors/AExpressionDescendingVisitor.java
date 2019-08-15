@@ -179,6 +179,12 @@ public class AExpressionDescendingVisitor implements Visitor {
   }
 
   @Override
+  public ExpressionNode visit(DecimalNode node) {
+    node.getChildren().forEach((m) -> m.accept(this));
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(CallNode node) {
     node.getChildren().forEach((m) -> m.accept(this));
     return node;

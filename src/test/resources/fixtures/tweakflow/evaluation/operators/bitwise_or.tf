@@ -14,6 +14,11 @@ library operator_spec {
   l1_l0: (1 | 0)        == 1;
   l1_l1: (1 | 1)        == 1;
 
+  dc0_dc0: (0d | 0d)        == 0;
+  dc0_dc1: (0d | 1d)        == 1;
+  dc1_dc0: (1d | 0d)        == 1;
+  dc1_dc1: (1d | 1d)        == 1;
+
   l1_l2_l4_l8: (1|2|4|8) == 15;
 
   max_or: (max_long | 1) == max_long;
@@ -32,6 +37,11 @@ library operator_spec {
   d0_l1: (0.0 | 1)    == 1;
   d1_l0: (1.0 | 0)    == 1;
   d1_l1: (1.0 | 1)    == 1;
+
+  dc0_l0: (0.0d | 0)    == 0;
+  dc0_l1: (0.0d | 1)    == 1;
+  dc1_l0: (1.0d | 0)    == 1;
+  dc1_l1: (1.0d | 1)    == 1;
 
   nil_l0: (nil | 0)     == nil;
   l0_nil: (  0 | nil)   == nil;

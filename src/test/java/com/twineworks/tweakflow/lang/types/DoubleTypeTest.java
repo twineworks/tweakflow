@@ -31,6 +31,8 @@ import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DoubleTypeTest {
@@ -59,6 +61,21 @@ public class DoubleTypeTest {
     assertThat(Types.DOUBLE.canAttemptCastFrom(Types.LONG)).isTrue();
     assertThat(Types.DOUBLE.castFrom(Values.make(1L))).isEqualTo(Values.make(1.0d));
     assertThat(Types.DOUBLE.castFrom(Values.make(0L))).isEqualTo(Values.make(0.0d));
+  }
+
+  @Test
+  public void casts_from_decimal() throws Exception {
+    assertThat(Types.DOUBLE.canAttemptCastFrom(Types.DECIMAL)).isTrue();
+
+    assertThat(Types.DOUBLE.castFrom(Values.DECIMAL_ONE)).isEqualTo(Values.make(1.0d));
+    assertThat(Types.DOUBLE.castFrom(Values.make(new BigDecimal("1.0000000000")))).isEqualTo(Values.make(1.0d));
+
+    assertThat(Types.DOUBLE.castFrom(Values.DECIMAL_ZERO)).isEqualTo(Values.make(0.0d));
+    assertThat(Types.DOUBLE.castFrom(Values.make(new BigDecimal("-0.0000000000")))).isEqualTo(Values.make(0.0d));
+
+    assertThat(Types.DOUBLE.castFrom(Values.make(new BigDecimal("1e500")))).isEqualTo(Values.INFINITY);
+    assertThat(Types.DOUBLE.castFrom(Values.make(new BigDecimal("-1e500")))).isEqualTo(Values.NEG_INFINITY);
+
   }
 
   @Test

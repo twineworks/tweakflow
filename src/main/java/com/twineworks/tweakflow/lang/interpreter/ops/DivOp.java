@@ -34,11 +34,15 @@ import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 final public class DivOp implements ExpressionOp {
 
   private final DivNode node;
   private final ExpressionOp leftOp;
   private final ExpressionOp rightOp;
+  private final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
 
   public DivOp(DivNode node) {
     this.node = node;
@@ -60,7 +64,7 @@ final public class DivOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    // normal division promotes longs to doubles
+    // normal division promotes longs to doubles or decimals
     if (leftType == Types.LONG){
       if (rightType == Types.LONG){
         return Values.make(left.longNum().doubleValue() / right.longNum().doubleValue());
@@ -68,15 +72,42 @@ final public class DivOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum().doubleValue() / right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        BigDecimal divisor = right.decimal();
+        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(BigDecimal.valueOf(left.longNum()).divide(divisor, ROUNDING_MODE));
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         return Values.make(left.doubleNum() / right.longNum().doubleValue());
       }
       if (rightType == Types.DOUBLE){
         return Values.make(left.doubleNum() / right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        BigDecimal divisor = right.decimal();
+        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(BigDecimal.valueOf(left.doubleNum()).divide(divisor, ROUNDING_MODE));
+      }
+    }
+    else if (leftType == Types.DECIMAL){
 
+      if (rightType == Types.LONG){
+        BigDecimal divisor = BigDecimal.valueOf(right.longNum());
+        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+      }
+      if (rightType == Types.DOUBLE){
+        BigDecimal divisor = BigDecimal.valueOf(right.doubleNum());
+        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+      }
+      if (rightType == Types.DECIMAL){
+        BigDecimal divisor = right.decimal();
+        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().divide(right.decimal(), ROUNDING_MODE));
+      }
     }
     throw new LangException(LangError.CAST_ERROR, "cannot divide types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
@@ -86,8 +117,8 @@ final public class DivOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

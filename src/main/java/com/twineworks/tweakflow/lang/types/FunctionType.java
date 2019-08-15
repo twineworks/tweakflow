@@ -72,12 +72,7 @@ final public class FunctionType implements Type {
   }
 
   @Override
-  public boolean isBigInteger() {
-    return false;
-  }
-
-  @Override
-  public boolean isBigDecimal() {
+  public boolean isDecimal() {
     return false;
   }
 
@@ -98,11 +93,6 @@ final public class FunctionType implements Type {
 
   @Override
   public boolean isList() {
-    return false;
-  }
-
-  @Override
-  public boolean isSet() {
     return false;
   }
 

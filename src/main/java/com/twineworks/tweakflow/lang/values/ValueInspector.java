@@ -83,6 +83,12 @@ public class ValueInspector {
       return;
     }
 
+    if (v.type() == Types.DECIMAL){
+      out.append(leadingIndent).append(v.decimal().toString());
+      out.append("d");
+      return;
+    }
+
     if (v.type() == Types.DATETIME){
       out.append(leadingIndent).append(v.dateTime().toString());
       return;

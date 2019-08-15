@@ -161,6 +161,11 @@ public class AVisitor implements Visitor {
   }
 
   @Override
+  public ExpressionNode visit(DecimalNode node) {
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(CallNode node) {
     return node;
   }

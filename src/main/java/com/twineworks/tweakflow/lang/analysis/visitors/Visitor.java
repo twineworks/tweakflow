@@ -81,6 +81,7 @@ public interface Visitor {
   ExpressionNode visit(ExpressionNode node);
   ExpressionNode visit(BooleanNode node);
   ExpressionNode visit(BinaryNode node);
+  ExpressionNode visit(DecimalNode node);
   ExpressionNode visit(CallNode node);
   ExpressionNode visit(PartialApplicationNode node);
   ExpressionNode visit(CastNode node);

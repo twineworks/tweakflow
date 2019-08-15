@@ -48,6 +48,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -314,6 +315,16 @@ public class InterpreterTest {
     Cell epoch = vars.gets("epoch");
     assertThat(epoch.getValue().type()).isSameAs(Types.DATETIME);
     assertThat(epoch.getValue()).isEqualTo(Values.EPOCH);
+
+    // dec_1: 1D
+    Cell dec_1 = vars.gets("dec_1");
+    assertThat(dec_1.getValue().type()).isSameAs(Types.DECIMAL);
+    assertThat(dec_1.getValue()).isEqualTo(Values.DECIMAL_ONE);
+
+    // dec_20: 2e1_D;
+    Cell dec_20 = vars.gets("dec_20");
+    assertThat(dec_20.getValue().type()).isSameAs(Types.DECIMAL);
+    assertThat(dec_20.getValue()).isEqualTo(Values.make(BigDecimal.valueOf(20L)));
 
   }
 
@@ -903,6 +914,10 @@ public class InterpreterTest {
     Cell boolean_to_double = vars.gets("boolean_to_double");
     assertThat(boolean_to_double.getValue()).isEqualTo(Values.make(1.0d));
 
+    // boolean_to_decimal: true as decimal
+    Cell boolean_to_decimal = vars.gets("boolean_to_decimal");
+    assertThat(boolean_to_decimal.getValue()).isEqualTo(Values.DECIMAL_ONE);
+
     // boolean_to_string: true as string
     Cell boolean_to_string = vars.gets("boolean_to_string");
     assertThat(boolean_to_string.getValue()).isEqualTo(Values.make("true"));
@@ -914,6 +929,10 @@ public class InterpreterTest {
     // string_to_long: "123" as long
     Cell string_to_long = vars.gets("string_to_long");
     assertThat(string_to_long.getValue()).isEqualTo(Values.make(123L));
+
+    // string_to_decimal: "123.45" as decimal
+    Cell string_to_decimal = vars.gets("string_to_decimal");
+    assertThat(string_to_decimal.getValue()).isEqualTo(Values.make(new BigDecimal("123.45")));
 
     // string_to_double: "1.2" as double
     Cell string_to_double = vars.gets("string_to_double");
@@ -931,6 +950,10 @@ public class InterpreterTest {
     Cell long_to_double = vars.gets("long_to_double");
     assertThat(long_to_double.getValue()).isEqualTo(Values.make(123.0d));
 
+    // long_to_decimal: 123 as decimal
+    Cell long_to_decimal = vars.gets("long_to_decimal");
+    assertThat(long_to_decimal.getValue()).isEqualTo(Values.make(BigDecimal.valueOf(123L)));
+
     // long_to_string: 123 as string
     Cell long_to_string = vars.gets("long_to_string");
     assertThat(long_to_string.getValue()).isEqualTo(Values.make("123"));
@@ -942,6 +965,10 @@ public class InterpreterTest {
     // double_to_long: 1.2 as long
     Cell double_to_long = vars.gets("double_to_long");
     assertThat(double_to_long.getValue()).isEqualTo(Values.make(1L));
+
+    // double_to_decimal: 1.2 as decimal
+    Cell double_to_decimal = vars.gets("double_to_decimal");
+    assertThat(double_to_decimal.getValue()).isEqualTo(Values.make(BigDecimal.valueOf(1.2d)));
 
     // double_to_string: 1.2 as string
     Cell double_to_string = vars.gets("double_to_string");

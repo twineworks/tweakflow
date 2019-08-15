@@ -31,6 +31,8 @@ import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LongTypeTest {
@@ -46,6 +48,21 @@ public class LongTypeTest {
   public void casts_from_double() throws Exception {
     assertThat(Types.LONG.canAttemptCastFrom(Types.DOUBLE)).isTrue();
     Value x = Values.make(1.0d);
+    assertThat(Types.LONG.castFrom(x)).isEqualTo(Values.make(1L));
+  }
+
+  @Test
+  public void casts_from_decimal() throws Exception {
+    assertThat(Types.LONG.canAttemptCastFrom(Types.DECIMAL)).isTrue();
+    Value x;
+    x = Values.DECIMAL_ONE;
+    assertThat(Types.LONG.castFrom(x)).isEqualTo(Values.make(1L));
+
+    x = Values.DECIMAL_ZERO;
+    assertThat(Types.LONG.castFrom(x)).isEqualTo(Values.make(0L));
+
+    // losing precision
+    x = Values.make(new BigDecimal("1.01"));
     assertThat(Types.LONG.castFrom(x)).isEqualTo(Values.make(1L));
   }
 

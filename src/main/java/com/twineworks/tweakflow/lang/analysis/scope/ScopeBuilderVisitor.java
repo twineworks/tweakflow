@@ -948,6 +948,13 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   }
 
   @Override
+  public ExpressionNode visit(DecimalNode node) {
+    if (node.getScope() != null) return node;
+    node.setScope(scopes.peek());
+    return node;
+  }
+
+  @Override
   public ExpressionNode visit(LongNode node) {
     if (node.getScope() != null) return node;
     node.setScope(scopes.peek());

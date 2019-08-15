@@ -27,6 +27,8 @@ package com.twineworks.tweakflow.lang.types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.math.BigDecimal;
+
 final public class BooleanType implements Type {
 
   @Override
@@ -70,12 +72,7 @@ final public class BooleanType implements Type {
   }
 
   @Override
-  public boolean isBigInteger() {
-    return false;
-  }
-
-  @Override
-  public boolean isBigDecimal() {
+  public boolean isDecimal() {
     return false;
   }
 
@@ -96,11 +93,6 @@ final public class BooleanType implements Type {
 
   @Override
   public boolean isList() {
-    return false;
-  }
-
-  @Override
-  public boolean isSet() {
     return false;
   }
 
@@ -162,6 +154,9 @@ final public class BooleanType implements Type {
     }
     else if (srcType == Types.BINARY){
       return (x.bytes().length == 0) ? Values.FALSE : Values.TRUE;
+    }
+    else if (srcType == Types.DECIMAL){
+      return (x.decimal().compareTo(BigDecimal.ZERO)) == 0 ? Values.FALSE : Values.TRUE;
     }
 
     throw new AssertionError("Unknown type "+srcType);

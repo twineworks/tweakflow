@@ -46,6 +46,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.*;
 import java.util.*;
@@ -146,12 +147,12 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 //  }
 
   @Override
-  public ExpressionNode visitDecLiteral(TweakFlowParser.DecLiteralContext ctx) {
+  public ExpressionNode visitLongDecLiteral(TweakFlowParser.LongDecLiteralContext ctx) {
 
     SourceInfo sourceInfo = srcOf(parseUnit, ctx);
 
     try {
-      Long decLiteral = parseDecLiteral(ctx.getText().replace("_", ""));
+      Long decLiteral = parseLongLiteral(ctx.getText().replace("_", ""));
       return new LongNode(decLiteral).setSourceInfo(sourceInfo);
     } catch (NumberFormatException e) {
       throw new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
@@ -169,7 +170,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     return new DoubleNode(parseDoubleLiteral(ctx.getText())).setSourceInfo(srcOf(parseUnit, ctx));
   }
 
-  private Long parseDecLiteral(String text) {
+  private Long parseLongLiteral(String text) {
     return Long.parseLong(text);
   }
 
@@ -187,6 +188,18 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       return Long.parseLong(hex, 16); // regular parse
     }
 
+  }
+
+  @Override
+  public ExpressionNode visitDecimalLiteralExp(TweakFlowParser.DecimalLiteralExpContext ctx) {
+    String text = ctx.getText();
+    // remove underscores
+    text = text.replace("_", "");
+    // remove trailing D
+    text = text.substring(0, text.length()-1);
+    // parse the decimal
+    BigDecimal decimal = new BigDecimal(text);
+    return new DecimalNode(decimal).setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override

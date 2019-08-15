@@ -10,6 +10,7 @@ library operator_spec {
   bool: (true is boolean)   == true;
   l0: (0 is long)           == true;
   d0: (0.0 is double)       == true;
+  dc0: (0d is decimal)      == true;
   f: (lib.f is function)    == true;
   m: ({} is dict)           == true;
   a: ([] is list)           == true;
@@ -20,6 +21,7 @@ library operator_spec {
   nnil: (!(nil is long))     == true;
   nl0:  (!(0 is double))     == true;
   nd0:  (!(0.0 is long))     == true;
+  ndc0: (!(0d is long))      == true;
   nf:  (!(lib.f is long))    == true;
   nm:  (!({} is long))       == true;
   na:  (!([] is long))       == true;

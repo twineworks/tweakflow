@@ -102,6 +102,12 @@ public class NodeStructureAssert extends AbstractAssert<NodeStructureAssert, Nod
     }
   }
 
+  private void compareNodes(DecimalNode a, DecimalNode b){
+    if (!a.getDecimal().equals(b.getDecimal())){
+      failWithDifference("node values are different", a, b);
+    }
+  }
+
   private void compareNodes(BooleanNode a, BooleanNode b){
     if (!a.getBoolVal().equals(b.getBoolVal())){
       failWithDifference("node values are different", a, b);
@@ -244,6 +250,9 @@ public class NodeStructureAssert extends AbstractAssert<NodeStructureAssert, Nod
     }
     else if (a instanceof DoubleNode){
       compareNodes((DoubleNode) a, (DoubleNode) b);
+    }
+    else if (a instanceof DecimalNode){
+      compareNodes((DecimalNode) a, (DecimalNode) b);
     }
     else if (a instanceof BooleanNode){
       compareNodes((BooleanNode) a, (BooleanNode) b);

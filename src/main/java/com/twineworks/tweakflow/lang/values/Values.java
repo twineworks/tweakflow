@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.lang.values;
 
 import com.twineworks.tweakflow.lang.types.Types;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -58,6 +59,9 @@ final public class Values {
   public static final Value LONG_ZERO = new Value(Types.LONG, 0L);
   public static final Value LONG_ONE = new Value(Types.LONG, 1L);
   public static final Value LONG_NEG_ONE = new Value(Types.LONG, -1L);
+
+  public static final Value DECIMAL_ZERO = new Value(Types.DECIMAL, BigDecimal.ZERO);
+  public static final Value DECIMAL_ONE = new Value(Types.DECIMAL, BigDecimal.ONE);
 
   public static final Value[] LONGS = new Value[255];
 
@@ -98,6 +102,11 @@ final public class Values {
   public static Value make(Short i) {
     if (i == null) return NIL;
     return make(i.longValue());
+  }
+
+  public static Value make(BigDecimal d) {
+    if (d == null) return NIL;
+    return new Value(Types.DECIMAL, d);
   }
 
   public static Value make(Double d) {
@@ -187,6 +196,7 @@ final public class Values {
     if (o instanceof Long) return make((Long) o);
     if (o instanceof Integer) return make(((Integer) o).longValue());
     if (o instanceof Double) return make((Double) o);
+    if (o instanceof BigDecimal) return make((BigDecimal) o);
     if (o instanceof Instant) return make(new DateTimeValue((Instant) o));
     if (o instanceof DateTimeValue) return make((DateTimeValue) o);
     if (o instanceof FunctionValue) return make((FunctionValue) o);

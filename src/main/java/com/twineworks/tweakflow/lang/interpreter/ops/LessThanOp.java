@@ -34,6 +34,8 @@ import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 
+import java.math.BigDecimal;
+
 final public class LessThanOp implements ExpressionOp {
 
   private final LessThanNode node;
@@ -63,15 +65,43 @@ final public class LessThanOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return (left.longNum() < right.doubleNum()) ? Values.TRUE : Values.FALSE;
       }
+      if (rightType == Types.DECIMAL){
+        return (BigDecimal.valueOf(left.longNum()).compareTo(right.decimal()) < 0) ? Values.TRUE : Values.FALSE;
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         return (left.doubleNum() < right.longNum()) ? Values.TRUE : Values.FALSE;
       }
       if (rightType == Types.DOUBLE){
         return (left.doubleNum() < right.doubleNum()) ? Values.TRUE : Values.FALSE;
       }
-
+      if (rightType == Types.DECIMAL){
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          return (BigDecimal.valueOf(d).compareTo(right.decimal()) < 0) ? Values.TRUE : Values.FALSE;
+        }
+        else{
+          return (d == Double.NEGATIVE_INFINITY) ? Values.TRUE : Values.FALSE;
+        }
+      }
+    }
+    else if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        return left.decimal().compareTo(BigDecimal.valueOf(right.longNum())) < 0 ? Values.TRUE : Values.FALSE;
+      }
+      if (rightType == Types.DOUBLE){
+        double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          return left.decimal().compareTo(BigDecimal.valueOf(d)) < 0 ? Values.TRUE : Values.FALSE;
+        }
+        else {
+          return (d == Double.POSITIVE_INFINITY) ? Values.TRUE : Values.FALSE;
+        }
+      }
+      if (rightType == Types.DECIMAL){
+        return (left.decimal().compareTo(right.decimal()) < 0) ? Values.TRUE : Values.FALSE;
+      }
     }
     throw new LangException(LangError.CAST_ERROR, "cannot compare types "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
@@ -81,8 +111,8 @@ final public class LessThanOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

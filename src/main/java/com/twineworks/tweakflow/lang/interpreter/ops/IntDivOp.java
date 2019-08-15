@@ -56,7 +56,7 @@ final public class IntDivOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    // integer division promotes doubles to longs
+    // integer division promotes doubles and decimals to longs
     if (leftType == Types.LONG){
       if (rightType == Types.LONG){
         long r = right.longNum();
@@ -69,8 +69,14 @@ final public class IntDivOp implements ExpressionOp {
 
         return Values.make(left.longNum() / r);
       }
+      if (rightType == Types.DECIMAL){
+        long r = right.decimal().longValue();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+
+        return Values.make(left.longNum() / r);
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         long r = right.longNum();
         if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
@@ -82,8 +88,31 @@ final public class IntDivOp implements ExpressionOp {
         if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
         return Values.make(left.doubleNum().longValue() / r);
       }
+      if (rightType == Types.DECIMAL){
+        long r = right.decimal().longValue();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
+        return Values.make(left.doubleNum().longValue() / r);
+      }
     }
+    else if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        long r = right.longNum();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().longValue() / r);
+      }
+      if (rightType == Types.DOUBLE){
+        long r = right.doubleNum().longValue();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().longValue() / r);
+      }
+      if (rightType == Types.DECIMAL){
+        long r = right.decimal().longValue();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().longValue() / r);
+      }
+    }
+
     throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
   }
@@ -92,8 +121,8 @@ final public class IntDivOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

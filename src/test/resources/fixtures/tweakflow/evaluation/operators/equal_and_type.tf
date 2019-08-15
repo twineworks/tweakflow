@@ -27,16 +27,34 @@ library operator_spec {
   d1_d0: (1.0 === 0.0)    == false;
   d1_d1: (1.0 === 1.0)    == true;
 
-  l0_d0: (0 === 0.0)    == false;
+  dc0_dc1: (0d === 1d)    == false;
+  dc1_dc0: (1d === 0d)    == false;
+  dc1_dc1: (1d === 1d)    == true;
+
+  l0_d0:  (0 === 0.0)    == false;
+  l0_dc0: (0 === 0d)     == false;
 
   l0_d1: (0 === 1.0)    == false;
   l1_d0: (1 === 0.0)    == false;
   l1_d1: (1 === 1.0)    == false;
+  l0_dc1: (0 === 1d)    == false;
+  l1_dc0: (1 === 0d)    == false;
+  l1_dc1: (1 === 1d)    == false;
 
   d0_l0: (0.0 === 0)    == false;
   d0_l1: (0.0 === 1)    == false;
   d1_l0: (1.0 === 0)    == false;
   d1_l1: (1.0 === 1)    == false;
+
+  d0_dc0: (0.0 === 0d)    == false;
+  d0_dc1: (0.0 === 1d)    == false;
+  d1_dc0: (1.0 === 0d)    == false;
+  d1_dc1: (1.0 === 1d)    == false;
+
+  dc0_l0: (0d === 0)    == false;
+  dc0_l1: (0d === 1)    == false;
+  dc1_l0: (1d === 0)    == false;
+  dc1_l1: (1d === 1)    == false;
 
   nil_l0: (nil === 0)     == false;
   l0_nil:  (0 === nil)   == false;
@@ -71,6 +89,9 @@ library operator_spec {
   al0_a:     ([0] === [])      == false;
   al0_al0:   ([0] === [0])     == true;
   al0_ad0:   ([0] === [0.0])   == false;
+  al0_adc0:  ([0] === [0d])   == false;
+  ad0_adc0:  ([0.0] === [0d])   == false;
+  ad0_adc0_p1:  ([0.0] === [0.0d])   == false;
   anan_anan: ([NaN] === [NaN]) == false;
   af_af:     ([lib.f] === [lib.f]) == false;
   mnan_mnan: ({:a NaN} === {:a NaN}) == false;
@@ -81,6 +102,7 @@ library operator_spec {
 
   al0_ad1:   ([0] === [1.0])   == false;
   ad9_al9:   ([9.0] === [9]) == false;
+  ad9_adc9:  ([9.0] === [9d]) == false;
   ad9_as9:   ([9.0] === ["9"]) == false;
 
   a123_mixed: ([1.0, 2, 3.0] === [1, 2.0, 3]) == false;
@@ -93,8 +115,10 @@ library operator_spec {
   mab_mba:    ({:a 1, :b 2} === {:b 2, :a 1})    == true;
 
   mld:        ({:a 1} === {:a 1.0})             == false;
+  mldc:       ({:a 1} === {:a 1d})             == false;
 
-  m_mixed:    ({:a 1, :b 2.0} === {:a 1.0, :b 2}) == false;
+  m_mixed_d:    ({:a 1, :b 2.0} === {:a 1.0, :b 2}) == false;
+  m_mixed_dc:   ({:a 1, :b 2d} === {:a 1.0, :b 2}) == false;
 
   nested_mixed: {:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]}
                 ===
@@ -102,10 +126,16 @@ library operator_spec {
                 ==
                 false;
 
+  nested_mixed_dc: {:a [1d, 2, 3d, {:a 1d, :b [0]}]}
+                ===
+                {:a [1, 2d, 3, {:b [0d], :a 1}]}
+                ==
+                false;
+
   nested_same:   (
-                  {:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]}
+                  {:a [1.0, 2, 3d, {:a 1.0, :b [0d]}]}
                   ===
-                  {:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]}
+                  {:a [1.0, 2, 3d, {:a 1.0, :b [0d]}]}
                  )
                  ==
                  true;

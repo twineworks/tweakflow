@@ -34,6 +34,7 @@ final public class Types {
   public static final BooleanType BOOLEAN = new BooleanType();
   public static final BinaryType BINARY = new BinaryType();
   public static final StringType STRING = new StringType();
+  public static final DecimalType DECIMAL = new DecimalType();
   public static final LongType LONG = new LongType();
   public static final ListType LIST = new ListType();
   public static final DictType DICT = new DictType();
@@ -56,6 +57,7 @@ final public class Types {
     byName.put(FUNCTION.name(), FUNCTION);
     byName.put(DOUBLE.name(), DOUBLE);
     byName.put(DATETIME.name(), DATETIME);
+    byName.put(DECIMAL.name(), DECIMAL);
   }
 
   public static Type byName(String name) {

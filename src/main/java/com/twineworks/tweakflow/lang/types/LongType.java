@@ -78,12 +78,7 @@ final public class LongType implements Type {
   }
 
   @Override
-  public boolean isBigInteger() {
-    return false;
-  }
-
-  @Override
-  public boolean isBigDecimal() {
+  public boolean isDecimal() {
     return false;
   }
 
@@ -104,11 +99,6 @@ final public class LongType implements Type {
 
   @Override
   public boolean isList() {
-    return false;
-  }
-
-  @Override
-  public boolean isSet() {
     return false;
   }
 
@@ -134,6 +124,7 @@ final public class LongType implements Type {
         || type == Types.VOID
         || type == Types.BOOLEAN
         || type == Types.DOUBLE
+        || type == Types.DECIMAL
         || type == Types.STRING;
   }
 
@@ -146,6 +137,10 @@ final public class LongType implements Type {
 
     if (srcType == Types.DOUBLE){
       return Values.make(x.doubleNum().longValue());
+    }
+
+    if (srcType == Types.DECIMAL){
+      return Values.make(x.decimal().longValue());
     }
 
     if (srcType == Types.STRING){
@@ -165,7 +160,7 @@ final public class LongType implements Type {
     }
 
     if (srcType == Types.BOOLEAN){
-      return (x == Values.TRUE) ? Values.make(1L) : Values.make(0L);
+      return (x == Values.TRUE) ? Values.LONG_ONE : Values.LONG_ZERO;
     }
 
     throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+name());
@@ -185,6 +180,10 @@ final public class LongType implements Type {
     if (o.type() == Types.DOUBLE){
       // the double type implements equality check between doubles and longs
       return Types.DOUBLE.valueEquals(o, x);
+    }
+    if (o.type() == Types.DECIMAL){
+      // the decimal type implements equality check between decimals and longs
+      return Types.DECIMAL.valueEquals(o, x);
     }
     return false;
   }

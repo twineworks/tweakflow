@@ -28,6 +28,8 @@ import com.twineworks.tweakflow.TestHelper;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BooleanTypeTest {
@@ -81,6 +83,17 @@ public class BooleanTypeTest {
     assertThat(Types.BOOLEAN.canAttemptCastFrom(Types.LONG)).isTrue();
     assertThat(Types.BOOLEAN.castFrom(Values.make(0L))).isSameAs(Values.FALSE);
     assertThat(Types.BOOLEAN.castFrom(Values.make(1L))).isSameAs(Values.TRUE);
+  }
+
+  @Test
+  public void casts_from_decimal() throws Exception {
+    assertThat(Types.BOOLEAN.canAttemptCastFrom(Types.DECIMAL)).isTrue();
+    assertThat(Types.BOOLEAN.castFrom(Values.make(BigDecimal.ZERO))).isSameAs(Values.FALSE);
+    assertThat(Types.BOOLEAN.castFrom(Values.make(new BigDecimal("0.00")))).isSameAs(Values.FALSE);
+    assertThat(Types.BOOLEAN.castFrom(Values.make(BigDecimal.ONE))).isSameAs(Values.TRUE);
+    assertThat(Types.BOOLEAN.castFrom(Values.make(new BigDecimal("1.000")))).isSameAs(Values.TRUE);
+    assertThat(Types.BOOLEAN.castFrom(Values.make(new BigDecimal("-1.000")))).isSameAs(Values.TRUE);
+    assertThat(Types.BOOLEAN.castFrom(Values.make(new BigDecimal("-0.0001")))).isSameAs(Values.TRUE);
   }
 
   @Test

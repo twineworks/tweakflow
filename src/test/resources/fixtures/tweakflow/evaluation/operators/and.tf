@@ -21,15 +21,39 @@ library operator_spec {
   d1_d0: (1.0 && 0.0)    == false;
   d1_d1: (1.0 && 1.0)    == true;
 
+  dc0_dc1: (0.0d && 1.0d)    == false;
+  dc1_dc0: (1.0d && 0.0d)    == false;
+  dc1_dc1: (1.0d && 1.0d)    == true;
+
   l0_d0: (0 && 0.0)    == false;
   l0_d1: (0 && 1.0)    == false;
   l1_d0: (1 && 0.0)    == false;
   l1_d1: (1 && 1.0)    == true;
 
+  l0_dc0: (0 && 0.0d)    == false;
+  l0_dc1: (0 && 1.0d)    == false;
+  l1_dc0: (1 && 0.0d)    == false;
+  l1_dc1: (1 && 1.0d)    == true;
+
   d0_l0: (0.0 && 0)    == false;
   d0_l1: (0.0 && 1)    == false;
   d1_l0: (1.0 && 0)    == false;
   d1_l1: (1.0 && 1)    == true;
+
+  d0_dc0: (0.0 && 0d)    == false;
+  d0_dc1: (0.0 && 1d)    == false;
+  d1_dc0: (1.0 && 0d)    == false;
+  d1_dc1: (1.0 && 1d)    == true;
+
+  dc0_d0: (0d && 0.0)    == false;
+  dc1_d0: (1d && 0.0)    == false;
+  dc0_d1: (0d && 1.0)    == false;
+  dc1_d1: (1d && 1.0)    == true;
+
+  dc0_l0: (0d && 0)    == false;
+  dc1_l0: (1d && 0)    == false;
+  dc0_l1: (0d && 1)    == false;
+  dc1_l1: (1d && 1)    == true;
 
   nil_l0: (nil && 0)     == false;
   l0_nil: (0 && nil)     == false;
