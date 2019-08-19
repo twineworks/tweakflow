@@ -23,16 +23,29 @@ library operator_spec {
   d1_d0: (1.0 != 0.0)    == true;
   d1_d1: (1.0 != 1.0)    == false;
 
-  l0_d0: (0 != 0.0)    == false;
+  dc0_dc1: (0d != 1d)    == true;
+  dc1_dc0: (1d != 0d)    == true;
+  dc1_dc1: (1d != 1d)    == false;
 
+  l0_d0:  (0 != 0.0)    == false;
   l0_d1: (0 != 1.0)    == true;
   l1_d0: (1 != 0.0)    == true;
   l1_d1: (1 != 1.0)    == false;
+
+  l0_dc0: (0 != 0d)    == false;
+  l0_dc1: (0 != 1d)    == true;
+  l1_dc0: (1 != 0d)    == true;
+  l1_dc1: (1 != 1d)    == false;
 
   d0_l0: (0.0 != 0)    == false;
   d0_l1: (0.0 != 1)    == true;
   d1_l0: (1.0 != 0)    == true;
   d1_l1: (1.0 != 1)    == false;
+
+  d0_dc0: (0.0 != 0d)    == false;
+  d0_dc1: (0.0 != 1d)    == true;
+  d1_dc0: (1.0 != 0d)    == true;
+  d1_dc1: (1.0 != 1d)    == false;
 
   be_be: (0b != 0b) == false;
   be_b0: (0b != 0b00) == true;
@@ -48,6 +61,9 @@ library operator_spec {
   nil_d0: (nil != 0.0)   == true;
   d0_nil: (0.0 != nil)   == true;
 
+  nil_dc0: (nil != 0d)   == true;
+  dc0_nil: (0d != nil)   == true;
+
   inf_inf:    (Infinity != Infinity)  == false;
   ninf_inf:  (-Infinity != Infinity)  == true;
   inf_ninf:   (Infinity != -Infinity) == true;
@@ -58,9 +74,18 @@ library operator_spec {
   d0_inf:      (0.0 != Infinity)   == true;
   d0_ninf:     (0.0 != -Infinity)  == true;
 
+  inf_dc0:      (Infinity != 0d)   == true;
+  ninf_dc0:    (-Infinity != 0d)   == true;
+  dc0_inf:      (0d != Infinity)   == true;
+  dc0_ninf:     (0d != -Infinity)  == true;
+
   nan_nan:    (NaN != NaN) == true; # note that NaN is not equal to itself
+  nan_l0:     (NaN != 0) == true;
+  l0_nan:     (0 != NaN) == true;
   nan_d0:     (NaN != 0.0) == true;
   d0_nan:     (0.0 != NaN) == true;
+  nan_dc0:    (NaN != 0d) == true;
+  dc0_nan:    (0d != NaN) == true;
 
   foo_bar:    ("foo" != "bar") == true;
   foo_foo:    ("foo" != "foo") == false;
@@ -75,7 +100,9 @@ library operator_spec {
   al0_a:     ([0] != [])      == true;
   al0_al0:   ([0] != [0])    == false;
   al0_ad0:   ([0] != [0.0])   == false;
+  al0_adc0:  ([0] != [0d])   == false;
   ml0_md0:   ({:a 0} != {:a 0.0}) == false;
+  ml0_mdc0:  ({:a 0} != {:a 0d}) == false;
   ml0_ml1:   ({:a 0} != {:a 1}) == true;
   anan_anan: ([NaN]      != [NaN])      == true;
   af_af:     ([lib.f]    != [lib.f])    == true;
@@ -87,9 +114,10 @@ library operator_spec {
 
   al0_ad1:   ([0] != [1.0])   == true;
   ad9_al9:   ([9.0] != [9]) == false;
+  adc9_al9:   ([9d] != [9]) == false;
   ad9_as9:   ([9.0] != ["9"]) == true;
 
-  a123_mixed: ([1.0, 2, 3.0] != [1, 2.0, 3]) == false;
+  a123_mixed: ([1.0, 2, 3d] != [1d, 2.0, 3]) == false;
 
   m_m:        ({} != {})          == false;
   mxl0_mxl0:  ({:x 0} != {:x 0})  == false;
@@ -99,11 +127,11 @@ library operator_spec {
 
   mld:        ({:a 1} != {:a 1.0})             == false;
 
-  m_mixed:    ({:a 1, :b 2.0} != {:a 1.0, :b 2})             == false;
+  m_mixed:    ({:a 1, :b 2.0, :c 3d} != {:a 1d, :b 2, :c 3.0})             == false;
 
-  nested_mixed: ({:a [1.0, 2, 3.0, {:a 1.0, :b [0]}]}
+  nested_mixed: ({:a [1.0, 2, 3d, {:a 1.0, :b [0]}]}
                 !=
-                {:a [1, 2.0, 3, {:b [0.0], :a 1}]})
+                {:a [1d, 2.0, 3, {:b [0d], :a 1}]})
                 ==
                 false;
 

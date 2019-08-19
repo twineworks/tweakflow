@@ -21,7 +21,8 @@ library spec {
           f: formatter("0.00");
         }
         expect(f(1), to.be("1.00")) &&
-        expect(f(-2.2), to.be("-2.20"))
+        expect(f(-2.2), to.be("-2.20")) &&
+        expect(f(-2.2d), to.be("-2.20"))
       ),
 
       it("of_localized_symbols", () ->
@@ -30,7 +31,8 @@ library spec {
           f: formatter("0.00", s);
         }
         expect(f(1), to.be("1,00")) &&
-        expect(f(-2.2), to.be("-2,20"))
+        expect(f(-2.2), to.be("-2,20")) &&
+        expect(f(-2.2d), to.be("-2,20"))
       ),
 
       it("of_floor_rounding", () ->
@@ -38,7 +40,8 @@ library spec {
           f: formatter("0.00", rounding_mode: 'floor');
         }
         expect(f(1.888), to.be("1.88")) &&
-        expect(f(-2.222), to.be("-2.23"))
+        expect(f(-2.222), to.be("-2.23")) &&
+        expect(f(-2.222d), to.be("-2.23"))
       ),
 
       it("of_always_show_decimal_sep", () ->
@@ -46,7 +49,7 @@ library spec {
           f: formatter("0.##", always_show_decimal_separator: true);
         }
         expect(f(1.0), to.be("1.")) &&
-        expect(f(-20.0), to.be("-20."))
+        expect(f(-20.0d), to.be("-20."))
       ),
 
       it("of_not_always_show_decimal_sep", () ->
@@ -54,7 +57,7 @@ library spec {
           f: formatter("0.##", always_show_decimal_separator: false);
         }
         expect(f(1.0), to.be("1")) &&
-        expect(f(-20.0), to.be("-20"))
+        expect(f(-20.0d), to.be("-20"))
       ),
 
       it("of_bad_pattern", () ->

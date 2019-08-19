@@ -4690,6 +4690,8 @@ If `x` is `-Infinity` the result is `Infinity`.
 If `x` is a `long`, returns the absolute value of `x` as a long. \
 If `x` is a long, and is equal to `math.min_long`, the absolute value cannot be represented as a long, and an error is thrown.
 
+If `x` is a `decimal`, returns the absolute value of `x` as a decimal.
+
 If `x` is `nil`, returns `nil`.
 
 Throws an error if `x` is not numeric and not `nil`.
@@ -4703,6 +4705,9 @@ Throws an error if `x` is not numeric and not `nil`.
 
 > math.abs(-2.0)
 2.0
+
+> math.abs(-1.000d)
+1.000d
 
 > math.abs(-Infinity)
 Infinity
@@ -4795,14 +4800,15 @@ doc
 
 Increments `x` by one.
 
-If `x` is a double, returns x+1.0. \
-If `x` is a long, returns x+1. \
+If `x` is a double, returns `x+1.0` \
+If `x` is a long, returns `x+1` \
+If `x` is a decimal, returns `x+1d` \
 
 Does not guard against overflow of long values.
 
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is neither a `long` nor a `double`.
+Throws an error if `x` is not numeric.
 
 ```tweakflow
 > math.inc(2.0)
@@ -4813,6 +4819,9 @@ Throws an error if `x` is neither a `long` nor a `double`.
 
 > math.inc(1)
 2
+
+> math.inc(4.1234d)
+5.1234d
 
 > math.inc(math.max_long)
 -9223372036854775808 # overflow to math.min_long
@@ -4835,14 +4844,15 @@ doc
 
 Decrements `x` by one.
 
-If `x` is a double, returns x-1.0. \
-If `x` is a long, returns x-1. \
+If `x` is a double, returns `x-1.0` \
+If `x` is a long, returns `x-1` \
+If `x` is a decimal, returns `x-1d` \
 
-Does not guard against undeflow of long values.
+Does not guard against underflow of long values.
 
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is neither a `long` nor a `double`.
+Throws an error if `x` is not numeric.
 
 ```tweakflow
 > math.dec(2.0)
@@ -4850,6 +4860,9 @@ Throws an error if `x` is neither a `long` nor a `double`.
 
 > math.dec(-2.0)
 -3.0
+
+> math.dec(-2.1d)
+-3.1d
 
 > math.dec(1)
 0
@@ -4873,7 +4886,7 @@ doc
 ~~~
 `(a, b) -> long`
 
-Compares long or double numbers a and b according to their numeric order.
+Compares numbers a and b according to their numeric order.
 
 Returns -1 if a < b.\
 Returns 1 if a > b.\
@@ -4881,7 +4894,7 @@ Returns 0 if a == b.
 
 The order reflected by this function sorts these values in order: `nil`, `NaN`, `-Infinity`, finite numeric values, and `Infinity`.
 
-Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
+Throws an error if `a` or `b` are not `nil`, and not numeric.
 
 ```tweakflow
 > math.compare(1, 1)
@@ -4893,8 +4906,8 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 > math.compare(7.0, 2)
 1
 
-> data.sort([4, 3, 2.5, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
-[nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
+> data.sort([4, 3, 2.5d, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
+[nil, NaN, -Infinity, 0.2, 1, 2.5d, 3, 4, Infinity]
 ```
 ~~~
   function compare: (a, b) -> long via {:class "com.twineworks.tweakflow.std.Math$compare"};
@@ -4907,13 +4920,13 @@ Given a list of numeric `xs`, returns the smallest `x`.\
 
 Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
+Throws an error if any `x` is anything other than a numeric value or `nil`.
 
 ```tweakflow
 > math.min([1,2,3])
 1
 
-> math.min([1.0, 2.0, -3.0])
+> math.min([1.0, 2d, -3.0])
 -3.0
 
 > math.min([1, nil])
@@ -4939,13 +4952,13 @@ Given a list of numeric `xs`, returns the largest `x`.
 
 Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
+Throws an error if any `x` is anything other than a numeric value or `nil`.
 
 ```tweakflow
 > math.max([1,2,3])
 3
 
-> math.max([1.0, 2.0, -3.0])
+> math.max([1.0, 2.0, -3d])
 2.0
 
 > math.max([1, nil])
@@ -5046,9 +5059,9 @@ nil
 
 doc
 ~~~
-`(double x) -> boolean`
+`(any x) -> boolean`
 
-Given a double `x`, returns `true` if `x` is NaN, returns `false` otherwise.
+Given a value `x`, returns `true` if `x` is NaN, returns `false` otherwise.
 
 ```tweakflow
 > math.NaN?(2.3)
@@ -5316,7 +5329,7 @@ doc
 ) -> function
 ```
 
-Returns a function `f` that accepts a single `long` or `double` parameter `x`, and returns a string representation of `x` using the
+Returns a function `f` that accepts a single numeric parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html),
 [decimal_symbols](#locale-decimal_symbols),
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
@@ -5327,7 +5340,7 @@ If `decimal_symbols` is `nil` (the default), 'en-US' decimal symbols are used.\
 Java language.
 
 `f` returns `nil` if passed `nil` as an argument.
-`f` throws an error if `x` is neither a `double`, nor a `long` value.
+`f` throws an error if `x` is not a numeric value.
 
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
 Throws an error if `decimal_symbols` is invalid.\
@@ -5372,7 +5385,8 @@ doc
 (
   string pattern='0.##',
   dict decimal_symbols=nil,
-  boolean lenient=false
+  boolean lenient=false,
+  boolean parse_decimal=false
 ) -> function
 ```
 
@@ -5384,11 +5398,15 @@ Uses `en-US` decimal symbols if `decimal_symbols` is `nil`.
 If `lenient` is `false` then `x` must parse as a number in its entirety. Partial matches throw an error.\
 If `lenient` is `true` then partial matches of `x` return the number that results from parsing the partial match.
 
+If `parse_decimal` is false, `f` returns a `long` or `double` value.\
+If `parse_decimal` is true, `f` returns a `decimal` value.
+
 `f` returns `nil` if `x` is `nil`.
 
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
 Throws an error if `decimal_symbols` is invalid.\
-Throws an error if `lenient` is `nil`.
+Throws an error if `lenient` is `nil`. \
+Throws an error if `parse_decimal` is `nil`.
 
 ```tweakflow
 > f: math.parser()
@@ -5408,15 +5426,23 @@ function
 > f("203.23kg")
 203.23
 
+# localized parser
 > f: math.parser('#,##0.##', locale.decimal_symbols('hi-IN'))
 function
 
 > f("१०३")
 103
+
+# decimal parser
+> f: math.parser('0.##', parse_decimal: true)
+function
+
+> f("203.23")
+203.23d
 ```
 ~~~
 
-  function parser: (string pattern='0.##', dict decimal_symbols=nil, boolean lenient=false) -> function via {:class "com.twineworks.tweakflow.std.Math$parser"};
+  function parser: (string pattern='0.##', dict decimal_symbols=nil, boolean lenient=false, boolean parse_decimal=false) -> function via {:class "com.twineworks.tweakflow.std.Math$parser"};
 
 doc
 ~~~

@@ -86,9 +86,25 @@ final public class DivOp implements ExpressionOp {
         return Values.make(left.doubleNum() / right.doubleNum());
       }
       if (rightType == Types.DECIMAL){
-        BigDecimal divisor = right.decimal();
-        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(BigDecimal.valueOf(left.doubleNum()).divide(divisor, ROUNDING_MODE));
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          BigDecimal divisor = right.decimal();
+          if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+
+          return Values.make(BigDecimal.valueOf(left.doubleNum()).divide(divisor, ROUNDING_MODE));
+        }
+        else{
+          // NaN / some_d -> NaN
+          if (Double.isNaN(d)) return left;
+          // Infinity / pos_d -> Infinity
+          // Infinity / neg_d -> -Infinity
+          if (right.decimal().compareTo(BigDecimal.ZERO) >= 0){
+            return left;
+          }
+          else {
+            return Values.make(-d);
+          }
+        }
       }
     }
     else if (leftType == Types.DECIMAL){
@@ -99,9 +115,18 @@ final public class DivOp implements ExpressionOp {
         return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
       }
       if (rightType == Types.DOUBLE){
-        BigDecimal divisor = BigDecimal.valueOf(right.doubleNum());
-        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+        double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          BigDecimal divisor = BigDecimal.valueOf(right.doubleNum());
+          if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+          return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+        }
+        else{
+          // some_d / NaN -> NaN
+          if (Double.isNaN(d)) return right;
+          // some_d / +-Infinity -> 0
+          return Values.DECIMAL_ZERO;
+        }
       }
       if (rightType == Types.DECIMAL){
         BigDecimal divisor = right.decimal();

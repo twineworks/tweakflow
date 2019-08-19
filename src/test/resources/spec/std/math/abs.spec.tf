@@ -19,6 +19,10 @@ library spec {
         expect(abs(12345), to.be(12345))
       ),
 
+      it("pos_decimal", () ->
+        expect(abs(12345.56d), to.be(12345.56d))
+      ),
+
       it("of_NaN", () ->
         expect(abs(NaN), to.be_NaN())
       ),
@@ -41,6 +45,10 @@ library spec {
 
       it("neg_double", () ->
         expect(abs(-12345.6789), to.be(12345.6789))
+      ),
+
+      it("neg_decimal", () ->
+        expect(abs(-12345.6789d), to.be(12345.6789d))
       ),
 
       it("of_min_long", () ->

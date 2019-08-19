@@ -198,8 +198,9 @@ final public class DecimalType implements Type {
     }
     // comparing to a double?
     else if (o.type() == Types.DOUBLE){
-      if (Double.isFinite(o.doubleNum())){
-        return dec.compareTo(BigDecimal.valueOf(o.doubleNum())) == 0;
+      double d = o.doubleNum();
+      if (Double.isFinite(d)){
+        return dec.compareTo(BigDecimal.valueOf(d)) == 0;
       }
       else {
         return false;

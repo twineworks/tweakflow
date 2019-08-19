@@ -34,6 +34,8 @@ import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 
+import java.math.BigDecimal;
+
 final public class MultOp implements ExpressionOp {
 
   private final MultNode node;
@@ -63,15 +65,59 @@ final public class MultOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum() * right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        return Values.make(BigDecimal.valueOf(left.longNum()).multiply(right.decimal()));
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         return Values.make(left.doubleNum() * right.longNum());
       }
       if (rightType == Types.DOUBLE){
         return Values.make(left.doubleNum() * right.doubleNum());
       }
-
+      if (rightType == Types.DECIMAL){
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(BigDecimal.valueOf(d).multiply(right.decimal()));
+        }
+        else {
+          // NaN * some_d -> NaN
+          if (Double.isNaN(d)) return Values.NAN;
+          // Infinity * some_d > 0 -> Infinity
+          // Infinity * some_d < 0 -> -Infinity
+          // Infinity * 0 -> NaN
+          int cmp = right.decimal().compareTo(BigDecimal.ZERO);
+          if (cmp == 0) return Values.NAN;
+          if (cmp > 0) return left;
+          return Values.make(-d);
+        }
+      }
+    }
+    else if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        return Values.make(left.decimal().multiply(BigDecimal.valueOf(right.longNum())));
+      }
+      if (rightType == Types.DOUBLE){
+        Double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(left.decimal().multiply(BigDecimal.valueOf(d)));
+        }
+        else{
+          // some_d * NaN -> NaN
+          if (Double.isNaN(d)) return right;
+          // some_d > 0 * Infinity -> Infinity
+          // some_d < 0 * Infinity -> -Infinity
+          // 0 * Infinity -> NaN
+          int cmp = left.decimal().compareTo(BigDecimal.ZERO);
+          if (cmp == 0) return Values.NAN;
+          if (cmp > 0) return right;
+          return Values.make(-d);
+        }
+      }
+      if (rightType == Types.DECIMAL){
+        return Values.make(left.decimal().multiply(right.decimal()));
+      }
     }
     throw new LangException(LangError.CAST_ERROR, "cannot multiply types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
@@ -81,8 +127,8 @@ final public class MultOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

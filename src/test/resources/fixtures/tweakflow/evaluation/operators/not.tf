@@ -29,6 +29,10 @@ library operator_spec {
   d1:   !1.0    == false;
   dn1: !-1.0    == false;
 
+  dc0:   !0d    == true;
+  dc1:   !1d    == false;
+  dcn1: !-1d    == false;
+
   foo: !"foo"  == false;
   s_:  !""     == true;      # empty string casts to boolean false
   f:   !lib.f  == false;

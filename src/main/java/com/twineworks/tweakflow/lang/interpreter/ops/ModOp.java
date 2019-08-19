@@ -27,12 +27,14 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.ast.expressions.ModNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
+
+import java.math.BigDecimal;
 
 final public class ModOp implements ExpressionOp {
 
@@ -65,15 +67,54 @@ final public class ModOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum() % right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        return Values.make(BigDecimal.valueOf(left.longNum()).remainder(right.decimal()));
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         return Values.make(left.doubleNum() % right.longNum());
       }
       if (rightType == Types.DOUBLE){
         return Values.make(left.doubleNum() % right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          BigDecimal r = right.decimal();
+          if (r.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+          return Values.make(BigDecimal.valueOf(d).remainder(right.decimal()));
+        }
+        else {
+          return Values.NAN;
+        }
 
+      }
+    }
+    if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        long r = right.longNum();
+        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().remainder(BigDecimal.valueOf(r)));
+      }
+      if (rightType == Types.DOUBLE){
+        double r = right.doubleNum();
+        if (r == 0.0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        if (Double.isFinite(r)){
+          return Values.make(left.decimal().remainder(BigDecimal.valueOf(r)));
+        }
+        else{
+          // some_d % NaN
+          if (Double.isNaN(r)) return right;
+          // some_d % +-Infinity
+          return left;
+        }
+      }
+      if (rightType == Types.DECIMAL){
+        BigDecimal r = right.decimal();
+        if (r.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.decimal().remainder(right.decimal()));
+      }
     }
     throw new LangException(LangError.CAST_ERROR, "Cannot divide types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
@@ -83,8 +124,8 @@ final public class ModOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

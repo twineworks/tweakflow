@@ -42,6 +42,7 @@ public class Out implements AutoCloseable {
 
   private final LongSerializer longSerializer = new LongSerializer();
   private final DoubleSerializer doubleSerializer = new DoubleSerializer();
+  private final DecimalSerializer decimalSerializer = new DecimalSerializer();
   private final DatetimeSerializer datetimeSerializer = new DatetimeSerializer();
   private final StringSerializer stringSerializer = new StringSerializer();
   private final ListSerializer listSerializer = new ListSerializer();
@@ -78,6 +79,9 @@ public class Out implements AutoCloseable {
     }
     else if (v.isDoubleNum()){
       serializers.push(doubleSerializer);
+    }
+    else if (v.isDecimal()){
+      serializers.push(decimalSerializer);
     }
     else if (v.isString()){
       serializers.push(stringSerializer);

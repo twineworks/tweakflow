@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -143,6 +144,28 @@ class OutTest {
       for (int i=0;i<100;i++){
         Value v = in.readNext();
         assertThat(v).isEqualTo(Values.make((double)i));
+      }
+      Value end = in.readNext();
+      assertThat(end).isNull();
+    }
+    r.close();
+
+  }
+
+  @Test
+  void writes_decimals() throws Exception {
+
+    try (Out out = new Out(w, 17)) {
+      for (int i=0;i<100;i++){
+        out.write(Values.make(new BigDecimal(i+"."+i)));
+      }
+    }
+    w.close();
+
+    try (In in = new In(r, 17)){
+      for (int i=0;i<100;i++){
+        Value v = in.readNext();
+        assertThat(v).isEqualTo(Values.make(new BigDecimal(i+"."+i)));
       }
       Value end = in.readNext();
       assertThat(end).isNull();
@@ -395,7 +418,7 @@ class OutTest {
     for (int i=0;i<1000;i++){
       Value a = Values.makeDict("foo", "bar", "baz", Values.EMPTY_LIST);
       Value b = Values.makeList("a", i, "b", i+1, "c", a);
-      Value c = Values.makeDict("z", a, "x", b, "y", i+1, "q", i+2);
+      Value c = Values.makeDict("z", a, "x", b, "y", new BigDecimal(i+1), "q", i+2);
       values.add(c);
     }
 

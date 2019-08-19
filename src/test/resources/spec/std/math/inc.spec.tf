@@ -18,6 +18,10 @@ library spec {
       it("of_zero_long", () -> 
         expect(inc(0), to.be(1))
       ),
+
+      it("of_zero_decimal", () ->
+        expect(inc(0d), to.be(1d))
+      ),
     
       it("of_NaN", () -> 
         expect(inc(NaN), to.be_NaN())
@@ -29,6 +33,22 @@ library spec {
     
       it("of_neg_one_long", () -> 
         expect(inc(-1), to.be(0))
+      ),
+
+      it("of_one_decimal", () ->
+        expect(inc(1d), to.be(2d))
+      ),
+
+      it("of_fraction_decimal", () ->
+        expect(inc(1.234d), to.be(2.234d))
+      ),
+
+      it("of_neg_one_decimal", () ->
+        expect(inc(-1d), to.be(0d))
+      ),
+
+      it("of_neg_fraction_decimal", () ->
+        expect(inc(-1.234d), to.be(-0.234d))
       ),
     
       it("of_zero_double", () -> 

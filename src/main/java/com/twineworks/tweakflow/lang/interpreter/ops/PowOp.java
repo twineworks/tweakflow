@@ -27,12 +27,12 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.ast.expressions.PowNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 
 final public class PowOp implements ExpressionOp {
 
@@ -68,13 +68,41 @@ final public class PowOp implements ExpressionOp {
       return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.doubleNum()));
     }
 
+    if (baseType == Types.DOUBLE && exponentType == Types.DECIMAL){
+      return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.decimal().doubleValue()));
+    }
+
     if (baseType == Types.LONG && exponentType == Types.DOUBLE){
       return Values.make(java.lang.Math.pow(base.longNum(), exponent.doubleNum()));
+    }
+
+    if (baseType == Types.LONG && exponentType == Types.DECIMAL){
+      return Values.make(java.lang.Math.pow(base.longNum(), exponent.decimal().doubleValue()));
     }
 
     if (baseType == Types.DOUBLE && exponentType == Types.LONG){
       return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.longNum()));
     }
+
+    if (baseType == Types.DECIMAL && exponentType == Types.LONG){
+      long exp = exponent.longNum();
+      // documented range of BigDecimal.pow
+      if (exp >= 0 && exp <= 999999999){
+        return Values.make(base.decimal().pow((int)exp));
+      }
+      else{
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "exponent too large, must be within range of 0 to 999999999, cannot lift base of type "+base.type().name()+" to exponent of "+exp, stack, node.getSourceInfo());
+      }
+    }
+
+    if (baseType == Types.DECIMAL && exponentType == Types.DOUBLE){
+      return Values.make(java.lang.Math.pow(base.decimal().doubleValue(), exponent.doubleNum()));
+    }
+
+    if (baseType == Types.DECIMAL && exponentType == Types.DECIMAL){
+      return Values.make(java.lang.Math.pow(base.decimal().doubleValue(), exponent.decimal().doubleValue()));
+    }
+
 
     throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+base.type().name()+" to exponent of type " + exponent.type().name(), stack, node.getSourceInfo());
 
@@ -84,8 +112,8 @@ final public class PowOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

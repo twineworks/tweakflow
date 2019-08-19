@@ -82,7 +82,15 @@ final public class PlusOp implements ExpressionOp {
         return Values.make(left.doubleNum() + right.doubleNum());
       }
       if (rightType == Types.DECIMAL){
-        return Values.make(BigDecimal.valueOf(left.doubleNum()).add(right.decimal()));
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(BigDecimal.valueOf(left.doubleNum()).add(right.decimal()));
+        }
+        else{
+          // NaN + some_d -> NaN
+          // +-Infinity + some_d -> +-Infinity
+          return left;
+        }
       }
     }
     if (leftType == Types.DECIMAL){
@@ -90,7 +98,16 @@ final public class PlusOp implements ExpressionOp {
         return Values.make(left.decimal().add(BigDecimal.valueOf(right.longNum())));
       }
       if (rightType == Types.DOUBLE){
-        return Values.make(left.decimal().add(BigDecimal.valueOf(right.doubleNum())));
+        double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(left.decimal().add(BigDecimal.valueOf(d)));
+        }
+        else {
+          // some_d + NaN -> NaN
+          // some_d + +-Infinity -> +-Infinity
+          return right;
+        }
+
       }
       if (rightType == Types.DECIMAL){
         return Values.make(left.decimal().add(right.decimal()));

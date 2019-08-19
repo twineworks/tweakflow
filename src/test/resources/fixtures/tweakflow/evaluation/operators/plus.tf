@@ -12,9 +12,9 @@ library operator_spec {
 
   nil_nil: nil + nil  == nil;
 
-  l0_l1: 0 + 1        == 1;
-  l1_l0: 1 + 0        == 1;
-  l1_l1: 1 + 1        == 2;
+  l0_l1: 0 + 1        === 1;
+  l1_l0: 1 + 0        === 1;
+  l1_l1: 1 + 1        === 2;
 
   # integer overflow
   max_inc: max_long + 1 == min_long;
@@ -25,25 +25,54 @@ library operator_spec {
   # adding extremes
   min_max: max_long + min_long + 1 == 0;
 
-  d0_d1: 0.0 + 1.0    == 1.0;
-  d1_d0: 1.0 + 0.0    == 1.0;
-  d1_d1: 1.0 + 1.0    == 2.0;
+  d0_d0: 0.0 + 0.0    === 0.0;
+  d0_d1: 0.0 + 1.0    === 1.0;
+  d1_d0: 1.0 + 0.0    === 1.0;
+  d1_d1: 1.0 + 1.0    === 2.0;
 
-  l0_d0: 0 + 0.0    == 0.0;
-  l0_d1: 0 + 1.0    == 1.0;
-  l1_d0: 1 + 0.0    == 1.0;
-  l1_d1: 1 + 1.0    == 2.0;
+  dc0_dc0: 0d + 0d    === 0d;
+  dc0_dc1: 0d + 1d    === 1d;
+  dc1_dc0: 1d + 0d    === 1d;
+  dc1_dc1: 1d + 1d    === 2d;
 
-  d0_l0: 0.0 + 0    == 0.0;
-  d0_l1: 0.0 + 1    == 1.0;
-  d1_l0: 1.0 + 0    == 1.0;
-  d1_l1: 1.0 + 1    == 2.0;
+  dc0_d0: 0d + 0.0    === 0d;
+  dc0_d1: 0d + 1.0    === 1d;
+  dc1_d0: 1d + 0.0    === 1d;
+  dc1_d1: 1d + 1.0    === 2d;
+
+  dc0_l0: 0d + 0    === 0d;
+  dc0_l1: 0d + 1    === 1d;
+  dc1_l0: 1d + 0    === 1d;
+  dc1_l1: 1d + 1    === 2d;
+
+  l0_d0: 0 + 0.0    === 0.0;
+  l0_d1: 0 + 1.0    === 1.0;
+  l1_d0: 1 + 0.0    === 1.0;
+  l1_d1: 1 + 1.0    === 2.0;
+
+  l0_dc0: 0 + 0d    === 0d;
+  l0_dc1: 0 + 1d    === 1d;
+  l1_dc0: 1 + 0d    === 1d;
+  l1_dc1: 1 + 1d    === 2d;
+
+  d0_l0: 0.0 + 0    === 0.0;
+  d0_l1: 0.0 + 1    === 1.0;
+  d1_l0: 1.0 + 0    === 1.0;
+  d1_l1: 1.0 + 1    === 2.0;
+
+  d0_dc0: 0.0 + 0d    === 0d;
+  d0_dc1: 0.0 + 1d    === 1d;
+  d1_dc0: 1.0 + 0d    === 1d;
+  d1_dc1: 1.0 + 1d    === 2d;
 
   nil_l0: nil + 0     == nil;
   l0_nil:   0 + nil   == nil;
 
   nil_d0: nil + 0.0   == nil;
   d0_nil: 0.0 + nil   == nil;
+
+  nil_dc0: nil + 0d   == nil;
+  dc0_nil: 0d + nil   == nil;
 
   inf_inf:    Infinity + Infinity  == Infinity;
   ninf_inf:   NaN?(-Infinity + Infinity) == true;
@@ -55,9 +84,23 @@ library operator_spec {
   d0_inf:      0.0 + Infinity   == Infinity;
   d0_ninf:     0.0 + -Infinity  == -Infinity;
 
+  inf_l0:      Infinity + 0   == Infinity;
+  ninf_l0:    -Infinity + 0   == -Infinity;
+  l0_inf:      0 + Infinity   == Infinity;
+  l0_ninf:     0 + -Infinity  == -Infinity;
+
+  inf_dc0:      Infinity + 0d   == Infinity;
+  ninf_dc0:    -Infinity + 0d   == -Infinity;
+  dc0_inf:      0d + Infinity   == Infinity;
+  dc0_ninf:     0d + -Infinity  == -Infinity;
+
   nan_nan:    NaN?(NaN + NaN) == true;
   nan_d0:     NaN?(NaN + 0.0) == true;
   d0_nan:     NaN?(0.0 + NaN) == true;
+  nan_dc0:    NaN?(NaN + 0d) == true;
+  dc0_nan:    NaN?(0d + NaN) == true;
+  nan_l0:     NaN?(NaN + 0) == true;
+  l0_nan:     NaN?(0 + NaN) == true;
 
   nil_bar: try     nil + "bar"    catch "error" == "error";
   foo_nil: try   "foo" + nil      catch "error" == "error";

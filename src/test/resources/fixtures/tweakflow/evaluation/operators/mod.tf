@@ -37,6 +37,17 @@ library operator_spec {
   dn1_dn03: close_to(-1.0 % -0.3, -0.1);
   d1_dn03:  close_to( 1.0 % -0.3,  0.1);
 
+  # decimal operation
+  dc0_dc1:  0d % 1d    === 0d;
+  dc1_dc0:  try 1d % 0d catch e e[:code] == "DIVISION_BY_ZERO";
+  dc1_dc1:  1d % 1d    === 0d;
+  dc8_dc5:  8d % 5d    === 3d;
+  dc5_dc25: 5d % 2.5d  === 0d;
+  dc1_dc03: 1d % 0.3d ===  0.1d;
+  dcn1_dc03: -1d %  0.3d === -0.1d;
+  dcn1_dcn03: -1d % -0.3d === -0.1d;
+  dc1_dcn03:  1d % -0.3d === 0.1d;
+
   l0_d0:   NaN?(0 % 0.0) == true;
   l0_d1:        0 % 1.0  == 0.0;
   l1_d0:  NaN?( 1 % 0.0) == true;
@@ -55,6 +66,9 @@ library operator_spec {
   nil_d0: nil % 0.0   == nil;
   d0_nil: 0.0 % nil   == nil;
 
+  nil_dc0: nil % 0d   == nil;
+  dc0_nil: 0d % nil   == nil;
+
   inf_inf:    NaN?(Infinity % Infinity)   == true;
   ninf_inf:   NaN?(-Infinity % Infinity)  == true;
   inf_ninf:   NaN?(Infinity % -Infinity)  == true;
@@ -62,12 +76,36 @@ library operator_spec {
 
   inf_d0:      NaN?(Infinity % 0.0)   == true;
   ninf_d0:     NaN?(-Infinity % 0.0)  == true;
-  d0_inf:      0.0 % Infinity         == 0.0;
-  d0_ninf:     0.0 %-Infinity         == 0.0;
+  inf_dc0:     NaN?(Infinity % 0d)    == true;
+  ninf_dc0:    NaN?(-Infinity % 0d)   == true;
+  inf_d1:      NaN?(Infinity % 1.0)   == true;
+  ninf_d1:     NaN?(-Infinity % 1.0)  == true;
+  inf_l1:      NaN?(Infinity % 1)     == true;
+  ninf_l1:     NaN?(-Infinity % 1)    == true;
+  inf_dc1:     NaN?(Infinity % 1d)    == true;
+  ninf_dc1:    NaN?(-Infinity % 1d)   == true;
+
+  d0_inf:      0.0 % Infinity       === 0.0;
+  d0_ninf:     0.0 %-Infinity       === 0.0;
+  l0_inf:      0 % Infinity         === 0.0;
+  l0_ninf:     0 %-Infinity         === 0.0;
+  dc0_inf:     0d % Infinity        === 0d;
+  dc0_ninf:    0d %-Infinity        === 0d;
+
+  d1_inf:      1.0 % Infinity       === 1.0;
+  d1_ninf:     1.0 %-Infinity       === 1.0;
+  l1_inf:      1 % Infinity         === 1.0;
+  l1_ninf:     1 %-Infinity         === 1.0;
+  dc1_inf:     1d % Infinity        === 1d;
+  dc1_ninf:    1d %-Infinity        === 1d;
 
   nan_nan:    NaN?(NaN % NaN) == true;
   nan_d0:     NaN?(NaN % 0.0) == true;
   d0_nan:     NaN?(0.0 % NaN) == true;
+  nan_l0:     NaN?(NaN % 0) == true;
+  l0_nan:     NaN?(0 % NaN) == true;
+  nan_dc0:    NaN?(NaN % 0d) == true;
+  dc0_nan:    NaN?(0d % NaN) == true;
 
   nil_bar: try     nil % "bar"    catch "error" == "error";
   foo_nil: try   "foo" % nil      catch "error" == "error";

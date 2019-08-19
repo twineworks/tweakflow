@@ -187,6 +187,10 @@ final public class DoubleType implements Type {
     if (o.type() == this){
       return d == o.doubleNum();
     }
+    // NaN and Infinities are not equal to any value of any other type
+    else if (!Double.isFinite(d)){
+      return false;
+    }
     // comparing to a long?
     else if (o.type() == Types.LONG){
       return d == (double) o.longNum();

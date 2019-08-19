@@ -35,6 +35,8 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.math.BigDecimal;
+
 final public class MinusOp implements ExpressionOp {
 
   private final MinusNode node;
@@ -68,16 +70,58 @@ final public class MinusOp implements ExpressionOp {
       if (rightType == Types.DOUBLE){
         return Values.make(left.longNum() - right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        return Values.make(BigDecimal.valueOf(left.longNum()).subtract(right.decimal()));
+      }
     }
-    if (leftType == Types.DOUBLE){
+    else if (leftType == Types.DOUBLE){
       if (rightType == Types.LONG){
         return Values.make(left.doubleNum() - right.longNum());
       }
       if (rightType == Types.DOUBLE){
         return Values.make(left.doubleNum() - right.doubleNum());
       }
+      if (rightType == Types.DECIMAL){
+        double d = left.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(BigDecimal.valueOf(d).subtract(right.decimal()));
+        }
+        else{
+          // Infinite - some_d = Infinite
+          // -Infinite - some_d = -Infinite
+          // NaN - some_d = NaN
+          return left;
+        }
 
+      }
     }
+    else if (leftType == Types.DECIMAL){
+      if (rightType == Types.LONG){
+        return Values.make(left.decimal().subtract(BigDecimal.valueOf(right.longNum())));
+      }
+      if (rightType == Types.DOUBLE){
+        Double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(left.decimal().subtract(BigDecimal.valueOf(d)));
+        }
+        else{
+          // some_d - NaN = NaN
+          if (Double.isNaN(d)) return right;
+          // some_d - Infinity = -Infinity
+          // some_d - -Infinity = Infinity
+          if (d > 0){
+            return Values.NEG_INFINITY;
+          }
+          else {
+            return Values.INFINITY;
+          }
+        }
+      }
+      if (rightType == Types.DECIMAL){
+        return Values.make(left.decimal().subtract(right.decimal()));
+      }
+    }
+
     throw new LangException(LangError.CAST_ERROR, "cannot subtract types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
   }
@@ -86,8 +130,8 @@ final public class MinusOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG)){
+    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
+        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
       return;
     }
 

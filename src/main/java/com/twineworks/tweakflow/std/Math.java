@@ -29,6 +29,8 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -67,6 +69,16 @@ public final class Math {
         }
       }
 
+      if (x.isDecimal()){
+        BigDecimal d = x.decimal();
+        if (d.compareTo(BigDecimal.ZERO) < 0){
+          return Values.make(d.negate());
+        }
+        else{
+          return x;
+        }
+      }
+
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot determine magnitude of type "+x.type().name());
 
     }
@@ -80,8 +92,8 @@ public final class Math {
 
       if (a == b) return Values.LONG_ZERO; // short circuit for identity
 
-      if (!a.isDoubleNum() && !a.isLongNum() && !(a == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(a));
-      if (!b.isDoubleNum() && !b.isLongNum() && !(b == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(b));
+      if (!a.isDoubleNum() && !a.isLongNum() && !a.isDecimal() && !(a == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(a));
+      if (!b.isDoubleNum() && !b.isLongNum() && !b.isDecimal() && !(b == Values.NIL)) throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare non-numeric: "+ValueInspector.inspect(b));
 
       // nil case
       // a == nil && b != nil
@@ -112,33 +124,95 @@ public final class Math {
           if (ad > bd) return Values.LONG_ONE;
           return Values.LONG_ZERO;
         }
-        // b long
-        double ad = a.doubleNum();
-        long bl = b.longNum();
-        if (ad < bl) return Values.LONG_NEG_ONE;
-        if (ad > bl) return Values.LONG_ONE;
-        return Values.LONG_ZERO;
+        else if (b.isLongNum()){
+          // b long
+          double ad = a.doubleNum();
+          long bl = b.longNum();
+          if (ad < bl) return Values.LONG_NEG_ONE;
+          if (ad > bl) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
+        else { // b is decimal
+          double d = a.doubleNum();
+          if (Double.isFinite(d)){
+            // b decimal
+            BigDecimal ad = BigDecimal.valueOf(d);
+            BigDecimal bd = b.decimal();
+            int cmp = ad.compareTo(bd);
+            if (cmp < 0) return Values.LONG_NEG_ONE;
+            if (cmp > 0) return Values.LONG_ONE;
+            return Values.LONG_ZERO;
+          }
+          else{
+            // only +-Infinity cases to handle
+            if (d < 0) return Values.LONG_NEG_ONE;
+            return Values.LONG_ONE;
+          }
+        }
       }
-
-      // both long case
-      if (b.isLongNum()){
-        long al = a.longNum();
-        long bl = b.longNum();
-        if (al == bl) return Values.LONG_ZERO;
-        if (al < bl) return Values.LONG_NEG_ONE;
-        return Values.LONG_ONE;
+      else if(a.isLongNum()){
+        // both long case
+        if (b.isLongNum()){
+          long al = a.longNum();
+          long bl = b.longNum();
+          if (al == bl) return Values.LONG_ZERO;
+          if (al < bl) return Values.LONG_NEG_ONE;
+          return Values.LONG_ONE;
+        }
+        else if (b.isDoubleNum()){
+          // a long, b double
+          long al = a.longNum();
+          double bd = b.doubleNum();
+          if (al < bd) return Values.LONG_NEG_ONE;
+          if (al > bd) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
+        else {
+          // a long, b decimal
+          BigDecimal ad = BigDecimal.valueOf(a.longNum());
+          BigDecimal bd = b.decimal();
+          int cmp = ad.compareTo(bd);
+          if (cmp < 0) return Values.LONG_NEG_ONE;
+          if (cmp > 0) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
       }
-      else{
-        // only one possibility left
-        // a long b double
-        long al = a.longNum();
-        double bd = b.doubleNum();
-        if (al < bd) return Values.LONG_NEG_ONE;
-        if (al > bd) return Values.LONG_ONE;
-        return Values.LONG_ZERO;
+      else { /* a decimal */
+        if (b.isLongNum()){
+          BigDecimal ad = a.decimal();
+          BigDecimal bd = BigDecimal.valueOf(b.longNum());
 
+          int cmp = ad.compareTo(bd);
+          if (cmp < 0) return Values.LONG_NEG_ONE;
+          if (cmp > 0) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
+        else if (b.isDoubleNum()){
+          double d = b.doubleNum();
+          if (Double.isFinite(d)){
+            BigDecimal ad = a.decimal();
+            BigDecimal bd = BigDecimal.valueOf(d);
+            int cmp = ad.compareTo(bd);
+            if (cmp < 0) return Values.LONG_NEG_ONE;
+            if (cmp > 0) return Values.LONG_ONE;
+            return Values.LONG_ZERO;
+          }
+          else{
+            // only +-Infinity cases to handle
+            if (d < 0) return Values.LONG_ONE;
+            return Values.LONG_NEG_ONE;
+          }
+        }
+        else {
+          /* b is decimal */
+          BigDecimal ad = a.decimal();
+          BigDecimal bd = b.decimal();
+          int cmp = ad.compareTo(bd);
+          if (cmp < 0) return Values.LONG_NEG_ONE;
+          if (cmp > 0) return Values.LONG_ONE;
+          return Values.LONG_ZERO;
+        }
       }
-
 
     }
   }
@@ -158,6 +232,11 @@ public final class Math {
       if (x.isDoubleNum()){
         Double v = x.doubleNum();
         return Values.make(v+1.0);
+      }
+
+      if (x.isDecimal()){
+        BigDecimal v = x.decimal();
+        return Values.make(v.add(BigDecimal.ONE));
       }
 
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot increment type "+x.type().name());
@@ -183,6 +262,11 @@ public final class Math {
         return Values.make(v-1.0);
       }
 
+      if (x.isDecimal()){
+        BigDecimal v = x.decimal();
+        return Values.make(v.subtract(BigDecimal.ONE));
+      }
+
       throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot decrement type "+x.type().name());
 
     }
@@ -200,6 +284,14 @@ public final class Math {
   // min: (list xs) ->
   public static final class min implements UserFunction, Arity1UserFunction {
 
+    private int compareTo(double a, BigDecimal b){
+      if (Double.isFinite(a)){
+        return BigDecimal.valueOf(a).compareTo(b);
+      }
+      if (a > 0) return 1;
+      return -1;
+    }
+
     @Override
     public Value call(UserCallContext context, Value xs) {
 
@@ -211,7 +303,7 @@ public final class Math {
       // only one element?
       if (list.size() == 1) {
         Value v = list.get(0);
-        if (v.isNil() || v.isLongNum()){
+        if (v.isNil() || v.isLongNum() || v.isDecimal()){
           return v;
         }
         else if (v.isDoubleNum()){
@@ -223,21 +315,32 @@ public final class Math {
         }
       }
 
-      boolean longMode = true;
+      byte MODE_LONG=0;
+      byte MODE_DOUBLE=1;
+      byte MODE_DECIMAL=2;
+
+      byte mode;
+
       long longMin = 0L;
       double doubleMin = 0.0d;
+      BigDecimal decimalMin = BigDecimal.ZERO;
 
       // first value
       Value min = list.get(0);
       if (min.isLongNum()){
+        mode = MODE_LONG;
         longMin = min.longNum();
       }
       else if (min.isDoubleNum()) {
-        longMode = false;
         doubleMin = min.doubleNum();
         if (Double.isNaN(doubleMin)){
           return Values.NIL;
         }
+        mode = MODE_DOUBLE;
+      }
+      else if (min.isDecimal()){
+        mode = MODE_DECIMAL;
+        decimalMin = min.decimal();
       }
       else if (min.isNil()){
         return Values.NIL;
@@ -248,7 +351,7 @@ public final class Math {
 
       for (Value v : list) {
         if (v.isNil()) return Values.NIL;
-        if (longMode){
+        if (mode == MODE_LONG){
           // long mode
           if (v.isLongNum()){
             long num = v.longNum();
@@ -265,13 +368,22 @@ public final class Math {
               doubleMin = num;
               min = v;
             }
-            longMode = false;
+            mode = MODE_DOUBLE;
+          }
+          else if (v.isDecimal()){
+            decimalMin = BigDecimal.valueOf(longMin);
+            BigDecimal num = v.decimal();
+            if (num.compareTo(decimalMin) < 0){
+              decimalMin = num;
+              min = v;
+            }
+            mode = MODE_DECIMAL;
           }
           else {
             throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
           }
         }
-        else {
+        else if (mode == MODE_DOUBLE){
           // double mode
           if (v.isLongNum()){
             long num = v.longNum();
@@ -288,10 +400,57 @@ public final class Math {
               min = v;
             }
           }
+          else if (v.isDecimal()){
+            BigDecimal num = v.decimal();
+            if (compareTo(doubleMin, num) > 0){
+              decimalMin = num;
+              min = v;
+              mode = MODE_DECIMAL;
+            }
+          }
           else {
             throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
           }
         }
+        else {
+          // decimal mode
+          if (v.isLongNum()){
+            BigDecimal num = BigDecimal.valueOf(v.longNum());
+            if (num.compareTo(decimalMin) < 0){
+              decimalMin = num;
+              min = v;
+            }
+          }
+          else if (v.isDoubleNum()){
+            double d = v.doubleNum();
+            if (Double.isFinite(d)){
+              BigDecimal num = BigDecimal.valueOf(d);
+              if (num.compareTo(decimalMin) < 0){
+                decimalMin = num;
+                min = v;
+              }
+            }
+            else {
+              if (Double.isNaN(d)) return Values.NIL;
+              if (d < 0){ // d = -Infinity
+                doubleMin = d;
+                min = v;
+                mode = MODE_DOUBLE;
+              }
+            }
+
+          } else if (v.isDecimal()) {
+            BigDecimal num = v.decimal();
+            if (num.compareTo(decimalMin) < 0){
+              decimalMin = num;
+              min = v;
+            }
+          }
+          else {
+            throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
+          }
+        }
+
       }
 
       return min;
@@ -301,9 +460,16 @@ public final class Math {
   // max: (list xs) ->
   public static final class max implements UserFunction, Arity1UserFunction {
 
+    private int compareTo(double a, BigDecimal b){
+      if (Double.isFinite(a)){
+        return BigDecimal.valueOf(a).compareTo(b);
+      }
+      if (a > 0) return 1;
+      return -1;
+    }
+
     @Override
     public Value call(UserCallContext context, Value xs) {
-
       if (xs.isNil()) return Values.NIL;
 
       ListValue list = xs.list();
@@ -312,7 +478,7 @@ public final class Math {
       // only one element?
       if (list.size() == 1) {
         Value v = list.get(0);
-        if (v.isNil() || v.isLongNum()){
+        if (v.isNil() || v.isLongNum() || v.isDecimal()){
           return v;
         }
         else if (v.isDoubleNum()){
@@ -324,19 +490,32 @@ public final class Math {
         }
       }
 
-      boolean longMode = true;
+      byte MODE_LONG=0;
+      byte MODE_DOUBLE=1;
+      byte MODE_DECIMAL=2;
+
+      byte mode;
+
       long longMax = 0L;
       double doubleMax = 0.0d;
+      BigDecimal decimalMax = BigDecimal.ZERO;
 
       // first value
       Value max = list.get(0);
       if (max.isLongNum()){
+        mode = MODE_LONG;
         longMax = max.longNum();
       }
       else if (max.isDoubleNum()) {
-        longMode = false;
         doubleMax = max.doubleNum();
-        if (Double.isNaN(doubleMax)) return Values.NIL;
+        if (Double.isNaN(doubleMax)){
+          return Values.NIL;
+        }
+        mode = MODE_DOUBLE;
+      }
+      else if (max.isDecimal()){
+        mode = MODE_DECIMAL;
+        decimalMax = max.decimal();
       }
       else if (max.isNil()){
         return Values.NIL;
@@ -347,12 +526,11 @@ public final class Math {
 
       for (Value v : list) {
         if (v.isNil()) return Values.NIL;
-        if (longMode){
-
+        if (mode == MODE_LONG){
           // long mode
           if (v.isLongNum()){
             long num = v.longNum();
-            if (num > longMax) {
+            if (num > longMax){
               longMax = num;
               max = v;
             }
@@ -365,14 +543,22 @@ public final class Math {
               doubleMax = num;
               max = v;
             }
-            longMode = false;
+            mode = MODE_DOUBLE;
+          }
+          else if (v.isDecimal()){
+            decimalMax = BigDecimal.valueOf(longMax);
+            BigDecimal num = v.decimal();
+            if (num.compareTo(decimalMax) > 0){
+              decimalMax = num;
+              max = v;
+            }
+            mode = MODE_DECIMAL;
           }
           else {
             throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
           }
         }
-        else {
-
+        else if (mode == MODE_DOUBLE){
           // double mode
           if (v.isLongNum()){
             long num = v.longNum();
@@ -389,10 +575,57 @@ public final class Math {
               max = v;
             }
           }
+          else if (v.isDecimal()){
+            BigDecimal num = v.decimal();
+            if (compareTo(doubleMax, num) < 0){
+              decimalMax = num;
+              max = v;
+              mode = MODE_DECIMAL;
+            }
+          }
           else {
             throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
           }
         }
+        else {
+          // decimal mode
+          if (v.isLongNum()){
+            BigDecimal num = BigDecimal.valueOf(v.longNum());
+            if (num.compareTo(decimalMax) > 0){
+              decimalMax = num;
+              max = v;
+            }
+          }
+          else if (v.isDoubleNum()){
+            double d = v.doubleNum();
+            if (Double.isFinite(d)){
+              BigDecimal num = BigDecimal.valueOf(d);
+              if (num.compareTo(decimalMax) > 0){
+                decimalMax = num;
+                max = v;
+              }
+            }
+            else {
+              if (Double.isNaN(d)) return Values.NIL;
+              if (d > 0){ // d = Infinity
+                doubleMax = d;
+                max = v;
+                mode = MODE_DOUBLE;
+              }
+            }
+
+          } else if (v.isDecimal()) {
+            BigDecimal num = v.decimal();
+            if (num.compareTo(decimalMax) > 0){
+              decimalMax = num;
+              max = v;
+            }
+          }
+          else {
+            throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot compare type "+v.type().name());
+          }
+        }
+
       }
 
       return max;
@@ -595,6 +828,9 @@ public final class Math {
       else if (x.isLongNum()){
         out = formatter.format(x.longNum());
       }
+      else if (x.isDecimal()){
+        out = formatter.format(x.decimal());
+      }
       else {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot format value of type: "+x.type().name());
       }
@@ -693,17 +929,24 @@ public final class Math {
       else if (parsed instanceof Double){
         return Values.make(parsed.doubleValue());
       }
+      else if (parsed instanceof BigDecimal){
+        return Values.make((BigDecimal) parsed);
+      }
+      else if (parsed instanceof BigInteger){
+        return Values.make(new BigDecimal((BigInteger)parsed));
+      }
+
       else {
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "unexpected parse result type: "+parsed.getClass().getCanonicalName());
       }
     }
   }
 
-  // (string pattern='#.#', dict decimal_symbols=nil, boolean lenient=false) -> function
-  public static final class parser implements UserFunction, Arity3UserFunction {
+  // (string pattern='#.#', dict decimal_symbols=nil, boolean lenient=false, boolean parse_decimal=false) -> function
+  public static final class parser implements UserFunction, Arity4UserFunction {
 
     @Override
-    public Value call(UserCallContext context, Value pattern, Value decimalSymbols, Value lenient) {
+    public Value call(UserCallContext context, Value pattern, Value decimalSymbols, Value lenient, Value parseDecimal) {
 
       // pattern
       if (pattern == Values.NIL){
@@ -723,9 +966,15 @@ public final class Math {
         throw new LangException(LangError.NIL_ERROR, "lenient cannot be nil");
       }
 
+      if (parseDecimal == Values.NIL){
+        throw new LangException(LangError.NIL_ERROR, "parse_decimal cannot be nil");
+      }
+
       boolean allowPartial = lenient == Values.TRUE;
+      boolean useDecimal = parseDecimal == Values.TRUE;
       try {
         DecimalFormat formatter = new DecimalFormat(pattern.string(), symbols);
+        formatter.setParseBigDecimal(useDecimal);
 
         return Values.make(
             new UserFunctionValue(
@@ -736,7 +985,7 @@ public final class Math {
 
       }
       catch (IllegalArgumentException e){
-        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid decimal number format pattern: "+e.getMessage());
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "invalid number format pattern: "+e.getMessage());
       }
 
     }

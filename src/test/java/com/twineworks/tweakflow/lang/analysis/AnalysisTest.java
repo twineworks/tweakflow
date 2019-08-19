@@ -566,16 +566,20 @@ public class AnalysisTest {
     // verify types of expressions
     assertThat(vars.get("boolean_to_long").getValueExpression().getValueType()).isSameAs(Types.LONG);
     assertThat(vars.get("boolean_to_double").getValueExpression().getValueType()).isSameAs(Types.DOUBLE);
+    assertThat(vars.get("boolean_to_decimal").getValueExpression().getValueType()).isSameAs(Types.DECIMAL);
     assertThat(vars.get("boolean_to_string").getValueExpression().getValueType()).isSameAs(Types.STRING);
     assertThat(vars.get("string_to_boolean").getValueExpression().getValueType()).isSameAs(Types.BOOLEAN);
     assertThat(vars.get("string_to_long").getValueExpression().getValueType()).isSameAs(Types.LONG);
     assertThat(vars.get("string_to_double").getValueExpression().getValueType()).isSameAs(Types.DOUBLE);
+    assertThat(vars.get("string_to_decimal").getValueExpression().getValueType()).isSameAs(Types.DECIMAL);
     assertThat(vars.get("string_to_list").getValueExpression().getValueType()).isSameAs(Types.LIST);
     assertThat(vars.get("long_to_boolean").getValueExpression().getValueType()).isSameAs(Types.BOOLEAN);
     assertThat(vars.get("long_to_double").getValueExpression().getValueType()).isSameAs(Types.DOUBLE);
+    assertThat(vars.get("long_to_decimal").getValueExpression().getValueType()).isSameAs(Types.DECIMAL);
     assertThat(vars.get("long_to_string").getValueExpression().getValueType()).isSameAs(Types.STRING);
     assertThat(vars.get("double_to_boolean").getValueExpression().getValueType()).isSameAs(Types.BOOLEAN);
     assertThat(vars.get("double_to_long").getValueExpression().getValueType()).isSameAs(Types.LONG);
+    assertThat(vars.get("double_to_decimal").getValueExpression().getValueType()).isSameAs(Types.DECIMAL);
     assertThat(vars.get("double_to_string").getValueExpression().getValueType()).isSameAs(Types.STRING);
     assertThat(vars.get("list_to_boolean").getValueExpression().getValueType()).isSameAs(Types.BOOLEAN);
     assertThat(vars.get("list_to_map").getValueExpression().getValueType()).isSameAs(Types.DICT);

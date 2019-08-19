@@ -92,14 +92,27 @@ library operator_spec {
   inf_ninf:   NaN?(Infinity / -Infinity)  == true;
   ninf_ninf:  NaN?(-Infinity / -Infinity) == true;
 
-  inf_d0:      Infinity / 0.0         == Infinity;
-  ninf_d0:     -Infinity / 0.0        == -Infinity;
-  d0_inf:      0.0 / Infinity         == 0.0;
-  d0_ninf:     0.0 /-Infinity         == 0.0;
+  inf_d0:      Infinity / 0.0   == Infinity;
+  ninf_d0:     -Infinity / 0.0  == -Infinity;
+  inf_dc0:     Infinity / 0d    == Infinity;
+  ninf_dc0:    -Infinity / 0d   == -Infinity;
+  inf_l0:      Infinity / 0     == Infinity;
+  ninf_l0:     -Infinity / 0    == -Infinity;
+
+  d0_inf:      0.0 / Infinity   === 0.0;
+  d0_ninf:     0.0 /-Infinity   === 0.0;
+  l0_inf:      0 / Infinity   === 0.0;
+  l0_ninf:     0 /-Infinity   === 0.0;
+  dc0_inf:     0d / Infinity   === 0d;
+  dc0_ninf:    0d /-Infinity   === 0d;
 
   nan_nan:    NaN?(NaN / NaN) == true;
   nan_d0:     NaN?(NaN / 0.0) == true;
   d0_nan:     NaN?(0.0 / NaN) == true;
+  nan_dc0:    NaN?(NaN / 0d) == true;
+  dc0_nan:    NaN?(0d / NaN) == true;
+  nan_l0:     NaN?(NaN / 0) == true;
+  l0_nan:     NaN?(0 / NaN) == true;
 
   nil_bar: try     nil / "bar"    catch "error" == "error";
   foo_nil: try   "foo" / nil      catch "error" == "error";

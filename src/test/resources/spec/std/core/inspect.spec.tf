@@ -19,6 +19,10 @@ library spec {
         expect(inspect(1.0), to.be("1.0"))
       ),
 
+      it("inspects_decimal", () ->
+        expect(inspect(1.000d), to.be("1.000d"))
+      ),
+
       it("inspects_list", () ->
         expect(inspect([1, 2, 3]), to.be("[1, 2, 3]"))
       ),

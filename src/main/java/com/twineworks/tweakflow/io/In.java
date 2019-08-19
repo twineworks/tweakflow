@@ -42,6 +42,7 @@ public class In implements AutoCloseable {
 
   private final LongSerializer longSerializer = new LongSerializer();
   private final DoubleSerializer doubleSerializer = new DoubleSerializer();
+  private final DecimalSerializer decimalSerializer = new DecimalSerializer();
   private final StringSerializer stringSerializer = new StringSerializer();
   private final DatetimeSerializer datetimeSerializer = new DatetimeSerializer();
   private final ListSerializer listSerializer = new ListSerializer();
@@ -105,6 +106,9 @@ public class In implements AutoCloseable {
         break;
       case MagicNumbers.Format.LONG:
         d = longSerializer;
+        break;
+      case MagicNumbers.Format.DECIMAL:
+        d = decimalSerializer;
         break;
       case MagicNumbers.Format.DOUBLE:
         d = doubleSerializer;

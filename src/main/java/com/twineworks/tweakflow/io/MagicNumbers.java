@@ -34,6 +34,8 @@ public class MagicNumbers {
 
     public final static byte LONG = 10;
 
+    public final static byte DECIMAL = 20;
+
     public final static byte DOUBLE = 30;
 
     public final static byte STRING = 40;
