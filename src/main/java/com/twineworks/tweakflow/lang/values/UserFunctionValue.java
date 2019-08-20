@@ -24,14 +24,28 @@
 
 package com.twineworks.tweakflow.lang.values;
 
+import com.twineworks.tweakflow.lang.load.user.UserFunctionDesc;
+import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
+
 public class UserFunctionValue implements FunctionValue {
 
   private final FunctionSignature functionSignature;
-  private final UserFunction userFunction;
+  private UserFunction userFunction;
+  private final UserFunctionDesc desc;
+  private final UserObjectFactory factory;
 
   public UserFunctionValue(FunctionSignature functionSignature, UserFunction userFunction) {
     this.functionSignature = functionSignature;
     this.userFunction = userFunction;
+    this.desc = null;
+    this.factory = null;
+  }
+
+  public UserFunctionValue(FunctionSignature functionSignature, UserObjectFactory factory, UserFunctionDesc desc) {
+    this.functionSignature = functionSignature;
+    this.userFunction = null;
+    this.desc = desc;
+    this.factory = factory;
   }
 
   @Override
@@ -50,6 +64,9 @@ public class UserFunctionValue implements FunctionValue {
   }
 
   public UserFunction getUserFunction() {
+    if (userFunction == null){
+      userFunction = factory.createInstance(desc);
+    }
     return userFunction;
   }
 

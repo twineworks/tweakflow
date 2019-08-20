@@ -37,10 +37,12 @@ public class UserObjectFactory {
 
   public FunctionValue createUserFunction(FunctionSignature functionSignature, Value viaConf) {
     UserFunctionDesc desc = new UserFunctionDesc(viaConf);
-    return new UserFunctionValue(functionSignature, createInstance(desc));
+    return new UserFunctionValue(functionSignature, this, desc);
+    // delay the instantiation of the function until it is called
+//    return new UserFunctionValue(functionSignature, createInstance(desc));
   }
 
-  private UserFunction createInstance(UserFunctionDesc desc) {
+  public UserFunction createInstance(UserFunctionDesc desc) {
     ensureClassLoaded(desc);
     Class<UserFunction> clazz = desc.getClazz();
     try {
