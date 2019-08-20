@@ -45,6 +45,7 @@ public class Out implements AutoCloseable {
   private final DecimalSerializer decimalSerializer = new DecimalSerializer();
   private final DatetimeSerializer datetimeSerializer = new DatetimeSerializer();
   private final StringSerializer stringSerializer = new StringSerializer();
+  private final BinarySerializer binarySerializer = new BinarySerializer();
   private final ListSerializer listSerializer = new ListSerializer();
   private final DictSerializer dictSerializer = new DictSerializer();
   private final VoidSerializer voidSerializer = new VoidSerializer();
@@ -94,6 +95,9 @@ public class Out implements AutoCloseable {
     }
     else if (v.isDict()){
       serializers.push(dictSerializer);
+    }
+    else if (v.isBinary()){
+      serializers.push(binarySerializer);
     }
     else if (v.isFunction()){
       throw new IOException("Cannot serialize function values, found: "+ ValueInspector.inspect(v, true));

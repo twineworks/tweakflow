@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -240,6 +241,37 @@ class OutTest {
   }
 
   @Test
+  void writes_binary() throws Exception {
+
+    ArrayList<String> zoneIds = new ArrayList<>(ZoneId.getAvailableZoneIds());
+    ArrayList<Value> values = new ArrayList<>();
+
+    for (int i=0;i<1000;i++){
+      int idx = (i % zoneIds.size() + i%2) % zoneIds.size();
+      ZoneId zoneId = ZoneId.of(zoneIds.get(idx));
+      values.add(Values.make(zoneId.toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+    try (Out out = new Out(w, 17)) {
+      for (int i=0;i<1000;i++){
+        out.write(values.get(i));
+      }
+    }
+    w.close();
+
+    try (In in = new In(r, 17)){
+      for (int i=0;i<1000;i++){
+        Value v = in.readNext();
+        assertThat(v).isEqualTo(values.get(i));
+      }
+      Value end = in.readNext();
+      assertThat(end).isNull();
+    }
+    r.close();
+
+  }
+
+  @Test
   void writes_empty_lists() throws Exception {
 
     try (Out out = new Out(w, 17)) {
@@ -386,7 +418,7 @@ class OutTest {
 
     ArrayList<Value> values = new ArrayList<>();
     for (int i=0;i<1000;i++){
-      Value a = Values.EMPTY_DICT;
+      Value a = Values.makeDict("bytes", Values.make(new byte[] {0,1,2}));
       Value b = Values.makeDict("a", i, "b", i+1, "c", a);
       Value c = Values.makeDict("z", a, "x", b, "y", i+1, "q", i+2);
       values.add(c);
@@ -416,8 +448,8 @@ class OutTest {
 
     ArrayList<Value> values = new ArrayList<>();
     for (int i=0;i<1000;i++){
-      Value a = Values.makeDict("foo", "bar", "baz", Values.EMPTY_LIST);
-      Value b = Values.makeList("a", i, "b", i+1, "c", a);
+      Value a = Values.makeDict("foo", Values.make(new byte[] {0,1,2}), "bar", Values.EMPTY_LIST);
+      Value b = Values.makeList(Values.make(new byte[] {}), i, "b", i+1, "c", a);
       Value c = Values.makeDict("z", a, "x", b, "y", new BigDecimal(i+1), "q", i+2);
       values.add(c);
     }

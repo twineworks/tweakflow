@@ -32,6 +32,8 @@ public class MagicNumbers {
 
     public final static byte BOOLEAN = 1;
 
+    public final static byte BINARY = 5;
+
     public final static byte LONG = 10;
 
     public final static byte DECIMAL = 20;
