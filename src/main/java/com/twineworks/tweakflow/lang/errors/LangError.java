@@ -53,6 +53,7 @@ public enum LangError implements ErrorCode {
   DEFAULT_PATTERN_NOT_LAST,
   ILLEGAL_ARGUMENT,
   INVALID_DATETIME,
+  ROUNDING_NECESSARY,
   NATIVE_CODE_RESTRICTED;
 
   @Override

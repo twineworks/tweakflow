@@ -5475,6 +5475,185 @@ The largest representable long value: `9223372036854775807`.
 
 doc
 ~~~
+The decimals library contains utility functions for working with decimal numbers.
+~~~
+
+export library decimals {
+
+doc
+~~~
+`(decimal x) -> decimal`
+
+Returns the unit in the last place, of given decimal `x`.
+
+An ulp of a decimal is the positive distance between this value and the decimal next larger in magnitude with the same scale.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.ulp(0.5d)
+0.1d
+
+> decimals.ulp(1.000d)
+0.001d
+
+> decimals.ulp(-1000d)
+1d
+
+> decimals.ulp(nil)
+nil
+```
+~~~
+
+  function ulp: (decimal x) -> decimal  via {:class "com.twineworks.tweakflow.std.Decimals$ulp"};
+
+doc
+~~~
+`(decimal x) -> long`
+
+Returns the scale of given decimal `x`.
+
+A decimal number is internally represented as a mathematical integer x 10^(-scale).
+
+A positive scale therefore indicates the number of fractional digits.
+
+A negative scale represents a decimal that is stored in terms of 10, 100, 1000, etc.
+times some integer value, effectively dropping precision of trailing digits.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+# no fractional digits
+> decimals.scale(0d)
+0
+
+# two fractional digits
+> decimals.scale(0.00d)
+2
+
+# two fractional digits
+> decimals.scale(0.75d)
+2
+
+# value 100 with -2 scale
+> decimals.scale(1e+2d)
+-2
+```
+~~~
+  function scale: (decimal x) -> long via {:class "com.twineworks.tweakflow.std.Decimals$scale"};
+
+doc
+~~~
+```tweakflow
+(
+  decimal x,
+  long scale,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns a decimal of the same value as `x` with given `scale`.
+
+The given [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html) is used when digits must be dropped to adapt the given scale.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `scale` or `rounding_mode` are `nil`.
+
+```tweakflow
+> decimals.with_scale(0d, 3)
+0.000d
+
+> decimals.with_scale(5d, 2)
+5.00d
+
+> decimals.with_scale(1.29d, 1)
+1.3d
+
+> decimals.with_scale(1.29d, 1, 'down')
+1.2d
+
+# set negative scale -2, effectively storing the number at multiples of 100
+> decimals.with_scale(1299d, -2)
+1.3E+3d
+
+> decimals.with_scale(1299d, -2, 'down')
+1.2E+3d
+```
+~~~
+  function with_scale: (decimal x, long scale, string rounding_mode='half_up') -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$with_scale"};
+
+doc
+~~~
+```tweakflow
+(
+  decimal x,
+  long digits,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns a decimal of `x` rounded to the given number of non-zero digits using the given [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html).
+
+This function is useful to get a number with a relevant number of significant digits when dealing with numbers which contain many digits.
+
+If you wish to round to a fixed number of decimal places or digits, use [with_scale](#decimals-with_scale).
+
+Returns `nil` if `x` is `nil`.\
+If `digits` is `0`, `x` is returned.\
+Throws an error if `digits` or `rounding_mode` are `nil`.\
+Throws an error if `digits` is negative.
+
+```tweakflow
+> round(0.0001234, 2)
+0.00012d
+
+> round(0.01234d, 2)
+0.012d
+
+> round(1.01234d, 2)
+1.0d
+
+> round(1999d, 2)
+2.0E+3d
+
+> round(1999, 3, 'down')
+1.99E+3d
+```
+~~~
+
+  function round: (decimal x, long digits, string rounding_mode='half_up') -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$round"};
+
+doc
+~~~
+`(decimal x) -> string`
+
+Returns a plain string representation of the decimal, not using exponent notation.
+~~~
+  function plain: (decimal x) -> string via {:class "com.twineworks.tweakflow.std.Decimals$plain"};
+
+doc
+~~~
+Returns a decimal numerically equal to `x` in which the scale has been adjusted to remove any trailing zeros.
+~~~
+  function strip_trailing_zeros: (decimal x) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$strip_trailing_zeros"};
+
+doc
+~~~
+Returns the result of `x` divided by `y` with given `scale` and [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html)
+~~~
+  function divide: (decimal x, decimal y, long scale, string rounding_mode='half_up') -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$divide"};
+
+doc
+~~~
+Returns the integer part of the result of `x` divided by `y`. Any fractional digits are not included in the result.
+~~~
+  function divide_integral: (decimal x, decimal y) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$divide_integral"};
+
+}
+
+doc
+~~~
 The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
 provide functionality similar to control-flow features in other languages.
 ~~~
@@ -5490,7 +5669,7 @@ Subsequent calls to `f` receive as argument the result of the previous call.
 
 Returns the result of the last call to `f`, or `x` if `n` is `0`.
 
-Returns `nil` if `n` `nil`.\
+Returns `nil` if `n` is `nil`.\
 Throws an error if `n` is negative or `f` is `nil`.
 
 ```tweakflow

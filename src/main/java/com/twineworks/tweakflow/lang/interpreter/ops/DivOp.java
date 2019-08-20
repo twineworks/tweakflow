@@ -43,6 +43,7 @@ final public class DivOp implements ExpressionOp {
   private final ExpressionOp leftOp;
   private final ExpressionOp rightOp;
   private final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+  private final static int DEFAULT_SCALE = 20;
 
   public DivOp(DivNode node) {
     this.node = node;
@@ -74,8 +75,14 @@ final public class DivOp implements ExpressionOp {
       }
       if (rightType == Types.DECIMAL){
         BigDecimal divisor = right.decimal();
-        if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(BigDecimal.valueOf(left.longNum()).divide(divisor, ROUNDING_MODE));
+        if (divisor.compareTo(BigDecimal.ZERO) == 0){
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        }
+        BigDecimal result = BigDecimal.valueOf(left.longNum()).divide(divisor, DEFAULT_SCALE, ROUNDING_MODE).stripTrailingZeros();
+        if(result.scale() < 0){
+          result = result.setScale(0);
+        }
+        return Values.make(result);
       }
     }
     else if (leftType == Types.DOUBLE){
@@ -90,8 +97,11 @@ final public class DivOp implements ExpressionOp {
         if (Double.isFinite(d)){
           BigDecimal divisor = right.decimal();
           if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-
-          return Values.make(BigDecimal.valueOf(left.doubleNum()).divide(divisor, ROUNDING_MODE));
+          BigDecimal result = BigDecimal.valueOf(left.doubleNum()).divide(divisor, DEFAULT_SCALE, ROUNDING_MODE).stripTrailingZeros();
+          if(result.scale() < 0){
+            result = result.setScale(0);
+          }
+          return Values.make(result);
         }
         else{
           // NaN / some_d -> NaN
@@ -112,14 +122,24 @@ final public class DivOp implements ExpressionOp {
       if (rightType == Types.LONG){
         BigDecimal divisor = BigDecimal.valueOf(right.longNum());
         if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+        BigDecimal dividend = left.decimal();
+        BigDecimal result = dividend.divide(divisor, DEFAULT_SCALE, ROUNDING_MODE).stripTrailingZeros();
+        if(result.scale() < dividend.scale()){
+          result = result.setScale(dividend.scale(), RoundingMode.UNNECESSARY);
+        }
+        return Values.make(result);
       }
       if (rightType == Types.DOUBLE){
         double d = right.doubleNum();
         if (Double.isFinite(d)){
           BigDecimal divisor = BigDecimal.valueOf(right.doubleNum());
           if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-          return Values.make(left.decimal().divide(divisor, ROUNDING_MODE));
+          BigDecimal dividend = left.decimal();
+          BigDecimal result = dividend.divide(divisor, DEFAULT_SCALE, ROUNDING_MODE).stripTrailingZeros();
+          if(result.scale() < dividend.scale()){
+            result = result.setScale(dividend.scale(), RoundingMode.UNNECESSARY);
+          }
+          return Values.make(result);
         }
         else{
           // some_d / NaN -> NaN
@@ -131,7 +151,13 @@ final public class DivOp implements ExpressionOp {
       if (rightType == Types.DECIMAL){
         BigDecimal divisor = right.decimal();
         if (divisor.compareTo(BigDecimal.ZERO) == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().divide(right.decimal(), ROUNDING_MODE));
+        BigDecimal dividend = left.decimal();
+        int scale = Math.max(DEFAULT_SCALE, dividend.scale());
+        BigDecimal result = dividend.divide(right.decimal(), scale, ROUNDING_MODE).stripTrailingZeros();
+        if(result.scale() < dividend.scale()){
+          result = result.setScale(dividend.scale(), RoundingMode.UNNECESSARY);
+        }
+        return Values.make(result);
       }
     }
     throw new LangException(LangError.CAST_ERROR, "cannot divide types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
