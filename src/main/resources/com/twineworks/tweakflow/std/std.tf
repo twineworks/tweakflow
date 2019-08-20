@@ -5605,19 +5605,19 @@ Throws an error if `digits` or `rounding_mode` are `nil`.\
 Throws an error if `digits` is negative.
 
 ```tweakflow
-> round(0.0001234, 2)
+> decimals.round(0.0001234, 2)
 0.00012d
 
-> round(0.01234d, 2)
+> decimals.round(0.01234d, 2)
 0.012d
 
-> round(1.01234d, 2)
+> decimals.round(1.01234d, 2)
 1.0d
 
-> round(1999d, 2)
+> decimals.round(1999d, 2)
 2.0E+3d
 
-> round(1999, 3, 'down')
+> decimals.round(1999, 3, 'down')
 1.99E+3d
 ```
 ~~~
@@ -5629,24 +5629,126 @@ doc
 `(decimal x) -> string`
 
 Returns a plain string representation of the decimal, not using exponent notation.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.plain(1d)
+"1"
+
+> decimals.plain(1.00d)
+"1.00"
+
+> decimals.plain(1e+6d)
+"1000000"
+
+> decimals.plain(1e-5d)
+"0.00001"
+```
 ~~~
   function plain: (decimal x) -> string via {:class "com.twineworks.tweakflow.std.Decimals$plain"};
 
 doc
 ~~~
-Returns a decimal numerically equal to `x` in which the scale has been adjusted to remove any trailing zeros.
+`(decimal x) -> decimal`
+
+A decimal number is internally represented as a mathematical integer x 10^(-scale).
+
+Returns a decimal numerically equal to `x` in which scale and the integer part has
+been adjusted to not store any trailing zeros in the integer part.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.strip_trailing_zeros(1.00d)
+1d
+
+> decimals.strip_trailing_zeros(1.10d)
+1.1d
+
+> decimals.strip_trailing_zeros(100d)
+1E+2d
+
+> decimals.strip_trailing_zeros(110d)
+1.1E+2d
+```
 ~~~
   function strip_trailing_zeros: (decimal x) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$strip_trailing_zeros"};
 
 doc
 ~~~
-Returns the result of `x` divided by `y` with given `scale` and [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html)
+```tweakflow
+(
+  decimal x,
+  decimal y,
+  long scale,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns the result of `x` divided by `y` with given `scale` and [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html).
+
+If `scale` is `nil`, the scale of `x` is used.
+
+Returns `nil` if `x` or `y` are `nil`.\
+Throws an error if `rounding_mode` is `nil`.
+Throws an error if `y` is zero.
+
+```tweakflow
+> decimals.divide(1d, 3d, 2)
+0.33d
+
+> decimals.divide(1d, 3d, 10)
+0.3333333333d
+
+> decimals.divide(1d, 3d, 2, 'up')
+0.34d
+
+# scale=nil means result uses scale of x
+> decimals.divide(1.00000d, 3d)
+0.33333d
+
+# negative scale division
+> decimals.divide(10_000d, 3d, -2)
+3.3E+3d
+
+# negative scale division rounded up
+> decimals.divide(10_000d, 3d, -2, 'up')
+3.4E+3d
+```
 ~~~
   function divide: (decimal x, decimal y, long scale, string rounding_mode='half_up') -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$divide"};
 
 doc
 ~~~
-Returns the integer part of the result of `x` divided by `y`. Any fractional digits are not included in the result.
+`(decimal x, decimal y) -> decimal`
+
+Returns the integer part of `x` divided by `y`. Any fractional digits are not included in the result.
+
+The preferred scale of the result is `scale(x) - scale(y)`, but the scale will be expanded to accommodate
+additional digits, if necessary.
+
+Returns `nil` if `x` or `y` are `nil`.\
+Throws an error if `y` is zero.
+
+```tweakflow
+> decimals.divide_integral(1d, 3d)
+0d
+
+> decimals.divide_integral(100d, 3d)
+33d
+
+> decimals.divide_integral(100d, -3d)
+-33d
+
+# scale of result is scale(x) - scale(y)
+> decimals.divide_integral(10.54321d, 0.5d)
+21.0000d
+
+# scale of result is scale(x) - scale(y)
+> decimals.divide_integral(10.54321d, 1E+1d)
+1.000000d
+```
 ~~~
   function divide_integral: (decimal x, decimal y) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$divide_integral"};
 
