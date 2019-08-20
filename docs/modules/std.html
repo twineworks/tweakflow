@@ -5412,6 +5412,8 @@ If <code>x</code> is <code>-Infinity</code> the result is <code>Infinity</code>.
 <p>If <code>x</code> is a <code>long</code>, returns the absolute value of <code>x</code> as a long. <br />
 If <code>x</code> is a long, and is equal to <code>math.min_long</code>, the absolute value cannot be represented as a long, and an error is thrown.</p>
 
+<p>If <code>x</code> is a <code>decimal</code>, returns the absolute value of <code>x</code> as a decimal.</p>
+
 <p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
 
 <p>Throws an error if <code>x</code> is not numeric and not <code>nil</code>.</p>
@@ -5424,6 +5426,9 @@ If <code>x</code> is a long, and is equal to <code>math.min_long</code>, the abs
 
 &gt; math.abs(-2.0)
 2.0
+
+&gt; math.abs(-1.000d)
+1.000d
 
 &gt; math.abs(-Infinity)
 Infinity
@@ -5526,14 +5531,15 @@ function
 
 <p>Increments <code>x</code> by one.</p>
 
-<p>If <code>x</code> is a double, returns x+1.0. <br />
-If <code>x</code> is a long, returns x+1. </p>
+<p>If <code>x</code> is a double, returns <code>x+1.0</code> <br />
+If <code>x</code> is a long, returns <code>x+1</code> <br />
+If <code>x</code> is a decimal, returns <code>x+1d</code> </p>
 
 <p>Does not guard against overflow of long values.</p>
 
 <p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
 
-<p>Throws an error if <code>x</code> is neither a <code>long</code> nor a <code>double</code>.</p>
+<p>Throws an error if <code>x</code> is not numeric.</p>
 
 <pre><code class="language-tweakflow">&gt; math.inc(2.0)
 3.0
@@ -5543,6 +5549,9 @@ If <code>x</code> is a long, returns x+1. </p>
 
 &gt; math.inc(1)
 2
+
+&gt; math.inc(4.1234d)
+5.1234d
 
 &gt; math.inc(math.max_long)
 -9223372036854775808 # overflow to math.min_long
@@ -5570,20 +5579,24 @@ ERROR:
 
 <p>Decrements <code>x</code> by one.</p>
 
-<p>If <code>x</code> is a double, returns x-1.0. <br />
-If <code>x</code> is a long, returns x-1. </p>
+<p>If <code>x</code> is a double, returns <code>x-1.0</code> <br />
+If <code>x</code> is a long, returns <code>x-1</code> <br />
+If <code>x</code> is a decimal, returns <code>x-1d</code> </p>
 
-<p>Does not guard against undeflow of long values.</p>
+<p>Does not guard against underflow of long values.</p>
 
 <p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
 
-<p>Throws an error if <code>x</code> is neither a <code>long</code> nor a <code>double</code>.</p>
+<p>Throws an error if <code>x</code> is not numeric.</p>
 
 <pre><code class="language-tweakflow">&gt; math.dec(2.0)
 1.0
 
 &gt; math.dec(-2.0)
 -3.0
+
+&gt; math.dec(-2.1d)
+-3.1d
 
 &gt; math.dec(1)
 0
@@ -5612,7 +5625,7 @@ ERROR:
 
 <p><code>(a, b) -&gt; long</code></p>
 
-<p>Compares long or double numbers a and b according to their numeric order.</p>
+<p>Compares numbers a and b according to their numeric order.</p>
 
 <p>Returns -1 if a &lt; b.<br />
 Returns 1 if a &gt; b.<br />
@@ -5620,7 +5633,7 @@ Returns 0 if a == b.</p>
 
 <p>The order reflected by this function sorts these values in order: <code>nil</code>, <code>NaN</code>, <code>-Infinity</code>, finite numeric values, and <code>Infinity</code>.</p>
 
-<p>Throws an error if <code>a</code> or <code>b</code> are not <code>nil</code>, nor of type <code>long</code> or <code>double</code>.</p>
+<p>Throws an error if <code>a</code> or <code>b</code> are not <code>nil</code>, and not numeric.</p>
 
 <pre><code class="language-tweakflow">&gt; math.compare(1, 1)
 0
@@ -5631,8 +5644,8 @@ Returns 0 if a == b.</p>
 &gt; math.compare(7.0, 2)
 1
 
-&gt; data.sort([4, 3, 2.5, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
-[nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
+&gt; data.sort([4, 3, 2.5d, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
+[nil, NaN, -Infinity, 0.2, 1, 2.5d, 3, 4, Infinity]
 </code></pre>
 
 <div
@@ -5651,12 +5664,12 @@ Returns 0 if a == b.</p>
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code> or <code>NaN</code>.</p>
 
-<p>Throws an error if any <code>x</code> is anything other than a <code>long</code>, <code>double</code>, or <code>nil</code>.</p>
+<p>Throws an error if any <code>x</code> is anything other than a numeric value or <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.min([1,2,3])
 1
 
-&gt; math.min([1.0, 2.0, -3.0])
+&gt; math.min([1.0, 2d, -3.0])
 -3.0
 
 &gt; math.min([1, nil])
@@ -5687,12 +5700,12 @@ ERROR:
 
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>xs</code> is empty, or any <code>x</code> in <code>xs</code> is <code>nil</code> or <code>NaN</code>.</p>
 
-<p>Throws an error if any <code>x</code> is anything other than a <code>long</code>, <code>double</code>, or <code>nil</code>.</p>
+<p>Throws an error if any <code>x</code> is anything other than a numeric value or <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; math.max([1,2,3])
 3
 
-&gt; math.max([1.0, 2.0, -3.0])
+&gt; math.max([1.0, 2.0, -3d])
 2.0
 
 &gt; math.max([1, nil])
@@ -5810,9 +5823,9 @@ nil
 
 <h3 id="math-NaN?">NaN?</h3>
 
-<p><code>(double x) -&gt; boolean</code></p>
+<p><code>(any x) -&gt; boolean</code></p>
 
-<p>Given a double <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
+<p>Given a value <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
 
 <pre><code class="language-tweakflow">&gt; math.NaN?(2.3)
 false
@@ -6119,7 +6132,7 @@ nil
 ) -&gt; function
 </code></pre>
 
-<p>Returns a function <code>f</code> that accepts a single <code>long</code> or <code>double</code> parameter <code>x</code>, and returns a string representation of <code>x</code> using the
+<p>Returns a function <code>f</code> that accepts a single numeric parameter <code>x</code>, and returns a string representation of <code>x</code> using the
 supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a>,
 <a href="#locale-decimal_symbols">decimal_symbols</a>,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a>, and
@@ -6130,7 +6143,7 @@ supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFor
 Java language.</p>
 
 <p><code>f</code> returns <code>nil</code> if passed <code>nil</code> as an argument.
-<code>f</code> throws an error if <code>x</code> is neither a <code>double</code>, nor a <code>long</code> value.</p>
+<code>f</code> throws an error if <code>x</code> is not a numeric value.</p>
 
 <p>Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.<br />
 Throws an error if <code>decimal_symbols</code> is invalid.<br />
@@ -6178,7 +6191,8 @@ std.tf&gt; f(648722)
 <pre><code>(
   string pattern='0.##',
   dict decimal_symbols=nil,
-  boolean lenient=false
+  boolean lenient=false,
+  boolean parse_decimal=false
 ) -&gt; function
 </code></pre>
 
@@ -6190,11 +6204,15 @@ std.tf&gt; f(648722)
 <p>If <code>lenient</code> is <code>false</code> then <code>x</code> must parse as a number in its entirety. Partial matches throw an error.<br />
 If <code>lenient</code> is <code>true</code> then partial matches of <code>x</code> return the number that results from parsing the partial match.</p>
 
+<p>If <code>parse_decimal</code> is false, <code>f</code> returns a <code>long</code> or <code>double</code> value.<br />
+If <code>parse_decimal</code> is true, <code>f</code> returns a <code>decimal</code> value.</p>
+
 <p><code>f</code> returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>pattern</code> is not a valid <a href="https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html">pattern</a> for the DecimalFormat of the Java language.<br />
 Throws an error if <code>decimal_symbols</code> is invalid.<br />
-Throws an error if <code>lenient</code> is <code>nil</code>.</p>
+Throws an error if <code>lenient</code> is <code>nil</code>. <br />
+Throws an error if <code>parse_decimal</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; f: math.parser()
 
@@ -6213,11 +6231,19 @@ function
 &gt; f(&quot;203.23kg&quot;)
 203.23
 
+# localized parser
 &gt; f: math.parser('#,##0.##', locale.decimal_symbols('hi-IN'))
 function
 
 &gt; f(&quot;१०३&quot;)
 103
+
+# decimal parser
+&gt; f: math.parser('0.##', parse_decimal: true)
+function
+
+&gt; f(&quot;203.23&quot;)
+203.23d
 </code></pre>
 
 <div
@@ -6276,6 +6302,325 @@ function
       data-meta-tags='math'
     ></div>
 
+<h2 id="decimals">library decimals</h2>
+
+<p>The decimals library contains utility functions for working with decimal numbers.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals'
+      data-meta-type='library'
+      data-meta-name='decimals'
+      data-meta-tags=''
+    ></div>
+
+<h3 id="decimals-ulp">ulp</h3>
+
+<p><code>(decimal x) -&gt; decimal</code></p>
+
+<p>Returns the unit in the last place, of given decimal <code>x</code>.</p>
+
+<p>An ulp of a decimal is the positive distance between this value and the decimal next larger in magnitude with the same scale.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.ulp(0.5d)
+0.1d
+
+&gt; decimals.ulp(1.000d)
+0.001d
+
+&gt; decimals.ulp(-1000d)
+1d
+
+&gt; decimals.ulp(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-ulp'
+      data-meta-type='var'
+      data-meta-name='ulp'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-scale">scale</h3>
+
+<p><code>(decimal x) -&gt; long</code></p>
+
+<p>Returns the scale of given decimal <code>x</code>.</p>
+
+<p>A decimal number is internally represented as a mathematical integer x 10^(-scale).</p>
+
+<p>A positive scale therefore indicates the number of fractional digits.</p>
+
+<p>A negative scale represents a decimal that is stored in terms of 10, 100, 1000, etc.
+times some integer value, effectively dropping precision of trailing digits.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow"># no fractional digits
+&gt; decimals.scale(0d)
+0
+
+# two fractional digits
+&gt; decimals.scale(0.00d)
+2
+
+# two fractional digits
+&gt; decimals.scale(0.75d)
+2
+
+# value 100 with -2 scale
+&gt; decimals.scale(1e+2d)
+-2
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-scale'
+      data-meta-type='var'
+      data-meta-name='scale'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-with_scale">with_scale</h3>
+
+<pre><code class="language-tweakflow">(
+  decimal x,
+  long scale,
+  string rounding_mode='half_up'
+) -&gt; decimal
+</code></pre>
+
+<p>Returns a decimal of the same value as <code>x</code> with given <code>scale</code>.</p>
+
+<p>The given <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a> is used when digits must be dropped to adapt the given scale.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>scale</code> or <code>rounding_mode</code> are <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.with_scale(0d, 3)
+0.000d
+
+&gt; decimals.with_scale(5d, 2)
+5.00d
+
+&gt; decimals.with_scale(1.29d, 1)
+1.3d
+
+&gt; decimals.with_scale(1.29d, 1, 'down')
+1.2d
+
+# set negative scale -2, effectively storing the number at multiples of 100
+&gt; decimals.with_scale(1299d, -2)
+1.3E+3d
+
+&gt; decimals.with_scale(1299d, -2, 'down')
+1.2E+3d
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-with_scale'
+      data-meta-type='var'
+      data-meta-name='with_scale'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-round">round</h3>
+
+<pre><code class="language-tweakflow">(
+  decimal x,
+  long digits,
+  string rounding_mode='half_up'
+) -&gt; decimal
+</code></pre>
+
+<p>Returns a decimal of <code>x</code> rounded to the given number of non-zero digits using the given <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a>.</p>
+
+<p>This function is useful to get a number with a relevant number of significant digits when dealing with numbers which contain many digits.</p>
+
+<p>If you wish to round to a fixed number of decimal places or digits, use <a href="#decimals-with_scale">with_scale</a>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.<br />
+If <code>digits</code> is <code>0</code>, <code>x</code> is returned.<br />
+Throws an error if <code>digits</code> or <code>rounding_mode</code> are <code>nil</code>.<br />
+Throws an error if <code>digits</code> is negative.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.round(0.0001234, 2)
+0.00012d
+
+&gt; decimals.round(0.01234d, 2)
+0.012d
+
+&gt; decimals.round(1.01234d, 2)
+1.0d
+
+&gt; decimals.round(1999d, 2)
+2.0E+3d
+
+&gt; decimals.round(1999, 3, 'down')
+1.99E+3d
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-round'
+      data-meta-type='var'
+      data-meta-name='round'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-plain">plain</h3>
+
+<p><code>(decimal x) -&gt; string</code></p>
+
+<p>Returns a plain string representation of the decimal, not using exponent notation.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.plain(1d)
+&quot;1&quot;
+
+&gt; decimals.plain(1.00d)
+&quot;1.00&quot;
+
+&gt; decimals.plain(1e+6d)
+&quot;1000000&quot;
+
+&gt; decimals.plain(1e-5d)
+&quot;0.00001&quot;
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-plain'
+      data-meta-type='var'
+      data-meta-name='plain'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-strip_trailing_zeros">strip_trailing_zeros</h3>
+
+<p><code>(decimal x) -&gt; decimal</code></p>
+
+<p>A decimal number is internally represented as a mathematical integer x 10^(-scale).</p>
+
+<p>Returns a decimal numerically equal to <code>x</code> in which scale and the integer part has
+been adjusted to not store any trailing zeros in the integer part.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.strip_trailing_zeros(1.00d)
+1d
+
+&gt; decimals.strip_trailing_zeros(1.10d)
+1.1d
+
+&gt; decimals.strip_trailing_zeros(100d)
+1E+2d
+
+&gt; decimals.strip_trailing_zeros(110d)
+1.1E+2d
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-strip_trailing_zeros'
+      data-meta-type='var'
+      data-meta-name='strip_trailing_zeros'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-divide">divide</h3>
+
+<pre><code class="language-tweakflow">(
+  decimal x,
+  decimal y,
+  long scale,
+  string rounding_mode='half_up'
+) -&gt; decimal
+</code></pre>
+
+<p>Returns the result of <code>x</code> divided by <code>y</code> with given <code>scale</code> and <a href="https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html">rounding mode</a>.</p>
+
+<p>If <code>scale</code> is <code>nil</code>, the scale of <code>x</code> is used.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> or <code>y</code> are <code>nil</code>.<br />
+Throws an error if <code>rounding_mode</code> is <code>nil</code>.
+Throws an error if <code>y</code> is zero.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.divide(1d, 3d, 2)
+0.33d
+
+&gt; decimals.divide(1d, 3d, 10)
+0.3333333333d
+
+&gt; decimals.divide(1d, 3d, 2, 'up')
+0.34d
+
+# scale=nil means result uses scale of x
+&gt; decimals.divide(1.00000d, 3d)
+0.33333d
+
+# negative scale division
+&gt; decimals.divide(10_000d, 3d, -2)
+3.3E+3d
+
+# negative scale division rounded up
+&gt; decimals.divide(10_000d, 3d, -2, 'up')
+3.4E+3d
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-divide'
+      data-meta-type='var'
+      data-meta-name='divide'
+      data-meta-tags='decimals'
+    ></div>
+
+<h3 id="decimals-divide_integral">divide_integral</h3>
+
+<p><code>(decimal x, decimal y) -&gt; decimal</code></p>
+
+<p>Returns the integer part of <code>x</code> divided by <code>y</code>. Any fractional digits are not included in the result.</p>
+
+<p>The preferred scale of the result is <code>scale(x) - scale(y)</code>, but the scale will be expanded to accommodate
+additional digits, if necessary.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> or <code>y</code> are <code>nil</code>.<br />
+Throws an error if <code>y</code> is zero.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.divide_integral(1d, 3d)
+0d
+
+&gt; decimals.divide_integral(100d, 3d)
+33d
+
+&gt; decimals.divide_integral(100d, -3d)
+-33d
+
+# scale of result is scale(x) - scale(y)
+&gt; decimals.divide_integral(10.54321d, 0.5d)
+21.0000d
+
+# scale of result is scale(x) - scale(y)
+&gt; decimals.divide_integral(10.54321d, 1E+1d)
+1.000000d
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-divide_integral'
+      data-meta-type='var'
+      data-meta-name='divide_integral'
+      data-meta-tags='decimals'
+    ></div>
+
 <h2 id="fun">library fun</h2>
 
 <p>The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
@@ -6298,7 +6643,7 @@ Subsequent calls to <code>f</code> receive as argument the result of the previou
 
 <p>Returns the result of the last call to <code>f</code>, or <code>x</code> if <code>n</code> is <code>0</code>.</p>
 
-<p>Returns <code>nil</code> if <code>n</code> <code>nil</code>.<br />
+<p>Returns <code>nil</code> if <code>n</code> is <code>nil</code>.<br />
 Throws an error if <code>n</code> is negative or <code>f</code> is <code>nil</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; double_up: (x) -&gt; 2*x

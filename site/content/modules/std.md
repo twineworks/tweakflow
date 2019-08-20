@@ -5624,6 +5624,8 @@ If `x` is `-Infinity` the result is `Infinity`.
 If `x` is a `long`, returns the absolute value of `x` as a long. \
 If `x` is a long, and is equal to `math.min_long`, the absolute value cannot be represented as a long, and an error is thrown.
 
+If `x` is a `decimal`, returns the absolute value of `x` as a decimal.
+
 If `x` is `nil`, returns `nil`.
 
 Throws an error if `x` is not numeric and not `nil`.
@@ -5637,6 +5639,9 @@ Throws an error if `x` is not numeric and not `nil`.
 
 > math.abs(-2.0)
 2.0
+
+> math.abs(-1.000d)
+1.000d
 
 > math.abs(-Infinity)
 Infinity
@@ -5744,14 +5749,15 @@ function
 
 Increments `x` by one.
 
-If `x` is a double, returns x+1.0. \
-If `x` is a long, returns x+1. \
+If `x` is a double, returns `x+1.0` \
+If `x` is a long, returns `x+1` \
+If `x` is a decimal, returns `x+1d` \
 
 Does not guard against overflow of long values.
 
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is neither a `long` nor a `double`.
+Throws an error if `x` is not numeric.
 
 ```tweakflow
 > math.inc(2.0)
@@ -5762,6 +5768,9 @@ Throws an error if `x` is neither a `long` nor a `double`.
 
 > math.inc(1)
 2
+
+> math.inc(4.1234d)
+5.1234d
 
 > math.inc(math.max_long)
 -9223372036854775808 # overflow to math.min_long
@@ -5791,14 +5800,15 @@ ERROR:
 
 Decrements `x` by one.
 
-If `x` is a double, returns x-1.0. \
-If `x` is a long, returns x-1. \
+If `x` is a double, returns `x-1.0` \
+If `x` is a long, returns `x-1` \
+If `x` is a decimal, returns `x-1d` \
 
-Does not guard against undeflow of long values.
+Does not guard against underflow of long values.
 
 If `x` is `nil`, returns `nil`.
 
-Throws an error if `x` is neither a `long` nor a `double`.
+Throws an error if `x` is not numeric.
 
 ```tweakflow
 > math.dec(2.0)
@@ -5806,6 +5816,9 @@ Throws an error if `x` is neither a `long` nor a `double`.
 
 > math.dec(-2.0)
 -3.0
+
+> math.dec(-2.1d)
+-3.1d
 
 > math.dec(1)
 0
@@ -5836,7 +5849,7 @@ ERROR:
 
 `(a, b) -> long`
 
-Compares long or double numbers a and b according to their numeric order.
+Compares numbers a and b according to their numeric order.
 
 Returns -1 if a < b.\
 Returns 1 if a > b.\
@@ -5844,7 +5857,7 @@ Returns 0 if a == b.
 
 The order reflected by this function sorts these values in order: `nil`, `NaN`, `-Infinity`, finite numeric values, and `Infinity`.
 
-Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
+Throws an error if `a` or `b` are not `nil`, and not numeric.
 
 ```tweakflow
 > math.compare(1, 1)
@@ -5856,8 +5869,8 @@ Throws an error if `a` or `b` are not `nil`, nor of type `long` or `double`.
 > math.compare(7.0, 2)
 1
 
-> data.sort([4, 3, 2.5, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
-[nil, NaN, -Infinity, 0.2, 1, 2.5, 3, 4, Infinity]
+> data.sort([4, 3, 2.5d, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
+[nil, NaN, -Infinity, 0.2, 1, 2.5d, 3, 4, Infinity]
 ```
 
 
@@ -5878,13 +5891,13 @@ Given a list of numeric `xs`, returns the smallest `x`.\
 
 Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
+Throws an error if any `x` is anything other than a numeric value or `nil`.
 
 ```tweakflow
 > math.min([1,2,3])
 1
 
-> math.min([1.0, 2.0, -3.0])
+> math.min([1.0, 2d, -3.0])
 -3.0
 
 > math.min([1, nil])
@@ -5917,13 +5930,13 @@ Given a list of numeric `xs`, returns the largest `x`.
 
 Returns `nil` if `xs` is `nil`, `xs` is empty, or any `x` in `xs` is `nil` or `NaN`.
 
-Throws an error if any `x` is anything other than a `long`, `double`, or `nil`.
+Throws an error if any `x` is anything other than a numeric value or `nil`.
 
 ```tweakflow
 > math.max([1,2,3])
 3
 
-> math.max([1.0, 2.0, -3.0])
+> math.max([1.0, 2.0, -3d])
 2.0
 
 > math.max([1, nil])
@@ -6052,9 +6065,9 @@ nil
 
 ### NaN?{#math-NaN?}
 
-`(double x) -> boolean`
+`(any x) -> boolean`
 
-Given a double `x`, returns `true` if `x` is NaN, returns `false` otherwise.
+Given a value `x`, returns `true` if `x` is NaN, returns `false` otherwise.
 
 ```tweakflow
 > math.NaN?(2.3)
@@ -6395,7 +6408,7 @@ nil
 ) -> function
 ```
 
-Returns a function `f` that accepts a single `long` or `double` parameter `x`, and returns a string representation of `x` using the
+Returns a function `f` that accepts a single numeric parameter `x`, and returns a string representation of `x` using the
 supplied [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html),
 [decimal_symbols](#locale-decimal_symbols),
 [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html), and
@@ -6406,7 +6419,7 @@ If `decimal_symbols` is `nil` (the default), 'en-US' decimal symbols are used.\
 Java language.
 
 `f` returns `nil` if passed `nil` as an argument.
-`f` throws an error if `x` is neither a `double`, nor a `long` value.
+`f` throws an error if `x` is not a numeric value.
 
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
 Throws an error if `decimal_symbols` is invalid.\
@@ -6458,7 +6471,8 @@ std.tf> f(648722)
 (
   string pattern='0.##',
   dict decimal_symbols=nil,
-  boolean lenient=false
+  boolean lenient=false,
+  boolean parse_decimal=false
 ) -> function
 ```
 
@@ -6470,11 +6484,15 @@ Uses `en-US` decimal symbols if `decimal_symbols` is `nil`.
 If `lenient` is `false` then `x` must parse as a number in its entirety. Partial matches throw an error.\
 If `lenient` is `true` then partial matches of `x` return the number that results from parsing the partial match.
 
+If `parse_decimal` is false, `f` returns a `long` or `double` value.\
+If `parse_decimal` is true, `f` returns a `decimal` value.
+
 `f` returns `nil` if `x` is `nil`.
 
 Throws an error if `pattern` is not a valid [pattern](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) for the DecimalFormat of the Java language.\
 Throws an error if `decimal_symbols` is invalid.\
-Throws an error if `lenient` is `nil`.
+Throws an error if `lenient` is `nil`. \
+Throws an error if `parse_decimal` is `nil`.
 
 ```tweakflow
 > f: math.parser()
@@ -6494,11 +6512,19 @@ function
 > f("203.23kg")
 203.23
 
+# localized parser
 > f: math.parser('#,##0.##', locale.decimal_symbols('hi-IN'))
 function
 
 > f("१०३")
 103
+
+# decimal parser
+> f: math.parser('0.##', parse_decimal: true)
+function
+
+> f("203.23")
+203.23d
 ```
 
 
@@ -6567,6 +6593,354 @@ The largest representable long value: `9223372036854775807`.
 	  data-meta-tags='math'
     ></div>
 
+## library decimals{#decimals}
+
+The decimals library contains utility functions for working with decimal numbers.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals'
+      data-meta-type='library'
+      data-meta-name='decimals'
+	  data-meta-tags=''
+    ></div>
+
+### ulp{#decimals-ulp}
+
+`(decimal x) -> decimal`
+
+Returns the unit in the last place, of given decimal `x`.
+
+An ulp of a decimal is the positive distance between this value and the decimal next larger in magnitude with the same scale.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.ulp(0.5d)
+0.1d
+
+> decimals.ulp(1.000d)
+0.001d
+
+> decimals.ulp(-1000d)
+1d
+
+> decimals.ulp(nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-ulp'
+      data-meta-type='var'
+      data-meta-name='ulp'
+	  data-meta-tags='decimals'
+    ></div>
+
+### scale{#decimals-scale}
+
+`(decimal x) -> long`
+
+Returns the scale of given decimal `x`.
+
+A decimal number is internally represented as a mathematical integer x 10^(-scale).
+
+A positive scale therefore indicates the number of fractional digits.
+
+A negative scale represents a decimal that is stored in terms of 10, 100, 1000, etc.
+times some integer value, effectively dropping precision of trailing digits.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+# no fractional digits
+> decimals.scale(0d)
+0
+
+# two fractional digits
+> decimals.scale(0.00d)
+2
+
+# two fractional digits
+> decimals.scale(0.75d)
+2
+
+# value 100 with -2 scale
+> decimals.scale(1e+2d)
+-2
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-scale'
+      data-meta-type='var'
+      data-meta-name='scale'
+	  data-meta-tags='decimals'
+    ></div>
+
+### with_scale{#decimals-with_scale}
+
+```tweakflow
+(
+  decimal x,
+  long scale,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns a decimal of the same value as `x` with given `scale`.
+
+The given [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html) is used when digits must be dropped to adapt the given scale.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `scale` or `rounding_mode` are `nil`.
+
+```tweakflow
+> decimals.with_scale(0d, 3)
+0.000d
+
+> decimals.with_scale(5d, 2)
+5.00d
+
+> decimals.with_scale(1.29d, 1)
+1.3d
+
+> decimals.with_scale(1.29d, 1, 'down')
+1.2d
+
+# set negative scale -2, effectively storing the number at multiples of 100
+> decimals.with_scale(1299d, -2)
+1.3E+3d
+
+> decimals.with_scale(1299d, -2, 'down')
+1.2E+3d
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-with_scale'
+      data-meta-type='var'
+      data-meta-name='with_scale'
+	  data-meta-tags='decimals'
+    ></div>
+
+### round{#decimals-round}
+
+```tweakflow
+(
+  decimal x,
+  long digits,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns a decimal of `x` rounded to the given number of non-zero digits using the given [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html).
+
+This function is useful to get a number with a relevant number of significant digits when dealing with numbers which contain many digits.
+
+If you wish to round to a fixed number of decimal places or digits, use [with_scale](#decimals-with_scale).
+
+Returns `nil` if `x` is `nil`.\
+If `digits` is `0`, `x` is returned.\
+Throws an error if `digits` or `rounding_mode` are `nil`.\
+Throws an error if `digits` is negative.
+
+```tweakflow
+> decimals.round(0.0001234, 2)
+0.00012d
+
+> decimals.round(0.01234d, 2)
+0.012d
+
+> decimals.round(1.01234d, 2)
+1.0d
+
+> decimals.round(1999d, 2)
+2.0E+3d
+
+> decimals.round(1999, 3, 'down')
+1.99E+3d
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-round'
+      data-meta-type='var'
+      data-meta-name='round'
+	  data-meta-tags='decimals'
+    ></div>
+
+### plain{#decimals-plain}
+
+`(decimal x) -> string`
+
+Returns a plain string representation of the decimal, not using exponent notation.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.plain(1d)
+"1"
+
+> decimals.plain(1.00d)
+"1.00"
+
+> decimals.plain(1e+6d)
+"1000000"
+
+> decimals.plain(1e-5d)
+"0.00001"
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-plain'
+      data-meta-type='var'
+      data-meta-name='plain'
+	  data-meta-tags='decimals'
+    ></div>
+
+### strip_trailing_zeros{#decimals-strip_trailing_zeros}
+
+`(decimal x) -> decimal`
+
+A decimal number is internally represented as a mathematical integer x 10^(-scale).
+
+Returns a decimal numerically equal to `x` in which scale and the integer part has
+been adjusted to not store any trailing zeros in the integer part.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> decimals.strip_trailing_zeros(1.00d)
+1d
+
+> decimals.strip_trailing_zeros(1.10d)
+1.1d
+
+> decimals.strip_trailing_zeros(100d)
+1E+2d
+
+> decimals.strip_trailing_zeros(110d)
+1.1E+2d
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-strip_trailing_zeros'
+      data-meta-type='var'
+      data-meta-name='strip_trailing_zeros'
+	  data-meta-tags='decimals'
+    ></div>
+
+### divide{#decimals-divide}
+
+```tweakflow
+(
+  decimal x,
+  decimal y,
+  long scale,
+  string rounding_mode='half_up'
+) -> decimal
+```
+
+Returns the result of `x` divided by `y` with given `scale` and [rounding mode](https://docs.oracle.com/javase/8/docs/api/java/math/RoundingMode.html).
+
+If `scale` is `nil`, the scale of `x` is used.
+
+Returns `nil` if `x` or `y` are `nil`.\
+Throws an error if `rounding_mode` is `nil`.
+Throws an error if `y` is zero.
+
+```tweakflow
+> decimals.divide(1d, 3d, 2)
+0.33d
+
+> decimals.divide(1d, 3d, 10)
+0.3333333333d
+
+> decimals.divide(1d, 3d, 2, 'up')
+0.34d
+
+# scale=nil means result uses scale of x
+> decimals.divide(1.00000d, 3d)
+0.33333d
+
+# negative scale division
+> decimals.divide(10_000d, 3d, -2)
+3.3E+3d
+
+# negative scale division rounded up
+> decimals.divide(10_000d, 3d, -2, 'up')
+3.4E+3d
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-divide'
+      data-meta-type='var'
+      data-meta-name='divide'
+	  data-meta-tags='decimals'
+    ></div>
+
+### divide_integral{#decimals-divide_integral}
+
+`(decimal x, decimal y) -> decimal`
+
+Returns the integer part of `x` divided by `y`. Any fractional digits are not included in the result.
+
+The preferred scale of the result is `scale(x) - scale(y)`, but the scale will be expanded to accommodate
+additional digits, if necessary.
+
+Returns `nil` if `x` or `y` are `nil`.\
+Throws an error if `y` is zero.
+
+```tweakflow
+> decimals.divide_integral(1d, 3d)
+0d
+
+> decimals.divide_integral(100d, 3d)
+33d
+
+> decimals.divide_integral(100d, -3d)
+-33d
+
+# scale of result is scale(x) - scale(y)
+> decimals.divide_integral(10.54321d, 0.5d)
+21.0000d
+
+# scale of result is scale(x) - scale(y)
+> decimals.divide_integral(10.54321d, 1E+1d)
+1.000000d
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-divide_integral'
+      data-meta-type='var'
+      data-meta-name='divide_integral'
+	  data-meta-tags='decimals'
+    ></div>
+
 ## library fun{#fun}
 
 The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
@@ -6591,7 +6965,7 @@ Subsequent calls to `f` receive as argument the result of the previous call.
 
 Returns the result of the last call to `f`, or `x` if `n` is `0`.
 
-Returns `nil` if `n` `nil`.\
+Returns `nil` if `n` is `nil`.\
 Throws an error if `n` is negative or `f` is `nil`.
 
 ```tweakflow
