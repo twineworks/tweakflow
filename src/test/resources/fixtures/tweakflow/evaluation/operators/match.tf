@@ -64,6 +64,86 @@ library match_expression_spec {
     )
     == "two";
 
+  match_long_on_decimal_found: (
+      match 2
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_long_on_decimal_missing: (
+      match 3
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_double_on_decimal_found: (
+      match 2.0
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_double_on_decimal_missing: (
+      match 3.0
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_decimal_on_decimal_found: (
+      match 2d
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_decimal_on_decimal_missing: (
+      match 3d
+        1d -> "one",
+        2d -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_decimal_on_long_found: (
+      match 2d
+        1 -> "one",
+        2 -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_decimal_on_long_missing: (
+      match 3d
+        1 -> "one",
+        2 -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
+  match_decimal_on_double_found: (
+      match 2d
+        1.0 -> "one",
+        2.0 -> "two",
+        default -> "unknown"
+    )
+    == "two";
+
+  match_decimal_on_double_missing: (
+      match 3d
+        1.0 -> "one",
+        2.0 -> "two",
+        default -> "unknown"
+    )
+    == "unknown";
+
   match_empty_list: (
       match []
         [] -> "empty",
