@@ -70,6 +70,7 @@ function hljsDefineTweakflow(hljs) {
     "dict",
     "list",
     "double",
+    "decimal",
     "datetime",
     "any",
     "void"
@@ -85,11 +86,12 @@ function hljsDefineTweakflow(hljs) {
 
   const BOUNDARY_RE = "(^|\\b|[ ])";
 
-  const INT_RE = "(_*[0-9][0-9_]*)";
+  const INT_RE = "([0-9][0-9_]*)";
   const LONG_RE = `[+\\-]?${INT_RE}`;
   const HEX_RE = "0x[0-9a-fA-F]+";
   const DOUBLE_RE = `[+\\-]?((NaN)|(Infinity)|(${INT_RE}+(\\.${INT_RE}+)?([eE][-+]?${INT_RE}+)?)|\\.${INT_RE}+([eE][-+]?${INT_RE}+)?)`;
-  const NUMBER_RE = `${BOUNDARY_RE}((${HEX_RE})|(${DOUBLE_RE}|(${LONG_RE})))`;
+  const DECIMAL_RE = `[+\\-]?((${INT_RE}+(\\.${INT_RE}+)?([eE][-+]?${INT_RE}+)?)|\\.${INT_RE}+([eE][-+]?${INT_RE}+)?)([dD])`;
+  const NUMBER_RE = `${BOUNDARY_RE}((${HEX_RE})|((${DECIMAL_RE})|(${DOUBLE_RE})|(${LONG_RE})))`;
   const BINARY_RE = `${BOUNDARY_RE}0b(_|([0-9a-fA-F]{2}))*`;
 
   const ID_RE = "[a-zA-Z_][a-zA-Z0-9?_]*";

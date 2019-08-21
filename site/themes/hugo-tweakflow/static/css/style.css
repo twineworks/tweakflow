@@ -383,6 +383,10 @@ main ul {
   padding-left: 2em;
 }
 
+main ul li {
+  line-height: 1.4em;
+}
+
 main table {
     border-collapse: collapse;
     border-spacing: 0;

@@ -92,7 +92,7 @@ Non-empty digit sequences denoting the integer, fraction, or exponent can additi
 `_` characters in non-leading positions to visually format the number.
 
 ```tweakflow
-# various ways to write the decimal number 3.1315
+# various ways to write the double number 3.1315
 
 > 3.1315
 3.1315
@@ -135,6 +135,47 @@ NaN
 
 > typeof NaN
 "double"
+```
+
+### Decimal literals
+
+Decimal numbers are arbitrary precision numeric values, internally represented by a [BigDecimal](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html).
+
+Decimal literals are notated as decimal long values, or finite double values, followed by the characters `d` or `D`.
+
+```tweakflow
+# various ways to write the decimal number 3.1315
+
+> 3.1315d
+3.1315d
+
+> 3.13_15_d
+3.1315d
+
+> 0.31315e1d
+3.1315d
+
+> .31315E1D
+3.1315d
+
+> 31315_e-4d
+3.1315d
+```
+
+The scale of the resulting decimal is the number of fractional digits minus the given exponent.
+
+```tweakflow
+> decimals.scale(3.1314d)
+4
+
+> decimals.scale(3.1314000d)
+7
+
+> decimals.scale(1e+6d)
+-6
+
+> decimals.scale(1.1e+6d)
+-5
 ```
 
 ### Binary literals
@@ -1112,6 +1153,10 @@ Boolean as double
 
 Boolean `true` is cast to `1.0` and boolean `false` is cast to `0.0`.
 
+Boolean as decimal
+
+Boolean `true` is cast to `1d` and boolean `false` is cast to `0d`.
+
 Boolean as string
 
 Boolean `true` is cast to `"true"` and boolean `false` is cast to `"false"`.
@@ -1127,6 +1172,10 @@ The long `0` is converted to `false`. Any other long value is converted to `true
 Long as double
 
 The long number is converted to to closest double value possible.
+
+Long as decimal
+
+The long number is converted to the corresponding decimal value.
 
 Long as string
 
@@ -1150,6 +1199,12 @@ If the double is `Infinity`, the converted value is `math.max_long`.
 
 If the double is `-Infinity`, the converted value is `math.min_long`.
 
+Double as decimal
+
+The double value is converted to its [string representation]((https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-)), which is then converted to a decimal. The intermediate conversion to string compensates for erratic results caused by the inexact representation of floating point numbers.
+
+If the double value is not finite, the resulting decimal is `0d`.
+
 Double as string
 
 - If the double value is `NaN`, the string is `"NaN"`.
@@ -1161,6 +1216,29 @@ Double as string
 For any other double value, the [conventions the Java language](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-) are used.
 
 Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers [formatters](/modules/std.html#math-formatter) to to convert double values to strings in a controlled output format.
+
+### Decimal
+
+The `decimal` type holds an exact arbitrary precision numeric value, stored internally as a [BigDecimal](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html). Literal decimals are notated using [decimal literals](#decimal-literals). The following type casts are supported:
+
+Decimal as boolean
+
+Decimal values equal to `0d` are converted to `false`. Any other values are converted to `true`.
+
+Decimal as long
+
+The decimal value is truncated at the decimal point and converted to the closest long value.
+
+Decimal as double
+
+The decimal value is converted to the closest double value.
+
+  - If the decimal value is greater than the maximum double value, the result is `Infinity`.
+  - If the decimal value is less than the minimum double value, the result is `-Infinity`.
+
+Decimal as string
+
+The decimal value is converted to a string, possibly using exponent notation, which preserves all digits and scale of the decimal value. The resulting string value can be safely cast back to the original decimal value.
 
 ### Binary
 
@@ -1200,7 +1278,7 @@ Strings cast to doubles successfully if they pass the following regular expressi
 (Infinity)|                                  # Infinity
 ([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
                                              # fractional digits, and exponent
-\.[0-9]+([eE][-+]?[0-9]+)?)                  # decimal dot followed by fractional digits
+(\.[0-9]+([eE][-+]?[0-9]+)?)                 # decimal dot followed by fractional digits
                                              # and exponent
 )
 [\x00-\x20]*                                 # optional trailing whitespace
@@ -1225,6 +1303,43 @@ Examples for casts from string to double:
 ERROR:
   code: CAST_ERROR
   message: Cannot cast 200.0kg to double
+```
+
+String as decimal
+
+Strings cast to decimals successfully if they pass the following regular expression:
+
+```text
+[\x00-\x20]*                                 # optional leading whitespace
+[-+]?                                        # optional sign
+(
+([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
+                                             # fractional digits, and exponent
+(\.[0-9]+([eE][-+]?[0-9]+)?)                 # decimal dot followed by fractional digits
+                                             # and exponent
+)
+[\x00-\x20]*                                 # optional trailing whitespace
+```
+
+Examples for casts from string to decimal:
+
+```tweakflow
+> "1.0" as decimal
+1.0d
+
+> "2e3" as decimal
+2E+3d
+
+> "2230.3e-1" as decimal
+223.03d
+
+> ".98e2" as decimal
+98d
+
+> "200.0kg" as decimal
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast 200.0kg to decimal
 ```
 
 String as list
@@ -3409,7 +3524,7 @@ true
 
 Syntax: `-a`
 
-The operand must be of type long or double. Any other types throw an error. The operand is negated retaining its original type. If the operand is `nil` the result is `nil`.
+The operand must be of type long, double or decimal. Any other types throw an error. The operand is negated retaining its original type. If the operand is `nil` the result is `nil`.
 
 The following special cases are defined:
 
@@ -3423,8 +3538,8 @@ The following special cases are defined:
 > -(1)
 -1
 
-> -(-1)
-1
+> -(-1d)
+1d
 
 > -(-2.3)
 2.3
@@ -3447,13 +3562,17 @@ Syntax: `a+b`
 
 Evaluates to the sum of a and b.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double or decimal. Any other types throw an error. The following rules are applied in order:
 
-If any operands are `nil`, the result is `nil`.
-
-If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
-
-If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.
+  - If any operand is `nil`, the result is `nil`.
+  - If any operand is `NaN` the result is `NaN`.
+  - If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.
+  - If both operands are of type double, a floating point sum is performed. The result is a double.
+  - If both operands are of type decimal, a decimal exact sum is performed. The result is a decimal.
+  - If operands are of types long and double, the long operand is cast to double, and a floating point sum is performed. The result is a double.
+  - If one operand is `Infinity` and the other operand is finite, the result is `Infinity`.
+  - If one operand is `-Infinity` and the other operand is finite, the result is `-Infinity`.
+  - If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact sum is performed. The result is a decimal.
 
 Special cases involving `Infinity` and `NaN` are defined as follows:
 
@@ -3471,6 +3590,9 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 > 2.0+2
 4.0
 
+> 4d + 2
+6d
+
 > Infinity + 3
 Infinity
 
@@ -3484,13 +3606,19 @@ Syntax: `a-b`
 
 Evaluates to the value of a with b subtracted.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double or decimal. Any other types throw an error. The following rules are applied in order:
 
-If any operands are `nil`, the result is `nil`.
-
-If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
-
-If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.
+  - If any operand is `nil`, the result is `nil`.
+  - If any operand is `NaN` the result is `NaN`.
+  - If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.
+  - If both operands are of type double, a floating point subtraction is performed. The result is a double.
+  - If both operands are of type decimal, a decimal exact subtraction is performed. The result is a decimal.
+  - If operands are of types long and double, the long operand is cast to double, and a floating point subtraction is performed. The result is a double.
+  - If operand `a` is `Infinity` and the other operand is finite, the result is `Infinity`.
+  - If operand `b` is `Infinity` and the other operand is finite, the result is `-Infinity`.
+  - If operand `a` is `-Infinity` and the other operand is finite, the result is `-Infinity`.
+  - If operand `b` is `-Infinity` and the other operand is finite, the result is `Infinity`.
+  - If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact subtraction is performed. The result is a decimal.
 
 Special cases involving `Infinity` and `NaN` are defined as follows:
 
@@ -3511,6 +3639,9 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 > 2.3-9
 -6.7
 
+> 0.1d-0.2d
+-0.1d
+
 > math.min_long - 1 # binary underflow
 9223372036854775807
 
@@ -3525,15 +3656,19 @@ Syntax: `a*b`
 
 Operands are multiplied. Evaluation proceeds as follows:
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double, or decimal. Any other types throw an error.
 
-If any operands are `nil`, the result is `nil`.
-
-If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.
-
-If both operands are doubles, floating point multiplication is performed, and the result is another double.
-
-If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.
+  - If any operand is `nil`, the result is `nil`.
+  - If any operand is `NaN` the result is `NaN`.
+  - If both operands are longs, integer multiplication is performed and the result is a long. Overflows and underflows do not throw.
+  - If both operands are of type double, a floating point multiplication is performed. The result is a double.
+  - If both operands are of type decimal, a decimal exact multiplication is performed. The result is a decimal.
+  - If operands are of types long and double, the long operand is cast to double, and a floating point multiplication is performed. The result is a double.
+  - If one operand is `Infinity` and the other operand is finite and positive, the result is `Infinity`.
+  - If one operand is `Infinity` and the other operand is finite and negative, the result is `-Infinity`.
+  - If one operand is `-Infinity` and the other operand is finite and positive, the result is `-Infinity`.
+  - If one operand is `-Infinity` and the other operand is finite and negative, the result is `Infinity`.
+  - If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact multiplication is performed. The result is a decimal.
 
 Special cases involving `NaN` and `Infinity` are defined as follows:
 
@@ -3552,8 +3687,8 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 > 2 * 3.3
 6.6
 
-> 2 * 3.3
-6.6
+> 1.1d * 3.3
+3.63d
 
 > 1.1 * 2.9
 3.19
@@ -3563,23 +3698,36 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 
 > math.max_long as double * math.max_long # floating point multiplication
 8.507059173023462E37
+
+> math.max_long as decimal * math.max_long # decimal multiplication
+85070591730234615847396907784232501249d
 ```
 
-#### Floating point division
+#### Division
 
 Syntax: `a/b`
 
 Evaluates to a divided by b.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double, or decimal. Any other types throw an error.
 
-If any operands are `nil`, the result is `nil`.
+  - If any operand is `nil`, the result is `nil`.
+  - If any operand is `NaN` the result is `NaN`.
+  - If both operands are of type long, floating point division is performed and the result is a double.
+  - If both operands are of type double, a floating point division is performed. The result is a double.
+  - If both operands are of type decimal, a decimal division is performed. The result is a decimal.
+  - If operands are of types long and double, the long operand is cast to double, and a floating point division is performed. The result is a double.
+  - If operand `a` is `Infinity` and the other operand is finite and positive, the result is `Infinity`.
+  - If operand `a` is `-Infinity` and the other operand is finite and negative, the result is `-Infinity`.
+  - If operand `b` is `Infinity` and the other operand is finite and positive, the result is `0`.
+  - If operand `b` is `-Infinity` and the other operand is finite and negative, the result is `0`.
+  - If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal division is performed. The result is a decimal.
 
-If both operands are doubles, floating point division is performed.
+In case a decimal division is performed, the following rules apply:
 
-If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.
-
-The result is always a double.
+Operand b must not be zero. The scale of the result is no less than the scale of operand a.
+The result's scale includes up to 20 fractional digits, and is rounded if necessary. Rounding occurs towards the nearest neighbor, with ties rounded away from zero.
+For more control over the scale and rounding of results see [decimals.divide](/modules/std.html#decimals-divide).
 
 Special cases involving `Infinity` and `NaN` are defined as follows:
 
@@ -3607,7 +3755,7 @@ Syntax: `a//b`
 
 Casts a and b to long, and performs integer division.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double, or decimal. Any other types throw an error.
 
 If any operands are `nil`, the result is `nil`.
 
@@ -3643,13 +3791,16 @@ Syntax: `a%b`
 
 Evaluates to the remainder after a is divided by b.
 
-Each operand must be either a long or a double. Any other types throw an error.
+Each operand must be either a long, double, or decimal. Any other types throw an error.
 
-If any operands are `nil`, the result is `nil`.
+  - If any operand is `nil`, the result is `nil`.
+  - If any operand is `NaN` the result is `NaN`.
+  - If both operands are longs, an integer remainder calculation is performed, and the result is a long. `b` cannot be zero in this case. A division by zero throws an error.
+  - If both operands are decimals, a decimal remainder calculation is performed, and the result is a decimal. `b` cannot be zero in this case. A division by zero throws an error.
+  - If both operands are of type double, a floating point calculation is performed. The result is a double. The floating point calculation evaluates to `NaN` when dividing by zero.
+  - If the operands are of type long and double, the long operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to `NaN` when dividing by zero.
+  - If one of the operands is of type decimal, the other operand is cast to decimal, a decimal remainder calculation is performed, and the result is a decimal. `b` cannot be zero in this case. A division by zero throws an error.
 
-If both operands are longs, an integer remainder calculation is performed, and the result is a long. `b` cannot be zero in this case. A division by zero throws an error.
-
-If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to `NaN` when dividing by zero.
 
 The sign of the result depends on the sign of `a`.
 
@@ -3663,8 +3814,9 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 | Expression                      | Result |
 | ------------------------------- | ------ |
 | `x % 0.0`                       | `NaN`  |
+| `[+¦-]Infinity % x`             | `NaN`  |
 | `[+¦-]Infinity % [+¦-]Infinity` | `NaN`  |
-| `0.0 % [+¦-]Infinity`           | `0.0`  |
+| `x % [+¦-]Infinity`             | `x`    |
 
 ```tweakflow
 > 10 % 4
@@ -3681,6 +3833,14 @@ Special cases involving `Infinity` and `NaN` are defined as follows:
 
 > -5 % 1.5
 -0.5
+
+# the inexact nature of floating point numbers shows here
+> 100.0 % 0.1
+0.09999999999999445
+
+# the decimal result is exact
+> 100d % 0.1d
+0d
 ```
 
 #### Exponentiation
@@ -3689,11 +3849,11 @@ Syntax: `a**b`
 
 Operand a is raised to the power of b.
 
-Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.
+Each operand must be of type long, double or decimal. Any other types throw an error.
 
-If any operand is `nil`, the result is `nil`.
-
-The result is of type double.
+  - If any operand is `nil`, the result is `nil`.
+  - If `a` is a decimal and `b` is a long, exact exponentiation is performed. The result is of type decimal. Operand `b` must be within `0` and `999_999_999`.
+  - In all other cases `a` and `b` are cast to double and a floating point exponentiation is performed. The result is of type double.
 
 Special cases involving `NaN` and `Infinity` are defined as follows:
 
@@ -3721,6 +3881,14 @@ Special cases involving `NaN` and `Infinity` are defined as follows:
 > 2**10
 1024.0
 
+# floating point exponentiation
+> 2.2 ** 2
+4.840000000000001
+
+# exact exponentiation
+> 2.2d ** 2
+4.84d
+
 > nil**nil
 nil
 
@@ -3747,10 +3915,21 @@ The double special value `NaN` is not equal to anything, not even to itself.
 false
 ```
 
-A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.
+Values of type double, long, or decimal are equal if the they have the same magnitude.
+When comparing finite double and decimal types, the double value is cast to decimal first.
+Decimal values are equal if they are mathematically equal, regardless of scale.
 
 ```tweakflow
 > 0 == 0.0
+true
+
+> 0 == 0.000d
+true
+
+> 0.1 == 0.1d
+true
+
+> 0.1d == 0.1000d
 true
 
 > 3 == 3.0
@@ -3819,12 +3998,23 @@ Syntax: `a<b`
 
 Evaluates to `true` if a is less than b, `false` otherwise.
 
-Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+Each operand must be a long, double, or decimal. Supplying any other types throws an error.
 
-If either operand is `nil`, or `NaN` the result is `false`.
+  - If either operand is `nil`, or `NaN` the result is `false`.
+  - If both operands are long, an integer comparison is performed.
+  - If both operands are double, a floating point comparison is performed.
+  - If both operands are decimal, a decimal comparison is performed.
+  - If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.
+  - If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.
+  - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
+  - -Infinity is less than any finite number
+  - Infinity is greater than an finite number
 
 ```tweakflow
 > 1 < 2
+true
+
+> 1 < 6d
 true
 
 > 1 < 1
@@ -3849,19 +4039,25 @@ Syntax: `a<=b`
 
 Evaluates to true if a is less than b, or equal to b.
 
-Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+Each operand must be a long, double, or decimal. Supplying any other types throws an error.
 
-If either operand is `NaN` the result is `false`.
-
-If both operands are `nil`, the result is `true`.
-
-If exactly one operand is `nil`, the result is `false`.
+  - If both operands are `nil`, the result is `true`.
+  - If exactly one operand is `nil` the result is `false`.
+  - If any operand is `NaN` the result is `false`.
+  - If both operands are long, an integer comparison is performed.
+  - If both operands are double, a floating point comparison is performed.
+  - If both operands are decimal, a decimal comparison is performed.
+  - If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.
+  - If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.
+  - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
+  - -Infinity is less than any finite number
+  - Infinity is greater than an finite number
 
 ```tweakflow
 > 1 <= 3
 true
 
-> 1 <= 1
+> 1 <= 1d
 true
 
 > 1.0 <= Infinity
@@ -3880,9 +4076,17 @@ Syntax: `a>b`
 
 Evaluates to `true` if a is greater than b, `false` otherwise.
 
-Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+Each operand must be a long, double, or decimal. Supplying any other types throws an error.
 
-If either operand is `nil`, or `NaN` the result is `false`.
+  - If either operand is `nil`, or `NaN` the result is `false`.
+  - If both operands are long, an integer comparison is performed.
+  - If both operands are double, a floating point comparison is performed.
+  - If both operands are decimal, a decimal comparison is performed.
+  - If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.
+  - If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.
+  - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
+  - -Infinity is less than any finite number
+  - Infinity is greater than an finite number
 
 ```tweakflow
 > 1 > 2
@@ -3891,7 +4095,7 @@ false
 > Infinity > 4
 true
 
-> 5 > 3
+> 5 > 3d
 true
 
 > NaN > 2
@@ -3910,13 +4114,19 @@ Syntax: `a>=b`
 
 Evaluates to true if a is greater than b, or equal to b.
 
-Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.
+Each operand must be a long, double, or decimal. Supplying any other types throws an error.
 
-If either operand is `NaN` the result is `false`.
-
-If both operands are `nil`, the result is `true`.
-
-If exactly one operand is `nil`, the result is `false`.
+  - If both operands are `nil`, the result is `true`.
+  - If exactly one operand is `nil` the result is `false`.
+  - If any operand is `NaN` the result is `false`.
+  - If both operands are long, an integer comparison is performed.
+  - If both operands are double, a floating point comparison is performed.
+  - If both operands are decimal, a decimal comparison is performed.
+  - If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.
+  - If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.
+  - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
+  - -Infinity is less than any finite number
+  - Infinity is greater than an finite number
 
 ```tweakflow
 > 1 >= 2
@@ -3925,7 +4135,7 @@ false
 > Infinity >= 2
 true
 
-> 2.0 >= 2
+> 2.0 >= 2d
 true
 
 > NaN > 2
@@ -3953,6 +4163,12 @@ true
 
 > 1 === 1.0
 false
+
+> 1 === 1d
+false
+
+> 1d === 1.0000d
+true
 
 > "foo" === "foo"
 true
@@ -3984,6 +4200,9 @@ true
 false
 
 > 1 !== 1.0
+true
+
+> 1 !== 1d
 true
 
 > "foo" !== "foo"
@@ -4022,7 +4241,7 @@ Syntax: `a is datatype`
 
 ```text
 datatype
-  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  : (boolean|string|long|double|decimal|datetime|list|dict|function|void|any)
   ;
 ```
 
@@ -4068,7 +4287,7 @@ false
 
 Syntax: `typeof a`
 
-The expression returns the name of a value's type. The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `"void"`.
+The expression returns the name of a value's type. The possible results are: `"boolean"`, `"string"`, `"long"`, `"double"`, `"decimal"`, `"datetime"`, `"list"`, `"dict"`, `"function"`, or `"void"`. Any non-nil value yields its type. The `nil` value yields `"void"`.
 
 ```tweakflow
 > typeof "foo"
@@ -4082,6 +4301,9 @@ The expression returns the name of a value's type. The possible results are: `"b
 
 > typeof 1.0
 "double"
+
+> typeof 3d
+"decimal"
 
 > typeof false
 "boolean"
@@ -4108,7 +4330,7 @@ Syntax: `a as datatype`
 
 ```text
 datatype
-  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  : (boolean|string|long|double|decimal|datetime|list|dict|function|void|any)
   ;
 ```
 

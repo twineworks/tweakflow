@@ -42,10 +42,10 @@ See the [getting started](https://twineworks.github.io/tweakflow/getting-started
 ## Language features
 
 ### A simple computation model
-Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they can use formulas in a spreadsheet application, they can use formulas in your application too.
+Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions.
 
 ### Dynamically typed
-Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
+Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, exact decimal numbers, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
 
 ### All data is immutable
 All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.
@@ -77,53 +77,9 @@ Evaluating simple expressions is as easy as:
 TweakFlow.evaluate("1+2"); // returns the Value 3
 ```
 
-Or it can be more sophisticated, providing users with application variables they can reference. Your app is in control of functions and variables available to user expressions. A corresponding tweakflow module might look like this:
+Or it can be more sophisticated, providing users with application variables they can reference. Your app is in control of functions and variables available to user expressions.
 
-```tweakflow
-# my_module.tf
-# allow users to use core, data, math, and strings libraries from the standard library
-import core, data, math, strings from 'std';
-
-# place customer.first_name and customer.last_name into scope, provided dynamically during runtime
-library customer {
-  provided first_name;
-  provided last_name;
-}
-
-# generated from user input, re-evaluated automatically when customer changes
-library user {
-  greeting: if customer.first_name && customer.last_name
-              "Hello #{customer.first_name} #{customer.last_name}"
-            else
-              "Dear anonymous";
-}
-```
-
-The embedding code for above module:
-
-```java
-Runtime runtime = TweakFlow.compile(loadPath, "my_module.tf");
-// get the module out of the runtime
-Runtime.Module module = runtime.getModules().get(runtime.unitKey("user_module.tf"));
-
-// get a handle to customer.first_name, and customer.last_name provided vars
-Runtime.Var firstName = module.getLibrary("customer").getVar("first_name");
-Runtime.Var lastName = module.getLibrary("customer").getVar("last_name");
-
-// get a handle to greeting expression
-Runtime.Var greeting = module.getLibrary("user").getVar("greeting");
-
-// loop over customer collection and calculate the user-defined greeting
-for (Customer c : myCustomerCollection){
-  runtime.updateVars(
-    firstName, Values.make(c.getFirstName()),
-    lastName, Values.make(c.getLastName())
-  );
-  String userGreeting = greeting.getValue().string();
-}
-```
-
-Your application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
+The host application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
 
 See the [embedding](https://twineworks.github.io/tweakflow/embedding.html) guide for more information and examples.
 

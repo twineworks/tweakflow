@@ -23,7 +23,7 @@ This is in contrast to other embeddable languages like JRuby and JavaScript that
 # Language features
 
 ## A simple computation model
-Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions. If they are able to use formulas in a spreadsheet application, they are able to use tweakflow.
+Tweakflow has values and functions acting on them. All language constructs like variables, libraries, and modules merely serve to name and organize values and functions into sensible groups. Application users do not have to learn any programming paradigms to start using tweakflow expressions.
 
 ### Batteries included
 Tweakflow comes with a [standard library](/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
@@ -32,7 +32,7 @@ Tweakflow comes with a [standard library](/modules/std.html) that allows users t
 Tweakflow comes with an extensible [spec framework](/tools.html#spec-runner) similar to mocha, rspec, etc. The [tests for the standard library](https://github.com/twineworks/tweakflow/tree/master/src/test/resources/spec/std) are implemented with it.
 
 ## Dynamically typed
-Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
+Tweakflow is a dynamically typed language. Data types include booleans, strings, longs, doubles, exact decimal numbers, datetimes and functions, as well as nestable lists and dictionaries. All data types have literal notations.
 
 ## All data is immutable
 All values in tweakflow are immutable. It is always safe to pass values between user expressions and the host application without worrying about mutable state or object identity.

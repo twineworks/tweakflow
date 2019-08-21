@@ -181,6 +181,7 @@
 <li><a href="#the-nil-literal">The nil literal</a></li>
 <li><a href="#long-literals">Long literals</a></li>
 <li><a href="#double-literals">Double literals</a></li>
+<li><a href="#decimal-literals">Decimal literals</a></li>
 <li><a href="#binary-literals">Binary literals</a></li>
 <li><a href="#string-literals">String literals</a>
 <ul>
@@ -219,6 +220,7 @@
 <li><a href="#boolean">Boolean</a></li>
 <li><a href="#long">Long</a></li>
 <li><a href="#double">Double</a></li>
+<li><a href="#decimal">Decimal</a></li>
 <li><a href="#binary">Binary</a></li>
 <li><a href="#string">String</a></li>
 <li><a href="#datetime">Datetime</a></li>
@@ -298,7 +300,7 @@
 <li><a href="#addition">Addition</a></li>
 <li><a href="#subtraction">Subtraction</a></li>
 <li><a href="#multiplication">Multiplication</a></li>
-<li><a href="#floating-point-division">Floating point division</a></li>
+<li><a href="#division">Division</a></li>
 <li><a href="#integer-division">Integer division</a></li>
 <li><a href="#division-remainder">Division remainder</a></li>
 <li><a href="#exponentiation">Exponentiation</a></li>
@@ -438,7 +440,7 @@ Non-leading <code>_</code> characters can be used to help visually format the nu
 Non-empty digit sequences denoting the integer, fraction, or exponent can additionally contain
 <code>_</code> characters in non-leading positions to visually format the number.</p>
 
-<pre><code class="language-tweakflow"># various ways to write the decimal number 3.1315
+<pre><code class="language-tweakflow"># various ways to write the double number 3.1315
 
 &gt; 3.1315
 3.1315
@@ -480,6 +482,45 @@ NaN
 
 &gt; typeof NaN
 &quot;double&quot;
+</code></pre>
+
+<h3 id="decimal-literals">Decimal literals</h3>
+
+<p>Decimal numbers are arbitrary precision numeric values, internally represented by a <a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html">BigDecimal</a>.</p>
+
+<p>Decimal literals are notated as decimal long values, or finite double values, followed by the characters <code>d</code> or <code>D</code>.</p>
+
+<pre><code class="language-tweakflow"># various ways to write the decimal number 3.1315
+
+&gt; 3.1315d
+3.1315d
+
+&gt; 3.13_15_d
+3.1315d
+
+&gt; 0.31315e1d
+3.1315d
+
+&gt; .31315E1D
+3.1315d
+
+&gt; 31315_e-4d
+3.1315d
+</code></pre>
+
+<p>The scale of the resulting decimal is the number of fractional digits minus the given exponent.</p>
+
+<pre><code class="language-tweakflow">&gt; decimals.scale(3.1314d)
+4
+
+&gt; decimals.scale(3.1314000d)
+7
+
+&gt; decimals.scale(1e+6d)
+-6
+
+&gt; decimals.scale(1.1e+6d)
+-5
 </code></pre>
 
 <h3 id="binary-literals">Binary literals</h3>
@@ -1461,6 +1502,10 @@ foo.tf&gt; \meta bar.baz
 
 <p>Boolean <code>true</code> is cast to <code>1.0</code> and boolean <code>false</code> is cast to <code>0.0</code>.</p>
 
+<p>Boolean as decimal</p>
+
+<p>Boolean <code>true</code> is cast to <code>1d</code> and boolean <code>false</code> is cast to <code>0d</code>.</p>
+
 <p>Boolean as string</p>
 
 <p>Boolean <code>true</code> is cast to <code>&quot;true&quot;</code> and boolean <code>false</code> is cast to <code>&quot;false&quot;</code>.</p>
@@ -1476,6 +1521,10 @@ foo.tf&gt; \meta bar.baz
 <p>Long as double</p>
 
 <p>The long number is converted to to closest double value possible.</p>
+
+<p>Long as decimal</p>
+
+<p>The long number is converted to the corresponding decimal value.</p>
 
 <p>Long as string</p>
 
@@ -1499,6 +1548,12 @@ foo.tf&gt; \meta bar.baz
 
 <p>If the double is <code>-Infinity</code>, the converted value is <code>math.min_long</code>.</p>
 
+<p>Double as decimal</p>
+
+<p>The double value is converted to its <a href="(https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-)">string representation</a>, which is then converted to a decimal. The intermediate conversion to string compensates for erratic results caused by the inexact representation of floating point numbers.</p>
+
+<p>If the double value is not finite, the resulting decimal is <code>0d</code>.</p>
+
 <p>Double as string</p>
 
 <ul>
@@ -1512,6 +1567,31 @@ foo.tf&gt; \meta bar.baz
 <p>For any other double value, the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-">conventions the Java language</a> are used.</p>
 
 <p>Casting doubles to string should only be done for non-functional purposes like data-inspection, debugging or logging. The standard library offers <a href="./modules/std.html#math-formatter">formatters</a> to to convert double values to strings in a controlled output format.</p>
+
+<h3 id="decimal">Decimal</h3>
+
+<p>The <code>decimal</code> type holds an exact arbitrary precision numeric value, stored internally as a <a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html">BigDecimal</a>. Literal decimals are notated using <a href="#decimal-literals">decimal literals</a>. The following type casts are supported:</p>
+
+<p>Decimal as boolean</p>
+
+<p>Decimal values equal to <code>0d</code> are converted to <code>false</code>. Any other values are converted to <code>true</code>.</p>
+
+<p>Decimal as long</p>
+
+<p>The decimal value is truncated at the decimal point and converted to the closest long value.</p>
+
+<p>Decimal as double</p>
+
+<p>The decimal value is converted to the closest double value.</p>
+
+<ul>
+<li>If the decimal value is greater than the maximum double value, the result is <code>Infinity</code>.</li>
+<li>If the decimal value is less than the minimum double value, the result is <code>-Infinity</code>.</li>
+</ul>
+
+<p>Decimal as string</p>
+
+<p>The decimal value is converted to a string, possibly using exponent notation, which preserves all digits and scale of the decimal value. The resulting string value can be safely cast back to the original decimal value.</p>
 
 <h3 id="binary">Binary</h3>
 
@@ -1549,7 +1629,7 @@ foo.tf&gt; \meta bar.baz
 (Infinity)|                                  # Infinity
 ([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
                                              # fractional digits, and exponent
-\.[0-9]+([eE][-+]?[0-9]+)?)                  # decimal dot followed by fractional digits
+(\.[0-9]+([eE][-+]?[0-9]+)?)                 # decimal dot followed by fractional digits
                                              # and exponent
 )
 [\x00-\x20]*                                 # optional trailing whitespace
@@ -1573,6 +1653,41 @@ foo.tf&gt; \meta bar.baz
 ERROR:
   code: CAST_ERROR
   message: Cannot cast 200.0kg to double
+</code></pre>
+
+<p>String as decimal</p>
+
+<p>Strings cast to decimals successfully if they pass the following regular expression:</p>
+
+<pre><code class="language-text">[\x00-\x20]*                                 # optional leading whitespace
+[-+]?                                        # optional sign
+(
+([0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?)|       # Digits optionally followed by decimal dot
+                                             # fractional digits, and exponent
+(\.[0-9]+([eE][-+]?[0-9]+)?)                 # decimal dot followed by fractional digits
+                                             # and exponent
+)
+[\x00-\x20]*                                 # optional trailing whitespace
+</code></pre>
+
+<p>Examples for casts from string to decimal:</p>
+
+<pre><code class="language-tweakflow">&gt; &quot;1.0&quot; as decimal
+1.0d
+
+&gt; &quot;2e3&quot; as decimal
+2E+3d
+
+&gt; &quot;2230.3e-1&quot; as decimal
+223.03d
+
+&gt; &quot;.98e2&quot; as decimal
+98d
+
+&gt; &quot;200.0kg&quot; as decimal
+ERROR:
+  code: CAST_ERROR
+  message: Cannot cast 200.0kg to decimal
 </code></pre>
 
 <p>String as list</p>
@@ -3739,7 +3854,7 @@ true
 
 <p>Syntax: <code>-a</code></p>
 
-<p>The operand must be of type long or double. Any other types throw an error. The operand is negated retaining its original type. If the operand is <code>nil</code> the result is <code>nil</code>.</p>
+<p>The operand must be of type long, double or decimal. Any other types throw an error. The operand is negated retaining its original type. If the operand is <code>nil</code> the result is <code>nil</code>.</p>
 
 <p>The following special cases are defined:</p>
 
@@ -3772,8 +3887,8 @@ true
 <pre><code class="language-tweakflow">&gt; -(1)
 -1
 
-&gt; -(-1)
-1
+&gt; -(-1d)
+1d
 
 &gt; -(-2.3)
 2.3
@@ -3796,13 +3911,19 @@ ERROR:
 
 <p>Evaluates to the sum of a and b.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double or decimal. Any other types throw an error. The following rules are applied in order:</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point sum is performed. The result is a double.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>NaN</code>.</li>
+<li>If both operands are longs, integer addition is performed and the result is a long. Overflows and underflows do not throw.</li>
+<li>If both operands are of type double, a floating point sum is performed. The result is a double.</li>
+<li>If both operands are of type decimal, a decimal exact sum is performed. The result is a decimal.</li>
+<li>If operands are of types long and double, the long operand is cast to double, and a floating point sum is performed. The result is a double.</li>
+<li>If one operand is <code>Infinity</code> and the other operand is finite, the result is <code>Infinity</code>.</li>
+<li>If one operand is <code>-Infinity</code> and the other operand is finite, the result is <code>-Infinity</code>.</li>
+<li>If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact sum is performed. The result is a decimal.</li>
+</ul>
 
 <p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
 
@@ -3843,6 +3964,9 @@ ERROR:
 &gt; 2.0+2
 4.0
 
+&gt; 4d + 2
+6d
+
 &gt; Infinity + 3
 Infinity
 
@@ -3856,13 +3980,21 @@ Infinity
 
 <p>Evaluates to the value of a with b subtracted.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double or decimal. Any other types throw an error. The following rules are applied in order:</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point subtraction is performed. The result is a double.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>NaN</code>.</li>
+<li>If both operands are longs, integer subtraction is performed and the result is a long. Overflows and underflows do not throw.</li>
+<li>If both operands are of type double, a floating point subtraction is performed. The result is a double.</li>
+<li>If both operands are of type decimal, a decimal exact subtraction is performed. The result is a decimal.</li>
+<li>If operands are of types long and double, the long operand is cast to double, and a floating point subtraction is performed. The result is a double.</li>
+<li>If operand <code>a</code> is <code>Infinity</code> and the other operand is finite, the result is <code>Infinity</code>.</li>
+<li>If operand <code>b</code> is <code>Infinity</code> and the other operand is finite, the result is <code>-Infinity</code>.</li>
+<li>If operand <code>a</code> is <code>-Infinity</code> and the other operand is finite, the result is <code>-Infinity</code>.</li>
+<li>If operand <code>b</code> is <code>-Infinity</code> and the other operand is finite, the result is <code>Infinity</code>.</li>
+<li>If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact subtraction is performed. The result is a decimal.</li>
+</ul>
 
 <p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
 
@@ -3906,6 +4038,9 @@ Infinity
 &gt; 2.3-9
 -6.7
 
+&gt; 0.1d-0.2d
+-0.1d
+
 &gt; math.min_long - 1 # binary underflow
 9223372036854775807
 
@@ -3919,15 +4054,21 @@ Infinity
 
 <p>Operands are multiplied. Evaluation proceeds as follows:</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double, or decimal. Any other types throw an error.</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, integer multiplication is performed, and the result is another long. Binary overflows do not throw.</p>
-
-<p>If both operands are doubles, floating point multiplication is performed, and the result is another double.</p>
-
-<p>If one operand is a double and the other operand is a long, the long operand is cast to double, and floating point multiplication is performed. The result is a double.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>NaN</code>.</li>
+<li>If both operands are longs, integer multiplication is performed and the result is a long. Overflows and underflows do not throw.</li>
+<li>If both operands are of type double, a floating point multiplication is performed. The result is a double.</li>
+<li>If both operands are of type decimal, a decimal exact multiplication is performed. The result is a decimal.</li>
+<li>If operands are of types long and double, the long operand is cast to double, and a floating point multiplication is performed. The result is a double.</li>
+<li>If one operand is <code>Infinity</code> and the other operand is finite and positive, the result is <code>Infinity</code>.</li>
+<li>If one operand is <code>Infinity</code> and the other operand is finite and negative, the result is <code>-Infinity</code>.</li>
+<li>If one operand is <code>-Infinity</code> and the other operand is finite and positive, the result is <code>-Infinity</code>.</li>
+<li>If one operand is <code>-Infinity</code> and the other operand is finite and negative, the result is <code>Infinity</code>.</li>
+<li>If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal exact multiplication is performed. The result is a decimal.</li>
+</ul>
 
 <p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
 
@@ -3973,8 +4114,8 @@ Infinity
 &gt; 2 * 3.3
 6.6
 
-&gt; 2 * 3.3
-6.6
+&gt; 1.1d * 3.3
+3.63d
 
 &gt; 1.1 * 2.9
 3.19
@@ -3984,23 +4125,38 @@ Infinity
 
 &gt; math.max_long as double * math.max_long # floating point multiplication
 8.507059173023462E37
+
+&gt; math.max_long as decimal * math.max_long # decimal multiplication
+85070591730234615847396907784232501249d
 </code></pre>
 
-<h4 id="floating-point-division">Floating point division</h4>
+<h4 id="division">Division</h4>
 
 <p>Syntax: <code>a/b</code></p>
 
 <p>Evaluates to a divided by b.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double, or decimal. Any other types throw an error.</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>NaN</code>.</li>
+<li>If both operands are of type long, floating point division is performed and the result is a double.</li>
+<li>If both operands are of type double, a floating point division is performed. The result is a double.</li>
+<li>If both operands are of type decimal, a decimal division is performed. The result is a decimal.</li>
+<li>If operands are of types long and double, the long operand is cast to double, and a floating point division is performed. The result is a double.</li>
+<li>If operand <code>a</code> is <code>Infinity</code> and the other operand is finite and positive, the result is <code>Infinity</code>.</li>
+<li>If operand <code>a</code> is <code>-Infinity</code> and the other operand is finite and negative, the result is <code>-Infinity</code>.</li>
+<li>If operand <code>b</code> is <code>Infinity</code> and the other operand is finite and positive, the result is <code>0</code>.</li>
+<li>If operand <code>b</code> is <code>-Infinity</code> and the other operand is finite and negative, the result is <code>0</code>.</li>
+<li>If only one operand is of type decimal, the non-decimal operand is cast to decimal, and a decimal division is performed. The result is a decimal.</li>
+</ul>
 
-<p>If both operands are doubles, floating point division is performed.</p>
+<p>In case a decimal division is performed, the following rules apply:</p>
 
-<p>If any operands are longs, they are are implicitly cast to double first, and floating point division is performed.</p>
-
-<p>The result is always a double.</p>
+<p>Operand b must not be zero. The scale of the result is no less than the scale of operand a.
+The result&rsquo;s scale includes up to 20 fractional digits, and is rounded if necessary. Rounding occurs towards the nearest neighbor, with ties rounded away from zero.
+For more control over the scale and rounding of results see <a href="./modules/std.html#decimals-divide">decimals.divide</a>.</p>
 
 <p>Special cases involving <code>Infinity</code> and <code>NaN</code> are defined as follows:</p>
 
@@ -4051,7 +4207,7 @@ nil
 
 <p>Casts a and b to long, and performs integer division.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double, or decimal. Any other types throw an error.</p>
 
 <p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
 
@@ -4086,13 +4242,17 @@ ERROR:
 
 <p>Evaluates to the remainder after a is divided by b.</p>
 
-<p>Each operand must be either a long or a double. Any other types throw an error.</p>
+<p>Each operand must be either a long, double, or decimal. Any other types throw an error.</p>
 
-<p>If any operands are <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>If both operands are longs, an integer remainder calculation is performed, and the result is a long. <code>b</code> cannot be zero in this case. A division by zero throws an error.</p>
-
-<p>If any operand is a double, the other operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>NaN</code>.</li>
+<li>If both operands are longs, an integer remainder calculation is performed, and the result is a long. <code>b</code> cannot be zero in this case. A division by zero throws an error.</li>
+<li>If both operands are decimals, a decimal remainder calculation is performed, and the result is a decimal. <code>b</code> cannot be zero in this case. A division by zero throws an error.</li>
+<li>If both operands are of type double, a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</li>
+<li>If the operands are of type long and double, the long operand is cast to double, and a floating point calculation is performed. The result is a double. The floating point calculation evaluates to <code>NaN</code> when dividing by zero.</li>
+<li>If one of the operands is of type decimal, the other operand is cast to decimal, a decimal remainder calculation is performed, and the result is a decimal. <code>b</code> cannot be zero in this case. A division by zero throws an error.</li>
+</ul>
 
 <p>The sign of the result depends on the sign of <code>a</code>.</p>
 
@@ -4134,13 +4294,18 @@ ERROR:
 </tr>
 
 <tr>
+<td><code>[+¦-]Infinity % x</code></td>
+<td><code>NaN</code></td>
+</tr>
+
+<tr>
 <td><code>[+¦-]Infinity % [+¦-]Infinity</code></td>
 <td><code>NaN</code></td>
 </tr>
 
 <tr>
-<td><code>0.0 % [+¦-]Infinity</code></td>
-<td><code>0.0</code></td>
+<td><code>x % [+¦-]Infinity</code></td>
+<td><code>x</code></td>
 </tr>
 </tbody>
 </table>
@@ -4159,6 +4324,14 @@ ERROR:
 
 &gt; -5 % 1.5
 -0.5
+
+# the inexact nature of floating point numbers shows here
+&gt; 100.0 % 0.1
+0.09999999999999445
+
+# the decimal result is exact
+&gt; 100d % 0.1d
+0d
 </code></pre>
 
 <h4 id="exponentiation">Exponentiation</h4>
@@ -4167,11 +4340,13 @@ ERROR:
 
 <p>Operand a is raised to the power of b.</p>
 
-<p>Each operand must be of type long or double. Any long operands are implicitly cast to double. Any other types throw an error.</p>
+<p>Each operand must be of type long, double or decimal. Any other types throw an error.</p>
 
-<p>If any operand is <code>nil</code>, the result is <code>nil</code>.</p>
-
-<p>The result is of type double.</p>
+<ul>
+<li>If any operand is <code>nil</code>, the result is <code>nil</code>.</li>
+<li>If <code>a</code> is a decimal and <code>b</code> is a long, exact exponentiation is performed. The result is of type decimal. Operand <code>b</code> must be within <code>0</code> and <code>999_999_999</code>.</li>
+<li>In all other cases <code>a</code> and <code>b</code> are cast to double and a floating point exponentiation is performed. The result is of type double.</li>
+</ul>
 
 <p>Special cases involving <code>NaN</code> and <code>Infinity</code> are defined as follows:</p>
 
@@ -4250,6 +4425,14 @@ ERROR:
 &gt; 2**10
 1024.0
 
+# floating point exponentiation
+&gt; 2.2 ** 2
+4.840000000000001
+
+# exact exponentiation
+&gt; 2.2d ** 2
+4.84d
+
 &gt; nil**nil
 nil
 
@@ -4275,9 +4458,20 @@ ERROR:
 false
 </code></pre>
 
-<p>A double value and a long value are equal if the double value has the same magnitude as the long value. No type casts take place during comparison.</p>
+<p>Values of type double, long, or decimal are equal if the they have the same magnitude.
+When comparing finite double and decimal types, the double value is cast to decimal first.
+Decimal values are equal if they are mathematically equal, regardless of scale.</p>
 
 <pre><code class="language-tweakflow">&gt; 0 == 0.0
+true
+
+&gt; 0 == 0.000d
+true
+
+&gt; 0.1 == 0.1d
+true
+
+&gt; 0.1d == 0.1000d
 true
 
 &gt; 3 == 3.0
@@ -4342,11 +4536,24 @@ false
 
 <p>Evaluates to <code>true</code> if a is less than b, <code>false</code> otherwise.</p>
 
-<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+<p>Each operand must be a long, double, or decimal. Supplying any other types throws an error.</p>
 
-<p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
+<ul>
+<li>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</li>
+<li>If both operands are long, an integer comparison is performed.</li>
+<li>If both operands are double, a floating point comparison is performed.</li>
+<li>If both operands are decimal, a decimal comparison is performed.</li>
+<li>If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.</li>
+<li>If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.</li>
+<li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
+<li>-Infinity is less than any finite number</li>
+<li>Infinity is greater than an finite number</li>
+</ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &lt; 2
+true
+
+&gt; 1 &lt; 6d
 true
 
 &gt; 1 &lt; 1
@@ -4371,18 +4578,26 @@ ERROR:
 
 <p>Evaluates to true if a is less than b, or equal to b.</p>
 
-<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+<p>Each operand must be a long, double, or decimal. Supplying any other types throws an error.</p>
 
-<p>If either operand is <code>NaN</code> the result is <code>false</code>.</p>
-
-<p>If both operands are <code>nil</code>, the result is <code>true</code>.</p>
-
-<p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
+<ul>
+<li>If both operands are <code>nil</code>, the result is <code>true</code>.</li>
+<li>If exactly one operand is <code>nil</code> the result is <code>false</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>false</code>.</li>
+<li>If both operands are long, an integer comparison is performed.</li>
+<li>If both operands are double, a floating point comparison is performed.</li>
+<li>If both operands are decimal, a decimal comparison is performed.</li>
+<li>If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.</li>
+<li>If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.</li>
+<li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
+<li>-Infinity is less than any finite number</li>
+<li>Infinity is greater than an finite number</li>
+</ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &lt;= 3
 true
 
-&gt; 1 &lt;= 1
+&gt; 1 &lt;= 1d
 true
 
 &gt; 1.0 &lt;= Infinity
@@ -4401,9 +4616,19 @@ true
 
 <p>Evaluates to <code>true</code> if a is greater than b, <code>false</code> otherwise.</p>
 
-<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+<p>Each operand must be a long, double, or decimal. Supplying any other types throws an error.</p>
 
-<p>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</p>
+<ul>
+<li>If either operand is <code>nil</code>, or <code>NaN</code> the result is <code>false</code>.</li>
+<li>If both operands are long, an integer comparison is performed.</li>
+<li>If both operands are double, a floating point comparison is performed.</li>
+<li>If both operands are decimal, a decimal comparison is performed.</li>
+<li>If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.</li>
+<li>If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.</li>
+<li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
+<li>-Infinity is less than any finite number</li>
+<li>Infinity is greater than an finite number</li>
+</ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &gt; 2
 false
@@ -4411,7 +4636,7 @@ false
 &gt; Infinity &gt; 4
 true
 
-&gt; 5 &gt; 3
+&gt; 5 &gt; 3d
 true
 
 &gt; NaN &gt; 2
@@ -4430,13 +4655,21 @@ true
 
 <p>Evaluates to true if a is greater than b, or equal to b.</p>
 
-<p>Each operand must be a long or double. Supplying any other types throws an error. If both operands are long, an integer comparison is performed. If any operand is double, the other operand is cast to double, and a floating point comparison is performed.</p>
+<p>Each operand must be a long, double, or decimal. Supplying any other types throws an error.</p>
 
-<p>If either operand is <code>NaN</code> the result is <code>false</code>.</p>
-
-<p>If both operands are <code>nil</code>, the result is <code>true</code>.</p>
-
-<p>If exactly one operand is <code>nil</code>, the result is <code>false</code>.</p>
+<ul>
+<li>If both operands are <code>nil</code>, the result is <code>true</code>.</li>
+<li>If exactly one operand is <code>nil</code> the result is <code>false</code>.</li>
+<li>If any operand is <code>NaN</code> the result is <code>false</code>.</li>
+<li>If both operands are long, an integer comparison is performed.</li>
+<li>If both operands are double, a floating point comparison is performed.</li>
+<li>If both operands are decimal, a decimal comparison is performed.</li>
+<li>If the operands are long and double, the long operand is cast to double, and a floating point comparison is performed.</li>
+<li>If the operands are long and decimal, the long operand is cast to decimal, and a decimal comparison is performed.</li>
+<li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
+<li>-Infinity is less than any finite number</li>
+<li>Infinity is greater than an finite number</li>
+</ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &gt;= 2
 false
@@ -4444,7 +4677,7 @@ false
 &gt; Infinity &gt;= 2
 true
 
-&gt; 2.0 &gt;= 2
+&gt; 2.0 &gt;= 2d
 true
 
 &gt; NaN &gt; 2
@@ -4471,6 +4704,12 @@ true
 
 &gt; 1 === 1.0
 false
+
+&gt; 1 === 1d
+false
+
+&gt; 1d === 1.0000d
+true
 
 &gt; &quot;foo&quot; === &quot;foo&quot;
 true
@@ -4501,6 +4740,9 @@ true
 false
 
 &gt; 1 !== 1.0
+true
+
+&gt; 1 !== 1d
 true
 
 &gt; &quot;foo&quot; !== &quot;foo&quot;
@@ -4537,7 +4779,7 @@ true
 <p>Syntax: <code>a is datatype</code></p>
 
 <pre><code class="language-text">datatype
-  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  : (boolean|string|long|double|decimal|datetime|list|dict|function|void|any)
   ;
 </code></pre>
 
@@ -4582,7 +4824,7 @@ false
 
 <p>Syntax: <code>typeof a</code></p>
 
-<p>The expression returns the name of a value&rsquo;s type. The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>&quot;void&quot;</code>.</p>
+<p>The expression returns the name of a value&rsquo;s type. The possible results are: <code>&quot;boolean&quot;</code>, <code>&quot;string&quot;</code>, <code>&quot;long&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;decimal&quot;</code>, <code>&quot;datetime&quot;</code>, <code>&quot;list&quot;</code>, <code>&quot;dict&quot;</code>, <code>&quot;function&quot;</code>, or <code>&quot;void&quot;</code>. Any non-nil value yields its type. The <code>nil</code> value yields <code>&quot;void&quot;</code>.</p>
 
 <pre><code class="language-tweakflow">&gt; typeof &quot;foo&quot;
 &quot;string&quot;
@@ -4595,6 +4837,9 @@ false
 
 &gt; typeof 1.0
 &quot;double&quot;
+
+&gt; typeof 3d
+&quot;decimal&quot;
 
 &gt; typeof false
 &quot;boolean&quot;
@@ -4620,7 +4865,7 @@ false
 <p>Syntax: <code>a as datatype</code></p>
 
 <pre><code class="language-text">datatype
-  : (boolean|string|long|double|datetime|list|dict|function|void|any)
+  : (boolean|string|long|double|decimal|datetime|list|dict|function|void|any)
   ;
 </code></pre>
 
