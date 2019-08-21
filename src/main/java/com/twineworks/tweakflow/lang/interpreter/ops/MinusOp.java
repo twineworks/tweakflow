@@ -52,8 +52,8 @@ final public class MinusOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = node.getLeftExpression().getOp().eval(stack, context);
-    Value right = node.getRightExpression().getOp().eval(stack, context);
+    Value left = leftOp.eval(stack, context);
+    Value right = rightOp.eval(stack, context);
 
     ensureValidTypes(left, right, stack);
 
@@ -130,8 +130,8 @@ final public class MinusOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())){
       return;
     }
 
@@ -141,7 +141,7 @@ final public class MinusOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override
@@ -164,6 +164,9 @@ final public class MinusOp implements ExpressionOp {
             }
           }
           return new MinusOpLL(node);
+        }
+        if (leftType == Types.DECIMAL){
+          return new MinusOpDecDec(node);
         }
       }
     } catch (LangException ignored){}

@@ -24,61 +24,57 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.ast.expressions.NegateNode;
+import com.twineworks.tweakflow.lang.ast.expressions.IntDivNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
-final public class NegateOp implements ExpressionOp {
+final public class IntDivOpLL implements ExpressionOp {
 
-  private final NegateNode node;
-  private final ExpressionOp op;
+  private final IntDivNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
-  public NegateOp(NegateNode node) {
+  public IntDivOpLL(IntDivNode node) {
     this.node = node;
-    op = node.getExpression().getOp();
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
+
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value value = op.eval(stack, context);
-    if (value == Values.NIL) return Values.NIL;
+    Value left = leftOp.eval(stack, context);
+    if (left == Values.NIL) return Values.NIL;
 
-    Type leftType = value.type();
+    Value right = rightOp.eval(stack, context);
+    if (right == Values.NIL) return Values.NIL;
 
-    if (leftType == Types.LONG) {
-      return Values.make(-value.longNum());
-    }
-    if (leftType == Types.DOUBLE) {
-      return Values.make(-value.doubleNum());
-    }
-    if (leftType == Types.DECIMAL) {
-      return Values.make(value.decimal().negate());
-    }
+    long r = right.longNum();
+    if (r == 0)
+      throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot negate type: " + leftType.name(), stack, node.getSourceInfo());
+    return Values.make(left.longNum() / r);
 
   }
 
   @Override
   public boolean isConstant() {
-    return op.isConstant();
+    return false;
   }
 
   @Override
   public ExpressionOp specialize() {
-    return new NegateOp(node);
+    return new IntDivOpLL(node);
   }
 
   @Override
   public ExpressionOp refresh() {
-    return new NegateOp(node);
+    return new IntDivOpLL(node);
   }
 
 

@@ -152,6 +152,8 @@ final public class Value implements ValueProvider {
     return this.type == Types.DECIMAL;
   }
 
+  public boolean isNumeric() {return this.type.isNumeric();}
+
   public boolean isDateTime(){
     return this.type == Types.DATETIME;
   }

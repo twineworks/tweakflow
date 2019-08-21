@@ -39,16 +39,21 @@ import java.math.BigDecimal;
 final public class GreaterThanOrEqualOp implements ExpressionOp {
 
   private final GreaterThanOrEqualNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
   public GreaterThanOrEqualOp(GreaterThanOrEqualNode node) {
     this.node = node;
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
+
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = node.getLeftExpression().getOp().eval(stack, context);
-    Value right = node.getRightExpression().getOp().eval(stack, context);
+    Value left = leftOp.eval(stack, context);
+    Value right = rightOp.eval(stack, context);
 
     ensureValidTypes(left, right, stack);
 
@@ -111,8 +116,8 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())){
       return;
     }
 
@@ -122,11 +127,30 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override
   public ExpressionOp specialize() {
+
+    Type leftType = node.getLeftExpression().getValueType();
+    Type rightType = node.getRightExpression().getValueType();
+
+    try {
+
+      if (leftType == rightType){
+        if (leftType == Types.DOUBLE){
+          return new GreaterThanOrEqualOpDD(node);
+        }
+        if (leftType == Types.LONG){
+          return new GreaterThanOrEqualOpLL(node);
+        }
+        if (leftType == Types.DECIMAL){
+          return new GreaterThanOrEqualOpDecDec(node);
+        }
+      }
+    } catch (LangException ignored){}
+
     return new GreaterThanOrEqualOp(node);
   }
 

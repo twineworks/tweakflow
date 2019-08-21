@@ -33,18 +33,22 @@ import com.twineworks.tweakflow.lang.interpreter.Stack;
 final public class MinusOpDD implements ExpressionOp {
 
   private final MinusNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
   public MinusOpDD(MinusNode node) {
     this.node = node;
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = node.getLeftExpression().getOp().eval(stack, context);
+    Value left = leftOp.eval(stack, context);
     if (left == Values.NIL) return Values.NIL;
 
-    Value right = node.getRightExpression().getOp().eval(stack, context);
+    Value right = rightOp.eval(stack, context);
     if (right == Values.NIL) return Values.NIL;
 
     return Values.make(left.doubleNum() - right.doubleNum());

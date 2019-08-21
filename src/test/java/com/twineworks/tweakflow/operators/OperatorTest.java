@@ -148,6 +148,11 @@ public class OperatorTest {
   }
 
   @TestFactory
+  public Collection<DynamicTest> negate() throws Exception {
+    return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/operators/negate.tf");
+  }
+
+  @TestFactory
   public Collection<DynamicTest> div() throws Exception {
     return TestHelper.dynamicTestsSpecModule("fixtures/tweakflow/evaluation/operators/div.tf");
   }

@@ -49,7 +49,7 @@ final public class NotOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return expOp.isConstant();
   }
 
   @Override

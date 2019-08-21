@@ -4,6 +4,12 @@ library lib {
   f: (x) -> x;
 }
 
+library op {
+  l_l: (long x, long y) -> x > y;
+  d_d: (double x, double y) -> x > y;
+  dc_dc: (decimal x, decimal y) -> x > y;
+}
+
 library operator_spec {
 
   nil_nil: nil > nil  == false;
@@ -90,5 +96,34 @@ library operator_spec {
 
   f_f:     try   lib.f > lib.f    catch "error" == "error";
   dt_dt:   try time.epoch > time.epoch catch "error" == "error";
+
+  op_dc_dc_1_2: op.dc_dc(1d, 2d) === false;
+  op_dc_dc_nil_2: op.dc_dc(nil, 2d) === false;
+  op_dc_dc_nil_nil: op.dc_dc(nil, nil) === false;
+  op_dc_dc_1_nil: op.dc_dc(1d, nil) === false;
+  op_dc_dc_1_0: op.dc_dc(1d, 0d) === true;
+
+  op_d_d_1_2: op.d_d(1.0, 2.0) === false;
+  op_d_d_1_nil: op.d_d(1.0, nil) === false;
+  op_d_d_nil_1: op.d_d(nil, 1.0) === false;
+  op_d_d_nil_nil: op.d_d(nil, nil) === false;
+  op_d_d_1_0: op.d_d(1.0, 0.0) === true;
+  op_d_d_n1_0: op.d_d(-1.0, 0.0) === false;
+  op_d_d_nan_1: op.d_d(NaN, 1.0) == false;
+  op_d_d_nan_0: op.d_d(NaN, 0.0) == false;
+  op_d_d_1_nan: op.d_d(1.0, NaN) == false;
+  op_d_d_0_nan: op.d_d(0.0, NaN) == false;
+  op_d_d_nan_nan: op.d_d(NaN, NaN) == false;
+  op_d_d_0_inf: op.d_d(0.0, Infinity) === false;
+  op_d_d_0_ninf: op.d_d(0.0, -Infinity) === true;
+  op_d_d_inf_0: op.d_d(Infinity, 0.0) === true;
+  op_d_d_ninf_0: op.d_d(-Infinity, 0.0) === false;
+
+  op_l_l_1_2: op.l_l(1, 2) === false;
+  op_l_l_1_0: op.l_l(1, 0) === true;
+  op_l_l_n1_0: op.l_l(-1, 0) === false;
+  op_l_l_1_nil: op.l_l(1, nil) === false;
+  op_l_l_nil_1: op.l_l(nil, 1) === false;
+  op_l_l_nil_nil: op.l_l(nil, nil) === false;
 
 }

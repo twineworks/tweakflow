@@ -36,7 +36,6 @@ final public class PlusOpLL implements ExpressionOp {
   private final ExpressionOp leftOp;
   private final ExpressionOp rightOp;
 
-
   public PlusOpLL(PlusNode node) {
     this.node = node;
     leftOp = node.getLeftExpression().getOp();

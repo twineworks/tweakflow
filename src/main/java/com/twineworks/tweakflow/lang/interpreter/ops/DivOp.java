@@ -27,12 +27,12 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.ast.expressions.DivNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -168,8 +168,8 @@ final public class DivOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())){
       return;
     }
 
@@ -184,6 +184,25 @@ final public class DivOp implements ExpressionOp {
 
   @Override
   public ExpressionOp specialize() {
+
+    Type leftType = node.getLeftExpression().getValueType();
+    Type rightType = node.getRightExpression().getValueType();
+
+    try {
+
+      if (leftType == rightType){
+        if (leftType == Types.DOUBLE){
+          return new DivOpDD(node);
+        }
+        if (leftType == Types.LONG){
+          return new DivOpLL(node);
+        }
+        if (leftType == Types.DECIMAL){
+          return new DivOpDecDec(node);
+        }
+      }
+    } catch (LangException ignored){}
+
     return new DivOp(node);
   }
 

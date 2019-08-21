@@ -27,26 +27,30 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.ast.expressions.IntDivNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.types.Type;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 
 final public class IntDivOp implements ExpressionOp {
 
   private final IntDivNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
   public IntDivOp(IntDivNode node) {
     this.node = node;
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = node.getLeftExpression().getOp().eval(stack, context);
-    Value right = node.getRightExpression().getOp().eval(stack, context);
+    Value left = leftOp.eval(stack, context);
+    Value right = rightOp.eval(stack, context);
 
     ensureValidTypes(left, right, stack);
 
@@ -57,86 +61,113 @@ final public class IntDivOp implements ExpressionOp {
     Type rightType = right.type();
 
     // integer division promotes doubles and decimals to longs
-    if (leftType == Types.LONG){
-      if (rightType == Types.LONG){
+    if (leftType == Types.LONG) {
+      if (rightType == Types.LONG) {
         long r = right.longNum();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
         return Values.make(left.longNum() / r);
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         long r = right.doubleNum().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-
-        return Values.make(left.longNum() / r);
-      }
-      if (rightType == Types.DECIMAL){
-        long r = right.decimal().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
         return Values.make(left.longNum() / r);
       }
-    }
-    else if (leftType == Types.DOUBLE){
-      if (rightType == Types.LONG){
+      if (rightType == Types.DECIMAL) {
+        long r = right.castTo(Types.LONG).longNum();
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+
+        return Values.make(left.longNum() / r);
+      }
+    } else if (leftType == Types.DOUBLE) {
+      if (rightType == Types.LONG) {
         long r = right.longNum();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
         return Values.make(left.doubleNum().longValue() / r);
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         long r = right.doubleNum().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
         return Values.make(left.doubleNum().longValue() / r);
       }
-      if (rightType == Types.DECIMAL){
-        long r = right.decimal().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+      if (rightType == Types.DECIMAL) {
+        long r = right.castTo(Types.LONG).longNum();
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
         return Values.make(left.doubleNum().longValue() / r);
       }
-    }
-    else if (leftType == Types.DECIMAL){
-      if (rightType == Types.LONG){
+    } else if (leftType == Types.DECIMAL) {
+      if (rightType == Types.LONG) {
         long r = right.longNum();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().longValue() / r);
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.castTo(Types.LONG).longNum() / r);
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         long r = right.doubleNum().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().longValue() / r);
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.castTo(Types.LONG).longNum() / r);
       }
-      if (rightType == Types.DECIMAL){
-        long r = right.decimal().longValue();
-        if (r == 0) throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
-        return Values.make(left.decimal().longValue() / r);
+      if (rightType == Types.DECIMAL) {
+        long r = right.castTo(Types.LONG).longNum();
+        if (r == 0)
+          throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
+        return Values.make(left.castTo(Types.LONG).longNum() / r);
       }
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types " + leftType.name() + " and " + rightType.name(), stack, node.getSourceInfo());
 
   }
 
-  private void ensureValidTypes(Value left, Value right, Stack stack){
+  private void ensureValidTypes(Value left, Value right, Stack stack) {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())) {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "cannot integer-divide types " + left.type().name() + " and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override
   public ExpressionOp specialize() {
+
+    Type leftType = node.getLeftExpression().getValueType();
+    Type rightType = node.getRightExpression().getValueType();
+
+    try {
+
+      if (leftType == rightType) {
+        if (leftType == Types.DOUBLE) {
+          return new IntDivOpDD(node);
+        }
+        if (leftType == Types.LONG) {
+          return new IntDivOpLL(node);
+        }
+        if (leftType == Types.DECIMAL) {
+          return new IntDivOpDecDec(node);
+        }
+      }
+    } catch (LangException ignored) {
+    }
+
     return new IntDivOp(node);
   }
 

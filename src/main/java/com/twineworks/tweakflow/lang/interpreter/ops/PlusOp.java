@@ -63,70 +63,68 @@ final public class PlusOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if (leftType == Types.LONG){
-      if (rightType == Types.LONG){
+    if (leftType == Types.LONG) {
+      if (rightType == Types.LONG) {
         return Values.make(left.longNum() + right.longNum());
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         return Values.make(left.longNum() + right.doubleNum());
       }
-      if (rightType == Types.DECIMAL){
+      if (rightType == Types.DECIMAL) {
         return Values.make(BigDecimal.valueOf(left.longNum()).add(right.decimal()));
       }
     }
-    if (leftType == Types.DOUBLE){
-      if (rightType == Types.LONG){
+    if (leftType == Types.DOUBLE) {
+      if (rightType == Types.LONG) {
         return Values.make(left.doubleNum() + right.longNum());
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         return Values.make(left.doubleNum() + right.doubleNum());
       }
-      if (rightType == Types.DECIMAL){
+      if (rightType == Types.DECIMAL) {
         double d = left.doubleNum();
-        if (Double.isFinite(d)){
+        if (Double.isFinite(d)) {
           return Values.make(BigDecimal.valueOf(left.doubleNum()).add(right.decimal()));
-        }
-        else{
+        } else {
           // NaN + some_d -> NaN
           // +-Infinity + some_d -> +-Infinity
           return left;
         }
       }
     }
-    if (leftType == Types.DECIMAL){
-      if (rightType == Types.LONG){
+    if (leftType == Types.DECIMAL) {
+      if (rightType == Types.LONG) {
         return Values.make(left.decimal().add(BigDecimal.valueOf(right.longNum())));
       }
-      if (rightType == Types.DOUBLE){
+      if (rightType == Types.DOUBLE) {
         double d = right.doubleNum();
-        if (Double.isFinite(d)){
+        if (Double.isFinite(d)) {
           return Values.make(left.decimal().add(BigDecimal.valueOf(d)));
-        }
-        else {
+        } else {
           // some_d + NaN -> NaN
           // some_d + +-Infinity -> +-Infinity
           return right;
         }
 
       }
-      if (rightType == Types.DECIMAL){
+      if (rightType == Types.DECIMAL) {
         return Values.make(left.decimal().add(right.decimal()));
       }
     }
-    throw new LangException(LangError.CAST_ERROR, "Cannot add types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "Cannot add types: " + leftType.name() + " and " + rightType.name(), stack, node.getSourceInfo());
 
   }
 
-  private void ensureValidTypes(Value left, Value right, Stack stack){
+  private void ensureValidTypes(Value left, Value right, Stack stack) {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())) {
       return;
     }
 
-    throw new LangException(LangError.CAST_ERROR, "cannot add types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
+    throw new LangException(LangError.CAST_ERROR, "cannot add types " + left.type().name() + " and " + right.type().name(), stack, node.getSourceInfo());
 
   }
 
@@ -143,25 +141,26 @@ final public class PlusOp implements ExpressionOp {
 
     try {
 
-      if (leftType == rightType){
-        if (leftType == Types.DOUBLE){
+      if (leftType == rightType) {
+        if (leftType == Types.DOUBLE) {
           return new PlusOpDD(node);
         }
-        if (leftType == Types.LONG){
-          if (rightOp.isConstant()){
+        if (leftType == Types.LONG) {
+          if (rightOp.isConstant()) {
             Value right = Interpreter.evaluateInEmptyScope(node.getRightExpression());
-            if (!right.isNil()){
+            if (!right.isNil()) {
               // x + non-nil const
               return new PlusOpLCL(node);
             }
           }
           return new PlusOpLL(node);
         }
-        if (leftType == Types.DECIMAL){
+        if (leftType == Types.DECIMAL) {
           return new PlusOpDecDec(node);
         }
       }
-    } catch (LangException ignored){}
+    } catch (LangException ignored) {
+    }
 
     return new PlusOp(node);
   }

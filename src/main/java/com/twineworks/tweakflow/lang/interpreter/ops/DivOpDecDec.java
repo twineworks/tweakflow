@@ -24,61 +24,67 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.ast.expressions.NegateNode;
+import com.twineworks.tweakflow.lang.ast.expressions.DivNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
-final public class NegateOp implements ExpressionOp {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-  private final NegateNode node;
-  private final ExpressionOp op;
+final public class DivOpDecDec implements ExpressionOp {
 
-  public NegateOp(NegateNode node) {
+  private final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+  private final static int DEFAULT_SCALE = 20;
+  private final DivNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
+
+  public DivOpDecDec(DivNode node) {
     this.node = node;
-    op = node.getExpression().getOp();
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value value = op.eval(stack, context);
-    if (value == Values.NIL) return Values.NIL;
+    Value left = leftOp.eval(stack, context);
+    if (left == Values.NIL) return Values.NIL;
 
-    Type leftType = value.type();
+    Value right = rightOp.eval(stack, context);
+    if (right == Values.NIL) return Values.NIL;
 
-    if (leftType == Types.LONG) {
-      return Values.make(-value.longNum());
-    }
-    if (leftType == Types.DOUBLE) {
-      return Values.make(-value.doubleNum());
-    }
-    if (leftType == Types.DECIMAL) {
-      return Values.make(value.decimal().negate());
-    }
+    BigDecimal divisor = right.decimal();
+    if (divisor.compareTo(BigDecimal.ZERO) == 0)
+      throw new LangException(LangError.DIVISION_BY_ZERO, "division by zero", stack, node.getSourceInfo());
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot negate type: " + leftType.name(), stack, node.getSourceInfo());
+    BigDecimal dividend = left.decimal();
+    int scale = Math.max(DEFAULT_SCALE, dividend.scale());
+    BigDecimal result = dividend.divide(right.decimal(), scale, ROUNDING_MODE).stripTrailingZeros();
+    if (result.scale() < dividend.scale()) {
+      result = result.setScale(dividend.scale(), RoundingMode.UNNECESSARY);
+    }
+    return Values.make(result);
 
   }
 
   @Override
   public boolean isConstant() {
-    return op.isConstant();
+    return false;
   }
 
   @Override
   public ExpressionOp specialize() {
-    return new NegateOp(node);
+    return new DivOpDecDec(node);
   }
 
   @Override
   public ExpressionOp refresh() {
-    return new NegateOp(node);
+    return new DivOpDecDec(node);
   }
 
 

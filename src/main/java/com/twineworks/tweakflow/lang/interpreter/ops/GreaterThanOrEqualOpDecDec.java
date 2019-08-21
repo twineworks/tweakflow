@@ -24,62 +24,52 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.ast.expressions.NegateNode;
-import com.twineworks.tweakflow.lang.errors.LangError;
-import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.types.Type;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.ast.expressions.GreaterThanOrEqualNode;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
-final public class NegateOp implements ExpressionOp {
+import java.math.BigDecimal;
 
-  private final NegateNode node;
-  private final ExpressionOp op;
+final public class GreaterThanOrEqualOpDecDec implements ExpressionOp {
 
-  public NegateOp(NegateNode node) {
+  private final GreaterThanOrEqualNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
+
+  public GreaterThanOrEqualOpDecDec(GreaterThanOrEqualNode node) {
     this.node = node;
-    op = node.getExpression().getOp();
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value value = op.eval(stack, context);
-    if (value == Values.NIL) return Values.NIL;
+    BigDecimal left = leftOp.eval(stack, context).decimal();
+    BigDecimal right = rightOp.eval(stack, context).decimal();
 
-    Type leftType = value.type();
+    if (left == null) return right == null ? Values.TRUE : Values.FALSE;
+    if (right == null) return Values.FALSE;
 
-    if (leftType == Types.LONG) {
-      return Values.make(-value.longNum());
-    }
-    if (leftType == Types.DOUBLE) {
-      return Values.make(-value.doubleNum());
-    }
-    if (leftType == Types.DECIMAL) {
-      return Values.make(value.decimal().negate());
-    }
-
-    throw new LangException(LangError.CAST_ERROR, "Cannot negate type: " + leftType.name(), stack, node.getSourceInfo());
+    return (left.compareTo(right) >= 0) ? Values.TRUE : Values.FALSE;
 
   }
 
   @Override
   public boolean isConstant() {
-    return op.isConstant();
+    return false;
   }
 
   @Override
   public ExpressionOp specialize() {
-    return new NegateOp(node);
+    return new GreaterThanOrEqualOpDecDec(node);
   }
 
   @Override
   public ExpressionOp refresh() {
-    return new NegateOp(node);
+    return new GreaterThanOrEqualOpDecDec(node);
   }
-
 
 }

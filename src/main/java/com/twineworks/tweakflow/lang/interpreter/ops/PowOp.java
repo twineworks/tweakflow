@@ -59,31 +59,11 @@ final public class PowOp implements ExpressionOp {
     Type baseType = base.type();
     Type exponentType = exponent.type();
 
-    if (baseType == Types.LONG && exponentType == Types.LONG){
-      double pow = java.lang.Math.pow(base.longNum(), exponent.longNum());
-      return Values.make(pow);
+    if (!baseType.isNumeric() || !exponentType.isNumeric()){
+      throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+base.type().name()+" to exponent of type " + exponent.type().name(), stack, node.getSourceInfo());
     }
 
-    if (baseType == Types.DOUBLE && exponentType == Types.DOUBLE){
-      return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.doubleNum()));
-    }
-
-    if (baseType == Types.DOUBLE && exponentType == Types.DECIMAL){
-      return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.decimal().doubleValue()));
-    }
-
-    if (baseType == Types.LONG && exponentType == Types.DOUBLE){
-      return Values.make(java.lang.Math.pow(base.longNum(), exponent.doubleNum()));
-    }
-
-    if (baseType == Types.LONG && exponentType == Types.DECIMAL){
-      return Values.make(java.lang.Math.pow(base.longNum(), exponent.decimal().doubleValue()));
-    }
-
-    if (baseType == Types.DOUBLE && exponentType == Types.LONG){
-      return Values.make(java.lang.Math.pow(base.doubleNum(), exponent.longNum()));
-    }
-
+    // special case for exact exponentiation
     if (baseType == Types.DECIMAL && exponentType == Types.LONG){
       long exp = exponent.longNum();
       // documented range of BigDecimal.pow
@@ -95,16 +75,31 @@ final public class PowOp implements ExpressionOp {
       }
     }
 
-    if (baseType == Types.DECIMAL && exponentType == Types.DOUBLE){
-      return Values.make(java.lang.Math.pow(base.decimal().doubleValue(), exponent.doubleNum()));
+    // regular case: base and exponent are converted to doubles
+    double b;
+    double e;
+
+    if (baseType == Types.LONG){
+      b = (double) base.longNum();
+    }
+    else if (baseType == Types.DOUBLE){
+      b = base.doubleNum();
+    }
+    else {
+      b = base.decimal().doubleValue();
     }
 
-    if (baseType == Types.DECIMAL && exponentType == Types.DECIMAL){
-      return Values.make(java.lang.Math.pow(base.decimal().doubleValue(), exponent.decimal().doubleValue()));
+    if (exponentType == Types.LONG){
+      e = (double) exponent.longNum();
+    }
+    else if (exponentType == Types.DOUBLE){
+      e = exponent.doubleNum();
+    }
+    else {
+      e = exponent.decimal().doubleValue();
     }
 
-
-    throw new LangException(LangError.CAST_ERROR, "cannot lift base of type "+base.type().name()+" to exponent of type " + exponent.type().name(), stack, node.getSourceInfo());
+    return Values.make(java.lang.Math.pow(b, e));
 
   }
 
@@ -112,8 +107,8 @@ final public class PowOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())){
       return;
     }
 
@@ -124,7 +119,7 @@ final public class PowOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override

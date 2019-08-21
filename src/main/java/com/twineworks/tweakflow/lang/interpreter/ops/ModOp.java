@@ -39,21 +39,26 @@ import java.math.BigDecimal;
 final public class ModOp implements ExpressionOp {
 
   private final ModNode node;
+  private final ExpressionOp leftOp;
+  private final ExpressionOp rightOp;
 
   public ModOp(ModNode node) {
     this.node = node;
+    leftOp = node.getLeftExpression().getOp();
+    rightOp = node.getRightExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = node.getLeftExpression().getOp().eval(stack, context);
-    Value right = node.getRightExpression().getOp().eval(stack, context);
+    Value left = leftOp.eval(stack, context);
+    Value right = rightOp.eval(stack, context);
 
     ensureValidTypes(left, right, stack);
 
     if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;
+    if (left == Values.NAN || right == Values.NAN) return Values.NAN;
 
     Type leftType = left.type();
     Type rightType = right.type();
@@ -65,7 +70,13 @@ final public class ModOp implements ExpressionOp {
         return Values.make(left.longNum() % r);
       }
       if (rightType == Types.DOUBLE){
-        return Values.make(left.longNum() % right.doubleNum());
+        double d = right.doubleNum();
+        if (Double.isFinite(d)){
+          return Values.make(left.longNum() % right.doubleNum());
+        }
+        else{
+          return left;
+        }
       }
       if (rightType == Types.DECIMAL){
         return Values.make(BigDecimal.valueOf(left.longNum()).remainder(right.decimal()));
@@ -124,8 +135,8 @@ final public class ModOp implements ExpressionOp {
     Type leftType = left.type();
     Type rightType = right.type();
 
-    if ((left == Values.NIL || leftType == Types.DOUBLE || leftType == Types.LONG || leftType == Types.DECIMAL) &&
-        (right == Values.NIL || rightType == Types.DOUBLE || rightType == Types.LONG || rightType == Types.DECIMAL)){
+    if ((left == Values.NIL || leftType.isNumeric()) &&
+        (right == Values.NIL || rightType.isNumeric())){
       return;
     }
 
@@ -135,11 +146,27 @@ final public class ModOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override
   public ExpressionOp specialize() {
+
+    Type leftType = node.getLeftExpression().getValueType();
+    Type rightType = node.getRightExpression().getValueType();
+
+    if (leftType == rightType){
+      if (leftType == Types.DOUBLE){
+        return new ModOpDD(node);
+      }
+      if (leftType == Types.LONG){
+        return new ModOpLL(node);
+      }
+      if (leftType == Types.DECIMAL){
+        return new ModOpDecDec(node);
+      }
+    }
+
     return new ModOp(node);
   }
 

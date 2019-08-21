@@ -54,7 +54,7 @@ final public class NotEqualOp implements ExpressionOp {
 
   @Override
   public boolean isConstant() {
-    return false;
+    return leftOp.isConstant() && rightOp.isConstant();
   }
 
   @Override

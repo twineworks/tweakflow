@@ -30,12 +30,15 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 final public class LongType implements Type {
 
   private String parseRegexPattern = "[+-]?[0-9]+";
   private Pattern parseRegex = Pattern.compile(parseRegexPattern);
+  private BigDecimal MIN_DECIMAL = BigDecimal.valueOf(Long.MIN_VALUE);
+  private BigDecimal MAX_DECIMAL = BigDecimal.valueOf(Long.MAX_VALUE);
 
   @Override
   public String name() {
@@ -140,7 +143,10 @@ final public class LongType implements Type {
     }
 
     if (srcType == Types.DECIMAL){
-      return Values.make(x.decimal().longValue());
+      BigDecimal d = x.decimal();
+      if (MIN_DECIMAL.compareTo(d) >= 0) return Values.make(Long.MIN_VALUE);
+      if (MAX_DECIMAL.compareTo(d) <= 0) return Values.make(Long.MAX_VALUE);
+      return Values.make(d.longValue());
     }
 
     if (srcType == Types.STRING){
