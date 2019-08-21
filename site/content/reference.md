@@ -1201,7 +1201,7 @@ If the double is `-Infinity`, the converted value is `math.min_long`.
 
 Double as decimal
 
-The double value is converted to its [string representation]((https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-)), which is then converted to a decimal. The intermediate conversion to string compensates for erratic results caused by the inexact representation of floating point numbers.
+The double value is converted to its [string representation](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-), which is then converted to a decimal. The intermediate conversion to string compensates for erratic results caused by the inexact representation of floating point numbers.
 
 If the double value is not finite, the resulting decimal is `0d`.
 
