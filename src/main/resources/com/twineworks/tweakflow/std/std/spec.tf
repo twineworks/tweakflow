@@ -478,7 +478,7 @@ ERROR:
     {
       :semantic "to be greater than",
       :expected expected,
-      :success (x is double || x is long) && (expected is double || expected is long) && x > expected
+      :success (x is double || x is long || x is decimal) && (expected is double || expected is long || expected is decimal) && x > expected
     };
 
 doc
@@ -500,7 +500,7 @@ ERROR:
     {
       :semantic "to be less than",
       :expected expected,
-      :success (x is double || x is long) && (expected is double || expected is long)  && x < expected
+      :success (x is double || x is long || x is decimal) && (expected is double || expected is long || expected is decimal)  && x < expected
     };
 
 doc
@@ -545,9 +545,9 @@ ERROR:
     {
       :semantic "to be between",
       :expected [expected_low, expected_high],
-      :success (expected_low is long || expected_low is double) &&
-               (expected_high is long || expected_high is double) &&
-               (x is long || x is double) &&
+      :success (expected_low is long || expected_low is double || expected_low is decimal) &&
+               (expected_high is long || expected_high is double || expected_high is decimal) &&
+               (x is long || x is double || x is decimal) &&
                (if low_inclusive (expected_low <= x) else (expected_low < x)) &&
                (if high_inclusive (x <= expected_high) else (x < expected_high))
     };
@@ -574,8 +574,7 @@ ERROR:
       :semantic "to be within #{precision} of",
       :expected expected,
       :success
-        (x is long || x is double) &&
-        (expected is long || expected is double) &&
+        (x is long || x is double || x is decimal) &&
         (!math.NaN?(expected)) &&
         (!math.NaN?(x)) &&
         (!math.NaN?(precision)) &&
@@ -888,7 +887,7 @@ doc
 ~~~
 `() -> (x) -> boolean`
 
-Matcher function that is satisfied if `x` is of type `long` or `double`.
+Matcher function that is satisfied if `x` is of type `long`, `double`, or `decimal`.
 
 ```
 > assert.expect(1, to.be_numeric())
@@ -905,8 +904,8 @@ ERROR
   be_numeric: () -> (x) ->
     {
       :semantic "to be",
-      :expected "a long or double",
-      :success x is long || x is double
+      :expected "a long, double, or decimal",
+      :success x is long || x is double || x is decimal
     };
 
 doc
@@ -951,6 +950,28 @@ ERROR
       :semantic "to be",
       :expected "a double",
       :success x is double
+    };
+
+doc
+~~~
+`() -> (x) -> boolean`
+
+Matcher function that is satisfied if `x` is of type `decimal`.
+
+```
+> assert.expect(1.0d, to.be_decimal())
+true
+
+> assert.expect(1, to.be_decimal())
+ERROR
+  ...
+```
+~~~
+  be_decimal: () -> (x) ->
+    {
+      :semantic "to be",
+      :expected "a decimal",
+      :success x is decimal
     };
 
 doc

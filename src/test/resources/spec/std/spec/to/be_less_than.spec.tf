@@ -21,6 +21,10 @@ library spec {
           expect(m, to_not_match(20.0))
         ),
 
+        it ("does not match 20d", (m) ->
+          expect(m, to_not_match(20d))
+        ),
+
         it ("does not match Infinity", (m) ->
           expect(m, to_not_match(Infinity))
         ),
@@ -32,6 +36,10 @@ library spec {
         it ("does not match 10.0", (m) ->
           expect(m, to_not_match(10.0))
         ),
+
+        it ("does not match 10d", (m) ->
+          expect(m, to_not_match(10d))
+        ),
         
         it ("matches -20", (m) ->
           expect(m, to_match(-20))
@@ -39,7 +47,11 @@ library spec {
 
         it ("matches -20.0", (m) ->
           expect(m, to_match(-20.0))
-        ),        
+        ),
+
+        it ("matches -20d", (m) ->
+          expect(m, to_match(-20d))
+        ),
 
         it ("matches -Infinity", (m) ->
           expect(m, to_match(-Infinity))

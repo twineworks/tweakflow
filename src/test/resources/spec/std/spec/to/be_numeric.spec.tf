@@ -15,6 +15,10 @@ library spec {
         expect(m, to_match(2))
       ),
 
+      it ("matches decimal", (m) ->
+        expect(m, to_match(2d))
+      ),
+
       it ("matches finite double", (m) ->
         expect(m, to_match(2.0))
       ),
