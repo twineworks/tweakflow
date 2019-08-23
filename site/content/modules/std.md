@@ -6090,6 +6090,37 @@ false
 	  data-meta-tags='math'
     ></div>
 
+### finite?{#math-finite?}
+
+`(any x) -> boolean`
+
+Returns `false` if `x` is `nil`, `NaN`, '-Infinity', or 'Infinity'.
+
+Returns `true` if `x` is a finite numeric value.
+
+Throws an error if `x` is not of type `long`, `double`, or `decimal`.
+
+```tweakflow
+> math.finite?(2.3)
+true
+
+> math.finite?(NaN)
+false
+
+> math.finite?(Infinity)
+false
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='math-finite?'
+      data-meta-type='var'
+      data-meta-name='finite?'
+	  data-meta-tags='math'
+    ></div>
+
 ### sqrt{#math-sqrt}
 
 `(double x) -> double`
@@ -6941,6 +6972,26 @@ Throws an error if `y` is zero.
 	  data-meta-tags='decimals'
     ></div>
 
+### from_double_exact{#decimals-from_double_exact}
+
+`(double x) -> decimal`
+
+Floating point doubles encode approximations of fractional numbers.
+
+This function returns the exact mathematical value of the given double as a decimal.
+
+Returns `nil` if `x` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-from_double_exact'
+      data-meta-type='var'
+      data-meta-name='from_double_exact'
+	  data-meta-tags='decimals'
+    ></div>
+
 ## library fun{#fun}
 
 The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
@@ -7633,6 +7684,152 @@ nil
       data-meta-id='bin-long_at'
       data-meta-type='var'
       data-meta-name='long_at'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_byte{#bin-of_byte}
+
+`(long x, boolean signed=false) -> binary`
+
+Returns the binary representation of the given byte.
+
+If signed is `true`, `x` must be a value between `-128` and `127`.\
+If signed is `false`, `x` must be a value between `0` and `255`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_byte'
+      data-meta-type='var'
+      data-meta-name='of_byte'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_word{#bin-of_word}
+
+`(long x, boolean signed=false, boolean big_endian=false) -> binary`
+
+Returns the binary representation of the given 2-byte word.
+
+If `signed` is `true`, `x` must be a value between `−32768` and `32767`.\
+If `signed` is `false`, `x` must be a value between `0` and `65535`.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.\
+Throws an error if `big_endian` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_word'
+      data-meta-type='var'
+      data-meta-name='of_word'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_dword{#bin-of_dword}
+
+`(long x, boolean signed=false, boolean big_endian=false) -> binary`
+
+Returns the binary representation of the given 4-byte dword.
+
+If `signed` is `true`, `x` must be a value between `−2147483648` and `2147483647`.\
+If `signed` is `false`, `x` must be a value between `0` and `4294967295`.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.\
+Throws an error if `big_endian` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_dword'
+      data-meta-type='var'
+      data-meta-name='of_dword'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_long{#bin-of_long}
+
+`(long x, boolean big_endian=false) -> binary`
+
+Returns the 64-bit binary representation of the given long value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_long'
+      data-meta-type='var'
+      data-meta-name='of_long'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_float{#bin-of_float}
+
+`(double x, boolean big_endian=false) -> binary`
+
+Returns the 32-bit binary representation of the float closest to the given double value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_float'
+      data-meta-type='var'
+      data-meta-name='of_float'
+	  data-meta-tags='bin'
+    ></div>
+
+### of_double{#bin-of_double}
+
+`(double x, boolean big_endian=false) -> binary`
+
+Returns the 64-bit binary representation of the given double value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_double'
+      data-meta-type='var'
+      data-meta-name='of_double'
 	  data-meta-tags='bin'
     ></div>
 

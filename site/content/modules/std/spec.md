@@ -887,7 +887,7 @@ ERROR
 
 `() -> (x) -> boolean`
 
-Matcher function that is satisfied if `x` is of type `long` or `double`.
+Matcher function that is satisfied if `x` is of type `long`, `double`, or `decimal`.
 
 ```
 > assert.expect(1, to.be_numeric())
@@ -958,6 +958,31 @@ ERROR
       data-meta-id='to-be_double'
       data-meta-type='var'
       data-meta-name='be_double'
+	  data-meta-tags='to'
+    ></div>
+
+### be_decimal{#to-be_decimal}
+
+`() -> (x) -> boolean`
+
+Matcher function that is satisfied if `x` is of type `decimal`.
+
+```
+> assert.expect(1.0d, to.be_decimal())
+true
+
+> assert.expect(1, to.be_decimal())
+ERROR
+  ...
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='to-be_decimal'
+      data-meta-type='var'
+      data-meta-name='be_decimal'
 	  data-meta-tags='to'
     ></div>
 
