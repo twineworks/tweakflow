@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.16.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.17.0</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../../index.html"
-            ><b>Tweakflow</b> v0.16.0</a
+            ><b>Tweakflow</b> v0.17.0</a
           >
         </li>
         
@@ -1003,7 +1003,7 @@ ERROR
 
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
 
-<p>Matcher function that is satisfied if <code>x</code> is of type <code>long</code> or <code>double</code>.</p>
+<p>Matcher function that is satisfied if <code>x</code> is of type <code>long</code>, <code>double</code>, or <code>decimal</code>.</p>
 
 <pre><code>&gt; assert.expect(1, to.be_numeric())
 true
@@ -1065,6 +1065,28 @@ ERROR
       data-meta-id='to-be_double'
       data-meta-type='var'
       data-meta-name='be_double'
+      data-meta-tags='to'
+    ></div>
+
+<h3 id="to-be_decimal">be_decimal</h3>
+
+<p><code>() -&gt; (x) -&gt; boolean</code></p>
+
+<p>Matcher function that is satisfied if <code>x</code> is of type <code>decimal</code>.</p>
+
+<pre><code>&gt; assert.expect(1.0d, to.be_decimal())
+true
+
+&gt; assert.expect(1, to.be_decimal())
+ERROR
+  ...
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='to-be_decimal'
+      data-meta-type='var'
+      data-meta-name='be_decimal'
       data-meta-tags='to'
     ></div>
 

@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.16.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.17.0</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v0.16.0</a
+            ><b>Tweakflow</b> v0.17.0</a
           >
         </li>
         
@@ -5845,6 +5845,34 @@ false
       data-meta-tags='math'
     ></div>
 
+<h3 id="math-finite?">finite?</h3>
+
+<p><code>(any x) -&gt; boolean</code></p>
+
+<p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, <code>NaN</code>, &lsquo;-Infinity&rsquo;, or &lsquo;Infinity&rsquo;.</p>
+
+<p>Returns <code>true</code> if <code>x</code> is a finite numeric value.</p>
+
+<p>Throws an error if <code>x</code> is not of type <code>long</code>, <code>double</code>, or <code>decimal</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; math.finite?(2.3)
+true
+
+&gt; math.finite?(NaN)
+false
+
+&gt; math.finite?(Infinity)
+false
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='math-finite?'
+      data-meta-type='var'
+      data-meta-name='finite?'
+      data-meta-tags='math'
+    ></div>
+
 <h3 id="math-sqrt">sqrt</h3>
 
 <p><code>(double x) -&gt; double</code></p>
@@ -6621,6 +6649,24 @@ Throws an error if <code>y</code> is zero.</p>
       data-meta-tags='decimals'
     ></div>
 
+<h3 id="decimals-from_double_exact">from_double_exact</h3>
+
+<p><code>(double x) -&gt; decimal</code></p>
+
+<p>Floating point doubles encode approximations of fractional numbers.</p>
+
+<p>This function returns the exact mathematical value of the given double as a decimal.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='decimals-from_double_exact'
+      data-meta-type='var'
+      data-meta-name='from_double_exact'
+      data-meta-tags='decimals'
+    ></div>
+
 <h2 id="fun">library fun</h2>
 
 <p>The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
@@ -7332,6 +7378,140 @@ nil
       data-meta-id='bin-long_at'
       data-meta-type='var'
       data-meta-name='long_at'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_byte">of_byte</h3>
+
+<p><code>(long x, boolean signed=false) -&gt; binary</code></p>
+
+<p>Returns the binary representation of the given byte.</p>
+
+<p>If signed is <code>true</code>, <code>x</code> must be a value between <code>-128</code> and <code>127</code>.<br />
+If signed is <code>false</code>, <code>x</code> must be a value between <code>0</code> and <code>255</code>.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>signed</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_byte'
+      data-meta-type='var'
+      data-meta-name='of_byte'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_word">of_word</h3>
+
+<p><code>(long x, boolean signed=false, boolean big_endian=false) -&gt; binary</code></p>
+
+<p>Returns the binary representation of the given 2-byte word.</p>
+
+<p>If <code>signed</code> is <code>true</code>, <code>x</code> must be a value between <code>−32768</code> and <code>32767</code>.<br />
+If <code>signed</code> is <code>false</code>, <code>x</code> must be a value between <code>0</code> and <code>65535</code>.</p>
+
+<p>If <code>big_endian</code> is <code>true</code>, the returned binary starts with the most significant byte.<br />
+If <code>big_endian</code> is <code>false</code>, the returned binary starts with the least significant byte.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>signed</code> is <code>nil</code>.<br />
+Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_word'
+      data-meta-type='var'
+      data-meta-name='of_word'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_dword">of_dword</h3>
+
+<p><code>(long x, boolean signed=false, boolean big_endian=false) -&gt; binary</code></p>
+
+<p>Returns the binary representation of the given 4-byte dword.</p>
+
+<p>If <code>signed</code> is <code>true</code>, <code>x</code> must be a value between <code>−2147483648</code> and <code>2147483647</code>.<br />
+If <code>signed</code> is <code>false</code>, <code>x</code> must be a value between <code>0</code> and <code>4294967295</code>.</p>
+
+<p>If <code>big_endian</code> is <code>true</code>, the returned binary starts with the most significant byte.<br />
+If <code>big_endian</code> is <code>false</code>, the returned binary starts with the least significant byte.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>signed</code> is <code>nil</code>.<br />
+Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_dword'
+      data-meta-type='var'
+      data-meta-name='of_dword'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_long">of_long</h3>
+
+<p><code>(long x, boolean big_endian=false) -&gt; binary</code></p>
+
+<p>Returns the 64-bit binary representation of the given long value.</p>
+
+<p>If <code>big_endian</code> is <code>true</code>, the returned binary starts with the most significant byte.<br />
+If <code>big_endian</code> is <code>false</code>, the returned binary starts with the least significant byte.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_long'
+      data-meta-type='var'
+      data-meta-name='of_long'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_float">of_float</h3>
+
+<p><code>(double x, boolean big_endian=false) -&gt; binary</code></p>
+
+<p>Returns the 32-bit binary representation of the float closest to the given double value.</p>
+
+<p>If <code>big_endian</code> is <code>true</code>, the returned binary starts with the most significant byte.<br />
+If <code>big_endian</code> is <code>false</code>, the returned binary starts with the least significant byte.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_float'
+      data-meta-type='var'
+      data-meta-name='of_float'
+      data-meta-tags='bin'
+    ></div>
+
+<h3 id="bin-of_double">of_double</h3>
+
+<p><code>(double x, boolean big_endian=false) -&gt; binary</code></p>
+
+<p>Returns the 64-bit binary representation of the given double value.</p>
+
+<p>If <code>big_endian</code> is <code>true</code>, the returned binary starts with the most significant byte.<br />
+If <code>big_endian</code> is <code>false</code>, the returned binary starts with the least significant byte.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<div
+      data-meta='true'
+      data-meta-id='bin-of_double'
+      data-meta-type='var'
+      data-meta-name='of_double'
       data-meta-tags='bin'
     ></div>
 
