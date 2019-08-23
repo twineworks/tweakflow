@@ -141,6 +141,23 @@ public final class Decimals {
     }
   }
 
+  // from_double_exact: (double x) -> decimal
+  public static final class from_double_exact implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x) {
+
+      if (x.isNil()) return Values.NIL;
+      double d = x.doubleNum();
+      if (!Double.isFinite(d)){
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot convert non-finite double: "+d+" to decimal");
+      }
+      BigDecimal dec = new BigDecimal(d);
+      return Values.make(dec);
+
+    }
+  }
+
   // strip_trailing_zeros: (decimal x) -> string
   public static final class strip_trailing_zeros implements UserFunction, Arity1UserFunction {
 
