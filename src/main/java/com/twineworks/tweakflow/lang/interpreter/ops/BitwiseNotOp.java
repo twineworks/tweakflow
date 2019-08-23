@@ -25,11 +25,10 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.ast.expressions.BitwiseNotNode;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 final public class BitwiseNotOp implements ExpressionOp {
 
@@ -45,7 +44,7 @@ final public class BitwiseNotOp implements ExpressionOp {
   public Value eval(Stack stack, EvaluationContext context) {
     Value value = expOp.eval(stack, context);;
     if (value == Values.NIL) return Values.NIL;
-    return Values.make(~value.castTo(Types.LONG).longNum());
+    return Values.make(~value.longNum());
   }
 
   @Override

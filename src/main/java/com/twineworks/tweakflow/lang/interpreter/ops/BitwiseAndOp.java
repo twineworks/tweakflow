@@ -25,11 +25,10 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.ast.expressions.BitwiseAndNode;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 final public class BitwiseAndOp implements ExpressionOp {
 
@@ -46,8 +45,8 @@ final public class BitwiseAndOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Long left = leftOp.eval(stack, context).castTo(Types.LONG).longNum();
-    Long right = rightOp.eval(stack, context).castTo(Types.LONG).longNum();
+    Long left = leftOp.eval(stack, context).longNum();
+    Long right = rightOp.eval(stack, context).longNum();
 
     if (left == null) return Values.NIL;
     if (right == null) return Values.NIL;

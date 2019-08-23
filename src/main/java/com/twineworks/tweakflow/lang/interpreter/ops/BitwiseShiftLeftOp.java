@@ -25,11 +25,10 @@
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
 import com.twineworks.tweakflow.lang.ast.expressions.BitwiseShiftLeftNode;
-import com.twineworks.tweakflow.lang.types.Types;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.Values;
 
 final public class BitwiseShiftLeftOp implements ExpressionOp {
 
@@ -46,8 +45,8 @@ final public class BitwiseShiftLeftOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    Value left = leftOp.eval(stack, context).castTo(Types.LONG);
-    Value right = rightOp.eval(stack, context).castTo(Types.LONG);
+    Value left = leftOp.eval(stack, context);
+    Value right = rightOp.eval(stack, context);
 
     if (left == Values.NIL) return Values.NIL;
     if (right == Values.NIL) return Values.NIL;

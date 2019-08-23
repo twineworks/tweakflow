@@ -563,55 +563,55 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   @Override
   public ExpressionNode visitBitwiseNotExp(TweakFlowParser.BitwiseNotExpContext ctx) {
     return new BitwiseNotNode()
-        .setExpression(visit(ctx.expression()))
+        .setExpression(addImplicitCast(Types.LONG, visit(ctx.expression())))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitBitwiseXorExp(TweakFlowParser.BitwiseXorExpContext ctx) {
     return new BitwiseXorNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitShiftLeftExp(TweakFlowParser.ShiftLeftExpContext ctx) {
     return new BitwiseShiftLeftNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitBitwiseOrExp(TweakFlowParser.BitwiseOrExpContext ctx) {
     return new BitwiseOrNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitZeroShiftRightExp(TweakFlowParser.ZeroShiftRightExpContext ctx) {
     return new BitwiseZeroShiftRightNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitPreservingShiftRightExp(TweakFlowParser.PreservingShiftRightExpContext ctx) {
     return new BitwisePreservingShiftRightNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 
   @Override
   public ExpressionNode visitBitwiseAndExp(TweakFlowParser.BitwiseAndExpContext ctx) {
     return new BitwiseAndNode()
-        .setLeftExpression(visit(ctx.expression(0)))
-        .setRightExpression(visit(ctx.expression(1)))
+        .setLeftExpression(addImplicitCast(Types.LONG, visit(ctx.expression(0))))
+        .setRightExpression(addImplicitCast(Types.LONG, visit(ctx.expression(1))))
         .setSourceInfo(srcOf(parseUnit, ctx));
   }
 

@@ -19,9 +19,9 @@ library operator_spec {
   dc1:   ~1.0    == -2;
   dcn1: ~-1.0    == 0;
 
-  b0:    try   ~0b00  catch "error" == "error";
-  foo:   try   ~"foo"  catch "error" == "error";
-  f:     try   ~lib.f  catch "error" == "error";
-  dt:    try   ~time.epoch catch "error" == "error";
+  b0:    (try   ~lib.f(0b00)  catch "error") == "error";
+  foo:   (try   ~"foo"  catch "error") == "error";
+  f:     (try   ~lib.f  catch "error") == "error";
+  dt:    (try   ~time.epoch catch "error") == "error";
 
 }
