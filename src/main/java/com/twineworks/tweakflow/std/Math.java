@@ -681,6 +681,18 @@ public final class Math {
     }
   }
 
+  // finite?: (any x) -> boolean
+  public static final class finite implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x.isNil()) return Values.FALSE;
+      if (!x.isNumeric()) throw new LangException(LangError.ILLEGAL_ARGUMENT, "x must be numeric, found: "+x);
+      if (!x.isDoubleNum()) return Values.TRUE;
+      return Double.isFinite(x.doubleNum()) ? Values.TRUE : Values.FALSE;
+    }
+  }
+
   // sqrt: (x) ->
   public static final class sqrt implements UserFunction, Arity1UserFunction {
 
