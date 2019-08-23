@@ -106,6 +106,37 @@ public final class Bin {
     }
   }
 
+  // (long x, boolean signed=false) -> binary
+  public static final class of_byte implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value signed) {
+      if (x == Values.NIL) return Values.NIL;
+      if (signed == Values.NIL) throw new LangException(LangError.NIL_ERROR, "signed cannot be nil");
+
+      long num = x.longNum();
+      boolean isSigned = signed.bool();
+
+      byte[] ret = new byte[1];
+      if (isSigned){
+        if (num < Byte.MIN_VALUE || num > Byte.MAX_VALUE) throw new LangException(LangError.ILLEGAL_ARGUMENT, "signed byte value out of range: "+num);
+        ret[0] = (byte) num;
+      }
+      else {
+        if (num < 0 || num > 255) throw new LangException(LangError.ILLEGAL_ARGUMENT, "unsigned byte value out of range: "+num);
+        if (num < 128){
+          ret[0] = (byte) num;
+        }
+        else {
+          ret[0] = (byte) (num-256);
+        }
+      }
+
+      return Values.make(ret);
+    }
+  }
+
+
   // (binary x, long i, boolean big_endian=false) -> long
   public static final class word_at implements UserFunction, Arity3UserFunction {
 
@@ -134,6 +165,48 @@ public final class Bin {
       }
 
       return Values.make(out);
+    }
+  }
+
+  // (long x, boolean signed=false, boolean big_endian=false) -> binary
+  public static final class of_word implements UserFunction, Arity3UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value signed, Value bigEndian) {
+      if (x == Values.NIL) return Values.NIL;
+      if (signed == Values.NIL) throw new LangException(LangError.NIL_ERROR, "signed cannot be nil");
+      if (bigEndian == Values.NIL) throw new LangException(LangError.NIL_ERROR, "big_endian cannot be nil");
+
+      long num = x.longNum();
+      boolean isSigned = signed.bool();
+      boolean isBigEndian = bigEndian.bool();
+      short word;
+      byte[] ret = new byte[2];
+
+      if (isSigned){
+        if (num < Short.MIN_VALUE || num > Short.MAX_VALUE) throw new LangException(LangError.ILLEGAL_ARGUMENT, "signed word value out of range: "+num);
+        word = (short) num;
+      }
+      else {
+        long MAX_UNSIGNED = (long)Short.MAX_VALUE*2+1;
+        if (num < 0 || num > MAX_UNSIGNED) throw new LangException(LangError.ILLEGAL_ARGUMENT, "unsigned word value out of range: "+num);
+        if (num <= Short.MAX_VALUE){
+          word = (short) num;
+        }
+        else {
+          word = (short) (num-MAX_UNSIGNED-1);
+        }
+      }
+      if (isBigEndian){
+        ret[0] = (byte) (word >>> 8);
+        ret[1] = (byte) (word);
+      }
+      else{
+        ret[0] = (byte) (word);
+        ret[1] = (byte) (word >>> 8);
+      }
+
+      return Values.make(ret);
     }
   }
 
@@ -167,6 +240,52 @@ public final class Bin {
       }
 
       return Values.make(out);
+    }
+  }
+
+  // (long x, boolean signed=false, boolean big_endian=false) -> binary
+  public static final class of_dword implements UserFunction, Arity3UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value signed, Value bigEndian) {
+      if (x == Values.NIL) return Values.NIL;
+      if (signed == Values.NIL) throw new LangException(LangError.NIL_ERROR, "signed cannot be nil");
+      if (bigEndian == Values.NIL) throw new LangException(LangError.NIL_ERROR, "big_endian cannot be nil");
+
+      long num = x.longNum();
+      boolean isSigned = signed.bool();
+      boolean isBigEndian = bigEndian.bool();
+      int dword;
+      byte[] ret = new byte[4];
+
+      if (isSigned){
+        if (num < Integer.MIN_VALUE || num > Integer.MAX_VALUE) throw new LangException(LangError.ILLEGAL_ARGUMENT, "signed dword value out of range: "+num);
+        dword = (int) num;
+      }
+      else {
+        long MAX_UNSIGNED = (long)Integer.MAX_VALUE*2+1;
+        if (num < 0 || num > MAX_UNSIGNED) throw new LangException(LangError.ILLEGAL_ARGUMENT, "unsigned dword value out of range: "+num);
+        if (num <= Integer.MAX_VALUE){
+          dword = (int) num;
+        }
+        else {
+          dword = (int) (num-MAX_UNSIGNED-1);
+        }
+      }
+      if (isBigEndian){
+        ret[0] = (byte) (dword >>> 24);
+        ret[1] = (byte) (dword >>> 16);
+        ret[2] = (byte) (dword >>> 8);
+        ret[3] = (byte) (dword);
+      }
+      else{
+        ret[3] = (byte) (dword >>> 24);
+        ret[2] = (byte) (dword >>> 16);
+        ret[1] = (byte) (dword >>> 8);
+        ret[0] = (byte) (dword);
+      }
+
+      return Values.make(ret);
     }
   }
 
@@ -207,6 +326,44 @@ public final class Bin {
     }
   }
 
+  // (long x, boolean big_endian=false) -> binary
+  public static final class of_long implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value bigEndian) {
+      if (x == Values.NIL) return Values.NIL;
+      if (bigEndian == Values.NIL) throw new LangException(LangError.NIL_ERROR, "big_endian cannot be nil");
+
+      long num = x.longNum();
+      boolean isBigEndian = bigEndian.bool();
+
+      byte[] ret = new byte[8];
+
+      if (isBigEndian){
+        ret[0] = (byte) (num >>> 56);
+        ret[1] = (byte) (num >>> 48);
+        ret[2] = (byte) (num >>> 40);
+        ret[3] = (byte) (num >>> 32);
+        ret[4] = (byte) (num >>> 24);
+        ret[5] = (byte) (num >>> 16);
+        ret[6] = (byte) (num >>> 8);
+        ret[7] = (byte) (num);
+      }
+      else{
+        ret[7] = (byte) (num >>> 56);
+        ret[6] = (byte) (num >>> 48);
+        ret[5] = (byte) (num >>> 40);
+        ret[4] = (byte) (num >>> 32);
+        ret[3] = (byte) (num >>> 24);
+        ret[2] = (byte) (num >>> 16);
+        ret[1] = (byte) (num >>> 8);
+        ret[0] = (byte) (num);
+      }
+
+      return Values.make(ret);
+    }
+  }
+
   // (binary x, long i, boolean big_endian=false) -> double
   public static final class float_at implements UserFunction, Arity3UserFunction {
 
@@ -237,6 +394,36 @@ public final class Bin {
       }
       float v = Float.intBitsToFloat(out);
       return Values.make((double) v);
+    }
+  }
+
+  // (double x, boolean big_endian=false) -> binary
+  public static final class of_float implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value bigEndian) {
+      if (x == Values.NIL) return Values.NIL;
+      if (bigEndian == Values.NIL) throw new LangException(LangError.NIL_ERROR, "big_endian cannot be nil");
+
+      float num = x.doubleNum().floatValue();
+      boolean isBigEndian = bigEndian.bool();
+      int dword = Float.floatToIntBits(num);
+      byte[] ret = new byte[4];
+
+      if (isBigEndian){
+        ret[0] = (byte) (dword >>> 24);
+        ret[1] = (byte) (dword >>> 16);
+        ret[2] = (byte) (dword >>> 8);
+        ret[3] = (byte) (dword);
+      }
+      else{
+        ret[3] = (byte) (dword >>> 24);
+        ret[2] = (byte) (dword >>> 16);
+        ret[1] = (byte) (dword >>> 8);
+        ret[0] = (byte) (dword);
+      }
+
+      return Values.make(ret);
     }
   }
 
@@ -274,6 +461,44 @@ public final class Bin {
       }
 
       return Values.make(Double.longBitsToDouble(out));
+    }
+  }
+
+  // (double x, boolean big_endian=false) -> binary
+  public static final class of_double implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value x, Value bigEndian) {
+      if (x == Values.NIL) return Values.NIL;
+      if (bigEndian == Values.NIL) throw new LangException(LangError.NIL_ERROR, "big_endian cannot be nil");
+
+      double num = x.doubleNum();
+      boolean isBigEndian = bigEndian.bool();
+      long bits = Double.doubleToLongBits(num);
+      byte[] ret = new byte[8];
+
+      if (isBigEndian){
+        ret[0] = (byte) (bits >>> 56);
+        ret[1] = (byte) (bits >>> 48);
+        ret[2] = (byte) (bits >>> 40);
+        ret[3] = (byte) (bits >>> 32);
+        ret[4] = (byte) (bits >>> 24);
+        ret[5] = (byte) (bits >>> 16);
+        ret[6] = (byte) (bits >>> 8);
+        ret[7] = (byte) (bits);
+      }
+      else{
+        ret[7] = (byte) (bits >>> 56);
+        ret[6] = (byte) (bits >>> 48);
+        ret[5] = (byte) (bits >>> 40);
+        ret[4] = (byte) (bits >>> 32);
+        ret[3] = (byte) (bits >>> 24);
+        ret[2] = (byte) (bits >>> 16);
+        ret[1] = (byte) (bits >>> 8);
+        ret[0] = (byte) (bits);
+      }
+
+      return Values.make(ret);
     }
   }
 

@@ -5079,6 +5079,30 @@ false
 
 doc
 ~~~
+`(any x) -> boolean`
+
+Returns `false` if `x` is `nil`, `NaN`, '-Infinity', or 'Infinity'.
+
+Returns `true` if `x` is a finite numeric value.
+
+Throws an error if `x` is not of type `long`, `double`, or `decimal`.
+
+```tweakflow
+> math.finite?(2.3)
+true
+
+> math.finite?(NaN)
+false
+
+> math.finite?(Infinity)
+false
+```
+~~~
+
+  function finite?:  (any x) -> boolean                     via {:class "com.twineworks.tweakflow.std.Math$finite"};
+
+doc
+~~~
 `(double x) -> double`
 
 Given a double `x`, returns the square root of `x`.
@@ -5752,6 +5776,19 @@ Throws an error if `y` is zero.
 ~~~
   function divide_integral: (decimal x, decimal y) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$divide_integral"};
 
+
+doc
+~~~
+`(double x) -> decimal`
+
+Floating point doubles encode approximations of fractional numbers.
+
+This function returns the exact mathematical value of the given double as a decimal.
+
+Returns `nil` if `x` is `nil`.
+~~~
+  function from_double_exact: (double x) -> decimal via {:class "com.twineworks.tweakflow.std.Decimals$from_double_exact"};
+
 }
 
 doc
@@ -6339,6 +6376,106 @@ nil
 
 doc
 ~~~
+`(long x, boolean signed=false) -> binary`
+
+Returns the binary representation of the given byte.
+
+If signed is `true`, `x` must be a value between `-128` and `127`.\
+If signed is `false`, `x` must be a value between `0` and `255`.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.
+~~~
+  function of_byte: (long x, boolean signed=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_byte"};
+
+doc
+~~~
+`(long x, boolean signed=false, boolean big_endian=false) -> binary`
+
+Returns the binary representation of the given 2-byte word.
+
+If `signed` is `true`, `x` must be a value between `−32768` and `32767`.\
+If `signed` is `false`, `x` must be a value between `0` and `65535`.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.\
+Throws an error if `big_endian` is `nil`.
+~~~
+  function of_word: (long x, boolean signed=false, boolean big_endian=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_word"};
+
+doc
+~~~
+`(long x, boolean signed=false, boolean big_endian=false) -> binary`
+
+Returns the binary representation of the given 4-byte dword.
+
+If `signed` is `true`, `x` must be a value between `−2147483648` and `2147483647`.\
+If `signed` is `false`, `x` must be a value between `0` and `4294967295`.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `signed` is `nil`.\
+Throws an error if `big_endian` is `nil`.
+~~~
+  function of_dword: (long x, boolean signed=false, boolean big_endian=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_dword"};
+
+doc
+~~~
+`(long x, boolean big_endian=false) -> binary`
+
+Returns the 64-bit binary representation of the given long value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+~~~
+  function of_long: (long x, boolean big_endian=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_long"};
+
+doc
+~~~
+`(double x, boolean big_endian=false) -> binary`
+
+Returns the 32-bit binary representation of the float closest to the given double value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+~~~
+  function of_float: (double x, boolean big_endian=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_float"};
+
+doc
+~~~
+`(double x, boolean big_endian=false) -> binary`
+
+Returns the 64-bit binary representation of the given double value.
+
+If `big_endian` is `true`, the returned binary starts with the most significant byte.\
+If `big_endian` is `false`, the returned binary starts with the least significant byte.
+
+Returns `nil` if `x` is `nil`.
+
+Throws an error if `big_endian` is `nil`.
+~~~
+  function of_double: (double x, boolean big_endian=false) -> binary via {:class "com.twineworks.tweakflow.std.Bin$of_double"};
+
+
+
+doc
+~~~
 `(binary x, long i, boolean big_endian=false) -> double`
 
 Returns the float (32-bit floating point value) at byte offset `i` in binary `x` as a double.
@@ -6557,5 +6694,6 @@ nil
 ~~~
 
   function base64_decode: (string x, string variant='basic') -> binary via {:class "com.twineworks.tweakflow.std.Bin$base64_decode"};
+
 
 }
