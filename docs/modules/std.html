@@ -5849,7 +5849,7 @@ false
 
 <p><code>(any x) -&gt; boolean</code></p>
 
-<p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, <code>NaN</code>, &lsquo;-Infinity&rsquo;, or &lsquo;Infinity&rsquo;.</p>
+<p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, <code>NaN</code>, <code>-Infinity</code>, or <code>Infinity</code>.</p>
 
 <p>Returns <code>true</code> if <code>x</code> is a finite numeric value.</p>
 
@@ -6659,6 +6659,19 @@ Throws an error if <code>y</code> is zero.</p>
 
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
+<pre><code class="language-tweakflow">&gt; decimals.from_double_exact(1.0)
+1d
+
+&gt; decimals.from_double_exact(2.6)
+2.600000000000000088817841970012523233890533447265625d
+
+&gt; decimals.from_double_exact(0.1)
+0.1000000000000000055511151231257827021181583404541015625d
+
+&gt; decimals.from_double_exact(nil)
+nil
+</code></pre>
+
 <div
       data-meta='true'
       data-meta-id='decimals-from_double_exact'
@@ -7394,6 +7407,24 @@ If signed is <code>false</code>, <code>x</code> must be a value between <code>0<
 
 <p>Throws an error if <code>signed</code> is <code>nil</code>.</p>
 
+<pre><code class="language-tweakflow">&gt; bin.of_byte(64)
+0b40
+
+&gt; bin.of_byte(192)
+0bc0
+
+&gt; bin.of_byte(255)
+0bff
+
+&gt; bin.of_byte(-1, true)
+0bff
+
+&gt; bin.of_byte(-1, false)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unsigned byte value out of range: -1
+</code></pre>
+
 <div
       data-meta='true'
       data-meta-id='bin-of_byte'
@@ -7418,6 +7449,27 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 
 <p>Throws an error if <code>signed</code> is <code>nil</code>.<br />
 Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.of_word(192)
+0bc000
+
+&gt; bin.of_word(192, big_endian: true)
+0b00c0
+
+&gt; bin.of_word(65535)
+0bffff
+
+&gt; bin.of_word(-32768, signed: true)
+0b0080
+
+&gt; bin.of_word(-32768, signed: true, big_endian: true)
+0b8000
+
+&gt; bin.of_word(65535, signed: true)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: signed word value out of range: 65535
+</code></pre>
 
 <div
       data-meta='true'
@@ -7444,6 +7496,27 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 <p>Throws an error if <code>signed</code> is <code>nil</code>.<br />
 Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
 
+<pre><code class="language-tweakflow">&gt; bin.of_dword(255)
+0bff000000
+
+&gt; bin.of_dword(255, big_endian: true)
+0b000000ff
+
+&gt; bin.of_dword(-128, signed: true)
+0b80ffffff
+
+&gt; bin.of_dword(-128, signed: true, big_endian: true)
+0bffffff80
+
+&gt; bin.of_dword(4294967295)
+0bffffffff
+
+&gt; bin.of_dword(4294967295, signed: true)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: signed dword value out of range: 4294967295
+</code></pre>
+
 <div
       data-meta='true'
       data-meta-id='bin-of_dword'
@@ -7464,6 +7537,19 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.of_long(255)
+0bff00000000000000
+
+&gt; bin.of_long(255, big_endian: true)
+0b00000000000000ff
+
+&gt; bin.of_long(9223372036854775807)
+0bffffffffffffff7f
+
+&gt; bin.of_long(-1)
+0bffffffffffffffff
+</code></pre>
 
 <div
       data-meta='true'
@@ -7486,6 +7572,22 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 
 <p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
 
+<pre><code class="language-tweakflow">&gt; bin.of_float(0)
+0b00000000
+
+&gt; bin.of_float(1)
+0b0000803f
+
+&gt; bin.of_float(1, big_endian: true)
+0b3f800000
+
+&gt; bin.of_float(NaN)
+0b0000c07f
+
+&gt; bin.of_float(math.pi)
+0bdb0f4940
+</code></pre>
+
 <div
       data-meta='true'
       data-meta-id='bin-of_float'
@@ -7506,6 +7608,22 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 <p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 <p>Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; bin.of_double(0.0)
+0b0000000000000000
+
+&gt; bin.of_double(1.0)
+0b000000000000f03f
+
+&gt; bin.of_double(1.0, big_endian: true)
+0b3ff0000000000000
+
+&gt; bin.of_double(NaN)
+0b000000000000f87f
+
+&gt; bin.of_double(math.pi)
+0b182d4454fb210940
+</code></pre>
 
 <div
       data-meta='true'

@@ -6094,7 +6094,7 @@ false
 
 `(any x) -> boolean`
 
-Returns `false` if `x` is `nil`, `NaN`, '-Infinity', or 'Infinity'.
+Returns `false` if `x` is `nil`, `NaN`, `-Infinity`, or `Infinity`.
 
 Returns `true` if `x` is a finite numeric value.
 
@@ -6982,6 +6982,20 @@ This function returns the exact mathematical value of the given double as a deci
 
 Returns `nil` if `x` is `nil`.
 
+```tweakflow
+> decimals.from_double_exact(1.0)
+1d
+
+> decimals.from_double_exact(2.6)
+2.600000000000000088817841970012523233890533447265625d
+
+> decimals.from_double_exact(0.1)
+0.1000000000000000055511151231257827021181583404541015625d
+
+> decimals.from_double_exact(nil)
+nil
+```
+
 
 
 <div
@@ -7700,6 +7714,25 @@ Returns `nil` if `x` is `nil`.
 
 Throws an error if `signed` is `nil`.
 
+```tweakflow
+> bin.of_byte(64)
+0b40
+
+> bin.of_byte(192)
+0bc0
+
+> bin.of_byte(255)
+0bff
+
+> bin.of_byte(-1, true)
+0bff
+
+> bin.of_byte(-1, false)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: unsigned byte value out of range: -1
+```
+
 
 
 <div
@@ -7726,6 +7759,28 @@ Returns `nil` if `x` is `nil`.
 
 Throws an error if `signed` is `nil`.\
 Throws an error if `big_endian` is `nil`.
+
+```tweakflow
+> bin.of_word(192)
+0bc000
+
+> bin.of_word(192, big_endian: true)
+0b00c0
+
+> bin.of_word(65535)
+0bffff
+
+> bin.of_word(-32768, signed: true)
+0b0080
+
+> bin.of_word(-32768, signed: true, big_endian: true)
+0b8000
+
+> bin.of_word(65535, signed: true)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: signed word value out of range: 65535
+```
 
 
 
@@ -7754,6 +7809,28 @@ Returns `nil` if `x` is `nil`.
 Throws an error if `signed` is `nil`.\
 Throws an error if `big_endian` is `nil`.
 
+```tweakflow
+> bin.of_dword(255)
+0bff000000
+
+> bin.of_dword(255, big_endian: true)
+0b000000ff
+
+> bin.of_dword(-128, signed: true)
+0b80ffffff
+
+> bin.of_dword(-128, signed: true, big_endian: true)
+0bffffff80
+
+> bin.of_dword(4294967295)
+0bffffffff
+
+> bin.of_dword(4294967295, signed: true)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: signed dword value out of range: 4294967295
+```
+
 
 
 <div
@@ -7776,6 +7853,20 @@ If `big_endian` is `false`, the returned binary starts with the least significan
 Returns `nil` if `x` is `nil`.
 
 Throws an error if `big_endian` is `nil`.
+
+```tweakflow
+> bin.of_long(255)
+0bff00000000000000
+
+> bin.of_long(255, big_endian: true)
+0b00000000000000ff
+
+> bin.of_long(9223372036854775807)
+0bffffffffffffff7f
+
+> bin.of_long(-1)
+0bffffffffffffffff
+```
 
 
 
@@ -7800,6 +7891,23 @@ Returns `nil` if `x` is `nil`.
 
 Throws an error if `big_endian` is `nil`.
 
+```tweakflow
+> bin.of_float(0)
+0b00000000
+
+> bin.of_float(1)
+0b0000803f
+
+> bin.of_float(1, big_endian: true)
+0b3f800000
+
+> bin.of_float(NaN)
+0b0000c07f
+
+> bin.of_float(math.pi)
+0bdb0f4940
+```
+
 
 
 <div
@@ -7822,6 +7930,23 @@ If `big_endian` is `false`, the returned binary starts with the least significan
 Returns `nil` if `x` is `nil`.
 
 Throws an error if `big_endian` is `nil`.
+
+```tweakflow
+> bin.of_double(0.0)
+0b0000000000000000
+
+> bin.of_double(1.0)
+0b000000000000f03f
+
+> bin.of_double(1.0, big_endian: true)
+0b3ff0000000000000
+
+> bin.of_double(NaN)
+0b000000000000f87f
+
+> bin.of_double(math.pi)
+0b182d4454fb210940
+```
 
 
 
