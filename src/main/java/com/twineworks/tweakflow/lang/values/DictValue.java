@@ -26,10 +26,11 @@ package com.twineworks.tweakflow.lang.values;
 
 
 import io.usethesource.capsule.Map.Immutable;
-import io.usethesource.capsule.core.PersistentTrieMap;
 import io.usethesource.capsule.Map.Transient;
+import io.usethesource.capsule.core.PersistentTrieMap;
 
 import java.util.Map;
+import java.util.Set;
 
 final public class DictValue {
 
@@ -115,7 +116,7 @@ final public class DictValue {
     return new ListValue(map.values().toArray());
   }
 
-  public Iterable<String> keys() {
+  public Set<String> keys() {
     return map.keySet();
   }
 
