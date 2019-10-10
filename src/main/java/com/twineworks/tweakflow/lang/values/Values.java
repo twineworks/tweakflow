@@ -26,15 +26,15 @@ package com.twineworks.tweakflow.lang.values;
 
 import com.twineworks.tweakflow.lang.types.Types;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.sql.Struct;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 final public class Values {
 
@@ -63,7 +63,7 @@ final public class Values {
   public static final Value DECIMAL_ZERO = new Value(Types.DECIMAL, BigDecimal.ZERO);
   public static final Value DECIMAL_ONE = new Value(Types.DECIMAL, BigDecimal.ONE);
 
-  public static final Value[] LONGS = new Value[255];
+  private static final Value[] LONGS = new Value[255];
 
   static {
     // init interned longs
@@ -191,20 +191,113 @@ final public class Values {
     if (o == null) return NIL;
     if (o instanceof Value) return (Value) o;
     if (o instanceof Boolean) return o == Boolean.TRUE ? Values.TRUE : Values.FALSE;
+
+    if (o instanceof Character) return Values.make((Character) o);
     if (o instanceof String) return make((String) o);
-    if (o instanceof Character) return make(((Character) o).toString());
+
+    if (o instanceof Short) return Values.make((Short) o);
     if (o instanceof Long) return make((Long) o);
     if (o instanceof Integer) return make(((Integer) o).longValue());
+    if (o instanceof Float) return Values.make((Float) o);
     if (o instanceof Double) return make((Double) o);
     if (o instanceof BigDecimal) return make((BigDecimal) o);
+
     if (o instanceof Instant) return make(new DateTimeValue((Instant) o));
+    if (o instanceof LocalDateTime) return Values.make((LocalDateTime) o);
+    if (o instanceof OffsetDateTime) return Values.make((OffsetDateTime) o);
+    if (o instanceof ZonedDateTime) return Values.make((ZonedDateTime) o);
     if (o instanceof DateTimeValue) return make((DateTimeValue) o);
+
     if (o instanceof FunctionValue) return make((FunctionValue) o);
     if (o instanceof ListValue) return make((ListValue) o);
     if (o instanceof DictValue) return make((DictValue) o);
     if (o instanceof List) return makeList((List) o);
 
-    throw new RuntimeException("Cannot make a value from: " + o);
+    if (o instanceof Date) return Values.make(((Date) o).toInstant());
+    if (o instanceof byte[]) return Values.make((byte[]) o);
+
+    if (o instanceof Struct){
+      Struct struct = (Struct) o;
+      try {
+        ListValue list = new ListValue();
+        for (Object attribute : struct.getAttributes()) {
+          list = list.append(Values.make(attribute));
+        }
+        return Values.make(list);
+      } catch (SQLException e) {
+        return Values.NIL;
+      }
+    }
+
+    if (o.getClass().isArray()){
+
+      ListValue list = new ListValue();
+
+      if (o instanceof int[]){
+        int[] a = (int[]) o;
+        for (int value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      else if (o instanceof long[]){
+        long[] a = (long[]) o;
+        for (long value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      else if (o instanceof boolean[]){
+        boolean[] a = (boolean[]) o;
+        for (boolean value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      else if (o instanceof double[]){
+        double[] a = (double[]) o;
+        for (double value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      else if (o instanceof char[]){
+        char[] a = (char[]) o;
+        for (char value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      if (o instanceof String[]){
+        String[] a = (String[]) o;
+        for (String value : a) {
+          list = list.append(Values.make(value));
+        }
+      }
+      else {
+        // https://stackoverflow.com/questions/2725533/how-to-see-if-an-object-is-an-array-without-using-reflection
+        for(int i = 0; i< Array.getLength(o); i++){
+          list = list.append(Values.make(Array.get(o, i)));
+        }
+      }
+      return Values.make(list);
+    }
+
+    if (o instanceof Map){
+      TransientDictValue t = new TransientDictValue();
+      Map map = (Map) o;
+      for (Object k : map.keySet()) {
+        t.put(k.toString(), Values.make(map.get(k)));
+      }
+      return Values.make(t.persistent());
+    }
+
+    if (o instanceof Collection){
+      Collection collection = (Collection) o;
+      ListValue list = new ListValue();
+      for (Object item : collection) {
+        list = list.append(Values.make(item));
+      }
+      return Values.make(list);
+    }
+
+    return Values.make(o.toString());
+
   }
 
   public static Value makeDict() {
