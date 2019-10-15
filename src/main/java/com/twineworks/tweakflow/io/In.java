@@ -140,6 +140,6 @@ public class In implements AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
   }
 }
