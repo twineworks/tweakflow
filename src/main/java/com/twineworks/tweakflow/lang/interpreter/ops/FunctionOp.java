@@ -73,7 +73,7 @@ final public class FunctionOp implements ExpressionOp {
         Cell cell = Spaces.resolve(closure, currentStack.getSpace());
 
         // closed over value has not been evaluated yet
-        if (cell.getValue() == null || cell.isDirty()){
+        if (cell.isDirty()){
           closures.put(closure, cell);
           // is currently evaluating
           if (cell.isEvaluating()){
