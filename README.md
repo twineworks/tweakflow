@@ -86,7 +86,7 @@ Or it can be more sophisticated, providing users with application variables they
 
 The host application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
 
-We've embedded tweakflow as the expression engine in our [Tweakstreet](https://tweakstreet.io) data automation tool:
+We've embedded tweakflow as the expression engine in our data automation tool [Tweakstreet](https://tweakstreet.io):
 
 ![example integration](https://twineworks.github.io/tweakflow/images/integrated_expressions.gif)
 
