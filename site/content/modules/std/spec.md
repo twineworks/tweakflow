@@ -13,7 +13,7 @@ The `std/spec` module contains libraries useful for creating test suites.
       data-meta-id='spec'
       data-meta-type='module'
       data-meta-name='spec.tf'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ## library util{#util}
@@ -27,7 +27,7 @@ Utilities used internally.
       data-meta-id='util'
       data-meta-type='library'
       data-meta-name='util'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### permutations?{#util-permutations?}
@@ -56,7 +56,7 @@ false
       data-meta-id='util-permutations?'
       data-meta-type='var'
       data-meta-name='permutations?'
-	  data-meta-tags='util'
+	    data-meta-tags='util'
     ></div>
 
 ## library assert{#assert}
@@ -70,7 +70,7 @@ The library contains functions useful for defining assertions.
       data-meta-id='assert'
       data-meta-type='library'
       data-meta-name='assert'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### expect_error{#assert-expect_error}
@@ -107,7 +107,7 @@ ERROR:
       data-meta-id='assert-expect_error'
       data-meta-type='var'
       data-meta-name='expect_error'
-	  data-meta-tags='assert'
+	    data-meta-tags='assert'
     ></div>
 
 ### expect{#assert-expect}
@@ -134,7 +134,7 @@ ERROR:
       data-meta-id='assert-expect'
       data-meta-type='var'
       data-meta-name='expect'
-	  data-meta-tags='assert'
+	    data-meta-tags='assert'
     ></div>
 
 ### assert{#assert-assert}
@@ -157,7 +157,7 @@ ERROR:
       data-meta-id='assert-assert'
       data-meta-type='var'
       data-meta-name='assert'
-	  data-meta-tags='assert'
+	    data-meta-tags='assert'
     ></div>
 
 ## library nodes{#nodes}
@@ -171,7 +171,7 @@ Functions that help construct spec nodes.
       data-meta-id='nodes'
       data-meta-type='library'
       data-meta-name='nodes'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### before{#nodes-before}
@@ -187,7 +187,7 @@ Returns a `before` spec node with the given attributes.
       data-meta-id='nodes-before'
       data-meta-type='var'
       data-meta-name='before'
-	  data-meta-tags='nodes'
+	    data-meta-tags='nodes'
     ></div>
 
 ### after{#nodes-after}
@@ -203,7 +203,7 @@ Returns an `after` spec node with the given attributes.
       data-meta-id='nodes-after'
       data-meta-type='var'
       data-meta-name='after'
-	  data-meta-tags='nodes'
+	    data-meta-tags='nodes'
     ></div>
 
 ### describe{#nodes-describe}
@@ -222,7 +222,7 @@ If `tags` is a dict, keys containing values casting to boolean `true` are used.
       data-meta-id='nodes-describe'
       data-meta-type='var'
       data-meta-name='describe'
-	  data-meta-tags='nodes'
+	    data-meta-tags='nodes'
     ></div>
 
 ### it{#nodes-it}
@@ -241,7 +241,7 @@ If `tags` is a dict, keys containing values casting to boolean `true` are used.
       data-meta-id='nodes-it'
       data-meta-type='var'
       data-meta-name='it'
-	  data-meta-tags='nodes'
+	    data-meta-tags='nodes'
     ></div>
 
 ### subject{#nodes-subject}
@@ -263,7 +263,7 @@ If neither `transform`, nor `effect` are specified, a regular `subject` node is 
       data-meta-id='nodes-subject'
       data-meta-type='var'
       data-meta-name='subject'
-	  data-meta-tags='nodes'
+	    data-meta-tags='nodes'
     ></div>
 
 ## library to{#to}
@@ -277,7 +277,7 @@ The `to` library contains matcher functions useful in conjunction with the [expe
       data-meta-id='to'
       data-meta-type='library'
       data-meta-name='to'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### have_code{#to-have_code}
@@ -300,7 +300,7 @@ ERROR:
       data-meta-id='to-have_code'
       data-meta-type='var'
       data-meta-name='have_code'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### equal{#to-equal}
@@ -325,7 +325,7 @@ ERROR:
       data-meta-id='to-equal'
       data-meta-type='var'
       data-meta-name='equal'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### not_equal{#to-not_equal}
@@ -350,7 +350,7 @@ ERROR:
       data-meta-id='to-not_equal'
       data-meta-type='var'
       data-meta-name='not_equal'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be{#to-be}
@@ -375,7 +375,7 @@ ERROR:
       data-meta-id='to-be'
       data-meta-type='var'
       data-meta-name='be'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### not_be{#to-not_be}
@@ -400,7 +400,7 @@ ERROR:
       data-meta-id='to-not_be'
       data-meta-type='var'
       data-meta-name='not_be'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### match_regex{#to-match_regex}
@@ -425,7 +425,7 @@ ERROR:
       data-meta-id='to-match_regex'
       data-meta-type='var'
       data-meta-name='match_regex'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_like{#to-be_like}
@@ -439,7 +439,7 @@ Alias for [match_regex](#to-match_regex)
       data-meta-id='to-be_like'
       data-meta-type='var'
       data-meta-name='be_like'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_greater_than{#to-be_greater_than}
@@ -464,7 +464,7 @@ ERROR:
       data-meta-id='to-be_greater_than'
       data-meta-type='var'
       data-meta-name='be_greater_than'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_less_than{#to-be_less_than}
@@ -489,7 +489,7 @@ ERROR:
       data-meta-id='to-be_less_than'
       data-meta-type='var'
       data-meta-name='be_less_than'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_between{#to-be_between}
@@ -537,7 +537,7 @@ ERROR:
       data-meta-id='to-be_between'
       data-meta-type='var'
       data-meta-name='be_between'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_close_to{#to-be_close_to}
@@ -563,7 +563,7 @@ ERROR:
       data-meta-id='to-be_close_to'
       data-meta-type='var'
       data-meta-name='be_close_to'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_permutation_of{#to-be_permutation_of}
@@ -588,7 +588,7 @@ ERROR:
       data-meta-id='to-be_permutation_of'
       data-meta-type='var'
       data-meta-name='be_permutation_of'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_superset_of{#to-be_superset_of}
@@ -617,7 +617,7 @@ ERROR:
       data-meta-id='to-be_superset_of'
       data-meta-type='var'
       data-meta-name='be_superset_of'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_subset_of{#to-be_subset_of}
@@ -646,7 +646,7 @@ ERROR:
       data-meta-id='to-be_subset_of'
       data-meta-type='var'
       data-meta-name='be_subset_of'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_one_of{#to-be_one_of}
@@ -671,7 +671,7 @@ ERROR:
       data-meta-id='to-be_one_of'
       data-meta-type='var'
       data-meta-name='be_one_of'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### contain{#to-contain}
@@ -699,7 +699,7 @@ ERROR:
       data-meta-id='to-contain'
       data-meta-type='var'
       data-meta-name='contain'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### contain_all{#to-contain_all}
@@ -730,7 +730,7 @@ ERROR:
       data-meta-id='to-contain_all'
       data-meta-type='var'
       data-meta-name='contain_all'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_nil{#to-be_nil}
@@ -755,7 +755,7 @@ ERROR
       data-meta-id='to-be_nil'
       data-meta-type='var'
       data-meta-name='be_nil'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### not_be_nil{#to-not_be_nil}
@@ -780,7 +780,7 @@ ERROR
       data-meta-id='to-not_be_nil'
       data-meta-type='var'
       data-meta-name='not_be_nil'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_true{#to-be_true}
@@ -805,7 +805,7 @@ ERROR
       data-meta-id='to-be_true'
       data-meta-type='var'
       data-meta-name='be_true'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_false{#to-be_false}
@@ -830,7 +830,7 @@ ERROR
       data-meta-id='to-be_false'
       data-meta-type='var'
       data-meta-name='be_false'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_NaN{#to-be_NaN}
@@ -855,7 +855,7 @@ ERROR
       data-meta-id='to-be_NaN'
       data-meta-type='var'
       data-meta-name='be_NaN'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_function{#to-be_function}
@@ -880,7 +880,7 @@ ERROR
       data-meta-id='to-be_function'
       data-meta-type='var'
       data-meta-name='be_function'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_numeric{#to-be_numeric}
@@ -908,7 +908,7 @@ ERROR
       data-meta-id='to-be_numeric'
       data-meta-type='var'
       data-meta-name='be_numeric'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_long{#to-be_long}
@@ -933,7 +933,7 @@ ERROR
       data-meta-id='to-be_long'
       data-meta-type='var'
       data-meta-name='be_long'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_double{#to-be_double}
@@ -958,7 +958,7 @@ ERROR
       data-meta-id='to-be_double'
       data-meta-type='var'
       data-meta-name='be_double'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_decimal{#to-be_decimal}
@@ -983,7 +983,7 @@ ERROR
       data-meta-id='to-be_decimal'
       data-meta-type='var'
       data-meta-name='be_decimal'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_string{#to-be_string}
@@ -1008,7 +1008,7 @@ ERROR
       data-meta-id='to-be_string'
       data-meta-type='var'
       data-meta-name='be_string'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_binary{#to-be_binary}
@@ -1033,7 +1033,7 @@ ERROR
       data-meta-id='to-be_binary'
       data-meta-type='var'
       data-meta-name='be_binary'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_boolean{#to-be_boolean}
@@ -1058,7 +1058,7 @@ ERROR
       data-meta-id='to-be_boolean'
       data-meta-type='var'
       data-meta-name='be_boolean'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_dict{#to-be_dict}
@@ -1083,7 +1083,7 @@ ERROR
       data-meta-id='to-be_dict'
       data-meta-type='var'
       data-meta-name='be_dict'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_list{#to-be_list}
@@ -1108,7 +1108,7 @@ ERROR
       data-meta-id='to-be_list'
       data-meta-type='var'
       data-meta-name='be_list'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 
 ### be_datetime{#to-be_datetime}
@@ -1133,6 +1133,6 @@ ERROR
       data-meta-id='to-be_datetime'
       data-meta-type='var'
       data-meta-name='be_datetime'
-	  data-meta-tags='to'
+	    data-meta-tags='to'
     ></div>
 

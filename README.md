@@ -39,6 +39,11 @@ std.tf> data.map([1, 2, 3], (x) -> x*x)
 
 See the [getting started](https://twineworks.github.io/tweakflow/getting-started.html) guide for a short guided tour of language features.
 
+### Syntax Highlighting
+
+  - [HighlightJS grammar](https://github.com/twineworks/highlightjs-tweakflow) for the web
+  - [Language Extension](https://marketplace.visualstudio.com/items?itemName=twineworks.tweakflow) for VS Code / [source](https://github.com/twineworks/tweakflow-vscode)
+
 ## Language features
 
 ### A simple computation model

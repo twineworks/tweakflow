@@ -28,6 +28,11 @@ Tweakflow has values and functions acting on them. All language constructs like 
 ### Batteries included
 Tweakflow comes with a [standard library](/modules/std.html) that allows users to perform common tasks when working with data. Your application can limit or extend the standard library to suit its needs.
 
+### Syntax Highlighting
+
+  - [HighlightJS grammar](https://github.com/twineworks/highlightjs-tweakflow) for the web
+  - [Language Extension](https://marketplace.visualstudio.com/items?itemName=twineworks.tweakflow) for VS Code / [source](https://github.com/twineworks/tweakflow-vscode)
+
 ### Test framework included
 Tweakflow comes with an extensible [spec framework](/tools.html#spec-runner) similar to mocha, rspec, etc. The [tests for the standard library](https://github.com/twineworks/tweakflow/tree/master/src/test/resources/spec/std) are implemented with it.
 

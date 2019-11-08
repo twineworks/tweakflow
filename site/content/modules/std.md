@@ -13,7 +13,7 @@ The `std` module contains libraries for general computing tasks.
       data-meta-id='std'
       data-meta-type='module'
       data-meta-name='std.tf'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ## library core{#core}
@@ -27,7 +27,7 @@ The core library contains utility functions to process values at a basic level.
       data-meta-id='core'
       data-meta-type='library'
       data-meta-name='core'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### id{#core-id}
@@ -56,7 +56,7 @@ nil
       data-meta-id='core-id'
       data-meta-type='var'
       data-meta-name='id'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ### inspect{#core-inspect}
@@ -96,7 +96,7 @@ If `x` is not a function, and contains no functions as children `x == core.eval(
       data-meta-id='core-inspect'
       data-meta-type='var'
       data-meta-name='inspect'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ### present?{#core-present?}
@@ -120,7 +120,7 @@ false
       data-meta-id='core-present?'
       data-meta-type='var'
       data-meta-name='present?'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ### nil?{#core-nil?}
@@ -144,7 +144,7 @@ true
       data-meta-id='core-nil?'
       data-meta-type='var'
       data-meta-name='nil?'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ### hash{#core-hash}
@@ -174,7 +174,7 @@ Returns a hashcode of `x`. Values that compare as equal are guaranteed to have t
       data-meta-id='core-hash'
       data-meta-type='var'
       data-meta-name='hash'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ### eval{#core-eval}
@@ -220,7 +220,7 @@ ERROR:
       data-meta-id='core-eval'
       data-meta-type='var'
       data-meta-name='eval'
-	  data-meta-tags='core'
+	    data-meta-tags='core'
     ></div>
 
 ## library strings{#strings}
@@ -234,7 +234,7 @@ The strings library contains basic functions for text processing.
       data-meta-id='strings'
       data-meta-type='library'
       data-meta-name='strings'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### concat{#strings-concat}
@@ -272,7 +272,7 @@ nil
       data-meta-id='strings-concat'
       data-meta-type='var'
       data-meta-name='concat'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### length{#strings-length}
@@ -301,7 +301,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='strings-length'
       data-meta-type='var'
       data-meta-name='length'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### substring{#strings-substring}
@@ -363,7 +363,7 @@ ERROR:
       data-meta-id='strings-substring'
       data-meta-type='var'
       data-meta-name='substring'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### replace{#strings-replace}
@@ -400,7 +400,7 @@ Returns `nil` if any argument is `nil`.
       data-meta-id='strings-replace'
       data-meta-type='var'
       data-meta-name='replace'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### join{#strings-join}
@@ -445,7 +445,7 @@ nil
       data-meta-id='strings-join'
       data-meta-type='var'
       data-meta-name='join'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### trim{#strings-trim}
@@ -474,7 +474,7 @@ nil
       data-meta-id='strings-trim'
       data-meta-type='var'
       data-meta-name='trim'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### lower_case{#strings-lower_case}
@@ -503,7 +503,7 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
       data-meta-id='strings-lower_case'
       data-meta-type='var'
       data-meta-name='lower_case'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### upper_case{#strings-upper_case}
@@ -532,7 +532,7 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
       data-meta-id='strings-upper_case'
       data-meta-type='var'
       data-meta-name='upper_case'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### comparator{#strings-comparator}
@@ -583,7 +583,7 @@ function
       data-meta-id='strings-comparator'
       data-meta-type='var'
       data-meta-name='comparator'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### chars{#strings-chars}
@@ -615,7 +615,7 @@ nil
       data-meta-id='strings-chars'
       data-meta-type='var'
       data-meta-name='chars'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### code_points{#strings-code_points}
@@ -647,7 +647,7 @@ nil
       data-meta-id='strings-code_points'
       data-meta-type='var'
       data-meta-name='code_points'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### of_code_points{#strings-of_code_points}
@@ -683,7 +683,7 @@ nil
       data-meta-id='strings-of_code_points'
       data-meta-type='var'
       data-meta-name='of_code_points'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### split{#strings-split}
@@ -716,7 +716,7 @@ Returns `nil` if `x` is `nil` or `s` is `nil`.
       data-meta-id='strings-split'
       data-meta-type='var'
       data-meta-name='split'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### starts_with?{#strings-starts_with?}
@@ -754,7 +754,7 @@ nil
       data-meta-id='strings-starts_with?'
       data-meta-type='var'
       data-meta-name='starts_with?'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### ends_with?{#strings-ends_with?}
@@ -792,7 +792,7 @@ nil
       data-meta-id='strings-ends_with?'
       data-meta-type='var'
       data-meta-name='ends_with?'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### index_of{#strings-index_of}
@@ -830,7 +830,7 @@ Returns `nil` if any argument is `nil`.
       data-meta-id='strings-index_of'
       data-meta-type='var'
       data-meta-name='index_of'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### last_index_of{#strings-last_index_of}
@@ -872,7 +872,7 @@ nil
       data-meta-id='strings-last_index_of'
       data-meta-type='var'
       data-meta-name='last_index_of'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### char_at{#strings-char_at}
@@ -901,7 +901,7 @@ nil
       data-meta-id='strings-char_at'
       data-meta-type='var'
       data-meta-name='char_at'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### code_point_at{#strings-code_point_at}
@@ -930,7 +930,7 @@ nil
       data-meta-id='strings-code_point_at'
       data-meta-type='var'
       data-meta-name='code_point_at'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### to_bytes{#strings-to_bytes}
@@ -965,7 +965,7 @@ nil
       data-meta-id='strings-to_bytes'
       data-meta-type='var'
       data-meta-name='to_bytes'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### from_bytes{#strings-from_bytes}
@@ -1000,7 +1000,7 @@ nil
       data-meta-id='strings-from_bytes'
       data-meta-type='var'
       data-meta-name='from_bytes'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ### charsets{#strings-charsets}
@@ -1017,7 +1017,7 @@ functions requiring a charset name, such as [to_bytes](#strings-to_bytes) and [f
       data-meta-id='strings-charsets'
       data-meta-type='var'
       data-meta-name='charsets'
-	  data-meta-tags='strings'
+	    data-meta-tags='strings'
     ></div>
 
 ## library regex{#regex}
@@ -1032,7 +1032,7 @@ Pattern syntax is that of the [Java regular expression language](https://docs.or
       data-meta-id='regex'
       data-meta-type='library'
       data-meta-name='regex'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### matching{#regex-matching}
@@ -1066,7 +1066,7 @@ nil
       data-meta-id='regex-matching'
       data-meta-type='var'
       data-meta-name='matching'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ### capturing{#regex-capturing}
@@ -1112,7 +1112,7 @@ nil
       data-meta-id='regex-capturing'
       data-meta-type='var'
       data-meta-name='capturing'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ### scanning{#regex-scanning}
@@ -1159,7 +1159,7 @@ nil
       data-meta-id='regex-scanning'
       data-meta-type='var'
       data-meta-name='scanning'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ### splitting{#regex-splitting}
@@ -1219,7 +1219,7 @@ nil
       data-meta-id='regex-splitting'
       data-meta-type='var'
       data-meta-name='splitting'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ### replacing{#regex-replacing}
@@ -1262,7 +1262,7 @@ function
       data-meta-id='regex-replacing'
       data-meta-type='var'
       data-meta-name='replacing'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ### quote{#regex-quote}
@@ -1297,7 +1297,7 @@ function
       data-meta-id='regex-quote'
       data-meta-type='var'
       data-meta-name='quote'
-	  data-meta-tags='regex'
+	    data-meta-tags='regex'
     ></div>
 
 ## library data{#data}
@@ -1311,7 +1311,7 @@ The data library contains functions for manipulation of lists and dictionaries.
       data-meta-id='data'
       data-meta-type='library'
       data-meta-name='data'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### size{#data-size}
@@ -1353,7 +1353,7 @@ ERROR:
       data-meta-id='data-size'
       data-meta-type='var'
       data-meta-name='size'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### empty?{#data-empty?}
@@ -1395,7 +1395,7 @@ ERROR:
       data-meta-id='data-empty?'
       data-meta-type='var'
       data-meta-name='empty?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### get{#data-get}
@@ -1438,7 +1438,7 @@ nil
       data-meta-id='data-get'
       data-meta-type='var'
       data-meta-name='get'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### put{#data-put}
@@ -1495,7 +1495,7 @@ nil
       data-meta-id='data-put'
       data-meta-type='var'
       data-meta-name='put'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### get_in{#data-get_in}
@@ -1547,7 +1547,7 @@ ERROR:
       data-meta-id='data-get_in'
       data-meta-type='var'
       data-meta-name='get_in'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### put_in{#data-put_in}
@@ -1620,7 +1620,7 @@ nil
       data-meta-id='data-put_in'
       data-meta-type='var'
       data-meta-name='put_in'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### update{#data-update}
@@ -1662,7 +1662,7 @@ nil
       data-meta-id='data-update'
       data-meta-type='var'
       data-meta-name='update'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### update_in{#data-update_in}
@@ -1728,7 +1728,7 @@ nil
       data-meta-id='data-update_in'
       data-meta-type='var'
       data-meta-name='update_in'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### keys{#data-keys}
@@ -1771,7 +1771,7 @@ ERROR:
       data-meta-id='data-keys'
       data-meta-type='var'
       data-meta-name='keys'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### has?{#data-has?}
@@ -1821,7 +1821,7 @@ true
       data-meta-id='data-has?'
       data-meta-type='var'
       data-meta-name='has?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### values{#data-values}
@@ -1863,7 +1863,7 @@ ERROR:
       data-meta-id='data-values'
       data-meta-type='var'
       data-meta-name='values'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### entries{#data-entries}
@@ -1904,7 +1904,7 @@ nil
       data-meta-id='data-entries'
       data-meta-type='var'
       data-meta-name='entries'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### prepend{#data-prepend}
@@ -1933,7 +1933,7 @@ nil
       data-meta-id='data-prepend'
       data-meta-type='var'
       data-meta-name='prepend'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### append{#data-append}
@@ -1962,7 +1962,7 @@ nil
       data-meta-id='data-append'
       data-meta-type='var'
       data-meta-name='append'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### find{#data-find}
@@ -2008,7 +2008,7 @@ nil
       data-meta-id='data-find'
       data-meta-type='var'
       data-meta-name='find'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### find_index{#data-find_index}
@@ -2055,7 +2055,7 @@ ERROR:
       data-meta-id='data-find_index'
       data-meta-type='var'
       data-meta-name='find_index'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### insert{#data-insert}
@@ -2101,7 +2101,7 @@ ERROR:
       data-meta-id='data-insert'
       data-meta-type='var'
       data-meta-name='insert'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### delete{#data-delete}
@@ -2153,7 +2153,7 @@ ERROR:
       data-meta-id='data-delete'
       data-meta-type='var'
       data-meta-name='delete'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### select{#data-select}
@@ -2199,7 +2199,7 @@ nil
       data-meta-id='data-select'
       data-meta-type='var'
       data-meta-name='select'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### omit{#data-omit}
@@ -2238,7 +2238,7 @@ nil
       data-meta-id='data-omit'
       data-meta-type='var'
       data-meta-name='omit'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### filter{#data-filter}
@@ -2296,7 +2296,7 @@ ERROR:
       data-meta-id='data-filter'
       data-meta-type='var'
       data-meta-name='filter'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### shuffle{#data-shuffle}
@@ -2332,7 +2332,7 @@ nil
       data-meta-id='data-shuffle'
       data-meta-type='var'
       data-meta-name='shuffle'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### unique{#data-unique}
@@ -2371,7 +2371,7 @@ nil
       data-meta-id='data-unique'
       data-meta-type='var'
       data-meta-name='unique'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### range{#data-range}
@@ -2411,7 +2411,7 @@ nil
       data-meta-id='data-range'
       data-meta-type='var'
       data-meta-name='range'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### any?{#data-any?}
@@ -2455,7 +2455,7 @@ nil
       data-meta-id='data-any?'
       data-meta-type='var'
       data-meta-name='any?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### none?{#data-none?}
@@ -2499,7 +2499,7 @@ nil
       data-meta-id='data-none?'
       data-meta-type='var'
       data-meta-name='none?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### all?{#data-all?}
@@ -2545,7 +2545,7 @@ nil
       data-meta-id='data-all?'
       data-meta-type='var'
       data-meta-name='all?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### init{#data-init}
@@ -2578,7 +2578,7 @@ ERROR:
       data-meta-id='data-init'
       data-meta-type='var'
       data-meta-name='init'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### tail{#data-tail}
@@ -2611,7 +2611,7 @@ ERROR:
       data-meta-id='data-tail'
       data-meta-type='var'
       data-meta-name='tail'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### head{#data-head}
@@ -2644,7 +2644,7 @@ ERROR:
       data-meta-id='data-head'
       data-meta-type='var'
       data-meta-name='head'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### last{#data-last}
@@ -2677,7 +2677,7 @@ ERROR:
       data-meta-id='data-last'
       data-meta-type='var'
       data-meta-name='last'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### slice{#data-slice}
@@ -2719,7 +2719,7 @@ nil
       data-meta-id='data-slice'
       data-meta-type='var'
       data-meta-name='slice'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### slices{#data-slices}
@@ -2763,7 +2763,7 @@ ERROR:
       data-meta-id='data-slices'
       data-meta-type='var'
       data-meta-name='slices'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### reverse{#data-reverse}
@@ -2789,7 +2789,7 @@ nil
       data-meta-id='data-reverse'
       data-meta-type='var'
       data-meta-name='reverse'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### sort{#data-sort}
@@ -2835,7 +2835,7 @@ Returns `nil` if any argument is `nil`.
       data-meta-id='data-sort'
       data-meta-type='var'
       data-meta-name='sort'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### repeat{#data-repeat}
@@ -2871,7 +2871,7 @@ ERROR:
       data-meta-id='data-repeat'
       data-meta-type='var'
       data-meta-name='repeat'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### concat{#data-concat}
@@ -2911,7 +2911,7 @@ ERROR:
       data-meta-id='data-concat'
       data-meta-type='var'
       data-meta-name='concat'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### merge{#data-merge}
@@ -2959,7 +2959,7 @@ ERROR:
       data-meta-id='data-merge'
       data-meta-type='var'
       data-meta-name='merge'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### take{#data-take}
@@ -2999,7 +2999,7 @@ nil
       data-meta-id='data-take'
       data-meta-type='var'
       data-meta-name='take'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### take_while{#data-take_while}
@@ -3035,7 +3035,7 @@ nil
       data-meta-id='data-take_while'
       data-meta-type='var'
       data-meta-name='take_while'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### take_until{#data-take_until}
@@ -3074,7 +3074,7 @@ nil
       data-meta-id='data-take_until'
       data-meta-type='var'
       data-meta-name='take_until'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### drop{#data-drop}
@@ -3114,7 +3114,7 @@ nil
       data-meta-id='data-drop'
       data-meta-type='var'
       data-meta-name='drop'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### drop_while{#data-drop_while}
@@ -3147,7 +3147,7 @@ nil
       data-meta-id='data-drop_while'
       data-meta-type='var'
       data-meta-name='drop_while'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### drop_until{#data-drop_until}
@@ -3183,7 +3183,7 @@ nil
       data-meta-id='data-drop_until'
       data-meta-type='var'
       data-meta-name='drop_until'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### contains?{#data-contains?}
@@ -3236,7 +3236,7 @@ ERROR:
       data-meta-id='data-contains?'
       data-meta-type='var'
       data-meta-name='contains?'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### index_of{#data-index_of}
@@ -3287,7 +3287,7 @@ nil
       data-meta-id='data-index_of'
       data-meta-type='var'
       data-meta-name='index_of'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### last_index_of{#data-last_index_of}
@@ -3342,7 +3342,7 @@ nil
       data-meta-id='data-last_index_of'
       data-meta-type='var'
       data-meta-name='last_index_of'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### key_of{#data-key_of}
@@ -3389,7 +3389,7 @@ nil
       data-meta-id='data-key_of'
       data-meta-type='var'
       data-meta-name='key_of'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### flatten{#data-flatten}
@@ -3425,7 +3425,7 @@ nil
       data-meta-id='data-flatten'
       data-meta-type='var'
       data-meta-name='flatten'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### map{#data-map}
@@ -3486,7 +3486,7 @@ ERROR:
       data-meta-id='data-map'
       data-meta-type='var'
       data-meta-name='map'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### flatmap{#data-flatmap}
@@ -3532,7 +3532,7 @@ ERROR:
       data-meta-id='data-flatmap'
       data-meta-type='var'
       data-meta-name='flatmap'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### mapcat{#data-mapcat}
@@ -3578,7 +3578,7 @@ ERROR:
       data-meta-id='data-mapcat'
       data-meta-type='var'
       data-meta-name='mapcat'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### zip{#data-zip}
@@ -3613,7 +3613,7 @@ nil
       data-meta-id='data-zip'
       data-meta-type='var'
       data-meta-name='zip'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### zip_dict{#data-zip_dict}
@@ -3671,7 +3671,7 @@ nil
       data-meta-id='data-zip_dict'
       data-meta-type='var'
       data-meta-name='zip_dict'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### index_by{#data-index_by}
@@ -3735,7 +3735,7 @@ Throws an error if `f` is `nil`.
       data-meta-id='data-index_by'
       data-meta-type='var'
       data-meta-name='index_by'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### interpose{#data-interpose}
@@ -3767,7 +3767,7 @@ nil
       data-meta-id='data-interpose'
       data-meta-type='var'
       data-meta-name='interpose'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### reduce{#data-reduce}
@@ -3835,7 +3835,7 @@ ERROR:
       data-meta-id='data-reduce'
       data-meta-type='var'
       data-meta-name='reduce'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### reduce_until{#data-reduce_until}
@@ -3895,7 +3895,7 @@ ERROR:
       data-meta-id='data-reduce_until'
       data-meta-type='var'
       data-meta-name='reduce_until'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ### reduce_while{#data-reduce_while}
@@ -3955,7 +3955,7 @@ ERROR:
       data-meta-id='data-reduce_while'
       data-meta-type='var'
       data-meta-name='reduce_while'
-	  data-meta-tags='data'
+	    data-meta-tags='data'
     ></div>
 
 ## library time{#time}
@@ -3969,7 +3969,7 @@ The time library provides functions for processing datetime values.
       data-meta-id='time'
       data-meta-type='library'
       data-meta-name='time'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### epoch{#time-epoch}
@@ -3985,7 +3985,7 @@ The instant of time at `1970-01-01T00:00:00Z`
       data-meta-id='time-epoch'
       data-meta-type='var'
       data-meta-name='epoch'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### of{#time-of}
@@ -4036,7 +4036,7 @@ nil
       data-meta-id='time-of'
       data-meta-type='var'
       data-meta-name='of'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### at{#time-at}
@@ -4081,7 +4081,7 @@ nil
       data-meta-id='time-at'
       data-meta-type='var'
       data-meta-name='at'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### seconds_between{#time-seconds_between}
@@ -4123,7 +4123,7 @@ nil
       data-meta-id='time-seconds_between'
       data-meta-type='var'
       data-meta-name='seconds_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### minutes_between{#time-minutes_between}
@@ -4165,7 +4165,7 @@ nil
       data-meta-id='time-minutes_between'
       data-meta-type='var'
       data-meta-name='minutes_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### hours_between{#time-hours_between}
@@ -4207,7 +4207,7 @@ nil
       data-meta-id='time-hours_between'
       data-meta-type='var'
       data-meta-name='hours_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### days_between{#time-days_between}
@@ -4249,7 +4249,7 @@ nil
       data-meta-id='time-days_between'
       data-meta-type='var'
       data-meta-name='days_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### months_between{#time-months_between}
@@ -4291,7 +4291,7 @@ nil
       data-meta-id='time-months_between'
       data-meta-type='var'
       data-meta-name='months_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### years_between{#time-years_between}
@@ -4333,7 +4333,7 @@ nil
       data-meta-id='time-years_between'
       data-meta-type='var'
       data-meta-name='years_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### period_between{#time-period_between}
@@ -4385,7 +4385,7 @@ nil
       data-meta-id='time-period_between'
       data-meta-type='var'
       data-meta-name='period_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### duration_between{#time-duration_between}
@@ -4441,7 +4441,7 @@ nil
       data-meta-id='time-duration_between'
       data-meta-type='var'
       data-meta-name='duration_between'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### add_period{#time-add_period}
@@ -4486,7 +4486,7 @@ nil
       data-meta-id='time-add_period'
       data-meta-type='var'
       data-meta-name='add_period'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### add_duration{#time-add_duration}
@@ -4530,7 +4530,7 @@ nil
       data-meta-id='time-add_duration'
       data-meta-type='var'
       data-meta-name='add_duration'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### year{#time-year}
@@ -4559,7 +4559,7 @@ nil
       data-meta-id='time-year'
       data-meta-type='var'
       data-meta-name='year'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### month{#time-month}
@@ -4588,7 +4588,7 @@ nil
       data-meta-id='time-month'
       data-meta-type='var'
       data-meta-name='month'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### day_of_month{#time-day_of_month}
@@ -4617,7 +4617,7 @@ nil
       data-meta-id='time-day_of_month'
       data-meta-type='var'
       data-meta-name='day_of_month'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### day_of_year{#time-day_of_year}
@@ -4646,7 +4646,7 @@ nil
       data-meta-id='time-day_of_year'
       data-meta-type='var'
       data-meta-name='day_of_year'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### day_of_week{#time-day_of_week}
@@ -4687,7 +4687,7 @@ nil
       data-meta-id='time-day_of_week'
       data-meta-type='var'
       data-meta-name='day_of_week'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### hour{#time-hour}
@@ -4716,7 +4716,7 @@ nil
       data-meta-id='time-hour'
       data-meta-type='var'
       data-meta-name='hour'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### minute{#time-minute}
@@ -4745,7 +4745,7 @@ nil
       data-meta-id='time-minute'
       data-meta-type='var'
       data-meta-name='minute'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### second{#time-second}
@@ -4774,7 +4774,7 @@ nil
       data-meta-id='time-second'
       data-meta-type='var'
       data-meta-name='second'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### nano_of_second{#time-nano_of_second}
@@ -4806,7 +4806,7 @@ nil
       data-meta-id='time-nano_of_second'
       data-meta-type='var'
       data-meta-name='nano_of_second'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### week_of_year{#time-week_of_year}
@@ -4847,7 +4847,7 @@ nil
       data-meta-id='time-week_of_year'
       data-meta-type='var'
       data-meta-name='week_of_year'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### offset_seconds{#time-offset_seconds}
@@ -4879,7 +4879,7 @@ nil
       data-meta-id='time-offset_seconds'
       data-meta-type='var'
       data-meta-name='offset_seconds'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### zone{#time-zone}
@@ -4911,7 +4911,7 @@ nil
       data-meta-id='time-zone'
       data-meta-type='var'
       data-meta-name='zone'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_year{#time-with_year}
@@ -4951,7 +4951,7 @@ ERROR:
       data-meta-id='time-with_year'
       data-meta-type='var'
       data-meta-name='with_year'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_month{#time-with_month}
@@ -4991,7 +4991,7 @@ ERROR:
       data-meta-id='time-with_month'
       data-meta-type='var'
       data-meta-name='with_month'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_day_of_month{#time-with_day_of_month}
@@ -5036,7 +5036,7 @@ ERROR:
       data-meta-id='time-with_day_of_month'
       data-meta-type='var'
       data-meta-name='with_day_of_month'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_hour{#time-with_hour}
@@ -5077,7 +5077,7 @@ ERROR:
       data-meta-id='time-with_hour'
       data-meta-type='var'
       data-meta-name='with_hour'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_minute{#time-with_minute}
@@ -5114,7 +5114,7 @@ ERROR:
       data-meta-id='time-with_minute'
       data-meta-type='var'
       data-meta-name='with_minute'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_second{#time-with_second}
@@ -5151,7 +5151,7 @@ ERROR:
       data-meta-id='time-with_second'
       data-meta-type='var'
       data-meta-name='with_second'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_nano_of_second{#time-with_nano_of_second}
@@ -5188,7 +5188,7 @@ ERROR:
       data-meta-id='time-with_nano_of_second'
       data-meta-type='var'
       data-meta-name='with_nano_of_second'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### with_zone{#time-with_zone}
@@ -5231,7 +5231,7 @@ ERROR:
       data-meta-id='time-with_zone'
       data-meta-type='var'
       data-meta-name='with_zone'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### same_instant_at_zone{#time-same_instant_at_zone}
@@ -5274,7 +5274,7 @@ ERROR:
       data-meta-id='time-same_instant_at_zone'
       data-meta-type='var'
       data-meta-name='same_instant_at_zone'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### unix_timestamp{#time-unix_timestamp}
@@ -5304,7 +5304,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='time-unix_timestamp'
       data-meta-type='var'
       data-meta-name='unix_timestamp'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### unix_timestamp_ms{#time-unix_timestamp_ms}
@@ -5334,7 +5334,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='time-unix_timestamp_ms'
       data-meta-type='var'
       data-meta-name='unix_timestamp_ms'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### of_unix_timestamp{#time-of_unix_timestamp}
@@ -5364,7 +5364,7 @@ Returns `nil` if `s` is `nil`.
       data-meta-id='time-of_unix_timestamp'
       data-meta-type='var'
       data-meta-name='of_unix_timestamp'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### of_unix_timestamp_ms{#time-of_unix_timestamp_ms}
@@ -5394,7 +5394,7 @@ Returns `nil` if `ms` is `nil`.
       data-meta-id='time-of_unix_timestamp_ms'
       data-meta-type='var'
       data-meta-name='of_unix_timestamp_ms'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### compare{#time-compare}
@@ -5432,7 +5432,7 @@ Assumes `nil` to precede any non-nil datetime.
       data-meta-id='time-compare'
       data-meta-type='var'
       data-meta-name='compare'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### formatter{#time-formatter}
@@ -5485,7 +5485,7 @@ function
       data-meta-id='time-formatter'
       data-meta-type='var'
       data-meta-name='formatter'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### parser{#time-parser}
@@ -5567,7 +5567,7 @@ function
       data-meta-id='time-parser'
       data-meta-type='var'
       data-meta-name='parser'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ### zones{#time-zones}
@@ -5596,7 +5596,7 @@ Returns a list of all known time zone ids.
       data-meta-id='time-zones'
       data-meta-type='var'
       data-meta-name='zones'
-	  data-meta-tags='time'
+	    data-meta-tags='time'
     ></div>
 
 ## library math{#math}
@@ -5610,7 +5610,7 @@ The math library contains basic mathematical functions.
       data-meta-id='math'
       data-meta-type='library'
       data-meta-name='math'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### abs{#math-abs}
@@ -5673,7 +5673,7 @@ ERROR:
       data-meta-id='math-abs'
       data-meta-type='var'
       data-meta-name='abs'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### rand{#math-rand}
@@ -5740,7 +5740,7 @@ function
       data-meta-id='math-rand'
       data-meta-type='var'
       data-meta-name='rand'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### inc{#math-inc}
@@ -5791,7 +5791,7 @@ ERROR:
       data-meta-id='math-inc'
       data-meta-type='var'
       data-meta-name='inc'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### dec{#math-dec}
@@ -5842,7 +5842,7 @@ ERROR:
       data-meta-id='math-dec'
       data-meta-type='var'
       data-meta-name='dec'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### compare{#math-compare}
@@ -5880,7 +5880,7 @@ Throws an error if `a` or `b` are not `nil`, and not numeric.
       data-meta-id='math-compare'
       data-meta-type='var'
       data-meta-name='compare'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### min{#math-min}
@@ -5919,7 +5919,7 @@ ERROR:
       data-meta-id='math-min'
       data-meta-type='var'
       data-meta-name='min'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### max{#math-max}
@@ -5958,7 +5958,7 @@ ERROR:
       data-meta-id='math-max'
       data-meta-type='var'
       data-meta-name='max'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### round{#math-round}
@@ -5996,7 +5996,7 @@ nil
       data-meta-id='math-round'
       data-meta-type='var'
       data-meta-name='round'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### ceil{#math-ceil}
@@ -6028,7 +6028,7 @@ nil
       data-meta-id='math-ceil'
       data-meta-type='var'
       data-meta-name='ceil'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### floor{#math-floor}
@@ -6060,7 +6060,7 @@ nil
       data-meta-id='math-floor'
       data-meta-type='var'
       data-meta-name='floor'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### NaN?{#math-NaN?}
@@ -6087,7 +6087,7 @@ false
       data-meta-id='math-NaN?'
       data-meta-type='var'
       data-meta-name='NaN?'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### finite?{#math-finite?}
@@ -6118,7 +6118,7 @@ false
       data-meta-id='math-finite?'
       data-meta-type='var'
       data-meta-name='finite?'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### sqrt{#math-sqrt}
@@ -6149,7 +6149,7 @@ nil
       data-meta-id='math-sqrt'
       data-meta-type='var'
       data-meta-name='sqrt'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### sin{#math-sin}
@@ -6178,7 +6178,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-sin'
       data-meta-type='var'
       data-meta-name='sin'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### cos{#math-cos}
@@ -6210,7 +6210,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-cos'
       data-meta-type='var'
       data-meta-name='cos'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### tan{#math-tan}
@@ -6239,7 +6239,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-tan'
       data-meta-type='var'
       data-meta-name='tan'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### asin{#math-asin}
@@ -6268,7 +6268,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-asin'
       data-meta-type='var'
       data-meta-name='asin'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### acos{#math-acos}
@@ -6300,7 +6300,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-acos'
       data-meta-type='var'
       data-meta-name='acos'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### atan{#math-atan}
@@ -6329,7 +6329,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-atan'
       data-meta-type='var'
       data-meta-name='atan'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### log{#math-log}
@@ -6361,7 +6361,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-log'
       data-meta-type='var'
       data-meta-name='log'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### log10{#math-log10}
@@ -6393,7 +6393,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='math-log10'
       data-meta-type='var'
       data-meta-name='log10'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### bit_count{#math-bit_count}
@@ -6425,7 +6425,7 @@ nil
       data-meta-id='math-bit_count'
       data-meta-type='var'
       data-meta-name='bit_count'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### formatter{#math-formatter}
@@ -6493,7 +6493,7 @@ std.tf> f(648722)
       data-meta-id='math-formatter'
       data-meta-type='var'
       data-meta-name='formatter'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### parser{#math-parser}
@@ -6565,7 +6565,7 @@ function
       data-meta-id='math-parser'
       data-meta-type='var'
       data-meta-name='parser'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### e{#math-e}
@@ -6579,7 +6579,7 @@ The double value that is closer than any other to `e`, the base of the natural l
       data-meta-id='math-e'
       data-meta-type='var'
       data-meta-name='e'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### pi{#math-pi}
@@ -6593,7 +6593,7 @@ The double value that is closer than any other to `pi`, the ratio of the circumf
       data-meta-id='math-pi'
       data-meta-type='var'
       data-meta-name='pi'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### min_long{#math-min_long}
@@ -6607,7 +6607,7 @@ The smallest representable long value: `-9223372036854775808`.
       data-meta-id='math-min_long'
       data-meta-type='var'
       data-meta-name='min_long'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ### max_long{#math-max_long}
@@ -6621,7 +6621,7 @@ The largest representable long value: `9223372036854775807`.
       data-meta-id='math-max_long'
       data-meta-type='var'
       data-meta-name='max_long'
-	  data-meta-tags='math'
+	    data-meta-tags='math'
     ></div>
 
 ## library decimals{#decimals}
@@ -6635,7 +6635,7 @@ The decimals library contains utility functions for working with decimal numbers
       data-meta-id='decimals'
       data-meta-type='library'
       data-meta-name='decimals'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### ulp{#decimals-ulp}
@@ -6669,7 +6669,7 @@ nil
       data-meta-id='decimals-ulp'
       data-meta-type='var'
       data-meta-name='ulp'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### scale{#decimals-scale}
@@ -6712,7 +6712,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='decimals-scale'
       data-meta-type='var'
       data-meta-name='scale'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### with_scale{#decimals-with_scale}
@@ -6761,7 +6761,7 @@ Throws an error if `scale` or `rounding_mode` are `nil`.
       data-meta-id='decimals-with_scale'
       data-meta-type='var'
       data-meta-name='with_scale'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### round{#decimals-round}
@@ -6809,7 +6809,7 @@ Throws an error if `digits` is negative.
       data-meta-id='decimals-round'
       data-meta-type='var'
       data-meta-name='round'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### plain{#decimals-plain}
@@ -6841,7 +6841,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='decimals-plain'
       data-meta-type='var'
       data-meta-name='plain'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### strip_trailing_zeros{#decimals-strip_trailing_zeros}
@@ -6876,7 +6876,7 @@ Returns `nil` if `x` is `nil`.
       data-meta-id='decimals-strip_trailing_zeros'
       data-meta-type='var'
       data-meta-name='strip_trailing_zeros'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### divide{#decimals-divide}
@@ -6928,7 +6928,7 @@ Throws an error if `y` is zero.
       data-meta-id='decimals-divide'
       data-meta-type='var'
       data-meta-name='divide'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### divide_integral{#decimals-divide_integral}
@@ -6969,7 +6969,7 @@ Throws an error if `y` is zero.
       data-meta-id='decimals-divide_integral'
       data-meta-type='var'
       data-meta-name='divide_integral'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ### from_double_exact{#decimals-from_double_exact}
@@ -7003,7 +7003,7 @@ nil
       data-meta-id='decimals-from_double_exact'
       data-meta-type='var'
       data-meta-name='from_double_exact'
-	  data-meta-tags='decimals'
+	    data-meta-tags='decimals'
     ></div>
 
 ## library fun{#fun}
@@ -7018,7 +7018,7 @@ provide functionality similar to control-flow features in other languages.
       data-meta-id='fun'
       data-meta-type='library'
       data-meta-name='fun'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### times{#fun-times}
@@ -7066,7 +7066,7 @@ function
       data-meta-id='fun-times'
       data-meta-type='var'
       data-meta-name='times'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### until{#fun-until}
@@ -7119,7 +7119,7 @@ function
       data-meta-id='fun-until'
       data-meta-type='var'
       data-meta-name='until'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### while{#fun-while}
@@ -7172,7 +7172,7 @@ function
       data-meta-id='fun-while'
       data-meta-type='var'
       data-meta-name='while'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### iterate{#fun-iterate}
@@ -7204,7 +7204,7 @@ Throws an error if `f` is `nil`.
       data-meta-id='fun-iterate'
       data-meta-type='var'
       data-meta-name='iterate'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### thread{#fun-thread}
@@ -7242,7 +7242,7 @@ function
       data-meta-id='fun-thread'
       data-meta-type='var'
       data-meta-name='thread'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### chain{#fun-chain}
@@ -7271,7 +7271,7 @@ function
       data-meta-id='fun-chain'
       data-meta-type='var'
       data-meta-name='chain'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### compose{#fun-compose}
@@ -7301,7 +7301,7 @@ function
       data-meta-id='fun-compose'
       data-meta-type='var'
       data-meta-name='compose'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ### signature{#fun-signature}
@@ -7370,7 +7370,7 @@ Returns `nil` if `f` is `nil`.
       data-meta-id='fun-signature'
       data-meta-type='var'
       data-meta-name='signature'
-	  data-meta-tags='fun'
+	    data-meta-tags='fun'
     ></div>
 
 ## library locale{#locale}
@@ -7385,7 +7385,7 @@ are relevant in the context of number and date formatting as well as string sort
       data-meta-id='locale'
       data-meta-type='library'
       data-meta-name='locale'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### languages{#locale-languages}
@@ -7424,7 +7424,7 @@ Returns `en-US` display names if `lang` is `nil` or unknown.
       data-meta-id='locale-languages'
       data-meta-type='var'
       data-meta-name='languages'
-	  data-meta-tags='locale'
+	    data-meta-tags='locale'
     ></div>
 
 ### decimal_symbols{#locale-decimal_symbols}
@@ -7491,7 +7491,7 @@ Returns `en-US` decimal symbols if `lang` is `nil`.
       data-meta-id='locale-decimal_symbols'
       data-meta-type='var'
       data-meta-name='decimal_symbols'
-	  data-meta-tags='locale'
+	    data-meta-tags='locale'
     ></div>
 
 ## library bin{#bin}
@@ -7505,7 +7505,7 @@ The bin library provides functions that operate on binary data.
       data-meta-id='bin'
       data-meta-type='library'
       data-meta-name='bin'
-	  data-meta-tags=''
+	    data-meta-tags=''
     ></div>
 
 ### concat{#bin-concat}
@@ -7534,7 +7534,7 @@ nil
       data-meta-id='bin-concat'
       data-meta-type='var'
       data-meta-name='concat'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### size{#bin-size}
@@ -7563,7 +7563,7 @@ nil
       data-meta-id='bin-size'
       data-meta-type='var'
       data-meta-name='size'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### byte_at{#bin-byte_at}
@@ -7593,7 +7593,7 @@ nil
       data-meta-id='bin-byte_at'
       data-meta-type='var'
       data-meta-name='byte_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### word_at{#bin-word_at}
@@ -7631,7 +7631,7 @@ nil
       data-meta-id='bin-word_at'
       data-meta-type='var'
       data-meta-name='word_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### dword_at{#bin-dword_at}
@@ -7663,7 +7663,7 @@ nil
       data-meta-id='bin-dword_at'
       data-meta-type='var'
       data-meta-name='dword_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### long_at{#bin-long_at}
@@ -7698,7 +7698,7 @@ nil
       data-meta-id='bin-long_at'
       data-meta-type='var'
       data-meta-name='long_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_byte{#bin-of_byte}
@@ -7740,7 +7740,7 @@ ERROR:
       data-meta-id='bin-of_byte'
       data-meta-type='var'
       data-meta-name='of_byte'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_word{#bin-of_word}
@@ -7789,7 +7789,7 @@ ERROR:
       data-meta-id='bin-of_word'
       data-meta-type='var'
       data-meta-name='of_word'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_dword{#bin-of_dword}
@@ -7838,7 +7838,7 @@ ERROR:
       data-meta-id='bin-of_dword'
       data-meta-type='var'
       data-meta-name='of_dword'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_long{#bin-of_long}
@@ -7875,7 +7875,7 @@ Throws an error if `big_endian` is `nil`.
       data-meta-id='bin-of_long'
       data-meta-type='var'
       data-meta-name='of_long'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_float{#bin-of_float}
@@ -7915,7 +7915,7 @@ Throws an error if `big_endian` is `nil`.
       data-meta-id='bin-of_float'
       data-meta-type='var'
       data-meta-name='of_float'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### of_double{#bin-of_double}
@@ -7955,7 +7955,7 @@ Throws an error if `big_endian` is `nil`.
       data-meta-id='bin-of_double'
       data-meta-type='var'
       data-meta-name='of_double'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### float_at{#bin-float_at}
@@ -7999,7 +7999,7 @@ nil
       data-meta-id='bin-float_at'
       data-meta-type='var'
       data-meta-name='float_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### double_at{#bin-double_at}
@@ -8046,7 +8046,7 @@ nil
       data-meta-id='bin-double_at'
       data-meta-type='var'
       data-meta-name='double_at'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### slice{#bin-slice}
@@ -8087,7 +8087,7 @@ nil
       data-meta-id='bin-slice'
       data-meta-type='var'
       data-meta-name='slice'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### to_hex{#bin-to_hex}
@@ -8116,7 +8116,7 @@ nil
       data-meta-id='bin-to_hex'
       data-meta-type='var'
       data-meta-name='to_hex'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### from_hex{#bin-from_hex}
@@ -8147,7 +8147,7 @@ nil
       data-meta-id='bin-from_hex'
       data-meta-type='var'
       data-meta-name='from_hex'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### base64_encode{#bin-base64_encode}
@@ -8185,7 +8185,7 @@ nil
       data-meta-id='bin-base64_encode'
       data-meta-type='var'
       data-meta-name='base64_encode'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
 ### base64_decode{#bin-base64_decode}
@@ -8225,6 +8225,6 @@ nil
       data-meta-id='bin-base64_decode'
       data-meta-type='var'
       data-meta-name='base64_decode'
-	  data-meta-tags='bin'
+	    data-meta-tags='bin'
     ></div>
 
