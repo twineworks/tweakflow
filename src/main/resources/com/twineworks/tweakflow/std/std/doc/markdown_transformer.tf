@@ -102,10 +102,10 @@ library fragments {
   	  'default'  -> '';
 
   title_id: (dict x, list parents=[]) -> string
-	match x[:node]
- 	  "var"      -> parents[0, :name] .. '-' .. x[:name],
-      "module"   -> util.trim_trailing(x[:file], ".tf"),
-      "library"  -> x[:name];
+    match x[:node]
+      "var"      -> parents[0, :name] .. '-' .. x[:name],
+        "module"   -> util.trim_trailing(x[:file], ".tf"),
+        "library"  -> x[:name];
 
   doc_fragment: (dict x, list parents=[]) -> string
     (if x[:doc] != nil then x[:doc].."\n\n" else "");
@@ -131,7 +131,7 @@ library fragments {
       data-meta-id='#{id}'
       data-meta-type='#{type}'
       data-meta-name='#{name}'
-	  data-meta-tags='#{tags}'
+	    data-meta-tags='#{tags}'
     ></div>\n\n";
 
 }
@@ -139,6 +139,6 @@ library fragments {
 library transform {
 
   transform: (dict x) -> string
-	join(fragments.for_node(x));
+	  join(fragments.for_node(x));
 
 }
