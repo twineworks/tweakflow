@@ -36,8 +36,8 @@ import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
-import com.twineworks.tweakflow.lang.interpreter.*;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
+import com.twineworks.tweakflow.lang.interpreter.*;
 import com.twineworks.tweakflow.lang.interpreter.memory.Cell;
 import com.twineworks.tweakflow.lang.interpreter.memory.LocalMemorySpace;
 import com.twineworks.tweakflow.lang.interpreter.memory.MemorySpace;
@@ -694,6 +694,16 @@ public class Runtime {
   public Runtime(RuntimeSet runtimeSet, DebugHandler debugHandler) {
     this.runtimeSet = runtimeSet;
     context = new EvaluationContext(debugHandler);
+  }
+
+  public Runtime copy(){
+    RuntimeSet rs = runtimeSet.copy();
+    return new Runtime(rs, getDebugHandler());
+  }
+
+  public Runtime copy(DebugHandler debugHandler){
+    RuntimeSet rs = runtimeSet.copy();
+    return new Runtime(rs, debugHandler);
   }
 
   public void evaluate(){

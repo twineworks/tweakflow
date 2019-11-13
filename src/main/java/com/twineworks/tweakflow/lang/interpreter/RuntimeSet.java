@@ -56,4 +56,7 @@ public class RuntimeSet {
     return globalMemorySpace;
   }
 
+  public RuntimeSet copy() {
+    return new RuntimeSet(analysisResult);
+  }
 }
