@@ -139,6 +139,8 @@ class RuntimeTest {
         }
       });
 
+      thread.setUncaughtExceptionHandler((x, e) -> e.printStackTrace());
+
       threads.add(thread);
 
       // start immediately
@@ -149,7 +151,6 @@ class RuntimeTest {
     // wait for all threads
     for (Thread thread : threads) {
       thread.join();
-      thread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
     }
 
   }
