@@ -56,16 +56,16 @@ import java.util.stream.Collectors;
 
 public class Runtime {
 
-  public static interface Node {
+  public interface Node {
     Map<String, Runtime.Node> getChildren();
     List<String> getNames();
     void evaluate();
   }
 
-  public static interface Name extends Node { }
-  public static interface Unit extends Node { }
+  public interface Name extends Node { }
+  public interface Unit extends Node { }
 
-  public static interface DocMeta {
+  public interface DocMeta {
     Value getMeta();
     Value getDoc();
   }
