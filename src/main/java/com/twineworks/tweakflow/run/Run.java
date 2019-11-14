@@ -257,7 +257,7 @@ public class Run {
     }
 
     try {
-      Runtime runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler());
+      Runtime runtime = TweakFlow.compile(loadPath, modules, new SimpleDebugHandler(), true);
       runtime.evaluate();
       Map<String, Runtime.Module> runtimeModules = runtime.getModules();
       Runtime.Module module = runtimeModules.get(runtime.unitKey(modules.get(0)));

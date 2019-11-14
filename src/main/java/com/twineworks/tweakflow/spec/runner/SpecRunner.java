@@ -82,7 +82,7 @@ public class SpecRunner {
 
       Runtime runtime;
       try {
-        runtime = TweakFlow.compile(loadPath, toCompile, new SimpleDebugHandler());
+        runtime = TweakFlow.compile(loadPath, toCompile, new SimpleDebugHandler(), true);
         reporter.onModuleCompiled(module, runtime);
       } catch (Throwable e){
 

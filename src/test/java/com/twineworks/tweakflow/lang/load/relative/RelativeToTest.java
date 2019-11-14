@@ -68,7 +68,7 @@ public class RelativeToTest {
         .build();
 
     // compile the modules
-    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()), new SimpleDebugHandler());
+    return TweakFlow.compile(loadPath, new ArrayList<>(modules.keySet()), new SimpleDebugHandler(), true);
 
   }
 

@@ -34,6 +34,7 @@ import com.twineworks.tweakflow.lang.analysis.scope.ExpressionResolver;
 import com.twineworks.tweakflow.lang.analysis.scope.Linker;
 import com.twineworks.tweakflow.lang.analysis.scope.ScopeBuilder;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.ParallelLoader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 
@@ -78,11 +79,20 @@ public class Analysis {
   }
 
   public static AnalysisResult analyze(List<String> paths, LoadPath loadPath){
+    return analyze(paths, loadPath, false);
+  }
+
+  public static AnalysisResult analyze(List<String> paths, LoadPath loadPath, boolean multiThreaded){
     long start = System.currentTimeMillis();
     try {
       AnalysisSet analysisSet = new AnalysisSet(loadPath);
-      ParallelLoader pl = new ParallelLoader(loadPath);
-      analysisSet.getUnits().putAll(pl.load(paths));
+      if (multiThreaded){
+        ParallelLoader pl = new ParallelLoader(loadPath);
+        analysisSet.getUnits().putAll(pl.load(paths));
+      }
+      else {
+        Loader.load(loadPath, paths, analysisSet.getUnits(), true);
+      }
       return analyze(analysisSet, start);
     } catch (RuntimeException e){
       long end = System.currentTimeMillis();

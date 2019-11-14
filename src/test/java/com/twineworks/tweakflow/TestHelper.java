@@ -60,7 +60,7 @@ public class TestHelper {
     List<String> paths = Collections.singletonList(path);
 
     try {
-      runtime = TweakFlow.compile(loadPath, paths, new SimpleDebugHandler(System.err, false));
+      runtime = TweakFlow.compile(loadPath, paths, new SimpleDebugHandler(System.err, false), true);
       runtime.evaluate();
     } catch (LangException e) {
       e.printDigestMessageAndStackTrace();
@@ -98,7 +98,7 @@ public class TestHelper {
     List<String> paths = Collections.singletonList(path);
 
     try {
-      runtime = TweakFlow.compile(loadPath, paths, new SimpleDebugHandler(System.err, false));
+      runtime = TweakFlow.compile(loadPath, paths, new SimpleDebugHandler(System.err, false), true);
       runtime.evaluate();
     } catch (LangException e) {
       e.printDigestMessageAndStackTrace();
