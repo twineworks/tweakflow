@@ -63,9 +63,7 @@ public class ParallelLoader {
 
   public ParallelLoader(LoadPath loadPath) {
     this.loadPath = loadPath;
-    synchronized (ParallelLoader.class) {
-      es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    }
+    es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
   }
 
   private void waitForTasks() {
