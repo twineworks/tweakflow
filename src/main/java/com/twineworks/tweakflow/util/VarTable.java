@@ -38,6 +38,7 @@ import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class VarTable {
 
@@ -48,7 +49,12 @@ public class VarTable {
     String varLibraryName = "var_table";
     LinkedHashMap<String, String> vars = new LinkedHashMap<>();
     LoadPath loadPath = new LoadPath.Builder().addStdLocation().build();
+
+    ConcurrentHashMap<String, ParseResult> parseCache = null;
+    private boolean cacheModulePath;
+
     DebugHandler debugHandler = new SimpleDebugHandler();
+
 
     public Builder setVarLibraryName(String varLibraryName){
       Objects.requireNonNull(varLibraryName, "varLibraryName path cannot be null");
@@ -61,6 +67,11 @@ public class VarTable {
       Objects.requireNonNull(modulePath, "module path cannot be null");
       if (modulePath.isEmpty()) throw new IllegalArgumentException("module path cannot be empty");
       this.modulePath = modulePath;
+      return this;
+    }
+
+    public Builder cacheModulePath(boolean cacheModulePath){
+      this.cacheModulePath = cacheModulePath;
       return this;
     }
 
@@ -92,9 +103,14 @@ public class VarTable {
       return this;
     }
 
+    public Builder setParseCache(ConcurrentHashMap<String, ParseResult> cache){
+      this.parseCache = cache;
+      return this;
+    }
+
     @Override
     public VarTable build() {
-      return new VarTable(loadPath, modulePath, prologue, varLibraryName, vars, debugHandler);
+      return new VarTable(loadPath, modulePath, prologue, varLibraryName, vars, debugHandler, parseCache, cacheModulePath);
     }
   }
 
@@ -109,6 +125,9 @@ public class VarTable {
   private final String moduleText;
   private final ParseUnit moduleParseUnit;
   private int lastLibraryLine;
+  private DebugHandler debugHandler;
+
+  private final ConcurrentHashMap<String, ParseResult> parseCache;
 
   private int lineCount(String str) {
     if (str == null || str.isEmpty()) return 0;
@@ -120,11 +139,13 @@ public class VarTable {
     return lines;
   }
 
-  private VarTable(LoadPath loadPath, String modulePath, String prologue, String varLibraryName, HashMap<String, String> vars, DebugHandler debugHandler){
+  private VarTable(LoadPath loadPath, String modulePath, String prologue, String varLibraryName, HashMap<String, String> vars, DebugHandler debugHandler, ConcurrentHashMap<String, ParseResult> parseCache, boolean cacheModulePath){
 
     this.modulePath = modulePath;
     this.prologue = prologue;
     this.varLibraryName = varLibraryName;
+    this.debugHandler = debugHandler;
+    this.parseCache = parseCache;
 
     this.vars = new LinkedHashMap<>(vars);
     this.varParseErrors = new LinkedHashMap<>();
@@ -134,6 +155,7 @@ public class VarTable {
     moduleText = makeModuleText();
 
     LoadPath.Builder loadPathBuilder = new LoadPath.Builder();
+    loadPathBuilder.withParseResultCache(parseCache);
 
     for (LoadPathLocation loadPathLocation : loadPath.getLocations()) {
       loadPathBuilder.add(loadPathLocation);
@@ -141,6 +163,7 @@ public class VarTable {
 
     MemoryLocation varTableLocation = new MemoryLocation.Builder()
         .add(modulePath, moduleText)
+        .allowCaching(cacheModulePath)
         .build();
 
     this.moduleParseUnit = varTableLocation.getParseUnit(modulePath);
@@ -166,7 +189,7 @@ public class VarTable {
   }
 
   public Runtime compile() {
-    return TweakFlow.compile(loadPath, modulePath);
+    return TweakFlow.compile(loadPath, modulePath, debugHandler);
   }
 
   public String varNameFor(SourceInfo sourceInfo){
