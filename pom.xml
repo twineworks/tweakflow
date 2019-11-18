@@ -37,7 +37,7 @@
         - render html docs from markdown
           $ ./site/make_docs
         - ensure there are no references to previous versions
-          $ grep -r '0\.19\.0' * # should come up empty
+          $ grep -r '0\.20\.0' * # should come up empty
         - commit doc render
         - ensure pom.xml contains release version
         - commit pom
