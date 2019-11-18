@@ -84,8 +84,8 @@ class VarTableSpeedTest {
         // and makes little difference for small modules
         .cacheModulePath(true)
         // the name of the module this table generates,
-        // this name is used as the key in the parse cache, so if caching is enabled
-        // only identical modules should share the same path name
+        // this name is used as the key in the parse cache,
+        // so if caching is enabled distinct modules must have distinct path names
         .setModulePath("module.tf")
         .build();
 
