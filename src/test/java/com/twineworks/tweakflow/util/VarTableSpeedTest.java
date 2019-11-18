@@ -56,9 +56,9 @@ class VarTableSpeedTest {
     final long durationMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos);
 
     // expected timing on desktop-range hardware is [300 - 800] ms
-    // be generous with the timing, as most CI environments are throttled
+    // cloud CI workers clock in at [700-1000] ms
     // if caching does not work, the timing is in the range of [6000 - 14000] ms
-    System.err.println("time: "+durationMillis);
+    // System.err.println("time: "+durationMillis);
     assertThat(durationMillis).as("cached parse tree compilation time").isLessThan(3_000);
 
   }
