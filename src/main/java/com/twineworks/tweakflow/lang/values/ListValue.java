@@ -235,6 +235,24 @@ final public class ListValue implements Iterable<Value> {
     };
   }
 
+  public Value[] toArray(){
+    Value[] ret = new Value[size()];
+
+    int i=0;
+    for(Value item: this){
+      ret[i++] = item;
+    }
+    return ret;
+  }
+
+  public List<Value> toList(){
+    ArrayList<Value> ret = new ArrayList<>(size());
+    for(Value item: this){
+      ret.add(item);
+    }
+    return ret;
+  }
+
   public boolean equals(Object o) {
 
     if (this == o) return true;
