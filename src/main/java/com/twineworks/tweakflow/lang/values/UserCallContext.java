@@ -24,6 +24,8 @@
 
 package com.twineworks.tweakflow.lang.values;
 
+import com.twineworks.tweakflow.lang.interpreter.Stack;
+
 public interface UserCallContext {
   Value call(Value f, Value ... args);
 
@@ -32,4 +34,5 @@ public interface UserCallContext {
   Arity3CallSite createArity3CallSite(Value f);
 
   void debug(Value v);
+  Stack getStack();
 }

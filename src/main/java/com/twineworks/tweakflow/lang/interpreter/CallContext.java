@@ -62,4 +62,9 @@ public class CallContext implements UserCallContext {
     evaluationContext.getDebugHandler().debug(v);
   }
 
+  @Override
+  public Stack getStack() {
+    return stack;
+  }
+
 }
