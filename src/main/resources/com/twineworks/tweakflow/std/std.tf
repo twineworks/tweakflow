@@ -4091,6 +4091,39 @@ nil
 
 doc
 ~~~
+`(datetime x, long add_months=0) -> datetime`
+
+Returns the datetime representing the end of month of a given datetime `x`. The time component of `x` is preserved
+in the result.
+
+If `add_months` is non-zero, the given amount of months is added to `x` and the end of month of the resulting
+datetime is returned.
+
+Returns `nil` if `x` is `nil`.
+Returns `nil` if `add_months` is `nil`.
+
+```tweakflow
+> time.end_of_month(time.epoch)
+1970-01-31T00:00:00Z@UTC
+
+> time.end_of_month(2020-02-21T)
+2020-02-29T00:00:00Z@UTC
+
+> time.end_of_month(2019-06-02T, -1)
+2019-05-31T00:00:00Z@UTC
+
+> time.end_of_month(2019-02-02T12:23:34@Europe/Berlin, 12)
+2020-02-29T12:23:34+01:00@Europe/Berlin
+
+> time.day_of_month(nil)
+nil
+```
+~~~
+
+  function end_of_month: (datetime x, add_months=0) -> datetime via {:class "com.twineworks.tweakflow.std.Time$endOfMonth"};
+
+doc
+~~~
 `(datetime x, long year) -> datetime`
 
 Returns the datetime `x` with the year field set to `year`. If the day-of-month is invalid for the

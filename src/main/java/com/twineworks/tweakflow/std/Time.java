@@ -303,6 +303,21 @@ public final class Time {
     }
   }
 
+  // function end_of_month(datetime x, long offset=nil) -> long via {:class "com.twineworks.tweakflow.std.Time$endOfMonth"}
+  public static final class endOfMonth implements UserFunction, Arity2UserFunction {
+    @Override
+    public Value call(UserCallContext context, Value x, Value offset) {
+      if (x == Values.NIL) return Values.NIL;
+      if (offset == Values.NIL) return Values.NIL;
+      long offsetMonths = offset.longNum();
+      return Values.make(x.dateTime().getZoned()
+          .withDayOfMonth(1)
+          .plusMonths(1+offsetMonths)
+          .plusDays(-1)
+      );
+    }
+  }
+
   // function day_of_month(datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$dayOfMonth"}
   public static final class dayOfMonth implements UserFunction, Arity1UserFunction {
     @Override
@@ -532,7 +547,8 @@ public final class Time {
     public Value call(UserCallContext context) {
 
       ListValue list = new ListValue();
-      for (String tz : TimeZone.getAvailableIDs()) {
+
+      for (String tz : ZoneId.getAvailableZoneIds()) {
         list = list.append(Values.make(tz));
       }
 
