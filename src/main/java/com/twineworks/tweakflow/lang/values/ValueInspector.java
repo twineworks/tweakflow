@@ -29,36 +29,48 @@ import com.twineworks.tweakflow.util.LangUtil;
 
 public class ValueInspector {
 
-  public static String inspect(Value v){
+  public static String inspect(Value v) {
     StringBuilder out = new StringBuilder();
-    inspect(out, v, "", "",   "  ", false);
+    inspect(out, v, "", "", "  ", false);
     return out.toString();
   }
 
-  public static String inspect(Value v, boolean expandFunctions){
+  public static String inspect(Value v, boolean expandFunctions) {
     StringBuilder out = new StringBuilder();
-    inspect(out, v, "", "",   "  ", expandFunctions);
+    inspect(out, v, "", "", "  ", expandFunctions);
     return out.toString();
   }
 
-  public static void inspect(StringBuilder out, Value v, String leadingIndent, String inheritedIndent, String indentationUnit, boolean expandFunctions){
+  private static boolean shouldInspectAsSingleLine(ListValue lv) {
+    int size = lv.size();
+    if (size > 8) return false;
 
-    if (v == Values.NIL){
+    for (Value item : lv) {
+      if (!(item.isNumeric() || item.isNil() && item.isBoolean() || (item.isString() && item.string().length() < 20))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static void inspect(StringBuilder out, Value v, String leadingIndent, String inheritedIndent, String indentationUnit, boolean expandFunctions) {
+
+    if (v == Values.NIL) {
       out.append(leadingIndent).append("nil");
       return;
     }
 
-    if (v == Values.TRUE){
+    if (v == Values.TRUE) {
       out.append(leadingIndent).append("true");
       return;
     }
 
-    if (v == Values.FALSE){
+    if (v == Values.FALSE) {
       out.append(leadingIndent).append("false");
       return;
     }
 
-    if (v.type() == Types.STRING){
+    if (v.type() == Types.STRING) {
       out.append(leadingIndent)
           .append('"')
           .append(LangUtil.escapeString(v.string()))
@@ -66,92 +78,120 @@ public class ValueInspector {
       return;
     }
 
-    if (v.type() == Types.BINARY){
+    if (v.type() == Types.BINARY) {
       out.append(leadingIndent)
           .append("0b")
           .append(LangUtil.bytesToHex(v.bytes()));
       return;
     }
 
-    if (v.type() == Types.LONG){
+    if (v.type() == Types.LONG) {
       out.append(leadingIndent).append(v.longNum().toString());
       return;
     }
 
-    if (v.type() == Types.DOUBLE){
+    if (v.type() == Types.DOUBLE) {
       out.append(leadingIndent).append(v.doubleNum().toString());
       return;
     }
 
-    if (v.type() == Types.DECIMAL){
+    if (v.type() == Types.DECIMAL) {
       out.append(leadingIndent).append(v.decimal().toString());
       out.append("d");
       return;
     }
 
-    if (v.type() == Types.DATETIME){
+    if (v.type() == Types.DATETIME) {
       out.append(leadingIndent).append(v.dateTime().toString());
       return;
     }
 
-    if (v.type() == Types.LIST){
+    if (v.type() == Types.LIST) {
       out.append(leadingIndent).append("[");
       ListValue list = v.list();
-      for (int i = 0, listSize = list.size(); i < listSize; i++) {
-        Value value = list.get(i);
-        inspect(out, value, "", inheritedIndent, indentationUnit, expandFunctions);
-        if (i < (listSize -1)) out.append(", ");
+
+      int MAX_CHARS_PER_LINE = 70;
+
+      // decide whether to display in multi-line or single line mode
+      if (shouldInspectAsSingleLine(list)) {
+        // single-line mode
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value value = list.get(i);
+          inspect(out, value, "", inheritedIndent, indentationUnit, expandFunctions);
+
+          boolean withSeparator = (i < (listSize - 1));
+
+          if (withSeparator) {
+            out.append(", ");
+          }
+        }
+        out.append("]");
+
+      } else {
+        // multi-line mode
+        String nextLeadingIndent = leadingIndent + indentationUnit;
+        String nextInheritedIndent = inheritedIndent + indentationUnit;
+        out.append("\n");
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value value = list.get(i);
+          inspect(out, value, nextLeadingIndent, nextInheritedIndent, indentationUnit, expandFunctions);
+
+          boolean withSeparator = (i < (listSize - 1));
+
+          if (withSeparator) {
+            out.append(",");
+          }
+
+          out.append("\n");
+        }
+        out.append(inheritedIndent).append("]");
       }
 
-      out.append("]");
       return;
     }
 
-    if (v.type() == Types.DICT){
+    if (v.type() == Types.DICT) {
       out.append(leadingIndent).append("{");
       if (!v.dict().isEmpty()) out.append("\n");
       int size = v.dict().size();
-      int i=1;
+      int i = 1;
       DictValue dict = v.dict();
       for (String key : dict.keys()) {
         Value value = dict.get(key);
         out.append(inheritedIndent).append(indentationUnit).append(LangUtil.getKeyLiteral(key));
         out.append(" ");
-        inspect(out, value, "", inheritedIndent+indentationUnit, indentationUnit, expandFunctions);
-        if (i < size){
+        inspect(out, value, "", inheritedIndent + indentationUnit, indentationUnit, expandFunctions);
+        if (i < size) {
           out.append(",");
         }
         out.append("\n");
-        i+=1;
+        i += 1;
       }
       out.append(inheritedIndent).append("}");
       return;
     }
 
-    if (v.type() == Types.FUNCTION){
+    if (v.type() == Types.FUNCTION) {
 
-      if (expandFunctions){
+      if (expandFunctions) {
 
-        if (v.function() instanceof StandardFunctionValue){
+        if (v.function() instanceof StandardFunctionValue) {
           StandardFunctionValue f = (StandardFunctionValue) v.function();
-          if (f.getSourceInfo() != null && f.getSourceInfo().getSourceCode() != null){
+          if (f.getSourceInfo() != null && f.getSourceInfo().getSourceCode() != null) {
             out.append(leadingIndent).append("\n");
             String[] lines = f.getSourceInfo().getSourceCode().split("\r?\n");
             for (String line : lines) {
               out.append(inheritedIndent).append(indentationUnit).append(line).append("\n");
             }
 
-          }
-          else{
+          } else {
             out.append(leadingIndent).append("function");
           }
-        }
-        else{
+        } else {
           out.append(leadingIndent).append("native function");
         }
 
-      }
-      else{
+      } else {
         out.append(leadingIndent).append("function");
       }
 
