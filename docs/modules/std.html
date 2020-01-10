@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.20.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.21.0</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v0.20.0</a
+            ><b>Tweakflow</b> v0.21.0</a
           >
         </li>
         
@@ -4756,6 +4756,43 @@ nil
         data-meta-tags='time'
     ></div>
 
+<h3 id="time-end_of_month">end_of_month</h3>
+
+<p><code>(datetime x, long add_months=0) -&gt; datetime</code></p>
+
+<p>Returns the datetime representing the end of month of a given datetime <code>x</code>. The time component of <code>x</code> is preserved
+in the result.</p>
+
+<p>If <code>add_months</code> is non-zero, the given amount of months is added to <code>x</code> and the end of month of the resulting
+datetime is returned.</p>
+
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.
+Returns <code>nil</code> if <code>add_months</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; time.end_of_month(time.epoch)
+1970-01-31T00:00:00Z@UTC
+
+&gt; time.end_of_month(2020-02-21T)
+2020-02-29T00:00:00Z@UTC
+
+&gt; time.end_of_month(2019-06-02T, -1)
+2019-05-31T00:00:00Z@UTC
+
+&gt; time.end_of_month(2019-02-02T12:23:34@Europe/Berlin, 12)
+2020-02-29T12:23:34+01:00@Europe/Berlin
+
+&gt; time.day_of_month(nil)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='time-end_of_month'
+      data-meta-type='var'
+      data-meta-name='end_of_month'
+        data-meta-tags='time'
+    ></div>
+
 <h3 id="time-with_year">with_year</h3>
 
 <p><code>(datetime x, long year) -&gt; datetime</code></p>
@@ -7885,7 +7922,7 @@ nil
         
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2019</a>
+    © <a href="http://twineworks.com">Twineworks 2020</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">
