@@ -26,7 +26,6 @@ package com.twineworks.tweakflow.spec.reporter;
 
 import com.twineworks.tweakflow.lang.runtime.Runtime;
 import com.twineworks.tweakflow.spec.nodes.*;
-import com.twineworks.tweakflow.spec.reporter.anim.ConsoleAnimator;
 import com.twineworks.tweakflow.spec.reporter.helpers.ConsoleHelper;
 import com.twineworks.tweakflow.spec.reporter.helpers.ErrorReporter;
 import com.twineworks.tweakflow.spec.reporter.helpers.HumanReadable;
@@ -48,7 +47,7 @@ public class DotSpecReporter implements SpecReporter {
   private boolean tty = false;
   private int dots = 0;
 
-  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
+//  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
   private PrintStream out;
   private ArrayList<SpecNode> errorNodes = new ArrayList<>();
 

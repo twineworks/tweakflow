@@ -51,7 +51,7 @@ public class DocSpecReporter implements SpecReporter {
   private PrintStream out;
   private ArrayList<SpecNode> errorNodes = new ArrayList<>();
   private boolean tty;
-  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
+//  private ConsoleAnimator consoleAnimator = new ConsoleAnimator();
 
   private final boolean isWindows = PlatformHelper.isWindows();
 
