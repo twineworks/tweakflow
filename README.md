@@ -90,7 +90,7 @@ We've embedded tweakflow as the expression engine in our data automation tool: [
 
 Here's a screencast showcasing the embedded scripting in the context of a data processing challenge:
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=MZCTCpkED0U?t=2729" target="_blank"><img src="http://img.youtube.com/vi/MZCTCpkED0U/0.jpg" 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=bNX62PjQAh4" target="_blank"><img src="http://img.youtube.com/vi/bNX62PjQAh4/0.jpg" 
 alt="integration screencast" width="480" height="275" border="10" /></a>
 
 See the [embedding](https://twineworks.github.io/tweakflow/embedding.html) guide for more information and examples.
