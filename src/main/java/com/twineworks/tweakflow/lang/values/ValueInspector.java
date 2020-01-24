@@ -129,7 +129,7 @@ public class ValueInspector {
 
       } else {
         // multi-line mode
-        String nextLeadingIndent = leadingIndent + indentationUnit;
+        String nextLeadingIndent = inheritedIndent + indentationUnit;
         String nextInheritedIndent = inheritedIndent + indentationUnit;
         out.append("\n");
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
@@ -151,11 +151,15 @@ public class ValueInspector {
     }
 
     if (v.type() == Types.DICT) {
-      out.append(leadingIndent).append("{");
-      if (!v.dict().isEmpty()) out.append("\n");
+      DictValue dict = v.dict();
+      if (dict.isEmpty()) {
+        out.append(leadingIndent).append("{}");
+        return;
+      }
+      out.append(leadingIndent).append("{\n");
       int size = v.dict().size();
       int i = 1;
-      DictValue dict = v.dict();
+
       for (String key : dict.keys()) {
         Value value = dict.get(key);
         out.append(inheritedIndent).append(indentationUnit).append(LangUtil.getKeyLiteral(key));

@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.values;
 
+import com.twineworks.tweakflow.lang.TweakFlow;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,4 +85,5 @@ class ValueInspectorTest {
     String s = ValueInspector.inspect(v);
     assertThat(stripWS(s)).isEqualTo(stripWS("[{:a 1, :b 2}, 1, 2, [1, 2, 3], {:a 1, :b 2}, {:a 1, :b {:a 1, :b 2}}, 3]"));
   }
+
 }
