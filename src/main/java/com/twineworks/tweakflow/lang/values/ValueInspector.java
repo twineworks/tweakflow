@@ -110,8 +110,6 @@ public class ValueInspector {
       out.append(leadingIndent).append("[");
       ListValue list = v.list();
 
-      int MAX_CHARS_PER_LINE = 70;
-
       // decide whether to display in multi-line or single line mode
       if (shouldInspectAsSingleLine(list)) {
         // single-line mode
@@ -160,11 +158,12 @@ public class ValueInspector {
       int size = v.dict().size();
       int i = 1;
 
+      String nextInheritedIndent = inheritedIndent + indentationUnit;
       for (String key : dict.keys()) {
         Value value = dict.get(key);
         out.append(inheritedIndent).append(indentationUnit).append(LangUtil.getKeyLiteral(key));
         out.append(" ");
-        inspect(out, value, "", inheritedIndent + indentationUnit, indentationUnit, expandFunctions);
+        inspect(out, value, "", nextInheritedIndent, indentationUnit, expandFunctions);
         if (i < size) {
           out.append(",");
         }
