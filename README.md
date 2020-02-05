@@ -1,6 +1,6 @@
 # Tweakflow - safe embeddable scripting for the JVM
 
-[![Java 8+](https://img.shields.io/badge/java-8--11-4c7e9f.svg)](http://java.oracle.com)
+[![Java 8+](https://img.shields.io/badge/java-8--13-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twineworks/tweakflow/badge.svg)](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow")
 [![Travis Build Status](https://travis-ci.org/twineworks/tweakflow.svg?branch=master)](https://travis-ci.org/twineworks/tweakflow)
@@ -12,7 +12,7 @@ Applications can use tweakflow to expose runtime information to an expression-ba
 Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.
 
 ## Requirements
-Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
+Java 8 or later is required. Builds are tested against JDK 8, 11 and 13.
 
 ## Getting the jar
 Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow").
@@ -87,11 +87,6 @@ Or it can be more sophisticated, providing users with application variables they
 The host application can allow users to define variables, group them into libraries and even separate modules for reuse across their projects. How much sophistication is available to users depends on how much your application wants to expose.
 
 We've embedded tweakflow as the expression engine in our data automation tool: [Tweakstreet](https://tweakstreet.io)
-
-Here's a screencast showcasing the embedded scripting in the context of a data processing challenge:
-
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=bNX62PjQAh4" target="_blank"><img src="http://img.youtube.com/vi/bNX62PjQAh4/0.jpg" 
-alt="integration screencast" width="480" height="275" border="10" /></a>
 
 See the [embedding](https://twineworks.github.io/tweakflow/embedding.html) guide for more information and examples.
 
