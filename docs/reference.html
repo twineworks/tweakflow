@@ -4488,17 +4488,17 @@ false
 false
 </code></pre>
 
-<p>Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use <a href="./modules/std.html#time-compare">time.compare</a> to determine whether datetime values represent the same point in time.</p>
+<p>Datetime values are equal if they represent the same instant on an absolute timeline.</p>
 
-<pre><code class="language-tweakflow"># same points in time, but different local time and time zone
-&gt; time.compare(1970-01-01T01:00:00+01:00, time.epoch)
-0
-# same points in time are not equal
-&gt; 1970-01-01T01:00:00+01:00 == time.epoch
-false
-# going back to UTC offset of time.epoch, they are equal
-&gt; 1970-01-01T00:00:00+00:00 == time.epoch
+<pre><code class="language-tweakflow">&gt; time.epoch == time.epoch
 true
+
+# same points in time, but different local time and time zone
+&gt; 1970-01-01T01:00:00+01:00 == time.epoch
+true
+
+&gt; 1970-01-01T == 1970-01-02T
+false
 </code></pre>
 
 <p>Function values are never equal to anything, not even to themselves.</p>
@@ -4552,6 +4552,8 @@ false
 <li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
 <li>-Infinity is less than any finite number</li>
 <li>Infinity is greater than an finite number</li>
+<li>If both operands are datetimes, they are compared as instants on an absolute timeline
+<br /></li>
 </ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &lt; 2
@@ -4567,6 +4569,9 @@ false
 false
 
 &gt; -Infinity &lt; 5
+true
+
+&gt; time.epoch &lt; 2020-01-02T
 true
 
 &gt; &quot;1&quot; &lt; 1
@@ -4596,6 +4601,7 @@ ERROR:
 <li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
 <li>-Infinity is less than any finite number</li>
 <li>Infinity is greater than an finite number</li>
+<li>If both operands are datetimes, they are compared as instants on an absolute timeline</li>
 </ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &lt;= 3
@@ -4605,6 +4611,9 @@ true
 true
 
 &gt; 1.0 &lt;= Infinity
+true
+
+&gt; time.epoch &lt;= 2020-01-02T
 true
 
 &gt; NaN &lt;= NaN
@@ -4632,6 +4641,7 @@ true
 <li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
 <li>-Infinity is less than any finite number</li>
 <li>Infinity is greater than an finite number</li>
+<li>If both operands are datetimes, they are compared as instants on an absolute timeline</li>
 </ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &gt; 2
@@ -4642,6 +4652,9 @@ true
 
 &gt; 5 &gt; 3d
 true
+
+&gt; time.epoch &gt; 2020-01-02T
+false
 
 &gt; NaN &gt; 2
 false
@@ -4673,6 +4686,7 @@ true
 <li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
 <li>-Infinity is less than any finite number</li>
 <li>Infinity is greater than an finite number</li>
+<li>If both operands are datetimes, they are compared as instants on an absolute timeline</li>
 </ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &gt;= 2
@@ -4683,6 +4697,9 @@ true
 
 &gt; 2.0 &gt;= 2d
 true
+
+&gt; time.epoch &gt;= 2020-01-02T
+false
 
 &gt; NaN &gt; 2
 false
@@ -4698,7 +4715,9 @@ true
 
 <p>Syntax: <code>a===b</code></p>
 
-<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the <a href="#equality">equality</a> operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
+<p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the <a href="#equality">equality</a> operator <code>==</code>, and in addition a and b are of the same type.
+If both operands are datetimes, their date, time, and timezone components must match.<br />
+Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
 
 <pre><code class="language-tweakflow">&gt; 0 === -0
 true
@@ -4718,6 +4737,13 @@ true
 &gt; &quot;foo&quot; === &quot;foo&quot;
 true
 
+&gt; 1970-01-01T === time.epoch
+true
+
+# same point in time, but different time zones
+&gt; 1970-01-01T01:00:00+01:00 === time.epoch
+false
+
 &gt; {:a 1.0} === {:a 1.0}
 true
 
@@ -4735,7 +4761,7 @@ false
 
 <p>Syntax: <code>a!==b</code></p>
 
-<p>Evaluates to <code>false</code> if a is equal to b as per the semantics of the equality operator <code>==</code>, and in addition a and b are of the same type. Evaluates to <code>true</code> otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.</p>
+<p>Evaluates to <code>false</code> if a is equal to b as per the semantics of the equality operator <code>===</code>. Evaluates to <code>true</code> otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.</p>
 
 <pre><code class="language-tweakflow">&gt; 0 !== 1
 true

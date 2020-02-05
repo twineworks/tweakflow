@@ -107,6 +107,11 @@ final public class LessThanOp implements ExpressionOp {
         return (left.decimal().compareTo(right.decimal()) < 0) ? Values.TRUE : Values.FALSE;
       }
     }
+    else if (leftType == Types.DATETIME){
+      if (rightType == Types.DATETIME){
+        return left.dateTime().getInstant().compareTo(right.dateTime().getInstant()) < 0 ? Values.TRUE : Values.FALSE;
+      }
+    }
     throw new LangException(LangError.CAST_ERROR, "cannot compare types "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
   }
@@ -117,6 +122,11 @@ final public class LessThanOp implements ExpressionOp {
 
     if ((left == Values.NIL || leftType.isNumeric()) &&
         (right == Values.NIL || rightType.isNumeric())){
+      return;
+    }
+
+    if ((left == Values.NIL || leftType.isDateTime()) &&
+        (right == Values.NIL || rightType.isDateTime())){
       return;
     }
 
@@ -144,6 +154,9 @@ final public class LessThanOp implements ExpressionOp {
       }
       if (leftType == Types.DECIMAL){
         return new LessThanOpDecDec(node);
+      }
+      if (leftType == Types.DATETIME){
+        return new LessThanOpDtDt(node);
       }
     }
 

@@ -140,7 +140,7 @@ final public class DateTimeType implements Type {
 
     //  comparing to a datetime?
     if (o.type() == this){
-      return x.dateTime().equals(o.dateTime());
+      return x.dateTime().getInstant().equals(o.dateTime().getInstant());
     }
 
     // anything else cannot be equal
@@ -149,7 +149,13 @@ final public class DateTimeType implements Type {
 
   @Override
   public boolean valueAndTypeEquals(Value x, Value o) {
-    return valueEquals(x, o);
+    //  comparing to a datetime?
+    if (o.type() == this){
+      return x.dateTime().equals(o.dateTime());
+    }
+
+    // anything else cannot be equal
+    return false;
   }
 
   @Override

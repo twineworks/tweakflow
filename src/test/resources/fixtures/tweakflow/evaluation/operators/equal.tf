@@ -115,6 +115,7 @@ library operator_spec {
 
   dt_epoch:      1970-01-01T00:00:00Z == 1970-01-01T00:00:00Z == true;
   dt_epoch_dt:   1970-01-01T00:00:00Z == 1970-01-01T23:59:59Z == false;
+  dt_epoch_same: 1970-01-01T00:00:00Z == 1970-01-01T01:00:00+01:00 == true;
 
   h_al0_ad0: hash([0]) == hash([0.0]) == true;
 

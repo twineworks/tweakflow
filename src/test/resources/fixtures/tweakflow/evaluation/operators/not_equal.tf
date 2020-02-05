@@ -111,6 +111,7 @@ library operator_spec {
 
   dt_epoch:      (1970-01-01T00:00:00Z != 1970-01-01T00:00:00Z) == false;
   dt_epoch_dt:   (1970-01-01T00:00:00Z != 1970-01-01T23:59:59Z) == true;
+  dt_epoch_same: (1970-01-01T00:00:00Z != 1970-01-01T01:00:00+01:00) == false;
 
   al0_ad1:   ([0] != [1.0])   == true;
   ad9_al9:   ([9.0] != [9]) == false;

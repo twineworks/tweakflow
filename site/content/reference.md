@@ -3946,18 +3946,18 @@ false
 false
 ```
 
-Datetime values are equal only if their date, time, and timezone components match. They are not considered equal if they merely happen to represent to the same point in time. Use [time.compare](/modules/std.html#time-compare) to determine whether datetime values represent the same point in time.
+Datetime values are equal if they represent the same instant on an absolute timeline. 
 
 ```tweakflow
-# same points in time, but different local time and time zone
-> time.compare(1970-01-01T01:00:00+01:00, time.epoch)
-0
-# same points in time are not equal
-> 1970-01-01T01:00:00+01:00 == time.epoch
-false
-# going back to UTC offset of time.epoch, they are equal
-> 1970-01-01T00:00:00+00:00 == time.epoch
+> time.epoch == time.epoch
 true
+
+# same points in time, but different local time and time zone
+> 1970-01-01T01:00:00+01:00 == time.epoch
+true
+
+> 1970-01-01T == 1970-01-02T
+false
 ```
 
 Function values are never equal to anything, not even to themselves.
@@ -4013,7 +4013,8 @@ Each operand must be a long, double, or decimal. Supplying any other types throw
   - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
   - -Infinity is less than any finite number
   - Infinity is greater than an finite number
-
+  - If both operands are datetimes, they are compared as instants on an absolute timeline
+  
 ```tweakflow
 > 1 < 2
 true
@@ -4028,6 +4029,9 @@ false
 false
 
 > -Infinity < 5
+true
+
+> time.epoch < 2020-01-02T
 true
 
 > "1" < 1
@@ -4056,6 +4060,8 @@ Each operand must be a long, double, or decimal. Supplying any other types throw
   - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
   - -Infinity is less than any finite number
   - Infinity is greater than an finite number
+  - If both operands are datetimes, they are compared as instants on an absolute timeline
+
 
 ```tweakflow
 > 1 <= 3
@@ -4065,6 +4071,9 @@ true
 true
 
 > 1.0 <= Infinity
+true
+
+> time.epoch <= 2020-01-02T
 true
 
 > NaN <= NaN
@@ -4091,6 +4100,8 @@ Each operand must be a long, double, or decimal. Supplying any other types throw
   - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
   - -Infinity is less than any finite number
   - Infinity is greater than an finite number
+  - If both operands are datetimes, they are compared as instants on an absolute timeline
+
 
 ```tweakflow
 > 1 > 2
@@ -4101,6 +4112,9 @@ true
 
 > 5 > 3d
 true
+
+> time.epoch > 2020-01-02T
+false
 
 > NaN > 2
 false
@@ -4131,6 +4145,7 @@ Each operand must be a long, double, or decimal. Supplying any other types throw
   - If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.
   - -Infinity is less than any finite number
   - Infinity is greater than an finite number
+  - If both operands are datetimes, they are compared as instants on an absolute timeline
 
 ```tweakflow
 > 1 >= 2
@@ -4141,6 +4156,9 @@ true
 
 > 2.0 >= 2d
 true
+
+> time.epoch >= 2020-01-02T
+false
 
 > NaN > 2
 false
@@ -4156,7 +4174,9 @@ true
 
 Syntax: `a===b`
 
-Evaluates to `true` if a is equal to b as per the semantics of the [equality](#equality) operator `==`, and in addition a and b are of the same type. Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
+Evaluates to `true` if a is equal to b as per the semantics of the [equality](#equality) operator `==`, and in addition a and b are of the same type. 
+If both operands are datetimes, their date, time, and timezone components must match.  
+Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
 
 ```tweakflow
 > 0 === -0
@@ -4177,6 +4197,13 @@ true
 > "foo" === "foo"
 true
 
+> 1970-01-01T === time.epoch
+true
+
+# same point in time, but different time zones
+> 1970-01-01T01:00:00+01:00 === time.epoch
+false
+
 > {:a 1.0} === {:a 1.0}
 true
 
@@ -4194,7 +4221,7 @@ false
 
 Syntax: `a!==b`
 
-Evaluates to `false` if a is equal to b as per the semantics of the equality operator `==`, and in addition a and b are of the same type. Evaluates to `true` otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.
+Evaluates to `false` if a is equal to b as per the semantics of the equality operator `===`. Evaluates to `true` otherwise. Lists and dicts compare as not equal with type identity if their elements compare as not equal with type identity.
 
 ```tweakflow
 > 0 !== 1

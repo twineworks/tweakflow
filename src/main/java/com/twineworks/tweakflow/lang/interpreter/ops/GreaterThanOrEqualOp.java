@@ -121,6 +121,11 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
       return;
     }
 
+    if ((left == Values.NIL || leftType.isDateTime()) &&
+        (right == Values.NIL || rightType.isDateTime())){
+      return;
+    }
+
     throw new LangException(LangError.CAST_ERROR, "cannot compare types "+left.type().name()+" and " + right.type().name(), stack, node.getSourceInfo());
 
   }
@@ -147,6 +152,9 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
         }
         if (leftType == Types.DECIMAL){
           return new GreaterThanOrEqualOpDecDec(node);
+        }
+        if (leftType == Types.DATETIME){
+          return new GreaterThanOrEqualOpDtDt(node);
         }
       }
     } catch (LangException ignored){}

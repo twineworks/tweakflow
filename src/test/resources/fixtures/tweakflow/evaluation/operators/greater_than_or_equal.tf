@@ -8,6 +8,7 @@ library op {
   l_l: (long x, long y) -> x >= y;
   d_d: (double x, double y) -> x >= y;
   dc_dc: (decimal x, decimal y) -> x >= y;
+  dt_dt: (datetime x, datetime y) -> x >= y;
 }
 
 library operator_spec {
@@ -92,10 +93,21 @@ library operator_spec {
   l0_bar:  try       0 >= "bar"    catch "error" == "error";
   bar_l0:  try   "bar" >= 0        catch "error" == "error";
   b00_l0:  try    0b00 >= 0        catch "error" == "error";
+  dt_foo:  try  time.epoch >= "foo" catch "error" == "error";
+  foo_dt:  try  "foo" >= time.epoch catch "error" == "error";
+  dt_l0:   try  time.epoch >= 0     catch "error" == "error";
+  l0_dt:   try  0 >= time.epoch     catch "error" == "error";
+  dt_b00:  try  time.epoch >= 0b00  catch "error" == "error";
+  b00_dt:  try  0b00 >= time.epoch  catch "error" == "error";
 
   f_f:     try   lib.f >= lib.f    catch "error" == "error";
 
-  dt_dt:   try time.epoch >= time.epoch catch "error" == "error";
+  dt_dt_epoch_before:            time.epoch >= 1970-01-01T00:00:01        == false;
+  dt_dt_epoch_before_other_tz:   time.epoch >= 1970-01-01T00:00:00-01:00  == false;
+  dt_dt_epoch_epoch:             time.epoch >= time.epoch                 == true;
+  dt_dt_epoch_epoch_other_tz:    time.epoch >= 1970-01-01T01:00:00+01:00  == true;
+  dt_nil:                        time.epoch >= nil                        == false;
+  nil_dt:                        nil >= time.epoch                        == false;
 
   op_dc_dc_1_2: op.dc_dc(1d, 2d) === false;
   op_dc_dc_1_1: op.dc_dc(1d, 1d) === true;
@@ -128,4 +140,12 @@ library operator_spec {
   op_l_l_1_nil: op.l_l(1, nil) === false;
   op_l_l_nil_1: op.l_l(nil, 1) === false;
   op_l_l_nil_nil: op.l_l(nil, nil) === true;
+
+  op_dt_dt_epoch_before: op.dt_dt(time.epoch, 1970-01-01T00:00:01) === false;
+  op_dt_dt_epoch_before_other_tz: op.dt_dt(time.epoch, 1970-01-01T00:00:00-01:00) === false;
+  op_dt_dt_epoch_after: op.dt_dt(time.epoch, 1969-01-01T00:00:00) === true;
+  op_dt_dt_epoch_after_other_tz: op.dt_dt(time.epoch, 1969-01-01T00:00:00-01:00) === true;
+  op_dt_dt_epoch_epoch: op.dt_dt(time.epoch, time.epoch) === true;
+  op_dt_dt_epoch_epoch_other_tz: op.dt_dt(time.epoch, 1970-01-01T01:00:00+01:00) === true;
+  op_dt_dt_nil_nil: op.dt_dt(nil, nil) === true;
 }
