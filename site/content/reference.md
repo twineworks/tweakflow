@@ -318,10 +318,14 @@ Hello World
 
 Tweakflow allows symbol notation for strings. It can be useful to visually distinguish strings filling the semantic role of keys or enumeration items from data strings. Symbol strings are prepended with a `:`. Their name is their value.
 
-A symbol string is written as:
+A symbol string can consist of letters, digits, and the characters `.-+/?`
+
+A symbol string must not end with the `.` character.
+
+Formally a symbol string is written as:
 
 ```text
-:[-+/a-zA-Z_0-9?]+
+:([.]?[-+/a-zA-Z_0-9?]+)+
 ```
 
 The escaped form with backticks allows an unconstrained set of characters, with the exception of the backtick itself:

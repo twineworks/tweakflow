@@ -210,7 +210,7 @@ fragment NEWLINE
   : '\r'? '\n'
   ;
 
-fragment KEY_NAME: [-+/a-zA-Z_0-9?]+;
+fragment KEY_NAME: ([.]?[-+/a-zA-Z_0-9?]+)+;
 fragment KEY_NAME_ESCAPED: '`'.+?'`';
 
 fragment ID: [a-zA-Z_][a-zA-Z_0-9?]*;

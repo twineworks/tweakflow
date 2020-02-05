@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class LangUtil {
 
-  private final static Pattern safeKeyName = Pattern.compile("[-+/a-zA-Z_0-9?]+");
+  private final static Pattern safeKeyName = Pattern.compile("([.]?[-+/a-zA-Z_0-9?]+)+");
   private final static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
   private final static Pattern safeTimeZoneIdentifier = Pattern.compile("[a-zA-Z_]+(/[a-zA-Z_0-9?]+)+");
   private final static HashSet<String> keywords = new HashSet<>(Arrays.asList(

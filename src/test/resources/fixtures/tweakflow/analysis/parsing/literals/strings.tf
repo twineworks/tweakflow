@@ -40,4 +40,5 @@ Here ~~~ String
   dash_key: :content-type;
   plus_key: :+and+;
   slash_key: :/slash/;
+  dot_key: :user.home;
 }

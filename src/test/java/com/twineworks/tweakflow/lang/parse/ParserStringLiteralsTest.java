@@ -137,6 +137,18 @@ public class ParserStringLiteralsTest {
   }
 
   @Test
+  void parses_dot_key(){
+
+    Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
+
+    ExpressionNode expNode = varDefMap.get("dot_key").getValueExpression();
+    assertThat(expNode).isInstanceOf(StringNode.class);
+    StringNode node = (StringNode) expNode;
+    assertThat(node.getStringVal()).isEqualTo("user.home");
+
+  }
+
+  @Test
   void parses_single_quoted_empty(){
 
     Map<String, VarDefNode> varDefMap = getVars("fixtures/tweakflow/analysis/parsing/literals/strings.tf");
