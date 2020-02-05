@@ -12,6 +12,8 @@ jobs:
       dist: bionic
     - jdk: oraclejdk11
       dist: bionic
+    - jdk: oraclejdk13
+      dist: bionic
 
 os: linux
 group: stable
