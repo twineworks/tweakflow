@@ -101,7 +101,7 @@ doc
 ~~~
 The library contains functions useful for defining assertions.
 ~~~
-library assert {
+export library assert {
 
 doc
 ~~~
