@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.21.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.22.0</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v0.21.0</a
+            ><b>Tweakflow</b> v0.22.0</a
           >
         </li>
         
@@ -672,6 +672,30 @@ nil
       data-meta-id='strings-upper_case'
       data-meta-type='var'
       data-meta-name='upper_case'
+        data-meta-tags='strings'
+    ></div>
+
+<h3 id="strings-compare">compare</h3>
+
+<p><code>(string a, string b) -&gt; long</code></p>
+
+<p>Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.</p>
+
+<p>Returns -1 if a &lt; b.<br />
+Returns 1 if a &gt; b.<br />
+Returns 0 if a == b.</p>
+
+<p>This function considers <code>nil</code> less than any non-nil string.</p>
+
+<pre><code class="language-tweakflow">&gt; data.sort([&quot;Aaron&quot;, &quot;Eve&quot;, &quot;Adam&quot;, &quot;Joe&quot;, &quot;Beth&quot;, &quot;Linda&quot;], strings.compare)
+[&quot;Aaron&quot;, &quot;Adam&quot;, &quot;Beth&quot;, &quot;Eve&quot;, &quot;Joe&quot;, &quot;Linda&quot;]
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='strings-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
         data-meta-tags='strings'
     ></div>
 
