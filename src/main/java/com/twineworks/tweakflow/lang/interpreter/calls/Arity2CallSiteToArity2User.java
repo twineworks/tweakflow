@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.lang.interpreter.calls;
 
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.types.Type;
+import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.interpreter.StackEntry;
@@ -43,6 +44,7 @@ public class Arity2CallSiteToArity2User implements Arity2CallSite {
   private final Type p0Type;
   private final Type p1Type;
   private final Type retType;
+  private final boolean canSkipCasts;
 
   public Arity2CallSiteToArity2User(UserFunctionValue f, Node at, Stack stack, UserCallContext userCallContext) {
 
@@ -54,6 +56,8 @@ public class Arity2CallSiteToArity2User implements Arity2CallSite {
     p0Type = params[0].getDeclaredType();
     p1Type = params[1].getDeclaredType();
 
+    canSkipCasts = p0Type == Types.ANY && p1Type == Types.ANY;
+
     retType = f.getSignature().getReturnType();
 
     stackEntry = new StackEntry(at, LocalMemorySpace.EMPTY, Collections.emptyMap());
@@ -62,9 +66,18 @@ public class Arity2CallSiteToArity2User implements Arity2CallSite {
 
   @Override
   public Value call(Value arg0, Value arg1) {
-    stack.push(stackEntry);
-    Value retValue = f.call(userCallContext, arg0.castTo(p0Type), arg1.castTo(p1Type)).castTo(retType);
-    stack.pop();
-    return retValue;
+
+    if (canSkipCasts){
+      stack.push(stackEntry);
+      Value retValue = f.call(userCallContext, arg0, arg1).castTo(retType);
+      stack.pop();
+      return retValue;
+    }
+    else {
+      stack.push(stackEntry);
+      Value retValue = f.call(userCallContext, arg0.castTo(p0Type), arg1.castTo(p1Type)).castTo(retType);
+      stack.pop();
+      return retValue;
+    }
   }
 }
