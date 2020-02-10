@@ -16,7 +16,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/embedding.html</guid>
-      <description>Requirements Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
+      <description>Requirements Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11 and 13.
 Getting tweakflow You can get the tweakflow jar from the releases page or from maven central:
 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.22.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Tweakflow values Whenever the application is exchanging data with tweakflow code, it does so through immutable value objects of class Value. Variable values, function parameters, function return values, everything is a value in tweakflow.</description>
     </item>
@@ -28,7 +28,7 @@ Getting tweakflow You can get the tweakflow jar from the releases page or from m
       
       <guid>/getting-started.html</guid>
       <description>Getting started This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.
-Requirements Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
+Requirements Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11, and 13.
 Getting tweakflow Download the latest release jar. You can also obtain it from maven central using the following dependency:
 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.twineworks&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;tweakflow&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;0.22.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;  Starting a REPL Launch the interactive REPL using:</description>
     </item>
