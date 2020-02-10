@@ -21,7 +21,7 @@
  permutations? (list xs, list ys) -&amp;gt; boolean
 Returns true if xs and ys are both non-nil and contain the same items. Item order is not relevant.
 Returns false otherwise.
-&amp;gt; util.permutations?([1,2,3], [2,3,1]) true &amp;gt; util.permutations?([1,2], [1,3]) false &amp;gt; util.permutations?(nil, nil) false   library assert The library contains functions useful for defining assertions.</description>
+&amp;gt; util.permutations?([1,2,3], [2,3,1]) true &amp;gt; util.permutations?([1,2], [1,3]) false &amp;gt; util.permutations?(nil, nil) false   library assertions The library contains functions useful for defining assertions.</description>
     </item>
     
     <item>

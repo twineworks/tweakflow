@@ -241,19 +241,19 @@ false
         data-meta-tags='util'
     ></div>
 
-<h2 id="assert">library assert</h2>
+<h2 id="assertions">library assertions</h2>
 
 <p>The library contains functions useful for defining assertions.</p>
 
 <div
       data-meta='true'
-      data-meta-id='assert'
+      data-meta-id='assertions'
       data-meta-type='library'
-      data-meta-name='assert'
+      data-meta-name='assertions'
         data-meta-tags=''
     ></div>
 
-<h3 id="assert-expect_error">expect_error</h3>
+<h3 id="assertions-expect_error">expect_error</h3>
 
 <p><code>(function x, function f) -&gt; boolean</code></p>
 
@@ -281,13 +281,13 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-expect_error'
+      data-meta-id='assertions-expect_error'
       data-meta-type='var'
       data-meta-name='expect_error'
-        data-meta-tags='assert'
+        data-meta-tags='assertions'
     ></div>
 
-<h3 id="assert-expect">expect</h3>
+<h3 id="assertions-expect">expect</h3>
 
 <p><code>(x, function f) -&gt; boolean</code></p>
 
@@ -305,15 +305,15 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-expect'
+      data-meta-id='assertions-expect'
       data-meta-type='var'
       data-meta-name='expect'
-        data-meta-tags='assert'
+        data-meta-tags='assertions'
     ></div>
 
-<h3 id="assert-assert">assert</h3>
+<h3 id="assertions-assert">assert</h3>
 
-<p>Alias for <a href="#assert-expect">expect</a> that might be more readable in cases where the matcher is omitted and <code>to.be_true()</code> is used implicitly.</p>
+<p>Alias for <a href="#assertions-expect">expect</a> that might be more readable in cases where the matcher is omitted and <code>to.be_true()</code> is used implicitly.</p>
 
 <pre><code>&gt; assert.assert(1.0 == 1)
 true
@@ -325,10 +325,10 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-assert'
+      data-meta-id='assertions-assert'
       data-meta-type='var'
       data-meta-name='assert'
-        data-meta-tags='assert'
+        data-meta-tags='assertions'
     ></div>
 
 <h2 id="nodes">library nodes</h2>
@@ -427,7 +427,7 @@ If <code>tags</code> is a dict, keys containing values casting to boolean <code>
 
 <h2 id="to">library to</h2>
 
-<p>The <code>to</code> library contains matcher functions useful in conjunction with the <a href="#assert-expect">expect</a> function.</p>
+<p>The <code>to</code> library contains matcher functions useful in conjunction with the <a href="#assertions-expect">expect</a> function.</p>
 
 <div
       data-meta='true'

@@ -29,9 +29,9 @@ module;
 
 import data, math, regex from 'std';
 
-export assert.expect as expect;
-export assert.assert as assert;
-export assert.expect_error as expect_error;
+export assertions.expect as expect;
+export assertions.assert as assert;
+export assertions.expect_error as expect_error;
 
 export nodes.describe as describe;
 export nodes.it as it;
@@ -101,7 +101,7 @@ doc
 ~~~
 The library contains functions useful for defining assertions.
 ~~~
-export library assert {
+export library assertions {
 
 doc
 ~~~
@@ -190,7 +190,7 @@ ERROR:
 
 doc
 ~~~
-Alias for [expect](#assert-expect) that might be more readable in cases where the matcher is omitted and `to.be_true()` is used implicitly.
+Alias for [expect](#assertions-expect) that might be more readable in cases where the matcher is omitted and `to.be_true()` is used implicitly.
 
 ```
 > assert.assert(1.0 == 1)
@@ -317,7 +317,7 @@ If neither `transform`, nor `effect` are specified, a regular `subject` node is 
 
 doc
 ~~~
-The `to` library contains matcher functions useful in conjunction with the [expect](#assert-expect) function.
+The `to` library contains matcher functions useful in conjunction with the [expect](#assertions-expect) function.
 ~~~
 export library to {
 

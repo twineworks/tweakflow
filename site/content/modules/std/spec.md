@@ -59,7 +59,7 @@ false
 	    data-meta-tags='util'
     ></div>
 
-## library assert{#assert}
+## library assertions{#assertions}
 
 The library contains functions useful for defining assertions.
 
@@ -67,13 +67,13 @@ The library contains functions useful for defining assertions.
 
 <div
       data-meta='true'
-      data-meta-id='assert'
+      data-meta-id='assertions'
       data-meta-type='library'
-      data-meta-name='assert'
+      data-meta-name='assertions'
 	    data-meta-tags=''
     ></div>
 
-### expect_error{#assert-expect_error}
+### expect_error{#assertions-expect_error}
 
 `(function x, function f) -> boolean`
 
@@ -104,13 +104,13 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-expect_error'
+      data-meta-id='assertions-expect_error'
       data-meta-type='var'
       data-meta-name='expect_error'
-	    data-meta-tags='assert'
+	    data-meta-tags='assertions'
     ></div>
 
-### expect{#assert-expect}
+### expect{#assertions-expect}
 
 `(x, function f) -> boolean`
 
@@ -131,15 +131,15 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-expect'
+      data-meta-id='assertions-expect'
       data-meta-type='var'
       data-meta-name='expect'
-	    data-meta-tags='assert'
+	    data-meta-tags='assertions'
     ></div>
 
-### assert{#assert-assert}
+### assert{#assertions-assert}
 
-Alias for [expect](#assert-expect) that might be more readable in cases where the matcher is omitted and `to.be_true()` is used implicitly.
+Alias for [expect](#assertions-expect) that might be more readable in cases where the matcher is omitted and `to.be_true()` is used implicitly.
 
 ```
 > assert.assert(1.0 == 1)
@@ -154,10 +154,10 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='assert-assert'
+      data-meta-id='assertions-assert'
       data-meta-type='var'
       data-meta-name='assert'
-	    data-meta-tags='assert'
+	    data-meta-tags='assertions'
     ></div>
 
 ## library nodes{#nodes}
@@ -268,7 +268,7 @@ If neither `transform`, nor `effect` are specified, a regular `subject` node is 
 
 ## library to{#to}
 
-The `to` library contains matcher functions useful in conjunction with the [expect](#assert-expect) function.
+The `to` library contains matcher functions useful in conjunction with the [expect](#assertions-expect) function.
 
 
 
