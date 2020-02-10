@@ -535,6 +535,33 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 	    data-meta-tags='strings'
     ></div>
 
+### compare{#strings-compare}
+
+`(string a, string b) -> long`
+
+Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.
+
+Returns -1 if a < b.\
+Returns 1 if a > b.\
+Returns 0 if a == b.\
+
+This function considers `nil` less than any non-nil string.
+
+```tweakflow
+> data.sort(["Aaron", "Eve", "Adam", "Joe", "Beth", "Linda"], strings.compare)
+["Aaron", "Adam", "Beth", "Eve", "Joe", "Linda"]
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='strings-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	    data-meta-tags='strings'
+    ></div>
+
 ### comparator{#strings-comparator}
 
 ```

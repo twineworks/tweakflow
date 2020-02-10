@@ -3,7 +3,7 @@ title: Embedding Guide
 ---
 
 ## Requirements
-Tweakflow requires Java 8 or later. Builds are tested against JDK 8 and JDK 11.
+Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11 and 13.
 
 ## Getting tweakflow
 You can get the tweakflow jar from the [releases page](https://github.com/twineworks/tweakflow/releases) or from maven central:
