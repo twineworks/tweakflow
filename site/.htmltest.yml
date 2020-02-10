@@ -1,3 +1,5 @@
 DirectoryPath: "../docs"
 CacheExpires: "12h"
 IgnoreDirectoryMissingTrailingSlash: true
+StripQueryString: false
+#StripQueryExcludes: ["https://marketplace.visualstudio.com"]
