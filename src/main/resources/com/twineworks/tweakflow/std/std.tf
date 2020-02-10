@@ -430,6 +430,26 @@ Returns `nil` if `x` is `nil` or `lang` is `nil`.
 
 doc
 ~~~
+`(string a, string b) -> long`
+
+Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.
+
+Returns -1 if a < b.\
+Returns 1 if a > b.\
+Returns 0 if a == b.\
+
+This function considers `nil` less than any non-nil string.
+
+```tweakflow
+> data.sort(["Aaron", "Eve", "Adam", "Joe", "Beth", "Linda"], strings.compare)
+["Aaron", "Adam", "Beth", "Eve", "Joe", "Linda"]
+```
+~~~
+
+  function compare: (string a, string b) -> long via {:class "com.twineworks.tweakflow.std.Strings$compare"};
+
+doc
+~~~
 ```
 (
   string lang='en-US',

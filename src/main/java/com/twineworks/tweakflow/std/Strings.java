@@ -324,9 +324,9 @@ public final class Strings {
 
     private final java.text.Collator collator;
 
-    private final Value ab = Values.make(-1);
-    private final Value ba = Values.make(1);
-    private final Value eq = Values.make(0);
+    private final Value ab = Values.LONG_NEG_ONE;
+    private final Value ba = Values.LONG_ONE;
+    private final Value eq = Values.LONG_ZERO;
 
     public comparator_impl(Collator collator) {
       this.collator = collator;
@@ -385,6 +385,27 @@ public final class Strings {
                   new FunctionParameter(1, "b", Types.STRING, Values.NIL)),
                   Types.LONG),
               new comparator_impl(collator)));
+
+    }
+  }
+
+  // // compare: (string a, string b) -> long
+  public static final class compare implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value a, Value b) {
+
+      if (a == b) return Values.LONG_ZERO; // short circuit for identity
+      // nils first
+      if (a == Values.NIL) return Values.LONG_NEG_ONE;
+      if (b == Values.NIL) return Values.LONG_ONE;
+
+      String sa = a.string();
+      String sb = b.string();
+      int i = sa.compareTo(sb);
+      if (i < 0) return Values.LONG_NEG_ONE;
+      if (i > 0) return Values.LONG_ONE;
+      return Values.LONG_ZERO;
 
     }
   }
