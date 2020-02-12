@@ -62,6 +62,12 @@ public class In implements AutoCloseable {
     deserializers = new ArrayDeque<>();
   }
 
+  public void reInit(){
+    buffer.clear();
+    buffer.limit(0);
+    channelDepleted = false;
+  }
+
   private void nextBuffer() throws IOException {
       // Prepare the buffer for reading
       if (buffer.position() < buffer.limit()) {
