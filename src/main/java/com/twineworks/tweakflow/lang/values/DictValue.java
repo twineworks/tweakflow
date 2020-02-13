@@ -50,12 +50,12 @@ final public class DictValue {
     map = m.freeze();
   }
 
-  public DictValue(Map.Entry<String, Value>[] entries){
+  public DictValue(Map.Entry<String, Value>[] entries) {
     Immutable<String, Value> m = PersistentTrieMap.of();
-    for (Map.Entry<String, Value> entry: entries){
+    for (Map.Entry<String, Value> entry : entries) {
       m = m.__put(entry.getKey(), entry.getValue());
     }
-    map  = m;
+    map = m;
   }
 
   public int size() {
@@ -74,7 +74,7 @@ final public class DictValue {
     return map.containsValue(value);
   }
 
-  public java.util.HashMap<String, Value> toHashMap(){
+  public java.util.HashMap<String, Value> toHashMap() {
     java.util.HashMap<String, Value> ret = new java.util.HashMap<>();
     for (String k : keys()) {
       ret.put(k, get(k));
@@ -86,7 +86,7 @@ final public class DictValue {
     return new DictValue(map.__put(key, value));
   }
 
-  public DictValue putAll(Map<String, Value> entries){
+  public DictValue putAll(Map<String, Value> entries) {
     return new DictValue(map.__putAll(entries));
   }
 
@@ -102,7 +102,7 @@ final public class DictValue {
     return new DictValue(m);
   }
 
-  public DictValue putAll(DictValue dict){
+  public DictValue putAll(DictValue dict) {
     return new DictValue(map.__putAll(dict.map));
   }
 
@@ -122,15 +122,12 @@ final public class DictValue {
 
   public boolean equals(Object o) {
 
-    // a dict may not be equal to itself if it contains NaNs or functions
-    // if (this == o) return true;
-
+    if (this == o) return true;
     if (o == null) return false;
-    if (o.getClass() == getClass()){
+    if (o.getClass() == getClass()) {
       DictValue that = (DictValue) o;
       return map.equals(that.map);
-    }
-    else{
+    } else {
       return false;
     }
 

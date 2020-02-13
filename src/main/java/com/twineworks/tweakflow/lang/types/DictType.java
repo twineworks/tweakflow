@@ -218,6 +218,7 @@ final public class DictType implements Type {
     if (o.type() != this) return false;
     DictValue xDict = x.dict();
     DictValue oDict = o.dict();
+    if (xDict == oDict) return true;
     if (xDict.size() != oDict.size()) return false;
     for (String k : xDict.keys()) {
       if (!oDict.containsKey(k)) return false;
