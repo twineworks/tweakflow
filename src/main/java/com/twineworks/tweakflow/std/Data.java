@@ -1022,12 +1022,12 @@ public final class Data {
         return Values.NIL;
       }
 
-      DictValue result = new DictValue();
+      TransientDictValue t = new TransientDictValue();
 
       for (Value dict : dictList) {
         if (dict.isDict()){
           DictValue dictValue = dict.dict();
-          result = result.putAll(dictValue);
+          t.putAll(dictValue);
         }
         else if (dict.isNil()){ // trying to merge with nil
           return Values.NIL;
@@ -1038,7 +1038,7 @@ public final class Data {
         }
       }
 
-      return Values.make(result);
+      return Values.make(t.persistent());
     }
   }
 
@@ -2079,17 +2079,19 @@ public final class Data {
 
       HashSet<String> keySet = new HashSet<>();
       for (Value value : keyList) {
-        keySet.add(value.castTo(Types.STRING).string());
-      }
-
-      TransientDictValue t = new TransientDictValue();
-      for (String key : xsDict.keys()) {
-        if (!keySet.contains(key)){
-          t.put(key, xsDict.get(key));
+        String k = value.castTo(Types.STRING).string();
+        if (k != null){
+          keySet.add(k);
         }
       }
-
-      return Values.make(t.persistent());
+      if (keySet.size() > 0){
+        TransientDictValue t = new TransientDictValue(xsDict);
+        t.removeAll(keySet);
+        return Values.make(t.persistent());
+      }
+      else{ // only nil keys to remove
+        return xs;
+      }
 
     }
   }

@@ -40,7 +40,6 @@ public class LangException extends RuntimeException {
   private SourceInfo sourceInfo;
   private Map<String, Object> properties = new HashMap<>();
 
-
   private LangException(Throwable t, ErrorCode code, String message, Stack stack, SourceInfo sourceInfo) {
     super(message, t);
     this.code = code;

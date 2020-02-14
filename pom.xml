@@ -100,8 +100,8 @@
 
     <repositories>
         <repository>
-            <id>usethesource</id>
-            <url>http://nexus.usethesource.io/content/repositories/public/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
         </repository>
     </repositories>
 
@@ -420,14 +420,7 @@
         <dependency>
             <groupId>com.twineworks</groupId>
             <artifactId>collections</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <!-- persistent data structures -->
-        <dependency>
-            <groupId>io.usethesource</groupId>
-            <artifactId>capsule</artifactId>
-            <version>0.6.2</version>
+            <version>1.2.0</version>
         </dependency>
 
         <!-- interactive shell -->

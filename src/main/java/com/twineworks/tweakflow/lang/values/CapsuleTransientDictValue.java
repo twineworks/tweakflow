@@ -24,60 +24,47 @@
 
 package com.twineworks.tweakflow.lang.values;
 
-import com.twineworks.collections.champ.TransientChampMap;
+//import io.usethesource.capsule.Map;
+//import io.usethesource.capsule.core.PersistentTrieMap;
 
-import java.util.Collection;
-import java.util.Map;
+public class CapsuleTransientDictValue {
 
-public class TransientDictValue {
-
-  TransientChampMap<String, Value> t;
-
-  public TransientDictValue(){
-    this(new TransientChampMap<>());
-  }
-
-  public TransientDictValue(DictValue d){
-    this(new TransientChampMap<>(d.map));
-  }
-
-  private TransientDictValue(TransientChampMap<String, Value> t){
-    this.t = t;
-  }
-
-  public void put(String key, Value v){
-    t.set(key, v);
-  }
-
-  public Value get(String key){
-    return t.get(key);
-  }
-
-  public boolean containsKey(String key){
-    return t.containsKey(key);
-  }
-
-  public void remove(String key){
-    t.remove(key);
-  }
-
-  public void removeAll(Collection<String> keys){
-    t.removeAll(keys);
-  }
-
-  public void putAll(Map<String, Value> m){
-    t.setAll(m);
-  }
-  public void putAll(DictValue d){
-    t.setAll(d.map);
-  }
-
-  public DictValue persistent(){
-    return new DictValue(t.freeze());
-  }
-
-  public TransientDictValue dup(){
-    return new TransientDictValue(t.dup());
-  }
+//  Map.Transient<String, Value> t;
+//
+//  public CapsuleTransientDictValue(){
+//    this(PersistentTrieMap.transientOf());
+//  }
+//
+//  public CapsuleTransientDictValue(CapsuleDictValue d){
+//    this(d.map.asTransient());
+//  }
+//
+//  private CapsuleTransientDictValue(Map.Transient<String, Value> t){
+//    this.t = t;
+//  }
+//
+//  public Value put(String key, Value v){
+//    return t.__put(key, v);
+//  }
+//
+//  public Value get(String key){
+//    return t.get(key);
+//  }
+//
+//  public boolean containsKey(String key){
+//    return t.containsKey(key);
+//  }
+//
+//  public Value remove(String key){
+//    return t.remove(key);
+//  }
+//
+//  public void putAll(Map<String, Value> m){
+//    t.__putAll(m);
+//  }
+//
+//  public DictValue persistent(){
+//    return new DictValue(t.freeze());
+//  }
 
 }

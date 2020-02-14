@@ -25,37 +25,33 @@
 package com.twineworks.tweakflow.lang.values;
 
 
-import io.usethesource.capsule.Map.Immutable;
-import io.usethesource.capsule.Map.Transient;
-import io.usethesource.capsule.core.PersistentTrieMap;
+import com.twineworks.collections.champ.ChampMap;
+import com.twineworks.collections.champ.TransientChampMap;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 final public class DictValue {
 
-  final Immutable<String, Value> map;
+  final ChampMap<String, Value> map;
 
-  DictValue(Immutable<String, Value> map) {
+  DictValue(ChampMap<String, Value> map) {
     this.map = map;
   }
 
   public DictValue() {
-    this(PersistentTrieMap.of());
+    this(ChampMap.empty());
   }
 
   public DictValue(Map<String, Value> in) {
-    Transient<String, Value> m = PersistentTrieMap.transientOf();
-    m.__putAll(in);
-    map = m.freeze();
+    TransientChampMap<String, Value> t = new TransientChampMap<>();
+    t.setAll(in);
+    map = t.freeze();
   }
 
   public DictValue(Map.Entry<String, Value>[] entries) {
-    Immutable<String, Value> m = PersistentTrieMap.of();
-    for (Map.Entry<String, Value> entry : entries) {
-      m = m.__put(entry.getKey(), entry.getValue());
-    }
-    map = m;
+    TransientChampMap<String, Value> t = new TransientChampMap<>();
+    t.setAll(Arrays.asList(entries));
+    map = t.freeze();
   }
 
   public int size() {
@@ -74,36 +70,44 @@ final public class DictValue {
     return map.containsValue(value);
   }
 
-  public java.util.HashMap<String, Value> toHashMap() {
-    java.util.HashMap<String, Value> ret = new java.util.HashMap<>();
-    for (String k : keys()) {
-      ret.put(k, get(k));
+  public HashMap<String, Value> toHashMap() {
+    HashMap<String, Value> ret = new HashMap<>();
+    Iterator<Map.Entry<String, Value>> iter = map.entryIterator();
+    while(iter.hasNext()){
+      Map.Entry<String, Value> e = iter.next();
+      ret.put(e.getKey(), e.getValue());
     }
     return ret;
   }
 
   public DictValue put(String key, Value value) {
-    return new DictValue(map.__put(key, value));
+    return new DictValue(map.set(key, value));
   }
 
   public DictValue putAll(Map<String, Value> entries) {
-    return new DictValue(map.__putAll(entries));
+    return new DictValue(map.setAll(entries));
   }
 
   public DictValue delete(String key) {
-    return new DictValue(map.__remove(key));
+    return new DictValue(map.remove(key));
   }
 
   public DictValue deleteAll(Iterable<? extends String> keys) {
-    Immutable<String, Value> m = this.map;
+
+    TransientChampMap<String, Value> t = new TransientChampMap<>(map);
     for (String key : keys) {
-      m = m.__remove(key);
+      t.remove(key);
     }
-    return new DictValue(m);
+    return new DictValue(t.freeze());
+
+  }
+
+  public DictValue deleteAll(DictValue dict) {
+    return new DictValue(map.removeAll(dict.keys()));
   }
 
   public DictValue putAll(DictValue dict) {
-    return new DictValue(map.__putAll(dict.map));
+    return new DictValue(map.setAll(dict.map));
   }
 
   public Value get(String key) {
