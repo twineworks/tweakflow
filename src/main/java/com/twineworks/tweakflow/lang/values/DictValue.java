@@ -25,6 +25,7 @@
 package com.twineworks.tweakflow.lang.values;
 
 
+import com.twineworks.collections.champ.ChampEntry;
 import com.twineworks.collections.champ.ChampMap;
 import com.twineworks.collections.champ.TransientChampMap;
 
@@ -122,6 +123,29 @@ final public class DictValue {
 
   public Set<String> keys() {
     return map.keySet();
+  }
+
+  public void getAll(String[] keys, Value[] values){
+    Iterator<ChampEntry<String, Value>> iter = map.champEntryIterator();
+    int i=0;
+    while(iter.hasNext()){
+      ChampEntry<String, Value> entry = iter.next();
+      keys[i] = entry.key;
+      values[i] = entry.value;
+      i++;
+    }
+  }
+
+  public Iterator<Map.Entry<String, Value>> entryIterator(){
+    return map.entryIterator();
+  }
+
+  public Iterator<String> keyIterator(){
+    return map.keyIterator();
+  }
+
+  public Iterator<Value> valueIterator(){
+    return map.valueIterator();
   }
 
   public boolean equals(Object o) {
