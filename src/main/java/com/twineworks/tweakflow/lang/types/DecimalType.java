@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
@@ -223,6 +224,11 @@ final public class DecimalType implements Type {
     BigDecimal d_x = x.decimal();
     BigDecimal d_o = o.decimal();
     return d_x.compareTo(d_o) == 0;
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.DECIMAL;
   }
 
   @Override

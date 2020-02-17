@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
@@ -161,6 +162,11 @@ final public class DateTimeType implements Type {
   @Override
   public boolean valueIdentical(Value x, Value o) {
     return valueAndTypeEquals(x, o);
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.DATETIME;
   }
 
   @Override

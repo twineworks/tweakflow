@@ -66,4 +66,6 @@ public interface Type {
 
   // valueIdentical(NaN, NaN) == true
   boolean valueIdentical(Value x, Value o);
+
+  byte getId();
 }

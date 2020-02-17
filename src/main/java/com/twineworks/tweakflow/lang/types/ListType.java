@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.*;
@@ -218,6 +219,11 @@ final public class ListType implements Type {
       if (!xi.next().valueIdentical(oi.next())) return false;
     }
     return true;
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.LIST;
   }
 
   @Override

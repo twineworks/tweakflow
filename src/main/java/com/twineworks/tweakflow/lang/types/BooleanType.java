@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
@@ -183,6 +184,11 @@ final public class BooleanType implements Type {
   @Override
   public boolean valueIdentical(Value x, Value o) {
     return x == o;
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.BOOLEAN;
   }
 
   @Override

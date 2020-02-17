@@ -139,6 +139,11 @@ final public class AnyType implements Type{
   }
 
   @Override
+  public byte getId() {
+    return -1;
+  }
+
+  @Override
   public String toString() {
     return name();
   }

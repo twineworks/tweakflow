@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.Value;
@@ -216,6 +217,11 @@ final public class DoubleType implements Type {
     double d_x = x.doubleNum();
     double d_o = o.doubleNum();
     return d_x == d_o || Double.isNaN(d_x) && Double.isNaN(d_o);
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.DOUBLE;
   }
 
   @Override

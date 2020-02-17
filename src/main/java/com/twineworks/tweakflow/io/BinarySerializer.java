@@ -61,9 +61,14 @@ class BinarySerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    // need to write out bytes
-    while (bytes.hasRemaining() && buffer.hasRemaining()){
-      buffer.put(bytes.get());
+    if (buffer.remaining() >= bytes.remaining()){
+      buffer.put(bytes);
+    }
+    else{
+      // need to write out bytes
+      while (bytes.hasRemaining() && buffer.hasRemaining()){
+        buffer.put(bytes.get());
+      }
     }
 
     return !bytes.hasRemaining();
@@ -94,8 +99,13 @@ class BinarySerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    while(buffer.hasRemaining() && bytes.hasRemaining()){
-      bytes.put(buffer.get());
+    if (bytes.remaining() >= buffer.remaining()){
+      bytes.put(buffer);
+    }
+    else{
+      while(buffer.hasRemaining() && bytes.hasRemaining()){
+        bytes.put(buffer.get());
+      }
     }
 
     if (bytes.hasRemaining()) return false;

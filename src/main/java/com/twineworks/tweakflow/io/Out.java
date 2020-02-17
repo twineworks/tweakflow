@@ -72,38 +72,20 @@ public class Out implements AutoCloseable {
 
   public void write(Value v) throws IOException {
     // find the serializer in question
-    if (v.isNil()){
-      serializers.push(voidSerializer);
-    }
-    else if (v.isLongNum()){
-      serializers.push(longSerializer);
-    }
-    else if (v.isDoubleNum()){
-      serializers.push(doubleSerializer);
-    }
-    else if (v.isDecimal()){
-      serializers.push(decimalSerializer);
-    }
-    else if (v.isString()){
-      serializers.push(stringSerializer);
-    }
-    else if (v.isDateTime()){
-      serializers.push(datetimeSerializer);
-    }
-    else if (v.isList()){
-      serializers.push(listSerializer);
-    }
-    else if (v.isDict()){
-      serializers.push(dictSerializer);
-    }
-    else if (v.isBinary()){
-      serializers.push(binarySerializer);
-    }
-    else if (v.isFunction()){
-      throw new IOException("Cannot serialize function values, found: "+ ValueInspector.inspect(v, true));
-    }
-    else {
-      throw new IOException("Unknown value type: "+v.type().name());
+    switch(v.type().getId()){
+      case MagicNumbers.Format.VOID: serializers.push(voidSerializer); break;
+      case MagicNumbers.Format.BINARY: serializers.push(binarySerializer); break;
+      case MagicNumbers.Format.LONG: serializers.push(longSerializer); break;
+      case MagicNumbers.Format.DOUBLE: serializers.push(doubleSerializer); break;
+      case MagicNumbers.Format.DECIMAL: serializers.push(decimalSerializer); break;
+      case MagicNumbers.Format.STRING: serializers.push(stringSerializer); break;
+      case MagicNumbers.Format.DATETIME: serializers.push(datetimeSerializer); break;
+      case MagicNumbers.Format.LIST: serializers.push(listSerializer); break;
+      case MagicNumbers.Format.DICT: serializers.push(dictSerializer); break;
+      case MagicNumbers.Format.FUNCTION:
+        throw new IOException("Cannot serialize function values, found: "+ ValueInspector.inspect(v, true));
+      default:
+        throw new IOException("Unknown value type: "+v.type().name());
     }
 
     toBuffer(v);

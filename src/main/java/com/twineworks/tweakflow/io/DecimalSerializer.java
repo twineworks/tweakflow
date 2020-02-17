@@ -74,8 +74,13 @@ class DecimalSerializer implements ValueSerializer, ValueDeserializer {
     }
 
     // need to write out bytes
-    while (decBytes.hasRemaining() && buffer.hasRemaining()){
-      buffer.put(decBytes.get());
+    if (buffer.remaining() >= decBytes.remaining()){
+      buffer.put(decBytes);
+    }
+    else{
+      while (decBytes.hasRemaining() && buffer.hasRemaining()){
+        buffer.put(decBytes.get());
+      }
     }
 
     return !decBytes.hasRemaining();
@@ -106,8 +111,13 @@ class DecimalSerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    while(buffer.hasRemaining() && decBytes.hasRemaining()){
-      decBytes.put(buffer.get());
+    if (decBytes.remaining() >= buffer.remaining()){
+      decBytes.put(buffer);
+    }
+    else{
+      while(buffer.hasRemaining() && decBytes.hasRemaining()){
+        decBytes.put(buffer.get());
+      }
     }
 
     if (decBytes.hasRemaining()) return false;

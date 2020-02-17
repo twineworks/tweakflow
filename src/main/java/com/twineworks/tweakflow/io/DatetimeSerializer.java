@@ -140,8 +140,13 @@ class DatetimeSerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    while(buffer.hasRemaining() && tzBytes.hasRemaining()){
-      tzBytes.put(buffer.get());
+    if (tzBytes.remaining() >= buffer.remaining()){
+      tzBytes.put(buffer);
+    }
+    else{
+      while(buffer.hasRemaining() && tzBytes.hasRemaining()){
+        tzBytes.put(buffer.get());
+      }
     }
 
     if (tzBytes.hasRemaining()) return false;

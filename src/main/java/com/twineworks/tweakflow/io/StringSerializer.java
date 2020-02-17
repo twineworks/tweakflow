@@ -29,6 +29,9 @@ import com.twineworks.tweakflow.lang.values.Values;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
 import java.nio.charset.StandardCharsets;
 
 class StringSerializer implements ValueSerializer, ValueDeserializer {
@@ -39,7 +42,10 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
   private boolean readSize = false;
 
   private ByteBuffer strBytes;
+  private CharBuffer charBuffer;
   private String lastStr;
+  private CharsetEncoder encoder;
+  private CharsetDecoder decoder;
 
   @Override
   public void setSubject(Value subject) {
@@ -48,7 +54,31 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
 
     if (!str.equals(lastStr)){
       lastStr = str;
-      strBytes = StandardCharsets.UTF_8.encode(str);
+      if (encoder == null){
+        encoder = StandardCharsets.UTF_16BE.newEncoder();
+      }
+
+      int len2 = str.length()*2;
+      if (strBytes == null){
+        strBytes = ByteBuffer.allocate(Math.max(len2, 256));
+      }
+
+      if (strBytes.capacity() < len2){
+        strBytes = ByteBuffer.allocate(len2);
+      }
+
+      if (charBuffer == null || charBuffer.capacity() < str.length()) {
+        charBuffer = CharBuffer.allocate(Math.max(str.length(), 128));
+      }
+
+      charBuffer.clear();
+      charBuffer.append(str);
+      charBuffer.flip();
+
+      strBytes.clear();
+      encoder.encode(charBuffer, strBytes, true);
+      strBytes.flip();
+
     }
     else{
       strBytes.position(0);
@@ -59,7 +89,6 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
 
   @Override
   public boolean put(Out out, ByteBuffer buffer) {
-
 
     if (!writtenSize){
       if (buffer.remaining() >= 5){
@@ -72,7 +101,12 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    // need to write out bytes
+    if (buffer.remaining() >= strBytes.remaining()){
+      buffer.put(strBytes);
+      return true;
+    }
+
+    // need to write out only some bytes
     while (strBytes.hasRemaining() && buffer.hasRemaining()){
       buffer.put(strBytes.get());
     }
@@ -92,12 +126,12 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
       if (buffer.remaining() >= 4){
         int bytesSize = buffer.getInt();
         if (strBytes == null || strBytes.capacity() < bytesSize){
-          strBytes = ByteBuffer.allocate(bytesSize);
+          strBytes = ByteBuffer.allocate(Math.max(bytesSize, 256));
         }
         else{
           strBytes.position(0);
-          strBytes.limit(bytesSize);
         }
+        strBytes.limit(bytesSize);
         readSize = true;
       }
       else{
@@ -105,15 +139,30 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
       }
     }
 
-    while(buffer.hasRemaining() && strBytes.hasRemaining()){
-      strBytes.put(buffer.get());
+    if (strBytes.remaining() >= buffer.remaining()){
+      strBytes.put(buffer);
+    }
+    else{
+      while(buffer.hasRemaining() && strBytes.hasRemaining()){
+        strBytes.put(buffer.get());
+      }
     }
 
     if (strBytes.hasRemaining()) return false;
 
-    strBytes.position(0);
-    CharBuffer decoded = StandardCharsets.UTF_8.decode(strBytes);
-    subject = Values.make(decoded.toString());
+    if (decoder == null){
+      decoder = StandardCharsets.UTF_16BE.newDecoder();
+    }
+
+    if (charBuffer == null || charBuffer.capacity() < strBytes.capacity()/2){
+      charBuffer = CharBuffer.allocate(Math.max(strBytes.capacity()/2, 128));
+    }
+
+    strBytes.flip();
+    charBuffer.clear();
+    CoderResult result = decoder.decode(strBytes, charBuffer, true);
+    strBytes.flip();
+    subject = Values.make(charBuffer.flip().toString());
 
     readSize = false;
 
@@ -123,13 +172,9 @@ class StringSerializer implements ValueSerializer, ValueDeserializer {
 
   @Override
   public boolean get(In in, byte format, ByteBuffer buffer) {
-    switch (format){
-      case MagicNumbers.Format.STRING: {
-        return getFromStringFormat(buffer);
-      }
-      default: {
-        throw new AssertionError("Unknown format: "+format);
-      }
+    if (format == MagicNumbers.Format.STRING) {
+      return getFromStringFormat(buffer);
     }
+    throw new AssertionError("Unknown format: " + format);
   }
 }

@@ -24,6 +24,7 @@
 
 package com.twineworks.tweakflow.lang.types;
 
+import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.values.*;
@@ -219,6 +220,11 @@ final public class DictType implements Type {
     DictValue xDict = x.dict();
     DictValue oDict = o.dict();
     return(xDict.equals(oDict));
+  }
+
+  @Override
+  public byte getId() {
+    return MagicNumbers.Format.DICT;
   }
 
   @Override
