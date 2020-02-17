@@ -71,6 +71,9 @@ public class TransientDictValue {
   public void putAll(DictValue d){
     t.setAll(d.map);
   }
+  public void putAll(String[] keys, Value[] values){
+    t.setAll(keys, values);
+  }
 
   public DictValue persistent(){
     return new DictValue(t.freeze());
