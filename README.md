@@ -21,7 +21,7 @@ Get the latest release jar from [github](https://github.com/twineworks/tweakflow
 
 Start the REPL using:
 ```bash
-$ java -jar tweakflow-0.22.0.jar repl
+$ java -jar tweakflow-0.23.0.jar repl
 ```
 
 Start typing expressions for the REPL to evaluate:
