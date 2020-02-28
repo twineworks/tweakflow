@@ -161,6 +161,37 @@ class ValueOutputStreamTest {
   }
 
   @Test
+  void writes_booleans() throws Exception {
+
+    try (ValueOutputStream out = getOut()) {
+      for (int i=0;i<100;i++){
+        out.write(i % 2 == 0 ? Values.TRUE : Values.FALSE);
+      }
+    }
+
+    int read = 0;
+    boolean seenEOF = false;
+
+    try (ValueInputStream in = getIn()){
+      for (int i=0;i<100;i++){
+        Value v = in.read();
+        assertThat(v).isEqualTo(i % 2 == 0 ? Values.TRUE : Values.FALSE);
+        read++;
+      }
+
+      try {
+        Value end = in.read();
+      } catch (EOFException e){
+        seenEOF = true;
+      }
+    }
+
+    assertThat(read).isEqualTo(100);
+    assertThat(seenEOF).isTrue();
+
+  }
+
+  @Test
   void writes_doubles() throws Exception {
 
     try (ValueOutputStream out = getOut()) {

@@ -40,6 +40,7 @@ public class Out implements AutoCloseable {
   private final ByteBuffer buffer;
   final ArrayDeque<ValueSerializer> serializers;
 
+  private final BooleanSerializer booleanSerializer = new BooleanSerializer();
   private final LongSerializer longSerializer = new LongSerializer();
   private final DoubleSerializer doubleSerializer = new DoubleSerializer();
   private final DecimalSerializer decimalSerializer = new DecimalSerializer();
@@ -74,6 +75,7 @@ public class Out implements AutoCloseable {
     // find the serializer in question
     switch(v.type().getId()){
       case MagicNumbers.Format.VOID: serializers.push(voidSerializer); break;
+      case MagicNumbers.Format.BOOLEAN: serializers.push(booleanSerializer); break;
       case MagicNumbers.Format.BINARY: serializers.push(binarySerializer); break;
       case MagicNumbers.Format.LONG: serializers.push(longSerializer); break;
       case MagicNumbers.Format.DOUBLE: serializers.push(doubleSerializer); break;

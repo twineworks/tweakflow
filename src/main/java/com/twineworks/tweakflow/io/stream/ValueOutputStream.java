@@ -48,7 +48,7 @@ public class ValueOutputStream implements AutoCloseable{
     byte magicByte = v.type().getId();
     switch(magicByte){
       case MagicNumbers.Format.VOID: ds.writeByte(magicByte); break;
-      case MagicNumbers.Format.BOOLEAN: ds.writeByte(v.bool() ? (byte)1 : (byte)0); break;
+      case MagicNumbers.Format.BOOLEAN: ds.writeByte(magicByte); ds.writeByte(v.bool() ? (byte)1 : (byte)0); break;
       case MagicNumbers.Format.BINARY: ds.writeByte(magicByte); ds.writeInt(v.bytes().length); ds.write(v.bytes());break;
       case MagicNumbers.Format.LONG: ds.writeByte(magicByte); ds.writeLong(v.longNum()); break;
       case MagicNumbers.Format.DOUBLE: ds.writeByte(magicByte); ds.writeDouble(v.doubleNum());break;

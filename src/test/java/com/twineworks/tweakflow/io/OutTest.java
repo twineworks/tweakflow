@@ -110,6 +110,28 @@ class OutTest {
   }
 
   @Test
+  void writes_booleans() throws Exception {
+
+    try (Out out = new Out(w, 17)) {
+      for (int i=0;i<100;i++){
+        out.write(i % 2 == 0 ? Values.TRUE : Values.FALSE);
+      }
+    }
+    w.close();
+
+    try (In in = new In(r, 17)){
+      for (int i=0;i<100;i++){
+        Value v = in.readNext();
+        assertThat(v).isEqualTo(i % 2 == 0 ? Values.TRUE : Values.FALSE);
+      }
+      Value end = in.readNext();
+      assertThat(end).isNull();
+    }
+    r.close();
+
+  }
+
+  @Test
   void writes_longs() throws Exception {
 
     try (Out out = new Out(w, 17)) {

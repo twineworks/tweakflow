@@ -40,6 +40,7 @@ public class In implements AutoCloseable {
   private final ArrayDeque<ValueDeserializer> deserializers;
   private boolean channelDepleted = false;
 
+  private final BooleanSerializer booleanSerializer = new BooleanSerializer();
   private final LongSerializer longSerializer = new LongSerializer();
   private final DoubleSerializer doubleSerializer = new DoubleSerializer();
   private final DecimalSerializer decimalSerializer = new DecimalSerializer();
@@ -110,6 +111,9 @@ public class In implements AutoCloseable {
     switch (format){
       case MagicNumbers.Format.VOID:
         d = voidSerializer;
+        break;
+      case MagicNumbers.Format.BOOLEAN:
+        d = booleanSerializer;
         break;
       case MagicNumbers.Format.LONG:
         d = longSerializer;
