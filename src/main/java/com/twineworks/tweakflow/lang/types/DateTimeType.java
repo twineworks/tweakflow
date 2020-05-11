@@ -27,12 +27,19 @@ package com.twineworks.tweakflow.lang.types;
 import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.values.DateTimeValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.ValueInspector;
 import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.util.LangUtil;
+
+import java.time.*;
+import java.util.regex.Pattern;
 
 final public class DateTimeType implements Type {
 
+  private final static Pattern isoDatetimePattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T?$");
+  private final static ZoneId UTC_ZONE = ZoneId.of("UTC");
   @Override
   public String name() {
     return "datetime";
@@ -116,6 +123,7 @@ final public class DateTimeType implements Type {
   @Override
   public boolean canAttemptCastFrom(Type type) {
     return type == Types.DATETIME
+        || type == Types.STRING
         || type == Types.VOID
         || type == Types.ANY;
   }
@@ -126,21 +134,56 @@ final public class DateTimeType implements Type {
     if (x == Values.NIL) return x;
 
     Type srcType = x.type();
-    if (srcType == Types.DATETIME) return x;
 
-    throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x) +" to "+name());
+    if (srcType == Types.DATETIME){
+      return x;
+    }
+
+    if (srcType == Types.STRING) {
+      return Values.make(castFromString(x.string()));
+    }
+
+    throw new LangException(LangError.CAST_ERROR, "Cannot cast " + ValueInspector.inspect(x) + " to " + name());
+  }
+
+  private DateTimeValue castFromString(String str) {
+
+    if (isoDatetimePattern.matcher(str).matches()){
+      try {
+        int year = Integer.parseInt(str.substring(0, 4));
+        int month = Integer.parseInt(str.substring(5, 7));
+        int dayOfMonth = Integer.parseInt(str.substring(8, 10));
+        LocalDate localDate = LocalDate.of(year, month, dayOfMonth);
+        LocalTime localTime = LocalTime.MIDNIGHT;
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, UTC_ZONE);
+        DateTimeValue dateTime = new DateTimeValue(zonedDateTime);
+        return dateTime;
+      }
+      catch(DateTimeException e){
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + str + " to " + name());
+      }
+    }
+    else{
+      try {
+        return LangUtil.toDateTime(str, null);
+      }
+      catch(LangException e){
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + str + " to " + name()+": "+e.getMessage());
+      }
+    }
   }
 
   @Override
   public int valueHash(Value x) {
-      return x.value().hashCode();
+    return x.value().hashCode();
   }
 
   @Override
   public boolean valueEquals(Value x, Value o) {
 
     //  comparing to a datetime?
-    if (o.type() == this){
+    if (o.type() == this) {
       return x.dateTime().getInstant().equals(o.dateTime().getInstant());
     }
 
@@ -151,7 +194,7 @@ final public class DateTimeType implements Type {
   @Override
   public boolean valueAndTypeEquals(Value x, Value o) {
     //  comparing to a datetime?
-    if (o.type() == this){
+    if (o.type() == this) {
       return x.dateTime().equals(o.dateTime());
     }
 

@@ -1346,6 +1346,27 @@ ERROR:
   message: Cannot cast 200.0kg to decimal
 ```
 
+String as datetime
+
+A string casts successfully to a datetime if it follows the format of [datetime literals](#datetime-literals). 
+Quoting the zone id with backticks is supported, but optional.
+
+In addition the ISO date format `YYYY-MM-DD` is recognized, and is cast to the given date at UTC midnight.
+
+```tweakflow
+> "2020-05-04" as datetime
+2020-05-04T00:00:00Z@UTC
+
+> "2020-05-04T" as datetime
+2020-05-04T00:00:00Z@UTC
+
+> "2017-03-17T16:04:02" as datetime
+2017-03-17T16:04:02Z@UTC
+
+> "2017-03-17T16:04:02.123456789@Europe/Berlin" as datetime
+2017-03-17T16:04:02.123456789+01:00@Europe/Berlin 
+```     
+
 String as list
 
 A string is converted to a list of individual character strings. More precisely, it is converted to a list of its unicode code points.
