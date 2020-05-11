@@ -51,7 +51,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v0.23.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.0.0</a>
           </li>
         </ul>
         </nav>
@@ -100,7 +100,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v0.23.0</a
+            ><b>Tweakflow</b> v1.0.0</a
           >
         </li>
         
@@ -1692,6 +1692,26 @@ ERROR:
 ERROR:
   code: CAST_ERROR
   message: Cannot cast 200.0kg to decimal
+</code></pre>
+
+<p>String as datetime</p>
+
+<p>A string casts successfully to a datetime if it follows the format of <a href="#datetime-literals">datetime literals</a>.
+Quoting the zone id with backticks is supported, but optional.</p>
+
+<p>In addition the ISO date format <code>YYYY-MM-DD</code> is recognized, and is cast to the given date at UTC midnight.</p>
+
+<pre><code class="language-tweakflow">&gt; &quot;2020-05-04&quot; as datetime
+2020-05-04T00:00:00Z@UTC
+
+&gt; &quot;2020-05-04T&quot; as datetime
+2020-05-04T00:00:00Z@UTC
+
+&gt; &quot;2017-03-17T16:04:02&quot; as datetime
+2017-03-17T16:04:02Z@UTC
+
+&gt; &quot;2017-03-17T16:04:02.123456789@Europe/Berlin&quot; as datetime
+2017-03-17T16:04:02.123456789+01:00@Europe/Berlin 
 </code></pre>
 
 <p>String as list</p>
