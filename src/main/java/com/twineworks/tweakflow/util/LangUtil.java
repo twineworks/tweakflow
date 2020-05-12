@@ -43,6 +43,13 @@ public class LangUtil {
   private final static Pattern safeKeyName = Pattern.compile("([.]?[-+/a-zA-Z_0-9?]+)+");
   private final static Pattern safeIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9?]*");
   private final static Pattern safeTimeZoneIdentifier = Pattern.compile("[a-zA-Z_]+(/[a-zA-Z_0-9?]+)+");
+
+  private final static String REGEX_DATE = "(?:\\+|-)?\\d{1,10}-\\d+-\\d+";
+  private final static String REGEX_TIME = "(?:\\d+:\\d+:\\d+(?:\\.\\d+)?)";
+  private final static String REGEX_OFFSET = "(?:(?:(?:\\+|-)\\d+:\\d+)|Z)";
+  private final static String REGEX_TZ = "@(?:.+)";
+  private final static Pattern literalDatetimePattern = Pattern.compile("^"+REGEX_DATE+"T(?:"+REGEX_TIME+"(?:"+REGEX_OFFSET+"|(?:"+REGEX_OFFSET+REGEX_TZ+")|"+REGEX_TZ+")?)?$");
+
   private final static HashSet<String> keywords = new HashSet<>(Arrays.asList(
 
       "interactive",
@@ -167,6 +174,16 @@ public class LangUtil {
     }
 
     return ":`"+id+"`";
+  }
+
+  /**
+   * Returns whether the given string has a chance to parse correctly
+   * using toDateTime()
+   * @param str
+   * @return
+   */
+  public static boolean isPossiblyDateTime(String str){
+    return literalDatetimePattern.matcher(str).matches();
   }
 
   /**

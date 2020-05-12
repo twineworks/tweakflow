@@ -38,12 +38,6 @@ import java.util.regex.Pattern;
 
 final public class DateTimeType implements Type {
 
-  private final static String REGEX_DATE = "(?:\\+|-)?\\d{1,10}-\\d+-\\d+";
-  private final static String REGEX_TIME = "(?:\\d+:\\d+:\\d+(?:\\.\\d+)?)";
-  private final static String REGEX_OFFSET = "(?:(?:(?:\\+|-)\\d+:\\d+)|Z)";
-  private final static String REGEX_TZ = "@(?:.+)";
-  private final static Pattern literalDatetimePattern = Pattern.compile("^"+REGEX_DATE+"T(?:"+REGEX_TIME+"(?:"+REGEX_OFFSET+"|(?:"+REGEX_OFFSET+REGEX_TZ+")|"+REGEX_TZ+")?)?$");
-
   private final static Pattern isoDatetimePattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T?$");
   private final static Pattern isoDateAndTimePattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z?$");
 
@@ -193,7 +187,7 @@ final public class DateTimeType implements Type {
       }
     }
     // everything else
-    else if (literalDatetimePattern.matcher(str).matches()){
+    else if (LangUtil.isPossiblyDateTime(str)){
       try {
         return LangUtil.toDateTime(str, null);
       }
