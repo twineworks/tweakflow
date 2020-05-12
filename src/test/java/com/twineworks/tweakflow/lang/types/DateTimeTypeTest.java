@@ -86,6 +86,12 @@ public class DateTimeTypeTest {
     assertThat(Types.DATETIME.castFrom(Values.make("2020-05-04"))).isEqualTo(Values.make(LocalDateTime.of(2020, 5, 4, 0, 0 )));
     assertThat(Types.DATETIME.castFrom(Values.make("2020-05-04T"))).isEqualTo(Values.make(LocalDateTime.of(2020, 5, 4, 0, 0 )));
 
+    // short datetime format
+    assertThat(Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02")))
+        .isEqualTo(Values.make(ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneId.of("UTC"))));
+    assertThat(Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02Z")))
+        .isEqualTo(Values.make(ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 0, ZoneId.of("UTC"))));
+
     // full format
 
     // with backticks
@@ -116,6 +122,20 @@ public class DateTimeTypeTest {
     assertThat(Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02.123456789+04:00@UTC+04:00")))
         .isEqualTo(Values.make(ZonedDateTime.of(2017, 3, 17, 16, 4, 2, 123456789, ZoneId.of("UTC+04:00"))));
 
+  }
+
+  @Test
+  public void cannot_cast_from_invalid_string() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      Types.DATETIME.castFrom(Values.make("foo"));
+    });
+  }
+
+  @Test
+  public void cannot_cast_from_string_with_invalid_tz() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      Types.DATETIME.castFrom(Values.make("2017-03-17T16:04:02@BogusTZ"));
+    });
   }
 
   @Test

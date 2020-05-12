@@ -38,7 +38,15 @@ import java.util.regex.Pattern;
 
 final public class DateTimeType implements Type {
 
+  private final static String REGEX_DATE = "(?:\\+|-)?\\d{1,10}-\\d+-\\d+";
+  private final static String REGEX_TIME = "(?:\\d+:\\d+:\\d+(?:\\.\\d+)?)";
+  private final static String REGEX_OFFSET = "(?:(?:(?:\\+|-)\\d+:\\d+)|Z)";
+  private final static String REGEX_TZ = "@(?:.+)";
+  private final static Pattern literalDatetimePattern = Pattern.compile("^"+REGEX_DATE+"T(?:"+REGEX_TIME+"(?:"+REGEX_OFFSET+"|(?:"+REGEX_OFFSET+REGEX_TZ+")|"+REGEX_TZ+")?)?$");
+
   private final static Pattern isoDatetimePattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T?$");
+  private final static Pattern isoDateAndTimePattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z?$");
+
   private final static ZoneId UTC_ZONE = ZoneId.of("UTC");
   @Override
   public String name() {
@@ -147,8 +155,28 @@ final public class DateTimeType implements Type {
   }
 
   private DateTimeValue castFromString(String str) {
-
-    if (isoDatetimePattern.matcher(str).matches()){
+    // dates of the form 2020-05-30T23:12:34Z
+    if (isoDateAndTimePattern.matcher(str).matches()){
+      try {
+        int year = Integer.parseInt(str.substring(0, 4));
+        int month = Integer.parseInt(str.substring(5, 7));
+        int dayOfMonth = Integer.parseInt(str.substring(8, 10));
+        int hour = Integer.parseInt(str.substring(11, 13));
+        int minute = Integer.parseInt(str.substring(14, 16));
+        int second = Integer.parseInt(str.substring(17, 19));
+        LocalDate localDate = LocalDate.of(year, month, dayOfMonth);
+        LocalTime localTime = LocalTime.of(hour, minute, second);
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, UTC_ZONE);
+        DateTimeValue dateTime = new DateTimeValue(zonedDateTime);
+        return dateTime;
+      }
+      catch(DateTimeException e){
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + LangUtil.getStringLiteral(str) + " to " + name());
+      }
+    }
+    // dates of the form 2020-05-30
+    else if (isoDatetimePattern.matcher(str).matches()){
       try {
         int year = Integer.parseInt(str.substring(0, 4));
         int month = Integer.parseInt(str.substring(5, 7));
@@ -161,16 +189,20 @@ final public class DateTimeType implements Type {
         return dateTime;
       }
       catch(DateTimeException e){
-        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + str + " to " + name());
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + LangUtil.getStringLiteral(str) + " to " + name());
       }
     }
-    else{
+    // everything else
+    else if (literalDatetimePattern.matcher(str).matches()){
       try {
         return LangUtil.toDateTime(str, null);
       }
       catch(LangException e){
-        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + str + " to " + name()+": "+e.getMessage());
+        throw new LangException(LangError.CAST_ERROR, "Cannot cast " + LangUtil.getStringLiteral(str) + " to " + name()+": "+e.getMessage());
       }
+    }
+    else {
+      throw new LangException(LangError.CAST_ERROR, "Cannot cast " + LangUtil.getStringLiteral(str) + " to " + name());
     }
   }
 
