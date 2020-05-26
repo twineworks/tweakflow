@@ -2008,7 +2008,9 @@ public final class Data {
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
             Value x = list.get(i);
             Value key = fcs.call(x, Values.make(i));
-            t.put(key.castTo(Types.STRING).string(), x);
+            if (!key.isNil()){
+              t.put(key.castTo(Types.STRING).string(), x);
+            }
           }
         }
         else{
@@ -2017,7 +2019,9 @@ public final class Data {
           for (int i = 0, listSize = list.size(); i < listSize; i++) {
             Value x = list.get(i);
             Value key = fcs.call(x);
-            t.put(key.castTo(Types.STRING).string(), x);
+            if (!key.isNil()){
+              t.put(key.castTo(Types.STRING).string(), x);
+            }
           }
         }
 
@@ -2034,7 +2038,9 @@ public final class Data {
           for (String key : map.keys()) {
             Value x = map.get(key);
             Value k = fcs.call(x, Values.make(key));
-            t.put(k.castTo(Types.STRING).string(), x);
+            if (!k.isNil()){
+              t.put(k.castTo(Types.STRING).string(), x);
+            }
           }
 
         }
@@ -2044,7 +2050,9 @@ public final class Data {
             Arity1CallSite fcs = context.createArity1CallSite(f);
             Value x = map.get(key);
             Value k = fcs.call(x);
-            t.put(k.castTo(Types.STRING).string(), x);
+            if (!k.isNil()){
+              t.put(k.castTo(Types.STRING).string(), x);
+            }
           }
 
         }

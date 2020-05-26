@@ -14,10 +14,24 @@ library spec {
         )
       ),
 
+      it("indexes list with omitting nil keys", () ->
+        expect(
+          index_by(["one", "two", "three"], (x) -> if x != "two" then x else nil),
+          to.be({:one "one", :three "three"})
+        )
+      ),
+
       it("indexes list with i", () ->
         expect(
           index_by([{:id "a1", :v 1}, {:id "a2", :v 2}], (x, i) -> "i"..i),
           to.be({:i0 {:id "a1", :v 1}, :i1 {:id "a2", :v 2}})
+        )
+      ),
+
+      it("indexes list with i omitting nil keys", () ->
+        expect(
+          index_by(["one", "two", "three"], (x, i) -> if i!=1 then x else nil),
+          to.be({:one "one", :three "three"})
         )
       ),
 
@@ -28,10 +42,24 @@ library spec {
         )
       ),
 
+      it("indexes dict omitting nil keys", () ->
+        expect(
+          index_by({:a1 1, :a2 2}, (x) -> if x!=1 "b"..x else nil),
+          to.be({:b2 2})
+        )
+      ),
+
       it("indexes dict with key", () ->
         expect(
           index_by({:a1 1, :a2 2}, (x, k) -> k..x),
           to.be({:a11 1, :a22 2})
+        )
+      ),
+
+      it("indexes dict with key omitting nil keys", () ->
+        expect(
+          index_by({:a1 1, :a2 2}, (x, k) -> if k!=:a1 "b"..x else nil),
+          to.be({:b2 2})
         )
       ),
 

@@ -3720,6 +3720,8 @@ The indexing function `f` must return a string, or a value that can be cast to s
 In case `f(x)` returns the same key for multiple `x`, only one of such `x` will be indexed in the returned dict.
 In such cases it is undefined which `x` is preserved in the returned dict.
 
+In case `f(x)` returns `nil` the corresponding `x` is omitted from the result.
+
 Returns `nil` if `xs` is `nil`.
 
 Throws an error if `xs` is neither a `list` nor a `dict`.
