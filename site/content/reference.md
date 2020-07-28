@@ -1348,7 +1348,7 @@ ERROR:
 
 String as datetime
 
-A string casts successfully to a datetime if it follows the format of [datetime literals](#datetime-literals). 
+A string casts successfully to a datetime if it follows the format of [datetime literals](#datetime-literals).
 Quoting the zone id with backticks is supported, but optional.
 
 In addition the ISO date format `YYYY-MM-DD` is recognized, and is cast to the given date at UTC midnight.
@@ -1364,8 +1364,8 @@ In addition the ISO date format `YYYY-MM-DD` is recognized, and is cast to the g
 2017-03-17T16:04:02Z@UTC
 
 > "2017-03-17T16:04:02.123456789@Europe/Berlin" as datetime
-2017-03-17T16:04:02.123456789+01:00@Europe/Berlin 
-```     
+2017-03-17T16:04:02.123456789+01:00@Europe/Berlin
+```
 
 String as list
 
@@ -1472,46 +1472,39 @@ An empty list `[]` converts to `false`. Any other list value converts to `true`.
 
 List as dict
 
-Lists are converted as sequences of key-value pairs. `["a", 1, "b", 2]` is converted to `{:a 1, :b 2}`. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is `nil` or cannot be cast to string, an error is thrown.
+Lists are converted as sequences of key-value pairs. `[["a", 1], ["b", 2]]` is converted to `{:a 1, :b 2}`. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If any list element has not exactly two items, an error is thrown. If any of the keys is `nil` or cannot be cast to string, an error is thrown.
 
 ```tweakflow
-> ["a", 1, "b", 2, "c", 3] as dict
+> [["a", 1], ["b", 2], ["c", 3]] as dict
 {
   :a 1,
   :b 2,
   :c 3
 }
 
-> [1, 2, 3, 4] as dict
+> [[1, 2], [3, 4]] as dict
 {
-  :`1` 2,
-  :`3` 4
+  :1 2,
+  :3 4
 }
 
 > [] as dict
 {}
 
-> ["a", "b", "a", "d"] as dict # rightmost key "a" takes precedence
+> [["a", "b"], ["a", "d"]] as dict # rightmost key "a" takes precedence
 {
   :a "d"
 }
 
-> ["a", nil, "b", 1] as dict # nil values are allowed
+> [["a", nil], ["b", 1]] as dict # nil values are allowed
 {
   :a nil,
   :b 1
 }
 
-> ["a", "b", nil, "d"] as dict # nil keys are not allowed
+> [["a", "b"], [nil, "d"]] as dict # nil keys are not allowed
 ERROR:
   code: CAST_ERROR
-  message: Cannot cast list to dict with nil key at index: 2
-  ...
-
-> [1, 2, 3] as dict
-ERROR:
-  code: CAST_ERROR
-  message: Cannot cast list with odd number of items to dict
   ...
 
 ```
@@ -1535,13 +1528,13 @@ Dicts are converted to lists as a sequence of key-value pairs. An empty dict giv
 []
 
 > {:a "foo", :b "bar"} as list
-["a", "foo", "b", "bar"]
+[["a", "foo"], ["b", "bar"]]
 
 > {:a 1, :b 2}  as list
-["a", 1, "b", 2]
+[["a", 1], ["b", 2]]
 
 > {:b 1, :a 2}  as list
-["a", 2, "b", 1]
+[["a", 2], ["b", 1]]
 ```
 
 ### Function
@@ -1646,7 +1639,7 @@ Instead of a body expression, tweakflow functions can specify a Java class that 
 | [Arity0UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity0UserFunction.java) | Implements zero-parameter functions.     |
 | [Arity1UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity1UserFunction.java) | Implements single-parameter functions.   |
 | [Arity2UserFunction](https://github.com/twineworks/tweakflow/blob/releases/0.0.1/src/main/java/com/twineworks/tweakflow/lang/values/Arity2UserFunction.java) | Implements functions with two parameters |
-| [Arity3UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java) | Implements functions with three paramters. |
+| [Arity3UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java) | Implements functions with three parameters. |
 | [Arity4UserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/Arity4UserFunction.java) | Implements functions with four parameters |
 | [ArityNUserFunction](https://github.com/twineworks/tweakflow/blob/{{< gitRef >}}/src/main/java/com/twineworks/tweakflow/lang/values/ArityNUserFunction.java) | Implements functions with any number of parameters. Arguments are passed as an array of values. |
 
@@ -3967,7 +3960,7 @@ false
 false
 ```
 
-Datetime values are equal if they represent the same instant on an absolute timeline. 
+Datetime values are equal if they represent the same instant on an absolute timeline.
 
 ```tweakflow
 > time.epoch == time.epoch
@@ -4035,7 +4028,7 @@ Each operand must be a long, double, or decimal. Supplying any other types throw
   - -Infinity is less than any finite number
   - Infinity is greater than an finite number
   - If both operands are datetimes, they are compared as instants on an absolute timeline
-  
+
 ```tweakflow
 > 1 < 2
 true
@@ -4195,8 +4188,8 @@ true
 
 Syntax: `a===b`
 
-Evaluates to `true` if a is equal to b as per the semantics of the [equality](#equality) operator `==`, and in addition a and b are of the same type. 
-If both operands are datetimes, their date, time, and timezone components must match.  
+Evaluates to `true` if a is equal to b as per the semantics of the [equality](#equality) operator `==`, and in addition a and b are of the same type.
+If both operands are datetimes, their date, time, and timezone components must match.
 Evaluates to `false` otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.
 
 ```tweakflow

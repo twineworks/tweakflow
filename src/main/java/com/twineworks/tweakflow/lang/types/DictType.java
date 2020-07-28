@@ -154,19 +154,30 @@ final public class DictType implements Type {
     }
     else if (srcType == Types.LIST){
       ListValue list = x.list();
-      if ((list.size() & 1) == 1){
-        throw new LangException(LangError.CAST_ERROR, "Cannot cast list with odd number of items to dict");
-      }
-      HashMap<String, Value> map = new HashMap<>();
-      for (int i = 0, listSize = list.size(); i < listSize; i+=2) {
-        String key = Types.STRING.castFrom(list.get(i)).string();
-        if (key == null){
-          throw new LangException(LangError.CAST_ERROR, "Cannot cast list to dict with nil key at index: "+i);
+      TransientDictValue r = new TransientDictValue();
+      for (Value item : list) {
+
+        if (!item.isList()){
+          throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+this.name() + " - each item must be a 2-element list [key, value], found item: "+ValueInspector.inspect(item));
         }
-        Value value = list.get(i+1);
-        map.put(key, value);
+
+        ListValue kvList = item.list();
+        if (kvList.size() != 2){
+          throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+this.name() + " - each item must be a 2-element list [key, value], found item: "+ValueInspector.inspect(item));
+        }
+
+        Value key = kvList.get(0).castTo(Types.STRING);
+        Value value = kvList.get(1);
+
+        if (key.isNil()){
+          throw new LangException(LangError.CAST_ERROR, "Cannot cast "+ValueInspector.inspect(x)+" to "+this.name() + " - each item must be a 2-element list [key, value], found nil key in item: "+ValueInspector.inspect(item));
+        }
+
+        r.put(key.string(), value);
+
       }
-      return Values.make(new DictValue(map));
+
+      return Values.make(r.persistent());
 
     }
 

@@ -18,7 +18,7 @@ library lib {
   double_to_decimal: 1.2 as decimal;
   double_to_string: 1.2 as string;
   list_to_boolean: [1, 2, 3] as boolean;
-  list_to_map: ["key", "value"] as dict;
+  list_to_map: [["key", "value"]] as dict;
   map_to_boolean: {} as boolean;
   map_to_list: {} as list;
   nil_to_boolean: nil as boolean;

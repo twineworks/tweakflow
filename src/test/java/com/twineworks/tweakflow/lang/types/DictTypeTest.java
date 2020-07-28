@@ -49,9 +49,47 @@ public class DictTypeTest {
 
   @Test
   public void casts_from_list() throws Exception {
-    Value list = Values.makeList("a", 1L, "b", 2L);
+    Value list = Values.makeList(Values.makeList("a", 1L), Values.makeList("b", 2L));
     assertThat(Types.DICT.canAttemptCastFrom(Types.LIST)).isTrue();
     assertThat(Types.DICT.castFrom(list)).isEqualTo(Values.makeDict("a", 1L, "b", 2L));
+  }
+
+  @Test
+  public void casts_from_list_casting_key_values() throws Exception {
+    Value list = Values.makeList(Values.makeList(true, 1L), Values.makeList(false, 0L));
+    assertThat(Types.DICT.canAttemptCastFrom(Types.LIST)).isTrue();
+    assertThat(Types.DICT.castFrom(list)).isEqualTo(Values.makeDict("true", 1L, "false", 0L));
+  }
+
+  @Test
+  public void casts_from_list_later_values_take_precedence() throws Exception {
+    Value list = Values.makeList(Values.makeList("a", 1L), Values.makeList("a", 99L));
+    assertThat(Types.DICT.canAttemptCastFrom(Types.LIST)).isTrue();
+    assertThat(Types.DICT.castFrom(list)).isEqualTo(Values.makeDict("a", 99L));
+  }
+
+  @Test
+  public void cannot_cast_from_list_with_nil_keys() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      Value list = Values.makeList(Values.makeList(null, 1L), Values.makeList("a", 0L));
+      Types.DICT.castFrom(list);
+    });
+  }
+
+  @Test
+  public void cannot_cast_from_list_with_non_pair_element__too_short() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      Value list = Values.makeList(Values.makeList( 1L), Values.makeList("a", 0L));
+      Types.DICT.castFrom(list);
+    });
+  }
+
+  @Test
+  public void cannot_cast_from_list_with_non_pair_element__too_long() throws Exception {
+    Assertions.assertThrows(LangException.class, () -> {
+      Value list = Values.makeList(Values.makeList( "a", 1L, true), Values.makeList("b", 0L));
+      Types.DICT.castFrom(list);
+    });
   }
 
   @Test

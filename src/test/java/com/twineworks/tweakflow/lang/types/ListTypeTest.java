@@ -46,7 +46,12 @@ public class ListTypeTest {
   public void casts_from_dict() throws Exception {
     Value map = Values.makeDict("a", "v_a", "b", "v_b");
     assertThat(Types.LIST.canAttemptCastFrom(Types.DICT)).isTrue();
-    assertThat(Types.LIST.castFrom(map)).isEqualTo(Values.makeList("a", "v_a", "b", "v_b"));
+    assertThat(Types.LIST.castFrom(map)).isEqualTo(
+        Values.makeList(
+            Values.makeList("a", "v_a"),
+            Values.makeList("b", "v_b")
+        )
+    );
   }
 
   @Test

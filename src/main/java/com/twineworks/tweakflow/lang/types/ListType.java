@@ -140,8 +140,7 @@ final public class ListType implements Type {
 
       for (String key : map.keys()) {
         Value value = map.get(key);
-        out = out.append(Values.make(key));
-        out = out.append(value);
+        out = out.append(Values.makeList(Values.make(key), value));
       }
 
       return Values.make(out);

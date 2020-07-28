@@ -39,7 +39,7 @@ library lib
 
   params_as_list_8: (p1, p2, p3, p4, p5, p6, p7, p8) -> list via {:class "com.twineworks.tweakflow.lang.values.ParamsAsList"};
 
-  params_as_list_8_auto_cast: (p1, p2, p3, p4, p5, p6, p7, p8) -> dict via {:class "com.twineworks.tweakflow.lang.values.ParamsAsList"};
+  params_as_list_8_auto_cast: (p1, p2, p3, p4, p5, p6, p7, p8) -> dict [[p1, p2], [p3, p4], [p5, p6], [p7, p8]];
 
   escaped_param: (`my x`=0) -> `my x`+1;
 }
