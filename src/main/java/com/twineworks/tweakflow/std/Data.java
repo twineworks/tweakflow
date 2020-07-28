@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.std;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.types.LongType;
 import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 
@@ -1575,6 +1576,52 @@ public final class Data {
       }
       else{
         throw new LangException(LangError.ILLEGAL_ARGUMENT, "has? is not defined for type "+xs.type().name());
+      }
+
+    }
+
+  }
+
+  // function pluck: (xs, key) -> any
+  public static final class pluck implements UserFunction, Arity2UserFunction {
+
+    private Value pluck(Value key, Value subject){
+      if (subject.isList()){
+        return subject.list().get(key.castTo(Types.LONG).longNum());
+      }
+      if (subject.isDict()){
+        return subject.dict().get(key.castTo(Types.STRING).string());
+      }
+      if (subject.isNil()) return Values.NIL;
+      throw new LangException(LangError.ILLEGAL_ARGUMENT, "item must be a dict, list, or nil - cannot pluck key "+key+" from item: "+ValueInspector.inspect(subject));
+    }
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value key) {
+
+      if (xs == Values.NIL) return Values.NIL;
+      if (key == Values.NIL) return Values.NIL;
+
+      if (xs.isDict()){
+        DictValue dictValue = xs.dict();
+        Iterator<Map.Entry<String, Value>> entryIterator = dictValue.entryIterator();
+        TransientDictValue ret = new TransientDictValue();
+        while(entryIterator.hasNext()){
+          Map.Entry<String, Value> entry = entryIterator.next();
+          ret.put(entry.getKey(), pluck(key, entry.getValue()));
+        }
+        return Values.make(ret.persistent());
+      }
+      else if (xs.isList()){
+        ListValue listValue = xs.list();
+        ListValue ret = new ListValue();
+        for (Value value : listValue) {
+          ret = ret.append(pluck(key, value));
+        }
+        return Values.make(ret);
+      }
+      else{
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "pluck is not defined for type "+xs.type().name());
       }
 
     }
