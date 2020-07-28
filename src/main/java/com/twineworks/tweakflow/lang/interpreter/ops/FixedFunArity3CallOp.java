@@ -39,15 +39,16 @@ import java.util.List;
 final public class FixedFunArity3CallOp implements ExpressionOp {
 
   private final CallNode node;
-  private Arity3CallSite cs;
   private final Value f;
   private final ExpressionOp arg0Op;
   private final ExpressionOp arg1Op;
   private final ExpressionOp arg2Op;
+  private final ThreadLocal<Arity3CallSite> tlcs;
 
   public FixedFunArity3CallOp(CallNode node) {
     this.node = node;
     this.f = Interpreter.evaluateInEmptyScope(node.getExpression());
+    this.tlcs = new ThreadLocal<>();
 
     List<ArgumentNode> argsList = node.getArguments().getList();
     this.arg0Op = argsList.get(0).getExpression().getOp();
@@ -58,8 +59,10 @@ final public class FixedFunArity3CallOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
+    Arity3CallSite cs = tlcs.get();
     if (cs == null){
       cs = CallSites.createArity3CallSite(f, node, stack, context, new CallContext(stack, context));
+      tlcs.set(cs);
     }
     return cs.call(arg0Op.eval(stack, context), arg1Op.eval(stack, context), arg2Op.eval(stack, context));
   }

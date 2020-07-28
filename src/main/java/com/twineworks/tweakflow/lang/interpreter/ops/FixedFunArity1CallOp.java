@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.interpreter.ops;
 import com.twineworks.tweakflow.lang.interpreter.Interpreter;
 import com.twineworks.tweakflow.lang.ast.expressions.CallNode;
 import com.twineworks.tweakflow.lang.values.Arity1CallSite;
+import com.twineworks.tweakflow.lang.values.Arity3CallSite;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
 import com.twineworks.tweakflow.lang.interpreter.CallContext;
@@ -36,21 +37,26 @@ import com.twineworks.tweakflow.lang.interpreter.calls.CallSites;
 final public class FixedFunArity1CallOp implements ExpressionOp {
 
   private final CallNode node;
-  private Arity1CallSite cs;
+
   private final ExpressionOp arg0Op;
   private final Value f;
+  private final ThreadLocal<Arity1CallSite> tlcs;
 
   public FixedFunArity1CallOp(CallNode node) {
     this.node = node;
     this.f = Interpreter.evaluateInEmptyScope(node.getExpression());
+    this.tlcs = new ThreadLocal<>();
     this.arg0Op = node.getArguments().getList().get(0).getExpression().getOp();
   }
 
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
+    Arity1CallSite cs = tlcs.get();
+
     if (cs == null){
       cs = CallSites.createArity1CallSite(f, node, stack, context, new CallContext(stack, context));
+      tlcs.set(cs);
     }
     return cs.call(arg0Op.eval(stack, context));
   }
