@@ -2229,6 +2229,53 @@ nil
 	    data-meta-tags='data'
     ></div>
 
+### pluck{#data-pluck}
+
+`(xs, key) ->`
+
+Given a `list` or `dict` `xs`, returns a collection of the same type and of the same size.
+Each element `el` of `xs` must be a `list`, `dict`, or `nil`. The given `key` is extracted
+from each `el` and placed in the corresponding position in the result. If `key` is not
+present in `el`, `nil` is extracted.
+
+Returns `nil` if `xs` is `nil` or `key` is `nil`.
+
+Throws an error if `key` cannot be cast to `string` or `long` when indexing into elements of
+type `dict` or `list`.
+
+Throws an error if any element of `xs` is not a `dict`, `list`, or `nil`.
+
+
+```tweakflow
+> data.pluck([{:id 1, :name "Sherlock", :address "221B Baker Street" }, {:id 2, :name "Bruce", :address "1007 Mountain Drive"}], "name")
+["Sherlock", "Bruce"]
+
+> data.pluck([["a", "b"], ["c", "d"]], 0)
+["a", "c"]
+
+> data.pluck([["a", "b"], ["c"], ["d", "e"]], 1)
+["b", nil, "e"]
+
+> data.pluck({:roll_1 [2, 4], :roll_2 [6, 5], :roll_3 [1, 3]}, 0)
+{:roll_1 2, :roll_2 6, :roll_3 1}
+
+> data.pluck(nil, 0)
+nil
+
+> data.pluck([{:a 1, :b 2}, {:a 3, :b 4}], nil)
+nil
+```
+
+
+
+<div
+      data-meta='true'
+      data-meta-id='data-pluck'
+      data-meta-type='var'
+      data-meta-name='pluck'
+	    data-meta-tags='data'
+    ></div>
+
 ### omit{#data-omit}
 
 `(dict xs, list keys) ->`

@@ -51,7 +51,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.0.2</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.1.0</a>
           </li>
         </ul>
         </nav>
@@ -100,7 +100,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v1.0.2</a
+            ><b>Tweakflow</b> v1.1.0</a
           >
         </li>
         
@@ -1711,7 +1711,7 @@ Quoting the zone id with backticks is supported, but optional.</p>
 2017-03-17T16:04:02Z@UTC
 
 &gt; &quot;2017-03-17T16:04:02.123456789@Europe/Berlin&quot; as datetime
-2017-03-17T16:04:02.123456789+01:00@Europe/Berlin 
+2017-03-17T16:04:02.123456789+01:00@Europe/Berlin
 </code></pre>
 
 <p>String as list</p>
@@ -1815,45 +1815,38 @@ Quoting the zone id with backticks is supported, but optional.</p>
 
 <p>List as dict</p>
 
-<p>Lists are converted as sequences of key-value pairs. <code>[&quot;a&quot;, 1, &quot;b&quot;, 2]</code> is converted to <code>{:a 1, :b 2}</code>. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If the list has an odd number of items, an error is thrown. If any of the keys is <code>nil</code> or cannot be cast to string, an error is thrown.</p>
+<p>Lists are converted as sequences of key-value pairs. <code>[[&quot;a&quot;, 1], [&quot;b&quot;, 2]]</code> is converted to <code>{:a 1, :b 2}</code>. Items in key position are cast to strings. The conversion proceeds left to right, with any duplicate keys being replaced with the rightmost occurrence. If any list element has not exactly two items, an error is thrown. If any of the keys is <code>nil</code> or cannot be cast to string, an error is thrown.</p>
 
-<pre><code class="language-tweakflow">&gt; [&quot;a&quot;, 1, &quot;b&quot;, 2, &quot;c&quot;, 3] as dict
+<pre><code class="language-tweakflow">&gt; [[&quot;a&quot;, 1], [&quot;b&quot;, 2], [&quot;c&quot;, 3]] as dict
 {
   :a 1,
   :b 2,
   :c 3
 }
 
-&gt; [1, 2, 3, 4] as dict
+&gt; [[1, 2], [3, 4]] as dict
 {
-  :`1` 2,
-  :`3` 4
+  :1 2,
+  :3 4
 }
 
 &gt; [] as dict
 {}
 
-&gt; [&quot;a&quot;, &quot;b&quot;, &quot;a&quot;, &quot;d&quot;] as dict # rightmost key &quot;a&quot; takes precedence
+&gt; [[&quot;a&quot;, &quot;b&quot;], [&quot;a&quot;, &quot;d&quot;]] as dict # rightmost key &quot;a&quot; takes precedence
 {
   :a &quot;d&quot;
 }
 
-&gt; [&quot;a&quot;, nil, &quot;b&quot;, 1] as dict # nil values are allowed
+&gt; [[&quot;a&quot;, nil], [&quot;b&quot;, 1]] as dict # nil values are allowed
 {
   :a nil,
   :b 1
 }
 
-&gt; [&quot;a&quot;, &quot;b&quot;, nil, &quot;d&quot;] as dict # nil keys are not allowed
+&gt; [[&quot;a&quot;, &quot;b&quot;], [nil, &quot;d&quot;]] as dict # nil keys are not allowed
 ERROR:
   code: CAST_ERROR
-  message: Cannot cast list to dict with nil key at index: 2
-  ...
-
-&gt; [1, 2, 3] as dict
-ERROR:
-  code: CAST_ERROR
-  message: Cannot cast list with odd number of items to dict
   ...
 
 </code></pre>
@@ -1876,13 +1869,13 @@ ERROR:
 []
 
 &gt; {:a &quot;foo&quot;, :b &quot;bar&quot;} as list
-[&quot;a&quot;, &quot;foo&quot;, &quot;b&quot;, &quot;bar&quot;]
+[[&quot;a&quot;, &quot;foo&quot;], [&quot;b&quot;, &quot;bar&quot;]]
 
 &gt; {:a 1, :b 2}  as list
-[&quot;a&quot;, 1, &quot;b&quot;, 2]
+[[&quot;a&quot;, 1], [&quot;b&quot;, 2]]
 
 &gt; {:b 1, :a 2}  as list
-[&quot;a&quot;, 2, &quot;b&quot;, 1]
+[[&quot;a&quot;, 2], [&quot;b&quot;, 1]]
 </code></pre>
 
 <h3 id="function">Function</h3>
@@ -2006,7 +1999,7 @@ function
 
 <tr>
 <td><a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Arity3UserFunction.java">Arity3UserFunction</a></td>
-<td>Implements functions with three paramters.</td>
+<td>Implements functions with three parameters.</td>
 </tr>
 
 <tr>
@@ -4572,8 +4565,7 @@ false
 <li>If the operands are finite double and decimal, the double is cast to decimal, and a decimal comparison is performed.</li>
 <li>-Infinity is less than any finite number</li>
 <li>Infinity is greater than an finite number</li>
-<li>If both operands are datetimes, they are compared as instants on an absolute timeline
-<br /></li>
+<li>If both operands are datetimes, they are compared as instants on an absolute timeline</li>
 </ul>
 
 <pre><code class="language-tweakflow">&gt; 1 &lt; 2
@@ -4736,7 +4728,7 @@ true
 <p>Syntax: <code>a===b</code></p>
 
 <p>Evaluates to <code>true</code> if a is equal to b as per the semantics of the <a href="#equality">equality</a> operator <code>==</code>, and in addition a and b are of the same type.
-If both operands are datetimes, their date, time, and timezone components must match.<br />
+If both operands are datetimes, their date, time, and timezone components must match.
 Evaluates to <code>false</code> otherwise. Lists and dicts compare as equal with type identity if their elements compare as equal with type identity.</p>
 
 <pre><code class="language-tweakflow">&gt; 0 === -0
