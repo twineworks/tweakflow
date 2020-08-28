@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.FilesystemParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import com.twineworks.tweakflow.lang.parse.units.transform.ParseUnitSourceTransformer;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,6 +43,7 @@ public class FilesystemLocation implements LoadPathLocation {
     private boolean allowNativeFunctions = true;
     private boolean allowCaching = true;
     private String defaultExtension = ".tf";
+    private ParseUnitSourceTransformer transformer;
 
     public Builder(Path path) {
       Objects.requireNonNull(path, "path cannot be null");
@@ -50,7 +52,7 @@ public class FilesystemLocation implements LoadPathLocation {
 
     @Override
     public FilesystemLocation build() {
-      return new FilesystemLocation(path, confineToPath, allowNativeFunctions, allowCaching, defaultExtension);
+      return new FilesystemLocation(path, confineToPath, allowNativeFunctions, allowCaching, defaultExtension, transformer);
     }
 
     public Builder confineToPath(boolean confineToPath) {
@@ -75,6 +77,11 @@ public class FilesystemLocation implements LoadPathLocation {
       }
       return this;
     }
+
+    public Builder withSourceTransformer(ParseUnitSourceTransformer transformer){
+      this.transformer = transformer;
+      return this;
+    }
   }
 
   private final Path rootPath;
@@ -83,8 +90,9 @@ public class FilesystemLocation implements LoadPathLocation {
   private final String defaultExtension;
   private final boolean allowNativeFunctions;
   private final boolean allowCaching;
+  private final ParseUnitSourceTransformer transformer;
 
-  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, boolean allowCaching, String defaultExtension){
+  private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, boolean allowCaching, String defaultExtension, ParseUnitSourceTransformer transformer){
     Objects.requireNonNull(rootPath, defaultExtension);
     this.rootPath = rootPath;
     this.absRootPath = rootPath.toAbsolutePath();
@@ -92,10 +100,11 @@ public class FilesystemLocation implements LoadPathLocation {
     this.defaultExtension = defaultExtension;
     this.allowNativeFunctions = allowNativeFunctions;
     this.allowCaching = allowCaching;
+    this.transformer = transformer;
   }
 
   private FilesystemLocation(Path rootPath, boolean confineToPath, boolean allowNativeFunctions, String defaultExtension){
-    this(rootPath, confineToPath, allowNativeFunctions, false, defaultExtension);
+    this(rootPath, confineToPath, allowNativeFunctions, false, defaultExtension, null);
   }
 
   public Path getRootPath() {
@@ -121,7 +130,7 @@ public class FilesystemLocation implements LoadPathLocation {
     if (!pathAccessible(path)){
       throw new LangException(LangError.CANNOT_FIND_MODULE, "cannot access path "+path+" from file system location "+absRootPath);
     }
-    return new FilesystemParseUnit(this, resolve(path));
+    return new FilesystemParseUnit(this, resolve(path), transformer);
   }
 
   @Override

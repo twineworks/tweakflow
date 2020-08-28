@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.parse.units;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
+import com.twineworks.tweakflow.lang.parse.units.transform.ParseUnitSourceTransformer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -36,12 +37,14 @@ import java.nio.file.Paths;
 public class FilesystemParseUnit implements ParseUnit {
 
   private String programText;
-  private LoadPathLocation location;
-  private String path;
+  private final LoadPathLocation location;
+  private final String path;
+  private final ParseUnitSourceTransformer transformer;
 
-  public FilesystemParseUnit(LoadPathLocation location, String path) {
+  public FilesystemParseUnit(LoadPathLocation location, String path, ParseUnitSourceTransformer transformer) {
     this.location = location;
     this.path = path;
+    this.transformer = transformer;
   }
 
   @Override
@@ -51,6 +54,11 @@ public class FilesystemParseUnit implements ParseUnit {
 
       try{
         String ret = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
+
+        if (transformer != null){
+          ret = transformer.transform(path, ret);
+        }
+
         if (location.allowsCaching()){
           programText = ret;
         }
@@ -58,7 +66,6 @@ public class FilesystemParseUnit implements ParseUnit {
       } catch (IOException e) {
         throw LangException.wrap(e, LangError.IO_ERROR);
       }
-
     }
 
     return programText;
