@@ -12,7 +12,7 @@ library spec {
       ),
 
       it("nil_shuffle", () ->
-        expect(shuffle([1,2,3]), to.be([1,3,2]))
+        expect(shuffle([1, 2, 3]), to.be([1,3,2]))
       ),
 
       it("foo_shuffle", () ->

@@ -281,6 +281,26 @@ public final class Math {
     }
   }
 
+  // rands: (long count, seed) -> list
+  public static final class rands implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value count, Value seed) {
+      if (count == Values.NIL) return Values.NIL;
+      long longCount = count.longNum();
+      if (longCount < 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "count cannot be negative, found: "+longCount);
+      if (longCount == 0) return Values.EMPTY_LIST;
+
+      Random rnd = new Random(seed.hashCode());
+      ListValue ret = new ListValue();
+      for (long i=0;i<longCount;i++){
+        ret = ret.append(Values.make(rnd.nextDouble()));
+      }
+
+      return Values.make(ret);
+    }
+  }
+
   // min: (list xs) ->
   public static final class min implements UserFunction, Arity1UserFunction {
 
