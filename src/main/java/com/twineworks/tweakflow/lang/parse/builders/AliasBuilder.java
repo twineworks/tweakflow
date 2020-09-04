@@ -29,7 +29,10 @@ import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.identifier;
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
@@ -37,15 +40,19 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class AliasBuilder extends TweakFlowParserBaseVisitor<Node> {
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public AliasBuilder(ParseUnit parseUnit) {
+  public AliasBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public AliasNode visitAliasDef(TweakFlowParser.AliasDefContext ctx) {
 
-    ExpressionBuilder b = new ExpressionBuilder(parseUnit);
+    ExpressionBuilder b = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
     ReferenceNode source = (ReferenceNode) b.visit(ctx.reference());
 
     String name = identifier(ctx.aliasName().getText());

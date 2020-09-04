@@ -22,29 +22,20 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.analysis.references;
+package com.twineworks.tweakflow.lang.parse.recovery;
 
-import com.twineworks.tweakflow.lang.analysis.AnalysisStage;
-import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
-import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
+import com.twineworks.tweakflow.grammar.TweakFlowLexer;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.LexerNoViableAltException;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
-public class MetaDataAnalysis {
-
-  @SuppressWarnings("unchecked")
-  public static void analyze(AnalysisSet analysisSet, boolean recovery){
-
-    MetaDataAnalysisVisitor analysis = new MetaDataAnalysisVisitor(recovery, analysisSet.getRecoveryErrors());
-
-    for (AnalysisUnit unit : analysisSet.getUnits().values()) {
-      if (unit.getStage().getProgress() >= AnalysisStage.META_DATA_ANALYZED.getProgress()){
-        continue;
-      }
-
-      analysis.visit(unit.getUnit());
-
-      unit.setStage(AnalysisStage.META_DATA_ANALYZED);
-    }
-
+public class RecoveryLexer extends TweakFlowLexer {
+  public RecoveryLexer(CharStream input) {
+    super(input);
   }
-
+  // the standard implementation of the generated lexer consumes any invalid tokens
+  // see:
+  // recover(LexerNoViableAltException e)
+  // recover(RecognitionException e)
 }

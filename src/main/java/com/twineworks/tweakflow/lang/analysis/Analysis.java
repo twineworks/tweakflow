@@ -38,32 +38,34 @@ import com.twineworks.tweakflow.lang.load.Loader;
 import com.twineworks.tweakflow.lang.load.ParallelLoader;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Analysis {
 
-  private static void buildScope(AnalysisSet analysisSet) {
-    ScopeBuilder.buildScope(analysisSet);
+  private static void buildScope(AnalysisSet analysisSet, boolean recovery) {
+    ScopeBuilder.buildScope(analysisSet, recovery);
   }
 
-  private static void resolveReferences(AnalysisSet analysisSet){
-    ExpressionResolver.resolve(analysisSet);
+  private static void resolveReferences(AnalysisSet analysisSet, boolean recovery){
+    ExpressionResolver.resolve(analysisSet, recovery);
   }
 
   private static void link (AnalysisSet analysisSet){
     Linker.link(analysisSet);
   }
 
-  private static void verifyDependencies (AnalysisSet analysisSet){
-    DependencyVerification.verify(analysisSet);
+  private static void verifyDependencies (AnalysisSet analysisSet, boolean recovery){
+    DependencyVerification.verify(analysisSet, recovery);
   }
 
   private static void analyzeClosures (AnalysisSet analysisSet){
     ClosureAnalysis.analyze(analysisSet);
   }
 
-  private static void analyzeMetaData (AnalysisSet analysisSet){
-    MetaDataAnalysis.analyze(analysisSet);
+  private static void analyzeMetaData (AnalysisSet analysisSet, boolean recovery){
+    MetaDataAnalysis.analyze(analysisSet, recovery);
   }
 
   private static void foldConstantOps(AnalysisSet analysisSet) {
@@ -87,13 +89,36 @@ public class Analysis {
     try {
       AnalysisSet analysisSet = new AnalysisSet(loadPath);
       if (multiThreaded){
-        ParallelLoader pl = new ParallelLoader(loadPath);
+        ParallelLoader pl = new ParallelLoader(loadPath, false);
         analysisSet.getUnits().putAll(pl.load(paths));
       }
       else {
-        Loader.load(loadPath, paths, analysisSet.getUnits(), true);
+        Loader.load(loadPath, paths, analysisSet.getUnits(), true, false, null);
       }
       return analyze(analysisSet, start);
+    } catch (RuntimeException e){
+      long end = System.currentTimeMillis();
+      return AnalysisResult.error(LangException.wrap(e), end-start);
+    }
+  }
+
+  public static AnalysisResult recoveryAnalysis(List<String> paths, LoadPath loadPath, boolean multiThreaded){
+    long start = System.currentTimeMillis();
+    try {
+      List<LangException> recoveryErrors;
+      AnalysisSet analysisSet = new AnalysisSet(loadPath);
+      if (multiThreaded){
+        ParallelLoader pl = new ParallelLoader(loadPath, true);
+        analysisSet.getUnits().putAll(pl.load(paths));
+        analysisSet.getRecoveryErrors().addAll(pl.getRecoveryErrors());
+      }
+      else {
+        recoveryErrors = new ArrayList<>();
+        Loader.load(loadPath, paths, analysisSet.getUnits(), true, true, recoveryErrors);
+        analysisSet.getRecoveryErrors().addAll(recoveryErrors);
+      }
+
+      return recoveryAnalysis(analysisSet, start);
     } catch (RuntimeException e){
       long end = System.currentTimeMillis();
       return AnalysisResult.error(LangException.wrap(e), end-start);
@@ -103,12 +128,12 @@ public class Analysis {
   public static AnalysisResult analyze(AnalysisSet analysisSet, long startMillis){
     long start = startMillis;
     try {
-      analyzeMetaData(analysisSet);
-      buildScope(analysisSet);
+      analyzeMetaData(analysisSet, false);
+      buildScope(analysisSet, false);
       link(analysisSet);
-      resolveReferences(analysisSet);
+      resolveReferences(analysisSet, false);
       analyzeClosures(analysisSet);
-      verifyDependencies(analysisSet);
+      verifyDependencies(analysisSet, false);
       buildOps(analysisSet);
       foldConstantOps(analysisSet);
       specializeOps(analysisSet);
@@ -126,5 +151,30 @@ public class Analysis {
     }
   }
 
+  public static AnalysisResult recoveryAnalysis(AnalysisSet analysisSet, long startMillis){
+    long start = startMillis;
+    try {
+      analyzeMetaData(analysisSet, true);
+      buildScope(analysisSet, true);
+      link(analysisSet);
+      resolveReferences(analysisSet, true);
+      analyzeClosures(analysisSet);
+      verifyDependencies(analysisSet, true);
+//      buildOps(analysisSet);
+//      foldConstantOps(analysisSet);
+//      specializeOps(analysisSet);
+
+      // mark module space compiled
+//      for (AnalysisUnit spaceUnit : analysisSet.getUnits().values()) {
+//        spaceUnit.setStage(AnalysisStage.COMPILED);
+//      }
+      long end = System.currentTimeMillis();
+      return AnalysisResult.recovery(analysisSet.getRecoveryErrors(), analysisSet, end-start);
+
+    } catch (RuntimeException e){
+      long end = System.currentTimeMillis();
+      return AnalysisResult.error(LangException.wrap(e), end-start);
+    }
+  }
 
 }

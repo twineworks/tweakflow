@@ -37,7 +37,21 @@ import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.scope.Scope;
 import com.twineworks.tweakflow.lang.scope.Scopes;
 
+import java.util.List;
+
 public class ExpressionResolverVisitor extends AExpressionDescendingVisitor implements Visitor {
+
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
+
+  public ExpressionResolverVisitor(boolean recovery, List<LangException> recoveryErrors) {
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
+  }
+
+  public ExpressionResolverVisitor() {
+    this(false, null);
+  }
 
   @Override
   public InteractiveNode visit(InteractiveNode node) {
@@ -66,16 +80,20 @@ public class ExpressionResolverVisitor extends AExpressionDescendingVisitor impl
 
   @Override
   public ReferenceNode visit(ReferenceNode node) {
-    node.setReferencedSymbol(Scopes.resolve(node));
+    node.setReferencedSymbol(Scopes.resolve(node, recovery, recoveryErrors));
 
     // vars in ordered scopes must be referenced after they are defined
-
     Scope scope = node.getReferencedSymbol().getScope();
-    if (scope.isOrdered()){
+    if (scope.isOrdered()) {
       SourceInfo varSrc = node.getReferencedSymbol().getNode().getSourceInfo();
       SourceInfo refSrc = node.getSourceInfo();
-      if (refSrc.precedes(varSrc)){
-        throw new LangException(LangError.UNRESOLVED_REFERENCE, node.getSourceInfo());
+      if (refSrc.precedes(varSrc)) {
+        LangException e = new LangException(LangError.UNRESOLVED_REFERENCE, node.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+        } else {
+          throw e;
+        }
       }
     }
     return node;

@@ -32,6 +32,7 @@ import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
 import com.twineworks.tweakflow.lang.ast.imports.ModuleImportNode;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.util.ArrayList;
@@ -43,16 +44,26 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class ImportBuilder extends TweakFlowParserBaseVisitor<Node> {
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public ImportBuilder(ParseUnit parseUnit) {
+  public ImportBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public ImportNode visitImportDef(TweakFlowParser.ImportDefContext ctx) {
 
+    boolean hasErrors = ctx.exception != null;
+    if (hasErrors) return null;
+
     // module path
-    ExpressionNode pathNode = new ExpressionBuilder(parseUnit).visit(ctx.modulePath());
+    TweakFlowParser.ModulePathContext modulePathContext = ctx.modulePath();
+
+    // the module path node might not be present if we're in a recovery context
+    ExpressionNode pathNode = new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(modulePathContext);
 
     // members
     List<ImportMemberNode> members = new ArrayList<>();

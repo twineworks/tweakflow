@@ -41,10 +41,7 @@ import com.twineworks.tweakflow.lang.parse.ParseResult;
 import com.twineworks.tweakflow.lang.parse.Parser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -54,16 +51,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ParallelLoader {
 
   private final LoadPath loadPath;
+  private final boolean recovery;
   private final ExecutorService es;
   private final ConcurrentHashMap<String, AnalysisUnit> analysisUnits = new ConcurrentHashMap<>();
   private final ConcurrentHashMap<String, ParseUnit> parseUnits = new ConcurrentHashMap<>();
   private final ConcurrentHashMap<String, Throwable> errors = new ConcurrentHashMap<>();
 
   private final AtomicInteger taskCount = new AtomicInteger(0);
+  private final List<LangException> recoveryErrors;
+
+  public ParallelLoader(LoadPath loadPath, boolean recovery) {
+    this.loadPath = loadPath;
+    this.recovery = recovery;
+    if (recovery){
+      recoveryErrors = Collections.synchronizedList(new ArrayList<>());
+    }
+    else {
+      recoveryErrors = null;
+    }
+    es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+  }
 
   public ParallelLoader(LoadPath loadPath) {
-    this.loadPath = loadPath;
-    es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    this(loadPath, false);
+  }
+
+  public List<LangException> getRecoveryErrors() {
+    return recoveryErrors;
   }
 
   private void waitForTasks() {
@@ -97,7 +111,7 @@ public class ParallelLoader {
       // no errors, parse all units in parallel
       ArrayList<Loader> loaderTasks = new ArrayList<>();
       for (ParseUnit parseUnit : parseUnits.values()) {
-        loaderTasks.add(new Loader(parseUnit));
+        loaderTasks.add(new Loader(parseUnit, recovery, recoveryErrors));
       }
 
       try {
@@ -143,9 +157,13 @@ public class ParallelLoader {
   private class Loader implements Callable<Boolean> {
 
     private final ParseUnit parseUnit;
+    private final boolean recovery;
+    private final List<LangException> recoveryErrors;
 
-    private Loader(ParseUnit parseUnit) {
+    private Loader(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
       this.parseUnit = parseUnit;
+      this.recovery = recovery;
+      this.recoveryErrors = recoveryErrors;
     }
 
     @Override
@@ -164,12 +182,16 @@ public class ParallelLoader {
         }
 
         if (parseResult == null) {
-          Parser parser = new Parser(parseUnit);
+          Parser parser = new Parser(parseUnit, recovery);
           parseResult = parser.parseUnit();
 
           if (!parseResult.isSuccess()) {
             errors.putIfAbsent(parseUnitKey, parseResult.getException());
             return Boolean.FALSE;
+          }
+
+          if (recovery && parseResult.hasRecoveryErrors()){
+            recoveryErrors.addAll(parseResult.getRecoveryErrors());
           }
 
           if (parseResultCache != null && parseUnit.getLocation().allowsCaching()) {
@@ -268,7 +290,7 @@ public class ParallelLoader {
           }
         } else {
           // parse just the module head
-          Parser parser = new Parser(parseUnit);
+          Parser parser = new Parser(parseUnit, recovery);
           ParseResult parseResult = parser.parseModuleHead();
 
           if (!parseResult.isSuccess()) {

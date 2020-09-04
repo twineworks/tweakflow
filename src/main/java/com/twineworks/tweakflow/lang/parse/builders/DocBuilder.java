@@ -28,23 +28,30 @@ import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.meta.DocNode;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
 public class DocBuilder extends TweakFlowParserBaseVisitor<DocNode> {
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public DocBuilder(ParseUnit parseUnit) {
+  public DocBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public DocNode visitDoc(TweakFlowParser.DocContext ctx) {
     DocNode doc = new DocNode().setSourceInfo(srcOf(parseUnit, ctx));
 
-    ExpressionNode expression = new ExpressionBuilder(parseUnit).visit(ctx.literal());
+    ExpressionNode expression = new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.literal());
     doc.setExpression(expression);
 
     return doc;

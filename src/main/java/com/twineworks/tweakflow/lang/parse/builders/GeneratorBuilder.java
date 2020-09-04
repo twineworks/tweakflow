@@ -27,31 +27,57 @@ package com.twineworks.tweakflow.lang.parse.builders;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
+import com.twineworks.tweakflow.lang.ast.expressions.NilNode;
 import com.twineworks.tweakflow.lang.ast.structure.GeneratorNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.types.Type;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.*;
 
 public class GeneratorBuilder extends TweakFlowParserBaseVisitor<GeneratorNode>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public GeneratorBuilder(ParseUnit parseUnit) {
+  public GeneratorBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public GeneratorNode visitGenerator(TweakFlowParser.GeneratorContext ctx) {
     Type declaredType = type(ctx.dataType());
 
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
-    ExpressionNode expression = expressionBuilder.visit(ctx.expression());
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
+
+    ExpressionNode expression;
+
+    if (recovery && ctx.expression() == null){
+      expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx));
+    }
+    else{
+      expression = expressionBuilder.visit(ctx.expression());
+    }
+
     expression = expressionBuilder.addImplicitCast(declaredType, expression);
+
+    String name;
+    if (recovery && ctx.identifier() == null){
+      name = identifier("#err");
+    }
+    else{
+      name = identifier(ctx.identifier().getText());
+    }
+
 
     GeneratorNode generator = new GeneratorNode()
         .setSourceInfo(srcOf(parseUnit, ctx))
-        .setSymbolName(identifier(ctx.identifier().getText()))
+        .setSymbolName(name)
         .setDeclaredType(declaredType)
         .setValueExpression(expression);
 

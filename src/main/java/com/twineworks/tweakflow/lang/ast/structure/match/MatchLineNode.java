@@ -65,8 +65,19 @@ public class MatchLineNode implements Node {
 
   @Override
   public List<? extends Node> getChildren() {
+    // guard can be missing
+    // pattern can be missing in recovery parsing
     if (guard == null){
-      return Arrays.asList(pattern, expression);
+      if (pattern == null){
+        return Arrays.asList(expression);
+      }
+      else{
+        return Arrays.asList(pattern, expression);
+      }
+
+    }
+    if (pattern == null){
+      return Arrays.asList(guard, expression);
     }
     return Arrays.asList(pattern, guard, expression);
   }

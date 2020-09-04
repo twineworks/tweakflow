@@ -22,44 +22,51 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.parse.builders;
+package com.twineworks.tweakflow.lang.parse.util;
 
-import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
-import com.twineworks.tweakflow.lang.ast.meta.MetaNode;
-import com.twineworks.tweakflow.grammar.TweakFlowParser;
-import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.BitSet;
 
-import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
+public class CollectingParserErrorListener implements ANTLRErrorListener {
 
-public class MetaBuilder extends TweakFlowParserBaseVisitor<MetaNode> {
-
+  private final ArrayList<LangException> errors = new ArrayList<>();
   private final ParseUnit parseUnit;
-  private final boolean recovery;
-  private final List<LangException> recoveryErrors;
 
-
-  public MetaBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
+  public CollectingParserErrorListener(ParseUnit parseUnit) {
     this.parseUnit = parseUnit;
-    this.recovery = recovery;
-    this.recoveryErrors = recoveryErrors;
-  }
-
-  public MetaBuilder(ParseUnit parseUnit) {
-    this(parseUnit, false, null);
   }
 
   @Override
-  public MetaNode visitMeta(TweakFlowParser.MetaContext ctx) {
-    MetaNode meta = new MetaNode().setSourceInfo(srcOf(parseUnit, ctx));
-
-    ExpressionNode expression = new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.literal());
-    meta.setExpression(expression);
-
-    return meta;
+  public void syntaxError(Recognizer<?, ?> recognizer, Object o, int line, int charIndex, String message, RecognitionException e) {
+    errors.add(ParseErrorHelper.exceptionFor(parseUnit, recognizer, o, line, charIndex, message, e));
   }
 
+  @Override
+  public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
+  }
+
+  @Override
+  public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
+  }
+
+  @Override
+  public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
+  }
+
+  public ArrayList<LangException> getErrors() {
+    return errors;
+  }
+
+  public boolean hasErrors() {
+    return !errors.isEmpty();
+  }
 }

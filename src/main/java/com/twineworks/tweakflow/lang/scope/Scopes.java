@@ -24,13 +24,21 @@
 
 package com.twineworks.tweakflow.lang.scope;
 
+import com.twineworks.tweakflow.lang.ast.expressions.NilNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
+import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.parse.SourceInfo;
+import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
+import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.util.LangUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.identifier;
+import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
 public class Scopes {
 
@@ -62,9 +70,12 @@ public class Scopes {
   }
 
   static public Symbol resolve(ReferenceNode node){
+    return resolve(node, false, null);
+  }
+
+  static public Symbol resolve(ReferenceNode node, boolean recovery, List<LangException> recoveryErrors){
     Scope scope = node.getScope();
     List<String> elements = node.getElements();
-
 
     try {
       Symbol symbol;
@@ -91,6 +102,10 @@ public class Scopes {
       return symbol;
 
     } catch (LangException e){
+      if (recovery){
+        recoveryErrors.add(e);
+        return unresolvedInGlobal(scope);
+      }
       if (e.getSourceInfo() == null){
         e.setSourceInfo(node.getSourceInfo());
       }
@@ -176,6 +191,32 @@ public class Scopes {
 
     return Scopes.resolveMembers(names, findGlobalScope(scope));
 
+  }
+
+  static private Symbol unresolvedInGlobal(Scope scope){
+    Scope globalScope = findGlobalScope(scope);
+    Symbol unresolved = globalScope.getSymbols().get("#unresolved");
+    if (unresolved == null){
+
+      VarDefNode varDef = new VarDefNode()
+          .setSymbolName("#unresolved")
+          .setDeclaredType(Types.ANY)
+          .setValueExpression(new NilNode())
+          .setDeclaredProvided(false)
+          .setScope(globalScope);
+
+      unresolved = new Symbol()
+          .setScope(globalScope)
+          .setEnclosingScope(globalScope)
+          .setName("#unresolved")
+          .setNode(varDef)
+          .setType(SymbolType.LOCAL)
+          .setExport(false)
+          .setTarget(SymbolTarget.VAR);
+
+      globalScope.getSymbols().put("#unresolved", unresolved);
+    }
+    return unresolved;
   }
 
   static private Symbol resolveInModule(List<String> names, Scope scope) {

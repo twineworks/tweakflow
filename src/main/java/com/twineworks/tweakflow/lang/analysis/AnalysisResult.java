@@ -26,28 +26,42 @@ package com.twineworks.tweakflow.lang.analysis;
 
 import com.twineworks.tweakflow.lang.errors.LangException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AnalysisResult {
 
   private final LangException exception;
   private final AnalysisSet analysisSet;
   private final long analysisDurationMillis;
+  private final ArrayList<LangException> recoveryErrors;
+  private final boolean isRecovery;
 
 
   static public AnalysisResult ok(AnalysisSet analysisSet, long analysisDurationMillis){
-    return new AnalysisResult(null, analysisSet, analysisDurationMillis);
+    return new AnalysisResult(false, null, null, analysisSet, analysisDurationMillis);
   }
 
   static public AnalysisResult error(LangException exception, long analysisDurationMillis){
-    return new AnalysisResult(exception, null, analysisDurationMillis);
+    return new AnalysisResult(false, null, exception, null, analysisDurationMillis);
   }
 
-  private AnalysisResult(LangException exception, AnalysisSet analysisSet, long analysisDurationMillis){
+  static public AnalysisResult recovery(ArrayList<LangException> recoveryErrors, AnalysisSet analysisSet, long analysisDurationMillis){
+    return new AnalysisResult(true, recoveryErrors, null, analysisSet, analysisDurationMillis);
+  }
+
+  private AnalysisResult(boolean isRecovery, List<LangException> recoveryErrors, LangException exception, AnalysisSet analysisSet, long analysisDurationMillis){
+    this.isRecovery = isRecovery;
+    this.recoveryErrors = (recoveryErrors != null) ? new ArrayList<>(recoveryErrors) : null;
     this.analysisSet = analysisSet;
     this.exception = exception;
     this.analysisDurationMillis = analysisDurationMillis;
   }
 
   public boolean isSuccess() {
+    if (isRecovery){
+      return analysisSet != null;
+    }
     return exception == null && analysisSet != null;
   }
 
@@ -56,7 +70,27 @@ public class AnalysisResult {
   }
 
   public LangException getException() {
-    return exception;
+    if (isRecovery){
+      if (recoveryErrors != null && recoveryErrors.size() > 0){
+        return recoveryErrors.get(0);
+      }
+      return null;
+    }
+    else{
+      return exception;
+    }
+  }
+
+  public ArrayList<LangException> getRecoveryErrors() {
+    return recoveryErrors;
+  }
+
+  public boolean hasRecoveryErrors() {
+    return recoveryErrors != null && recoveryErrors.size() > 0;
+  }
+
+  public boolean isRecovery() {
+    return isRecovery;
   }
 
   public AnalysisSet getAnalysisSet() {

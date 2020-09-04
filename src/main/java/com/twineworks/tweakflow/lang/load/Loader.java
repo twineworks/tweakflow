@@ -46,7 +46,15 @@ import java.util.Map;
 
 public class Loader {
 
-  private static AnalysisUnit load(LoadPath loadPath, String modulePath, LoadPathLocation pathLocation, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  private static AnalysisUnit load(
+      LoadPath loadPath,
+      String modulePath,
+      LoadPathLocation pathLocation,
+      Map<String, AnalysisUnit> workSet,
+      boolean collectImports,
+      boolean recovery,
+      List<LangException> recoveryErrors
+  ){
 
     long loadStart = System.currentTimeMillis();
 
@@ -70,10 +78,14 @@ public class Loader {
     }
 
     if (parseResult == null){
-      Parser parser = new Parser(parseUnit);
+      Parser parser = new Parser(parseUnit, recovery);
       parseResult = parser.parseUnit();
       if (!parseResult.isSuccess()){
         throw parseResult.getException();
+      }
+
+      if (recovery && recoveryErrors != null){
+        recoveryErrors.addAll(parseResult.getRecoveryErrors());
       }
 
       if (parseResultCache != null && pathLocation.allowsCaching()){
@@ -124,10 +136,10 @@ public class Loader {
         // relative?
         if (importPath.startsWith(".")){
           Resolved resolved = loadPath.resolve(modulePath, pathLocation, importPath);
-          collectResult = load(loadPath, resolved.path, resolved.location, workSet, true);
+          collectResult = load(loadPath, resolved.path, resolved.location, workSet, true, recovery, recoveryErrors);
         }
         else{
-          collectResult = load(loadPath, importPath, workSet, collectImports);
+          collectResult = load(loadPath, importPath, workSet, collectImports, recovery, recoveryErrors);
         }
 
         anImport.setImportedUnit(collectResult);
@@ -143,8 +155,9 @@ public class Loader {
 
   }
 
+
   // load finding the file in load path first
-  public static AnalysisUnit load(LoadPath loadPath, String modulePath, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  public static AnalysisUnit load(LoadPath loadPath, String modulePath, Map<String, AnalysisUnit> workSet, boolean collectImports, boolean recovery, List<LangException> recoveryErrors){
 
     LoadPathLocation pathLocation = loadPath.pathLocationFor(modulePath);
 
@@ -152,30 +165,42 @@ public class Loader {
       throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
     }
 
-    return load(loadPath, modulePath, pathLocation, workSet, collectImports);
+    return load(loadPath, modulePath, pathLocation, workSet, collectImports, recovery, recoveryErrors);
+
+  }
+
+  public static AnalysisUnit load(LoadPath loadPath, String modulePath, Map<String, AnalysisUnit> workSet, boolean collectImports){
+    return load(loadPath, modulePath, workSet, collectImports, false, null);
+  }
+
+  public static AnalysisUnit load(LoadPath loadPath, String modulePath, boolean recovery, List<LangException> recoveryErrors){
+
+    LoadPathLocation pathLocation = loadPath.pathLocationFor(modulePath);
+
+    if (pathLocation == null){
+      throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
+    }
+
+    return load(loadPath, modulePath, pathLocation, new HashMap<>(), false, recovery, recoveryErrors);
 
   }
 
   public static AnalysisUnit load(LoadPath loadPath, String modulePath){
-
-    LoadPathLocation pathLocation = loadPath.pathLocationFor(modulePath);
-
-    if (pathLocation == null){
-      throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
-    }
-
-    return load(loadPath, modulePath, pathLocation, new HashMap<>(), false);
-
+    return load(loadPath, modulePath, false, null);
   }
 
-  public static Map<String, AnalysisUnit> load(LoadPath loadPath, List<String> modulePaths, Map<String, AnalysisUnit> workSet, boolean collectImports){
+  public static Map<String, AnalysisUnit> load(LoadPath loadPath, List<String> modulePaths, Map<String, AnalysisUnit> workSet, boolean collectImports, boolean recovery, List<LangException> recoveryErrors){
 
     for (String modulePath : modulePaths) {
-      load(loadPath, modulePath, workSet, collectImports);
+      load(loadPath, modulePath, workSet, collectImports, recovery, recoveryErrors);
     }
 
     return workSet;
 
+  }
+
+  public static Map<String, AnalysisUnit> load(LoadPath loadPath, List<String> modulePaths, Map<String, AnalysisUnit> workSet, boolean collectImports){
+    return load(loadPath, modulePaths, workSet, collectImports, false, null);
   }
 
 

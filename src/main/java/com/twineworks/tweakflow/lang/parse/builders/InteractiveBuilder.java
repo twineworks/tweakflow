@@ -43,9 +43,13 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class InteractiveBuilder extends TweakFlowParserBaseVisitor<Node>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public InteractiveBuilder(ParseUnit parseUnit) {
+  public InteractiveBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
@@ -65,7 +69,7 @@ public class InteractiveBuilder extends TweakFlowParserBaseVisitor<Node>{
   @Override
   public InteractiveSectionNode visitInteractiveSection(TweakFlowParser.InteractiveSectionContext ctx) {
 
-    ReferenceNode inScope = (ReferenceNode) new ExpressionBuilder(parseUnit).visit(ctx.reference());
+    ReferenceNode inScope = (ReferenceNode) new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.reference());
 
     // can only reference modules
     if (inScope.getElements().size() != 1){
@@ -84,7 +88,7 @@ public class InteractiveBuilder extends TweakFlowParserBaseVisitor<Node>{
   private void buildVars(VarDefs vars, List<TweakFlowParser.VarDefContext> varDefContexts){
 
     for (TweakFlowParser.VarDefContext varDefContext : varDefContexts) {
-      VarDefNode varDef = new VarDefBuilder(parseUnit).visitVarDef(varDefContext);
+      VarDefNode varDef = new VarDefBuilder(parseUnit, recovery, recoveryErrors).visitVarDef(varDefContext);
       if (vars.getMap().containsKey(varDef.getSymbolName())){
         throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" already defined", srcOf(parseUnit, varDefContext));
       }

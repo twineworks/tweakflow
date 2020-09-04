@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Twineworks GmbH
+ * Copyright (c) 2020 Twineworks GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,31 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.analysis.references;
+package com.twineworks.tweakflow.lang.parse.util;
 
-import com.twineworks.tweakflow.lang.analysis.AnalysisStage;
-import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
-import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
+import com.twineworks.tweakflow.lang.errors.LangException;
 
-public class MetaDataAnalysis {
+public class ParseError {
 
-  @SuppressWarnings("unchecked")
-  public static void analyze(AnalysisSet analysisSet, boolean recovery){
+  private LangException error;
+  private int line;
+  private int charIndex;
 
-    MetaDataAnalysisVisitor analysis = new MetaDataAnalysisVisitor(recovery, analysisSet.getRecoveryErrors());
-
-    for (AnalysisUnit unit : analysisSet.getUnits().values()) {
-      if (unit.getStage().getProgress() >= AnalysisStage.META_DATA_ANALYZED.getProgress()){
-        continue;
-      }
-
-      analysis.visit(unit.getUnit());
-
-      unit.setStage(AnalysisStage.META_DATA_ANALYZED);
-    }
-
+  public ParseError(LangException error, int line, int charIndex) {
+    this.error = error;
+    this.line = line;
+    this.charIndex = charIndex;
   }
 
+  public LangException getError() {
+    return error;
+  }
+
+  public int getLine() {
+    return line;
+  }
+
+  public int getCharIndex() {
+    return charIndex;
+  }
 }

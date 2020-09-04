@@ -44,16 +44,20 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPatternNode>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public MatchPatternBuilder(ParseUnit parseUnit) {
+  public MatchPatternBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public MatchPatternNode visitExpPattern(TweakFlowParser.ExpPatternContext ctx) {
     ExpressionPatternNode patternNode = new ExpressionPatternNode();
     patternNode.setSourceInfo(srcOf(parseUnit, ctx));
-    patternNode.setExpression(new ExpressionBuilder(parseUnit).visit(ctx.expression()));
+    patternNode.setExpression(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.expression()));
 
     if (ctx.varCapture() != null){
       patternNode.setCapture(visitVarCapture(ctx.varCapture()));
@@ -186,7 +190,7 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
 
     OpenDictPatternNode node = new OpenDictPatternNode();
     node.setSourceInfo(srcOf(parseUnit, ctx));
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
 
     List<TweakFlowParser.MatchPatternContext> matchPattern = ctx.matchPattern();
     List<TweakFlowParser.StringConstantContext> keys = ctx.stringConstant();
@@ -222,7 +226,7 @@ public class MatchPatternBuilder extends TweakFlowParserBaseVisitor<MatchPattern
 
     DictPatternNode node = new DictPatternNode();
     node.setSourceInfo(srcOf(parseUnit, ctx));
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
 
     List<TweakFlowParser.MatchPatternContext> matchPattern = ctx.matchPattern();
     List<TweakFlowParser.StringConstantContext> keys = ctx.stringConstant();

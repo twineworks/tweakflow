@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Twineworks GmbH
+ * Copyright (c) 2020 Twineworks GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.parse.bailing;
+package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import org.antlr.v4.runtime.ParserRuleContext;

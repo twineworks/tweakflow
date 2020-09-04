@@ -33,6 +33,7 @@ import com.twineworks.tweakflow.lang.ast.structure.LibraryNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.util.ArrayList;
@@ -45,9 +46,13 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public ModuleBuilder(ParseUnit parseUnit) {
+  public ModuleBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
@@ -67,7 +72,13 @@ public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
     List<ImportNode> imports = new ArrayList<>();
 
     for (TweakFlowParser.ImportDefContext importDefContext : getImportDefs(ctx)) {
-      imports.add(new ImportBuilder(parseUnit).visitImportDef(importDefContext));
+      ImportNode importNode = new ImportBuilder(parseUnit, recovery, recoveryErrors).visitImportDef(importDefContext);
+
+      // import node might come back null in recovery parsing
+      if (importNode != null){
+        imports.add(importNode);
+      }
+
     }
 
     module.setImports(imports);
@@ -75,7 +86,7 @@ public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
     // aliases
     List<AliasNode> aliases = new ArrayList<>();
     for (TweakFlowParser.AliasDefContext aliasDefContext : getAliasDefs(ctx)) {
-      aliases.add(new AliasBuilder(parseUnit).visitAliasDef(aliasDefContext));
+      aliases.add(new AliasBuilder(parseUnit, recovery, recoveryErrors).visitAliasDef(aliasDefContext));
     }
 
     module.setAliases(aliases);
@@ -83,7 +94,7 @@ public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
     // exports
     List<ExportNode> exports = new ArrayList<>();
     for (TweakFlowParser.ExportDefContext exportDefContext : getExportDefs(ctx)) {
-      exports.add(new ExportBuilder(parseUnit).visitExportDef(exportDefContext));
+      exports.add(new ExportBuilder(parseUnit, recovery, recoveryErrors).visitExportDef(exportDefContext));
     }
 
     module.setExports(exports);
@@ -91,13 +102,13 @@ public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
     // doc
     TweakFlowParser.DocContext docContext = getDocContext(ctx);
     if (docContext != null){
-      module.setDoc(new DocBuilder(parseUnit).visitDoc(docContext));
+      module.setDoc(new DocBuilder(parseUnit, recovery, recoveryErrors).visitDoc(docContext));
     }
 
     // meta
     TweakFlowParser.MetaContext metaContext = getMetaContext(ctx);
     if (metaContext != null){
-      module.setMeta(new MetaBuilder(parseUnit).visitMeta(metaContext));
+      module.setMeta(new MetaBuilder(parseUnit, recovery, recoveryErrors).visitMeta(metaContext));
     }
 
     // components
@@ -108,7 +119,7 @@ public class ModuleBuilder extends TweakFlowParserBaseVisitor<Node>{
       // library
       if (comp instanceof TweakFlowParser.LibraryComponentContext){
         TweakFlowParser.LibraryComponentContext libraryCtx = (TweakFlowParser.LibraryComponentContext) comp;
-        LibraryNode library = new LibraryBuilder(parseUnit).visitLibrary(libraryCtx.library());
+        LibraryNode library = new LibraryBuilder(parseUnit, recovery, recoveryErrors).visitLibrary(libraryCtx.library());
         components.add(library);
       }
 

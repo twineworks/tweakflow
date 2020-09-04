@@ -112,6 +112,13 @@ public class TweakFlow {
 
   }
 
+  public static Runtime compileRecovery(LoadPath loadPath, List<String> paths, DebugHandler debugHandler, boolean multiThreaded){
+    AnalysisResult analysisResult = Analysis.recoveryAnalysis(paths, loadPath, multiThreaded);
+    if (analysisResult.isError()) throw analysisResult.getException();
+    RuntimeSet runtimeSet = new RuntimeSet(analysisResult);
+    return new Runtime(runtimeSet, debugHandler);
+  }
+
   public static ParseResult parse(String exp){
     ParseUnit parseUnit = new MemoryLocation.Builder()
         .add("eval", exp)

@@ -35,6 +35,7 @@ import com.twineworks.tweakflow.lang.parse.SourceInfo;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.identifier;
@@ -43,9 +44,13 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class LibraryBuilder extends TweakFlowParserBaseVisitor<Node>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public LibraryBuilder(ParseUnit parseUnit) {
+  public LibraryBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
@@ -60,20 +65,26 @@ public class LibraryBuilder extends TweakFlowParserBaseVisitor<Node>{
 
     TweakFlowParser.DocContext docContext = getDocContext(ctx);
     if (docContext != null){
-      library.setDoc(new DocBuilder(parseUnit).visitDoc(docContext));
+      library.setDoc(new DocBuilder(parseUnit, recovery, recoveryErrors).visitDoc(docContext));
     }
 
     TweakFlowParser.MetaContext metaContext = getMetaContext(ctx);
     if (metaContext != null){
-      library.setMeta(new MetaBuilder(parseUnit).visitMeta(metaContext));
+      library.setMeta(new MetaBuilder(parseUnit, recovery, recoveryErrors).visitMeta(metaContext));
     }
 
     // add vars
     Map<String, VarDefNode> varDefs = library.getVars().getMap();
     for (TweakFlowParser.LibVarContext libVarContext : ctx.libVar()) {
-      VarDefNode varDef = new VarDefBuilder(parseUnit).visitLibVar(libVarContext);
+      VarDefNode varDef = new VarDefBuilder(parseUnit, recovery, recoveryErrors).visitLibVar(libVarContext);
       if (varDefs.containsKey(varDef.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined more than once in "+name, varDef.getSourceInfo());
+        LangException e = new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName()+" defined more than once in "+name, varDef.getSourceInfo());
+        if (recovery){
+          recoveryErrors.add(e);
+        }
+        else{
+          throw e;
+        }
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }

@@ -31,7 +31,7 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 
 public class ScopeBuilder {
 
-  public static void buildScope(AnalysisSet analysisSet) {
+  public static void buildScope(AnalysisSet analysisSet, boolean recovery) {
 
     for (AnalysisUnit unit : analysisSet.getUnits().values()) {
 
@@ -40,15 +40,15 @@ public class ScopeBuilder {
         continue;
       }
 
-      buildScope(analysisSet, unit.getUnit());
+      buildScope(analysisSet, unit.getUnit(), recovery);
 
       unit.setStage(AnalysisStage.BUILT_SCOPE);
     }
 
   }
 
-  static void buildScope(AnalysisSet analysisSet, UnitNode unitNode){
-    new ScopeBuilderVisitor(analysisSet.getGlobalScope()).visit(unitNode);
+  static void buildScope(AnalysisSet analysisSet, UnitNode unitNode, boolean recovery){
+    new ScopeBuilderVisitor(analysisSet.getGlobalScope(), recovery, analysisSet.getRecoveryErrors()).visit(unitNode);
   }
 
 }

@@ -49,7 +49,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,16 +57,25 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.*;
 public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode> {
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public ExpressionBuilder(ParseUnit parseUnit) {
+  public ExpressionBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
+  }
+
+  public static ExpressionNode makeRecoveryNilNode(ParseUnit p, ParserRuleContext ctx){
+    return new NilNode().setSourceInfo(srcOf(p, ctx));
   }
 
   public ExpressionNode addImplicitCast(Type targetType, ExpressionNode node) {
     if (targetType == Types.ANY) return node;
     if (targetType == node.getValueType()) return node;
 
-    if (node.getValueType().canAttemptCastTo(targetType)) {
+    // allow casts that are guaranteed to fail in recovery mode
+    if (recovery || node.getValueType().canAttemptCastTo(targetType)) {
       return new CastNode()
           .setExpression(node)
           .setTargetType(targetType)
@@ -156,6 +164,9 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       Long decLiteral = parseLongLiteral(ctx.getText().replace("_", ""));
       return new LongNode(decLiteral).setSourceInfo(sourceInfo);
     } catch (NumberFormatException e) {
+      if (recovery){
+        return new LongNode(0L).setSourceInfo(sourceInfo);
+      }
       throw new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
     }
 
@@ -224,12 +235,12 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       ParseTree child = headContext.getChild(i);
       // generator
       if (child instanceof TweakFlowParser.GeneratorContext) {
-        GeneratorNode generatorNode = new GeneratorBuilder(parseUnit).visitGenerator((TweakFlowParser.GeneratorContext) child);
+        GeneratorNode generatorNode = new GeneratorBuilder(parseUnit, recovery, recoveryErrors).visitGenerator((TweakFlowParser.GeneratorContext) child);
         head.getElements().add(generatorNode);
       }
       // local
       else if (child instanceof TweakFlowParser.VarDefContext) {
-        VarDefNode varDefNode = new VarDefBuilder(parseUnit).visitVarDef((TweakFlowParser.VarDefContext) child);
+        VarDefNode varDefNode = new VarDefBuilder(parseUnit, recovery, recoveryErrors).visitVarDef((TweakFlowParser.VarDefContext) child);
         head.getElements().add(varDefNode);
       }
       // expression
@@ -239,7 +250,13 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       // comma separator token children are skipped
     }
 
-    forNode.setExpression(visit(ctx.expression()));
+    if (recovery && ctx.expression() == null){
+      forNode.setExpression(makeRecoveryNilNode(parseUnit, ctx));
+    }
+    else{
+      forNode.setExpression(visit(ctx.expression()));
+    }
+
     return forNode;
   }
 
@@ -259,11 +276,11 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     for (int i = 0; i < size; i++) {
       TweakFlowParser.MatchLineContext matchLineContext = matchLineContexts.get(i);
-      MatchLineNode matchLineNode = new MatchLineBuilder(parseUnit).visit(matchLineContext);
+      MatchLineNode matchLineNode = new MatchLineBuilder(parseUnit, recovery, recoveryErrors).visit(matchLineContext);
 
       // ensure the default pattern appears last, if present
       if (matchLineNode.getPattern() instanceof DefaultPatternNode) {
-        if (i != size - 1)
+        if (!recovery && i != size - 1)
           throw new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
       }
       matchLines.getElements().add(matchLineNode);
@@ -464,6 +481,11 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ArrayList<ExpressionNode> subLists = new ArrayList<>();
 
     ListNode currentSubList = null;
+
+    // ignore faulty children in recovery mode
+    if (recovery && children == null){
+      children = Collections.emptyList();
+    }
 
     for (ParseTree child : children) {
 
@@ -739,8 +761,15 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
         .setSourceInfo(srcOf(parseUnit, ctx));
 
     Map<String, VarDefNode> varDefs = bindings.getVars().getMap();
-    for (TweakFlowParser.VarDefContext varDefContext : ctx.varDef()) {
-      VarDefNode varDef = new VarDefBuilder(parseUnit).visitVarDef(varDefContext);
+    List<TweakFlowParser.VarDefContext> varDefContexts = ctx.varDef();
+
+    // allow errors in node
+    if (recovery && varDefContexts == null){
+      varDefContexts = Collections.emptyList();
+    }
+
+    for (TweakFlowParser.VarDefContext varDefContext : varDefContexts) {
+      VarDefNode varDef = new VarDefBuilder(parseUnit, recovery, recoveryErrors).visitVarDef(varDefContext);
       if (varDefs.containsKey(varDef.getSymbolName())) {
         throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName() + " defined more than once", varDef.getSourceInfo());
       }
@@ -748,7 +777,15 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     }
     bindings.getVars().cook();
 
-    ExpressionNode expression = new ExpressionBuilder(parseUnit).visit(ctx.expression());
+
+    ExpressionNode expression;
+    TweakFlowParser.ExpressionContext valueExp = ctx.expression();
+    if (recovery && valueExp == null){
+      expression = makeRecoveryNilNode(parseUnit, ctx);
+    }
+    else {
+      expression = new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(valueExp);
+    }
 
     return new LetNode()
         .setBindings(bindings)
@@ -784,15 +821,17 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       }
 
       ExpressionNode defaultValue;
-      if (defContext.expression() == null) {
+
+      TweakFlowParser.ExpressionContext defExp = defContext.expression();
+      if (defExp == null) {
         defaultValue = new NilNode().setSourceInfo(srcOf(parseUnit, defContext.identifier()));
-      } else {
-        defaultValue = visit(defContext.expression());
+      }else {
+        defaultValue = visit(defExp);
       }
 
       String name = identifier(defContext.identifier().getText());
 
-      if (paramMap.containsKey(name)) {
+      if (!recovery && paramMap.containsKey(name)) {
         throw new LangException(LangError.ALREADY_DEFINED, name + " defined more than once", srcOf(parseUnit, defContext));
       }
 
@@ -819,7 +858,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
     } else if (ctx.viaDec() != null) {
 
-      ViaNode via = new ViaBuilder(parseUnit).visit(ctx.viaDec());
+      ViaNode via = new ViaBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.viaDec());
 
       return new FunctionNode()
           .setVia(via)
@@ -944,7 +983,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ExpressionNode exp = visit(ctx.expression());
     Type type = type(ctx.dataType());
 
-    if (exp.getValueType().canAttemptCastTo(type)) {
+    if (recovery || exp.getValueType().canAttemptCastTo(type)) {
       return new CastNode()
           .setExpression(exp)
           .setTargetType(type)
@@ -1204,7 +1243,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
               .setExpression(visit(nArg.expression()))
               .setName(identifier(nArg.identifier().getText()));
 
-          if (argMap.containsKey(arg.getName())) {
+          if (!recovery && argMap.containsKey(arg.getName())) {
             throw new LangException(LangError.ALREADY_DEFINED, arg.getName() + " defined more than once", arg.getSourceInfo());
           } else {
             argMap.put(arg.getName(), arg);

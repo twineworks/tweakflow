@@ -29,8 +29,6 @@ import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.ForHeadElementNode;
 import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.args.*;
-import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
-import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.*;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
@@ -39,6 +37,8 @@ import com.twineworks.tweakflow.lang.ast.imports.NameImportNode;
 import com.twineworks.tweakflow.lang.ast.meta.DocNode;
 import com.twineworks.tweakflow.lang.ast.meta.MetaNode;
 import com.twineworks.tweakflow.lang.ast.meta.ViaNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArgumentNode;
+import com.twineworks.tweakflow.lang.ast.partial.PartialArguments;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
@@ -48,6 +48,7 @@ import com.twineworks.tweakflow.lang.types.Types;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
   SymbolInterface scopes and local scopes are created for every node.
@@ -62,8 +63,17 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
   private final ArrayDeque<Scope> scopes = new ArrayDeque<>();
   private final ArrayDeque<Scope> matchLineScopes = new ArrayDeque<>();
 
-  public ScopeBuilderVisitor(Scope topLevelScope) {
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
+
+  public ScopeBuilderVisitor(Scope topLevelScope, boolean recovery, List<LangException> recoveryErrors) {
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
     scopes.push(topLevelScope);
+  }
+
+  public ScopeBuilderVisitor(Scope topLevelScope) {
+      this(topLevelScope, false, null);
   }
 
   @Override
@@ -82,8 +92,13 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
         .setTarget(SymbolTarget.INTERACTIVE);
 
     // already present?
-    if (unitScope.getSymbols().containsKey(unitSymbol.getName())){
-      throw new LangException(LangError.ALREADY_DEFINED, unitSymbol.getName()+" already loaded");
+    if (unitScope.getSymbols().containsKey(unitSymbol.getName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, unitSymbol.getName() + " already loaded");
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
     unitScope.getSymbols().put(unitSymbol.getName(), unitSymbol);
 
@@ -120,14 +135,20 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
         .setTarget(SymbolTarget.MODULE);
 
     // already present?
-    if (unitScope.getSymbols().containsKey(unitSymbol.getName())){
-      throw new LangException(LangError.ALREADY_DEFINED, unitSymbol.getName()+" already defined", node.getSourceInfo());
+    if (unitScope.getSymbols().containsKey(unitSymbol.getName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, unitSymbol.getName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
     unitScope.getSymbols().put(unitSymbol.getName(), unitSymbol);
 
     // if the module declares itself global, an import symbol references it in global scope
 
-    if (node.isGlobal()){
+    if (node.isGlobal()) {
       Symbol globalModuleSymbol = new Symbol()
           .setScope(globalScope)
           .setEnclosingScope(globalScope)
@@ -139,8 +160,13 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
           .setTarget(SymbolTarget.MODULE);
 
       // already present?
-      if (globalScope.getSymbols().containsKey(globalModuleSymbol.getName())){
-        throw new LangException(LangError.ALREADY_DEFINED, "global "+globalModuleSymbol.getName()+" already defined", node.getSourceInfo());
+      if (globalScope.getSymbols().containsKey(globalModuleSymbol.getName())) {
+        LangException e = new LangException(LangError.ALREADY_DEFINED, "global " + globalModuleSymbol.getName() + " already defined", node.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+        } else {
+          throw e;
+        }
       }
 
       globalScope.getSymbols().put(globalModuleSymbol.getName(), globalModuleSymbol);
@@ -179,8 +205,14 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
         .setTarget(SymbolTarget.UNKNOWN);
 
     // cannot clash with anything already exported
-    if (scope.getPublicScope().getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getPublicScope().getSymbols().containsKey(node.getSymbolName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     scope.getPublicScope().getSymbols().put(node.getSymbolName(), exportSymbol);
@@ -232,17 +264,28 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
         .setExport(node.isExport())
         .setTarget(SymbolTarget.LIBRARY);
 
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
 
     scope.getSymbols().put(node.getSymbolName(), librarySymbol);
     node.setScope(scope);
 
     // if it's exported, it cannot clash with existing exports
-    if (node.isExport()){
-      if (scope.getPublicScope().getSymbols().containsKey(node.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" export already defined", node.getSourceInfo());
+    if (node.isExport()) {
+      if (scope.getPublicScope().getSymbols().containsKey(node.getSymbolName())) {
+        LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " export already defined", node.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+        } else {
+          throw e;
+        }
       }
 
       scope.getPublicScope().getSymbols().put(node.getSymbolName(), librarySymbol);
@@ -269,8 +312,13 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     Scope scope = scopes.peek();
     node.setScope(scope);
 
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
 
     scope.getSymbols().put(node.getSymbolName(), new Symbol()
@@ -298,8 +346,13 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     Scope scope = scopes.peek();
     node.setScope(scope);
 
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
 
     scope.getSymbols().put(node.getSymbolName(), new Symbol()
@@ -357,15 +410,20 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
 
     LocalScope bindingsScope = new LocalScope(scope, ScopeType.LOCAL);
 
-    matchLineScopes.push(bindingsScope);
+    MatchPatternNode pattern = node.getPattern();
 
-    visit(node.getPattern());
+    if (pattern == null && recovery) {
+      recoveryErrors.add(new LangException(LangError.PARSE_ERROR, "missing match pattern in: ", node.getSourceInfo()));
+    } else {
+      matchLineScopes.push(bindingsScope);
+      visit(pattern);
+      matchLineScopes.pop();
+    }
 
-    matchLineScopes.pop();
 
     scopes.push(bindingsScope);
 
-    if (node.getGuard() != null){
+    if (node.getGuard() != null) {
       visit(node.getGuard());
     }
     visit(node.getExpression());
@@ -466,10 +524,15 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     node.setScope(scope);
     super.visit(node);
 
-    if (node.getSymbolName() != null){
+    if (node.getSymbolName() != null) {
 
-      if (scope.getSymbols().containsKey(node.getSymbolName())){
-        throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+      if (scope.getSymbols().containsKey(node.getSymbolName())) {
+        LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+        } else {
+          throw e;
+        }
       }
 
       scope.getSymbols().put(node.getSymbolName(), new Symbol()
@@ -524,8 +587,14 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     Scope scope = scopes.peek();
     node.setScope(scope);
 
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     scope.getSymbols().put(node.getSymbolName(), new Symbol()
@@ -550,7 +619,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     return node;
   }
 
-  
+
   @Override
   public ImportNode visit(ImportNode node) {
     if (node.getScope() != null) return node;
@@ -569,8 +638,15 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     node.setScope(scope);
 
     // ensure module scope does not already define that name
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     Symbol importSymbol = new Symbol()
@@ -593,8 +669,15 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     node.setScope(scope);
 
     // ensure module scope does not already define that name
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     Symbol importSymbol = new Symbol()
@@ -618,8 +701,15 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     node.setScope(scope);
 
     // ensure module scope does not already define that name
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     Symbol aliasSymbol = new Symbol()
@@ -657,7 +747,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     LocalScope catchScope = new LocalScope(scope);
 
     VarDecNode caughtException = node.getCaughtException();
-    if (caughtException!= null){
+    if (caughtException != null) {
       Symbol exceptionSymbol = new Symbol()
           .setName(caughtException.getSymbolName())
           .setVarType(caughtException.getDeclaredType())
@@ -670,7 +760,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     }
 
     VarDecNode caughtTrace = node.getCaughtTrace();
-    if (caughtTrace!= null){
+    if (caughtTrace != null) {
       Symbol traceSymbol = new Symbol()
           .setName(caughtTrace.getSymbolName())
           .setVarType(Types.LIST)
@@ -776,7 +866,7 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     visit(node.getParameters());
 
     // if the function is defined natively using 'via' the expression is null
-    if (node.getExpression() != null){
+    if (node.getExpression() != null) {
       visit(node.getExpression());
     }
 
@@ -801,8 +891,14 @@ public class ScopeBuilderVisitor extends AExpressionDescendingVisitor implements
     Scope scope = scopes.peek();
     node.setScope(scope);
 
-    if (scope.getSymbols().containsKey(node.getSymbolName())){
-      throw new LangException(LangError.ALREADY_DEFINED, node.getSymbolName()+" already defined", node.getSourceInfo());
+    if (scope.getSymbols().containsKey(node.getSymbolName())) {
+      LangException e = new LangException(LangError.ALREADY_DEFINED, node.getSymbolName() + " already defined", node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
+
     }
 
     scope.getSymbols().put(node.getSymbolName(), new Symbol()

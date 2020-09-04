@@ -29,23 +29,30 @@ import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.structure.InteractiveNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+
+import java.util.List;
 
 public class UnitBuilder extends TweakFlowParserBaseVisitor<Node>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public UnitBuilder(ParseUnit parseUnit) {
+  public UnitBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public ModuleNode visitModuleUnit(TweakFlowParser.ModuleUnitContext ctx) {
-    return new ModuleBuilder(parseUnit).visitModule(ctx.module());
+    return new ModuleBuilder(parseUnit, recovery, recoveryErrors).visitModule(ctx.module());
   }
 
   @Override
   public InteractiveNode visitInteractiveUnit(TweakFlowParser.InteractiveUnitContext ctx) {
-    return new InteractiveBuilder(parseUnit).visitInteractive(ctx.interactive());
+    return new InteractiveBuilder(parseUnit, recovery, recoveryErrors).visitInteractive(ctx.interactive());
   }
 }

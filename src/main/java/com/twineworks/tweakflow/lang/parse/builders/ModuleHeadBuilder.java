@@ -31,6 +31,7 @@ import com.twineworks.tweakflow.lang.ast.aliases.AliasNode;
 import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.imports.ImportNode;
 import com.twineworks.tweakflow.lang.ast.structure.ModuleHeadNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.util.ArrayList;
@@ -42,9 +43,13 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class ModuleHeadBuilder extends TweakFlowParserBaseVisitor<Node>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public ModuleHeadBuilder(ParseUnit parseUnit) {
+  public ModuleHeadBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
@@ -70,7 +75,7 @@ public class ModuleHeadBuilder extends TweakFlowParserBaseVisitor<Node>{
     List<ImportNode> imports = new ArrayList<>();
 
     for (TweakFlowParser.ImportDefContext importDefContext : ctx.importDef()) {
-      imports.add(new ImportBuilder(parseUnit).visitImportDef(importDefContext));
+      imports.add(new ImportBuilder(parseUnit, recovery, recoveryErrors).visitImportDef(importDefContext));
     }
 
     headNode.setImports(imports);
@@ -78,7 +83,7 @@ public class ModuleHeadBuilder extends TweakFlowParserBaseVisitor<Node>{
     // aliases
     List<AliasNode> aliases = new ArrayList<>();
     for (TweakFlowParser.AliasDefContext aliasDefContext : ctx.aliasDef()) {
-      aliases.add(new AliasBuilder(parseUnit).visitAliasDef(aliasDefContext));
+      aliases.add(new AliasBuilder(parseUnit, recovery, recoveryErrors).visitAliasDef(aliasDefContext));
     }
 
     headNode.setAliases(aliases);
@@ -86,7 +91,7 @@ public class ModuleHeadBuilder extends TweakFlowParserBaseVisitor<Node>{
     // exports
     List<ExportNode> exports = new ArrayList<>();
     for (TweakFlowParser.ExportDefContext exportDefContext : ctx.exportDef()) {
-      exports.add(new ExportBuilder(parseUnit).visitExportDef(exportDefContext));
+      exports.add(new ExportBuilder(parseUnit, recovery, recoveryErrors).visitExportDef(exportDefContext));
     }
 
     headNode.setExports(exports);

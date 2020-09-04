@@ -101,9 +101,10 @@ public class DependencyVerification {
   }
 
   @SuppressWarnings("unchecked")
-  public static void verify(AnalysisSet analysisSet){
+  public static void verify(AnalysisSet analysisSet, boolean recovery){
 
-    DependencyVerificationVisitor analysis = new DependencyVerificationVisitor();
+    List<LangException> recoveryErrors = analysisSet.getRecoveryErrors();
+    DependencyVerificationVisitor analysis = new DependencyVerificationVisitor(recovery, recoveryErrors);
 
     for (AnalysisUnit unit : analysisSet.getUnits().values()) {
       if (unit.getStage().getProgress() >= AnalysisStage.DEPENDENCIES_VERIFIED.getProgress()){
@@ -125,8 +126,15 @@ public class DependencyVerification {
     catch (TopoSort.CyclicDependencyException e){
       Symbol s = (Symbol) e.getCyclicItem();
 
-      throw new LangException(LangError.CYCLIC_REFERENCE, s.getNode().getSourceInfo())
+      LangException langException = new LangException(LangError.CYCLIC_REFERENCE, s.getNode().getSourceInfo())
           .put("cycle", cycleText(e.getCycle()));
+      if (recovery){
+        recoveryErrors.add(langException);
+        globalOrder = Collections.emptyList();
+      }
+      else{
+        throw langException;
+      }
     }
 
     // form transitive closure of top level dependencies

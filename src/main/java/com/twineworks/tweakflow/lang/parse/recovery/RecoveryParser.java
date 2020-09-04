@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-package com.twineworks.tweakflow.lang.parse.bailing;
+package com.twineworks.tweakflow.lang.parse.recovery;
 
 import com.twineworks.tweakflow.grammar.TweakFlowLexer;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.ast.structure.EmptyNode;
-import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.NodeBuilder;
 import com.twineworks.tweakflow.lang.parse.ParseResult;
@@ -38,20 +37,18 @@ import com.twineworks.tweakflow.lang.parse.builders.ModuleHeadBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.UnitBuilder;
 import com.twineworks.tweakflow.lang.parse.builders.VarDefBuilder;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
-import com.twineworks.tweakflow.lang.parse.util.NullParserErrorListener;
-import com.twineworks.tweakflow.lang.parse.util.ParseErrorHelper;
+import com.twineworks.tweakflow.lang.parse.util.CollectingParserErrorListener;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
-public class BailParser {
+public class RecoveryParser {
 
   private final ParseUnit parseUnit;
 
-  public BailParser(ParseUnit parseUnit) {
+  public RecoveryParser(ParseUnit parseUnit) {
     this.parseUnit = parseUnit;
   }
 
@@ -94,48 +91,41 @@ public class BailParser {
     );
   }
 
+  public ParseResult parseModuleHead() {
+    return parse(
+        TweakFlowParser::moduleHead,
+        (ParserRuleContext ctx, boolean recovery, List<LangException> recoveryErrors) -> new ModuleHeadBuilder(parseUnit, recovery, recoveryErrors).visit(ctx)
+    );
+  }
+
   private ParseResult parse(RuleInvoker ruleInvoker, NodeBuilder nodeBuilder) {
 
     long parseStart = System.currentTimeMillis();
 
     CodePointCharStream input = CharStreams.fromString(parseUnit.getProgramText());
-    TweakFlowLexer lexer = new BailLexer(input);
+    TweakFlowLexer lexer = new RecoveryLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    NullParserErrorListener errorListener = new NullParserErrorListener();
+    CollectingParserErrorListener errorListener = new CollectingParserErrorListener(parseUnit);
 
     // default listeners cause noise on stdout
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
 
     // consume tokens
-    try {
-      tokens.fill();
-    } catch (ParseCancellationException e) {
-      LangException exception = ParseErrorHelper.exceptionFor(parseUnit, lexer, tokens, e);
-      long parseEnd = System.currentTimeMillis();
-      return ParseResult.error(exception, parseEnd - parseStart, 0);
-    }
+    tokens.fill();
 
     // parse them
     TweakFlowParser parser = new TweakFlowParser(tokens);
 
-    // bail on errors, we're in non-IDE mode
-    parser.setErrorHandler(new BailErrorStrategy());
+    // proceed on errors, we're taking what we can get
+    parser.setErrorHandler(new DefaultErrorStrategy());
 
     // default listeners cause noise on stdout:
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
 
-    ParserRuleContext parseTree;
-
-    try {
-      parseTree = ruleInvoker.invokeRule(parser);
-    } catch (ParseCancellationException e) {
-      LangException exception = ParseErrorHelper.exceptionFor(parseUnit, parser, e);
-      long parseEnd = System.currentTimeMillis();
-      return ParseResult.error(exception, parseEnd - parseStart, 0);
-    }
+    ParserRuleContext parseTree = ruleInvoker.invokeRule(parser);
 
     long parseEnd = System.currentTimeMillis();
     long buildStart = parseEnd;
@@ -145,25 +135,12 @@ public class BailParser {
     }
 
     // build AST nodes
-    try {
-      Node result = nodeBuilder.buildNode(parseTree, false, null);
-      long buildEnd = System.currentTimeMillis();
-      return ParseResult.ok(result, parseEnd - parseStart, buildEnd - buildStart);
-    } catch (LangException e) {
-      long buildEnd = System.currentTimeMillis();
-      return ParseResult.error(e, parseEnd - parseStart, buildEnd - buildStart);
-    } catch (RuntimeException e) {
-      long buildEnd = System.currentTimeMillis();
-      return ParseResult.error(LangException.wrap(e, LangError.PARSE_ERROR), parseEnd - parseStart, buildEnd - buildStart);
-    }
+    Node result = nodeBuilder.buildNode(parseTree, true, errorListener.getErrors());
+    long buildEnd = System.currentTimeMillis();
 
+    return ParseResult.recovery(errorListener.getErrors(), result, parseEnd - parseStart, buildEnd - buildStart);
 
   }
 
-  public ParseResult parseModuleHead() {
-    return parse(
-        TweakFlowParser::moduleHead,
-        (ParserRuleContext ctx, boolean recovery, List<LangException> recoveryErrors) -> new ModuleHeadBuilder(parseUnit, recovery, recoveryErrors).visit(ctx)
-    );
-  }
+
 }

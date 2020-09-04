@@ -29,7 +29,10 @@ import com.twineworks.tweakflow.lang.ast.exports.ExportNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ReferenceNode;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.identifier;
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
@@ -37,15 +40,19 @@ import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 public class ExportBuilder extends TweakFlowParserBaseVisitor<Node> {
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public ExportBuilder(ParseUnit parseUnit) {
+  public ExportBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public ExportNode visitExportDef(TweakFlowParser.ExportDefContext ctx) {
 
-    ExpressionBuilder b = new ExpressionBuilder(parseUnit);
+    ExpressionBuilder b = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
     ReferenceNode source = (ReferenceNode) b.visit(ctx.reference());
 
     String name;

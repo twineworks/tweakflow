@@ -38,10 +38,7 @@ import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 import com.twineworks.tweakflow.lang.scope.SymbolTarget;
 
-import java.util.ArrayDeque;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class DependencyVerificationVisitor extends AExpressionDescendingVisitor implements Visitor {
 
@@ -50,6 +47,18 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
 
   private ArrayDeque<LinkedHashSet<Symbol>> depStack = new ArrayDeque<>();
   private ArrayDeque<LinkedHashSet<Symbol>> topLevelStack = new ArrayDeque<>();
+
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
+
+  public DependencyVerificationVisitor(boolean recovery, List<LangException> recoveryErrors) {
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
+  }
+
+  public DependencyVerificationVisitor() {
+    this(false, null);
+  }
 
   public IdentityHashMap<Symbol, LinkedHashSet<Symbol>> getDirectDependencies() {
     return directDependencies;
@@ -163,11 +172,18 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
       ReferenceNode ref = (ReferenceNode) node.getExpression();
 
       if (ref.getReferencedSymbol().getTarget() != SymbolTarget.VAR){
-        throw new LangException(
+
+        LangException e = new LangException(
             LangError.INVALID_REFERENCE_TARGET,
             "Cannot call "+ref.getReferencedSymbol().getTarget().name()+". Not a value.",
             node.getSourceInfo()
         );
+        if (recovery){
+          recoveryErrors.add(e);
+        }
+        else{
+          throw e;
+        }
       }
 
     }
@@ -185,11 +201,17 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
       ReferenceNode ref = (ReferenceNode) node.getExpression();
 
       if (ref.getReferencedSymbol().getTarget() != SymbolTarget.VAR){
-        throw new LangException(
+        LangException e = new LangException(
             LangError.INVALID_REFERENCE_TARGET,
             "Cannot partially apply "+ref.getReferencedSymbol().getTarget().name()+". Not a value.",
             node.getSourceInfo()
         );
+        if (recovery){
+          recoveryErrors.add(e);
+        }
+        else{
+          throw e;
+        }
       }
 
     }
@@ -205,7 +227,14 @@ public class DependencyVerificationVisitor extends AExpressionDescendingVisitor 
       Symbol referencedSymbol = node.getReferencedSymbol();
       // expressions can only depend on expressions
       if (referencedSymbol.getTarget() != SymbolTarget.VAR){
-        throw new LangException(LangError.INVALID_REFERENCE_TARGET, "Cannot reference "+referencedSymbol.getTarget().name()+". Not a value.", node.getSourceInfo());
+
+        LangException e = new LangException(LangError.INVALID_REFERENCE_TARGET, "Cannot reference "+referencedSymbol.getTarget().name()+". Not a value.", node.getSourceInfo());
+        if (recovery){
+          recoveryErrors.add(e);
+        }
+        else {
+          throw e;
+        }
       }
       // functions can call themselves recursively and are not part of cyclic dependency detection
       if (referencedSymbol.getTargetNode() instanceof NamedValueNode){

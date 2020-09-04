@@ -28,10 +28,14 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisStage;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
+import com.twineworks.tweakflow.lang.errors.LangError;
+import com.twineworks.tweakflow.lang.errors.LangException;
+
+import java.util.List;
 
 public class ExpressionResolver {
 
-  public static void resolve(AnalysisSet analysisSet){
+  public static void resolve(AnalysisSet analysisSet, boolean recovery){
 
     for (AnalysisUnit unit : analysisSet.getUnits().values()) {
 
@@ -40,14 +44,14 @@ public class ExpressionResolver {
         continue;
       }
 
-      resolve(unit.getUnit());
+      resolve(unit.getUnit(), recovery, analysisSet.getRecoveryErrors());
       unit.setStage(AnalysisStage.RESOLVED_EXPRESSIONS);
     }
 
   }
 
-  private static void resolve(UnitNode unitNode){
-    new ExpressionResolverVisitor().visit(unitNode);
+  private static void resolve(UnitNode unitNode, boolean recovery, List<LangException> recoveryErrors){
+    new ExpressionResolverVisitor(recovery, recoveryErrors).visit(unitNode);
   }
 
 }

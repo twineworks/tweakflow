@@ -58,7 +58,7 @@ public class ScopeBuilderTest {
     String path = "fixtures/tweakflow/analysis/imports/scope.tf";
     Loader.load(loadPath, path, space.getUnits(), true);
     module = (ModuleNode) space.getUnits().get(path).getUnit();
-    ScopeBuilder.buildScope(space, module);
+    ScopeBuilder.buildScope(space, module, false);
 
   }
 

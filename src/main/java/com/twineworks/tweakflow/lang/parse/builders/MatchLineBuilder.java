@@ -28,27 +28,34 @@ import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.structure.match.DefaultPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
 public class MatchLineBuilder extends TweakFlowParserBaseVisitor<MatchLineNode>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public MatchLineBuilder(ParseUnit parseUnit) {
+  public MatchLineBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public MatchLineNode visitPatternLine(TweakFlowParser.PatternLineContext ctx) {
     MatchLineNode matchLineNode = new MatchLineNode();
     matchLineNode.setSourceInfo(srcOf(parseUnit, ctx));
-    matchLineNode.setExpression(new ExpressionBuilder(parseUnit).visit(ctx.expression()));
+    matchLineNode.setExpression(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.expression()));
     if (ctx.matchGuard() != null){
-      matchLineNode.setGuard(new ExpressionBuilder(parseUnit).visit(ctx.matchGuard()));
+      matchLineNode.setGuard(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.matchGuard()));
     }
-    matchLineNode.setPattern(new MatchPatternBuilder(parseUnit).visit(ctx.matchPattern()));
+    matchLineNode.setPattern(new MatchPatternBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.matchPattern()));
     return matchLineNode;
   }
 
@@ -56,7 +63,7 @@ public class MatchLineBuilder extends TweakFlowParserBaseVisitor<MatchLineNode>{
   public MatchLineNode visitDefaultLine(TweakFlowParser.DefaultLineContext ctx) {
     MatchLineNode matchLineNode = new MatchLineNode();
     matchLineNode.setSourceInfo(srcOf(parseUnit, ctx));
-    matchLineNode.setExpression(new ExpressionBuilder(parseUnit).visit(ctx.expression()));
+    matchLineNode.setExpression(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.expression()));
 
     DefaultPatternNode patternNode = new DefaultPatternNode();
     patternNode.setSourceInfo(srcOf(parseUnit, ctx));

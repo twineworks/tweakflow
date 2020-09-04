@@ -27,34 +27,53 @@ package com.twineworks.tweakflow.lang.parse;
 import com.twineworks.tweakflow.lang.ast.Node;
 import com.twineworks.tweakflow.lang.errors.LangException;
 
+import java.util.ArrayList;
+
 public class ParseResult {
 
   private final Node node;
   private final LangException exception;
   private final long parseDurationMillis;
   private final long buildDurationMillis;
+  private final boolean isRecovery;
+  private final ArrayList<LangException> recoveryErrors;
 
-  static public ParseResult ok(Node node, long parseDurationMillis, long buildDurationMillis){
-    return new ParseResult(null, node, parseDurationMillis, buildDurationMillis);
-  }
-
-  static public ParseResult error(LangException exception, long parseDurationMillis, long buildDurationMillis){
-    return new ParseResult(exception, null, parseDurationMillis, buildDurationMillis);
-  }
-
-  private ParseResult(LangException exception, Node node, long parseDurationMillis, long buildDurationMillis){
+  private ParseResult(boolean recovery, ArrayList<LangException> recoveryErrors, LangException exception, Node node, long parseDurationMillis, long buildDurationMillis) {
+    this.isRecovery = recovery;
+    this.recoveryErrors = recoveryErrors;
     this.node = node;
     this.exception = exception;
     this.parseDurationMillis = parseDurationMillis;
     this.buildDurationMillis = buildDurationMillis;
   }
 
+  static public ParseResult ok(Node node, long parseDurationMillis, long buildDurationMillis) {
+    return new ParseResult(false, null, null, node, parseDurationMillis, buildDurationMillis);
+  }
+
+  static public ParseResult error(LangException exception, long parseDurationMillis, long buildDurationMillis) {
+    return new ParseResult(false, null, exception, null, parseDurationMillis, buildDurationMillis);
+  }
+
+  static public ParseResult recovery(ArrayList<LangException> errors, Node node, long parseDurationMillis, long buildDurationMillis) {
+    return new ParseResult(true, errors, null, node, parseDurationMillis, buildDurationMillis);
+  }
+
   public boolean isSuccess() {
-    return exception == null;
+    if (isRecovery()){
+      return node != null;
+    }
+    else {
+      return exception == null;
+    }
   }
 
   public boolean isError() {
-    return exception != null;
+    return !isSuccess();
+  }
+
+  public boolean isRecovery() {
+    return isRecovery;
   }
 
   public Node getNode() {
@@ -62,7 +81,24 @@ public class ParseResult {
   }
 
   public LangException getException() {
-    return exception;
+    if (isRecovery){
+      if (recoveryErrors != null && recoveryErrors.size() > 0){
+        return recoveryErrors.get(0);
+      }
+      return null;
+    }
+    else{
+      return exception;
+    }
+
+  }
+
+  public boolean hasRecoveryErrors() {
+    return recoveryErrors != null && recoveryErrors.size() > 0;
+  }
+
+  public ArrayList<LangException> getRecoveryErrors() {
+    return recoveryErrors;
   }
 
   public long getParseDurationMillis() {

@@ -29,27 +29,39 @@ import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.NilNode;
 import com.twineworks.tweakflow.lang.ast.structure.VarDefNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.types.Type;
+
+import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.*;
 
 public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
 
   private final ParseUnit parseUnit;
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
 
-  public VarDefBuilder(ParseUnit parseUnit) {
+  public VarDefBuilder(ParseUnit parseUnit, boolean recovery, List<LangException> recoveryErrors) {
     this.parseUnit = parseUnit;
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
   }
 
   @Override
   public VarDefNode visitVarDef(TweakFlowParser.VarDefContext ctx) {
     Type declaredType = type(ctx.dataType());
 
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
-
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
 
     ExpressionNode expression = expressionBuilder.visit(ctx.expression());
+
+    if (recovery && expression == null){
+      // if the expression comes back broken, replace it with a nil node
+      expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx.expression()));
+    }
+
     expression = expressionBuilder.addImplicitCast(declaredType, expression);
 
     VarDefNode varDef = new VarDefNode()
@@ -61,12 +73,12 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
 
     TweakFlowParser.DocContext docContext = getDocContext(ctx);
     if (docContext != null){
-      varDef.setDoc(new DocBuilder(parseUnit).visitDoc(docContext));
+      varDef.setDoc(new DocBuilder(parseUnit, recovery, recoveryErrors).visitDoc(docContext));
     }
 
     TweakFlowParser.MetaContext metaContext = getMetaContext(ctx);
     if (metaContext != null){
-      varDef.setMeta(new MetaBuilder(parseUnit).visitMeta(metaContext));
+      varDef.setMeta(new MetaBuilder(parseUnit, recovery, recoveryErrors).visitMeta(metaContext));
     }
 
     return varDef;
@@ -76,7 +88,7 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
   public VarDefNode visitVarDec(TweakFlowParser.VarDecContext ctx) {
     Type declaredType = type(ctx.dataType());
 
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit);
+    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
 
     // expression is missing on provided vars, it is implicitly nil
     ExpressionNode expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx));
@@ -90,12 +102,12 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
 
     TweakFlowParser.DocContext docContext = getDocContext(ctx);
     if (docContext != null){
-      varDef.setDoc(new DocBuilder(parseUnit).visitDoc(docContext));
+      varDef.setDoc(new DocBuilder(parseUnit, recovery, recoveryErrors).visitDoc(docContext));
     }
 
     TweakFlowParser.MetaContext metaContext = getMetaContext(ctx);
     if (metaContext != null){
-      varDef.setMeta(new MetaBuilder(parseUnit).visitMeta(metaContext));
+      varDef.setMeta(new MetaBuilder(parseUnit, recovery, recoveryErrors).visitMeta(metaContext));
     }
 
     return varDef;

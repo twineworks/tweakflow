@@ -156,7 +156,7 @@ public class DocMain {
       for (Object moduleObj : modules) {
         StringBuilder out = new StringBuilder();
         String module = (String) moduleObj;
-        AnalysisUnit analysisUnit = Loader.load(loadPath, module);
+        AnalysisUnit analysisUnit = Loader.load(loadPath, module, false, null);
         Value value = Doc.makeMetaValue(analysisUnit.getUnit());
 
         if (transformers.isEmpty()) {

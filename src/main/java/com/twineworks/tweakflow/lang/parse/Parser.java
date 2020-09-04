@@ -26,18 +26,31 @@ package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseListener;
 import com.twineworks.tweakflow.lang.parse.bailing.BailParser;
+import com.twineworks.tweakflow.lang.parse.recovery.RecoveryParser;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 final public class Parser extends TweakFlowParserBaseListener {
 
-  private ParseUnit parseUnit;
+  private final ParseUnit parseUnit;
+  private final boolean recovery;
+
+  public Parser(ParseUnit parseUnit, boolean recovery) {
+    this.parseUnit = parseUnit;
+    this.recovery = recovery;
+  }
 
   public Parser(ParseUnit parseUnit) {
-    this.parseUnit = parseUnit;
+    this(parseUnit, false);
   }
 
   public ParseResult parseUnit(){
-    return new BailParser(parseUnit).parseUnit();
+    if (recovery){
+      return new RecoveryParser(parseUnit).parseUnit();
+    }
+    else{
+      return new BailParser(parseUnit).parseUnit();
+    }
+
   }
 
   public ParseResult parseInteractiveInput(){
@@ -55,5 +68,6 @@ final public class Parser extends TweakFlowParserBaseListener {
   public ParseResult parseModuleHead(){
     return new BailParser(parseUnit).parseModuleHead();
   }
+
 
 }

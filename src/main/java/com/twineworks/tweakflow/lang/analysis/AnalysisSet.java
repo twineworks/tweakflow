@@ -24,14 +24,12 @@
 
 package com.twineworks.tweakflow.lang.analysis;
 
+import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPath;
 import com.twineworks.tweakflow.lang.scope.GlobalScope;
 import com.twineworks.tweakflow.lang.scope.Symbol;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
+import java.util.*;
 
 public class AnalysisSet {
 
@@ -40,6 +38,8 @@ public class AnalysisSet {
 
   private IdentityHashMap<Symbol, LinkedHashSet<Symbol>> dependencies;
   private IdentityHashMap<Symbol, LinkedHashSet<Symbol>> dependants;
+
+  private final ArrayList<LangException> recoveryErrors = new ArrayList<>();
 
   private final LoadPath loadPath;
 
@@ -75,5 +75,9 @@ public class AnalysisSet {
   public AnalysisSet setDependants(IdentityHashMap<Symbol, LinkedHashSet<Symbol>> dependants) {
     this.dependants = dependants;
     return this;
+  }
+
+  public ArrayList<LangException> getRecoveryErrors() {
+    return recoveryErrors;
   }
 }

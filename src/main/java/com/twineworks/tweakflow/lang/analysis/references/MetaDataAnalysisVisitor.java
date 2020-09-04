@@ -33,11 +33,26 @@ import com.twineworks.tweakflow.lang.ast.meta.MetaNode;
 import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.scope.Scope;
+
+import java.util.List;
 
 public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implements Visitor {
 
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
+
   private boolean inMeta = false;
   private boolean inDoc = false;
+
+  public MetaDataAnalysisVisitor(boolean recovery, List<LangException> recoveryErrors) {
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
+  }
+
+  public MetaDataAnalysisVisitor() {
+    this(false, null);
+  }
 
   private void ensureNotInMeta(Node node){
     if (inMeta | inDoc){
@@ -50,7 +65,13 @@ public class MetaDataAnalysisVisitor extends AExpressionDescendingVisitor implem
         nodeType = "doc";
       }
 
-      throw new LangException(LangError.LITERAL_VALUE_REQUIRED, "computations and functions not allowed in " + nodeType, node.getSourceInfo());
+      LangException e = new LangException(LangError.LITERAL_VALUE_REQUIRED, "computations and functions not allowed in " + nodeType, node.getSourceInfo());
+      if (recovery){
+        recoveryErrors.add(e);
+      }
+      else{
+        throw e;
+      }
     }
   }
 
