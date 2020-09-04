@@ -24,16 +24,17 @@
 
 package com.twineworks.tweakflow.lang.interpreter.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.ast.expressions.ExpressionNode;
 import com.twineworks.tweakflow.lang.ast.expressions.ListNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.EvaluationContext;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.Stack;
 import com.twineworks.tweakflow.lang.values.ListValue;
 import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 
+import java.util.Arrays;
 import java.util.List;
 
 final public class ListOp implements ExpressionOp {
@@ -46,14 +47,16 @@ final public class ListOp implements ExpressionOp {
   private final boolean hasConst;
   private final int firstNonConstIndex;
   private final int lastNonConstIndex;
+  private final ThreadLocal<Value[]> tlvs;
 
   public ListOp(ListNode node) {
     this.node = node;
     this.size = node.getElements().size();
+    this.tlvs = new ThreadLocal<>();
     ops = new ExpressionOp[size];
     values = new Value[size];
     nonConstIndexes = new boolean[size];
-    int firstDynamic = size+1;
+    int firstDynamic = size + 1;
     int lastDynamic = -1;
 
     List<ExpressionNode> elements = node.getElements();
@@ -63,17 +66,17 @@ final public class ListOp implements ExpressionOp {
       ExpressionNode expressionNode = elements.get(i);
       ops[i] = expressionNode.getOp();
       Value v = null;
-      if (expressionNode.getOp().isConstant()){
+      if (expressionNode.getOp().isConstant()) {
         try {
           v = Interpreter.evaluateInEmptyScope(expressionNode);
-        } catch (LangException ignored) {}
+        } catch (LangException ignored) {
+        }
       }
-      if (v != null){
+      if (v != null) {
         values[i] = v;
         nonConstIndexes[i] = false;
         constIndexes++;
-      }
-      else{
+      } else {
         if (i < firstDynamic) firstDynamic = i;
         if (i > lastDynamic) lastDynamic = i;
         nonConstIndexes[i] = true;
@@ -87,32 +90,37 @@ final public class ListOp implements ExpressionOp {
   @Override
   public Value eval(Stack stack, EvaluationContext context) {
 
-    if (hasConst){
+    Value[] vs = tlvs.get();
+    if (vs == null) {
+      vs = Arrays.copyOf(values, values.length);
+      tlvs.set(vs);
+    }
+
+    if (hasConst) {
       for (int i = firstNonConstIndex; i <= lastNonConstIndex; i++) {
-        if (nonConstIndexes[i]){
-          values[i] = ops[i].eval(stack, context);
+        if (nonConstIndexes[i]) {
+          vs[i] = ops[i].eval(stack, context);
         }
       }
-      Value ret = Values.make(new ListValue(values));
+      Value ret = Values.make(new ListValue(vs));
 
       // aggressively clear non-constants
       for (int i = firstNonConstIndex; i <= lastNonConstIndex; i++) {
-        if (nonConstIndexes[i]){
-          values[i] = null;
+        if (nonConstIndexes[i]) {
+          vs[i] = null;
         }
       }
 
       return ret;
-    }
-    else{
+    } else {
       for (int i = 0; i < size; i++) {
-        values[i] = ops[i].eval(stack, context);
+        vs[i] = ops[i].eval(stack, context);
       }
-      Value ret = Values.make(new ListValue(values));
+      Value ret = Values.make(new ListValue(vs));
 
       // aggressively clear non-constants
       for (int i = 0; i < size; i++) {
-        values[i] = null;
+        vs[i] = null;
       }
 
       return ret;
