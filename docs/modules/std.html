@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.2.0</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.2.1</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v1.2.0</a
+            ><b>Tweakflow</b> v1.2.1</a
           >
         </li>
         
@@ -2408,6 +2408,83 @@ nil
       data-meta-id='data-shuffle'
       data-meta-type='var'
       data-meta-name='shuffle'
+        data-meta-tags='data'
+    ></div>
+
+<h3 id="data-choice">choice</h3>
+
+<p><code>(list xs, seed) -&gt; any</code></p>
+
+<p>Returns a random item from <code>xs</code>. The selection is based on <code>seed</code>.
+The same seed will consistently select the same index from same-length lists.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code> or empty.</p>
+
+<pre><code class="language-tweakflow">&gt; data.choice([1, 2, 3, 4, 5, 6], &quot;foo&quot;)
+1
+
+&gt; data.choice([1, 2, 3, 4, 5, 6], &quot;bar&quot;)
+6
+
+&gt; data.choice([1, 2, 3, 4, 5, 6], &quot;seed&quot;)
+2
+
+&gt; data.choice([], &quot;seed&quot;)
+nil
+
+&gt; data.choice(nil, &quot;seed&quot;)
+nil
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='data-choice'
+      data-meta-type='var'
+      data-meta-name='choice'
+        data-meta-tags='data'
+    ></div>
+
+<h3 id="data-sample">sample</h3>
+
+<p><code>(list xs, long count, boolean with_return, seed) -&gt; list</code></p>
+
+<p>Returns a random selection of <code>count</code> items from random indexes in <code>xs</code>. The selection is based on <code>seed</code>.
+The same seed will consistently select the same indexes from same-length lists.</p>
+
+<p>If <code>with_return</code> is <code>true</code>, indexes can be selected multiple times. If <code>with_return</code> is <code>false</code>,
+each index in <code>xs</code> can be selected only once.</p>
+
+<p>In case <code>with_return</code> is <code>false</code> and <code>count</code> is larger than the number of items in <code>xs</code>, the returned list is
+limited in length to the number of items available.</p>
+
+<p>Returns an empty list if <code>count</code> is negative.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>, <code>count</code> is <code>nil</code>, or <code>with_return</code> is <code>nil</code>.</p>
+
+<pre><code class="language-tweakflow">&gt; data.sample([1, 2, 3, 4, 5, 6], 4, true, &quot;seed&quot;)
+[2, 5, 5, 2]
+
+&gt; data.sample([1, 2, 3, 4, 5, 6], 4, false, &quot;seed&quot;)
+[4, 1, 6, 3]
+
+&gt; data.sample([1, 2, 3, 4, 5, 6], 10, true, &quot;seed&quot;)
+[2, 5, 5, 2, 5, 2, 6, 4, 4, 6]
+
+&gt; data.sample([1, 2, 3, 4, 5, 6], 10, false, &quot;seed&quot;)
+[4, 1, 6, 3, 5, 2]
+
+&gt; data.sample([1, 2, 3, 4, 5, 6], 10, true, &quot;foo&quot;)
+[1, 3, 6, 4, 2, 3, 3, 5, 1, 5]
+
+&gt; data.sample([1, 2, 3, 4, 5, 6], 10, false, &quot;foo&quot;)
+[3, 4, 5, 2, 6, 1]
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='data-sample'
+      data-meta-type='var'
+      data-meta-name='sample'
         data-meta-tags='data'
     ></div>
 
@@ -5572,9 +5649,7 @@ ERROR:
 <p><code>(any seed) -&gt; double</code></p>
 
 <p>Returns a pseudo-random double between <code>0.0</code> inclusive and <code>1.0</code> exclusive, based on given <code>seed</code>.
-This function is pure and deterministically returns the same number for the same <code>seed</code>.</p>
-
-<p>To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next <code>seed</code>.</p>
+This function deterministically returns the same number for the same <code>seed</code>.</p>
 
 <p><code>nil</code> is a valid <code>seed</code> value.</p>
 
@@ -5628,6 +5703,42 @@ function
       data-meta-id='math-rand'
       data-meta-type='var'
       data-meta-name='rand'
+        data-meta-tags='math'
+    ></div>
+
+<h3 id="math-rands">rands</h3>
+
+<p><code>(long count, any seed) -&gt; list</code></p>
+
+<p>Returns a list of length <code>count</code> of pseudo-random double values between <code>0.0</code> inclusive and <code>1.0</code> exclusive, based on given <code>seed</code>.
+This function deterministically returns the same list for the same <code>seed</code>.</p>
+
+<p><code>nil</code> is a valid <code>seed</code> value.</p>
+
+<p>Returns <code>nil</code> if <code>count</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>count</code> is negative.</p>
+
+<pre><code class="language-tweakflow">&gt; math.rands(2, &quot;foo&quot;)
+[0.7636542620472306, 0.4845448486565105]
+
+&gt; math.rands(2, &quot;bar&quot;)
+[0.8603985347346733, 0.7525012276982017]
+
+&gt; math.rands(3, nil)
+[0.730967787376657, 0.24053641567148587, 0.6374174253501083]
+
+&gt; math.rands(-7)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: count cannot be negative, found: -7
+</code></pre>
+
+<div
+      data-meta='true'
+      data-meta-id='math-rands'
+      data-meta-type='var'
+      data-meta-name='rands'
         data-meta-tags='math'
     ></div>
 
