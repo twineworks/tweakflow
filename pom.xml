@@ -37,7 +37,7 @@
         - render html docs from markdown
           $ ./site/make_docs
         - ensure there are no references to previous versions
-          $ grep -r '1\.1\.0' * # should come up empty
+          $ grep -r '1\.2\.1' * # should come up empty
         - commit doc render
         - ensure pom.xml contains release version
         - commit pom
@@ -58,7 +58,7 @@
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1</version>
 
     <organization>
         <name>Twineworks GmbH</name>
