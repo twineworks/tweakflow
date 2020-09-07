@@ -1988,6 +1988,78 @@ nil
 
 doc
 ~~~
+`(list xs, seed) -> any`
+
+Returns a random item from `xs`. The selection is based on `seed`.
+The same seed will consistently select the same index from same-length lists.
+
+Returns `nil` if `xs` is `nil` or empty.
+
+```tweakflow
+> data.choice([1, 2, 3, 4, 5, 6], "foo")
+1
+
+> data.choice([1, 2, 3, 4, 5, 6], "bar")
+6
+
+> data.choice([1, 2, 3, 4, 5, 6], "seed")
+2
+
+> data.choice([], "seed")
+nil
+
+> data.choice(nil, "seed")
+nil
+```
+~~~
+
+  function choice: (list xs, seed) -> any via {:class "com.twineworks.tweakflow.std.Data$choice"};
+
+
+doc
+~~~
+`(list xs, long count, boolean with_return, seed) -> list`
+
+Returns a random selection of `count` items from random indexes in `xs`. The selection is based on `seed`.
+The same seed will consistently select the same indexes from same-length lists.
+
+If `with_return` is `true`, indexes can be selected multiple times. If `with_return` is `false`,
+each index in `xs` can be selected only once.
+
+In case `with_return` is `false` and `count` is larger than the number of items in `xs`, the returned list is
+limited in length to the number of items available.
+
+Returns an empty list if `count` is negative.
+
+Returns `nil` if `xs` is `nil`, `count` is `nil`, or `with_return` is `nil`.
+
+
+```tweakflow
+> data.sample([1, 2, 3, 4, 5, 6], 4, true, "seed")
+[2, 5, 5, 2]
+
+> data.sample([1, 2, 3, 4, 5, 6], 4, false, "seed")
+[4, 1, 6, 3]
+
+> data.sample([1, 2, 3, 4, 5, 6], 10, true, "seed")
+[2, 5, 5, 2, 5, 2, 6, 4, 4, 6]
+
+> data.sample([1, 2, 3, 4, 5, 6], 10, false, "seed")
+[4, 1, 6, 3, 5, 2]
+
+> data.sample([1, 2, 3, 4, 5, 6], 10, true, "foo")
+[1, 3, 6, 4, 2, 3, 3, 5, 1, 5]
+
+> data.sample([1, 2, 3, 4, 5, 6], 10, false, "foo")
+[3, 4, 5, 2, 6, 1]
+```
+~~~
+
+  function sample: (list xs, long count, boolean with_return, seed) -> list via {:class "com.twineworks.tweakflow.std.Data$sample"};
+
+
+doc
+~~~
 `(list xs) -> list `
 
 Returns a list with all duplicates in `xs` removed. Values are considered duplicates when they compare as equal
@@ -4836,9 +4908,7 @@ doc
 `(any seed) -> double`
 
 Returns a pseudo-random double between `0.0` inclusive and `1.0` exclusive, based on given `seed`.
-This function is pure and deterministically returns the same number for the same `seed`.
-
-To generate a sequence of pseudo-random numbers, you can use a previously generated number as the next `seed`.
+This function deterministically returns the same number for the same `seed`.
 
 `nil` is a valid `seed` value.
 
@@ -4889,6 +4959,38 @@ function
 ```
 ~~~
   function rand: (any seed) -> double                           via {:class "com.twineworks.tweakflow.std.Math$rand"};
+
+doc
+~~~
+`(long count, any seed) -> list`
+
+Returns a list of length `count` of pseudo-random double values between `0.0` inclusive and `1.0` exclusive, based on given `seed`.
+This function deterministically returns the same list for the same `seed`.
+
+`nil` is a valid `seed` value.
+
+Returns `nil` if `count` is `nil`.
+
+Throws an error if `count` is negative.
+
+```tweakflow
+> math.rands(2, "foo")
+[0.7636542620472306, 0.4845448486565105]
+
+> math.rands(2, "bar")
+[0.8603985347346733, 0.7525012276982017]
+
+> math.rands(3, nil)
+[0.730967787376657, 0.24053641567148587, 0.6374174253501083]
+
+> math.rands(-7)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+  message: count cannot be negative, found: -7
+```
+~~~
+  function rands: (long count, any seed) -> list                           via {:class "com.twineworks.tweakflow.std.Math$rands"};
+
 
 doc
 ~~~

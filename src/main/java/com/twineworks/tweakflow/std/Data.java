@@ -31,8 +31,21 @@ import com.twineworks.tweakflow.lang.types.Types;
 import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class Data {
+
+  private static void shuffleArray(int[] arr, Random rnd) {
+
+    for (int i = arr.length - 1; i > 0; i--)
+    {
+      int index = rnd.nextInt(i + 1);
+      // Simple swap
+      int a = arr[index];
+      arr[index] = arr[i];
+      arr[i] = a;
+    }
+  }
 
   // function get_in: (xs, list keys, not_found=nil)
   public static final class getIn implements UserFunction, Arity3UserFunction {
@@ -1228,6 +1241,78 @@ public final class Data {
         list = list.set(swapIdx, item);
       }
       return Values.make(list);
+
+    }
+
+  }
+
+  // function choice: (list xs, seed) -> any
+  public static final class choice implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value seed) {
+
+      if (xs == Values.NIL) return Values.NIL;
+      ListValue list = xs.list();
+      if (list.isEmpty()) return Values.NIL;
+      int size = list.size();
+      if (size == 1) return list.get(0);
+
+      Random r = new Random(seed.hashCode());
+      return list.get(r.nextInt(size));
+
+    }
+
+  }
+
+  // (list xs, long count, boolean with_return, seed) -> list
+  public static final class sample implements UserFunction, Arity4UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value count, Value withReturn, Value seed) {
+
+      if (xs == Values.NIL) return Values.NIL;
+      if (count == Values.NIL) return Values.NIL;
+      if (withReturn == Values.NIL) return Values.NIL;
+
+
+      ListValue list = xs.list();
+      if (list.isEmpty()) return Values.EMPTY_LIST;
+
+      long longNr = count.longNum();
+      if (longNr < 0) return Values.EMPTY_LIST;
+
+      int nr = java.lang.Math.toIntExact(longNr);
+      boolean withRet = withReturn.bool();
+
+      Random r = new Random(seed.hashCode());
+
+      int size = list.size();
+      if (size == 1) return list.get(0);
+
+      if (withRet){
+        // we can pick the same index multiple times
+        ListValue ret = new ListValue();
+        for (int i=0;i<nr;i++){
+          ret = ret.append(list.get(r.nextInt(size)));
+        }
+        return Values.make(ret);
+      }
+      else {
+        // we cannot pick the same index multiple times
+        int[] indexes = new int[size];
+        for(int i=0;i<size;i++){
+          indexes[i] = i;
+        }
+        shuffleArray(indexes, r);
+
+        ListValue ret = new ListValue();
+        for (int i=0;i<nr && i<size;i++){
+          ret = ret.append(list.get(indexes[i]));
+        }
+        return Values.make(ret);
+
+      }
 
     }
 
