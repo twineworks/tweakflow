@@ -1678,7 +1678,7 @@ The only `void` value `nil` casts successfully to any type, and remains `nil`.
 
 ### Any
 
-The `any` type is a type is not concrete type of its own, but it is used to indicate the possibility of any type being present in the given context. The `any` type is used as a default in type declarations for variables, parameters and return types.
+The `any` type is not a proper type of its own. It indicates the possibility of any type being present in the given context. It is the default type declaration for variables, parameters and return types unless another type is given.
 
 ## Expressions
 
