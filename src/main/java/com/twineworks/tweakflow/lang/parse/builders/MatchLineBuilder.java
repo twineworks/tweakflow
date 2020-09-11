@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.parse.builders;
 import com.twineworks.tweakflow.grammar.TweakFlowParser;
 import com.twineworks.tweakflow.grammar.TweakFlowParserBaseVisitor;
 import com.twineworks.tweakflow.lang.ast.structure.match.DefaultPatternNode;
+import com.twineworks.tweakflow.lang.ast.structure.match.ExpressionPatternNode;
 import com.twineworks.tweakflow.lang.ast.structure.match.MatchLineNode;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
@@ -35,7 +36,7 @@ import java.util.List;
 
 import static com.twineworks.tweakflow.lang.parse.util.CodeParseHelper.srcOf;
 
-public class MatchLineBuilder extends TweakFlowParserBaseVisitor<MatchLineNode>{
+public class MatchLineBuilder extends TweakFlowParserBaseVisitor<MatchLineNode> {
 
   private final ParseUnit parseUnit;
   private final boolean recovery;
@@ -51,11 +52,33 @@ public class MatchLineBuilder extends TweakFlowParserBaseVisitor<MatchLineNode>{
   public MatchLineNode visitPatternLine(TweakFlowParser.PatternLineContext ctx) {
     MatchLineNode matchLineNode = new MatchLineNode();
     matchLineNode.setSourceInfo(srcOf(parseUnit, ctx));
-    matchLineNode.setExpression(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.expression()));
-    if (ctx.matchGuard() != null){
-      matchLineNode.setGuard(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.matchGuard()));
+
+    TweakFlowParser.ExpressionContext expression = ctx.expression();
+    TweakFlowParser.MatchGuardContext matchGuardContext = ctx.matchGuard();
+    TweakFlowParser.MatchPatternContext matchPatternContext = ctx.matchPattern();
+
+    if (recovery && expression == null) {
+      // replace a parse error
+      matchLineNode.setExpression(ExpressionBuilder.makeRecoveryNilNode(parseUnit, ctx));
+    } else {
+      matchLineNode.setExpression(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(expression));
     }
-    matchLineNode.setPattern(new MatchPatternBuilder(parseUnit, recovery, recoveryErrors).visit(ctx.matchPattern()));
+
+    if (matchGuardContext != null) {
+      matchLineNode.setGuard(new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(matchGuardContext));
+    }
+
+    if (recovery && matchGuardContext == null) {
+      // replace a parse error
+      matchLineNode.setPattern(
+          new ExpressionPatternNode()
+              .setSourceInfo(matchLineNode.getSourceInfo())
+              .setExpression(ExpressionBuilder.makeRecoveryNilNode(parseUnit, ctx)));
+    } else {
+      matchLineNode.setPattern(new MatchPatternBuilder(parseUnit, recovery, recoveryErrors).visit(matchPatternContext));
+    }
+
+
     return matchLineNode;
   }
 

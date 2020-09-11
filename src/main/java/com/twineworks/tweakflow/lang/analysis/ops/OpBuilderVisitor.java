@@ -24,8 +24,6 @@
 
 package com.twineworks.tweakflow.lang.analysis.ops;
 
-import com.twineworks.tweakflow.lang.interpreter.Interpreter;
-import com.twineworks.tweakflow.lang.interpreter.ops.*;
 import com.twineworks.tweakflow.lang.analysis.visitors.AExpressionDescendingVisitor;
 import com.twineworks.tweakflow.lang.analysis.visitors.Visitor;
 import com.twineworks.tweakflow.lang.ast.args.ParameterNode;
@@ -34,13 +32,29 @@ import com.twineworks.tweakflow.lang.ast.structure.*;
 import com.twineworks.tweakflow.lang.ast.structure.match.*;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.interpreter.Interpreter;
+import com.twineworks.tweakflow.lang.interpreter.ops.*;
 import com.twineworks.tweakflow.lang.load.loadpath.LoadPathLocation;
 import com.twineworks.tweakflow.lang.load.user.UserObjectFactory;
 import com.twineworks.tweakflow.lang.values.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Visitor {
+
+  private final boolean recovery;
+  private final List<LangException> recoveryErrors;
+
+  public OpBuilderVisitor(boolean recovery, List<LangException> recoveryErrors) {
+    this.recovery = recovery;
+    this.recoveryErrors = recoveryErrors;
+  }
+
+  public OpBuilderVisitor() {
+    this(false, null);
+  }
+
 
   @Override
   public InteractiveNode visit(InteractiveNode node) {
@@ -217,7 +231,7 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
   public ExpressionNode visit(CastNode node) {
     super.visit(node);
     // if the cast is not necessary, just use the underlying expression directly
-    if (node.getTargetType() == node.getExpression().getValueType()){
+    if (node.getTargetType() == node.getExpression().getValueType()) {
       return node.setOp(node.getExpression().getOp());
     }
 
@@ -233,18 +247,29 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
 
     for (ParameterNode parameterNode : node.getParameters().getMap().values()) {
 
-      if (!parameterNode.getDefaultValue().getOp().isConstant()){
-        throw new LangException(LangError.LITERAL_VALUE_REQUIRED, "parameter "+parameterNode.getSymbolName()+" default value must be a literal", parameterNode.getSourceInfo());
+      if (!parameterNode.getDefaultValue().getOp().isConstant()) {
+        LangException e = new LangException(LangError.LITERAL_VALUE_REQUIRED, "parameter " + parameterNode.getSymbolName() + " default value must be a constant", parameterNode.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+          parameterNode.getDefaultValue().setOp(new ConstantOp(Values.NIL));
+        } else {
+          throw e;
+        }
       }
 
-      Value rawDefaultValue = Interpreter.evaluateInEmptyScope(parameterNode.getDefaultValue());
       Value typedDefaultValue;
       try {
+        Value rawDefaultValue = Interpreter.evaluateInEmptyScope(parameterNode.getDefaultValue());
         typedDefaultValue = rawDefaultValue.castTo(parameterNode.getDeclaredType());
-      }
-      catch(LangException e){
+      } catch (LangException e) {
         e.setSourceInfo(node.getSourceInfo());
-        throw e;
+        if (recovery){
+          recoveryErrors.add(e);
+          typedDefaultValue = Values.NIL;
+        }
+        else {
+          throw e;
+        }
       }
       params.add(new FunctionParameter(
           parameterNode.getIndex(),
@@ -255,19 +280,18 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
     FunctionSignature functionSignature = new FunctionSignature(params, node.getDeclaredReturnType());
     node.setSignature(functionSignature);
 
-    if (node.getVia() != null){
+    if (node.getVia() != null) {
 
       // user functions are always compile time constants
       LoadPathLocation location = node.getSourceInfo().getParseUnit().getLocation();
-      if (location.allowsNativeFunctions()){
+      if (location.allowsNativeFunctions()) {
         UserObjectFactory userObjectFactory = new UserObjectFactory();
 
         FunctionValue userFunction = userObjectFactory.createUserFunction(functionSignature, Interpreter.evaluateInEmptyScope(node.getVia().getExpression()));
         node.setFunctionValue(Values.make(userFunction));
         return node.setOp(new ConstantOp(node.getFunctionValue()));
-      }
-      else {
-        throw new LangException(LangError.NATIVE_CODE_RESTRICTED, "code in location "+node.getSourceInfo().getParseUnit().getPath()+" cannot define native functions", node.getSourceInfo());
+      } else {
+        throw new LangException(LangError.NATIVE_CODE_RESTRICTED, "code in location " + node.getSourceInfo().getParseUnit().getPath() + " cannot define native functions", node.getSourceInfo());
       }
 
     }
@@ -387,8 +411,19 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
 
   @Override
   public ExpressionNode visit(LetNode node) {
-    super.visit(node);
-    return node.setOp(new LetOp(node));
+    try {
+      super.visit(node);
+      return node.setOp(new LetOp(node));
+    }
+    catch (Exception e){
+      if (recovery){
+        recoveryErrors.add(LangException.wrap(e));
+        return node.setOp(new ConstantOp(Values.NIL));
+      }
+      else {
+        throw e;
+      }
+    }
   }
 
   @Override
@@ -419,13 +454,13 @@ public class OpBuilderVisitor extends AExpressionDescendingVisitor implements Vi
   @Override
   public ExpressionNode visit(ReferenceNode node) {
 
-    if (node.isClosure()){
+    if (node.isClosure()) {
       return node.setOp(new ClosureReferenceOp(node));
     }
-    if (node.isSimpleLocal()){
+    if (node.isSimpleLocal()) {
       return node.setOp(new SimpleLocalReferenceOp(node.getSimpleName()));
     }
-    if (node.isSimpleParent()){
+    if (node.isSimpleParent()) {
       return node.setOp(new SimpleParentSpaceReferenceOp(node.getSimpleName()));
     }
     return node.setOp(new ReferenceOp(node));

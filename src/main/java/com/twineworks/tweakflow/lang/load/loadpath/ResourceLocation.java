@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.lang.load.loadpath;
 
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
+import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ResourceParseUnit;
 import com.twineworks.tweakflow.util.InOut;
@@ -170,5 +171,11 @@ public class ResourceLocation implements LoadPathLocation {
   private String pathToString(Path path){
     return path.toString().replace('\\', '/');
   }
+
+  @Override
+  public ParseUnit makeRecoveryUnit(String path) {
+    return MemoryParseUnit.makeRecoveryUnit(this, path);
+  }
+
 
 }

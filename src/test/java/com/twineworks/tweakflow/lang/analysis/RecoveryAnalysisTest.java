@@ -113,12 +113,20 @@ public class RecoveryAnalysisTest {
     assertThat(result.isSuccess()).isTrue();
 
     // has a recovery error
-//    assertThat(result.getRecoveryErrors().size()).isEqualTo(1);
+    assertThat(result.getRecoveryErrors().size()).isEqualTo(1);
 
     // f: (string x=a) -> x;
-//    LangException e = result.getRecoveryErrors().get(0);
-//    assertThat(e.getCode()).isEqualTo(LangError.LITERAL_VALUE_REQUIRED);
-//    assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("a");
+    LangException e = result.getRecoveryErrors().get(0);
+    assertThat(e.getCode()).isEqualTo(LangError.LITERAL_VALUE_REQUIRED);
+    assertThat(e.getSourceInfo().getSourceCode()).isEqualTo("string x=a");
+
+  }
+
+  @Test
+  public void accepts_missing_import() throws Exception {
+
+    AnalysisResult result = analyze("fixtures/tweakflow/analysis/imports/errors/missing_import.tf");
+    assertThat(result.isSuccess()).isTrue();
 
   }
 

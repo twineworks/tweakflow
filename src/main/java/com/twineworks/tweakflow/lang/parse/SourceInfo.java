@@ -26,6 +26,8 @@ package com.twineworks.tweakflow.lang.parse;
 
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
+import java.util.ArrayList;
+
 public class SourceInfo {
 
   private ParseUnit parseUnit;
@@ -34,6 +36,7 @@ public class SourceInfo {
 
   private int sourceIdxStart;
   private int sourceIdxEnd;
+  private ArrayList<Integer> lineStarts;
 
   public SourceInfo(ParseUnit parseUnit, int line, int charWithinLine, int sourceIdxStart, int sourceIdxEnd) {
     this.parseUnit = parseUnit;
@@ -58,6 +61,30 @@ public class SourceInfo {
   public SourceInfo setLine(int line) {
     this.line = line;
     return this;
+  }
+
+  private ArrayList<Integer> getLineStartIndexes(){
+    if (lineStarts == null){
+
+      String str = parseUnit.getProgramText();
+
+      lineStarts = new ArrayList<>();
+      lineStarts.add(0);
+
+      int idx = 0;
+      int len = str.length();
+      while(idx < len){
+        int nextLine = str.indexOf('\n', idx)+1;
+        // not found: nextLine == 0
+        if (nextLine == 0) break;
+        if (nextLine != len){
+          lineStarts.add(nextLine);
+        }
+        idx = nextLine;
+      }
+    }
+
+    return lineStarts;
   }
 
   public int getCharWithinLine() {
@@ -142,18 +169,38 @@ public class SourceInfo {
     String programText = parseUnit.getProgramText();
     if (programText == null) return null;
     if (line <= 0) return null;
-    String[] lines = programText.split("\\r?\\n", -1);
-    if (lines.length > line - 1) {
-      return lines[line - 1];
-    } else {
-      return null;
+    ArrayList<Integer> lineStarts = getLineStartIndexes();
+    if (line-1 >= lineStarts.size()) return null;
+    int startIdx = lineStarts.get(line-1);
+    int endIdx = line >= lineStarts.size() ? programText.length() : lineStarts.get(line);
+    String line = programText.substring(startIdx, endIdx);
+    // trim possible leading and trailing \r\n
+    if (line.indexOf('\n') >= 0 || line.indexOf('\r') >= 0){
+      line = line.replaceAll("^[\n\r]", "").replaceAll("[\n\r]$", "");
     }
+    return line;
+//    String[] lines = programText.split("\\r?\\n", -1);
+//    if (lines.length > line - 1) {
+//      return lines[line - 1];
+//    } else {
+//      return null;
+//    }
   }
 
   public boolean precedes(SourceInfo other) {
     return parseUnit == other.parseUnit &&
         (getLine() < other.getLine() || getLine() == other.getLine() && getCharWithinLine() < other.getCharWithinLine());
 
+  }
+
+  public boolean encloses(int atLine, int atChar){
+    if (line > atLine) return false;
+    ArrayList<Integer> lineStarts = getLineStartIndexes();
+    int lineIdx = atLine-1;
+    if (lineIdx >= lineStarts.size()) return false;
+    Integer startIdx = lineStarts.get(lineIdx);
+    int pos = startIdx+(atChar-1);
+    return (sourceIdxStart <= pos && sourceIdxEnd >= pos);
   }
 
 }

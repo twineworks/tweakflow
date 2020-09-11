@@ -48,6 +48,19 @@ public class CodeParseHelper {
     return sourceInfo;
   }
 
+  public static SourceInfo srcOf(ParseUnit unit, Token from, Token to){
+
+    SourceInfo sourceInfo = new SourceInfo(
+        unit,
+        from.getLine(),
+        from.getCharPositionInLine() + 1,
+        from.getStartIndex(),
+        to.getStopIndex()
+    );
+
+    return sourceInfo;
+  }
+
   public static SourceInfo srcOf(ParseUnit unit, ParserRuleContext treeNode){
 
     SourceInfo sourceInfo = new SourceInfo(

@@ -33,5 +33,5 @@ public interface LoadPathLocation {
   String resolve(String path);
   boolean allowsNativeFunctions();
   boolean allowsCaching();
-
+  ParseUnit makeRecoveryUnit(String path);
 }

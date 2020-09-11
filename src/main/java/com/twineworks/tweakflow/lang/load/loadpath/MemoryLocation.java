@@ -117,5 +117,9 @@ public class MemoryLocation implements LoadPathLocation {
     return allowCaching;
   }
 
+  @Override
+  public ParseUnit makeRecoveryUnit(String path) {
+    return MemoryParseUnit.makeRecoveryUnit(this, path);
+  }
 
 }

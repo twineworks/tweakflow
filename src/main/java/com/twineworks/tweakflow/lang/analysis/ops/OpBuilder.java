@@ -28,10 +28,13 @@ import com.twineworks.tweakflow.lang.analysis.AnalysisSet;
 import com.twineworks.tweakflow.lang.analysis.AnalysisStage;
 import com.twineworks.tweakflow.lang.analysis.AnalysisUnit;
 import com.twineworks.tweakflow.lang.ast.UnitNode;
+import com.twineworks.tweakflow.lang.errors.LangException;
+
+import java.util.List;
 
 public class OpBuilder {
 
-  public static void analyze(AnalysisSet analysisSet){
+  public static void analyze(AnalysisSet analysisSet, boolean recovery){
 
     for (AnalysisUnit unit : analysisSet.getUnits().values()) {
 
@@ -40,14 +43,14 @@ public class OpBuilder {
         continue;
       }
 
-      analyze(unit.getUnit());
+      analyze(unit.getUnit(), recovery, analysisSet.getRecoveryErrors());
       unit.setStage(AnalysisStage.OPS_ASSIGNED);
     }
 
   }
 
-  private static void analyze(UnitNode unitNode){
-    new OpBuilderVisitor().visit(unitNode);
+  private static void analyze(UnitNode unitNode, boolean recovery, List<LangException> recoveryErrors){
+    new OpBuilderVisitor(recovery, recoveryErrors).visit(unitNode);
   }
 
 }

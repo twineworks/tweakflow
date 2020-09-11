@@ -66,7 +66,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     this.recoveryErrors = recoveryErrors;
   }
 
-  public static ExpressionNode makeRecoveryNilNode(ParseUnit p, ParserRuleContext ctx){
+  public static ExpressionNode makeRecoveryNilNode(ParseUnit p, ParserRuleContext ctx) {
     return new NilNode().setSourceInfo(srcOf(p, ctx));
   }
 
@@ -74,15 +74,22 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     if (targetType == Types.ANY) return node;
     if (targetType == node.getValueType()) return node;
 
+    ExpressionNode ret = new CastNode()
+        .setExpression(node)
+        .setTargetType(targetType)
+        .setSourceInfo(node.getSourceInfo());
+
     // allow casts that are guaranteed to fail in recovery mode
-    if (recovery || node.getValueType().canAttemptCastTo(targetType)) {
-      return new CastNode()
-          .setExpression(node)
-          .setTargetType(targetType)
-          .setSourceInfo(node.getSourceInfo());
-    } else {
-      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + node.getValueType().name() + " to " + targetType.name(), node.getSourceInfo());
+    if (!node.getValueType().canAttemptCastTo(targetType)) {
+      LangException e = new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + node.getValueType().name() + " to " + targetType.name(), node.getSourceInfo());
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
+
+    return ret;
   }
 
   @Override
@@ -164,10 +171,16 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       Long decLiteral = parseLongLiteral(ctx.getText().replace("_", ""));
       return new LongNode(decLiteral).setSourceInfo(sourceInfo);
     } catch (NumberFormatException e) {
-      if (recovery){
+
+      LangException err = new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
+
+      if (recovery) {
+        recoveryErrors.add(err);
         return new LongNode(0L).setSourceInfo(sourceInfo);
+      } else {
+        throw err;
       }
-      throw new LangException(LangError.NUMBER_OUT_OF_BOUNDS, "Number out of bounds.", sourceInfo);
+
     }
 
   }
@@ -208,7 +221,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     // remove underscores
     text = text.replace("_", "");
     // remove trailing D
-    text = text.substring(0, text.length()-1);
+    text = text.substring(0, text.length() - 1);
     // parse the decimal
     BigDecimal decimal = new BigDecimal(text);
     return new DecimalNode(decimal).setSourceInfo(srcOf(parseUnit, ctx));
@@ -250,10 +263,9 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       // comma separator token children are skipped
     }
 
-    if (recovery && ctx.expression() == null){
+    if (recovery && ctx.expression() == null) {
       forNode.setExpression(makeRecoveryNilNode(parseUnit, ctx));
-    }
-    else{
+    } else {
       forNode.setExpression(visit(ctx.expression()));
     }
 
@@ -280,8 +292,15 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
       // ensure the default pattern appears last, if present
       if (matchLineNode.getPattern() instanceof DefaultPatternNode) {
-        if (!recovery && i != size - 1)
-          throw new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
+        if (i != size - 1) {
+          LangException e = new LangException(LangError.DEFAULT_PATTERN_NOT_LAST, matchLineNode.getPattern().getSourceInfo());
+          if (recovery) {
+            recoveryErrors.add(e);
+          } else {
+            throw e;
+          }
+        }
+
       }
       matchLines.getElements().add(matchLineNode);
     }
@@ -483,7 +502,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ListNode currentSubList = null;
 
     // ignore faulty children in recovery mode
-    if (recovery && children == null){
+    if (recovery && children == null) {
       children = Collections.emptyList();
     }
 
@@ -758,32 +777,37 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
   public ExpressionNode visitLetExp(TweakFlowParser.LetExpContext ctx) {
 
     BindingsNode bindings = new BindingsNode()
-        .setSourceInfo(srcOf(parseUnit, ctx));
+        .setSourceInfo(srcOf(parseUnit, ctx.LCURLY().getSymbol(), ctx.RCURLY().getSymbol()));
 
     Map<String, VarDefNode> varDefs = bindings.getVars().getMap();
     List<TweakFlowParser.VarDefContext> varDefContexts = ctx.varDef();
 
     // allow errors in node
-    if (recovery && varDefContexts == null){
+    if (recovery && varDefContexts == null) {
       varDefContexts = Collections.emptyList();
     }
 
     for (TweakFlowParser.VarDefContext varDefContext : varDefContexts) {
       VarDefNode varDef = new VarDefBuilder(parseUnit, recovery, recoveryErrors).visitVarDef(varDefContext);
       if (varDefs.containsKey(varDef.getSymbolName())) {
-        throw new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName() + " defined more than once", varDef.getSourceInfo());
+        LangException e = new LangException(LangError.ALREADY_DEFINED, varDef.getSymbolName() + " defined more than once", varDef.getSourceInfo());
+        if (recovery) {
+          recoveryErrors.add(e);
+        } else {
+          throw e;
+        }
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }
+    bindings.getVars().setSourceInfo(srcOf(parseUnit, ctx.LCURLY().getSymbol(), ctx.RCURLY().getSymbol()));
     bindings.getVars().cook();
 
 
     ExpressionNode expression;
     TweakFlowParser.ExpressionContext valueExp = ctx.expression();
-    if (recovery && valueExp == null){
+    if (recovery && (valueExp == null || valueExp.exception != null)) {
       expression = makeRecoveryNilNode(parseUnit, ctx);
-    }
-    else {
+    } else {
       expression = new ExpressionBuilder(parseUnit, recovery, recoveryErrors).visit(valueExp);
     }
 
@@ -825,14 +849,21 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
       TweakFlowParser.ExpressionContext defExp = defContext.expression();
       if (defExp == null) {
         defaultValue = new NilNode().setSourceInfo(srcOf(parseUnit, defContext.identifier()));
-      }else {
+      } else {
         defaultValue = visit(defExp);
       }
 
       String name = identifier(defContext.identifier().getText());
 
-      if (!recovery && paramMap.containsKey(name)) {
-        throw new LangException(LangError.ALREADY_DEFINED, name + " defined more than once", srcOf(parseUnit, defContext));
+      if (paramMap.containsKey(name)) {
+        LangException e = new LangException(LangError.ALREADY_DEFINED, name + " defined more than once", srcOf(parseUnit, defContext));
+        if (recovery){
+          recoveryErrors.add(e);
+        }
+        else{
+          throw e;
+        }
+
       }
 
       paramMap.put(name, new ParameterNode()
@@ -983,15 +1014,21 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
     ExpressionNode exp = visit(ctx.expression());
     Type type = type(ctx.dataType());
 
-    if (recovery || exp.getValueType().canAttemptCastTo(type)) {
-      return new CastNode()
-          .setExpression(exp)
-          .setTargetType(type)
-          .setSourceInfo(srcOf(parseUnit, ctx));
-    } else {
-      throw new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + exp.getValueType().name() + " to " + type.name(), srcOf(parseUnit, ctx));
+    ExpressionNode ret = new CastNode()
+        .setExpression(exp)
+        .setTargetType(type)
+        .setSourceInfo(srcOf(parseUnit, ctx));
+
+    if (!exp.getValueType().canAttemptCastTo(type)) {
+      LangException e = new LangException(LangError.INCOMPATIBLE_TYPES, "cannot cast " + exp.getValueType().name() + " to " + type.name(), srcOf(parseUnit, ctx));
+      if (recovery) {
+        recoveryErrors.add(e);
+      } else {
+        throw e;
+      }
     }
 
+    return ret;
   }
 
   @Override
@@ -1243,8 +1280,13 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
               .setExpression(visit(nArg.expression()))
               .setName(identifier(nArg.identifier().getText()));
 
-          if (!recovery && argMap.containsKey(arg.getName())) {
-            throw new LangException(LangError.ALREADY_DEFINED, arg.getName() + " defined more than once", arg.getSourceInfo());
+          if (argMap.containsKey(arg.getName())) {
+            LangException e = new LangException(LangError.ALREADY_DEFINED, arg.getName() + " defined more than once", arg.getSourceInfo());
+            if (recovery) {
+              recoveryErrors.add(e);
+            } else {
+              throw e;
+            }
           } else {
             argMap.put(arg.getName(), arg);
           }
@@ -1329,7 +1371,7 @@ public class ExpressionBuilder extends TweakFlowParserBaseVisitor<ExpressionNode
 
   }
 
-  byte[] parseBinLiteral(String hexString){
+  byte[] parseBinLiteral(String hexString) {
     return hexToBytes(hexString.replace("_", ""));
   }
 

@@ -72,8 +72,8 @@ public class Analysis {
     ConstantOpsFolding.analyze(analysisSet);
   }
 
-  private static void buildOps(AnalysisSet analysisSet) {
-    OpBuilder.analyze(analysisSet);
+  private static void buildOps(AnalysisSet analysisSet, boolean recovery) {
+    OpBuilder.analyze(analysisSet, recovery);
   }
 
   private static void specializeOps(AnalysisSet analysisSet) {
@@ -134,7 +134,7 @@ public class Analysis {
       resolveReferences(analysisSet, false);
       analyzeClosures(analysisSet);
       verifyDependencies(analysisSet, false);
-      buildOps(analysisSet);
+      buildOps(analysisSet, false);
       foldConstantOps(analysisSet);
       specializeOps(analysisSet);
 
@@ -160,9 +160,9 @@ public class Analysis {
       resolveReferences(analysisSet, true);
       analyzeClosures(analysisSet);
       verifyDependencies(analysisSet, true);
-//      buildOps(analysisSet);
-//      foldConstantOps(analysisSet);
-//      specializeOps(analysisSet);
+      buildOps(analysisSet, true);
+      foldConstantOps(analysisSet);
+      specializeOps(analysisSet);
 
       // mark module space compiled
 //      for (AnalysisUnit spaceUnit : analysisSet.getUnits().values()) {

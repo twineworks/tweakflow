@@ -255,15 +255,33 @@ public class ParallelLoader {
         if (pathLocation == null) {
           pathLocation = loadPath.pathLocationFor(modulePath);
           if (pathLocation == null) {
-            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
-          }
-        } else {
-          if (!pathLocation.pathExists(modulePath)) {
-            throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
+            LangException e = new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
+            if (recovery){
+              // fabricate a recovery unit on the first available load path entry
+              pathLocation = loadPath.getLocations().get(0);
+            }
+            else{
+              throw e;
+            }
           }
         }
 
-        ParseUnit parseUnit = pathLocation.getParseUnit(modulePath);
+        ParseUnit parseUnit;
+
+        if (!pathLocation.pathExists(modulePath)) {
+          LangException e = new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find " + modulePath + " on load path");
+          if (recovery) {
+            parseUnit = pathLocation.makeRecoveryUnit(modulePath);
+            recoveryErrors.add(e);
+          }
+          else{
+            throw e;
+          }
+        }
+        else{
+          parseUnit = pathLocation.getParseUnit(modulePath);
+        }
+
 
         String key = parseUnit.getPath();
         ParseUnit prev = parseUnits.putIfAbsent(key, parseUnit);

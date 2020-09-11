@@ -58,10 +58,22 @@ public class Loader {
 
     long loadStart = System.currentTimeMillis();
 
+    ParseUnit parseUnit;
     if (!pathLocation.pathExists(modulePath)){
-      throw new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
+      LangException e = new LangException(LangError.CANNOT_FIND_MODULE, "Cannot find "+modulePath+" on load path");
+      if (recovery){
+        recoveryErrors.add(e);
+        parseUnit = pathLocation.makeRecoveryUnit(modulePath);
+      }
+      else{
+        throw e;
+      }
     }
-    ParseUnit parseUnit = pathLocation.getParseUnit(modulePath);
+    else{
+      parseUnit = pathLocation.getParseUnit(modulePath);
+    }
+
+
     String parseUnitKey = parseUnit.getPath();
 
     // already done?

@@ -32,6 +32,10 @@ public class MemoryParseUnit implements ParseUnit {
   private final String programLocation;
   private final LoadPathLocation location;
 
+  public static final MemoryParseUnit makeRecoveryUnit(LoadPathLocation location, String path){
+    return new MemoryParseUnit(location, "# missing - recovery unit", path);
+  }
+
   public MemoryParseUnit(LoadPathLocation location, String programText, String path) {
     this.programText = programText;
     this.programLocation = path;

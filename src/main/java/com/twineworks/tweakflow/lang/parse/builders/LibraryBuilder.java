@@ -88,6 +88,20 @@ public class LibraryBuilder extends TweakFlowParserBaseVisitor<Node>{
       }
       varDefs.put(varDef.getSymbolName(), varDef);
     }
+
+    if (recovery){
+      if (ctx.LCURLY() != null && ctx.RCURLY() != null){
+        library.getVars().setSourceInfo(srcOf(parseUnit, ctx.LCURLY().getSymbol(), ctx.RCURLY().getSymbol()));
+      }
+      else{
+        // bad input, use all of ctx as source
+        library.getVars().setSourceInfo(srcOf(parseUnit, ctx));
+      }
+    }
+    else{
+      library.getVars().setSourceInfo(srcOf(parseUnit, ctx.LCURLY().getSymbol(), ctx.RCURLY().getSymbol()));
+    }
+
     library.getVars().cook();
 
     return library;

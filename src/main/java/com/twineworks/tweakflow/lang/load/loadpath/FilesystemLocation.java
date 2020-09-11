@@ -27,6 +27,7 @@ package com.twineworks.tweakflow.lang.load.loadpath;
 import com.twineworks.tweakflow.lang.errors.LangError;
 import com.twineworks.tweakflow.lang.errors.LangException;
 import com.twineworks.tweakflow.lang.parse.units.FilesystemParseUnit;
+import com.twineworks.tweakflow.lang.parse.units.MemoryParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 import com.twineworks.tweakflow.lang.parse.units.transform.ParseUnitSourceTransformer;
 
@@ -160,6 +161,11 @@ public class FilesystemLocation implements LoadPathLocation {
   @Override
   public boolean allowsCaching() {
     return allowCaching;
+  }
+
+  @Override
+  public ParseUnit makeRecoveryUnit(String path) {
+    return MemoryParseUnit.makeRecoveryUnit(this, path);
   }
 
 }

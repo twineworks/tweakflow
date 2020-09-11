@@ -81,7 +81,7 @@ public class InteractiveBuilder extends TweakFlowParserBaseVisitor<Node>{
         .setInScopeRef(inScope);
 
     buildVars(sectionNode.getVars(), ctx.varDef());
-
+    sectionNode.getVars().setSourceInfo(srcOf(parseUnit, ctx.LCURLY().getSymbol(), ctx.RCURLY().getSymbol()));
     return sectionNode;
   }
 

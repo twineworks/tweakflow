@@ -58,7 +58,7 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
     ExpressionNode expression = expressionBuilder.visit(ctx.expression());
 
     if (recovery && expression == null){
-      // if the expression comes back broken, replace it with a nil node
+      // if the expression has a parse error, replace it with a nil node
       expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx.expression()));
     }
 
@@ -87,8 +87,6 @@ public class VarDefBuilder extends TweakFlowParserBaseVisitor<VarDefNode>{
   @Override
   public VarDefNode visitVarDec(TweakFlowParser.VarDecContext ctx) {
     Type declaredType = type(ctx.dataType());
-
-    ExpressionBuilder expressionBuilder = new ExpressionBuilder(parseUnit, recovery, recoveryErrors);
 
     // expression is missing on provided vars, it is implicitly nil
     ExpressionNode expression = new NilNode().setSourceInfo(srcOf(parseUnit, ctx));
