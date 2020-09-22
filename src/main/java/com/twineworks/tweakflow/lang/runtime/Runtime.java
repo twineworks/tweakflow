@@ -511,7 +511,7 @@ public class Runtime {
 
       this.cell = cell;
       this.runtime = runtime;
-      this.varDefNode= (VarDefNode) cell.getSymbol().getNode();
+      this.varDefNode = (VarDefNode) cell.getSymbol().getNode();
       this.isProvided = varDefNode.isDeclaredProvided();
       this.declaredType = varDefNode.getDeclaredType();
       this.name = varDefNode.getSymbolName();
@@ -538,6 +538,16 @@ public class Runtime {
         }
       }
 
+    }
+
+    public boolean dependsOn(Runtime.Var other){
+      LinkedHashSet<Symbol> dependencies = runtime.getRuntimeSet().getAnalysisSet().getDependencies().get(cell.getSymbol());
+      if (dependencies == null) return false;
+      return dependencies.contains(other.cell.getSymbol());
+    }
+
+    public boolean isReferencedBy(Runtime.Var other){
+      return dependants.contains(other.cell);
     }
 
     public Type getDeclaredType() {
