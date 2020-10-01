@@ -119,6 +119,16 @@ public class LangUtil {
     return "\""+escapeString(s)+"\"";
   }
 
+  public static String escapeSingleQuotedString(String s){
+    String escaped = s.replace("'", "''");
+    return escaped;
+  }
+
+
+  public static String getSingleQuotedStringLiteral(String s){
+    return "'"+escapeSingleQuotedString(s)+"'";
+  }
+
   private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
   public static String bytesToHex(byte[] bytes) {
@@ -167,6 +177,16 @@ public class LangUtil {
     // safe as is?
     if (safeKeyName.matcher(id).matches()){
       return ":"+id;
+    }
+
+    // prefer '$foo' over :`$foo`
+    if (!id.contains("'")){
+      return getSingleQuotedStringLiteral(id);
+    }
+
+    // prefer "foo's" over :`foo's`
+    if (!id.contains("\"")){
+      return getStringLiteral(id);
     }
 
     if (id.contains("`")){
