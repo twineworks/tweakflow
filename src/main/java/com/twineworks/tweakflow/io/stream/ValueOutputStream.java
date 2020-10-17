@@ -25,34 +25,54 @@
 package com.twineworks.tweakflow.io.stream;
 
 import com.twineworks.tweakflow.io.MagicNumbers;
-import com.twineworks.tweakflow.lang.values.*;
+import com.twineworks.tweakflow.lang.values.DictValue;
+import com.twineworks.tweakflow.lang.values.ListValue;
+import com.twineworks.tweakflow.lang.values.Value;
+import com.twineworks.tweakflow.lang.values.ValueInspector;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ValueOutputStream implements AutoCloseable{
+public class ValueOutputStream implements AutoCloseable {
 
   private final DataOutputStream ds;
 
-  public ValueOutputStream(OutputStream out){
+  public ValueOutputStream(OutputStream out) {
     this.ds = new DataOutputStream(out);
   }
 
   public void write(Value v) throws IOException {
     byte magicByte = v.type().getId();
-    switch(magicByte){
-      case MagicNumbers.Format.VOID: ds.writeByte(magicByte); break;
-      case MagicNumbers.Format.BOOLEAN: ds.writeByte(magicByte); ds.writeByte(v.bool() ? (byte)1 : (byte)0); break;
-      case MagicNumbers.Format.BINARY: ds.writeByte(magicByte); ds.writeInt(v.bytes().length); ds.write(v.bytes());break;
-      case MagicNumbers.Format.LONG: ds.writeByte(magicByte); ds.writeLong(v.longNum()); break;
-      case MagicNumbers.Format.DOUBLE: ds.writeByte(magicByte); ds.writeDouble(v.doubleNum());break;
-      case MagicNumbers.Format.DECIMAL: ds.writeByte(magicByte); ds.writeUTF(v.decimal().toString()); break;
+    switch (magicByte) {
+      case MagicNumbers.Format.VOID:
+        ds.writeByte(magicByte);
+        break;
+      case MagicNumbers.Format.BOOLEAN:
+        ds.writeByte(magicByte);
+        ds.writeByte(v.bool() ? (byte) 1 : (byte) 0);
+        break;
+      case MagicNumbers.Format.BINARY:
+        ds.writeByte(magicByte);
+        ds.writeInt(v.bytes().length);
+        ds.write(v.bytes());
+        break;
+      case MagicNumbers.Format.LONG:
+        ds.writeByte(magicByte);
+        ds.writeLong(v.longNum());
+        break;
+      case MagicNumbers.Format.DOUBLE:
+        ds.writeByte(magicByte);
+        ds.writeDouble(v.doubleNum());
+        break;
+      case MagicNumbers.Format.DECIMAL:
+        ds.writeByte(magicByte);
+        ds.writeUTF(v.decimal().toString());
+        break;
       case MagicNumbers.Format.STRING:
         ds.writeByte(magicByte);
         ds.writeUTF(v.string());
@@ -80,16 +100,16 @@ public class ValueOutputStream implements AutoCloseable{
         DictValue dict = v.dict();
         ds.writeInt(dict.size());
         Iterator<Map.Entry<String, Value>> iter = dict.entryIterator();
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
           Map.Entry<String, Value> entry = iter.next();
           ds.writeUTF(entry.getKey());
           write(entry.getValue());
         }
         break;
       case MagicNumbers.Format.FUNCTION:
-        throw new IOException("Cannot serialize function values, found: "+ ValueInspector.inspect(v, true));
+        throw new IOException("Cannot serialize function values, found: " + ValueInspector.inspect(v, true));
       default:
-        throw new IOException("Unknown value type: "+v.type().name());
+        throw new IOException("Unknown value type: " + v.type().name());
     }
   }
 
@@ -101,7 +121,7 @@ public class ValueOutputStream implements AutoCloseable{
   public void close() {
     try {
       ds.close();
-    } catch (IOException ignored){
+    } catch (IOException ignored) {
     }
   }
 

@@ -26,6 +26,7 @@ package com.twineworks.tweakflow.io.stream;
 
 import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.values.*;
+import com.twineworks.tweakflow.util.LRUCache;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -36,9 +37,68 @@ import java.time.ZonedDateTime;
 public class ValueInputStream implements AutoCloseable {
 
   private final DataInputStream ds;
+  private final LRUCache<String, Value> stringCache;
+  private final LRUCache<Long, Value> longCache;
+  private final LRUCache<String, String> keyCache;
 
   public ValueInputStream(InputStream in) {
+    this(in, 0);
+  }
+
+  public ValueInputStream(InputStream in, int cacheSize) {
     this.ds = new DataInputStream(in);
+    if (cacheSize > 0){
+      stringCache = new LRUCache<>(cacheSize);
+      longCache = new LRUCache<>(cacheSize);
+      keyCache = new LRUCache<>(cacheSize);
+    }
+    else{
+      stringCache = null;
+      longCache = null;
+      keyCache = null;
+    }
+  }
+
+  private Value makeString(String str){
+    if (stringCache != null){
+      Value v = stringCache.get(str);
+      if (v == null){
+        v = Values.make(str);
+        stringCache.put(str, v);
+      }
+      return v;
+    }
+    else {
+      return Values.make(str);
+    }
+  }
+
+  private Value makeLong(Long num){
+    if (longCache != null){
+      Value v = longCache.get(num);
+      if (v == null){
+        v = Values.make(num);
+        longCache.put(num, v);
+      }
+      return v;
+    }
+    else {
+      return Values.make(num);
+    }
+  }
+
+  private String getKey(String k){
+    if (keyCache != null){
+      String v = keyCache.get(k);
+      if (v == null){
+        v = k;
+        keyCache.put(k, k);
+      }
+      return v;
+    }
+    else {
+      return k;
+    }
   }
 
   public Value read() throws IOException {
@@ -55,17 +115,17 @@ public class ValueInputStream implements AutoCloseable {
         ds.readFully(bytes);
         return Values.make(bytes);
       case MagicNumbers.Format.LONG:
-        return Values.make(ds.readLong());
+        return makeLong(ds.readLong());
       case MagicNumbers.Format.DOUBLE:
         return Values.make(ds.readDouble());
       case MagicNumbers.Format.DECIMAL:
         return Values.make(new BigDecimal(ds.readUTF()));
       case MagicNumbers.Format.STRING:
-        return Values.make(ds.readUTF());
+        return makeString(ds.readUTF());
       case MagicNumbers.Format.DATETIME:
         long epochSeconds = ds.readLong();
         int nanos = ds.readInt();
-        ZoneId zoneId = ZoneId.of(ds.readUTF());
+        ZoneId zoneId = ZoneId.of(getKey(ds.readUTF()));
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds, nanos), zoneId);
         return Values.make(new DateTimeValue(zonedDateTime));
       case MagicNumbers.Format.LIST:
@@ -80,7 +140,7 @@ public class ValueInputStream implements AutoCloseable {
         TransientDictValue t = new TransientDictValue();
         int count = ds.readInt();
         for (int i = 0; i < count; i++) {
-          t.put(ds.readUTF(), read());
+          t.put(getKey(ds.readUTF()), read());
         }
         return Values.make(t.persistent());
 
@@ -92,6 +152,15 @@ public class ValueInputStream implements AutoCloseable {
   @Override
   public void close() {
     try {
+      if (stringCache != null){
+        stringCache.clear();
+      }
+      if (longCache != null){
+        longCache.clear();
+      }
+      if(keyCache != null){
+        keyCache.clear();
+      }
       ds.close();
     } catch (IOException ignored) {
     }
