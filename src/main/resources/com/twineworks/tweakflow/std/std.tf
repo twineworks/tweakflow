@@ -4202,7 +4202,7 @@ nil
 
 doc
 ~~~
-`(datetime x) -> long`
+`(datetime x) -> string`
 
 Returns the time zone for given datetime `x`.
 
