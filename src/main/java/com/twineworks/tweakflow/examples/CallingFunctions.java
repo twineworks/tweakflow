@@ -59,9 +59,9 @@ public class CallingFunctions {
   public static void main(String[] args) {
 
     // a module where time_format.format is a formatting function
-    String module = "import time from 'std'\n" +
+    String module = "import time from 'std';\n" +
         "library time_format {\n" +
-        "  format: time.formatter(\"cccc, d MMMM uuuu HH:mm:ss 'in' VV\")\n" +
+        "  format: time.formatter(\"cccc, d MMMM uuuu HH:mm:ss 'in' VV\");\n" +
         "}";
 
     // compile the module
