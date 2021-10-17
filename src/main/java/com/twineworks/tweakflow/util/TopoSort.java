@@ -30,11 +30,12 @@ import java.util.*;
 public class TopoSort {
 
   final private static class SortContext<T> {
-    final HashSet<T> unmarked = new HashSet<>();
+    // linked hashsets preserve a deterministic result
+    final LinkedHashSet<T> processed = new LinkedHashSet<>();
+    final LinkedHashSet<T> unmarked = new LinkedHashSet<>();
     // A linked hashset preserves sensible order when reporting a cycle going from a -> b -> c -> a.
     // Making it a regular hashset might report a cycle like b -> a -> a -> c, since order is not preserved
     final LinkedHashSet<T> processing = new LinkedHashSet<>();
-    final HashSet<T> processed = new HashSet<>();
   }
 
   final public static class CyclicDependencyException extends RuntimeException {
