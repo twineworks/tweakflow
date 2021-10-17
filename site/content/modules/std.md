@@ -2135,7 +2135,7 @@ ERROR:
 
 `(xs, key) -> `
 
-Given a `list` or `dict` `xs`, returns a collection of the same time consisting of all elements of `xs`, except for the element at `key`.
+Given a `list` or `dict` `xs`, returns a collection of the same type consisting of all elements of `xs`, except for the element at `key`.
 If `xs` is a list, any elements past the deleted index are shifted to the left.
 
 If `xs` does not have the given `key`, `xs` is returned.
@@ -5044,7 +5044,7 @@ nil
 
 ### zone{#time-zone}
 
-`(datetime x) -> long`
+`(datetime x) -> string`
 
 Returns the time zone for given datetime `x`.
 

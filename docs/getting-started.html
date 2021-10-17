@@ -51,7 +51,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.2</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.3</a>
           </li>
         </ul>
         </nav>
@@ -100,7 +100,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v1.3.2</a
+            ><b>Tweakflow</b> v1.3.3</a
           >
         </li>
         
@@ -164,23 +164,20 @@
           <div class="scrollable-parent">
             <div class="scrollable-content">
               <nav id="TableOfContents">
-<ul>
-<li><a href="#getting-started">Getting started</a>
-<ul>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#getting-tweakflow">Getting tweakflow</a></li>
-<li><a href="#starting-a-repl">Starting a REPL</a></li>
-<li><a href="#evaluating-expressions">Evaluating expressions</a></li>
-<li><a href="#calling-functions">Calling functions</a></li>
-<li><a href="#variables">Variables</a></li>
-<li><a href="#string-interpolation">String interpolation</a></li>
-<li><a href="#defining-functions">Defining functions</a></li>
-<li><a href="#local-variables">Local variables</a></li>
-<li><a href="#types">Types</a></li>
-<li><a href="#conditionals">Conditionals</a></li>
-<li><a href="#conclusion">Conclusion</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#getting-tweakflow">Getting tweakflow</a></li>
+    <li><a href="#starting-a-repl">Starting a REPL</a></li>
+    <li><a href="#evaluating-expressions">Evaluating expressions</a></li>
+    <li><a href="#calling-functions">Calling functions</a></li>
+    <li><a href="#variables">Variables</a></li>
+    <li><a href="#string-interpolation">String interpolation</a></li>
+    <li><a href="#defining-functions">Defining functions</a></li>
+    <li><a href="#local-variables">Local variables</a></li>
+    <li><a href="#types">Types</a></li>
+    <li><a href="#conditionals">Conditionals</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
 </nav>
             </div>
           </div>
@@ -188,109 +185,66 @@
       </aside>
       
       <main class="single-content " role="main">
-        
-
-<h1 id="getting-started">Getting started</h1>
-
+        <h1 id="getting-started">Getting started</h1>
 <p>This document is an interactive step-by-step guide to tweakflow expressions. Its goal is to give you a feeling for the syntax and expressive capabilities of tweakflow.</p>
-
 <h2 id="requirements">Requirements</h2>
-
 <p>Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11, and 13.</p>
-
 <h2 id="getting-tweakflow">Getting tweakflow</h2>
-
 <p><a href="https://github.com/twineworks/tweakflow/releases/latest">Download</a> the latest release jar. You can also obtain it from maven central using the following dependency:</p>
-
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;com.twineworks&lt;/groupId&gt;
-    &lt;artifactId&gt;tweakflow&lt;/artifactId&gt;
-    &lt;version&gt;1.3.2&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<h2 id="starting-a-repl">Starting a REPL</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>com.twineworks<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>tweakflow<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>1.3.3<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><h2 id="starting-a-repl">Starting a REPL</h2>
 <p>Launch the interactive REPL using:</p>
-
-<p><code>java -jar tweakflow-1.3.2.jar repl</code></p>
-
+<p><code>java -jar tweakflow-1.3.3.jar repl</code></p>
 <p>The <code>repl</code> argument tells tweakflow to start an interactive session also known as Read-Evaluate-Print-Loop, REPL for short.</p>
-
 <p>You should see a prompt similar to this:</p>
-
-<pre><code class="language-none">$ java -jar tweakflow-1.3.2.jar repl
+<pre><code class="language-none" data-lang="none">$ java -jar tweakflow-1.3.3.jar repl
 tweakflow interactive shell    \? for help, \q to quit
 std.tf&gt;
-</code></pre>
-
-<p>The prompt tells you which module context you are in. In our case it is the <a href="./modules/std.html">std.tf</a> module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering <code>\q</code>.</p>
-
+</code></pre><p>The prompt tells you which module context you are in. In our case it is the <a href="./modules/std.html">std.tf</a> module which is the default standard library module that comes with tweakflow. You can quit out of the REPL at any time by entering <code>\q</code>.</p>
 <h2 id="evaluating-expressions">Evaluating expressions</h2>
-
 <p>You can now type in expressions, and the REPL will evaluate them, and print the results. If you embed tweakflow in your application, you can empower your users to  use these kinds of expressions to communicate values back to your app.</p>
-
 <p>Evaluate some number expressions using conventional operators:</p>
-
-<pre><code class="language-tweakflow">&gt; 1+3
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; 1+3
 4
 &gt; 2*8
 16
-</code></pre>
-
-<p>Evaluate boolean expressions:</p>
-
-<pre><code class="language-tweakflow">&gt; 1 &lt; 5
+</code></pre><p>Evaluate boolean expressions:</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; 1 &lt; 5
 true
 &gt; 2*3 == 6
 true
 &gt; 2*3 &lt; 3
 false
-</code></pre>
-
-<p>Evaluate strings and use the string concatenation operator:</p>
-
-<pre><code class="language-tweakflow">&gt; &quot;Hello World!&quot;
+</code></pre><p>Evaluate strings and use the string concatenation operator:</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; &quot;Hello World!&quot;
 &quot;Hello World!&quot;
 &gt; &quot;Hello &quot; .. &quot;World!&quot;
 &quot;Hello World!&quot;
-</code></pre>
-
-<p>Create some lists, and nest them too:</p>
-
-<pre><code class="language-tweakflow">&gt; [1, 2, &quot;hello&quot;]
+</code></pre><p>Create some lists, and nest them too:</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; [1, 2, &quot;hello&quot;]
 [1, 2, &quot;hello&quot;]
 
 &gt; [[1, 2], [&quot;one&quot;, &quot;two&quot;]]
 [[1, 2], [&quot;one&quot;, &quot;two&quot;]]
-</code></pre>
-
-<p>Create a dictionary:</p>
-
-<pre><code class="language-tweakflow">&gt; {:one 1, :two 2}
+</code></pre><p>Create a dictionary:</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; {:one 1, :two 2}
 {
   :one 1,
   :two 2
 }
-</code></pre>
-
-<p>Create a datetime value. If you don&rsquo;t need supply the time, it defaults to midnight UTC time.</p>
-
-<pre><code class="language-tweakflow">&gt; 2017-01-23T
+</code></pre><p>Create a datetime value. If you don&rsquo;t need supply the time, it defaults to midnight UTC time.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; 2017-01-23T
 2017-01-23T00:00:00Z@UTC
-</code></pre>
-
-<p>You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:</p>
-
-<pre><code class="language-tweakflow">&gt; 2017-01-23T18:23:11+01:00@Europe/Berlin
+</code></pre><p>You can also fully specify a zoned datetime value, complete with date, time, timezone offset and political timezone:</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; 2017-01-23T18:23:11+01:00@Europe/Berlin
 2017-01-23T18:23:11+01:00@Europe/Berlin
-</code></pre>
-
-<h2 id="calling-functions">Calling functions</h2>
-
+</code></pre><h2 id="calling-functions">Calling functions</h2>
 <p>Let&rsquo;s call some functions from the standard library:</p>
-
-<pre><code class="language-tweakflow">&gt; strings.length(&quot;foo&quot;)
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; strings.length(&quot;foo&quot;)
 3
 
 &gt; data.unique([1,1,2,3,3,2,1,2,3])
@@ -298,34 +252,21 @@ false
 
 &gt; strings.index_of(&quot;banana&quot;, &quot;nan&quot;)
 2
-</code></pre>
-
-<p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="./modules/std.html#time-add_period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
-
-<pre><code class="language-tweakflow">&gt; time.add_period(start: 2017-01-01T, days: 100)
+</code></pre><p>You were using positional arguments. Let&rsquo;s add 100 days to a date, and see where we end up. The function <a href="./modules/std.html#time-add_period">add_period</a> takes multiple parameters. Let&rsquo;s just supply the start date and days to add using named arguments, and leave the other parameters at their default values.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; time.add_period(start: 2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@UTC
-</code></pre>
-
-<p>You can even start with positional arguments, and switch to named arguments later in the call.</p>
-
-<pre><code class="language-tweakflow">&gt; time.add_period(2017-01-01T, days: 100)
+</code></pre><p>You can even start with positional arguments, and switch to named arguments later in the call.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; time.add_period(2017-01-01T, days: 100)
 2017-04-11T00:00:00Z@UTC
-</code></pre>
-
-<h2 id="variables">Variables</h2>
-
+</code></pre><h2 id="variables">Variables</h2>
 <p>The REPL allows you to define ad-hoc variables visible to all expressions in the session. Let&rsquo;s use that ability to assign a name to a function.</p>
-
-<pre><code class="language-tweakflow">&gt; square: (x) -&gt; x*x
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; square: (x) -&gt; x*x
 function
 
 &gt; square(5)
 25
-</code></pre>
-
-<p>You can assign any expression to a variable, and the tweakflow REPL will re-evaluate the expression value each time you type in a new definition.</p>
-
-<pre><code class="language-tweakflow">&gt; x: 10
+</code></pre><p>You can assign any expression to a variable, and the tweakflow REPL will re-evaluate the expression value each time you type in a new definition.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; x: 10
 10
 
 &gt; y: 2
@@ -339,36 +280,25 @@ function
 
 &gt; z
 40
-</code></pre>
-
-<p>You can check your session variable definitions using <code>\v</code>.</p>
-
-<pre><code class="language-tweakflow">&gt; \v
+</code></pre><p>You can check your session variable definitions using <code>\v</code>.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \v
 # 4 interactive variables defined
 square: (x) -&gt; x*x
 x: 10
 y: 4
 z: x*y
-</code></pre>
-
-<p>You can inspect what your session variable values are using <code>\i</code>.</p>
-
-<pre><code class="language-tweakflow">&gt; \i
+</code></pre><p>You can inspect what your session variable values are using <code>\i</code>.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \i
 # interactive section
   square: function
   `$`: 40
   x: 10
   y: 4
   z: 40
-</code></pre>
-
-<p>The REPL defines a special variable <code>$</code> that it maintains. It is defined as the most recently entered expression.</p>
-
+</code></pre><p>The REPL defines a special variable <code>$</code> that it maintains. It is defined as the most recently entered expression.</p>
 <h2 id="string-interpolation">String interpolation</h2>
-
 <p>You can include the values of expressions in double quoted strings using the <code>#{expression}</code> escape sequence.</p>
-
-<pre><code class="language-tweakflow">&gt; name: &quot;Joe&quot;
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; name: &quot;Joe&quot;
 &quot;Joe&quot;
 
 &gt; &quot;Hello #{name}&quot;
@@ -376,48 +306,28 @@ z: x*y
 
 &gt; &quot;Hello #{strings.upper_case(name)}&quot;
 &quot;Hello JOE&quot;
-</code></pre>
-
-<p>There are other escape sequences like <code>\n</code> for newlines and <code>\t</code> for tabs.</p>
-
+</code></pre><p>There are other escape sequences like <code>\n</code> for newlines and <code>\t</code> for tabs.</p>
 <h2 id="defining-functions">Defining functions</h2>
-
 <p>Functions are values. You can assign them to variables and pass them around. In fact, many standard library functions accept functions as parameters, or return them as a result.</p>
-
 <p>Functions are written as <code>(parameter list) -&gt; return value</code>. Let&rsquo;s define and call a simple function.</p>
-
-<pre><code class="language-tweakflow">&gt; next: (x) -&gt; x+1
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; next: (x) -&gt; x+1
 function
 
 &gt; next(2)
 3
-</code></pre>
-
-<p>The <a href="./modules/std.html#data-map">data.map</a> function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.</p>
-
-<pre><code class="language-tweakflow">&gt; data.map([1, 0, 3, -2], next)
+</code></pre><p>The <a href="./modules/std.html#data-map">data.map</a> function from the standard library takes a list and a function, and returns a new list, in which all items have been transformed by the given function.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; data.map([1, 0, 3, -2], next)
 [2, 1, 4, -1]
-</code></pre>
-
-<p>You can write functions inline without naming them. Functions are just values, like strings and numbers.</p>
-
-<pre><code class="language-tweakflow">&gt; data.map([1, 0, 3, -2], (x) -&gt; x*x)
+</code></pre><p>You can write functions inline without naming them. Functions are just values, like strings and numbers.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; data.map([1, 0, 3, -2], (x) -&gt; x*x)
 [1, 0, 9, 4]
-</code></pre>
-
-<h2 id="local-variables">Local variables</h2>
-
+</code></pre><h2 id="local-variables">Local variables</h2>
 <p>You can define helper variables scoped to an expression using <code>let</code>:</p>
-
-<pre><code class="language-tweakflow">&gt; let {sq: (x) -&gt; x*x; five: 5;} sq(five)
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; let {sq: (x) -&gt; x*x; five: 5;} sq(five)
 25
-</code></pre>
-
-<p>Tweakflow code can be formatted across multiple lines. But the REPL interprets hitting enter as a request to evaluate the current line as an expression, which can make entering multi-line expressions in the REPL impractical.</p>
-
+</code></pre><p>Tweakflow code can be formatted across multiple lines. But the REPL interprets hitting enter as a request to evaluate the current line as an expression, which can make entering multi-line expressions in the REPL impractical.</p>
 <p>If you want to format your expression using multiple lines, you can enter multi-line edit mode using <code>\e</code> and the REPL will accept multiple lines as part of a single expression until you enter <code>\e</code> again. The REPL indicates you are in multi-line mode by placing a <code>*</code> in the prompt. You can rewrite the above example in multi-line mode on the REPL like this:</p>
-
-<pre><code class="language-tweakflow">&gt; \e
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \e
 let {
   sq: (x) -&gt; x*x;
   five: 5;
@@ -425,13 +335,9 @@ let {
 sq(five)
 \e
 25
-</code></pre>
-
-<h2 id="types">Types</h2>
-
+</code></pre><h2 id="types">Types</h2>
 <p>Every value in tweakflow has an associated type. You can determine the types using <code>typeof</code>:</p>
-
-<pre><code class="language-tweakflow">&gt; typeof &quot;Hello&quot;
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; typeof &quot;Hello&quot;
 &quot;string&quot;
 
 &gt; typeof 2.3
@@ -442,11 +348,8 @@ sq(five)
 
 &gt; typeof (x) -&gt; x*x
 &quot;function&quot;
-</code></pre>
-
-<p>You can convert between many types automatically. Tweakflow is very conservative about automatic conversion. If there is a greater loss of information than can be expected from the nature of the types, it throws an error.</p>
-
-<pre><code class="language-tweakflow">&gt; &quot;foo&quot; as boolean
+</code></pre><p>You can convert between many types automatically. Tweakflow is very conservative about automatic conversion. If there is a greater loss of information than can be expected from the nature of the types, it throws an error.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; &quot;foo&quot; as boolean
 true
 
 &gt; 2.3 as string
@@ -465,13 +368,9 @@ ERROR: {
   :source &quot;\&quot;2.3kg\&quot; as double&quot;
   ...
 }
-</code></pre>
-
-<h2 id="conditionals">Conditionals</h2>
-
+</code></pre><h2 id="conditionals">Conditionals</h2>
 <p>Tweakflow supports a standard <code>if</code> construct to perform conditional calculations.</p>
-
-<pre><code class="language-tweakflow">&gt; parity: (x) -&gt; if x % 2 == 0 then &quot;even&quot; else &quot;odd&quot;
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; parity: (x) -&gt; if x % 2 == 0 then &quot;even&quot; else &quot;odd&quot;
 function
 
 &gt; parity(3)
@@ -479,18 +378,11 @@ function
 
 &gt; parity(2)
 &quot;even&quot;
-</code></pre>
-
-<p>The syntax is:</p>
-
-<pre><code class="language-text">if condition then then_expression else else_expression
-</code></pre>
-
-<p>Both the <code>then_expression</code> and the <code>else_expression</code> are mandatory, but the <code>then</code> and <code>else</code> keywords are optional, allowing you to write nested conditions that look like a sequence of tests.</p>
-
+</code></pre><p>The syntax is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">if condition then then_expression else else_expression
+</code></pre></div><p>Both the <code>then_expression</code> and the <code>else_expression</code> are mandatory, but the <code>then</code> and <code>else</code> keywords are optional, allowing you to write nested conditions that look like a sequence of tests.</p>
 <p>Define a function that returns the sign of a number as <code>-1</code>, <code>0</code>, or <code>1</code> if the number is negative, zero, or positive:</p>
-
-<pre><code class="language-tweakflow">&gt; \e
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \e
 sgn: (x) -&gt;
   if x &gt; 0 then 1
   if x &lt; 0 then -1
@@ -506,18 +398,14 @@ function
 
 &gt; sgn(9.2)
 1
-</code></pre>
-
-<h2 id="conclusion">Conclusion</h2>
-
+</code></pre><h2 id="conclusion">Conclusion</h2>
 <p>You now have a good feeling for the nature of tweakflow expressions. Check out the <a href="./reference.html">language reference</a> for more detail. It contains formal syntax information, describes advanced features like list comprehensions and pattern matching, and describes the library and module system.</p>
-
 <p>Check out the <a href="./embedding.html">embedding guide</a> for details on how to include tweakflow in your JVM application.</p>
 
         
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2020</a>
+    © <a href="http://twineworks.com">Twineworks 2021</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">

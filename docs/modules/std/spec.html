@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.2</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.3</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../../index.html"
-            ><b>Tweakflow</b> v1.3.2</a
+            ><b>Tweakflow</b> v1.3.3</a
           >
         </li>
         
@@ -189,40 +189,16 @@
       </aside>
       
       <main class="single-content" role="main">
-        
-
-<h1 id="spec">module spec.tf</h1>
-
+        <h1 id="spec">module spec.tf</h1>
 <p>The <code>std/spec</code> module contains libraries useful for creating test suites.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='spec'
-      data-meta-type='module'
-      data-meta-name='spec.tf'
-        data-meta-tags=''
-    ></div>
-
+<!-- raw HTML omitted -->
 <h2 id="util">library util</h2>
-
 <p>Utilities used internally.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='util'
-      data-meta-type='library'
-      data-meta-name='util'
-        data-meta-tags=''
-    ></div>
-
-<h3 id="util-permutations?">permutations?</h3>
-
+<!-- raw HTML omitted -->
+<h3 id="permutationsutil-permutations">permutations?{#util-permutations?}</h3>
 <p><code>(list xs, list ys) -&gt; boolean</code></p>
-
 <p>Returns <code>true</code> if <code>xs</code> and <code>ys</code> are both non-nil and contain the same items. Item order is not relevant.</p>
-
 <p>Returns <code>false</code> otherwise.</p>
-
 <pre><code>&gt; util.permutations?([1,2,3], [2,3,1])
 true
 
@@ -231,40 +207,16 @@ false
 
 &gt; util.permutations?(nil, nil)
 false
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='util-permutations?'
-      data-meta-type='var'
-      data-meta-name='permutations?'
-        data-meta-tags='util'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h2 id="assertions">library assertions</h2>
-
 <p>The library contains functions useful for defining assertions.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='assertions'
-      data-meta-type='library'
-      data-meta-name='assertions'
-        data-meta-tags=''
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="assertions-expect_error">expect_error</h3>
-
 <p><code>(function x, function f) -&gt; boolean</code></p>
-
 <p>A function that helps asserting facts about thrown errors.</p>
-
 <p>If <code>f</code> is <code>nil</code>, <code>to.be_true()</code> is used implicitly.</p>
-
 <p>It calls <code>x()</code>, expects it to throw, and expects the thrown value to satisfy matcher function <code>f</code>.</p>
-
 <p>Returns <code>true</code> if <code>x()</code> throws and the thrown value satisfies matcher function <code>f</code>, throws otherwise.</p>
-
 <pre><code>&gt; assert.expect_error(() -&gt; 1//0, to.have_code(&quot;DIVISION_BY_ZERO&quot;))
 true
 
@@ -277,364 +229,149 @@ ERROR:
 &gt; assert.expect_error(() -&gt; throw &quot;foo&quot;, to.be(&quot;bar&quot;))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='assertions-expect_error'
-      data-meta-type='var'
-      data-meta-name='expect_error'
-        data-meta-tags='assertions'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="assertions-expect">expect</h3>
-
 <p><code>(x, function f) -&gt; boolean</code></p>
-
 <p>If <code>f</code> is <code>nil</code>, <code>to.be_true()</code> is used implicitly.</p>
-
 <p>Returns <code>true</code> if <code>x</code> satisfies matcher function <code>f</code>, throws otherwise.</p>
-
 <pre><code>&gt; assert.expect(true, to.be_true())
 true
 
 &gt; assert.expect(false, to.be_true())
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='assertions-expect'
-      data-meta-type='var'
-      data-meta-name='expect'
-        data-meta-tags='assertions'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="assertions-assert">assert</h3>
-
 <p>Alias for <a href="#assertions-expect">expect</a> that might be more readable in cases where the matcher is omitted and <code>to.be_true()</code> is used implicitly.</p>
-
 <pre><code>&gt; assert.assert(1.0 == 1)
 true
 
 &gt; assert.assert(1.0 === 1)
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='assertions-assert'
-      data-meta-type='var'
-      data-meta-name='assert'
-        data-meta-tags='assertions'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h2 id="nodes">library nodes</h2>
-
 <p>Functions that help construct spec nodes.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes'
-      data-meta-type='library'
-      data-meta-name='nodes'
-        data-meta-tags=''
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="nodes-before">before</h3>
-
 <p><code>(dict effect, string name, any context) -&gt; dict</code></p>
-
 <p>Returns a <code>before</code> spec node with the given attributes.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes-before'
-      data-meta-type='var'
-      data-meta-name='before'
-        data-meta-tags='nodes'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="nodes-after">after</h3>
-
 <p><code>(dict effect, string name, any context) -&gt; dict</code></p>
-
 <p>Returns an <code>after</code> spec node with the given attributes.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes-after'
-      data-meta-type='var'
-      data-meta-name='after'
-        data-meta-tags='nodes'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="nodes-describe">describe</h3>
-
 <p><code>(string name, list spec, any context, any tags) -&gt; dict</code></p>
-
 <p>Returns a <code>describe</code> spec node with the given attributes.</p>
-
-<p>If <code>tags</code> is a list, it is used directly.<br />
+<p>If <code>tags</code> is a list, it is used directly.<br>
 If <code>tags</code> is a dict, keys containing values casting to boolean <code>true</code> are used.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes-describe'
-      data-meta-type='var'
-      data-meta-name='describe'
-        data-meta-tags='nodes'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="nodes-it">it</h3>
-
 <p><code>(string name, function spec, any context, any tags) -&gt; dict</code></p>
-
 <p>Returns an <code>it</code> spec node with the given attributes.</p>
-
-<p>If <code>tags</code> is a list, it is used directly.<br />
+<p>If <code>tags</code> is a list, it is used directly.<br>
 If <code>tags</code> is a dict, keys containing values casting to boolean <code>true</code> are used.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes-it'
-      data-meta-type='var'
-      data-meta-name='it'
-        data-meta-tags='nodes'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="nodes-subject">subject</h3>
-
 <p><code>(any data, function transform, dict effect, any context) -&gt; dict</code></p>
-
 <p>Returns a subject spec node with the given attributes.</p>
-
 <p>Specify non-nil <code>transform</code> to create a <code>subject_transform</code> node.</p>
-
 <p>Specify non-nil <code>effect</code> to create a <code>subject_effect</code> node.</p>
-
 <p>If neither <code>transform</code>, nor <code>effect</code> are specified, a regular <code>subject</code> node is created.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='nodes-subject'
-      data-meta-type='var'
-      data-meta-name='subject'
-        data-meta-tags='nodes'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h2 id="to">library to</h2>
-
 <p>The <code>to</code> library contains matcher functions useful in conjunction with the <a href="#assertions-expect">expect</a> function.</p>
-
-<div
-      data-meta='true'
-      data-meta-id='to'
-      data-meta-type='library'
-      data-meta-name='to'
-        data-meta-tags=''
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="to-have_code">have_code</h3>
-
 <p><code>(expected) -&gt; (err) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if the given <code>err</code> is a dict with the expected value at key <code>:code</code>.</p>
-
 <pre><code>&gt; assert.expect_error(() -&gt; 1//0, to.have_code(&quot;FOO&quot;))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-have_code'
-      data-meta-type='var'
-      data-meta-name='have_code'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-equal">equal</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is equal to <code>expected</code> using the <code>==</code> comparison operator.</p>
-
 <pre><code>&gt; assert.expect(1, to.equal(1.0))
 true
 
 &gt; assert.expect(1, to.equal(2.0))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-equal'
-      data-meta-type='var'
-      data-meta-name='equal'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-not_equal">not_equal</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is not equal to <code>expected</code> using the <code>!=</code> comparison operator.</p>
-
 <pre><code>&gt; assert.expect(1, to.not_equal(2.0))
 true
 
 &gt; assert.expect(1, to.not_equal(1.0))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-not_equal'
-      data-meta-type='var'
-      data-meta-name='not_equal'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be">be</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is equal to <code>expected</code> using the <code>===</code> comparison operator.</p>
-
 <pre><code>&gt; assert.expect(1, to.be(1))
 true
 
 &gt; assert.expect(1, to.be(1.0))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be'
-      data-meta-type='var'
-      data-meta-name='be'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-not_be">not_be</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is not equal to <code>expected</code> using the <code>!==</code> comparison operator.</p>
-
 <pre><code>&gt; assert.expect(1, to.not_be(1.0))
 true
 
 &gt; assert.expect(1, to.not_be(1))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-not_be'
-      data-meta-type='var'
-      data-meta-name='not_be'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-match_regex">match_regex</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a string and matches the regular expression <code>expected</code> in its entirety.</p>
-
 <pre><code>&gt; assert.expect(&quot;12345&quot;, to.match_regex('\d+'))
 true
 
 &gt; assert.expect(&quot;-12345&quot;, to.match_regex('\d+'))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-match_regex'
-      data-meta-type='var'
-      data-meta-name='match_regex'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_like">be_like</h3>
-
 <p>Alias for <a href="#to-match_regex">match_regex</a></p>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_like'
-      data-meta-type='var'
-      data-meta-name='be_like'
-        data-meta-tags='to'
-    ></div>
-
+<!-- raw HTML omitted -->
 <h3 id="to-be_greater_than">be_greater_than</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> and <code>expected</code> are both numeric and <code>x</code> &gt; <code>expected</code> holds true.</p>
-
 <pre><code>&gt; assert.expect(10, to.be_greater_than(5))
 true
 
 &gt; assert.expect(10, to.be_greater_than(20))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_greater_than'
-      data-meta-type='var'
-      data-meta-name='be_greater_than'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_less_than">be_less_than</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> and <code>expected</code> are both numeric and <code>x</code> &lt; <code>expected</code> holds true.</p>
-
 <pre><code>&gt; assert.expect(10, to.be_less_than(20))
 true
 
 &gt; assert.expect(10, to.be_less_than(5))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_less_than'
-      data-meta-type='var'
-      data-meta-name='be_less_than'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_between">be_between</h3>
-
 <pre><code>(
   expected_low,
   expected_high,
   boolean low_inclusive=true,
   boolean high_inclusive=true
 ) -&gt; (x) -&gt; boolean
-</code></pre>
-
-<p>Matcher function that is satisfied if <code>x</code>, <code>expected_low</code> and <code>expected_high</code> are all numeric, and depending on
+</code></pre><p>Matcher function that is satisfied if <code>x</code>, <code>expected_low</code> and <code>expected_high</code> are all numeric, and depending on
 inclusion options the corresponding condition holds:</p>
-
 <table>
 <thead>
 <tr>
@@ -643,26 +380,22 @@ inclusion options the corresponding condition holds:</p>
 <th>condition</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>true</code></td>
 <td><code>true</code></td>
 <td><code>expected_low &lt;= x &lt;= expected_high</code></td>
 </tr>
-
 <tr>
 <td><code>true</code></td>
 <td><code>false</code></td>
 <td><code>expected_low &lt;= x &lt;  expected_high</code></td>
 </tr>
-
 <tr>
 <td><code>false</code></td>
 <td><code>true</code></td>
 <td><code>expected_low  &lt; x &lt;= expected_high</code></td>
 </tr>
-
 <tr>
 <td><code>false</code></td>
 <td><code>false</code></td>
@@ -670,7 +403,6 @@ inclusion options the corresponding condition holds:</p>
 </tr>
 </tbody>
 </table>
-
 <pre><code>&gt; assert.expect(10, to.be_between(0, 20))
 true
 
@@ -684,68 +416,31 @@ ERROR:
 &gt; assert.expect(5, to.be_between(10, 20))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_between'
-      data-meta-type='var'
-      data-meta-name='be_between'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_close_to">be_close_to</h3>
-
 <p><code>(double expected, double precision=1e-15) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is numeric and within <code>precision</code> distance of <code>expected</code>.</p>
-
 <pre><code>&gt; assert.expect(3.1415, to.be_close_to(math.pi, 0.001))
 true
 
 &gt; assert.expect(3.1415, to.be_close_to(math.pi, 0.0000001))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_close_to'
-      data-meta-type='var'
-      data-meta-name='be_close_to'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_permutation_of">be_permutation_of</h3>
-
 <p><code>(list expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a non-nil list containing the same items as <code>expected</code>. Order does not matter.</p>
-
 <pre><code>&gt; assert.expect([1,2,3], to.be_permutation_of([2,3,1]))
 true
 
 &gt; assert.expect([1,2,3], to.be_permutation_of([2,3,2]))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_permutation_of'
-      data-meta-type='var'
-      data-meta-name='be_permutation_of'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_superset_of">be_superset_of</h3>
-
 <p><code>(dict expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a non-nil dict that has all keys and associated values of <code>expected</code>.</p>
-
 <p>Additional keys may be present in <code>x</code>.</p>
-
 <pre><code>&gt; assert.expect({:a 1, :b 2}, to.be_superset_of({:a 1, :b 2}))
 true
 
@@ -755,24 +450,11 @@ true
 &gt; assert.expect({:a 1, :b 2}, to.be_superset_of({:a 2}))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_superset_of'
-      data-meta-type='var'
-      data-meta-name='be_superset_of'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_subset_of">be_subset_of</h3>
-
 <p><code>(dict expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a non-nil dict whose keys and associated values all appear in <code>expected</code>.</p>
-
 <p><code>expected</code> may have keys and values that are not in <code>x</code>.</p>
-
 <pre><code>&gt; assert.expect({:a 1, :b 2}, to.be_subset_of({:a 1, :b 2}))
 true
 
@@ -782,44 +464,20 @@ true
 &gt; assert.expect({:a 1}, to.be_subset_of({:a 2, :b 2}))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_subset_of'
-      data-meta-type='var'
-      data-meta-name='be_subset_of'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_one_of">be_one_of</h3>
-
 <p><code>(list expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is one of the values in <code>expected</code>.</p>
-
 <pre><code>&gt; assert.expect(2, to.be_one_of([1,2,3]))
 true
 
 &gt; assert.expect(2, to.be_one_of([0,1]))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_one_of'
-      data-meta-type='var'
-      data-meta-name='be_one_of'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-contain">contain</h3>
-
 <p><code>(expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a list or dict containing the value <code>expected</code>.</p>
-
 <pre><code>&gt; assert.expect([1,2,3], to.contain(2))
 true
 
@@ -829,22 +487,10 @@ true
 &gt; assert.expect([], to.contain(2))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-contain'
-      data-meta-type='var'
-      data-meta-name='contain'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-contain_all">contain_all</h3>
-
 <p><code>(list expected) -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is a list or dict containing all values in <code>expected</code>.</p>
-
 <pre><code>&gt; assert.expect([1,2,3], to.contain_all([1,3]))
 true
 
@@ -857,154 +503,70 @@ true
 &gt; assert.expect({:a 1, :b 2, :c 3}, to.contain_all([1,4]))
 ERROR:
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-contain_all'
-      data-meta-type='var'
-      data-meta-name='contain_all'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_nil">be_nil</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is <code>nil</code>.</p>
-
 <pre><code>&gt; assert.expect(nil, to.be_nil())
 true
 
 &gt; assert.expect(0, to.be_nil())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_nil'
-      data-meta-type='var'
-      data-meta-name='be_nil'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-not_be_nil">not_be_nil</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is not <code>nil</code>.</p>
-
 <pre><code>&gt; assert.expect(0, to.not_be_nil())
 true
 
 &gt; assert.expect(nil, to.not_be_nil())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-not_be_nil'
-      data-meta-type='var'
-      data-meta-name='not_be_nil'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_true">be_true</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is boolean <code>true</code>.</p>
-
 <pre><code>&gt; assert.expect(true, to.be_true())
 true
 
 &gt; assert.expect(1, to.be_true())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_true'
-      data-meta-type='var'
-      data-meta-name='be_true'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_false">be_false</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is boolean <code>false</code>.</p>
-
 <pre><code>&gt; assert.expect(false, to.be_false())
 true
 
 &gt; assert.expect(nil, to.be_false())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_false'
-      data-meta-type='var'
-      data-meta-name='be_false'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_NaN">be_NaN</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is <code>NaN</code>.</p>
-
 <pre><code>&gt; assert.expect(NaN, to.be_NaN())
 true
 
 &gt; assert.expect(&quot;foo&quot;, to.be_NaN())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_NaN'
-      data-meta-type='var'
-      data-meta-name='be_NaN'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_function">be_function</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>function</code>.</p>
-
 <pre><code>&gt; assert.expect(() -&gt; nil, to.be_function())
 true
 
 &gt; assert.expect(&quot;foo&quot;, to.be_function())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_function'
-      data-meta-type='var'
-      data-meta-name='be_function'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_numeric">be_numeric</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>long</code>, <code>double</code>, or <code>decimal</code>.</p>
-
 <pre><code>&gt; assert.expect(1, to.be_numeric())
 true
 
@@ -1014,218 +576,102 @@ true
 &gt; assert.expect(&quot;foo&quot;, to.be_numeric())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_numeric'
-      data-meta-type='var'
-      data-meta-name='be_numeric'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_long">be_long</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>long</code>.</p>
-
 <pre><code>&gt; assert.expect(1, to.be_long())
 true
 
 &gt; assert.expect(1.0, to.be_long())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_long'
-      data-meta-type='var'
-      data-meta-name='be_long'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_double">be_double</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>double</code>.</p>
-
 <pre><code>&gt; assert.expect(1.0, to.be_double())
 true
 
 &gt; assert.expect(1, to.be_double())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_double'
-      data-meta-type='var'
-      data-meta-name='be_double'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_decimal">be_decimal</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>decimal</code>.</p>
-
 <pre><code>&gt; assert.expect(1.0d, to.be_decimal())
 true
 
 &gt; assert.expect(1, to.be_decimal())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_decimal'
-      data-meta-type='var'
-      data-meta-name='be_decimal'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_string">be_string</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>string</code>.</p>
-
 <pre><code>&gt; assert.expect(&quot;foo&quot;, to.be_string())
 true
 
 &gt; assert.expect(1, to.be_string())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_string'
-      data-meta-type='var'
-      data-meta-name='be_string'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_binary">be_binary</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>binary</code>.</p>
-
 <pre><code>&gt; assert.expect(0b00, to.be_binary())
 true
 
 &gt; assert.expect(1, to.be_binary())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_binary'
-      data-meta-type='var'
-      data-meta-name='be_binary'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_boolean">be_boolean</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>boolean</code>.</p>
-
 <pre><code>&gt; assert.expect(true, to.be_boolean())
 true
 
 &gt; assert.expect(1, to.be_boolean())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_boolean'
-      data-meta-type='var'
-      data-meta-name='be_boolean'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_dict">be_dict</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>dict</code>.</p>
-
 <pre><code>&gt; assert.expect({:a 1}, to.be_dict())
 true
 
 &gt; assert.expect(1, to.be_dict())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_dict'
-      data-meta-type='var'
-      data-meta-name='be_dict'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_list">be_list</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>list</code>.</p>
-
 <pre><code>&gt; assert.expect([1,2,3], to.be_list())
 true
 
 &gt; assert.expect(1, to.be_list())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_list'
-      data-meta-type='var'
-      data-meta-name='be_list'
-        data-meta-tags='to'
-    ></div>
-
+</code></pre><!-- raw HTML omitted -->
 <h3 id="to-be_datetime">be_datetime</h3>
-
 <p><code>() -&gt; (x) -&gt; boolean</code></p>
-
 <p>Matcher function that is satisfied if <code>x</code> is of type <code>datetime</code>.</p>
-
 <pre><code>&gt; assert.expect(2019-08-16T, to.be_datetime())
 true
 
 &gt; assert.expect(1, to.be_datetime())
 ERROR
   ...
-</code></pre>
-
-<div
-      data-meta='true'
-      data-meta-id='to-be_datetime'
-      data-meta-type='var'
-      data-meta-name='be_datetime'
-        data-meta-tags='to'
-    ></div>
+</code></pre><!-- raw HTML omitted -->
 
         
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2020</a>
+    © <a href="http://twineworks.com">Twineworks 2021</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">
