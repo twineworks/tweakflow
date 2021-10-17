@@ -2165,7 +2165,7 @@ namedPartialArg
   ;
 ```
 
-As an example consider a function that checks whether an list contains only long values.
+As an example consider a function that checks whether a list contains only long values.
 The function is created by binding a predicate function to the parameter `p` of [data.all?](/modules/std.html#data-all?).
 
 ```tweakflow
