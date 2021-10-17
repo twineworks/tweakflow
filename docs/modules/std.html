@@ -191,10 +191,22 @@
       <main class="single-content" role="main">
         <h1 id="std">module std.tf</h1>
 <p>The <code>std</code> module contains libraries for general computing tasks.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='std'
+      data-meta-type='module'
+      data-meta-name='std.tf'
+	    data-meta-tags=''
+    ></div>
 <h2 id="core">library core</h2>
 <p>The core library contains utility functions to process values at a basic level.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='core'
+      data-meta-type='library'
+      data-meta-name='core'
+	    data-meta-tags=''
+    ></div>
 <h3 id="core-id">id</h3>
 <p><code>(any x) -&gt; any</code></p>
 <p>Identity function. Returns <code>x</code>.</p>
@@ -208,7 +220,13 @@
 
 &gt; core.id(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-id'
+      data-meta-type='var'
+      data-meta-name='id'
+	    data-meta-tags='core'
+    ></div>
 <h3 id="core-inspect">inspect</h3>
 <p><code>(x) -&gt; string</code></p>
 <p>Returns a string representation of <code>x</code>.
@@ -232,7 +250,13 @@ If <code>x</code> is not a function, and contains no functions as children <code
 
 &gt; core.inspect(&quot;foo&quot;)
 &quot;\&quot;foo\&quot;&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-inspect'
+      data-meta-type='var'
+      data-meta-name='inspect'
+	    data-meta-tags='core'
+    ></div>
 <h3 id="presentcore-present">present?{#core-present?}</h3>
 <p><code>(x) -&gt; boolean</code></p>
 <p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, returns <code>true</code> otherwise.</p>
@@ -241,7 +265,13 @@ true
 
 &gt; core.present?(nil)
 false
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-present?'
+      data-meta-type='var'
+      data-meta-name='present?'
+	    data-meta-tags='core'
+    ></div>
 <h3 id="nilcore-nil">nil?{#core-nil?}</h3>
 <p><code>(x) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> is <code>nil</code>, returns <code>false</code> otherwise.</p>
@@ -250,7 +280,13 @@ false
 
 &gt; core.nil?(nil)
 true
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-nil?'
+      data-meta-type='var'
+      data-meta-name='nil?'
+	    data-meta-tags='core'
+    ></div>
 <h3 id="core-hash">hash</h3>
 <p><code>(x) -&gt; long</code></p>
 <p>Returns a hashcode of <code>x</code>. Values that compare as equal are guaranteed to have the same hashcode.</p>
@@ -265,7 +301,13 @@ true
 
 &gt; core.hash([1.0, 2.0, 3.0])
 66614367
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-hash'
+      data-meta-type='var'
+      data-meta-name='hash'
+	    data-meta-tags='core'
+    ></div>
 <h3 id="core-eval">eval</h3>
 <p><code>(string x) -&gt; any</code></p>
 <p>Evaluates tweakflow source code <code>x</code> in empty scope.
@@ -295,10 +337,22 @@ ERROR:
   message: hello is undefined
   at: &lt;eval&gt;:1:1
   source: hello
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='core-eval'
+      data-meta-type='var'
+      data-meta-name='eval'
+	    data-meta-tags='core'
+    ></div>
 <h2 id="strings">library strings</h2>
 <p>The strings library contains basic functions for text processing.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='strings'
+      data-meta-type='library'
+      data-meta-name='strings'
+	    data-meta-tags=''
+    ></div>
 <h3 id="strings-concat">concat</h3>
 <p><code>(list xs) -&gt; string</code></p>
 <p>Returns a string consisting of all <code>xs</code> concatenated into a single string.
@@ -320,7 +374,13 @@ If any <code>x</code> is <code>nil</code>, it is concatenated into the output st
 
 &gt; strings.concat(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-length">length</h3>
 <p><code>(string x) -&gt; long</code></p>
 <p>Returns the number of unicode codepoints in given string <code>x</code>.</p>
@@ -333,7 +393,13 @@ nil
 
 &gt; strings.length(&quot;你好&quot;)
 2
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-length'
+      data-meta-type='var'
+      data-meta-name='length'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-substring">substring</h3>
 <p><code>(string x, long start=0, long end=nil) -&gt; string</code></p>
 <p>Returns a substring of <code>x</code> beginning at index <code>start</code> (inclusive) up to index <code>end</code> (exclusive).
@@ -377,7 +443,13 @@ ERROR:
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: start must not be negative: -4
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-substring'
+      data-meta-type='var'
+      data-meta-name='substring'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-replace">replace</h3>
 <p><code>(string x, string search, string replace) -&gt; string</code></p>
 <p>Returns a string where each occurrence of <code>search</code> in <code>x</code> is replaced with <code>replace</code>.
@@ -398,7 +470,13 @@ so <code>strings.replace('ooo', 'oo', 'g')</code> results in <code>'go'</code> r
 
 &gt; strings.replace('hello world', 'not found', 'something')
 &quot;hello world&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-replace'
+      data-meta-type='var'
+      data-meta-name='replace'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-join">join</h3>
 <p><code>(list xs, string s=&quot;&quot;) -&gt; string</code></p>
 <p>Concatenates a list of <code>xs</code> into a single string using <code>s</code> as the separator.
@@ -427,7 +505,13 @@ nil
 &gt; strings.join([&quot;a&quot;, &quot;b&quot;], nil)
 nil
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-join'
+      data-meta-type='var'
+      data-meta-name='join'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-trim">trim</h3>
 <p><code>(string x) -&gt; string</code></p>
 <p>Returns <code>x</code> with leading and trailing whitespace characters removed.</p>
@@ -440,7 +524,13 @@ nil
 
 &gt; strings.trim(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-trim'
+      data-meta-type='var'
+      data-meta-name='trim'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-lower_case">lower_case</h3>
 <p><code>(string x, string lang='en-US') -&gt; string</code></p>
 <p>Returns <code>x</code> with all characters converted to lower case as per conventions of the given language tag.</p>
@@ -453,7 +543,13 @@ nil
 
 &gt; strings.lower_case(&quot;TITLE&quot;, &quot;tr&quot;)
 &quot;tıtle&quot; # note the dotless i in turkish language
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-lower_case'
+      data-meta-type='var'
+      data-meta-name='lower_case'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-upper_case">upper_case</h3>
 <p><code>(string x, string lang='en-US') -&gt; string</code></p>
 <p>Returns <code>x</code> with all characters converted to uper case as per conventions of the given language tag.</p>
@@ -466,7 +562,13 @@ nil
 
 &gt; strings.upper_case(&quot;title&quot;, &quot;tr&quot;)
 &quot;TİTLE&quot; # note the dotted upper case I in turkish language
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-upper_case'
+      data-meta-type='var'
+      data-meta-name='upper_case'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-compare">compare</h3>
 <p><code>(string a, string b) -&gt; long</code></p>
 <p>Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.</p>
@@ -476,7 +578,13 @@ Returns 0 if a == b.\</p>
 <p>This function considers <code>nil</code> less than any non-nil string.</p>
 <pre><code class="language-tweakflow" data-lang="tweakflow">&gt; data.sort([&quot;Aaron&quot;, &quot;Eve&quot;, &quot;Adam&quot;, &quot;Joe&quot;, &quot;Beth&quot;, &quot;Linda&quot;], strings.compare)
 [&quot;Aaron&quot;, &quot;Adam&quot;, &quot;Beth&quot;, &quot;Eve&quot;, &quot;Joe&quot;, &quot;Linda&quot;]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-comparator">comparator</h3>
 <pre><code>(
   string lang='en-US',
@@ -507,7 +615,13 @@ function
 
 &gt; data.sort([&quot;Foo&quot;, &quot;Bar&quot;, &quot;foo&quot;, &quot;bar&quot;, nil], strings.comparator(&quot;en-US&quot;, false))
 [nil, &quot;Bar&quot;, &quot;bar&quot;, &quot;Foo&quot;, &quot;foo&quot;]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-comparator'
+      data-meta-type='var'
+      data-meta-name='comparator'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-chars">chars</h3>
 <p><code>(string x) -&gt; list</code></p>
 <p>Returns a list of characters that make up given string <code>x</code>.</p>
@@ -523,7 +637,13 @@ function
 
 &gt; strings.chars(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-chars'
+      data-meta-type='var'
+      data-meta-name='chars'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-code_points">code_points</h3>
 <p><code>(string x) -&gt; list</code></p>
 <p>Returns a list of unicode code point numbers that make up given string <code>x</code>.</p>
@@ -539,7 +659,13 @@ nil
 
 &gt; strings.code_points(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-code_points'
+      data-meta-type='var'
+      data-meta-name='code_points'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-of_code_points">of_code_points</h3>
 <p><code>(list xs) -&gt; string</code></p>
 <p>Returns string consisting of given <code>xs</code>. The <code>xs</code> are are longs representing unicode code point numbers.
@@ -558,7 +684,13 @@ valid code point.</p>
 
 &gt; strings.of_code_points(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-of_code_points'
+      data-meta-type='var'
+      data-meta-name='of_code_points'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-split">split</h3>
 <p><code>(string x, string s=&quot; &quot;) -&gt; list</code></p>
 <p>Returns a list of strings obtained by splitting <code>x</code> using separator <code>s</code>.
@@ -575,7 +707,13 @@ The separator <code>s</code> is treated like a regular string, it is not a regul
 
 &gt; strings.split(&quot;,foo,,bar,&quot;, &quot;,&quot;)
 [&quot;&quot;, &quot;foo&quot;, &quot;&quot;, &quot;bar&quot;, &quot;&quot;]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-split'
+      data-meta-type='var'
+      data-meta-name='split'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="starts_withstrings-starts_with">starts_with?{#strings-starts_with?}</h3>
 <p><code>(string x, string init) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> starts with the substring <code>init</code>.<br>
@@ -596,7 +734,13 @@ nil
 
 &gt; strings.starts_with?(&quot;yellow&quot;, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-starts_with?'
+      data-meta-type='var'
+      data-meta-name='starts_with?'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="ends_withstrings-ends_with">ends_with?{#strings-ends_with?}</h3>
 <p><code>(string x, string tail) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> ends with the substring <code>tail</code>.<br>
@@ -617,7 +761,13 @@ nil
 
 &gt; strings.ends_with?(&quot;yellow&quot;, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-ends_with?'
+      data-meta-type='var'
+      data-meta-name='ends_with?'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-index_of">index_of</h3>
 <p><code>(string x, string sub, long start=0) -&gt; long</code></p>
 <p>If <code>x</code> contains <code>sub</code> at or past index <code>start</code>, the function returns the index of the first occurrence of <code>sub</code>
@@ -638,7 +788,13 @@ at or past index <code>start</code>.</p>
 
 &gt; strings.index_of(&quot;foobar&quot;, &quot;bar&quot;, 4)
 -1
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-last_index_of">last_index_of</h3>
 <p><code>(string x, string sub, long end=nil) -&gt; long</code></p>
 <p>If <code>x</code> contains <code>sub</code> at or before index <code>end</code> returns the index of the last such occurrence. Returns <code>-1</code> otherwise.
@@ -664,7 +820,13 @@ nil
 
 &gt; strings.last_index_of(nil, &quot;e&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-char_at">char_at</h3>
 <p><code>(string x, long i) -&gt; string</code></p>
 <p>Returns <code>i</code>th character in string <code>x</code>.</p>
@@ -677,7 +839,13 @@ nil
 
 &gt; strings.char_at(nil, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-char_at'
+      data-meta-type='var'
+      data-meta-name='char_at'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-code_point_at">code_point_at</h3>
 <p><code>(string x, long i) -&gt; long</code></p>
 <p>Returns <code>i</code>th character code point in string <code>x</code>.</p>
@@ -690,7 +858,13 @@ nil
 
 &gt; strings.code_point_at(nil, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-code_point_at'
+      data-meta-type='var'
+      data-meta-name='code_point_at'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-to_bytes">to_bytes</h3>
 <p><code>(string x, string charset=&quot;UTF-8&quot;) -&gt; binary</code></p>
 <p>Returns binary representing the bytes of string <code>x</code> using given <code>charset</code>.</p>
@@ -709,7 +883,13 @@ nil
 
 &gt; strings.to_bytes(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-to_bytes'
+      data-meta-type='var'
+      data-meta-name='to_bytes'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-from_bytes">from_bytes</h3>
 <p><code>(binary x, string charset=&quot;UTF-8&quot;) -&gt; string</code></p>
 <p>Returns string represented by the bytes of <code>x</code> using given <code>charset</code>.</p>
@@ -728,16 +908,34 @@ nil
 
 &gt; strings.from_bytes(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='strings-from_bytes'
+      data-meta-type='var'
+      data-meta-name='from_bytes'
+	    data-meta-tags='strings'
+    ></div>
 <h3 id="strings-charsets">charsets</h3>
 <p><code>() -&gt; list</code></p>
 <p>Returns known charsets. Each item in the returned list is a charset name suitable for passing to
 functions requiring a charset name, such as <a href="#strings-to_bytes">to_bytes</a> and <a href="#strings-from_bytes">from_bytes</a>.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='strings-charsets'
+      data-meta-type='var'
+      data-meta-name='charsets'
+	    data-meta-tags='strings'
+    ></div>
 <h2 id="regex">library regex</h2>
 <p>The regex library provides functions to work with regular expressions.
 Pattern syntax is that of the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html">Java regular expression language</a>.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='regex'
+      data-meta-type='library'
+      data-meta-name='regex'
+	    data-meta-tags=''
+    ></div>
 <h3 id="regex-matching">matching</h3>
 <p><code>(string pattern) -&gt; function</code></p>
 <p>Returns a predicate function <code>f</code> accepting one string argument <code>x</code> that checks if the argument matches the given <code>pattern</code> completely.
@@ -754,7 +952,13 @@ false
 
 &gt; digits?(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-matching'
+      data-meta-type='var'
+      data-meta-name='matching'
+	    data-meta-tags='regex'
+    ></div>
 <h3 id="regex-capturing">capturing</h3>
 <p><code>(string pattern) -&gt; function</code></p>
 <p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list of captured groups in the pattern.</p>
@@ -779,7 +983,13 @@ function
 
 &gt; date_parts(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-capturing'
+      data-meta-type='var'
+      data-meta-name='capturing'
+	    data-meta-tags='regex'
+    ></div>
 <h3 id="regex-scanning">scanning</h3>
 <p><code>(string pattern) -&gt; function</code></p>
 <p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list of captured groups for each successive match of the pattern in <code>x</code>.</p>
@@ -807,7 +1017,13 @@ function
 
 &gt; clock_times(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-scanning'
+      data-meta-type='var'
+      data-meta-name='scanning'
+	    data-meta-tags='regex'
+    ></div>
 <h3 id="regex-splitting">splitting</h3>
 <p><code>(string pattern, long limit=nil) -&gt; function</code></p>
 <p>Returns a function <code>f</code> accepting one string argument <code>x</code> and returning a list substrings of <code>x</code> split on boundaries given by <code>pattern</code>.</p>
@@ -848,7 +1064,13 @@ function
 
 &gt; f(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-splitting'
+      data-meta-type='var'
+      data-meta-name='splitting'
+	    data-meta-tags='regex'
+    ></div>
 <h3 id="regex-replacing">replacing</h3>
 <p><code>(string pattern, string replace) -&gt; function</code></p>
 <p>Returns a function <code>f</code> accepting one string argument and returning a string replacing all occurrences of <code>pattern</code> with <code>replace</code>.
@@ -874,7 +1096,13 @@ function
 
 &gt; nr_dollar(&quot;I need a dollar, just one dollar more.&quot;)
 &quot;I need $1, just $1 more.&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-replacing'
+      data-meta-type='var'
+      data-meta-name='replacing'
+	    data-meta-tags='regex'
+    ></div>
 <h3 id="regex-quote">quote</h3>
 <p><code>(string x) -&gt; string</code></p>
 <p>Returns a string in which each character of <code>x</code> with special meaning in a pattern has been escaped.
@@ -893,10 +1121,22 @@ function
 
 &gt; f('foo\bbar\bbaz')
 [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='regex-quote'
+      data-meta-type='var'
+      data-meta-name='quote'
+	    data-meta-tags='regex'
+    ></div>
 <h2 id="data">library data</h2>
 <p>The data library contains functions for manipulation of lists and dictionaries.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='data'
+      data-meta-type='library'
+      data-meta-name='data'
+	    data-meta-tags=''
+    ></div>
 <h3 id="data-size">size</h3>
 <p><code>(any xs) -&gt; long</code></p>
 <p>Given a dict or list of <code>xs</code>, returns the collection&rsquo;s size.</p>
@@ -921,7 +1161,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: size is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-size'
+      data-meta-type='var'
+      data-meta-name='size'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="emptydata-empty">empty?{#data-empty?}</h3>
 <p><code>(any xs) -&gt; boolean</code></p>
 <p>Given a dict or list of <code>xs</code>, returns true if the collection is empty, false otherwise.</p>
@@ -946,7 +1192,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: empty? is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-empty?'
+      data-meta-type='var'
+      data-meta-name='empty?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-get">get</h3>
 <p><code>(xs, key, not_found) -&gt;</code></p>
 <p>Given a dict or list of <code>xs</code>, and a key, returns <code>xs[key]</code> if the key is present in <code>xs</code>.
@@ -972,7 +1224,13 @@ nil
 
 &gt; data.get(nil, :a, &quot;foo&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-get'
+      data-meta-type='var'
+      data-meta-name='get'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-put">put</h3>
 <p><code>(xs, key, value) -&gt;</code></p>
 <p>Given a dict or list of <code>xs</code>, returns the same type of collection with <code>value</code> placed at <code>key</code>.
@@ -1012,7 +1270,13 @@ Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> c
 
 &gt; data.put(nil, 0, &quot;baz&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-put'
+      data-meta-type='var'
+      data-meta-name='put'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-get_in">get_in</h3>
 <p><code>(any xs, list keys, any not_found) -&gt;</code></p>
 <p>Accesses nested <code>list</code> and <code>dict</code> values in <code>xs</code> using the list of <code>keys</code>. Returns the found value.
@@ -1047,7 +1311,13 @@ nil
 ERROR:
   code: CAST_ERROR
   message: Cannot cast c to long
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-get_in'
+      data-meta-type='var'
+      data-meta-name='get_in'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-put_in">put_in</h3>
 <p><code>(xs, list keys, value) -&gt;</code></p>
 <p>Given a dict or list of <code>xs</code>, returns the same type of collection with <code>value</code> placed at the end of navigating
@@ -1101,7 +1371,13 @@ data.put_in(
 
 &gt; data.put_in(nil, [0], &quot;baz&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-put_in'
+      data-meta-type='var'
+      data-meta-name='put_in'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-update">update</h3>
 <p><code>(xs, key, function f)</code></p>
 <p>Given a dict or list of <code>xs</code>, returns the same type of collection with <code>f(v)</code> placed at <code>key</code>, where <code>v</code> is the original value found at <code>key</code>.
@@ -1126,7 +1402,13 @@ Throws an error if <code>xs</code> is a <code>dict</code> and <code>key</code> c
 
 &gt; data.update(nil, 0, (x) -&gt; x)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-update'
+      data-meta-type='var'
+      data-meta-name='update'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-update_in">update_in</h3>
 <p><code>(xs, list keys, function f) -&gt;</code></p>
 <p>Given a dict or list of <code>xs</code>, returns the same type of collection with <code>f(v)</code> placed at the end of navigating
@@ -1173,7 +1455,13 @@ data.update_in(
 
 &gt; data.update_in(nil, [0], (x) -&gt; x+1)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-update_in'
+      data-meta-type='var'
+      data-meta-name='update_in'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-keys">keys</h3>
 <p><code>(xs) -&gt; list </code></p>
 <p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of keys present in the structure. If <code>xs</code> is a list present indexes are returned in order. If <code>xs</code> is a dict, the order of returned keys is undefined.</p>
@@ -1199,7 +1487,13 @@ ERROR:
   code: ILLEGAL_ARGUMENT
   message: keys is not defined for type string
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-keys'
+      data-meta-type='var'
+      data-meta-name='keys'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="hasdata-has">has?{#data-has?}</h3>
 <p><code>(xs, key) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>key</code> is a key in <code>xs</code>, false otherwise.
@@ -1232,7 +1526,13 @@ ERROR:
 
 &gt; data.has?(&quot;foo&quot; as list, 1)
 true
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-has?'
+      data-meta-type='var'
+      data-meta-name='has?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-values">values</h3>
 <p><code>(xs) -&gt; list </code></p>
 <p>Given a <code>list</code> or <code>dict</code> of <code>xs</code>, returns a list of values present in the structure. Returns <code>xs</code> if <code>xs</code> is a list . If <code>xs</code> is a dict, the order of returned values is undefined.</p>
@@ -1257,7 +1557,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: values is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-values'
+      data-meta-type='var'
+      data-meta-name='values'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-entries">entries</h3>
 <p><code>(dict xs) -&gt; list</code></p>
 <p>Returns a <code>list</code> where each element is a <code>dict</code>. For each key <code>k</code> in <code>xs</code> there is a correpsonding element <code>{:key k, :value xs[k]}</code> in the <code>list</code>. The order of items in the <code>list</code> is undefined.</p>
@@ -1282,7 +1588,13 @@ ERROR:
 
 &gt; data.entries(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-entries'
+      data-meta-type='var'
+      data-meta-name='entries'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-prepend">prepend</h3>
 <p><code>(x, list xs) -&gt; list</code></p>
 <p>Returns a list consisting of <code>x</code> followed by all elements of <code>xs</code>.</p>
@@ -1295,7 +1607,13 @@ nil
 
 &gt; data.prepend(&quot;a&quot;, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-prepend'
+      data-meta-type='var'
+      data-meta-name='prepend'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-append">append</h3>
 <p><code>(list xs, x) -&gt; list</code></p>
 <p>Returns a list consisting of all elements of <code>xs</code> followed by <code>x</code>.</p>
@@ -1308,7 +1626,13 @@ nil
 
 &gt; data.append(nil, &quot;a&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-append'
+      data-meta-type='var'
+      data-meta-name='append'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-find">find</h3>
 <p><code>(list xs, function p) -&gt;</code></p>
 <p>Tests each <code>x</code> in <code>xs</code> in order by passing them to predicate function <code>p</code>.</p>
@@ -1334,7 +1658,13 @@ nil
 &gt; data.find([], nil)
   code: NIL_ERROR
   message: predicate function cannot be nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-find'
+      data-meta-type='var'
+      data-meta-name='find'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-find_index">find_index</h3>
 <p><code>(list xs, function p) -&gt; long</code></p>
 <p>Tests each <code>x</code> in <code>xs</code> in order by passing them to predicate function <code>p</code>.</p>
@@ -1361,7 +1691,13 @@ nil
 ERROR:
   code: NIL_ERROR
   message: predicate function cannot be nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-find_index'
+      data-meta-type='var'
+      data-meta-name='find_index'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-insert">insert</h3>
 <p><code>(list xs, long i, v) -&gt;</code></p>
 <p>Returns a list consisting of all elements of <code>xs</code>, with elements starting at index <code>i</code> shifted to the right, and <code>v</code> inserted at position <code>i</code>.
@@ -1390,7 +1726,13 @@ ERROR:
   code: NIL_ERROR
   message: cannot insert at nil index
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-insert'
+      data-meta-type='var'
+      data-meta-name='insert'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-delete">delete</h3>
 <p><code>(xs, key) -&gt; </code></p>
 <p>Given a <code>list</code> or <code>dict</code> <code>xs</code>, returns a collection of the same type consisting of all elements of <code>xs</code>, except for the element at <code>key</code>.
@@ -1424,7 +1766,13 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: cannot delete index -2
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-delete'
+      data-meta-type='var'
+      data-meta-name='delete'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-select">select</h3>
 <p><code>(xs, list keys, not_found) -&gt;</code></p>
 <p>Given a <code>list</code> or <code>dict</code> <code>xs</code>, returns a collection of the same type, with elements at all <code>keys</code> from <code>xs</code>.
@@ -1453,7 +1801,13 @@ nil
 
 &gt; data.select([0, 1], nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-select'
+      data-meta-type='var'
+      data-meta-name='select'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-pluck">pluck</h3>
 <p><code>(xs, key) -&gt;</code></p>
 <p>Given a <code>list</code> or <code>dict</code> <code>xs</code>, returns a collection of the same type and of the same size.
@@ -1481,7 +1835,13 @@ nil
 
 &gt; data.pluck([{:a 1, :b 2}, {:a 3, :b 4}], nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-pluck'
+      data-meta-type='var'
+      data-meta-name='pluck'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-omit">omit</h3>
 <p><code>(dict xs, list keys) -&gt;</code></p>
 <p>Returns a copy of <code>xs</code> in which all keys given in <code>keys</code> are omitted.</p>
@@ -1503,7 +1863,13 @@ nil
 
 &gt; data.omit({:a 1, :b 2}, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-omit'
+      data-meta-type='var'
+      data-meta-name='omit'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-filter">filter</h3>
 <p><code>(xs, function p) -&gt;</code></p>
 <p>Given a <code>list</code> or <code>dict</code> <code>xs</code>, returns a collection of the same type,
@@ -1543,7 +1909,13 @@ ERROR:
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: filter is not defined for type long
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-filter'
+      data-meta-type='var'
+      data-meta-name='filter'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-shuffle">shuffle</h3>
 <p><code>(list xs, seed) -&gt; list</code></p>
 <p>Returns a list with all elements of <code>xs</code> in random order. The reordering of items is based on <code>seed</code>.
@@ -1563,7 +1935,13 @@ The same seed will shuffle lists of equal length in the same way.</p>
 
 &gt; data.shuffle(nil, &quot;seed&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-shuffle'
+      data-meta-type='var'
+      data-meta-name='shuffle'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-choice">choice</h3>
 <p><code>(list xs, seed) -&gt; any</code></p>
 <p>Returns a random item from <code>xs</code>. The selection is based on <code>seed</code>.
@@ -1583,7 +1961,13 @@ nil
 
 &gt; data.choice(nil, &quot;seed&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-choice'
+      data-meta-type='var'
+      data-meta-name='choice'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-sample">sample</h3>
 <p><code>(list xs, long count, boolean with_return, seed) -&gt; list</code></p>
 <p>Returns a random selection of <code>count</code> items from random indexes in <code>xs</code>. The selection is based on <code>seed</code>.
@@ -1611,7 +1995,13 @@ limited in length to the number of items available.</p>
 
 &gt; data.sample([1, 2, 3, 4, 5, 6], 10, false, &quot;foo&quot;)
 [3, 4, 5, 2, 6, 1]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-sample'
+      data-meta-type='var'
+      data-meta-name='sample'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-unique">unique</h3>
 <p><code>(list xs) -&gt; list </code></p>
 <p>Returns a list with all duplicates in <code>xs</code> removed. Values are considered duplicates when they compare as equal
@@ -1634,7 +2024,13 @@ using the <code>===</code> operator.</p>
 
 &gt; data.unique(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-unique'
+      data-meta-type='var'
+      data-meta-name='unique'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-range">range</h3>
 <p><code>(long start=0, long end=0) -&gt; list</code></p>
 <p>Returns a list with long values starting at <code>start</code>, and ending at <code>end</code>.</p>
@@ -1657,7 +2053,13 @@ nil
 
 &gt; data.range(0, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-range'
+      data-meta-type='var'
+      data-meta-name='range'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="anydata-any">any?{#data-any?}</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
@@ -1683,7 +2085,13 @@ false
 
 &gt; data.any?(nil, (x) -&gt; true)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-any?'
+      data-meta-type='var'
+      data-meta-name='any?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="nonedata-none">none?{#data-none?}</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
@@ -1709,7 +2117,13 @@ true
 
 &gt; data.none?(nil, (x) -&gt; true)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-none?'
+      data-meta-type='var'
+      data-meta-name='none?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="alldata-all">all?{#data-all?}</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
@@ -1736,7 +2150,13 @@ true
 
 &gt; data.all?(nil, (x) -&gt; false)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-all?'
+      data-meta-type='var'
+      data-meta-name='all?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-init">init</h3>
 <p><code>(list xs) -&gt; list</code></p>
 <p>Returns a list containing all elements of <code>xs</code> with the exception of the last one.</p>
@@ -1752,7 +2172,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-init'
+      data-meta-type='var'
+      data-meta-name='init'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-tail">tail</h3>
 <p><code>(list xs) -&gt; list</code></p>
 <p>Returns a list containing all elements of <code>xs</code> with the exception of the first one.</p>
@@ -1768,7 +2194,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-tail'
+      data-meta-type='var'
+      data-meta-name='tail'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-head">head</h3>
 <p><code>(list xs) -&gt; any</code></p>
 <p>Returns the first element in <code>xs</code>.</p>
@@ -1784,7 +2216,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-head'
+      data-meta-type='var'
+      data-meta-name='head'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-last">last</h3>
 <p><code>(list xs) -&gt; any</code></p>
 <p>Returns the last element in <code>xs</code>.</p>
@@ -1800,7 +2238,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: list must not be empty
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-last'
+      data-meta-type='var'
+      data-meta-name='last'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-slice">slice</h3>
 <p><code>(list xs, long start=0, long end=nil) -&gt; list</code></p>
 <p>Returns a sublist of <code>xs</code> starting at index <code>start</code> inclusively, and extending to index <code>end</code> exclusively.
@@ -1824,7 +2268,13 @@ Returns an empty list if <code>start &gt;= end</code>.</p>
 &gt; data.slice(nil, 0, 1)
 nil
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-slices">slices</h3>
 <p><code>(list xs, long s=1) -&gt; list</code></p>
 <p>Partitions <code>xs</code> into slices. Returns a list of slices, each of size <code>s</code>. The last slice may contain less than <code>s</code> items.</p>
@@ -1849,7 +2299,13 @@ ERROR:
   :message &quot;s must be positive, was 0&quot;,
   :code &quot;ILLEGAL_ARGUMENT&quot;
 }
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-slices'
+      data-meta-type='var'
+      data-meta-name='slices'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-reverse">reverse</h3>
 <p><code>(list xs) -&gt; list</code></p>
 <p>Returns a list that contains all elements of <code>xs</code> in reverse order.</p>
@@ -1859,7 +2315,13 @@ ERROR:
 
 &gt; data.reverse(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-reverse'
+      data-meta-type='var'
+      data-meta-name='reverse'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-sort">sort</h3>
 <p><code>(list xs, function f) -&gt; list</code></p>
 <p>Returns a list sorted according to comparator function f. The sorting algorithm is guaranteed to be stable.</p>
@@ -1888,7 +2350,13 @@ If a == b, f returns 0.</p>
   :name &quot;foo&quot;,
   :id 872
 }]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-sort'
+      data-meta-type='var'
+      data-meta-name='sort'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-repeat">repeat</h3>
 <p><code>(long n, x) -&gt; list</code></p>
 <p>Returns a list of length <code>n</code> that contains <code>x</code> in every position.</p>
@@ -1907,7 +2375,13 @@ nil
 ERROR:
   code: INDEX_OUT_OF_BOUNDS
   message: Cannot repeat -2 times
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-repeat'
+      data-meta-type='var'
+      data-meta-name='repeat'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-concat">concat</h3>
 <p><code>(list lists) -&gt; list</code></p>
 <p>Returns a list that contains all elements of all <code>lists</code>. Lists are concatenated in given order.</p>
@@ -1930,7 +2404,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot concat type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-merge">merge</h3>
 <p><code>(list dicts) -&gt; dict</code></p>
 <p>Returns a <code>dict</code> that contains all entries from all given <code>dicts</code>. Dicts are merged left to right.
@@ -1961,7 +2441,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot merge type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-merge'
+      data-meta-type='var'
+      data-meta-name='merge'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-take">take</h3>
 <p><code>(long n, list xs) -&gt; list</code></p>
 <p>Returns a list containing the first <code>n</code> elements of <code>xs</code>.
@@ -1985,7 +2471,13 @@ nil
 
 &gt; data.take(nil, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;])
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-take'
+      data-meta-type='var'
+      data-meta-name='take'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-take_while">take_while</h3>
 <p><code>(function p, list xs) -&gt; list</code></p>
 <p>Returns a list containing leading elements <code>x</code> of <code>xs</code> for which the predicate function <code>p</code> returns a value that casts to boolean <code>true</code>.
@@ -2004,7 +2496,13 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 
 &gt; data.take_while((x) -&gt; true, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-take_while'
+      data-meta-type='var'
+      data-meta-name='take_while'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-take_until">take_until</h3>
 <p><code>(function p, list xs) -&gt; list</code></p>
 <p>Returns a list containing leading elements <code>x</code> of <code>xs</code> for which the predicate function <code>p</code> returns a value that does not cast to boolean <code>true</code>.
@@ -2026,7 +2524,13 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 
 &gt; data.take_until((x) -&gt; false, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-take_until'
+      data-meta-type='var'
+      data-meta-name='take_until'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-drop">drop</h3>
 <p><code>(long n, list xs) -&gt; list</code></p>
 <p>Returns a list of elements in <code>xs</code> skipping the first <code>n</code> elements.
@@ -2050,7 +2554,13 @@ nil
 
 &gt; data.drop(nil, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;])
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-drop'
+      data-meta-type='var'
+      data-meta-name='drop'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-drop_while">drop_while</h3>
 <p><code>(function p, list xs) -&gt; list</code></p>
 <p>Returns a sublist of elements of <code>xs</code> skipping leading elements <code>x</code> for which the predicate function <code>p</code> returns a value that casts to boolean <code>true</code>.
@@ -2066,7 +2576,13 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 &gt; data.drop_while((x) -&gt; false, nil)
 nil
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-drop_while'
+      data-meta-type='var'
+      data-meta-name='drop_while'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-drop_until">drop_until</h3>
 <p><code>(function p, list xs) -&gt; list</code></p>
 <p>Returns a sublist of elements of <code>xs</code> skipping leading elements <code>x</code> for which the predicate function <code>p</code> returns a value that does not cast to boolean <code>true</code>.
@@ -2085,7 +2601,13 @@ If <code>p</code> accepts one argument, <code>x</code> is passed.  If <code>p</c
 &gt; data.drop_until((x) -&gt; false, nil)
 nil
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-drop_until'
+      data-meta-type='var'
+      data-meta-name='drop_until'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="containsdata-contains">contains?{#data-contains?}</h3>
 <p><code>(xs, x) -&gt; boolean</code></p>
 <p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if for any element <code>e</code> of <code>xs</code> <code>x === e</code> evaluates to <code>true</code>, <code>false</code> otherwise.</p>
@@ -2120,7 +2642,13 @@ ERROR:
   code: ILLEGAL_ARGUMENT
   message: contains? is not defined for type string
   ...
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-contains?'
+      data-meta-type='var'
+      data-meta-name='contains?'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-index_of">index_of</h3>
 <p><code>(list xs, x, long start=0) -&gt; long</code></p>
 <p>If <code>xs</code> contains <code>x</code> at or after index <code>start</code> returns the index of the earliest such occurrence. Returns <code>-1</code> if <code>x</code> is not an element of <code>xs</code>. Each element of <code>xs</code> is compared to <code>x</code> using the <code>===</code> operator.</p>
@@ -2155,7 +2683,13 @@ nil
 
 &gt; data.index_of([1,2,3], 3, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-index_of'
+      data-meta-type='var'
+      data-meta-name='index_of'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-last_index_of">last_index_of</h3>
 <p><code>(list xs, x, long end=nil) -&gt; long</code></p>
 <p>If <code>xs</code> contains <code>x</code> at or before index <code>end</code> returns the index of the last such occurrence. Returns <code>-1</code> if <code>x</code> is not an element of <code>xs</code>. Each element of <code>xs</code> is compared to <code>x</code> using the <code>===</code> operator.</p>
@@ -2193,7 +2727,13 @@ nil
 
 &gt; data.last_index_of(nil, 2)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-last_index_of'
+      data-meta-type='var'
+      data-meta-name='last_index_of'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-key_of">key_of</h3>
 <p><code>(dict xs, x) -&gt; string</code></p>
 <p>If <code>xs</code> contains an entry with value <code>x</code>, returns the key of that entry.
@@ -2223,7 +2763,13 @@ nil
 
 &gt; data.key_of(nil, 1)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-key_of'
+      data-meta-type='var'
+      data-meta-name='key_of'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-flatten">flatten</h3>
 <p><code>(list xs) -&gt; list</code></p>
 <p>Builds a result list iterating over all elements <code>x</code> in <code>xs</code>. If <code>x</code> is a list, it is concatenated to the result list.
@@ -2243,7 +2789,13 @@ Otherwise the element is appended to the list. Returns the result list.</p>
 
 &gt; data.flatten(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-flatten'
+      data-meta-type='var'
+      data-meta-name='flatten'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-map">map</h3>
 <p><code>(xs, function f) -&gt; any</code></p>
 <p>If <code>xs</code> is a <code>list</code>, returns a <code>list</code> of all <code>x</code> in <code>xs</code> mapped through <code>f</code>.
@@ -2285,7 +2837,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-map'
+      data-meta-type='var'
+      data-meta-name='map'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-flatmap">flatmap</h3>
 <p><code>(xs, function f) -&gt; list</code></p>
 <p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>. Builds a result list by mapping each <code>x</code> of <code>xs</code>
@@ -2311,7 +2869,13 @@ ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
   ...
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-flatmap'
+      data-meta-type='var'
+      data-meta-name='flatmap'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-mapcat">mapcat</h3>
 <p><code>(xs, function f) -&gt; list</code></p>
 <p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>. Builds a result list by mapping each <code>x</code> of <code>xs</code>
@@ -2337,7 +2901,13 @@ ERROR:
   code: ILLEGAL_ARGUMENT
   message: map is not defined for type string
   ...
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-mapcat'
+      data-meta-type='var'
+      data-meta-name='mapcat'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-zip">zip</h3>
 <p><code>(list xs, list ys) -&gt; list</code></p>
 <p>Returns a list of same length as <code>xs</code>. Each index <code>i</code> contains the value <code>[xs[i], ys[i]]</code>.</p>
@@ -2356,7 +2926,13 @@ nil
 
 &gt; data.zip(nil, [1, 2])
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-zip'
+      data-meta-type='var'
+      data-meta-name='zip'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-zip_dict">zip_dict</h3>
 <p><code>(list keys, list values) -&gt; dict</code></p>
 <p>Returns a <code>dict</code> with all keys from <code>keys</code>. Each key contains the value <code>values[i]</code>, where <code>i</code>
@@ -2396,7 +2972,13 @@ nil
 
 &gt; data.zip_dict(nil, [1, 2])
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-zip_dict'
+      data-meta-type='var'
+      data-meta-name='zip_dict'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-index_by">index_by</h3>
 <p><code>(xs, function f) -&gt; dict</code></p>
 <p>Returns a <code>dict</code> that contains all values from <code>xs</code>. Each <code>x</code> in <code>xs</code> is indexed by key <code>f(x)</code>.</p>
@@ -2438,7 +3020,13 @@ In such cases it is undefined which <code>x</code> is preserved in the returned 
   :_a2 2,
   :_a3 3
 }
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-index_by'
+      data-meta-type='var'
+      data-meta-name='index_by'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-interpose">interpose</h3>
 <p><code>(list xs, s) -&gt; list</code></p>
 <p>Returns a <code>list</code> with all elements from <code>xs</code> separated by <code>s</code>.</p>
@@ -2454,7 +3042,13 @@ In such cases it is undefined which <code>x</code> is preserved in the returned 
 
 &gt; data.interpose(nil, &quot;foo&quot;)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-interpose'
+      data-meta-type='var'
+      data-meta-name='interpose'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-reduce">reduce</h3>
 <p><code>(xs, init, function f) -&gt; any</code></p>
 <p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
@@ -2500,7 +3094,13 @@ ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce is not defined for type string
   ...
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-reduce'
+      data-meta-type='var'
+      data-meta-name='reduce'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-reduce_until">reduce_until</h3>
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 <p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
@@ -2537,7 +3137,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_until is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-reduce_until'
+      data-meta-type='var'
+      data-meta-name='reduce_until'
+	    data-meta-tags='data'
+    ></div>
 <h3 id="data-reduce_while">reduce_while</h3>
 <p><code>(xs, init, function p, function f) -&gt; any</code></p>
 <p>Expects <code>xs</code> to be a <code>list</code> or a <code>dict</code>.</p>
@@ -2574,14 +3180,32 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: reduce_while is not defined for type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='data-reduce_while'
+      data-meta-type='var'
+      data-meta-name='reduce_while'
+	    data-meta-tags='data'
+    ></div>
 <h2 id="time">library time</h2>
 <p>The time library provides functions for processing datetime values.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='time'
+      data-meta-type='library'
+      data-meta-name='time'
+	    data-meta-tags=''
+    ></div>
 <h3 id="time-epoch">epoch</h3>
 <p><code>datetime</code></p>
 <p>The instant of time at <code>1970-01-01T00:00:00Z</code></p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='time-epoch'
+      data-meta-type='var'
+      data-meta-name='epoch'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-of">of</h3>
 <pre><code class="language-tweakflow" data-lang="tweakflow">(
   long year=1970,
@@ -2612,7 +3236,13 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 
 &gt; time.of(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-of'
+      data-meta-type='var'
+      data-meta-name='of'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-at">at</h3>
 <pre><code class="language-tweakflow" data-lang="tweakflow">(
   datetime base,
@@ -2637,7 +3267,13 @@ If resulting datetime is in a DST overlap, the earlier valid offset is used.</p>
 
 &gt; time.at(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-at'
+      data-meta-type='var'
+      data-meta-name='at'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-seconds_between">seconds_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2660,7 +3296,13 @@ nil
 
 &gt; time.seconds_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-seconds_between'
+      data-meta-type='var'
+      data-meta-name='seconds_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-minutes_between">minutes_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2683,7 +3325,13 @@ nil
 
 &gt; time.minutes_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-minutes_between'
+      data-meta-type='var'
+      data-meta-name='minutes_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-hours_between">hours_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2706,7 +3354,13 @@ nil
 
 &gt; time.hours_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-hours_between'
+      data-meta-type='var'
+      data-meta-name='hours_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-days_between">days_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2729,7 +3383,13 @@ nil
 
 &gt; time.days_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-days_between'
+      data-meta-type='var'
+      data-meta-name='days_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-months_between">months_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2752,7 +3412,13 @@ nil
 
 &gt; time.months_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-months_between'
+      data-meta-type='var'
+      data-meta-name='months_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-years_between">years_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2775,7 +3441,13 @@ nil
 
 &gt; time.years_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-years_between'
+      data-meta-type='var'
+      data-meta-name='years_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-period_between">period_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2808,7 +3480,13 @@ nil
 
 &gt; time.period_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-period_between'
+      data-meta-type='var'
+      data-meta-name='period_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-duration_between">duration_between</h3>
 <pre><code>(
   datetime start_inclusive,
@@ -2845,7 +3523,13 @@ A duration of <code>-1</code> nanosecond is represented as <code>-1</code> <code
 
 &gt; time.duration_between(nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-duration_between'
+      data-meta-type='var'
+      data-meta-name='duration_between'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-add_period">add_period</h3>
 <pre><code>(
   datetime start,
@@ -2871,7 +3555,13 @@ nil
 
 &gt; time.add_period(nil, nil, nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-add_period'
+      data-meta-type='var'
+      data-meta-name='add_period'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-add_duration">add_duration</h3>
 <pre><code>(
   datetime start,
@@ -2896,7 +3586,13 @@ nil
 
 &gt; time.add_duration(nil, nil, nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-add_duration'
+      data-meta-type='var'
+      data-meta-name='add_duration'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-year">year</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the year component of given datetime <code>x</code>.</p>
@@ -2909,7 +3605,13 @@ nil
 
 &gt; time.year(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-year'
+      data-meta-type='var'
+      data-meta-name='year'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-month">month</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the month component of given datetime <code>x</code>.</p>
@@ -2922,7 +3624,13 @@ nil
 
 &gt; time.month(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-month'
+      data-meta-type='var'
+      data-meta-name='month'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-day_of_month">day_of_month</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the day of month component of given datetime <code>x</code>.</p>
@@ -2935,7 +3643,13 @@ nil
 
 &gt; time.day_of_month(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-day_of_month'
+      data-meta-type='var'
+      data-meta-name='day_of_month'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-day_of_year">day_of_year</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the day of year of given datetime <code>x</code>.</p>
@@ -2948,7 +3662,13 @@ nil
 
 &gt; time.day_of_year(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-day_of_year'
+      data-meta-type='var'
+      data-meta-name='day_of_year'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-day_of_week">day_of_week</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the day of week of given datetime <code>x</code>.</p>
@@ -3000,7 +3720,13 @@ nil
 
 &gt; time.day_of_week(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-day_of_week'
+      data-meta-type='var'
+      data-meta-name='day_of_week'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-hour">hour</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the hour of given datetime <code>x</code>.</p>
@@ -3013,7 +3739,13 @@ nil
 
 &gt; time.hour(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-hour'
+      data-meta-type='var'
+      data-meta-name='hour'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-minute">minute</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the minute of given datetime <code>x</code>.</p>
@@ -3026,7 +3758,13 @@ nil
 
 &gt; time.minute(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-minute'
+      data-meta-type='var'
+      data-meta-name='minute'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-second">second</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the second of given datetime <code>x</code>.</p>
@@ -3039,7 +3777,13 @@ nil
 
 &gt; time.second(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-second'
+      data-meta-type='var'
+      data-meta-name='second'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-nano_of_second">nano_of_second</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the nanoseconds of given datetime <code>x</code>.</p>
@@ -3055,7 +3799,13 @@ nil
 
 &gt; time.nano_of_second(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-nano_of_second'
+      data-meta-type='var'
+      data-meta-name='nano_of_second'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-week_of_year">week_of_year</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the week of year for given datetime <code>x</code>. The ISO-8601 definition of weeks is used, where a week starts on Monday and the first week of a year has a minimum of 4 days.</p>
@@ -3080,7 +3830,13 @@ nil
 
 &gt; time.week_of_year(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-week_of_year'
+      data-meta-type='var'
+      data-meta-name='week_of_year'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-offset_seconds">offset_seconds</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns the number of seconds in the offset from UTC for given datetime <code>x</code>.</p>
@@ -3096,7 +3852,13 @@ nil
 
 &gt; time.offset_seconds(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-offset_seconds'
+      data-meta-type='var'
+      data-meta-name='offset_seconds'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-zone">zone</h3>
 <p><code>(datetime x) -&gt; string</code></p>
 <p>Returns the time zone for given datetime <code>x</code>.</p>
@@ -3112,7 +3874,13 @@ nil
 
 &gt; time.zone(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-zone'
+      data-meta-type='var'
+      data-meta-name='zone'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-end_of_month">end_of_month</h3>
 <p><code>(datetime x, long add_months=0) -&gt; datetime</code></p>
 <p>Returns the datetime representing the end of month of a given datetime <code>x</code>. The time component of <code>x</code> is preserved
@@ -3135,7 +3903,13 @@ Returns <code>nil</code> if <code>add_months</code> is <code>nil</code>.</p>
 
 &gt; time.day_of_month(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-end_of_month'
+      data-meta-type='var'
+      data-meta-name='end_of_month'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_year">with_year</h3>
 <p><code>(datetime x, long year) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the year field set to <code>year</code>. If the day-of-month is invalid for the
@@ -3158,7 +3932,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for Year (valid values -999999999 - 999999999): 1000000000
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_year'
+      data-meta-type='var'
+      data-meta-name='with_year'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_month">with_month</h3>
 <p><code>(datetime x, long month) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the month field set to <code>month</code>.
@@ -3181,7 +3961,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MonthOfYear (valid values 1 - 12): 13
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_month'
+      data-meta-type='var'
+      data-meta-name='with_month'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_day_of_month">with_day_of_month</h3>
 <p><code>(datetime x, long day_of_month) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the day_of_month field set to <code>day_of_month</code>.</p>
@@ -3209,7 +3995,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for DayOfMonth (valid values 1 - 28/31): 33
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_day_of_month'
+      data-meta-type='var'
+      data-meta-name='with_day_of_month'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_hour">with_hour</h3>
 <p><code>(datetime x, long hour) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the hour field set to <code>hour</code>.
@@ -3233,7 +4025,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for HourOfDay (valid values 0 - 23): 25
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_hour'
+      data-meta-type='var'
+      data-meta-name='with_hour'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_minute">with_minute</h3>
 <p><code>(datetime x, long minute) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the minute field set to <code>minute</code>.
@@ -3253,7 +4051,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for MinuteOfHour (valid values 0 - 59): 78
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_minute'
+      data-meta-type='var'
+      data-meta-name='with_minute'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_second">with_second</h3>
 <p><code>(datetime x, long second) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the second field set to <code>second</code>.
@@ -3273,7 +4077,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for SecondOfMinute (valid values 0 - 59): 78
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_second'
+      data-meta-type='var'
+      data-meta-name='with_second'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_nano_of_second">with_nano_of_second</h3>
 <p><code>(datetime x, long nano_of_second) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the nano_of_second field set to <code>nano_of_second</code>.
@@ -3293,7 +4103,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: Invalid value for NanoOfSecond (valid values 0 - 999999999): 1000000000
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_nano_of_second'
+      data-meta-type='var'
+      data-meta-name='with_nano_of_second'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-with_zone">with_zone</h3>
 <p><code>(datetime x, string tz) -&gt; datetime</code></p>
 <p>Returns the datetime <code>x</code> with the time zone field set to <code>tz</code>.
@@ -3320,7 +4136,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-with_zone'
+      data-meta-type='var'
+      data-meta-name='with_zone'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-same_instant_at_zone">same_instant_at_zone</h3>
 <p><code>(datetime x, string tz) -&gt; datetime</code></p>
 <p>Returns a datetime representing the same instant as <code>x</code> in time zone <code>tz</code>.</p>
@@ -3346,7 +4168,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unknown time zone id: ---
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-same_instant_at_zone'
+      data-meta-type='var'
+      data-meta-name='same_instant_at_zone'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-unix_timestamp">unix_timestamp</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns a long representing the number of seconds since epoch for the given <code>x</code>.</p>
@@ -3360,7 +4188,13 @@ ERROR:
 
 &gt; time.unix_timestamp(1922-07-26T09:00:05Z@UTC)
 -1496933995
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-unix_timestamp_ms">unix_timestamp_ms</h3>
 <p><code>(datetime x) -&gt; long</code></p>
 <p>Returns a long representing the number of milliseconds since epoch for the given <code>x</code>.</p>
@@ -3374,7 +4208,13 @@ ERROR:
 
 &gt; time.unix_timestamp_ms(1922-07-26T09:00:04.877Z@UTC)
 -1496933995123
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='unix_timestamp_ms'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-of_unix_timestamp">of_unix_timestamp</h3>
 <p><code>(long s) -&gt; datetime</code></p>
 <p>Returns a datetime representing epoch + <code>s</code> seconds in time zone <code>UTC</code>.</p>
@@ -3388,7 +4228,13 @@ ERROR:
 
 &gt; time.of_unix_timestamp(-1496933995)
 1922-07-26T09:00:05Z@UTC
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-of_unix_timestamp_ms">of_unix_timestamp_ms</h3>
 <p><code>(long ms) -&gt; datetime</code></p>
 <p>Returns a datetime representing epoch + <code>ms</code> milliseconds in time zone <code>UTC</code>.</p>
@@ -3402,7 +4248,13 @@ ERROR:
 
 &gt; time.of_unix_timestamp_ms(-1496933995763)
 1922-07-26T09:00:04.237Z@UTC
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-of_unix_timestamp_ms'
+      data-meta-type='var'
+      data-meta-name='of_unix_timestamp_ms'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-compare">compare</h3>
 <p><code>(datetime a, datetime b) -&gt; long</code></p>
 <p>Compares two datetimes <code>a</code> and <code>b</code>.</p>
@@ -3424,7 +4276,13 @@ Assumes <code>nil</code> to precede any non-nil datetime.</p>
 
 &gt; data.sort([2017-05-24T00:00:00, 2017-05-25T00:00:00, nil, 2017-05-24T00:01:00, 2017-05-24T02:00:00], time.compare)
 [nil, 2017-05-24T00:00:00Z@UTC, 2017-05-24T00:01:00Z@UTC, 2017-05-24T02:00:00Z@UTC, 2017-05-25T00:00:00Z@UTC]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-formatter">formatter</h3>
 <pre><code>(
   string pattern=&quot;uuuu-MM-dd'T'HH:mm:ssZZZZZ'@`'VV'`'&quot;,
@@ -3458,7 +4316,13 @@ function
 
 &gt; f(time.epoch)
 &quot;Donnerstag, 1 Januar 1970&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-parser">parser</h3>
 <pre><code>(
   string pattern=&quot;uuuu-MM-dd'T'HH:mm:ss[ZZZZZ]['@`'VV'`']&quot;,
@@ -3520,7 +4384,13 @@ function
 &gt; f(&quot;2017-06-22&quot;)
 2017-06-22T00:00:00-05:00@America/Chicago
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+	    data-meta-tags='time'
+    ></div>
 <h3 id="time-zones">zones</h3>
 <p><code>() -&gt; list</code></p>
 <p>Returns a list of all known time zone ids.</p>
@@ -3534,10 +4404,22 @@ function
 # get all US/x time zones
 &gt; data.filter(time.zones(), (z) -&gt; strings.split(z, &quot;/&quot;)[0] == &quot;US&quot;)
 [&quot;US/Alaska&quot;, &quot;US/Aleutian&quot;, &quot;US/Arizona&quot;, &quot;US/Central&quot;, &quot;US/East-Indiana&quot;, &quot;US/Eastern&quot;, ...]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-zones'
+      data-meta-type='var'
+      data-meta-name='zones'
+	    data-meta-tags='time'
+    ></div>
 <h2 id="math">library math</h2>
 <p>The math library contains basic mathematical functions.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='math'
+      data-meta-type='library'
+      data-meta-name='math'
+	    data-meta-tags=''
+    ></div>
 <h3 id="math-abs">abs</h3>
 <p><code>(x) -&gt; </code></p>
 <p>If <code>x</code> is a <code>double</code>, returns the absolute value of <code>x</code> as a double.<br>
@@ -3581,7 +4463,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot determine magnitude of type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-abs'
+      data-meta-type='var'
+      data-meta-name='abs'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-rand">rand</h3>
 <p><code>(any seed) -&gt; double</code></p>
 <p>Returns a pseudo-random double between <code>0.0</code> inclusive and <code>1.0</code> exclusive, based on given <code>seed</code>.
@@ -3630,7 +4518,13 @@ function
 &gt; math.rand(nil)
 0.730967787376657
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-rand'
+      data-meta-type='var'
+      data-meta-name='rand'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-rands">rands</h3>
 <p><code>(long count, any seed) -&gt; list</code></p>
 <p>Returns a list of length <code>count</code> of pseudo-random double values between <code>0.0</code> inclusive and <code>1.0</code> exclusive, based on given <code>seed</code>.
@@ -3651,7 +4545,13 @@ This function deterministically returns the same list for the same <code>seed</c
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: count cannot be negative, found: -7
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-rands'
+      data-meta-type='var'
+      data-meta-name='rands'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-inc">inc</h3>
 <p><code>(any x) -&gt; any</code></p>
 <p>Increments <code>x</code> by one.</p>
@@ -3683,7 +4583,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot increment type list
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-inc'
+      data-meta-type='var'
+      data-meta-name='inc'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-dec">dec</h3>
 <p><code>(any x) -&gt; any</code></p>
 <p>Decrements <code>x</code> by one.</p>
@@ -3715,7 +4621,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot decrement type list
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-dec'
+      data-meta-type='var'
+      data-meta-name='dec'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-compare">compare</h3>
 <p><code>(a, b) -&gt; long</code></p>
 <p>Compares numbers a and b according to their numeric order.</p>
@@ -3735,7 +4647,13 @@ Returns 0 if a == b.</p>
 
 &gt; data.sort([4, 3, 2.5d, 1, 0.2, nil, NaN, -Infinity, Infinity], math.compare)
 [nil, NaN, -Infinity, 0.2, 1, 2.5d, 3, 4, Infinity]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-compare'
+      data-meta-type='var'
+      data-meta-name='compare'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-min">min</h3>
 <p><code>(list xs) -&gt; any</code></p>
 <p>Given a list of numeric <code>xs</code>, returns the smallest <code>x</code>.\</p>
@@ -3757,7 +4675,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-min'
+      data-meta-type='var'
+      data-meta-name='min'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-max">max</h3>
 <p><code>(list xs) -&gt; any</code></p>
 <p>Given a list of numeric <code>xs</code>, returns the largest <code>x</code>.</p>
@@ -3779,7 +4703,13 @@ nil
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: cannot compare type string
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-max'
+      data-meta-type='var'
+      data-meta-name='max'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-round">round</h3>
 <p><code>(double x) -&gt; long</code></p>
 <p>Given a double <code>x</code>, returns <code>x</code> rounded to the closest long value. Ties are rounded up.</p>
@@ -3801,7 +4731,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.round(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-round'
+      data-meta-type='var'
+      data-meta-name='round'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-ceil">ceil</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Given a double <code>x</code>, returns the smallest double value greater than or equal to <code>x</code> that is a mathematical integer.</p>
@@ -3817,7 +4753,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.ceil(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-ceil'
+      data-meta-type='var'
+      data-meta-name='ceil'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-floor">floor</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Given a double <code>x</code>, returns the largest double value smaller than or equal to <code>x</code> that is a mathematical integer.</p>
@@ -3833,7 +4775,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.floor(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-floor'
+      data-meta-type='var'
+      data-meta-name='floor'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="nanmath-nan">NaN?{#math-NaN?}</h3>
 <p><code>(any x) -&gt; boolean</code></p>
 <p>Given a value <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
@@ -3845,7 +4793,13 @@ true
 
 &gt; math.NaN?(nil)
 false
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-NaN?'
+      data-meta-type='var'
+      data-meta-name='NaN?'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="finitemath-finite">finite?{#math-finite?}</h3>
 <p><code>(any x) -&gt; boolean</code></p>
 <p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, <code>NaN</code>, <code>-Infinity</code>, or <code>Infinity</code>.</p>
@@ -3859,7 +4813,13 @@ false
 
 &gt; math.finite?(Infinity)
 false
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-finite?'
+      data-meta-type='var'
+      data-meta-name='finite?'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-sqrt">sqrt</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Given a double <code>x</code>, returns the square root of <code>x</code>.</p>
@@ -3874,7 +4834,13 @@ NaN
 
 &gt; math.sqrt(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-sqrt'
+      data-meta-type='var'
+      data-meta-name='sqrt'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-sin">sin</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the trigonometric sine of angle <code>x</code> given in radians.<br>
@@ -3888,7 +4854,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.sin(1)
 0.8414709848078965
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-sin'
+      data-meta-type='var'
+      data-meta-name='sin'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-cos">cos</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the trigonometric cosine of angle <code>x</code> given in radians.<br>
@@ -3905,7 +4877,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.cos(1)
 0.5403023058681398
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-cos'
+      data-meta-type='var'
+      data-meta-name='cos'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-tan">tan</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the trigonometric tangent of angle <code>x</code> given in radians.<br>
@@ -3919,7 +4897,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.tan(math.pi/4)
 0.9999999999999999
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-tan'
+      data-meta-type='var'
+      data-meta-name='tan'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-asin">asin</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the arc sine of <code>x</code> in the range of -pi/2 throuh pi/2.<br>
@@ -3933,7 +4917,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.asin(1)
 1.5707963267948966
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-asin'
+      data-meta-type='var'
+      data-meta-name='asin'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-acos">acos</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the arc cosine of <code>x</code> in the range of 0.0 throuh pi.<br>
@@ -3950,7 +4940,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.acos(-1)
 3.141592653589793
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-acos'
+      data-meta-type='var'
+      data-meta-name='acos'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-atan">atan</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the arc tangent of <code>x</code> in the range of -pi/2 through pi/2.<br>
@@ -3964,7 +4960,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.atan(1)
 0.7853981633974483
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-atan'
+      data-meta-type='var'
+      data-meta-name='atan'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-log">log</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the natural logarithm (base e) of <code>x</code>.</p>
@@ -3980,7 +4982,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.log(math.e**2)
 2.0
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-log'
+      data-meta-type='var'
+      data-meta-name='log'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-log10">log10</h3>
 <p><code>(double x) -&gt; double</code></p>
 <p>Returns the base 10 logarithm of <code>x</code>.</p>
@@ -3996,7 +5004,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.log10(100)
 2.0
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-log10'
+      data-meta-type='var'
+      data-meta-name='log10'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-bit_count">bit_count</h3>
 <p><code>(long x) -&gt; long</code></p>
 <p>Given a long <code>x</code>, returns the number of bits set to 1 in the binary two&rsquo;s complement representation of <code>x</code>.</p>
@@ -4012,7 +5026,13 @@ Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
 
 &gt; math.bit_count(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-bit_count'
+      data-meta-type='var'
+      data-meta-name='bit_count'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-formatter">formatter</h3>
 <pre><code>(
   string pattern='0.##',
@@ -4060,7 +5080,13 @@ function
 
 std.tf&gt; f(648722)
 &quot;६४८,७२२&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-formatter'
+      data-meta-type='var'
+      data-meta-name='formatter'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-parser">parser</h3>
 <pre><code>(
   string pattern='0.##',
@@ -4110,22 +5136,58 @@ function
 
 &gt; f(&quot;203.23&quot;)
 203.23d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='math-parser'
+      data-meta-type='var'
+      data-meta-name='parser'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-e">e</h3>
 <p>The double value that is closer than any other to <code>e</code>, the base of the natural logarithms.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='math-e'
+      data-meta-type='var'
+      data-meta-name='e'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-pi">pi</h3>
 <p>The double value that is closer than any other to <code>pi</code>, the ratio of the circumference of a circle to its diameter.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='math-pi'
+      data-meta-type='var'
+      data-meta-name='pi'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-min_long">min_long</h3>
 <p>The smallest representable long value: <code>-9223372036854775808</code>.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='math-min_long'
+      data-meta-type='var'
+      data-meta-name='min_long'
+	    data-meta-tags='math'
+    ></div>
 <h3 id="math-max_long">max_long</h3>
 <p>The largest representable long value: <code>9223372036854775807</code>.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='math-max_long'
+      data-meta-type='var'
+      data-meta-name='max_long'
+	    data-meta-tags='math'
+    ></div>
 <h2 id="decimals">library decimals</h2>
 <p>The decimals library contains utility functions for working with decimal numbers.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='decimals'
+      data-meta-type='library'
+      data-meta-name='decimals'
+	    data-meta-tags=''
+    ></div>
 <h3 id="decimals-ulp">ulp</h3>
 <p><code>(decimal x) -&gt; decimal</code></p>
 <p>Returns the unit in the last place, of given decimal <code>x</code>.</p>
@@ -4142,7 +5204,13 @@ function
 
 &gt; decimals.ulp(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-ulp'
+      data-meta-type='var'
+      data-meta-name='ulp'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-scale">scale</h3>
 <p><code>(decimal x) -&gt; long</code></p>
 <p>Returns the scale of given decimal <code>x</code>.</p>
@@ -4166,7 +5234,13 @@ times some integer value, effectively dropping precision of trailing digits.</p>
 # value 100 with -2 scale
 &gt; decimals.scale(1e+2d)
 -2
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-scale'
+      data-meta-type='var'
+      data-meta-name='scale'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-with_scale">with_scale</h3>
 <pre><code class="language-tweakflow" data-lang="tweakflow">(
   decimal x,
@@ -4195,7 +5269,13 @@ times some integer value, effectively dropping precision of trailing digits.</p>
 
 &gt; decimals.with_scale(1299d, -2, 'down')
 1.2E+3d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-with_scale'
+      data-meta-type='var'
+      data-meta-name='with_scale'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-round">round</h3>
 <pre><code class="language-tweakflow" data-lang="tweakflow">(
   decimal x,
@@ -4223,7 +5303,13 @@ Throws an error if <code>digits</code> is negative.</p>
 
 &gt; decimals.round(1999, 3, 'down')
 1.99E+3d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-round'
+      data-meta-type='var'
+      data-meta-name='round'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-plain">plain</h3>
 <p><code>(decimal x) -&gt; string</code></p>
 <p>Returns a plain string representation of the decimal, not using exponent notation.</p>
@@ -4239,7 +5325,13 @@ Throws an error if <code>digits</code> is negative.</p>
 
 &gt; decimals.plain(1e-5d)
 &quot;0.00001&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-plain'
+      data-meta-type='var'
+      data-meta-name='plain'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-strip_trailing_zeros">strip_trailing_zeros</h3>
 <p><code>(decimal x) -&gt; decimal</code></p>
 <p>A decimal number is internally represented as a mathematical integer x 10^(-scale).</p>
@@ -4257,7 +5349,13 @@ been adjusted to not store any trailing zeros in the integer part.</p>
 
 &gt; decimals.strip_trailing_zeros(110d)
 1.1E+2d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-strip_trailing_zeros'
+      data-meta-type='var'
+      data-meta-name='strip_trailing_zeros'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-divide">divide</h3>
 <pre><code class="language-tweakflow" data-lang="tweakflow">(
   decimal x,
@@ -4290,7 +5388,13 @@ Throws an error if <code>y</code> is zero.</p>
 # negative scale division rounded up
 &gt; decimals.divide(10_000d, 3d, -2, 'up')
 3.4E+3d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-divide'
+      data-meta-type='var'
+      data-meta-name='divide'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-divide_integral">divide_integral</h3>
 <p><code>(decimal x, decimal y) -&gt; decimal</code></p>
 <p>Returns the integer part of <code>x</code> divided by <code>y</code>. Any fractional digits are not included in the result.</p>
@@ -4314,7 +5418,13 @@ Throws an error if <code>y</code> is zero.</p>
 # scale of result is scale(x) - scale(y)
 &gt; decimals.divide_integral(10.54321d, 1E+1d)
 1.000000d
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-divide_integral'
+      data-meta-type='var'
+      data-meta-name='divide_integral'
+	    data-meta-tags='decimals'
+    ></div>
 <h3 id="decimals-from_double_exact">from_double_exact</h3>
 <p><code>(double x) -&gt; decimal</code></p>
 <p>Floating point doubles encode approximations of fractional numbers.</p>
@@ -4331,11 +5441,23 @@ Throws an error if <code>y</code> is zero.</p>
 
 &gt; decimals.from_double_exact(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='decimals-from_double_exact'
+      data-meta-type='var'
+      data-meta-name='from_double_exact'
+	    data-meta-tags='decimals'
+    ></div>
 <h2 id="fun">library fun</h2>
 <p>The function library contains utility functions to call functions using certain patterns or conditions. Functions in this library
 provide functionality similar to control-flow features in other languages.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='fun'
+      data-meta-type='library'
+      data-meta-name='fun'
+	    data-meta-tags=''
+    ></div>
 <h3 id="fun-times">times</h3>
 <p><code>(long n, any x, function f) -&gt; any</code></p>
 <p>Calls <code>f</code> <code>n</code> times with one argument. The first call of <code>f</code> receives <code>x</code> as argument.
@@ -4362,7 +5484,13 @@ function
 
 &gt; data.map([1,2,3,4,5,6,7,8,9,10], fib)
 [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-times'
+      data-meta-type='var'
+      data-meta-name='times'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-until">until</h3>
 <p><code>(function p, any x, function f) -&gt; any</code></p>
 <p>Calls <code>f</code> repeatedly with one argument. The first call of <code>f</code> receives <code>x</code> as argument.
@@ -4397,7 +5525,13 @@ function
   :nums [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 }
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-until'
+      data-meta-type='var'
+      data-meta-name='until'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-while">while</h3>
 <p><code>(function p, any x, function f) -&gt; any</code></p>
 <p>Calls <code>f</code> repeatedly with one argument. The first call of <code>f</code> receives <code>x</code> as argument.
@@ -4432,7 +5566,13 @@ function
   :nums [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 }
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-while'
+      data-meta-type='var'
+      data-meta-name='while'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-iterate">iterate</h3>
 <p><code>(long start, long end, any x, function f) -&gt; any</code></p>
 <p>Calls <code>f</code> repeatedly with two arguments. The first call of <code>f</code> receives <code>x</code> as first argument.
@@ -4445,7 +5585,13 @@ Returns <code>x</code> if <code>end</code> &lt; <code>start</code>.</p>
 <pre><code class="language-tweakflow" data-lang="tweakflow"># add natural numbers 1 to 10
 &gt; fun.iterate(1, 10, 0, (sum, i) -&gt; sum+i)
 55
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-iterate'
+      data-meta-type='var'
+      data-meta-name='iterate'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-thread">thread</h3>
 <p><code>(any state, list fs) -&gt; any</code></p>
 <p>Calls functions from given <code>fs</code> in sequence, passing <code>state</code> as the argument to the first function,
@@ -4466,7 +5612,13 @@ function
 
 &gt; rev_str(&quot;dlrow olleh&quot;)
 &quot;hello world&quot;
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-thread'
+      data-meta-type='var'
+      data-meta-name='thread'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-chain">chain</h3>
 <p><code>(list fs) -&gt; function</code></p>
 <p>Given a list of functions <code>fs</code>, returns a composite function that calls all functions in <code>fs</code> in order.</p>
@@ -4478,7 +5630,13 @@ function
 
 &gt; f(1)  # (1+10)*2
 22
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-chain'
+      data-meta-type='var'
+      data-meta-name='chain'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-compose">compose</h3>
 <p><code>(list fs) -&gt; function</code></p>
 <p>Given a list of functions <code>fs</code>, returns a composite function that calls all functions in <code>fs</code> in reverse order, consistent
@@ -4491,7 +5649,13 @@ function
 
 &gt; f(1)  # (1*2)+10
 12
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-compose'
+      data-meta-type='var'
+      data-meta-name='compose'
+	    data-meta-tags='fun'
+    ></div>
 <h3 id="fun-signature">signature</h3>
 <p><code>(function f) -&gt; dict</code></p>
 <p>Returns a <code>dict</code> describing the signature of <code>f</code>.</p>
@@ -4574,11 +5738,23 @@ function
   }]
 }
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='fun-signature'
+      data-meta-type='var'
+      data-meta-name='signature'
+	    data-meta-tags='fun'
+    ></div>
 <h2 id="locale">library locale</h2>
 <p>The locale library provides information about available localization conventions. Localization conventions
 are relevant in the context of number and date formatting as well as string sorting.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='locale'
+      data-meta-type='library'
+      data-meta-name='locale'
+	    data-meta-tags=''
+    ></div>
 <h3 id="locale-languages">languages</h3>
 <p><code>(lang='en-US') -&gt; dict</code></p>
 <p>Returns a dict of language tags (BCP 47) to human readable names of all available languages.
@@ -4600,7 +5776,13 @@ The human readable names are given in the language tag passed as the locale para
   :`zh-TW` &quot;chinois (Taiwan)&quot;,
   ...
 }
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='locale-languages'
+      data-meta-type='var'
+      data-meta-name='languages'
+	    data-meta-tags='locale'
+    ></div>
 <h3 id="locale-decimal_symbols">decimal_symbols</h3>
 <p><code>(lang='en-US') -&gt; dict</code></p>
 <p>Returns a dict containing the decimal symbols used for number representation in given language.</p>
@@ -4677,10 +5859,22 @@ The human readable names are given in the language tag passed as the locale para
   :NaN &quot;�&quot;
 }
 
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='locale-decimal_symbols'
+      data-meta-type='var'
+      data-meta-name='decimal_symbols'
+	    data-meta-tags='locale'
+    ></div>
 <h2 id="bin">library bin</h2>
 <p>The bin library provides functions that operate on binary data.</p>
-<!-- raw HTML omitted -->
+<div
+      data-meta='true'
+      data-meta-id='bin'
+      data-meta-type='library'
+      data-meta-name='bin'
+	    data-meta-tags=''
+    ></div>
 <h3 id="bin-concat">concat</h3>
 <p><code>(list xs) -&gt; binary</code></p>
 <p>Expects a list of binary values. Returns a binary that contains all bytes of all binaries in given order.</p>
@@ -4692,7 +5886,13 @@ Returns <code>nil</code> if any element of <code>xs</code> is <code>nil</code>.<
 
 &gt; bin.concat([nil, 0b01])
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-concat'
+      data-meta-type='var'
+      data-meta-name='concat'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-size">size</h3>
 <p><code>(binary x) -&gt; long</code></p>
 <p>Returns the number of bytes in <code>x</code>.</p>
@@ -4705,7 +5905,13 @@ nil
 
 &gt; bin.size(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-size'
+      data-meta-type='var'
+      data-meta-name='size'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-byte_at">byte_at</h3>
 <p><code>(binary x, long i) -&gt; long</code></p>
 <p>Returns the byte at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 255.</p>
@@ -4719,7 +5925,13 @@ Returns <code>nil</code> if <code>i&lt;0</code> or <code>i&gt;=size(x)</code>.</
 
 &gt; bin.byte_at(0b, 10)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-byte_at'
+      data-meta-type='var'
+      data-meta-name='byte_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-word_at">word_at</h3>
 <p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
 <p>Returns the word (16-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 65535.</p>
@@ -4740,7 +5952,13 @@ Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+1&gt;=size(x)</code>.
 
 &gt; bin.word_at(0bFF, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-word_at'
+      data-meta-type='var'
+      data-meta-name='word_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-dword_at">dword_at</h3>
 <p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
 <p>Returns the double-word (32-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a long between 0 and 4294967295.</p>
@@ -4755,7 +5973,13 @@ Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+3&gt;=size(x)</code>.
 
 &gt; bin.dword_at(0bFF, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-dword_at'
+      data-meta-type='var'
+      data-meta-name='dword_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-long_at">long_at</h3>
 <p><code>(binary x, long i, boolean big_endian=false) -&gt; long</code></p>
 <p>Returns the long (64-bit integer value) at byte offset <code>i</code> in binary <code>x</code> as a signed long.</p>
@@ -4773,7 +5997,13 @@ Returns <code>nil</code> if <code>i&lt;0</code> or <code>i+7&gt;=size(x)</code>.
 
 &gt; bin.long_at(0bFF, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-long_at'
+      data-meta-type='var'
+      data-meta-name='long_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_byte">of_byte</h3>
 <p><code>(long x, boolean signed=false) -&gt; binary</code></p>
 <p>Returns the binary representation of the given byte.</p>
@@ -4797,7 +6027,13 @@ If signed is <code>false</code>, <code>x</code> must be a value between <code>0<
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: unsigned byte value out of range: -1
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_byte'
+      data-meta-type='var'
+      data-meta-name='of_byte'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_word">of_word</h3>
 <p><code>(long x, boolean signed=false, boolean big_endian=false) -&gt; binary</code></p>
 <p>Returns the binary representation of the given 2-byte word.</p>
@@ -4827,7 +6063,13 @@ Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: signed word value out of range: 65535
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_word'
+      data-meta-type='var'
+      data-meta-name='of_word'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_dword">of_dword</h3>
 <p><code>(long x, boolean signed=false, boolean big_endian=false) -&gt; binary</code></p>
 <p>Returns the binary representation of the given 4-byte dword.</p>
@@ -4857,7 +6099,13 @@ Throws an error if <code>big_endian</code> is <code>nil</code>.</p>
 ERROR:
   code: ILLEGAL_ARGUMENT
   message: signed dword value out of range: 4294967295
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_dword'
+      data-meta-type='var'
+      data-meta-name='of_dword'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_long">of_long</h3>
 <p><code>(long x, boolean big_endian=false) -&gt; binary</code></p>
 <p>Returns the 64-bit binary representation of the given long value.</p>
@@ -4876,7 +6124,13 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 
 &gt; bin.of_long(-1)
 0bffffffffffffffff
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_long'
+      data-meta-type='var'
+      data-meta-name='of_long'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_float">of_float</h3>
 <p><code>(double x, boolean big_endian=false) -&gt; binary</code></p>
 <p>Returns the 32-bit binary representation of the float closest to the given double value.</p>
@@ -4898,7 +6152,13 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 
 &gt; bin.of_float(math.pi)
 0bdb0f4940
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_float'
+      data-meta-type='var'
+      data-meta-name='of_float'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-of_double">of_double</h3>
 <p><code>(double x, boolean big_endian=false) -&gt; binary</code></p>
 <p>Returns the 64-bit binary representation of the given double value.</p>
@@ -4920,7 +6180,13 @@ If <code>big_endian</code> is <code>false</code>, the returned binary starts wit
 
 &gt; bin.of_double(math.pi)
 0b182d4454fb210940
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-of_double'
+      data-meta-type='var'
+      data-meta-name='of_double'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-float_at">float_at</h3>
 <p><code>(binary x, long i, boolean big_endian=false) -&gt; double</code></p>
 <p>Returns the float (32-bit floating point value) at byte offset <code>i</code> in binary <code>x</code> as a double.</p>
@@ -4947,7 +6213,13 @@ NaN
 
 &gt; bin.float_at(0bFF, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-float_at'
+      data-meta-type='var'
+      data-meta-name='float_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-double_at">double_at</h3>
 <p><code>(binary x, long i, boolean big_endian=false) -&gt; double</code></p>
 <p>Returns the double (64-bit floating point value) at byte offset <code>i</code> in binary <code>x</code> as a double.</p>
@@ -4977,7 +6249,13 @@ NaN
 
 &gt; bin.double_at(0bFF, 0)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-double_at'
+      data-meta-type='var'
+      data-meta-name='double_at'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-slice">slice</h3>
 <p><code>(binary x, long start=0, long end=nil) -&gt; list</code></p>
 <p>Returns a range of bytes from <code>x</code> starting at byte offset <code>start</code> inclusively, and extending to byte offset <code>end</code> exclusively.
@@ -5000,7 +6278,13 @@ Returns a zero length binary if <code>start &gt;= end</code>.</p>
 
 &gt; bin.slice(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-slice'
+      data-meta-type='var'
+      data-meta-name='slice'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-to_hex">to_hex</h3>
 <p><code>(binary x) -&gt; string</code></p>
 <p>Returns a hexadecimal string representing the binary value <code>x</code>.</p>
@@ -5013,7 +6297,13 @@ nil
 
 &gt; bin.to_hex(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-to_hex'
+      data-meta-type='var'
+      data-meta-name='to_hex'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-from_hex">from_hex</h3>
 <p><code>(string x) -&gt; binary</code></p>
 <p>Returns the binary value represented by given hexadecimal string <code>x</code>.</p>
@@ -5027,7 +6317,13 @@ nil
 
 &gt; bin.from_hex(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-from_hex'
+      data-meta-type='var'
+      data-meta-name='from_hex'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-base64_encode">base64_encode</h3>
 <p><code>(binary x, string variant='basic') -&gt; string</code></p>
 <p>Returns the base64 string representation of given binary data <code>x</code>.</p>
@@ -5047,7 +6343,13 @@ and uses a carriage return <code>\r</code> followed immediately by a linefeed <c
 
 &gt; bin.base64_encode(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-base64_encode'
+      data-meta-type='var'
+      data-meta-name='base64_encode'
+	    data-meta-tags='bin'
+    ></div>
 <h3 id="bin-base64_decode">base64_decode</h3>
 <p><code>(string x, string variant='basic') -&gt; binary</code></p>
 <p>Returns the bytes encoded by given base64 string <code>x</code>.</p>
@@ -5069,7 +6371,13 @@ Throws an error if <code>variant</code> is <code>basic</code> or <code>url</code
 
 &gt; bin.base64_decode(nil)
 nil
-</code></pre><!-- raw HTML omitted -->
+</code></pre><div
+      data-meta='true'
+      data-meta-id='bin-base64_decode'
+      data-meta-type='var'
+      data-meta-name='base64_decode'
+	    data-meta-tags='bin'
+    ></div>
 
         
 <footer>

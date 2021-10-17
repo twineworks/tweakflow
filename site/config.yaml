@@ -3,6 +3,10 @@ title: "tweakflow - safe embeddable scripting language for the JVM"
 theme: "hugo-tweakflow"
 uglyurls: true
 relativeURLs: true
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
 menu:
 
   mainleft:
