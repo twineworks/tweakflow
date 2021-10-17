@@ -164,42 +164,39 @@
           <div class="scrollable-parent">
             <div class="scrollable-content">
               <nav id="TableOfContents">
-  <ul>
-    <li><a href="#requirements">Requirements</a></li>
-    <li><a href="#getting-tweakflow">Getting tweakflow</a></li>
-    <li><a href="#tweakflow-values">Tweakflow values</a>
-      <ul>
-        <li><a href="#creating-values">Creating values</a></li>
-        <li><a href="#inspecting-values">Inspecting values</a></li>
-      </ul>
-    </li>
-    <li><a href="#evaluating-expressions">Evaluating expressions</a>
-      <ul>
-        <li><a href="#examples">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#evaluating-a-set-of-variables">Evaluating a set of variables</a>
-      <ul>
-        <li><a href="#examples-1">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#evaluating-modules">Evaluating modules</a>
-      <ul>
-        <li><a href="#examples-2">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#calling-user-functions">Calling user functions</a>
-      <ul>
-        <li><a href="#examples-3">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#error-handling">Error handling</a>
-      <ul>
-        <li><a href="#examples-4">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#limiting-evaluation-time">Limiting evaluation time</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#getting-tweakflow">Getting tweakflow</a></li>
+<li><a href="#tweakflow-values">Tweakflow values</a>
+<ul>
+<li><a href="#creating-values">Creating values</a></li>
+<li><a href="#inspecting-values">Inspecting values</a></li>
+</ul></li>
+<li><a href="#evaluating-expressions">Evaluating expressions</a>
+<ul>
+<li><a href="#examples">Examples</a></li>
+</ul></li>
+<li><a href="#evaluating-a-set-of-variables">Evaluating a set of variables</a>
+<ul>
+<li><a href="#examples-1">Examples</a></li>
+</ul></li>
+<li><a href="#evaluating-modules">Evaluating modules</a>
+<ul>
+<li><a href="#examples-2">Examples</a></li>
+</ul></li>
+<li><a href="#calling-user-functions">Calling user functions</a>
+<ul>
+<li><a href="#examples-3">Examples</a></li>
+</ul></li>
+<li><a href="#error-handling">Error handling</a>
+<ul>
+<li><a href="#examples-4">Examples</a></li>
+</ul></li>
+<li><a href="#limiting-evaluation-time">Limiting evaluation time</a></li>
+</ul></li>
+</ul>
 </nav>
             </div>
           </div>
@@ -207,47 +204,62 @@
       </aside>
       
       <main class="single-content " role="main">
-        <h2 id="requirements">Requirements</h2>
+        
+
+<h2 id="requirements">Requirements</h2>
+
 <p>Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11 and 13.</p>
+
 <h2 id="getting-tweakflow">Getting tweakflow</h2>
+
 <p>You can get the tweakflow jar from the <a href="https://github.com/twineworks/tweakflow/releases">releases page</a> or from maven central:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
     <span style="color:#f92672">&lt;groupId&gt;</span>com.twineworks<span style="color:#f92672">&lt;/groupId&gt;</span>
     <span style="color:#f92672">&lt;artifactId&gt;</span>tweakflow<span style="color:#f92672">&lt;/artifactId&gt;</span>
     <span style="color:#f92672">&lt;version&gt;</span>1.3.3<span style="color:#f92672">&lt;/version&gt;</span>
-<span style="color:#f92672">&lt;/dependency&gt;</span>
-</code></pre></div><h2 id="tweakflow-values">Tweakflow values</h2>
+<span style="color:#f92672">&lt;/dependency&gt;</span></code></pre></div>
+<h2 id="tweakflow-values">Tweakflow values</h2>
+
 <p>Whenever the application is exchanging data with tweakflow code, it does so through immutable value objects of class <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a>. Variable values, function parameters, function return values, everything is a value in tweakflow.</p>
+
 <h3 id="creating-values">Creating values</h3>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Values.java">Values</a> class provides static singleton members for certain constants and factory methods for creating values of all types.</p>
+
 <p>The <code>nil</code> value is represented by the static singleton value <code>Values.NIL</code>. Boolean <code>true</code> and <code>false</code> are represented by singletons <code>Values.TRUE</code> and <code>Values.FALSE</code>.</p>
+
 <p>For all other cases Values provides the overloaded static factory method <code>make</code>.</p>
+
 <p>Creating strings, longs, and doubles is straightforward. Just pass a String, long or double to the overloaded <code>Values.make</code> factory method.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Value a <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;foo&#34;</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// a string
 </span><span style="color:#75715e"></span>Value b <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>      <span style="color:#75715e">// a long
-</span><span style="color:#75715e"></span>Value c <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">2d</span><span style="color:#f92672">);</span>   <span style="color:#75715e">// a double
-</span></code></pre></div><p>To create a datetime, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DateTimeValue.java">DateTimeValue</a> using one of its constructors, and pass that to <code>Values.make</code>.</p>
+</span><span style="color:#75715e"></span>Value c <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">2d</span><span style="color:#f92672">);</span>   <span style="color:#f92672">//</span> a <span style="color:#66d9ef">double</span></code></pre></div>
+<p>To create a datetime, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DateTimeValue.java">DateTimeValue</a> using one of its constructors, and pass that to <code>Values.make</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Value now <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>
-  <span style="color:#66d9ef">new</span> DateTimeValue<span style="color:#f92672">(</span>ZonedDateTime<span style="color:#f92672">.</span><span style="color:#a6e22e">now</span><span style="color:#f92672">()));</span> <span style="color:#75715e">// a datetime
-</span></code></pre></div><p>To create a dict, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DictValue.java">DictValue</a>, which is a persistent data structure mapping string keys to value objects. Remember that DictValue objects are immutable and all manipulation methods yield a new object. Pass a DictValue to <code>Values.make</code>, to create a tweakflow dict.</p>
+  <span style="color:#66d9ef">new</span> DateTimeValue<span style="color:#f92672">(</span>ZonedDateTime<span style="color:#f92672">.</span><span style="color:#a6e22e">now</span><span style="color:#f92672">()));</span> <span style="color:#f92672">//</span> a datetime</code></pre></div>
+<p>To create a dict, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/DictValue.java">DictValue</a>, which is a persistent data structure mapping string keys to value objects. Remember that DictValue objects are immutable and all manipulation methods yield a new object. Pass a DictValue to <code>Values.make</code>, to create a tweakflow dict.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Value dict <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DictValue<span style="color:#f92672">()</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;foo&#34;</span><span style="color:#f92672">,</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">))</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bar&#34;</span><span style="color:#f92672">,</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>42L<span style="color:#f92672">)));</span>
-</code></pre></div><p>To create a list, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ListValue.java">ListValue</a>, which is a persistent data structure. Remember that ListValue objects are immutable and all manipulation methods yield a new object. Pass a ListValue to <code>Values.make</code>, to create a tweakflow list.</p>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bar&#34;</span><span style="color:#f92672">,</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>42L<span style="color:#f92672">)));</span></code></pre></div>
+<p>To create a list, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ListValue.java">ListValue</a>, which is a persistent data structure. Remember that ListValue objects are immutable and all manipulation methods yield a new object. Pass a ListValue to <code>Values.make</code>, to create a tweakflow list.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Values list <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ListValue<span style="color:#f92672">()</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">))</span>
-    <span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;world&#34;</span><span style="color:#f92672">)));</span>
-</code></pre></div><p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#regex-matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;world&#34;</span><span style="color:#f92672">)));</span></code></pre></div>
+<p>To create a function, first create a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunctionValue.java">UserFunctionValue</a> which in turn consists of a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/FunctionSignature.java">FunctionSignature</a> and an implementation object implementing the  <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/UserFunction.java">UserFunction</a> tag interface as well as the arity interface matching the function&rsquo;s parameter count. See <a href="./reference.html#functions-in-java">Functions in Java</a> for details, and the implementation of the standard library function <a href="./modules/std.html#regex-matching">regex.matching</a> for an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/std/Regex.java#L62">example</a>, which returns a function to the caller.</p>
+
 <p>The following snippet creates a function that takes one string parameter named <code>x</code> with default value <code>&quot;hello&quot;</code>, and returns a boolean.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>
     <span style="color:#66d9ef">new</span> UserFunctionValue<span style="color:#f92672">(</span>
         <span style="color:#66d9ef">new</span> FunctionSignature<span style="color:#f92672">(</span>Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">singletonList</span><span style="color:#f92672">(</span>
             <span style="color:#66d9ef">new</span> FunctionParameter<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;x&#34;</span><span style="color:#f92672">,</span> Types<span style="color:#f92672">.</span><span style="color:#a6e22e">STRING</span><span style="color:#f92672">,</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">))),</span>
             Types<span style="color:#f92672">.</span><span style="color:#a6e22e">BOOLEAN</span><span style="color:#f92672">),</span>
-        <span style="color:#66d9ef">new</span> MyAwesomeImplementation<span style="color:#f92672">()));</span> <span style="color:#75715e">// implements UserFunction and Arity1UserFunction
-</span></code></pre></div><h3 id="inspecting-values">Inspecting values</h3>
+        <span style="color:#66d9ef">new</span> MyAwesomeImplementation<span style="color:#f92672">()));</span> <span style="color:#f92672">//</span> <span style="color:#66d9ef">implements</span> UserFunction and Arity1UserFunction</code></pre></div>
+<h3 id="inspecting-values">Inspecting values</h3>
+
 <p>A <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/Value.java">Value</a> object reports its <code>type</code>, which is one of the singleton objects on <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/types/Types.java">Types</a>. It also has boolean <code>is{TypeName}</code> methods to determine the type.</p>
+
 <p>Depending on the type of the value, call the method named after the type to retrieve the contained payload object. Strings are retrieved using <code>string</code>, lists are retrieved using <code>list</code>, and so on. Longs and doubles are retrieved using <code>longNum</code> and <code>doubleNum</code> respectively. Method names <code>long</code> and <code>double</code> are not allowed in Java.</p>
+
 <p>It is an error to call the wrong payload function for the type of the value. Calling <code>string</code> for a value of type <code>long</code> will result in a runtime exception.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Value v <span style="color:#f92672">=</span> obtainSomeValue<span style="color:#f92672">();</span>
 
@@ -261,8 +273,8 @@
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
   <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> AssertionError<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;I need a list or a dict&#34;</span><span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>To get the literal notation of a tweakflow value, use <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ValueInspector.java">ValueInspector.inspect</a>.</p>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>To get the literal notation of a tweakflow value, use <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/values/ValueInspector.java">ValueInspector.inspect</a>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String dump <span style="color:#f92672">=</span> ValueInspector<span style="color:#f92672">.</span><span style="color:#a6e22e">inspect</span><span style="color:#f92672">(</span>
     Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ListValue<span style="color:#f92672">()</span>
         <span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">))</span>
@@ -271,12 +283,15 @@
 
 System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>dump<span style="color:#f92672">);</span>
 
-<span style="color:#75715e">// outputs: [&#34;hello&#34;, &#34;world&#34;]
-</span></code></pre></div><h2 id="evaluating-expressions">Evaluating expressions</h2>
+<span style="color:#f92672">//</span> outputs<span style="color:#f92672">:</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;world&#34;</span><span style="color:#f92672">]</span></code></pre></div>
+<h2 id="evaluating-expressions">Evaluating expressions</h2>
+
 <p>The simplest case of embedding tweakflow is to evaluate independent, self-contained expressions in an empty scope. This is just a call to <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/TweakFlow.java">TweakFlow</a>.evaluate.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TweakFlow<span style="color:#f92672">.</span><span style="color:#a6e22e">evaluate</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;1+2&#34;</span><span style="color:#f92672">);</span> <span style="color:#75715e">// returns 3
-</span></code></pre></div><p>The scope is empty, which means there is no access to any modules including the standard library. The expression must be entirely self-contained.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TweakFlow<span style="color:#f92672">.</span><span style="color:#a6e22e">evaluate</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;1+2&#34;</span><span style="color:#f92672">);</span> <span style="color:#f92672">//</span> returns 3</code></pre></div>
+<p>The scope is empty, which means there is no access to any modules including the standard library. The expression must be entirely self-contained.</p>
+
 <p>To give the expression some context, but not go all the way to maintaining a complete runtime, an application might embed a user expression into a let construct that defines some variables.</p>
+
 <p>The following snippet puts variables <code>first_name</code> and <code>last_name</code> into scope. The expression is supposed to evaluate to a greeting line.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// exp stands in for a user-supplied expression
 </span><span style="color:#75715e"></span>String exp <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;if (first_name &amp;&amp; last_name) then \n&#34;</span> <span style="color:#f92672">+</span>
@@ -299,10 +314,13 @@ System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span>
       <span style="color:#e6db74">&#34;} &#34;</span><span style="color:#f92672">+</span>exp<span style="color:#f92672">;</span>
 
   TweakFlow<span style="color:#f92672">.</span><span style="color:#a6e22e">evaluate</span><span style="color:#f92672">(</span>code<span style="color:#f92672">);</span> <span style="color:#75715e">// returns &#34;Dear Mary Poppins&#34;
-</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-</code></pre></div><h3 id="examples">Examples</h3>
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span></code></pre></div>
+<h3 id="examples">Examples</h3>
+
 <p>See these <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding/EvalExpressionInEmptyScopeTest.java">tests</a> for working examples of expression evaluation.</p>
+
 <h2 id="evaluating-a-set-of-variables">Evaluating a set of variables</h2>
+
 <p>If the application&rsquo;s use-case is to have users define a table of variables, then the <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/util/VarTable.java">VarTable</a> helper class supports implementing it efficiently. It creates an in-memory module with a library containing user variables, compiles to a runtime, and relates any compilation error to the offending variable. The application can provide a prologue with any imports and aliases it wants to be available in scope.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">VarTable table <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> VarTable<span style="color:#f92672">.</span><span style="color:#a6e22e">Builder</span><span style="color:#f92672">()</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">setPrologue</span><span style="color:#f92672">(</span>
@@ -319,14 +337,18 @@ System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">addVar</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;avatar&#34;</span><span style="color:#f92672">,</span> avatarExp<span style="color:#f92672">)</span>
     <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
 
-Runtime runtime <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span><span style="color:#a6e22e">compile</span><span style="color:#f92672">();</span>
-</code></pre></div><h3 id="examples-1">Examples</h3>
+Runtime runtime <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span><span style="color:#a6e22e">compile</span><span style="color:#f92672">();</span></code></pre></div>
+<h3 id="examples-1">Examples</h3>
+
 <p>See the class <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/util/VarTableTest.java">test</a> for examples  demonstrating usage and error handling.</p>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java">LazilyProvidedVars</a> sample compiles a var table and provides only variables that are actually referenced.</p>
+
 <p>There is a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/VarTableEvaluation.java">demo application</a> which uses a var table. It asks the user for some expressions and verifies them.</p>
+
 <p>You can run it using:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">java -cp tweakflow-1.3.3.jar com.twineworks.tweakflow.examples.VarTableEvaluation
-</code></pre></div><p>An invocation might look like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">java -cp tweakflow-1.3.3.jar com.twineworks.tweakflow.examples.VarTableEvaluation</code></pre></div>
+<p>An invocation might look like:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Given a rectangle with sides of length a and b.
 What is the formula to calculate the circumference?
 circumference:
@@ -335,14 +357,17 @@ And the formula for calculating surface area?
 area: a*b
 Thanks. Checking answer...
 
-Congratulations. The formulas seem to be correct.
-</code></pre></div><h2 id="evaluating-modules">Evaluating modules</h2>
+Congratulations. The formulas seem to be correct.</code></pre></div>
+<h2 id="evaluating-modules">Evaluating modules</h2>
+
 <p>If users need the standard library, or need the ability to define variables, libraries, or even modules themselves, then the application must generate and compile the set of modules involved.</p>
+
 <p>The result is a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/runtime/Runtime.java">runtime</a> object that provides handles to all compiled modules, libraries, and variables. The application then supplies values for any variables it <a href="./reference.html#variables">provides</a>, and evaluates any variables it is interested in. The host application can determine which provided variables are actually referenced, so it can omit providing values that are not needed.</p>
+
 <p>For the purposes of discussion, consider the following module.</p>
 <pre><code class="language-tweakflow" data-lang="tweakflow"># user_module.tf
 
-import core, data, math, strings from 'std';
+import core, data, math, strings from &#39;std&#39;;
 
 library customer {
   provided first_name;
@@ -351,15 +376,17 @@ library customer {
 
 library user {
   greeting: if customer.first_name &amp;&amp; customer.last_name
-              &quot;Hello #{customer.first_name} #{customer.last_name}&quot;
+              &#34;Hello #{customer.first_name} #{customer.last_name}&#34;
             else
-              &quot;Dear anonymous&quot;;
-}
-</code></pre><p>The steps to compile a set of modules are:</p>
+              &#34;Dear anonymous&#34;;
+}</code></pre>
+<p>The steps to compile a set of modules are:</p>
+
 <ul>
 <li>Set up a load path so tweakflow knows where to look for imported modules.</li>
 <li>Compile the modules. Any imports will be searched on the load path.</li>
 </ul>
+
 <p>A module might be a resource, a file, or an in-memory object. The load path contains <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/load/loadpath/LoadPathLocation.java">LoadPathLocations</a> specifying where tweakflow will look for modules. Assuming user_module.tf was generated from user input and is just a string, the application must put it into a memory location, and place that location into the load path.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">MemoryLocation memLocation <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MemoryLocation<span style="color:#f92672">.</span><span style="color:#a6e22e">Builder</span><span style="color:#f92672">()</span>
             <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;user_module.tf&#34;</span><span style="color:#f92672">,</span> moduleText<span style="color:#f92672">)</span>
@@ -370,12 +397,13 @@ LoadPath loadPath <span style="color:#f92672">=</span> <span style="color:#66d9e
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>memLocation<span style="color:#f92672">)</span> <span style="color:#75715e">// memory location with &#34;user_module.tf&#34;
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
 
-Runtime runtime <span style="color:#f92672">=</span> TweakFlow<span style="color:#f92672">.</span><span style="color:#a6e22e">compile</span><span style="color:#f92672">(</span>loadPath<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;user_module.tf&#34;</span><span style="color:#f92672">);</span>
-</code></pre></div><p>To interact with a compiled runtime:</p>
+Runtime runtime <span style="color:#f92672">=</span> TweakFlow<span style="color:#f92672">.</span><span style="color:#a6e22e">compile</span><span style="color:#f92672">(</span>loadPath<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;user_module.tf&#34;</span><span style="color:#f92672">);</span></code></pre></div>
+<p>To interact with a compiled runtime:</p>
+
 <ul>
 <li>Supply values for any variables declared as <code>provided</code>.</li>
-<li>Evaluate everything, or selectively just specific modules, libraries, or vars.</li>
-</ul>
+
+<li><p>Evaluate everything, or selectively just specific modules, libraries, or vars.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// get the module out of the runtime
 </span><span style="color:#75715e"></span>Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">Module</span> module <span style="color:#f92672">=</span> runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">getModules</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">unitKey</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;user_module.tf&#34;</span><span style="color:#f92672">));</span>
 
@@ -392,8 +420,11 @@ lastName<span style="color:#f92672">.</span><span style="color:#a6e22e">update</
 </span><span style="color:#75715e"></span>greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">evaluate</span><span style="color:#f92672">();</span>
 
 <span style="color:#75715e">// retrieve whatever greeting evaluated to
-</span><span style="color:#75715e"></span>Value userGreeting <span style="color:#f92672">=</span> greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
-</code></pre></div><p>The application can continue updating provided variables and any dependent variables are re-evaluated automatically.</p>
+</span><span style="color:#75715e"></span>Value userGreeting <span style="color:#f92672">=</span> greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span></code></pre></div></li>
+</ul>
+
+<p>The application can continue updating provided variables and any dependent variables are re-evaluated automatically.</p>
+
 <p>Every variable update triggers a re-evaluation of dependent variables. The runtime object has <code>updateVars</code> methods that atomically update multiple variables at once, which reduces unnecessary evaluation overhead, and avoids temporary inconsistencies.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Customer c <span style="color:#f92672">:</span> myCustomerCollection<span style="color:#f92672">){</span>
   runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">updateVars</span><span style="color:#f92672">(</span>
@@ -401,12 +432,17 @@ lastName<span style="color:#f92672">.</span><span style="color:#a6e22e">update</
     lastName<span style="color:#f92672">,</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">getLastName</span><span style="color:#f92672">())</span>
   <span style="color:#f92672">);</span>
   String userGreeting <span style="color:#f92672">=</span> greeting<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">().</span><span style="color:#a6e22e">string</span><span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="examples-2">Examples</h3>
+<span style="color:#f92672">}</span></code></pre></div>
+<h3 id="examples-2">Examples</h3>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/ModuleEvaluation.java">ModuleEvaluation</a> sample compiles and calls into a set of modules.</p>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/LazilyProvidedVars.java">LazilyProvidedVars</a> sample compiles a var table and provides only variables that are actually referenced by user-supplied expressions.</p>
+
 <p>This <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding/EvalProvidedVarsTest.java">unit test</a> demonstrates supplying values for provided variables.</p>
+
 <h2 id="calling-user-functions">Calling user functions</h2>
+
 <p>Users can provide tweakflow functions to the host application. The application can call them through the runtime using <code>call</code> on a runtime var object that evaluated to a function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// get a handle on time_format.format which evaluated to a function
 </span><span style="color:#75715e"></span>Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">Var</span> format <span style="color:#f92672">=</span> module<span style="color:#f92672">.</span><span style="color:#a6e22e">getLibrary</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;time_format&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">getVar</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;format&#34;</span><span style="color:#f92672">);</span>
@@ -415,30 +451,40 @@ lastName<span style="color:#f92672">.</span><span style="color:#a6e22e">update</
 </span><span style="color:#75715e"></span>Value now <span style="color:#f92672">=</span> Values<span style="color:#f92672">.</span><span style="color:#a6e22e">make</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DateTimeValue<span style="color:#f92672">(</span>ZonedDateTime<span style="color:#f92672">.</span><span style="color:#a6e22e">now</span><span style="color:#f92672">()));</span>
 
 <span style="color:#75715e">// result of calling format with now as argument
-</span><span style="color:#75715e"></span>String formattedDate <span style="color:#f92672">=</span> format<span style="color:#f92672">.</span><span style="color:#a6e22e">call</span><span style="color:#f92672">(</span>now<span style="color:#f92672">).</span><span style="color:#a6e22e">string</span><span style="color:#f92672">();</span>
-</code></pre></div><p>In case the application wants to call a function in a tight loop, it is more efficient to create a callsite first, which can cache some information involved in calling a function.</p>
+</span><span style="color:#75715e"></span>String formattedDate <span style="color:#f92672">=</span> format<span style="color:#f92672">.</span><span style="color:#a6e22e">call</span><span style="color:#f92672">(</span>now<span style="color:#f92672">).</span><span style="color:#a6e22e">string</span><span style="color:#f92672">();</span></code></pre></div>
+<p>In case the application wants to call a function in a tight loop, it is more efficient to create a callsite first, which can cache some information involved in calling a function.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// some constant overhead creating the callsite
 </span><span style="color:#75715e"></span>Arity1CallSite callSite <span style="color:#f92672">=</span> format<span style="color:#f92672">.</span><span style="color:#a6e22e">arity1CallSite</span><span style="color:#f92672">();</span>
 
 <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;</span>1000<span style="color:#f92672">;</span>i<span style="color:#f92672">++){</span>
   <span style="color:#75715e">// less overhead per call when performing multiple calls
 </span><span style="color:#75715e"></span>  System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;var callsite: &#34;</span><span style="color:#f92672">+</span>callSite<span style="color:#f92672">.</span><span style="color:#a6e22e">call</span><span style="color:#f92672">(</span>now<span style="color:#f92672">).</span><span style="color:#a6e22e">string</span><span style="color:#f92672">());</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>If the function value is not the current value of a variable, but has been obtained by the application in some other way, there is no var handle to relate the call back into the runtime. In these cases the application can obtain a call context from the runtime using <code>createCallContext</code> to call into any function value, regardless of its source.</p>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>If the function value is not the current value of a variable, but has been obtained by the application in some other way, there is no var handle to relate the call back into the runtime. In these cases the application can obtain a call context from the runtime using <code>createCallContext</code> to call into any function value, regardless of its source.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Value f <span style="color:#f92672">=</span> getSomeFunctionValue<span style="color:#f92672">();</span>
 <span style="color:#75715e">// calling a function: variant 3, use runtime call context
 </span><span style="color:#75715e"></span>CallContext callContext <span style="color:#f92672">=</span> runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">createCallContext</span><span style="color:#f92672">();</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;runtime call context: &#34;</span><span style="color:#f92672">+</span> callContext<span style="color:#f92672">.</span><span style="color:#a6e22e">call</span><span style="color:#f92672">(</span>f<span style="color:#f92672">,</span> now<span style="color:#f92672">));</span>
-</code></pre></div><h3 id="examples-3">Examples</h3>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;runtime call context: &#34;</span><span style="color:#f92672">+</span> callContext<span style="color:#f92672">.</span><span style="color:#a6e22e">call</span><span style="color:#f92672">(</span>f<span style="color:#f92672">,</span> now<span style="color:#f92672">));</span></code></pre></div>
+<h3 id="examples-3">Examples</h3>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/CallingFunctions.java">CallingFunctions</a> sample contains demonstrations of all above techniques.</p>
+
 <h2 id="error-handling">Error handling</h2>
+
 <p>Tweakflow throws <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangException.java">LangExceptions</a> whenever something goes wrong.</p>
+
 <p>There are three categories of errors that can happen: parse errors, compilation errors, and runtime errors. Parse errors indicate unrecognized syntax. Compilation errors occur when syntax is fine, but semantics are invalid. Referencing undefined variables, or defining variables more than once are common compilation errors. Runtime errors occur when tweakflow code throws errors during evaluation using the <a href="./reference.html#throwing-errors">throw</a> syntax.</p>
+
 <p>An exception holds an <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/errors/LangError.java">error code</a> and a message describing the error condition. You can get the value that was thrown by calling <code>toErrorValue</code>. Calling <code>getDigestMessage</code> returns a detailed error message that includes stack trace information. The exception usually contains a <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/lang/parse/SourceInfo.java">SourceInfo</a> object which gives the exact location of the error condition. Note however that source info may be <code>null</code>, in case the error happens in a context where no source information is available.</p>
+
 <h3 id="examples-4">Examples</h3>
+
 <p>See these <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/java/com/twineworks/tweakflow/embedding">test files</a> for examples of handling errors. Each test file contains specific tests for error handling.</p>
+
 <h2 id="limiting-evaluation-time">Limiting evaluation time</h2>
+
 <p>The host application might wish to limit the evaluation time of user code. A good way to achieve this goal is to evaluate user code in a separate thread. The tweakflow interpreter reacts to thread interruption by throwing an exception.</p>
+
 <p>The <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/examples/LimitingExecTime.java">LimitingExecTime</a> sample evaluates a set of expressions, each taking exponentially longer to evaluate than the next. Each expression is evaluated within an enforced time limit, so at some point the evaluations start timing out, and the application interrupts the evaluation thread.</p>
 
         

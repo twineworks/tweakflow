@@ -4,6 +4,7 @@ theme: "hugo-tweakflow"
 uglyurls: true
 relativeURLs: true
 markup:
+  defaultMarkdownHandler: blackfriday
   goldmark:
     renderer:
       unsafe: true
