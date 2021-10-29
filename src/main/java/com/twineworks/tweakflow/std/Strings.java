@@ -82,7 +82,8 @@ public final class Strings {
 
       int size = s.codePointCount(0, s.length());
       for (int i = 0; i < size; i++) {
-        if (!Character.isWhitespace(s.codePointAt(i))) {
+        int c = s.codePointAt(i);
+        if (!Character.isSpaceChar(c) && !Character.isWhitespace(c)) {
           return i;
         }
       }
@@ -93,7 +94,8 @@ public final class Strings {
 
       int size = s.codePointCount(0, s.length());
       for (int i = size - 1; i >= 0; i--) {
-        if (!Character.isWhitespace(s.codePointAt(i))) {
+        int c = s.codePointAt(i);
+        if (!Character.isSpaceChar(c) && !Character.isWhitespace(c)) {
           return i;
         }
       }

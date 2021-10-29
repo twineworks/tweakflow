@@ -31,5 +31,9 @@ library spec {
         expect(trim("\u3000\nfoo bar\u3000\r"), to.be("foo bar"))
       ),
 
+      it("with_nbsp_whitespace", () ->
+        expect(trim("\u202F\u00A0\nfoo bar\u2007\r"), to.be("foo bar"))
+      ),
+
   ]);
 }
