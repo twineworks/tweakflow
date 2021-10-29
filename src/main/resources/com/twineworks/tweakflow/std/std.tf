@@ -5325,6 +5325,42 @@ nil
 
 doc
 ~~~
+`(long x) -> decimal`
+
+if `x` is non-negative, returns the factorial of `x`.
+
+If `x` is `nil`, returns `nil`.
+
+Throws an error if `x` is negative.
+
+```tweakflow
+> math.factorial(0)
+1d
+
+> math.factorial(1)
+1d
+
+> math.factorial(2)
+2d
+
+> math.factorial(25)
+15511210043330985984000000d
+
+> math.factorial(nil)
+nil
+
+> math.factorial(-1)
+ERROR:
+  code: ILLEGAL_ARGUMENT
+
+```
+~~~
+
+  function factorial: (long x) -> decimal via {:class "com.twineworks.tweakflow.std.Math$factorial"};
+
+
+doc
+~~~
 `(double x) -> double`
 
 Returns the trigonometric sine of angle `x` given in radians. \

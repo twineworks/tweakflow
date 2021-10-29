@@ -736,6 +736,25 @@ public final class Math {
     }
   }
 
+  // factorial: (long n) -> decimal
+  public static final class factorial implements UserFunction, Arity1UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value n) {
+      if (n == Values.NIL) return Values.NIL;
+      long x = n.longNum();
+      if (x < 0){
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "cannot calculate factorial of negative value: "+x);
+      }
+      BigDecimal acc = BigDecimal.ONE;
+      for (long i=2;i<=x;i++){
+        acc = acc.multiply(BigDecimal.valueOf(i));
+      }
+
+      return Values.make(acc);
+    }
+  }
+
   // sin: (double x) -> double
   public static final class sin implements UserFunction, Arity1UserFunction {
 
