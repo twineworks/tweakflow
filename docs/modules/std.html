@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.3</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.4</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v1.3.3</a
+            ><b>Tweakflow</b> v1.3.4</a
           >
         </li>
         
@@ -5594,6 +5594,41 @@ nil</code></pre>
       data-meta-id='math-sqrt'
       data-meta-type='var'
       data-meta-name='sqrt'
+        data-meta-tags='math'
+    ></div>
+
+<h3 id="math-factorial">factorial</h3>
+
+<p><code>(long x) -&gt; decimal</code></p>
+
+<p>if <code>x</code> is non-negative, returns the factorial of <code>x</code>.</p>
+
+<p>If <code>x</code> is <code>nil</code>, returns <code>nil</code>.</p>
+
+<p>Throws an error if <code>x</code> is negative.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; math.factorial(0)
+1d
+
+&gt; math.factorial(1)
+1d
+
+&gt; math.factorial(2)
+2d
+
+&gt; math.factorial(25)
+15511210043330985984000000d
+
+&gt; math.factorial(nil)
+nil
+
+&gt; math.factorial(-1)
+ERROR:
+  code: ILLEGAL_ARGUMENT</code></pre>
+<div
+      data-meta='true'
+      data-meta-id='math-factorial'
+      data-meta-type='var'
+      data-meta-name='factorial'
         data-meta-tags='math'
     ></div>
 
