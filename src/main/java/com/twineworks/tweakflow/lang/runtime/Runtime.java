@@ -647,10 +647,10 @@ public class Runtime {
 
   public static class UpdateBatch {
 
-    private Var[] vars;
-    private Cell[] dependants;
-    private EvaluationContext context;
-    private Stack stack = new Stack();
+    private final Var[] vars;
+    private final Cell[] dependants;
+    private final EvaluationContext context;
+    private final Stack stack = new Stack();
 
     UpdateBatch (Var[] vars, Cell[] dependants, EvaluationContext context){
       this.vars = vars;
@@ -685,6 +685,66 @@ public class Runtime {
         Var var = vars[i];
         Value value = valueProviders[i].getValue();
         var.cell.setValue(value.castTo(var.getDeclaredType()));
+      }
+
+      for (Cell dependant : dependants) {
+        dependant.setDirty(true);
+      }
+
+    }
+  }
+
+  public static class ChangeSensitiveUpdateBatch {
+
+    private final Var[] vars;
+    private final HashSet<Cell> dependants;
+    private final EvaluationContext context;
+    private final Stack stack = new Stack();
+
+    ChangeSensitiveUpdateBatch(Var[] vars, EvaluationContext context){
+      this.vars = vars;
+      this.dependants = new HashSet<>();
+      this.context = context;
+    }
+
+    public void update(ValueProvider[] valueProviders){
+
+      dependants.clear();
+      for (int i = 0; i < valueProviders.length; i++) {
+        Var var = vars[i];
+        Value value = valueProviders[i].getValue().castTo(var.getDeclaredType());
+        Value existing = var.getValue();
+        if (!existing.equals(value)){
+          var.cell.setValue(value);
+          dependants.addAll(var.dependants);
+        }
+      }
+
+      for (Cell dependant : dependants) {
+        dependant.setDirty(true);
+      }
+
+      for (Cell dependant : dependants) {
+        if (dependant.isDirty()){
+          stack.push(new StackEntry(dependant.getSymbol().getNode(), dependant, Collections.emptyMap()));
+          Interpreter.evaluateCell(dependant, stack, context);
+          stack.pop();
+        }
+      }
+      dependants.clear();
+    }
+
+    public void set(ValueProvider[] valueProviders){
+
+      dependants.clear();
+      for (int i = 0; i < valueProviders.length; i++) {
+        Var var = vars[i];
+        Value value = valueProviders[i].getValue().castTo(var.getDeclaredType());
+        Value existing = var.getValue();
+        if (!existing.equals(value)){
+          var.cell.setValue(value);
+          dependants.addAll(var.dependants);
+        }
       }
 
       for (Cell dependant : dependants) {
@@ -1013,5 +1073,13 @@ public class Runtime {
     return new UpdateBatch(vars, dependants.toArray(new Cell[0]), getEvaluationContext());
   }
 
+  public ChangeSensitiveUpdateBatch createChangeSensitiveUpdateBatch(Runtime.Var[] vars){
+
+    for (int i = 0; i < vars.length; i++) {
+      Var var = vars[i];
+      if (!var.isProvided()) throw new UnsupportedOperationException("index: "+i+" only vars declared as provided can change.");
+    }
+    return new ChangeSensitiveUpdateBatch(vars, getEvaluationContext());
+  }
 
 }
