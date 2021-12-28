@@ -54,7 +54,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.3.4</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.4.0</a>
           </li>
         </ul>
         </nav>
@@ -103,7 +103,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v1.3.4</a
+            ><b>Tweakflow</b> v1.4.0</a
           >
         </li>
         
@@ -1949,6 +1949,87 @@ ERROR:
       data-meta-id='data-find_index'
       data-meta-type='var'
       data-meta-name='find_index'
+        data-meta-tags='data'
+    ></div>
+
+<h3 id="data-find_last">find_last</h3>
+
+<p><code>(list xs, function p) -&gt;</code></p>
+
+<p>Tests each <code>x</code> in <code>xs</code> in reverse order by passing them to predicate function <code>p</code>.</p>
+
+<p>If <code>p</code> accepts a single argument, <code>p(x)</code> is evaluated.
+If <code>p</code> accepts two arguments, <code>p(x, i)</code> is evaluated, where <code>i</code> is the index of <code>x</code> in <code>xs</code>.</p>
+
+<p>Starting from the end of the list returns the first <code>x</code> for which <code>p</code> evaluates to a value that casts to <code>boolean</code> <code>true</code>.</p>
+
+<p>Returns <code>nil</code> if there is no <code>x</code> in <code>xs</code> such that <code>p</code> evaluates to a value that casts to <code>boolean</code> <code>true</code>.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>p</code> is <code>nil</code>.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; data.find_last([1, 2, 3, 4, 5], (x) -&gt; x &lt;= 3)
+3
+
+# find last even number on an even index
+&gt; data.find_last([1, 2, 1, 7, 6, 5, 8, 4], (x, i) -&gt; (i % 2 == 0) &amp;&amp; (x % 2 == 0))
+8
+
+&gt; data.find_last([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 10)
+nil
+
+&gt; data.find_last(nil, (x) -&gt; true)
+nil
+
+&gt; data.find_last([], nil)
+  code: NIL_ERROR
+  message: predicate function cannot be nil</code></pre>
+<div
+      data-meta='true'
+      data-meta-id='data-find_last'
+      data-meta-type='var'
+      data-meta-name='find_last'
+        data-meta-tags='data'
+    ></div>
+
+<h3 id="data-find_last_index">find_last_index</h3>
+
+<p><code>(list xs, function p) -&gt; long</code></p>
+
+<p>Tests each <code>x</code> in <code>xs</code> in reverse order by passing them to predicate function <code>p</code>.</p>
+
+<p>If <code>p</code> accepts a single argument, <code>p(x)</code> is evaluated.
+If <code>p</code> accepts two arguments, <code>p(x, i)</code> is evaluated, where <code>i</code> is the index of <code>x</code> in <code>xs</code>.</p>
+
+<p>Starting from the end of the list, returns the first index for which <code>p</code> evaluates to a value that casts to <code>boolean</code> <code>true</code>.</p>
+
+<p>Returns <code>nil</code> if there is no <code>x</code> in <code>xs</code> such that <code>p</code> evaluates to a value that casts to <code>boolean</code> <code>true</code>.</p>
+
+<p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
+
+<p>Throws an error if <code>p</code> is <code>nil</code>.</p>
+<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; data.find_last_index([1, 2, 3, 4, 5], (x) -&gt; x &lt;= 3)
+2
+
+# find index of last even number on an even index
+&gt; data.find_last_index([1, 2, 1, 7, 6, 5, 8, 4], (x, i) -&gt; (i % 2 == 0) &amp;&amp; (x % 2 == 0))
+6
+
+&gt; data.find_last_index([1, 2, 3, 4, 5], (x) -&gt; x &gt;= 10)
+nil
+
+&gt; data.find_last_index(nil, (x) -&gt; true)
+nil
+
+&gt; data.find_last_index([], nil)
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil</code></pre>
+<div
+      data-meta='true'
+      data-meta-id='data-find_last_index'
+      data-meta-type='var'
+      data-meta-name='find_last_index'
         data-meta-tags='data'
     ></div>
 
