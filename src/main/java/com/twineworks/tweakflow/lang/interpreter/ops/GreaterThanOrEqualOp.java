@@ -108,6 +108,9 @@ final public class GreaterThanOrEqualOp implements ExpressionOp {
         return left.decimal().compareTo(right.decimal()) >= 0 ? Values.TRUE : Values.FALSE;
       }
     }
+    else if (leftType == Types.DATETIME && rightType == Types.DATETIME){
+      return (left.dateTime().getInstant().compareTo(right.dateTime().getInstant()) >= 0) ? Values.TRUE : Values.FALSE;
+    }
     throw new LangException(LangError.CAST_ERROR, "cannot compare types: "+leftType.name()+" and "+rightType.name(), stack, node.getSourceInfo());
 
   }

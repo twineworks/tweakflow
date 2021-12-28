@@ -9,6 +9,7 @@ library op {
   d_d: (double x, double y) -> x >= y;
   dc_dc: (decimal x, decimal y) -> x >= y;
   dt_dt: (datetime x, datetime y) -> x >= y;
+  any_any: (x, y) -> x >= y;
 }
 
 library operator_spec {
@@ -148,4 +149,8 @@ library operator_spec {
   op_dt_dt_epoch_epoch: op.dt_dt(time.epoch, time.epoch) === true;
   op_dt_dt_epoch_epoch_other_tz: op.dt_dt(time.epoch, 1970-01-01T01:00:00+01:00) === true;
   op_dt_dt_nil_nil: op.dt_dt(nil, nil) === true;
+
+  op_any_any_epoch_before: op.any_any(time.epoch, 1970-01-01T00:00:01) === false;
+  op_any_any_epoch_after: op.any_any(time.epoch, 1969-01-01T00:00:00) === true;
+  op_any_any_epoch_epoch: op.any_any(time.epoch, time.epoch) === true;
 }
