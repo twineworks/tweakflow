@@ -1174,6 +1174,45 @@ public final class Data {
     }
   }
 
+  // function find_last: (list xs, function p)
+  public static final class findLast implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value p) {
+
+      if (xs == Values.NIL) return Values.NIL;
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = list.size() - 1; i >= 0; i--) {
+          Value x = list.get(i);
+          if (pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN) == Values.TRUE) {
+            return x;
+          }
+        }
+      }
+      else {
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = list.size() - 1; i >= 0; i--) {
+          Value x = list.get(i);
+          if (pcs.call(x).castTo(Types.BOOLEAN) == Values.TRUE) {
+            return x;
+          }
+        }
+      }
+
+      return Values.NIL;
+    }
+  }
+
   // function find_index: (list xs, function p) -> long
   public static final class findIndex implements UserFunction, Arity2UserFunction {
 
@@ -1205,6 +1244,51 @@ public final class Data {
       else{
         Arity1CallSite pcs = context.createArity1CallSite(p);
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
+          Value x = list.get(i);
+          Value result = pcs.call(x).castTo(Types.BOOLEAN);
+
+          if (result == Values.TRUE) {
+            return Values.make(i);
+          }
+        }
+
+      }
+
+      return Values.NIL;
+    }
+  }
+
+  // function find_last_index: (list xs, function p) -> long
+  public static final class findLastIndex implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value p) {
+
+
+      if (xs.isNil()) return Values.NIL;
+
+      if (p == Values.NIL) throw new LangException(LangError.NIL_ERROR, "predicate function cannot be nil");
+
+      int paramCount = p.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "predicate function must accept at least one argument");
+
+      boolean withIndex = paramCount > 1;
+
+      ListValue list = xs.list();
+
+      if (withIndex){
+        Arity2CallSite pcs = context.createArity2CallSite(p);
+        for (int i = list.size() - 1; i >= 0; i--) {
+          Value x = list.get(i);
+          Value result = pcs.call(x, Values.make(i)).castTo(Types.BOOLEAN);
+          if (result == Values.TRUE) {
+            return Values.make(i);
+          }
+        }
+      }
+      else{
+        Arity1CallSite pcs = context.createArity1CallSite(p);
+        for (int i = list.size() - 1; i >= 0; i--) {
           Value x = list.get(i);
           Value result = pcs.call(x).castTo(Types.BOOLEAN);
 

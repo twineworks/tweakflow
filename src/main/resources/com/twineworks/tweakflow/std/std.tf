@@ -1712,6 +1712,85 @@ ERROR:
 
 doc
 ~~~
+`(list xs, function p) ->`
+
+Tests each `x` in `xs` in reverse order by passing them to predicate function `p`.
+
+If `p` accepts a single argument, `p(x)` is evaluated.
+If `p` accepts two arguments, `p(x, i)` is evaluated, where `i` is the index of `x` in `xs`.
+
+Starting from the end of the list returns the first `x` for which `p` evaluates to a value that casts to `boolean` `true`.
+
+Returns `nil` if there is no `x` in `xs` such that `p` evaluates to a value that casts to `boolean` `true`.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
+
+```tweakflow
+> data.find_last([1, 2, 3, 4, 5], (x) -> x <= 3)
+3
+
+# find last even number on an even index
+> data.find_last([1, 2, 1, 7, 6, 5, 8, 4], (x, i) -> (i % 2 == 0) && (x % 2 == 0))
+8
+
+> data.find_last([1, 2, 3, 4, 5], (x) -> x >= 10)
+nil
+
+> data.find_last(nil, (x) -> true)
+nil
+
+> data.find_last([], nil)
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+```
+~~~
+  function find_last: (list xs, function p) ->                   via {:class "com.twineworks.tweakflow.std.Data$findLast"};
+
+
+doc
+~~~
+`(list xs, function p) -> long`
+
+Tests each `x` in `xs` in reverse order by passing them to predicate function `p`.
+
+If `p` accepts a single argument, `p(x)` is evaluated.
+If `p` accepts two arguments, `p(x, i)` is evaluated, where `i` is the index of `x` in `xs`.
+
+Starting from the end of the list, returns the first index for which `p` evaluates to a value that casts to `boolean` `true`.
+
+Returns `nil` if there is no `x` in `xs` such that `p` evaluates to a value that casts to `boolean` `true`.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `p` is `nil`.
+
+```tweakflow
+> data.find_last_index([1, 2, 3, 4, 5], (x) -> x <= 3)
+2
+
+# find index of last even number on an even index
+> data.find_last_index([1, 2, 1, 7, 6, 5, 8, 4], (x, i) -> (i % 2 == 0) && (x % 2 == 0))
+6
+
+> data.find_last_index([1, 2, 3, 4, 5], (x) -> x >= 10)
+nil
+
+> data.find_last_index(nil, (x) -> true)
+nil
+
+> data.find_last_index([], nil)
+ERROR:
+  code: NIL_ERROR
+  message: predicate function cannot be nil
+```
+~~~
+  function find_last_index: (list xs, function p) -> long        via {:class "com.twineworks.tweakflow.std.Data$findLastIndex"};
+
+
+doc
+~~~
 `(list xs, long i, v) ->`
 
 Returns a list consisting of all elements of `xs`, with elements starting at index `i` shifted to the right, and `v` inserted at position `i`.
