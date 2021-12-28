@@ -20,15 +20,6 @@ Tweakflow keeps the application in control of the data exchange. Users cannot ar
 
 This is in contrast to other embeddable languages like JRuby and JavaScript that have the ability to call into application internals via Java interop features, which tweakflow deliberately does not offer.
 
-## Integration Example
-
-We've embedded tweakflow as the expression engine in our [Tweakstreet](https://tweakstreet.io) data automation tool.
-
-User-defined expressions are evaluated in a desktop application:
-
-![example integration](/images/integrated_expressions.gif)
-
-
 # Language features
 
 ## A simple computation model
