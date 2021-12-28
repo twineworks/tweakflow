@@ -750,6 +750,7 @@ public class Runtime {
       for (Cell dependant : dependants) {
         dependant.setDirty(true);
       }
+      dependants.clear();
 
     }
   }
