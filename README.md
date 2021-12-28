@@ -11,7 +11,7 @@ Applications can use tweakflow to expose runtime information to an expression-ba
 Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.
 
 ## Requirements
-Java 8 or later is required. Builds are tested against JDK 8, 11 and 13.
+Java 8 or later is required. Builds are tested against JDK 8, 11, 13, 15 and 17.
 
 ## Getting the jar
 Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow").
