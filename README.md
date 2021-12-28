@@ -1,6 +1,6 @@
 # Tweakflow - safe embeddable scripting for the JVM
 
-[![Java 8+](https://img.shields.io/badge/java-8--13-4c7e9f.svg)](http://java.oracle.com)
+[![Java 8+](https://img.shields.io/badge/java-8--17-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twineworks/tweakflow/badge.svg)](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow")
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/v1u88koademagp2c/branch/master?svg=true)](https://ci.appveyor.com/project/slawo-ch/tweakflow/branch/master)
