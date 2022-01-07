@@ -55,4 +55,4 @@ params:
   # shortcode {{< gitRef >}}
   gitRef: "master"
   # shortcode {{< version >}}
-  version: "1.4.0"
+  version: "1.4.1"
