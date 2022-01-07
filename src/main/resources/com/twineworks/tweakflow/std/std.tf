@@ -3379,6 +3379,42 @@ Throws an error if `f` is `nil`.
 
   function index_deep_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$index_deep_by"};
 
+doc
+~~~
+`(xs, function f) -> dict`
+
+Returns a `dict`. Each `x` of `xs` is collected in a list located at the key given by `f(x)`.
+
+If `xs` is a list:\
+If `f` accepts one argument, `x` is passed.\
+If `f` accepts two arguments, `x` and its index are passed.
+
+If `xs` is a dict:\
+If `f` accepts one argument, each entry's value is passed.\
+If `f` accepts two arguments, each entry's value and key are passed.
+
+The indexing function `f` must return a string representing the key to the list where item `x` should be placed.
+The order of items in collecting lists is undefined.
+
+In case `f(x)` returns `nil`, the corresponding `x` is omitted from the result.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
+
+```tweakflow
+> data.group_by([0, 1, 2, 3, 4, 5], (x) -> if x % 2 == 0 then "even" else "odd")
+{
+  :odd [1, 3, 5],
+  :even [0, 2, 4]
+}
+```
+~~~
+
+  function group_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$group_by"};
+
 
 doc
 ~~~
@@ -3424,42 +3460,6 @@ Throws an error if `f` is `nil`.
 ~~~
 
   function group_deep_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$group_deep_by"};
-
-doc
-~~~
-`(xs, function f) -> dict`
-
-Returns a `dict`. Each `x` of `xs` is collected in a list located at the key given by `f(x)`.
-
-If `xs` is a list:\
-If `f` accepts one argument, `x` is passed.\
-If `f` accepts two arguments, `x` and its index are passed.
-
-If `xs` is a dict:\
-If `f` accepts one argument, each entry's value is passed.\
-If `f` accepts two arguments, each entry's value and key are passed.
-
-The indexing function `f` must return a string representing the key to the list where item `x` should be placed.
-The order of items in collecting lists is undefined.
-
-In case `f(x)` returns `nil`, the corresponding `x` is omitted from the result.
-
-Returns `nil` if `xs` is `nil`.
-
-Throws an error if `xs` is neither a `list` nor a `dict`.
-
-Throws an error if `f` is `nil`.
-
-```tweakflow
-> data.group_by([0, 1, 2, 3, 4, 5], (x) -> if x % 2 == 0 then "even" else "odd")
-{
-  :odd [1, 3, 5],
-  :even [0, 2, 4]
-}
-```
-~~~
-
-  function group_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$group_by"};
 
 doc
 ~~~
