@@ -2283,6 +2283,396 @@ public final class Data {
     }
   }
 
+  // function index_deep_by: (xs, function f) -> dict
+  public static final class index_deep_by implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value f) {
+
+      if (xs.isNil()) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least one argument");
+
+      HashMap<ListValue, Value> index = new HashMap<>();
+
+      if (xs.isList()){
+
+        boolean withIndex = paramCount >= 2;
+        //TransientDictValue t = new TransientDictValue();
+
+        ListValue list = xs.list();
+
+        if (withIndex){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value keys = fcs.call(x, Values.make(i));
+            if (!keys.isNil()){
+              if (keys.type().canAttemptCastTo(Types.LIST)){
+                index.put(keys.castTo(Types.LIST).list(), x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keys.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+        }
+        else{
+          Arity1CallSite fcs = context.createArity1CallSite(f);
+
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value keys = fcs.call(x);
+            if (!keys.isNil()){
+              if (keys.type().canAttemptCastTo(Types.LIST)){
+                index.put(keys.castTo(Types.LIST).list(), x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+ keys.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+        }
+
+      }
+      else if (xs.isDict()){
+
+        boolean withKey = paramCount >= 2;
+
+        DictValue map = xs.dict();
+        if (withKey){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (String key : map.keys()) {
+            Value x = map.get(key);
+            Value keyList = fcs.call(x, Values.make(key));
+            if (!keyList.isNil()){
+              if (keyList.type().canAttemptCastTo(Types.LIST)){
+                index.put(keyList.castTo(Types.LIST).list(), x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keyList.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+
+        }
+        else{
+
+          for (String key : map.keys()) {
+            Arity1CallSite fcs = context.createArity1CallSite(f);
+            Value x = map.get(key);
+            Value keyList = fcs.call(x);
+            if (!keyList.isNil()){
+              if (keyList.type().canAttemptCastTo(Types.LIST)){
+                index.put(keyList.castTo(Types.LIST).list(), x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keyList.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+
+        }
+
+      }
+      else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "index_deep_by is not defined for type "+xs.type().name());
+      }
+
+      // construct a deep dict from given paths
+      // ['l1', 'l2', 'l3'] => 'foo'
+      // ['a1', 'a2', 'a3'] => 'bar'
+      // ['l1', 'a2', 'l3'] => 'baz'
+      // ['l1', 'l2', 'a3'] => 'fun'
+      Value current = Values.EMPTY_DICT;
+      Value v = Values.EMPTY_DICT;
+
+      for (ListValue keys : index.keySet()) {
+
+        v = index.get(keys);
+        ArrayList<Value> traversed = new ArrayList<>(keys.size());
+
+        // iterate over keys, constructing values as needed
+        ArrayList<String> keyList = new ArrayList<>(keys.size());
+        for (Value key : keys) {
+          if (key.isNil())
+            throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got nil as part of key list " + Values.make(keys).humanReadable());
+          String k = key.castTo(Types.STRING).string();
+          keyList.add(k);
+        }
+
+        for (int i=0;i<keyList.size();i++) {
+          String k = keyList.get(i);
+          if (current.isNil()){
+            current = Values.EMPTY_DICT;
+          }
+          traversed.add(current);
+          current = current.dict().get(k);
+        }
+
+        for (int j=keys.size()-1;j>=0;j--){
+          current = traversed.get(j);
+          v = Values.make(current.dict().put(keyList.get(j), v));
+          current = v;
+        }
+
+      }
+
+      return current;
+    }
+  }
+
+  // function group_by: (xs, function f) -> dict
+  public static final class group_by implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value f) {
+
+      if (xs.isNil()) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least one argument");
+
+      HashMap<String, ArrayList<Value>> out = new HashMap<>();
+
+      if (xs.isList()){
+
+        boolean withIndex = paramCount >= 2;
+        TransientDictValue t = new TransientDictValue();
+
+        ListValue list = xs.list();
+
+        if (withIndex){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value key = fcs.call(x, Values.make(i));
+            if (!key.isNil()){
+              String skey = key.castTo(Types.STRING).string();
+              ArrayList<Value> outList = out.computeIfAbsent(skey, k -> new ArrayList<>());
+              outList.add(x);
+            }
+          }
+        }
+        else{
+          Arity1CallSite fcs = context.createArity1CallSite(f);
+
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value key = fcs.call(x);
+            if (!key.isNil()){
+              String skey = key.castTo(Types.STRING).string();
+              ArrayList<Value> outList = out.computeIfAbsent(skey, _k -> new ArrayList<>());
+              outList.add(x);
+            }
+          }
+        }
+      }
+      else if (xs.isDict()){
+
+        boolean withKey = paramCount >= 2;
+
+        DictValue map = xs.dict();
+        if (withKey){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (String key : map.keys()) {
+            Value x = map.get(key);
+            Value k = fcs.call(x, Values.make(key));
+            if (!k.isNil()){
+              String skey = k.castTo(Types.STRING).string();
+              ArrayList<Value> outList = out.computeIfAbsent(skey, _k -> new ArrayList<>());
+              outList.add(x);
+            }
+          }
+
+        }
+        else{
+
+          for (String key : map.keys()) {
+            Arity1CallSite fcs = context.createArity1CallSite(f);
+            Value x = map.get(key);
+            Value k = fcs.call(x);
+            if (!k.isNil()){
+              String skey = k.castTo(Types.STRING).string();
+              ArrayList<Value> outList = out.computeIfAbsent(skey, _k -> new ArrayList<>());
+              outList.add(x);
+            }
+          }
+
+        }
+
+        // out map contains results, convert to a value
+        TransientDictValue t = new TransientDictValue();
+        for (String s : out.keySet()) {
+          t.put(s, Values.make(new ListValue(out.get(s))));
+        }
+
+      }
+      else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "group_by is not defined for type "+xs.type().name());
+      }
+
+      TransientDictValue t = new TransientDictValue();
+      for (String s : out.keySet()) {
+        t.put(s, Values.make(new ListValue(out.get(s))));
+      }
+
+      return Values.make(t.persistent());
+
+    }
+  }
+
+  // function group_deep_by: (xs, function f) -> dict
+  public static final class group_deep_by implements UserFunction, Arity2UserFunction {
+
+    @Override
+    public Value call(UserCallContext context, Value xs, Value f) {
+
+      if (xs.isNil()) return Values.NIL;
+      if (f == Values.NIL) throw new LangException(LangError.NIL_ERROR, "f cannot be nil");
+
+      int paramCount = f.function().getSignature().getParameterList().size();
+      if (paramCount == 0) throw new LangException(LangError.ILLEGAL_ARGUMENT, "f must accept at least one argument");
+
+      HashMap<ListValue, ArrayList<Value>> index = new HashMap<>();
+
+      if (xs.isList()){
+
+        boolean withIndex = paramCount >= 2;
+
+        ListValue list = xs.list();
+
+        if (withIndex){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value keys = fcs.call(x, Values.make(i));
+            if (!keys.isNil()){
+              if (keys.isList()){
+                ListValue lk = keys.castTo(Types.LIST).list();
+                ArrayList<Value> values = index.computeIfAbsent(lk, k -> new ArrayList<>());
+                values.add(x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keys.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+        }
+        else{
+          Arity1CallSite fcs = context.createArity1CallSite(f);
+
+          for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            Value x = list.get(i);
+            Value keys = fcs.call(x);
+            if (!keys.isNil()){
+              if (keys.isList()){
+                ListValue lk = keys.castTo(Types.LIST).list();
+                ArrayList<Value> values = index.computeIfAbsent(lk, k -> new ArrayList<>());
+                values.add(x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+ keys.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+        }
+
+      }
+      else if (xs.isDict()){
+
+        boolean withKey = paramCount >= 2;
+
+        DictValue map = xs.dict();
+        if (withKey){
+          Arity2CallSite fcs = context.createArity2CallSite(f);
+          for (String key : map.keys()) {
+            Value x = map.get(key);
+            Value keyList = fcs.call(x, Values.make(key));
+            if (!keyList.isNil()){
+              if (keyList.isList()){
+                ListValue lk = keyList.castTo(Types.LIST).list();
+                ArrayList<Value> values = index.computeIfAbsent(lk, k -> new ArrayList<>());
+                values.add(x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keyList.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+
+        }
+        else{
+
+          for (String key : map.keys()) {
+            Arity1CallSite fcs = context.createArity1CallSite(f);
+            Value x = map.get(key);
+            Value keyList = fcs.call(x);
+            if (!keyList.isNil()){
+              if (keyList.isList()){
+                ListValue lk = keyList.castTo(Types.LIST).list();
+                ArrayList<Value> values = index.computeIfAbsent(lk, k -> new ArrayList<>());
+                values.add(x);
+              }
+              else {
+                throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got: "+keyList.humanReadable()+" for value: "+x.humanReadable());
+              }
+            }
+          }
+
+        }
+
+      }
+      else {
+        throw new LangException(LangError.ILLEGAL_ARGUMENT, "group_deep_by is not defined for type "+xs.type().name());
+      }
+
+      // construct a deep dict from given paths
+      // ['l1', 'l2', 'l3'] => 'foo'
+      // ['l1', 'l2', 'l3'] => 'baz'
+      // ['l1', 'l2', 'a3'] => 'fun'
+      Value current = Values.EMPTY_DICT;
+      Value v = Values.EMPTY_LIST;
+
+      for (ListValue keys : index.keySet()) {
+
+        v = Values.make(new ListValue(index.get(keys)));
+        ArrayList<Value> traversed = new ArrayList<>(keys.size());
+
+        // iterate over keys, constructing values as needed
+        ArrayList<String> keyList = new ArrayList<>(keys.size());
+        for (Value key : keys) {
+          if (key.isNil())
+            throw new LangException(LangError.CAST_ERROR, "indexing function must return a list of strings or nil, got nil as part of key list " + Values.make(keys).humanReadable());
+          String k = key.castTo(Types.STRING).string();
+          keyList.add(k);
+        }
+
+        for (int i=0;i<keyList.size();i++) {
+          String k = keyList.get(i);
+          if (current.isNil()){
+            current = Values.EMPTY_DICT;
+          }
+          traversed.add(current);
+          current = current.dict().get(k);
+        }
+
+        for (int j=keys.size()-1;j>=0;j--){
+          current = traversed.get(j);
+          v = Values.make(current.dict().put(keyList.get(j), v));
+          current = v;
+        }
+
+      }
+
+      return current;
+    }
+  }
+
+
   // function omit: (dict xs, list keys) -> dict
   public static final class omit implements UserFunction, Arity2UserFunction {
 

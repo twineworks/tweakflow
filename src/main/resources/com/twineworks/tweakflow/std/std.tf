@@ -3335,6 +3335,134 @@ Throws an error if `f` is `nil`.
 
 doc
 ~~~
+`(xs, function f) -> dict`
+
+Returns a nested `dict` that contains all values from `xs`. Each `x` in `xs` is indexed by a sequence of keys `f(x)`.
+
+If `xs` is a list:\
+If `f` accepts one argument, `x` is passed.\
+If `f` accepts two arguments, `x` and its index are passed.
+
+If `xs` is a dict:\
+If `f` accepts one argument, each entry's value is passed.\
+If `f` accepts two arguments, each entry's value and key are passed.
+
+The indexing function `f` must return a list of strings representing a path of keys where item `x` should be found.
+
+In case `f(x)` returns the same path of keys for multiple `x`, only one of such `x` will be indexed in the returned dict.
+In such cases it is undefined which `x` is preserved in the returned dict.
+
+If `f` returns paths p1 and p2, p2 is longer than p1, and p2 starts with p1, the behavior of `index_deep_by` is undefined.
+
+In case `f(x)` returns `nil` or an empty list, the corresponding `x` is omitted from the result.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
+
+```tweakflow
+> data.index_deep_by([{:l1 "a", :l2 "b"}, {:l1 "a", :l2 "c"}, {:l1 "b", :l2 "a"}], (x) -> [x[:l1], x[:l2]])
+{
+  :a {
+    :b {:l1 "a", :l2 "b"},
+    :c {:l1 "a", :l2 "c"}
+  },
+  :b {
+    :a  {:l1 "b", :l2 "a"}
+  }
+}
+```
+
+~~~
+
+  function index_deep_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$index_deep_by"};
+
+
+doc
+~~~
+`(xs, function f) -> dict`
+
+Returns a nested `dict`. Each `x` of `xs` is collected in a list located at the sequence of keys given by `f(x)`.
+
+If `xs` is a list:\
+If `f` accepts one argument, `x` is passed.\
+If `f` accepts two arguments, `x` and its index are passed.
+
+If `xs` is a dict:\
+If `f` accepts one argument, each entry's value is passed.\
+If `f` accepts two arguments, each entry's value and key are passed.
+
+The indexing function `f` must return a list of strings representing a path of keys to the list where item `x` should be placed.
+The order of items in collecting lists is undefined.
+
+If `f` returns paths p1 and p2, p2 is longer than p1, and p2 starts with p1, the behavior of `group_deep_by` is undefined.
+
+In case `f(x)` returns `nil` or an empty list, the corresponding `x` is omitted from the result.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
+
+```tweakflow
+> data.group_deep_by([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5], (x) -> [if x < 0 then "negative" else "positive", x % 2 == 0 then "even" else "odd"])
+{
+  :positive {
+    :even [0, 2, 4],
+    :odd [1, 3, 5]
+  },
+  :negative {
+    :even [-2, -4],
+    :odd [-1, -3, -5]
+  }
+}
+```
+
+~~~
+
+  function group_deep_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$group_deep_by"};
+
+doc
+~~~
+`(xs, function f) -> dict`
+
+Returns a `dict`. Each `x` of `xs` is collected in a list located at the key given by `f(x)`.
+
+If `xs` is a list:\
+If `f` accepts one argument, `x` is passed.\
+If `f` accepts two arguments, `x` and its index are passed.
+
+If `xs` is a dict:\
+If `f` accepts one argument, each entry's value is passed.\
+If `f` accepts two arguments, each entry's value and key are passed.
+
+The indexing function `f` must return a string representing the key to the list where item `x` should be placed.
+The order of items in collecting lists is undefined.
+
+In case `f(x)` returns `nil`, the corresponding `x` is omitted from the result.
+
+Returns `nil` if `xs` is `nil`.
+
+Throws an error if `xs` is neither a `list` nor a `dict`.
+
+Throws an error if `f` is `nil`.
+
+```tweakflow
+> data.group_by([0, 1, 2, 3, 4, 5], (x) -> if x % 2 == 0 then "even" else "odd")
+{
+  :odd [1, 3, 5],
+  :even [0, 2, 4]
+}
+```
+~~~
+
+  function group_by: (xs, function f) -> any                via {:class "com.twineworks.tweakflow.std.Data$group_by"};
+
+doc
+~~~
 `(list xs, s) -> list`
 
 Returns a `list` with all elements from `xs` separated by `s`.
