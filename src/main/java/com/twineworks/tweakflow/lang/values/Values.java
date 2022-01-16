@@ -28,6 +28,7 @@ import com.twineworks.tweakflow.lang.types.Types;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.time.Instant;
@@ -99,6 +100,11 @@ final public class Values {
     return make(i.longValue());
   }
 
+  public static Value make(Byte i) {
+    if (i == null) return NIL;
+    return make(i.longValue());
+  }
+
   public static Value make(Short i) {
     if (i == null) return NIL;
     return make(i.longValue());
@@ -107,6 +113,11 @@ final public class Values {
   public static Value make(BigDecimal d) {
     if (d == null) return NIL;
     return new Value(Types.DECIMAL, d);
+  }
+
+  public static Value make(BigInteger d) {
+    if (d == null) return NIL;
+    return new Value(Types.DECIMAL, new BigDecimal(d));
   }
 
   public static Value make(Double d) {
@@ -185,6 +196,19 @@ final public class Values {
     return new Value(Types.DATETIME, new DateTimeValue(zdt));
   }
 
+  public static Value make(Number o){
+    if (o instanceof Byte) return Values.make((Byte) o);
+    if (o instanceof Short) return Values.make((Short) o);
+    if (o instanceof Long) return make((Long) o);
+    if (o instanceof Integer) return make(((Integer) o).longValue());
+    if (o instanceof Float) return Values.make((Float) o);
+    if (o instanceof Double) return make((Double) o);
+    if (o instanceof BigDecimal) return make((BigDecimal) o);
+    if (o instanceof BigInteger) return make((BigInteger) o);
+
+    return make((Object)o);
+  }
+
   // convenience factory
 
   public static Value make(Object o) {
@@ -195,12 +219,14 @@ final public class Values {
     if (o instanceof Character) return Values.make((Character) o);
     if (o instanceof String) return make((String) o);
 
+    if (o instanceof Byte) return Values.make((Byte) o);
     if (o instanceof Short) return Values.make((Short) o);
     if (o instanceof Long) return make((Long) o);
     if (o instanceof Integer) return make(((Integer) o).longValue());
     if (o instanceof Float) return Values.make((Float) o);
     if (o instanceof Double) return make((Double) o);
     if (o instanceof BigDecimal) return make((BigDecimal) o);
+    if (o instanceof BigInteger) return make((BigInteger) o);
 
     if (o instanceof Instant) return make(new DateTimeValue((Instant) o));
     if (o instanceof LocalDateTime) return Values.make((LocalDateTime) o);
