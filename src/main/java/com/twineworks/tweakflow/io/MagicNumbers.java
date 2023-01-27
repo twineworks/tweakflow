@@ -49,6 +49,22 @@ public class MagicNumbers {
     public final static byte DICT = 70;
 
     public final static byte FUNCTION = 100;
+
+    public final static byte NOTHING = -1;
+
+    public static final byte STRING_PART = 42;
+
+    public final static byte LIST_HEAD = 62;
+
+    public final static byte DICT_HEAD = 72;
+
+    public final static byte KEY = 80;
+    public final static byte KEY_PART = 82;
+
+    public static final byte BINARY_PART = 7;
+    public static final byte DECIMAL_PART = 22;
+
+
   }
 
 }
