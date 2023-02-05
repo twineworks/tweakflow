@@ -20,6 +20,7 @@ dependency-reduced-pom.xml
 
 # local development ignores
 /build/hugo
+/build/htmltest
 /gen
 
 # htmltest cache
