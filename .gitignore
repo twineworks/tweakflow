@@ -24,4 +24,6 @@ dependency-reduced-pom.xml
 
 # htmltest cache
 /site/tmp
+
 .vscode
+.hugo_build.lock
