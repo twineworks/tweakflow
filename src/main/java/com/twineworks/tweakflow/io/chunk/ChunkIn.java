@@ -1,13 +1,14 @@
 package com.twineworks.tweakflow.io.chunk;
 
 import com.twineworks.tweakflow.io.MagicNumbers;
-import com.twineworks.tweakflow.lang.values.ListValue;
-import com.twineworks.tweakflow.lang.values.TransientDictValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.values.*;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 
 public class ChunkIn {
@@ -69,6 +70,16 @@ public class ChunkIn {
     }
   }
 
+  private Value bytesToDatetime(byte[] bytes){
+    ByteBuffer b = ByteBuffer.wrap(bytes);
+    long secs = b.getLong();
+    int nanos = b.getInt();
+    String tz = new String(bytes, 12, bytes.length-12, StandardCharsets.UTF_8);
+    ZoneId zoneId = ZoneId.of(tz);
+    ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(secs, nanos), zoneId);
+    return Values.make(new DateTimeValue(zonedDateTime));
+  }
+
   private Value readNextValue() {
 
     byte[] partial = null;
@@ -86,6 +97,7 @@ public class ChunkIn {
 
       while (buffer.remaining() > 0) {
         byte magic = buffer.get();
+        byte[] bin = null;
         switch (magic) {
           case MagicNumbers.Format.VOID:
             return Values.NIL;
@@ -95,10 +107,27 @@ public class ChunkIn {
             return Values.make(buffer.getLong());
           case MagicNumbers.Format.DOUBLE:
             return Values.make(buffer.getDouble());
+          case MagicNumbers.Format.DECIMAL:
+            bin = new byte[buffer.getInt()];
+            buffer.get(bin);
+            return Values.make(new BigDecimal(new String(bin, StandardCharsets.UTF_8)));
+          case MagicNumbers.Format.DECIMAL_PART: {
+            int totalSize = buffer.getInt();
+            int index = buffer.getInt();
+            int partLen = buffer.getInt();
+            if (partial == null) {
+              partial = new byte[totalSize];
+            }
+            buffer.get(partial, index, partLen);
+            if (index + partLen == totalSize) {
+              return Values.make(new BigDecimal(new String(partial, StandardCharsets.UTF_8)));
+            }
+            continue;
+          }
           case MagicNumbers.Format.STRING:
-            byte[] str = new byte[buffer.getInt()];
-            buffer.get(str);
-            return Values.make(new String(str, StandardCharsets.UTF_8));
+            bin = new byte[buffer.getInt()];
+            buffer.get(bin);
+            return Values.make(new String(bin, StandardCharsets.UTF_8));
           case MagicNumbers.Format.STRING_PART: {
             int totalSize = buffer.getInt();
             int index = buffer.getInt();
@@ -113,7 +142,7 @@ public class ChunkIn {
             continue;
           }
           case MagicNumbers.Format.BINARY:
-            byte[] bin = new byte[buffer.getInt()];
+            bin = new byte[buffer.getInt()];
             buffer.get(bin);
             return Values.make(bin);
           case MagicNumbers.Format.BINARY_PART: {
@@ -126,6 +155,24 @@ public class ChunkIn {
             buffer.get(partial, index, partLen);
             if (index + partLen == totalSize) {
               return Values.make(partial);
+            }
+            continue;
+          }
+
+          case MagicNumbers.Format.DATETIME:
+            bin = new byte[buffer.getInt()];
+            buffer.get(bin);
+            return bytesToDatetime(bin);
+          case MagicNumbers.Format.DATETIME_PART: {
+            int totalSize = buffer.getInt();
+            int index = buffer.getInt();
+            int partLen = buffer.getInt();
+            if (partial == null) {
+              partial = new byte[totalSize];
+            }
+            buffer.get(partial, index, partLen);
+            if (index + partLen == totalSize) {
+              return bytesToDatetime(partial);
             }
             continue;
           }

@@ -64,6 +64,8 @@ public class MagicNumbers {
     public static final byte BINARY_PART = 7;
     public static final byte DECIMAL_PART = 22;
 
+    public static final byte DATETIME_PART = 52;
+
 
   }
 

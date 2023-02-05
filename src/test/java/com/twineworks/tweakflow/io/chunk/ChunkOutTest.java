@@ -4,6 +4,7 @@ import com.twineworks.tweakflow.io.MagicNumbers;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
@@ -55,6 +56,127 @@ class ChunkOutTest {
         MagicNumbers.Format.DOUBLE,
         (byte) 0x40, (byte) 0x09, (byte) 0x21, (byte) 0xFB, (byte) 0x54, (byte) 0x44, (byte) 0x2D, (byte) 0x18
     );
+
+  }
+
+  @Test
+  void writes_datetimes() throws Exception {
+
+    ChunkOut chunkOut = new ChunkOut(Values.EPOCH, 32);
+    ArrayList<byte[]> chunks = new ArrayList<>();
+    while (chunkOut.hasMoreChunks()) {
+      chunks.add(chunkOut.nextChunk());
+    }
+
+    assertThat(chunks).asList().hasSize(1);
+    assertThat(chunks.get(0)).containsExactly(
+        MagicNumbers.Format.DATETIME,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, // 0 secs
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, // 0 nanos
+        (byte) 0x55, (byte) 0x54, (byte) 0x43 // UTC
+
+    );
+  }
+
+  @Test
+  void writes_datetimes_chunked() throws Exception {
+
+    ChunkOut chunkOut = new ChunkOut(Values.EPOCH, 16);
+    ArrayList<byte[]> chunks = new ArrayList<>();
+    while (chunkOut.hasMoreChunks()) {
+      chunks.add(chunkOut.nextChunk());
+    }
+
+    assertThat(chunks).asList().hasSize(5);
+    assertThat(chunks.get(0)).containsExactly(
+        MagicNumbers.Format.DATETIME_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // local len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00 // 3x0 sec
+    );
+
+    assertThat(chunks.get(1)).containsExactly(
+        MagicNumbers.Format.DATETIME_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // local len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00 // 3x0 sec
+    );
+
+    assertThat(chunks.get(2)).containsExactly(
+        MagicNumbers.Format.DATETIME_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x06, // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // local len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00 // 2x0 sec, 1x0 nano
+    );
+
+    assertThat(chunks.get(3)).containsExactly(
+        MagicNumbers.Format.DATETIME_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x09, // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // local len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00 // 3x0 nano
+    );
+
+    assertThat(chunks.get(4)).containsExactly(
+        MagicNumbers.Format.DATETIME_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0F, // buffer len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0C, // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03, // local len
+        (byte) 0x55, (byte) 0x54, (byte) 0x43 // UTC
+    );
+
+  }
+
+  @Test
+  void writes_decimal_0() throws Exception {
+    ChunkOut chunkOut = new ChunkOut(Values.DECIMAL_ZERO, 16);
+    ArrayList<byte[]> chunks = new ArrayList<>();
+    while (chunkOut.hasMoreChunks()) {
+      chunks.add(chunkOut.nextChunk());
+    }
+
+    assertThat(chunks).asList().hasSize(1);
+    assertThat(chunks.get(0)).containsExactly(
+        MagicNumbers.Format.DECIMAL,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01, // len
+        (byte) 0x30
+    );
+
+  }
+
+  @Test
+  void writes_decimal_parts_1_000000000000000001() throws Exception {
+    ChunkOut chunkOut = new ChunkOut(Values.make(new BigDecimal("1.000000000000000001")), 24);
+    ArrayList<byte[]> chunks = new ArrayList<>();
+    while (chunkOut.hasMoreChunks()) {
+      chunks.add(chunkOut.nextChunk());
+    }
+
+    assertThat(chunks).asList().hasSize(2);
+    assertThat(chunks.get(0)).containsExactly(
+        MagicNumbers.Format.DECIMAL_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x14,  // total len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,  // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0B,  // len
+        (byte) 0x31, (byte) 0x2E, (byte) 0x30, (byte) 0x30,  // 1.00
+        (byte) 0x30, (byte) 0x30, (byte) 0x30, (byte) 0x30,  // 0000
+        (byte) 0x30, (byte) 0x30, (byte) 0x30                // 000
+    );
+
+    assertThat(chunks.get(1)).containsExactly(
+        MagicNumbers.Format.DECIMAL_PART,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x14,  // total len
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0B,  // index
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x09,  // len
+        (byte) 0x30, (byte) 0x30, (byte) 0x30, (byte) 0x30,  // 0000
+        (byte) 0x30, (byte) 0x30, (byte) 0x30, (byte) 0x30,  // 0000
+        (byte) 0x31                                          // 000
+    );
+
 
   }
 

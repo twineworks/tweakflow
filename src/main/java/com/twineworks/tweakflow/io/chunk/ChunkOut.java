@@ -1,13 +1,12 @@
 package com.twineworks.tweakflow.io.chunk;
 
 import com.twineworks.tweakflow.io.MagicNumbers;
-import com.twineworks.tweakflow.lang.values.DictValue;
-import com.twineworks.tweakflow.lang.values.ListValue;
-import com.twineworks.tweakflow.lang.values.Value;
-import com.twineworks.tweakflow.lang.values.Values;
+import com.twineworks.tweakflow.lang.values.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
@@ -68,9 +67,9 @@ public class ChunkOut {
 
     boolean isContinuation = s.written == MagicNumbers.Format.STRING_PART
         || s.written == MagicNumbers.Format.KEY_PART
-        || s.written == MagicNumbers.Format.BINARY_PART;
-
-    // TODO: all other datatypes incl. parts for datetimes (TZ), decimals etc.
+        || s.written == MagicNumbers.Format.BINARY_PART
+        || s.written == MagicNumbers.Format.DECIMAL_PART
+        || s.written == MagicNumbers.Format.DATETIME_PART;
 
     if (isContinuation){
       switch(s.written){
@@ -82,6 +81,12 @@ public class ChunkOut {
           break;
         case MagicNumbers.Format.BINARY_PART:
           writeBinaryPart();
+          break;
+        case MagicNumbers.Format.DECIMAL_PART:
+          writeDecimalPart();
+          break;
+        case MagicNumbers.Format.DATETIME_PART:
+          writeDatetimePart();
           break;
         default:
           throw new AssertionError("Unexpected continuation type: "+s.written);
@@ -105,6 +110,12 @@ public class ChunkOut {
         case MagicNumbers.Format.DOUBLE:
           writeDouble();
           break;
+        case MagicNumbers.Format.DECIMAL:
+          writeDecimal();
+          break;
+        case MagicNumbers.Format.DATETIME:
+          writeDatetime();
+          break;
         case MagicNumbers.Format.STRING:
           writeString();
           break;
@@ -125,6 +136,68 @@ public class ChunkOut {
 
     return nextState();
 
+  }
+
+
+  private boolean writeDatetime() {
+    DateTimeValue dt = s.v.dateTime();
+    ZonedDateTime dz = dt.getZoned();
+    Instant di = dt.getInstant();
+    String z = dz.getZone().getId();
+
+    byte[] binBytes = new byte[8+4+z.length()];
+    ByteBuffer b = ByteBuffer.wrap(binBytes);
+    b.putLong(di.getEpochSecond());
+    b.putInt(di.getNano());
+    b.put(z.getBytes(StandardCharsets.UTF_8));
+    int remaining = buffer.remaining();
+    if (remaining >= binBytes.length + 1 + 4) {
+      buffer.put(MagicNumbers.Format.DATETIME);
+      buffer.putInt(binBytes.length);
+      buffer.put(binBytes);
+      s.written = MagicNumbers.Format.DATETIME;
+      return true;
+    } else if (remaining > 1 + 4 + 4 + 4) {
+      int lenToPut = remaining - (1 + 4 + 4 + 4);
+      buffer.put(MagicNumbers.Format.DATETIME_PART);
+      buffer.putInt(binBytes.length);
+      buffer.putInt(0);
+      buffer.putInt(lenToPut);
+      buffer.put(binBytes, 0, lenToPut);
+      s.written = MagicNumbers.Format.DATETIME_PART;
+      s.sidx = lenToPut;
+      s.bytes = binBytes;
+      return true;
+    }
+    s.written = MagicNumbers.Format.NOTHING;
+    return false;
+  }
+
+  private boolean writeDatetimePart() {
+    byte[] binBytes = s.bytes;
+    int remaining = buffer.remaining();
+    if (remaining > 1 + 4 + 4 + 4) {
+      int lenToPut = Math.min(remaining - (1 + 4 + 4 + 4), binBytes.length-s.sidx);
+      buffer.put(MagicNumbers.Format.DATETIME_PART);
+      buffer.putInt(binBytes.length);
+      buffer.putInt(s.sidx);
+      buffer.putInt(lenToPut);
+      buffer.put(binBytes, s.sidx, lenToPut);
+      s.sidx += lenToPut;
+
+      if (s.sidx == binBytes.length){
+        s.written = MagicNumbers.Format.DATETIME; // report having written a full value on finish
+        s.bytes = null;
+        s.sidx = -1;
+      }
+      else{
+        s.written = MagicNumbers.Format.DATETIME_PART;
+        s.bytes = binBytes;
+      }
+      return true;
+    }
+    s.written = MagicNumbers.Format.NOTHING;
+    return false;
   }
 
   private boolean writeBinary() {
@@ -258,6 +331,57 @@ public class ChunkOut {
     return false;
   }
 
+  private boolean writeDecimal() {
+    byte[] strBytes = s.v.decimal().toString().getBytes(StandardCharsets.UTF_8);
+    int remaining = buffer.remaining();
+    if (remaining >= strBytes.length + 1 + 4) {
+      buffer.put(MagicNumbers.Format.DECIMAL);
+      buffer.putInt(strBytes.length);
+      buffer.put(strBytes);
+      s.written = MagicNumbers.Format.DECIMAL;
+      return true;
+    } else if (remaining > 1 + 4 + 4 + 4) {
+      int lenToPut = remaining - (1 + 4 + 4 + 4);
+      buffer.put(MagicNumbers.Format.DECIMAL_PART);
+      buffer.putInt(strBytes.length);
+      buffer.putInt(0);
+      buffer.putInt(lenToPut);
+      buffer.put(strBytes, 0, lenToPut);
+      s.written = MagicNumbers.Format.DECIMAL_PART;
+      s.sidx = lenToPut;
+      s.bytes = strBytes;
+      return true;
+    }
+    s.written = MagicNumbers.Format.NOTHING;
+    return false;
+  }
+  private boolean writeDecimalPart() {
+    byte[] strBytes = s.bytes;
+    int remaining = buffer.remaining();
+    if (remaining > 1 + 4 + 4 + 4) {
+      int lenToPut = Math.min(remaining - (1 + 4 + 4 + 4), strBytes.length-s.sidx);
+      buffer.put(MagicNumbers.Format.DECIMAL_PART);
+      buffer.putInt(strBytes.length);
+      buffer.putInt(s.sidx);
+      buffer.putInt(lenToPut);
+      buffer.put(strBytes, s.sidx, lenToPut);
+      s.sidx += lenToPut;
+
+      if (s.sidx == strBytes.length){
+        s.written = MagicNumbers.Format.DECIMAL; // report having written a full value  on finish
+        s.bytes = null;
+        s.sidx = -1;
+      }
+      else{
+        s.written = MagicNumbers.Format.DECIMAL_PART;
+        s.bytes = strBytes;
+      }
+      return true;
+    }
+    s.written = MagicNumbers.Format.NOTHING;
+    return false;
+  }
+
   private boolean writeList() {
     ListValue list = s.v.list();
     int remaining = buffer.remaining();
@@ -383,6 +507,8 @@ public class ChunkOut {
       case MagicNumbers.Format.KEY_PART:
       case MagicNumbers.Format.STRING_PART:
       case MagicNumbers.Format.BINARY_PART:
+      case MagicNumbers.Format.DECIMAL_PART:
+      case MagicNumbers.Format.DATETIME_PART:
         return false;
         // container head done
       case MagicNumbers.Format.LIST_HEAD:
@@ -398,6 +524,8 @@ public class ChunkOut {
       case MagicNumbers.Format.DOUBLE:
       case MagicNumbers.Format.STRING:
       case MagicNumbers.Format.BINARY:
+      case MagicNumbers.Format.DECIMAL:
+      case MagicNumbers.Format.DATETIME:
       case MagicNumbers.Format.LIST:
       case MagicNumbers.Format.DICT:
         if (s.c.isNil()) {

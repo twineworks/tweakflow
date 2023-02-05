@@ -4,6 +4,9 @@ import com.twineworks.tweakflow.lang.values.Value;
 import com.twineworks.tweakflow.lang.values.Values;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -143,8 +146,14 @@ class ChunkInTest {
     Value src = Values.makeDict(
         "foo", "bar",
         "baz", 1L,
+        "str", "short",
+        "str_long", "A much longer string that does not fit in a chunk",
+        "a long key that does not fit in a chunk", -1L,
+        "f", Math.PI,
         "a", Values.TRUE,
-        "bin", new byte[]{1,2,3,4,5,6,7,8,9,10}
+        "bin", new byte[]{1,2,3,4,5,6,7,8,9,10},
+        "d", Values.make(new BigDecimal("123.45678901234545678967890")),
+        "dt", Values.EPOCH
     );
 
     ChunkIn in = new ChunkIn(getChunks(
@@ -192,5 +201,65 @@ class ChunkInTest {
 
   }
 
+  @Test
+  void reads_decimals() throws Exception {
+
+    Value src = Values.make(new BigDecimal(Math.PI));
+
+    ChunkIn in = new ChunkIn(getChunks(
+        src,
+        16)
+    );
+    Value v = in.read();
+
+    assertThat(v).isEqualTo(src);
+
+  }
+
+  @Test
+  void reads_short_decimals() throws Exception {
+
+    Value src = Values.make(Values.DECIMAL_ZERO);
+
+    ChunkIn in = new ChunkIn(getChunks(
+        src,
+        16)
+    );
+    Value v = in.read();
+
+    assertThat(v).isEqualTo(src);
+
+  }
+
+
+  @Test
+  void reads_datetimes() throws Exception {
+
+    Value src = Values.make(ZonedDateTime.of(1981, 8, 16, 4, 30, 2, 1233, ZoneId.of("Europe/Berlin")));
+
+    ChunkIn in = new ChunkIn(getChunks(
+        src,
+        32)
+    );
+    Value v = in.read();
+
+    assertThat(v).isEqualTo(src);
+
+  }
+
+  @Test
+  void reads_datetime_parts() throws Exception {
+
+    Value src = Values.make(ZonedDateTime.of(1981, 8, 16, 4, 30, 2, 1233, ZoneId.of("Europe/Berlin")));
+
+    ChunkIn in = new ChunkIn(getChunks(
+        src,
+        16)
+    );
+    Value v = in.read();
+
+    assertThat(v).isEqualTo(src);
+
+  }
 
 }
