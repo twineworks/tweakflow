@@ -1,0 +1,3 @@
+ - Download hugo from gohugo.io https://github.com/gohugoio/hugo/releases
+ - Ensure `build/hugo/hugo` points to the executable
+ - Rendered docs html contains the hugo version used to render docs in `<head><meta name="generator" value="..."></head>` 
