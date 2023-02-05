@@ -99,7 +99,7 @@ If `x` is not a function, and contains no functions as children `x == core.eval(
 	    data-meta-tags='core'
     ></div>
 
-### present?{#core-present?}
+### present?{#core-present}
 
 `(x) -> boolean`
 
@@ -117,13 +117,13 @@ false
 
 <div
       data-meta='true'
-      data-meta-id='core-present?'
+      data-meta-id='core-present'
       data-meta-type='var'
       data-meta-name='present?'
 	    data-meta-tags='core'
     ></div>
 
-### nil?{#core-nil?}
+### nil?{#core-nil}
 
 `(x) -> boolean`
 
@@ -141,7 +141,7 @@ true
 
 <div
       data-meta='true'
-      data-meta-id='core-nil?'
+      data-meta-id='core-nil'
       data-meta-type='var'
       data-meta-name='nil?'
 	    data-meta-tags='core'
@@ -746,7 +746,7 @@ Returns `nil` if `x` is `nil` or `s` is `nil`.
 	    data-meta-tags='strings'
     ></div>
 
-### starts_with?{#strings-starts_with?}
+### starts_with?{#strings-starts_with}
 
 `(string x, string init) -> boolean`
 
@@ -778,13 +778,13 @@ nil
 
 <div
       data-meta='true'
-      data-meta-id='strings-starts_with?'
+      data-meta-id='strings-starts_with'
       data-meta-type='var'
       data-meta-name='starts_with?'
 	    data-meta-tags='strings'
     ></div>
 
-### ends_with?{#strings-ends_with?}
+### ends_with?{#strings-ends_with}
 
 `(string x, string tail) -> boolean`
 
@@ -816,7 +816,7 @@ nil
 
 <div
       data-meta='true'
-      data-meta-id='strings-ends_with?'
+      data-meta-id='strings-ends_with'
       data-meta-type='var'
       data-meta-name='ends_with?'
 	    data-meta-tags='strings'
@@ -1383,7 +1383,7 @@ ERROR:
 	    data-meta-tags='data'
     ></div>
 
-### empty?{#data-empty?}
+### empty?{#data-empty}
 
 `(any xs) -> boolean`
 
@@ -1419,7 +1419,7 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='data-empty?'
+      data-meta-id='data-empty'
       data-meta-type='var'
       data-meta-name='empty?'
 	    data-meta-tags='data'
@@ -1801,7 +1801,7 @@ ERROR:
 	    data-meta-tags='data'
     ></div>
 
-### has?{#data-has?}
+### has?{#data-has}
 
 `(xs, key) -> boolean`
 
@@ -1845,7 +1845,7 @@ true
 
 <div
       data-meta='true'
-      data-meta-id='data-has?'
+      data-meta-id='data-has'
       data-meta-type='var'
       data-meta-name='has?'
 	    data-meta-tags='data'
@@ -2665,7 +2665,7 @@ nil
 	    data-meta-tags='data'
     ></div>
 
-### any?{#data-any?}
+### any?{#data-any}
 
 `(list xs, function p) -> boolean`
 
@@ -2703,13 +2703,13 @@ nil
 
 <div
       data-meta='true'
-      data-meta-id='data-any?'
+      data-meta-id='data-any'
       data-meta-type='var'
       data-meta-name='any?'
 	    data-meta-tags='data'
     ></div>
 
-### none?{#data-none?}
+### none?{#data-none}
 
 `(list xs, function p) -> boolean`
 
@@ -2747,13 +2747,13 @@ nil
 
 <div
       data-meta='true'
-      data-meta-id='data-none?'
+      data-meta-id='data-none'
       data-meta-type='var'
       data-meta-name='none?'
 	    data-meta-tags='data'
     ></div>
 
-### all?{#data-all?}
+### all?{#data-all}
 
 `(list xs, function p) -> boolean`
 
@@ -2793,7 +2793,7 @@ nil
 
 <div
       data-meta='true'
-      data-meta-id='data-all?'
+      data-meta-id='data-all'
       data-meta-type='var'
       data-meta-name='all?'
 	    data-meta-tags='data'
@@ -3437,7 +3437,7 @@ nil
 	    data-meta-tags='data'
     ></div>
 
-### contains?{#data-contains?}
+### contains?{#data-contains}
 
 `(xs, x) -> boolean`
 
@@ -3484,7 +3484,7 @@ ERROR:
 
 <div
       data-meta='true'
-      data-meta-id='data-contains?'
+      data-meta-id='data-contains'
       data-meta-type='var'
       data-meta-name='contains?'
 	    data-meta-tags='data'
@@ -6541,7 +6541,7 @@ nil
 	    data-meta-tags='math'
     ></div>
 
-### NaN?{#math-NaN?}
+### NaN?{#math-NaN}
 
 `(any x) -> boolean`
 
@@ -6562,13 +6562,13 @@ false
 
 <div
       data-meta='true'
-      data-meta-id='math-NaN?'
+      data-meta-id='math-NaN'
       data-meta-type='var'
       data-meta-name='NaN?'
 	    data-meta-tags='math'
     ></div>
 
-### finite?{#math-finite?}
+### finite?{#math-finite}
 
 `(any x) -> boolean`
 
@@ -6593,7 +6593,7 @@ false
 
 <div
       data-meta='true'
-      data-meta-id='math-finite?'
+      data-meta-id='math-finite'
       data-meta-type='var'
       data-meta-name='finite?'
 	    data-meta-tags='math'

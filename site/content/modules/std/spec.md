@@ -30,7 +30,7 @@ Utilities used internally.
 	    data-meta-tags=''
     ></div>
 
-### permutations?{#util-permutations?}
+### permutations?{#util-permutations}
 
 `(list xs, list ys) -> boolean`
 
@@ -53,7 +53,7 @@ false
 
 <div
       data-meta='true'
-      data-meta-id='util-permutations?'
+      data-meta-id='util-permutations'
       data-meta-type='var'
       data-meta-name='permutations?'
 	    data-meta-tags='util'
