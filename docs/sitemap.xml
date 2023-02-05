@@ -1,53 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>/categories.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/embedding.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/getting-started.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/legal_notice.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/modules.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/modules/std/spec.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/modules/std.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/support.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/reference.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tools.html</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/</loc>
   </url>
-  
 </urlset>

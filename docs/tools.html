@@ -39,6 +39,7 @@
 
     <meta name="apple-mobile-web-app-title" content="tweakflow - safe embeddable scripting language for the JVM">
     <meta name="application-name" content="tweakflow - safe embeddable scripting language for the JVM">
+    <meta name="generator" content="Hugo 0.110.0">
 
 </head>
 
@@ -51,7 +52,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.4.1</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.4.2</a>
           </li>
         </ul>
         </nav>
@@ -100,7 +101,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="./index.html"
-            ><b>Tweakflow</b> v1.4.1</a
+            ><b>Tweakflow</b> v1.4.2</a
           >
         </li>
         
@@ -164,49 +165,55 @@
           <div class="scrollable-parent">
             <div class="scrollable-content">
               <nav id="TableOfContents">
-<ul>
-<li><a href="#language-tools">Language Tools</a>
-<ul>
-<li><a href="#interactive-repl">Interactive REPL</a>
-<ul>
-<li><a href="#evaluating-expressions">Evaluating expressions</a></li>
-<li><a href="#multi-line-mode">Multi-line mode</a></li>
-<li><a href="#defining-variables">Defining variables</a></li>
-<li><a href="#inspecting-memory-contents">Inspecting memory contents</a></li>
-<li><a href="#viewing-docs">Viewing docs</a></li>
-<li><a href="#loading-modules">Loading modules</a></li>
-<li><a href="#command-line-arguments">Command line arguments</a></li>
-</ul></li>
-<li><a href="#spec-runner">Spec runner</a>
-<ul>
-<li><a href="#running-spec-modules">Running spec modules</a></li>
-<li><a href="#global-modules">Global modules</a></li>
-<li><a href="#filtering-specs">Filtering specs</a></li>
-<li><a href="#running-tagged-specs">Running tagged specs</a></li>
-<li><a href="#reporters">Reporters</a>
-<ul>
-<li><a href="#multiple-reporters">Multiple reporters</a></li>
-<li><a href="#reporter-options">Reporter options</a></li>
-</ul></li>
-<li><a href="#effects">Effects</a></li>
-<li><a href="#standard-library-test-suite">Standard library test suite</a></li>
-</ul></li>
-<li><a href="#runner">Runner</a>
-<ul>
-<li><a href="#passing-string-arguments">Passing string arguments</a></li>
-<li><a href="#passing-expression-arguments">Passing expression arguments</a></li>
-<li><a href="#loading-custom-modules">Loading custom modules</a></li>
-</ul></li>
-<li><a href="#metadata-extraction">Metadata extraction</a>
-<ul>
-<li><a href="#command-overview">Command overview</a></li>
-<li><a href="#printing-metadata">Printing metadata</a></li>
-<li><a href="#transforming-metadata">Transforming metadata</a></li>
-<li><a href="#processing-more-than-one-module">Processing more than one module</a></li>
-<li><a href="#saving-the-output">Saving the output</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#language-tools">Language Tools</a>
+      <ul>
+        <li><a href="#interactive-repl">Interactive REPL</a>
+          <ul>
+            <li><a href="#evaluating-expressions">Evaluating expressions</a></li>
+            <li><a href="#multi-line-mode">Multi-line mode</a></li>
+            <li><a href="#defining-variables">Defining variables</a></li>
+            <li><a href="#inspecting-memory-contents">Inspecting memory contents</a></li>
+            <li><a href="#viewing-docs">Viewing docs</a></li>
+            <li><a href="#loading-modules">Loading modules</a></li>
+            <li><a href="#command-line-arguments">Command line arguments</a></li>
+          </ul>
+        </li>
+        <li><a href="#spec-runner">Spec runner</a>
+          <ul>
+            <li><a href="#running-spec-modules">Running spec modules</a></li>
+            <li><a href="#global-modules">Global modules</a></li>
+            <li><a href="#filtering-specs">Filtering specs</a></li>
+            <li><a href="#running-tagged-specs">Running tagged specs</a></li>
+            <li><a href="#reporters">Reporters</a>
+              <ul>
+                <li><a href="#multiple-reporters">Multiple reporters</a></li>
+                <li><a href="#reporter-options">Reporter options</a></li>
+              </ul>
+            </li>
+            <li><a href="#effects">Effects</a></li>
+            <li><a href="#standard-library-test-suite">Standard library test suite</a></li>
+          </ul>
+        </li>
+        <li><a href="#runner">Runner</a>
+          <ul>
+            <li><a href="#passing-string-arguments">Passing string arguments</a></li>
+            <li><a href="#passing-expression-arguments">Passing expression arguments</a></li>
+            <li><a href="#loading-custom-modules">Loading custom modules</a></li>
+          </ul>
+        </li>
+        <li><a href="#metadata-extraction">Metadata extraction</a>
+          <ul>
+            <li><a href="#command-overview">Command overview</a></li>
+            <li><a href="#printing-metadata">Printing metadata</a></li>
+            <li><a href="#transforming-metadata">Transforming metadata</a></li>
+            <li><a href="#processing-more-than-one-module">Processing more than one module</a></li>
+            <li><a href="#saving-the-output">Saving the output</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 </nav>
             </div>
           </div>
@@ -214,61 +221,53 @@
       </aside>
       
       <main class="single-content " role="main">
-        
-
-<h1 id="language-tools">Language Tools</h1>
-
+        <h1 id="language-tools">Language Tools</h1>
 <p>The tweakflow jar offers entry points for some language tools that can be executed standalone. An interactive REPL, a spec runner that executes tests, a runner that evaluates all given modules and calls a main function, and a documentation tool that extracts doc and metadata from modules.</p>
-
 <h2 id="interactive-repl">Interactive REPL</h2>
-
 <p>To launch the REPL run:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar repl</code></pre></div>
-<p>The acronym <code>repl</code> stands for &lsquo;read evaluate process loop&rsquo;. You should see a prompt similar to this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">tweakflow interactive shell    \? for help, \q to quit
-std.tf&gt;</code></pre></div>
-<p>You can quit out of the REPL by entering <code>\q</code>. To get help, enter <code>\?</code>. The help screen looks similar to this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">usage: &gt; COMMAND ...
-
-interactive commands:
-  COMMAND
-    \help (\?)           show usage information
-    \vars (\v)           print interactive variable definitions
-    \edit (\e)           toggle multi-line entry
-    \inspect (\i)        inspect memory space
-    \load_path (\lp)     print load path
-    \pwd                 print working directory
-    \load (\l)           load a set of modules, removes interactive variables
-    \meta (\m)           print meta data
-    \doc (\d)            print doc
-    \time (\t)           measure evaluation time
-    ... snip ...</code></pre></div>
-<p>The commands are listed with a short description of what they do. To get more help for a particular command, just type it in with a <code>--help</code> argument.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar repl
+</span></span></code></pre></div><p>The acronym <code>repl</code> stands for &lsquo;read evaluate process loop&rsquo;. You should see a prompt similar to this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>tweakflow interactive shell    \? for help, \q to quit
+</span></span><span style="display:flex;"><span>std.tf&gt;
+</span></span></code></pre></div><p>You can quit out of the REPL by entering <code>\q</code>. To get help, enter <code>\?</code>. The help screen looks similar to this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>usage: &gt; COMMAND ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>interactive commands:
+</span></span><span style="display:flex;"><span>  COMMAND
+</span></span><span style="display:flex;"><span>    \help (\?)           show usage information
+</span></span><span style="display:flex;"><span>    \vars (\v)           print interactive variable definitions
+</span></span><span style="display:flex;"><span>    \edit (\e)           toggle multi-line entry
+</span></span><span style="display:flex;"><span>    \inspect (\i)        inspect memory space
+</span></span><span style="display:flex;"><span>    \load_path (\lp)     print load path
+</span></span><span style="display:flex;"><span>    \pwd                 print working directory
+</span></span><span style="display:flex;"><span>    \load (\l)           load a set of modules, removes interactive variables
+</span></span><span style="display:flex;"><span>    \meta (\m)           print meta data
+</span></span><span style="display:flex;"><span>    \doc (\d)            print doc
+</span></span><span style="display:flex;"><span>    \time (\t)           measure evaluation time
+</span></span><span style="display:flex;"><span>    ... snip ...
+</span></span></code></pre></div><p>The commands are listed with a short description of what they do. To get more help for a particular command, just type it in with a <code>--help</code> argument.</p>
 <p>To get help for the <code>\load</code> command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">&gt; \load --help
-usage: &gt; \load module [module ...]
-
-positional arguments:
-  module                 modules to load, first given module&#39;s scope is entered, relative paths are searched in load_path</code></pre></div>
-<h3 id="evaluating-expressions">Evaluating expressions</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&gt; \load --help
+</span></span><span style="display:flex;"><span>usage: &gt; \load module [module ...]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>positional arguments:
+</span></span><span style="display:flex;"><span>  module                 modules to load, first given module&#39;s scope is entered, relative paths are searched in load_path
+</span></span></code></pre></div><h3 id="evaluating-expressions">Evaluating expressions</h3>
 <p>Just type in an expression to have the REPL evaluate it:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; 1+2
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; 1+2
 3
 
 &gt; &#34;Hello&#34;.. &#34; &#34; .. &#34;World&#34;
-&#34;Hello World&#34;</code></pre>
-<p>The prompt shows you which module context you are in. You can reference all names visible in the module you are in. By default this is the standard library context, so you can use standard library functions.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">std.tf&gt; data.map([1, 2, 3], (x) -&gt; x*x)
+&#34;Hello World&#34;
+</code></pre><p>The prompt shows you which module context you are in. You can reference all names visible in the module you are in. By default this is the standard library context, so you can use standard library functions.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">std.tf&gt; data.map([1, 2, 3], (x) -&gt; x*x)
 [1, 4, 9]
 
 std.tf&gt; strings.length(&#34;foo&#34;)
-3</code></pre>
-<h3 id="multi-line-mode">Multi-line mode</h3>
-
+3
+</code></pre><h3 id="multi-line-mode">Multi-line mode</h3>
 <p>The REPL accepts single line entry by default. If you want to use an expression that spans multiple lines, open multiline mode using <code>\e</code> and close it again using <code>\e</code>. The REPL indicates with a <code>*</code> in the prompt that it is in multi-line mode.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">std.tf&gt; \e
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">std.tf&gt; \e
 std.tf* let {
 std.tf*   a: 3;
 std.tf*   b: 4;
@@ -276,20 +275,19 @@ std.tf* }
 std.tf* a+b
 std.tf* \e
 7
-std.tf&gt;</code></pre>
-<h3 id="defining-variables">Defining variables</h3>
-
+std.tf&gt;
+</code></pre><h3 id="defining-variables">Defining variables</h3>
 <p>You can define interactive variables using <code>var_name: expression</code> syntax. You can then reference your variables in your expressions and definitions.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; a: 3
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; a: 3
 3
 
 &gt; b: 4
 4
 
 &gt; c: a+b
-7</code></pre>
-<p>All variables are re-evaluated on each command, so changing a variable definition changes all dependent values.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; x: 3
+7
+</code></pre><p>All variables are re-evaluated on each command, so changing a variable definition changes all dependent values.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; x: 3
 3
 
 &gt; y: x
@@ -299,29 +297,27 @@ std.tf&gt;</code></pre>
 &#34;foo&#34;
 
 &gt; y
-&#34;foo&#34;</code></pre>
-<p>You can view your interactive variable definitions using the <code>\vars</code> command.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \vars
+&#34;foo&#34;
+</code></pre><p>You can view your interactive variable definitions using the <code>\vars</code> command.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; \vars
 5 interactive variables defined
 a: 3
 b: 4
 c: a+b
 x: &#34;foo&#34;
-y: x</code></pre>
-<p>You can view their current values using the <code>\inspect</code> command.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \inspect
+y: x
+</code></pre><p>You can view their current values using the <code>\inspect</code> command.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; \inspect
 a: 3
 b: 4
 c: 7
 `$`: &#34;foo&#34;
 x: &#34;foo&#34;
-y: &#34;foo&#34;</code></pre>
-<p>The <code>$</code> variable is internally maintained by the REPL to hold the last evaluation result. You can only view it using <code>\inspect</code>. It cannot be referenced in your expressions.</p>
-
+y: &#34;foo&#34;
+</code></pre><p>The <code>$</code> variable is internally maintained by the REPL to hold the last evaluation result. You can only view it using <code>\inspect</code>. It cannot be referenced in your expressions.</p>
 <h3 id="inspecting-memory-contents">Inspecting memory contents</h3>
-
 <p>You can inspect the content of any loaded module, library or variable. Just pass a reference to the <code>\inspect</code> command. To view the contents of the <code>strings</code> library, for example:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \i strings
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; \i strings
 # library
   starts_with?: function
   upper_case: function
@@ -337,36 +333,33 @@ y: &#34;foo&#34;</code></pre>
   lower_case: function
   join: function
   chars: function
-  last_index_of: function</code></pre>
-<p>Enter <code>\i --help</code> for more information about the inspect command.</p>
-
+  last_index_of: function
+</code></pre><p>Enter <code>\i --help</code> for more information about the inspect command.</p>
 <h3 id="viewing-docs">Viewing docs</h3>
-
 <p>Tweakflow has the ability to annotate all named entities with doc data. You can view any doc data using the <code>\doc</code> command. The standard module, libraries and functions are annotated with markdown documentation.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">&gt; \doc strings
-The strings library contains basic functions for text processing.
-
-&gt; \doc strings.length
-`(string x) -&gt; long`
-
-Returns the number of unicode codepoints in given string `x`.
-
-Returns `nil` if `x` is `nil`.
-
-​```tweakflow
-&gt; strings.length(&#34;&#34;)
-0
-
-&gt; strings.length(&#34;foo&#34;)
-3
-
-&gt; strings.length(&#34;你好&#34;)
-2
-​```</code></pre></div>
-<h3 id="loading-modules">Loading modules</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&gt; \doc strings
+</span></span><span style="display:flex;"><span>The strings library contains basic functions for text processing.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; \doc strings.length
+</span></span><span style="display:flex;"><span>`(string x) -&gt; long`
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Returns the number of unicode codepoints in given string `x`.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Returns `nil` if `x` is `nil`.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>​```tweakflow
+</span></span><span style="display:flex;"><span>&gt; strings.length(&#34;&#34;)
+</span></span><span style="display:flex;"><span>0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; strings.length(&#34;foo&#34;)
+</span></span><span style="display:flex;"><span>3
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; strings.length(&#34;你好&#34;)
+</span></span><span style="display:flex;"><span>2
+</span></span><span style="display:flex;"><span>​```
+</span></span></code></pre></div><h3 id="loading-modules">Loading modules</h3>
 <p>You can load a different module than the standard library through the <code>\load</code> command. Let&rsquo;s say you have a module file on your disk:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow"># acme.tf
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow"># acme.tf
 
 import data, regex, strings from &#39;std&#39;;
 
@@ -402,64 +395,50 @@ library product_codes {
 
         # upper case all characters &#34;foob-ar&#34; -&gt; &#34;FOOB-AR&#34;
         upper_case;
-}</code></pre>
-<p>Load it in the REPL:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">&gt; \load acme.tf
-acme.tf&gt;</code></pre>
-<p>You are now in the context of the acme module, and can reference all names in this module.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow">acme.tf&gt; product_codes.normalize(&#34;ah-78277-Nz&#34;)
-&#34;AH78-277N-Z&#34;</code></pre>
-<h3 id="command-line-arguments">Command line arguments</h3>
-
+}
+</code></pre><p>Load it in the REPL:</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; \load acme.tf
+acme.tf&gt;
+</code></pre><p>You are now in the context of the acme module, and can reference all names in this module.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">acme.tf&gt; product_codes.normalize(&#34;ah-78277-Nz&#34;)
+&#34;AH78-277N-Z&#34;
+</code></pre><h3 id="command-line-arguments">Command line arguments</h3>
 <p>The REPL accepts a number of command line arguments that influence which modules are initially loaded, and which directories are placed on the load path. To learn more, run:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar repl --help</code></pre></div>
-<h2 id="spec-runner">Spec runner</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar repl --help
+</span></span></code></pre></div><h2 id="spec-runner">Spec runner</h2>
 <p>The spec runner runs modules that <a href="./reference.html#specs">contain tests</a>. You can specify which modules to include, which tests to execute, and how to format the output.</p>
-
 <p>Run the following command to view the command line options:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar spec -h</code></pre></div>
-<h3 id="running-spec-modules">Running spec modules</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -h
+</span></span></code></pre></div><h3 id="running-spec-modules">Running spec modules</h3>
 <p>You specify the spec modules to run by supplying paths. If the given path is a file, it is run as a spec module.
 If the given path is a directory, the runner recursively finds and runs all <code>*.spec.tf</code> files within that directory.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># runs specific files</span>
-$ java -jar tweakflow-1.4.1.jar spec /path/to/t_1.spec.tf /path/to/t_2.spec.tf
-
-<span style="color:#75715e"># recursively runs all *.spec.tf files in ./tests</span>
-$ java -jar tweakflow-1.4.1.jar spec ./tests</code></pre></div>
-<h3 id="global-modules">Global modules</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># runs specific files</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec /path/to/t_1.spec.tf /path/to/t_2.spec.tf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># recursively runs all *.spec.tf files in ./tests</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec ./tests
+</span></span></code></pre></div><h3 id="global-modules">Global modules</h3>
 <p>You can include global modules to be available in specs using the <code>-g</code> switch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># include the ./conf/test.tf global module in each spec</span>
-$ java -jar tweakflow-1.4.1.jar spec -g ./conf/test.tf ./tests</code></pre></div>
-<h3 id="filtering-specs">Filtering specs</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># include the ./conf/test.tf global module in each spec</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -g ./conf/test.tf ./tests
+</span></span></code></pre></div><h3 id="filtering-specs">Filtering specs</h3>
 <p>Use the <code>-f</code> switch to execute only tests that contain the given string in their full name. A test&rsquo;s full name consists of all its parent describe block&rsquo;s names and its own name.</p>
-
 <p>In order to recursively execute all tests in a given describe block you can specify the describe block&rsquo;s name as a filter.</p>
-
 <p>In order to execute a single test only, you could specify a unique string from its own name.</p>
-
 <p>You can specify multiple <code>-f</code> switches. A test must satisfy all filters in order to run.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># only run tests that have &#39;nil&#39; somewhere in their name</span>
-$ java -jar tweakflow-1.4.1.jar spec -f nil ./tests</code></pre></div>
-<h3 id="running-tagged-specs">Running tagged specs</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># only run tests that have &#39;nil&#39; somewhere in their name</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -f nil ./tests
+</span></span></code></pre></div><h3 id="running-tagged-specs">Running tagged specs</h3>
 <p>If you have tagged describe blocks or tests, they are not executed by default. You need to specify that you wish to run tagged tests by providing the desired tag using the <code>-t</code> switch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># run tests that are tagged &#39;nightly&#39;</span>
-$ java -jar tweakflow-1.4.1.jar spec -t nightly ./tests</code></pre></div>
-<p>You can specify multiple <code>-t</code> switches. A test will run if it is tagged with any of the given tags.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># run tests that are tagged &#39;nightly&#39;</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -t nightly ./tests
+</span></span></code></pre></div><p>You can specify multiple <code>-t</code> switches. A test will run if it is tagged with any of the given tags.</p>
 <p>If you specify a <code>-t</code> switch, untagged tests will not run. If you wish to include them, use the <code>--untagged</code> switch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># run regular test-suite plus nightly tests</span>
-$ java -jar tweakflow-1.4.1.jar spec --untagged -t nightly ./tests</code></pre></div>
-<h3 id="reporters">Reporters</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># run regular test-suite plus nightly tests</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec --untagged -t nightly ./tests
+</span></span></code></pre></div><h3 id="reporters">Reporters</h3>
 <p>Spec reporters determine the output of a spec run. You can specify the reporter to use with the <code>-r</code> switch.</p>
-
 <p>The following reporters are built-in:</p>
-
 <table>
 <thead>
 <tr>
@@ -467,34 +446,27 @@ $ java -jar tweakflow-1.4.1.jar spec --untagged -t nightly ./tests</code></pre><
 <th>Output</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>doc (default)</td>
 <td>Hierarchical view of tests</td>
 </tr>
-
 <tr>
 <td>dot</td>
 <td>Minimal output with a single character printed for each test</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># use the dot reporter</span>
-$ java -jar tweakflow-1.4.1.jar spec -r dot ./tests</code></pre></div>
-<p>You can specify your own reporter that implements the <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/spec/reporter/SpecReporter.java">SpecReporter</a> interface. Make sure your imeplementation is on the class path and provide the fully qualified class name.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># use a custom reporter</span>
-$ java -cp &lt;your cp&gt; com.twineworks.tweakflow.Main spec -r com.your.ReporterClass ./tests</code></pre></div>
-<h4 id="multiple-reporters">Multiple reporters</h4>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># use the dot reporter</span>
+</span></span><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -r dot ./tests
+</span></span></code></pre></div><p>You can specify your own reporter that implements the <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/spec/reporter/SpecReporter.java">SpecReporter</a> interface. Make sure your imeplementation is on the class path and provide the fully qualified class name.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># use a custom reporter</span>
+</span></span><span style="display:flex;"><span>$ java -cp &lt;your cp&gt; com.twineworks.tweakflow.Main spec -r com.your.ReporterClass ./tests
+</span></span></code></pre></div><h4 id="multiple-reporters">Multiple reporters</h4>
 <p>You can specify more than one reporter by supplying more than one <code>-r</code> switch. The specified reporters should not interfere with each other, for example one should write to console, while the other should generate a file.</p>
-
 <h4 id="reporter-options">Reporter options</h4>
-
 <p>You can supply options to reporters using <code>-ro &lt;OPTION_NAME&gt; &lt;OPTION_VALUE&gt;</code>. Options specified in this way are made available to all reporters as string properties.</p>
-
 <p>The built-in reporters understand the following options:</p>
-
 <table>
 <thead>
 <tr>
@@ -503,14 +475,12 @@ $ java -cp &lt;your cp&gt; com.twineworks.tweakflow.Main spec -r com.your.Report
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>color</td>
 <td><code>true</code> / <code>false</code></td>
 <td>whether reporter may use ANSI escape sequences to generate colored output</td>
 </tr>
-
 <tr>
 <td>tty</td>
 <td><code>true</code> / <code>false</code></td>
@@ -518,61 +488,43 @@ $ java -cp &lt;your cp&gt; com.twineworks.tweakflow.Main spec -r com.your.Report
 </tr>
 </tbody>
 </table>
-
 <p>By default the runner tries to detect whether it runs on a console and enables the above options dynamically.</p>
-
 <p>You can use the following shortucts for specifying reporter options:</p>
-
 <ul>
 <li>use <code>--color</code> as a shortcut for <code>-ro color true</code></li>
 <li>use <code>--tty</code> as a shortcut for <code>-ro tty true</code></li>
 </ul>
-
 <h3 id="effects">Effects</h3>
-
 <p>Tweakflow is side-effect free. If you wish to trigger side effects in the test suite, you can supply a set of effects by implementing the <a href="https://github.com/twineworks/tweakflow/blob/master/src/main/java/com/twineworks/tweakflow/spec/effects/SpecEffects.java">SpecEffects</a> interface. To use your class, use the <code>-e</code> switch and supply the fully qualified name of the class implementing the interface.</p>
-
 <p>See the <a href="https://github.com/twineworks/tweakflow/blob/master/src/test/resources/spec/examples/effects.spec.tf">effects example module</a> for a demonstration on how to use effects. You can run the module using the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar spec -e com.twineworks.tweakflow.spec.effects.example.ExampleEffects src/test/resources/spec/examples/effects.spec.tf</code></pre></div>
-<h3 id="standard-library-test-suite">Standard library test suite</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec -e com.twineworks.tweakflow.spec.effects.example.ExampleEffects src/test/resources/spec/examples/effects.spec.tf
+</span></span></code></pre></div><h3 id="standard-library-test-suite">Standard library test suite</h3>
 <p>The test suite for the tweakflow standard library is located at <a href="https://github.com/twineworks/tweakflow/tree/master/src/test/resources/spec/std">src/test/resources/spec/std</a></p>
-
 <p>You can run it with the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar spec src/test/resources/spec/std</code></pre></div>
-<h2 id="runner">Runner</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar spec src/test/resources/spec/std
+</span></span></code></pre></div><h2 id="runner">Runner</h2>
 <p>The runner loads a module and calls a main function with some arguments you supply on the command line. It prints the return value back to the console.</p>
-
 <p>Run the following command to view the command line options.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar run --help</code></pre></div>
-<p>The module(s) to load are given as positional arguments. You can pass <code>std</code> to load the standard module.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar run --help
+</span></span></code></pre></div><p>The module(s) to load are given as positional arguments. You can pass <code>std</code> to load the standard module.</p>
 <p>The main function to call is given using the <code>-m</code> switch in <code>library_name.var_name</code> format. It is a reference in module scope of the first passed module.</p>
-
 <p>Arguments are given in order, using a series of <code>-a</code> and <code>-ea</code> switches. The <code>-a</code> switch takes the argument verbatim and turns it into a tweakflow string. The <code>-ea</code> switch treats the argument as an expression that is evaluated first, before it is passed on to the function.</p>
-
 <h3 id="passing-string-arguments">Passing string arguments</h3>
-
 <p>The following invocation calls <code>strings.length(&quot;foo&quot;)</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar run -m strings.length -a foo std
-<span style="color:#ae81ff">3</span></code></pre></div>
-<p>Since the argument is a string, it is passed using the <code>-a</code> switch. Please note that passing the argument using the <code>-ea</code> switch would fail, since <code>foo</code> would simply be a reference to an undefined variable. If you wish to pass strings using <code>-ea</code>, you have to pass a proper literal string as in:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar run -m strings.length -ea <span style="color:#e6db74">&#34;&#39;foo&#39;&#34;</span> std
-<span style="color:#ae81ff">3</span></code></pre></div>
-<p>Shell escaping can make it tricky to know exactly what is passed. It is therefore recommended to avoid the complexity and pass strings using <code>-a</code>.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar run -m strings.length -a foo std
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><p>Since the argument is a string, it is passed using the <code>-a</code> switch. Please note that passing the argument using the <code>-ea</code> switch would fail, since <code>foo</code> would simply be a reference to an undefined variable. If you wish to pass strings using <code>-ea</code>, you have to pass a proper literal string as in:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar run -m strings.length -ea <span style="color:#e6db74">&#34;&#39;foo&#39;&#34;</span> std
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><p>Shell escaping can make it tricky to know exactly what is passed. It is therefore recommended to avoid the complexity and pass strings using <code>-a</code>.</p>
 <h3 id="passing-expression-arguments">Passing expression arguments</h3>
-
 <p>The following invocation calls <code>data.map([1, 2, 3, 4], (x) -&gt; x*x)</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar run -m data.map -ea <span style="color:#e6db74">&#39;[1, 2, 3, 4]&#39;</span> -ea <span style="color:#e6db74">&#39;(x) -&gt; x*x&#39;</span> std
-<span style="color:#f92672">[</span>1, 4, 9, 16<span style="color:#f92672">]</span></code></pre></div>
-<p>This time both arguments need to be evaluated to a list and function first. Therefore the <code>-ea</code> switch is used both times.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar run -m data.map -ea <span style="color:#e6db74">&#39;[1, 2, 3, 4]&#39;</span> -ea <span style="color:#e6db74">&#39;(x) -&gt; x*x&#39;</span> std
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>1, 4, 9, 16<span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>This time both arguments need to be evaluated to a list and function first. Therefore the <code>-ea</code> switch is used both times.</p>
 <h3 id="loading-custom-modules">Loading custom modules</h3>
-
 <p>You can load any module on disk. Let&rsquo;s say you have the following module available:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow"># acme.tf
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow"># acme.tf
 
 import data, regex, strings from &#39;std&#39;;
 
@@ -608,16 +560,14 @@ library product_codes {
 
         # upper case all characters &#34;foob-ar&#34; -&gt; &#34;FOOB-AR&#34;
         upper_case;
-}</code></pre>
-<p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
-KSH7-65FG-25FF</code></pre></div>
-<h2 id="metadata-extraction">Metadata extraction</h2>
-
+}
+</code></pre><p>To load it, and run <code>product_codes.normalize(&quot;ksh765fg25ff&quot;)</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar run -m product_codes.normalize -a ksh765fg25ff acme.tf
+</span></span><span style="display:flex;"><span>KSH7-65FG-25FF
+</span></span></code></pre></div><h2 id="metadata-extraction">Metadata extraction</h2>
 <p>The tweakflow language allows annotating modules, libraries, and variables with documentation and custom meta data. The <code>doc</code> utility makes it possible to extract that information in a structured way.</p>
-
 <p>Let&rsquo;s work with the following module file:</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow"># module foo.tf
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow"># module foo.tf
 doc
 ~~~
 This is documentation at the module level.
@@ -648,63 +598,55 @@ library bar {
   }
 
   function baz: (x) -&gt; x*x;
-}</code></pre>
-<h3 id="command-overview">Command overview</h3>
-
+}
+</code></pre><h3 id="command-overview">Command overview</h3>
 <p>You can view all command line switches by running the following:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar doc --help</code></pre></div>
-<p>The next sections provide a walkthrough for the most common options.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar doc --help
+</span></span></code></pre></div><p>The next sections provide a walkthrough for the most common options.</p>
 <h3 id="printing-metadata">Printing metadata</h3>
-
 <p>The following invokes <code>doc</code>, passing in the module to extract metadata from.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar doc foo.tf</code></pre></div>
-<p>By default the <code>doc</code> utility prints the structure of available meta data:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">{
-  :node &#34;module&#34;,
-  :global false,
-  :components [{
-    :node &#34;library&#34;,
-    :meta {
-      :author &#34;John Doe et al.&#34;,
-      :since &#34;2.3&#34;
-    },
-    :name &#34;bar&#34;,
-    :vars [{
-      :node &#34;var&#34;,
-      :meta {
-        :author &#34;John Doe&#34;,
-        :date 2017-03-12T00:00:00Z@UTC
-      },
-      :name &#34;baz&#34;,
-      :type &#34;function&#34;,
-      :doc &#34;This is documentation for function baz.&#34;,
-      :expression &#34;(x) -&gt; x*x&#34;
-    }],
-    :export false,
-    :doc &#34;This is documentation for library bar.&#34;
-  }],
-  :doc &#34;This is documentation at the module level.&#34;,
-  :file &#34;foo.tf&#34;,
-  :path &#34;/Users/slawo/Desktop/docs_check/foo.tf&#34;,
-  :meta {
-    :description &#34;Description of the module&#34;,
-    :version &#34;4.2&#34;,
-    :title &#34;foo&#34;
-  }
-}</code></pre></div>
-<p>Please note that the output is a valid tweakflow dict value.</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar doc foo.tf
+</span></span></code></pre></div><p>By default the <code>doc</code> utility prints the structure of available meta data:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  :node &#34;module&#34;,
+</span></span><span style="display:flex;"><span>  :global false,
+</span></span><span style="display:flex;"><span>  :components [{
+</span></span><span style="display:flex;"><span>    :node &#34;library&#34;,
+</span></span><span style="display:flex;"><span>    :meta {
+</span></span><span style="display:flex;"><span>      :author &#34;John Doe et al.&#34;,
+</span></span><span style="display:flex;"><span>      :since &#34;2.3&#34;
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    :name &#34;bar&#34;,
+</span></span><span style="display:flex;"><span>    :vars [{
+</span></span><span style="display:flex;"><span>      :node &#34;var&#34;,
+</span></span><span style="display:flex;"><span>      :meta {
+</span></span><span style="display:flex;"><span>        :author &#34;John Doe&#34;,
+</span></span><span style="display:flex;"><span>        :date 2017-03-12T00:00:00Z@UTC
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      :name &#34;baz&#34;,
+</span></span><span style="display:flex;"><span>      :type &#34;function&#34;,
+</span></span><span style="display:flex;"><span>      :doc &#34;This is documentation for function baz.&#34;,
+</span></span><span style="display:flex;"><span>      :expression &#34;(x) -&gt; x*x&#34;
+</span></span><span style="display:flex;"><span>    }],
+</span></span><span style="display:flex;"><span>    :export false,
+</span></span><span style="display:flex;"><span>    :doc &#34;This is documentation for library bar.&#34;
+</span></span><span style="display:flex;"><span>  }],
+</span></span><span style="display:flex;"><span>  :doc &#34;This is documentation at the module level.&#34;,
+</span></span><span style="display:flex;"><span>  :file &#34;foo.tf&#34;,
+</span></span><span style="display:flex;"><span>  :path &#34;/Users/slawo/Desktop/docs_check/foo.tf&#34;,
+</span></span><span style="display:flex;"><span>  :meta {
+</span></span><span style="display:flex;"><span>    :description &#34;Description of the module&#34;,
+</span></span><span style="display:flex;"><span>    :version &#34;4.2&#34;,
+</span></span><span style="display:flex;"><span>    :title &#34;foo&#34;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Please note that the output is a valid tweakflow dict value.</p>
 <h3 id="transforming-metadata">Transforming metadata</h3>
-
 <p>The <code>doc</code> utility can pass the meta data of a module to a sequence of transformer functions. The most common task for a transformer is to generate some human-readable document format from the given structure.</p>
-
 <p>A transformer is a special tweakflow module that has a library named <code>transform</code> which in turn has a variable named <code>transform</code>. This variable holds a function accepting above structure as its sole argument. The return value of the function is the output of the transformer.</p>
-
 <p>You supply transformers using the <code>-t</code> switch. If you supply more than one transformer, they are chained such that the output of the first transformer becomes the argument to the second transformer, and so on.</p>
-
 <p>Let&rsquo;s supply a basic transformer that just generates a one-sentence summary of the module.</p>
-<pre><code class="language-tweakflow" data-lang="tweakflow"># transformer.tf
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow"># transformer.tf
 import data, strings from &#34;std&#34;;
 
 alias data.size as size;
@@ -732,34 +674,30 @@ library transform {
 
   vars_in_lib: (dict lib) -&gt; long
     size(lib[:vars]);
-}</code></pre>
-<p>Let&rsquo;s run this transformer over the standard library:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar doc -t transformer.tf std
-Module std.tf contains <span style="color:#ae81ff">8</span> libraries, and a total of <span style="color:#ae81ff">159</span> variables.</code></pre></div>
-<p>A more sophisticated transformer might generate markdown, XML, or HTML documentation for the module.</p>
-
+}
+</code></pre><p>Let&rsquo;s run this transformer over the standard library:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar doc -t transformer.tf std
+</span></span><span style="display:flex;"><span>Module std.tf contains <span style="color:#ae81ff">8</span> libraries, and a total of <span style="color:#ae81ff">159</span> variables.
+</span></span></code></pre></div><p>A more sophisticated transformer might generate markdown, XML, or HTML documentation for the module.</p>
 <h3 id="processing-more-than-one-module">Processing more than one module</h3>
-
 <p>You can pass more than one module to <code>doc</code>, and they are processed in order.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar doc -t transformer.tf std foo.tf
-Module std.tf contains <span style="color:#ae81ff">8</span> libraries, and a total of <span style="color:#ae81ff">159</span> variables.
-Module /path/to/foo.tf contains <span style="color:#ae81ff">1</span> libraries, and a total of <span style="color:#ae81ff">1</span> variables.</code></pre></div>
-<h3 id="saving-the-output">Saving the output</h3>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar doc -t transformer.tf std foo.tf
+</span></span><span style="display:flex;"><span>Module std.tf contains <span style="color:#ae81ff">8</span> libraries, and a total of <span style="color:#ae81ff">159</span> variables.
+</span></span><span style="display:flex;"><span>Module /path/to/foo.tf contains <span style="color:#ae81ff">1</span> libraries, and a total of <span style="color:#ae81ff">1</span> variables.
+</span></span></code></pre></div><h3 id="saving-the-output">Saving the output</h3>
 <p>If you&rsquo;re supplying relative module paths to <code>doc</code>, you can ask to save each module output to a base output directory, preserving the relative paths given. You can also specify a file extension to use, which is handy if your transformer generates a well known file format. The default extension is <code>txt</code>.</p>
-
 <p>Assuming foo.tf is in the current directory, run:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ java -jar tweakflow-1.4.1.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf</code></pre></div>
-<p>It generates a <code>docs</code> directory, placing the following files in there:</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ java -jar tweakflow-1.4.2.jar doc -t transformer.tf --output docs --output-extension md std.tf foo.tf
+</span></span></code></pre></div><p>It generates a <code>docs</code> directory, placing the following files in there:</p>
 <p><code>docs/std.tf.md</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Module std.tf contains 8 libraries, and a total of 167 variables.</code></pre></div>
-<p><code>docs/foo.tf.md</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Module std.tf contains 8 libraries, and a total of 167 variables.
+</span></span></code></pre></div><p><code>docs/foo.tf.md</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Module /path/to/foo.tf contains 1 libraries, and a total of 1 variables.
+</span></span></code></pre></div>
         
 <footer>
   <div class="footer__copyright">
-    © <a href="http://twineworks.com">Twineworks 2022</a>
+    © <a href="http://twineworks.com">Twineworks 2023</a>
   </div>
   <div class="footer__social"></div>
   <div class="footer__links">

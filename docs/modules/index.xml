@@ -13,11 +13,12 @@
       
       <guid>/modules/std/spec.html</guid>
       <description>module spec.tf The std/spec module contains libraries useful for creating test suites.
- library util Utilities used internally.
- permutations? (list xs, list ys) -&amp;gt; boolean
+library util Utilities used internally.
+permutations?{#util-permutations?} (list xs, list ys) -&amp;gt; boolean
 Returns true if xs and ys are both non-nil and contain the same items. Item order is not relevant.
 Returns false otherwise.
-&amp;gt; util.permutations?([1,2,3], [2,3,1]) true &amp;gt; util.permutations?([1,2], [1,3]) false &amp;gt; util.permutations?(nil, nil) false  library assertions The library contains functions useful for defining assertions.</description>
+&amp;gt; util.permutations?([1,2,3], [2,3,1]) true &amp;gt; util.permutations?([1,2], [1,3]) false &amp;gt; util.permutations?(nil, nil) false library assertions The library contains functions useful for defining assertions.
+expect_error (function x, function f) -&amp;gt; boolean</description>
     </item>
     
     <item>
@@ -27,11 +28,11 @@ Returns false otherwise.
       
       <guid>/modules/std.html</guid>
       <description>module std.tf The std module contains libraries for general computing tasks.
- library core The core library contains utility functions to process values at a basic level.
- id (any x) -&amp;gt; any
+library core The core library contains utility functions to process values at a basic level.
+id (any x) -&amp;gt; any
 Identity function. Returns x.
-&amp;gt; core.id(&amp;#34;foo&amp;#34;) &amp;#34;foo&amp;#34; &amp;gt; core.id({:a &amp;#34;b&amp;#34;}) { :a &amp;#34;b&amp;#34; } &amp;gt; core.id(nil) nil  inspect (x) -&amp;gt; string
-Returns a string representation of x. If x is a function the string &#39;function&#39; is returned.</description>
+&amp;gt; core.id(&amp;#34;foo&amp;#34;) &amp;#34;foo&amp;#34; &amp;gt; core.id({:a &amp;#34;b&amp;#34;}) { :a &amp;#34;b&amp;#34; } &amp;gt; core.id(nil) nil inspect (x) -&amp;gt; string
+Returns a string representation of x. If x is a function the string &#39;function&#39; is returned. Otherwise literal notation is used.</description>
     </item>
     
   </channel>
