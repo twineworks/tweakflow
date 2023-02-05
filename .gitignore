@@ -19,7 +19,7 @@ target
 dependency-reduced-pom.xml
 
 # local development ignores
-/bin
+/build/hugo
 /gen
 
 # htmltest cache
