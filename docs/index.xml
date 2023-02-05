@@ -97,7 +97,8 @@ Returns a string representation of x. If x is a function the string &#39;functio
       
       <guid>/reference.html</guid>
       <description>Motivation Tweakflow offers a way for JVM applications to evaluate user-supplied expressions in a formula-like notation. Tweakflow supports user-defined functions, libraries, and modules, to support applications in which the user-supplied computations can grow to non-trivial size and complexity. The host application is in control of how much sophistication is available to users.
-Requirements Tweakflow runs on the JVM. Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.</description>
+Requirements Tweakflow runs on the JVM. Java 8 or later is required.
+Design principles The following sections outline fundamental principles which inform the design of tweakflow.</description>
     </item>
     
     <item>

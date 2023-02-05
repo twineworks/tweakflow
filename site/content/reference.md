@@ -8,7 +8,7 @@ Tweakflow offers a way for JVM applications to evaluate user-supplied expression
 
 ## Requirements
 
-Tweakflow runs on the JVM. Java 8 or later is required. Builds are tested against JDK 8 and JDK 11.
+Tweakflow runs on the JVM. Java 8 or later is required.
 
 
 ## Design principles
