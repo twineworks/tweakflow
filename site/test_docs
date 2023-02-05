@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 set -e
-cd $(dirname "$0")
+cd "$(dirname "$0")"
 
 echo "* verifying html integrity"
-# need htmltest installed and on path
-# https://github.com/wjdp/htmltest
-htmltest
+# see /build/htmltest.md
+../build/htmltest/htmltest
 echo ""
 echo "* done"

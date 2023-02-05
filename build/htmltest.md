@@ -1,0 +1,2 @@
+ - Download htmltest from https://github.com/wjdp/htmltest/releases
+ - Ensure `build/htmltest/htmltest` points to the executable 
