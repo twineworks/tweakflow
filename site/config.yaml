@@ -4,10 +4,14 @@ theme: "hugo-tweakflow"
 uglyurls: true
 relativeURLs: true
 markup:
-  defaultMarkdownHandler: blackfriday
+  defaultMarkdownHandler: goldmark
   goldmark:
     renderer:
       unsafe: true
+  tableOfContents:
+    endLevel: 4
+    ordered: false
+    startLevel: 1
 menu:
 
   mainleft:
@@ -55,4 +59,4 @@ params:
   # shortcode {{< gitRef >}}
   gitRef: "master"
   # shortcode {{< version >}}
-  version: "1.4.1"
+  version: "1.4.2"
