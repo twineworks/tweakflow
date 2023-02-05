@@ -60,7 +60,7 @@ Germany</description>
       <guid>/modules/std/spec.html</guid>
       <description>module spec.tf The std/spec module contains libraries useful for creating test suites.
 library util Utilities used internally.
-permutations?{#util-permutations?} (list xs, list ys) -&amp;gt; boolean
+permutations? (list xs, list ys) -&amp;gt; boolean
 Returns true if xs and ys are both non-nil and contain the same items. Item order is not relevant.
 Returns false otherwise.
 &amp;gt; util.permutations?([1,2,3], [2,3,1]) true &amp;gt; util.permutations?([1,2], [1,3]) false &amp;gt; util.permutations?(nil, nil) false library assertions The library contains functions useful for defining assertions.

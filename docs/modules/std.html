@@ -258,7 +258,7 @@ If <code>x</code> is not a function, and contains no functions as children <code
       data-meta-name='inspect'
 	    data-meta-tags='core'
     ></div>
-<h3 id="presentcore-present">present?{#core-present?}</h3>
+<h3 id="core-present">present?</h3>
 <p><code>(x) -&gt; boolean</code></p>
 <p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, returns <code>true</code> otherwise.</p>
 <pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; core.present?(&#34;foo&#34;)
@@ -268,12 +268,12 @@ true
 false
 </code></pre><div
       data-meta='true'
-      data-meta-id='core-present?'
+      data-meta-id='core-present'
       data-meta-type='var'
       data-meta-name='present?'
 	    data-meta-tags='core'
     ></div>
-<h3 id="nilcore-nil">nil?{#core-nil?}</h3>
+<h3 id="core-nil">nil?</h3>
 <p><code>(x) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> is <code>nil</code>, returns <code>false</code> otherwise.</p>
 <pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; core.nil?(&#34;foo&#34;)
@@ -283,7 +283,7 @@ false
 true
 </code></pre><div
       data-meta='true'
-      data-meta-id='core-nil?'
+      data-meta-id='core-nil'
       data-meta-type='var'
       data-meta-name='nil?'
 	    data-meta-tags='core'
@@ -714,7 +714,7 @@ The separator <code>s</code> is treated like a regular string, it is not a regul
       data-meta-name='split'
 	    data-meta-tags='strings'
     ></div>
-<h3 id="starts_withstrings-starts_with">starts_with?{#strings-starts_with?}</h3>
+<h3 id="strings-starts_with">starts_with?</h3>
 <p><code>(string x, string init) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> starts with the substring <code>init</code>.<br>
 Returns <code>false</code> otherwise.</p>
@@ -736,12 +736,12 @@ nil
 nil
 </code></pre><div
       data-meta='true'
-      data-meta-id='strings-starts_with?'
+      data-meta-id='strings-starts_with'
       data-meta-type='var'
       data-meta-name='starts_with?'
 	    data-meta-tags='strings'
     ></div>
-<h3 id="ends_withstrings-ends_with">ends_with?{#strings-ends_with?}</h3>
+<h3 id="strings-ends_with">ends_with?</h3>
 <p><code>(string x, string tail) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>x</code> ends with the substring <code>tail</code>.<br>
 Returns <code>false</code> otherwise.</p>
@@ -763,7 +763,7 @@ nil
 nil
 </code></pre><div
       data-meta='true'
-      data-meta-id='strings-ends_with?'
+      data-meta-id='strings-ends_with'
       data-meta-type='var'
       data-meta-name='ends_with?'
 	    data-meta-tags='strings'
@@ -1168,7 +1168,7 @@ ERROR:
       data-meta-name='size'
 	    data-meta-tags='data'
     ></div>
-<h3 id="emptydata-empty">empty?{#data-empty?}</h3>
+<h3 id="data-empty">empty?</h3>
 <p><code>(any xs) -&gt; boolean</code></p>
 <p>Given a dict or list of <code>xs</code>, returns true if the collection is empty, false otherwise.</p>
 <p>Returns <code>nil</code> if <code>xs</code> is <code>nil</code>.</p>
@@ -1194,7 +1194,7 @@ ERROR:
   message: empty? is not defined for type string
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-empty?'
+      data-meta-id='data-empty'
       data-meta-type='var'
       data-meta-name='empty?'
 	    data-meta-tags='data'
@@ -1493,7 +1493,7 @@ ERROR:
       data-meta-name='keys'
 	    data-meta-tags='data'
     ></div>
-<h3 id="hasdata-has">has?{#data-has?}</h3>
+<h3 id="data-has">has?</h3>
 <p><code>(xs, key) -&gt; boolean</code></p>
 <p>Returns <code>true</code> if <code>key</code> is a key in <code>xs</code>, false otherwise.
 If <code>xs</code> is a <code>list</code>, <code>key</code> is cast to a <code>long</code>.
@@ -1527,7 +1527,7 @@ ERROR:
 true
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-has?'
+      data-meta-id='data-has'
       data-meta-type='var'
       data-meta-name='has?'
 	    data-meta-tags='data'
@@ -2123,7 +2123,7 @@ nil
       data-meta-name='range'
 	    data-meta-tags='data'
     ></div>
-<h3 id="anydata-any">any?{#data-any?}</h3>
+<h3 id="data-any">any?</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
 two arguments, <code>x</code> and the index of <code>x</code> in <code>xs</code> are passed.</p>
@@ -2150,12 +2150,12 @@ false
 nil
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-any?'
+      data-meta-id='data-any'
       data-meta-type='var'
       data-meta-name='any?'
 	    data-meta-tags='data'
     ></div>
-<h3 id="nonedata-none">none?{#data-none?}</h3>
+<h3 id="data-none">none?</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
 two arguments, <code>x</code> and the index of <code>x</code> in <code>xs</code> are passed.</p>
@@ -2182,12 +2182,12 @@ true
 nil
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-none?'
+      data-meta-id='data-none'
       data-meta-type='var'
       data-meta-name='none?'
 	    data-meta-tags='data'
     ></div>
-<h3 id="alldata-all">all?{#data-all?}</h3>
+<h3 id="data-all">all?</h3>
 <p><code>(list xs, function p) -&gt; boolean</code></p>
 <p>Tests items <code>x</code> in <code>xs</code> with predicate function <code>p</code>. If <code>p</code> accepts one argument, <code>x</code> is passed. If <code>p</code> accepts
 two arguments, <code>x</code> and the index of <code>x</code> in <code>xs</code> are passed.</p>
@@ -2215,7 +2215,7 @@ true
 nil
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-all?'
+      data-meta-id='data-all'
       data-meta-type='var'
       data-meta-name='all?'
 	    data-meta-tags='data'
@@ -2668,7 +2668,7 @@ nil
       data-meta-name='drop_until'
 	    data-meta-tags='data'
     ></div>
-<h3 id="containsdata-contains">contains?{#data-contains?}</h3>
+<h3 id="data-contains">contains?</h3>
 <p><code>(xs, x) -&gt; boolean</code></p>
 <p>If <code>xs</code> is a <code>list</code>, returns <code>true</code> if for any element <code>e</code> of <code>xs</code> <code>x === e</code> evaluates to <code>true</code>, <code>false</code> otherwise.</p>
 <p>If <code>xs</code> is a <code>dict</code>, returns <code>true</code> if for any value <code>v</code> in <code>xs</code> <code>v === e</code> evaluates to <code>true</code>, <code>false</code> otherwise.</p>
@@ -2704,7 +2704,7 @@ ERROR:
   ...
 </code></pre><div
       data-meta='true'
-      data-meta-id='data-contains?'
+      data-meta-id='data-contains'
       data-meta-type='var'
       data-meta-name='contains?'
 	    data-meta-tags='data'
@@ -4935,7 +4935,7 @@ nil
       data-meta-name='floor'
 	    data-meta-tags='math'
     ></div>
-<h3 id="nanmath-nan">NaN?{#math-NaN?}</h3>
+<h3 id="math-NaN">NaN?</h3>
 <p><code>(any x) -&gt; boolean</code></p>
 <p>Given a value <code>x</code>, returns <code>true</code> if <code>x</code> is NaN, returns <code>false</code> otherwise.</p>
 <pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; math.NaN?(2.3)
@@ -4948,12 +4948,12 @@ true
 false
 </code></pre><div
       data-meta='true'
-      data-meta-id='math-NaN?'
+      data-meta-id='math-NaN'
       data-meta-type='var'
       data-meta-name='NaN?'
 	    data-meta-tags='math'
     ></div>
-<h3 id="finitemath-finite">finite?{#math-finite?}</h3>
+<h3 id="math-finite">finite?</h3>
 <p><code>(any x) -&gt; boolean</code></p>
 <p>Returns <code>false</code> if <code>x</code> is <code>nil</code>, <code>NaN</code>, <code>-Infinity</code>, or <code>Infinity</code>.</p>
 <p>Returns <code>true</code> if <code>x</code> is a finite numeric value.</p>
@@ -4968,7 +4968,7 @@ false
 false
 </code></pre><div
       data-meta='true'
-      data-meta-id='math-finite?'
+      data-meta-id='math-finite'
       data-meta-type='var'
       data-meta-name='finite?'
 	    data-meta-tags='math'
