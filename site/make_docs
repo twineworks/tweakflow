@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-cd $(dirname "$0")/..
+cd "$(dirname "$0")/.."
 
 echo "* generating documentation for std"
 bin/doc -t std/doc/markdown_transformer -oe md -o site/content/modules std std/spec
@@ -11,8 +11,7 @@ rm -rf docs
 echo ""
 echo "* generating documentation site in /docs"
 cd site
-# need hugo installed and on path
-# https://gohugo.io/
-hugo -d ../docs
+# see /build/hugo.md
+../build/hugo/hugo -d ../docs
 echo ""
 echo "* done"
