@@ -103,7 +103,7 @@ library fragments {
 
   title_id: (dict x, list parents=[]) -> string
     match x[:node]
-      "var"      -> parents[0, :name] .. '-' .. x[:name],
+      "var"      -> parents[0, :name] .. '-' .. util.trim_trailing(x[:name], "?"),
         "module"   -> util.trim_trailing(x[:file], ".tf"),
         "library"  -> x[:name];
 
