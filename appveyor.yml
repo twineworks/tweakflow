@@ -3,13 +3,13 @@ environment:
   matrix:
 #    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
 #      JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-    - image: Visual Studio 2015
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       JAVA_HOME: C:\Program Files\Java\jdk11
-    - image: Visual Studio 2015
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       JAVA_HOME: C:\Program Files\Java\jdk13
-    - image: Visual Studio 2022
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       JAVA_HOME: C:\Program Files\Java\jdk15
-    - image: Visual Studio 2022
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       JAVA_HOME: C:\Program Files\Java\jdk17
 install:
 - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%;
