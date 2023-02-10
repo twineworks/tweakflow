@@ -4164,6 +4164,29 @@ doc
 ~~~
 `(datetime x) -> long`
 
+Returns the quarter for given datetime `x`. Returns 1 for Jan-Mar, 2 for Apr-Jun, 3 for Jul-Sep, 4 for Oct-Dec.
+
+Returns `nil` if `x` is `nil`.
+
+```tweakflow
+> time.week_of_year(2023-12-24)
+4
+
+> time.quarter(2017-02-21T)
+1
+
+> time.quarter(nil)
+nil
+```
+~~~
+
+  function quarter: (datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$quarter"};
+
+
+doc
+~~~
+`(datetime x) -> long`
+
 Returns the month component of given datetime `x`.
 
 Returns `nil` if `x` is `nil`.

@@ -35,6 +35,7 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.IsoFields;
 import java.time.temporal.WeekFields;
 import java.util.Collections;
 import java.util.TimeZone;
@@ -387,6 +388,16 @@ public final class Time {
     public Value call(UserCallContext context, Value x) {
       if (x == Values.NIL) return Values.NIL;
       return Values.make(x.dateTime().getZoned().getLong(WeekFields.ISO.weekOfWeekBasedYear()));
+    }
+  }
+
+
+  // function quarter(datetime x) -> long via {:class "com.twineworks.tweakflow.std.Time$quarter"}
+  public static final class quarter implements UserFunction, Arity1UserFunction {
+    @Override
+    public Value call(UserCallContext context, Value x) {
+      if (x == Values.NIL) return Values.NIL;
+      return Values.make(x.dateTime().getZoned().getLong(IsoFields.QUARTER_OF_YEAR));
     }
   }
 
