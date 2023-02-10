@@ -1,26 +1,16 @@
 version: 0.{branch}.{build}
-image:
-  - Visual Studio 2015
-  - Visual Studio 2022
-
 environment:
   matrix:
-    - JAVA_HOME: C:\Program Files\Java\jdk11
-    - JAVA_HOME: C:\Program Files\Java\jdk13
-    - JAVA_HOME: C:\Program Files\Java\jdk15
-    - JAVA_HOME: C:\Program Files\Java\jdk17
-
-matrix:
-  exclude:
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+#      JAVA_HOME: C:\Program Files\Java\jdk1.8.0
     - image: Visual Studio 2015
-      JAVA_HOME: C:\Program Files\Java\jdk15
-    - image: Visual Studio 2015
-      JAVA_HOME: C:\Program Files\Java\jdk17
-    - image: Visual Studio 2022
       JAVA_HOME: C:\Program Files\Java\jdk11
-    - image: Visual Studio 2022
+    - image: Visual Studio 2015
       JAVA_HOME: C:\Program Files\Java\jdk13
-
+    - image: Visual Studio 2022
+      JAVA_HOME: C:\Program Files\Java\jdk15
+    - image: Visual Studio 2022
+      JAVA_HOME: C:\Program Files\Java\jdk17
 install:
 - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%;
 build_script:
