@@ -2,21 +2,29 @@ version: 0.{branch}.{build}
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      RUNTIME_JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      COMPILE_JAVA_HOME: C:\Program Files\Java\jdk11
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      JAVA_HOME: C:\Program Files\Java\jdk11
+      RUNTIME_JAVA_HOME: C:\Program Files\Java\jdk11
+      COMPILE_JAVA_HOME: C:\Program Files\Java\jdk11
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      JAVA_HOME: C:\Program Files\Java\jdk13
+      RUNTIME_JAVA_HOME: C:\Program Files\Java\jdk13
+      COMPILE_JAVA_HOME: C:\Program Files\Java\jdk13
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-      JAVA_HOME: C:\Program Files\Java\jdk15
+      RUNTIME_JAVA_HOME: C:\Program Files\Java\jdk15
+      COMPILE_JAVA_HOME: C:\Program Files\Java\jdk15
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-      JAVA_HOME: C:\Program Files\Java\jdk17
+      RUNTIME_JAVA_HOME: C:\Program Files\Java\jdk17
+      COMPILE_JAVA_HOME: C:\Program Files\Java\jdk17
 install:
-- cmd: SET PATH=%JAVA_HOME%\bin;%PATH%;
+  - SET JAVA_HOME=%COMPILE_JAVA_HOME%
+  - SET PATH=%JAVA_HOME%\bin;%PATH%;
 build_script:
 - cmd: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 test_script:
-- cmd: mvn test -B
+  - SET JAVA_HOME=%RUNTIME_JAVA_HOME%
+  - SET PATH=%JAVA_HOME%\bin;%PATH%;
+  - mvn test -B
 notifications:
 - provider: Email
   to:
