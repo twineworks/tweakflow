@@ -55,7 +55,7 @@
         <nav role="navigation" class="menu__items-wrapper-left">
         <ul class="menu__items">
           <li class="menu__item">
-            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.4.2</a>
+            <a class="menu__item-version-link"><i class="caret fas fa-fw fa-caret-right"></i><b>Tweakflow</b> v1.4.3</a>
           </li>
         </ul>
         </nav>
@@ -104,7 +104,7 @@
       <ul class="menu__items">
         <li class="menu__item">
           <a class="menu__item-version-link" href="../index.html"
-            ><b>Tweakflow</b> v1.4.2</a
+            ><b>Tweakflow</b> v1.4.3</a
           >
         </li>
         
@@ -3765,6 +3765,25 @@ nil
       data-meta-id='time-year'
       data-meta-type='var'
       data-meta-name='year'
+	    data-meta-tags='time'
+    ></div>
+<h3 id="time-quarter">quarter</h3>
+<p><code>(datetime x) -&gt; long</code></p>
+<p>Returns the quarter for given datetime <code>x</code>. Returns 1 for Jan-Mar, 2 for Apr-Jun, 3 for Jul-Sep, 4 for Oct-Dec.</p>
+<p>Returns <code>nil</code> if <code>x</code> is <code>nil</code>.</p>
+<pre tabindex="0"><code class="language-tweakflow" data-lang="tweakflow">&gt; time.week_of_year(2023-12-24)
+4
+
+&gt; time.quarter(2017-02-21T)
+1
+
+&gt; time.quarter(nil)
+nil
+</code></pre><div
+      data-meta='true'
+      data-meta-id='time-quarter'
+      data-meta-type='var'
+      data-meta-name='quarter'
 	    data-meta-tags='time'
     ></div>
 <h3 id="time-month">month</h3>
