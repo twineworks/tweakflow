@@ -34,7 +34,7 @@ import com.twineworks.tweakflow.lang.parse.units.ParseUnit;
 
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class LoadPath {
 
@@ -42,7 +42,7 @@ public class LoadPath {
 
     private final List<LoadPathLocation> locations = new ArrayList<>();
     private RelativeResolver relativeResolver = new DefaultResolver();
-    private ConcurrentHashMap<String, ParseResult> parseResultCache;
+    private ConcurrentMap<String, ParseResult> parseResultCache;
 
     public Builder() { }
 
@@ -61,7 +61,7 @@ public class LoadPath {
       return this;
     }
 
-    public LoadPath.Builder withParseResultCache(ConcurrentHashMap<String, ParseResult> parseResultCache){
+    public LoadPath.Builder withParseResultCache(ConcurrentMap<String, ParseResult> parseResultCache){
       this.parseResultCache = parseResultCache;
       return this;
     }
