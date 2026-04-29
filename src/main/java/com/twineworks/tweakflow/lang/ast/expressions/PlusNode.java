@@ -37,6 +37,7 @@ public class PlusNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode leftExpression;
   private ExpressionNode rightExpression;
+  private Type cachedValueType;
 
   @Override
   public PlusNode copy() {
@@ -53,6 +54,7 @@ public class PlusNode extends AExpressionNode implements ExpressionNode {
 
   public PlusNode setLeftExpression(ExpressionNode leftExpression) {
     this.leftExpression = leftExpression;
+    this.cachedValueType = null;
     return this;
   }
 
@@ -62,6 +64,7 @@ public class PlusNode extends AExpressionNode implements ExpressionNode {
 
   public PlusNode setRightExpression(ExpressionNode rightExpression) {
     this.rightExpression = rightExpression;
+    this.cachedValueType = null;
     return this;
   }
 
@@ -82,14 +85,15 @@ public class PlusNode extends AExpressionNode implements ExpressionNode {
       return expressionOp.eval(null, null).type();
     }
 
-    if (leftExpression.getValueType() == Types.LONG && rightExpression.getValueType() == Types.LONG){
-      return Types.LONG;
-    }
-    if (leftExpression.getValueType() == Types.DOUBLE || rightExpression.getValueType() == Types.DOUBLE){
-      return Types.DOUBLE;
-    }
+    if (cachedValueType != null) return cachedValueType;
 
-    return Types.ANY;
+    Type lt = leftExpression.getValueType();
+    Type rt = rightExpression.getValueType();
+
+    if (lt == Types.LONG && rt == Types.LONG) return cachedValueType = Types.LONG;
+    if (lt == Types.DOUBLE || rt == Types.DOUBLE) return cachedValueType = Types.DOUBLE;
+
+    return cachedValueType = Types.ANY;
   }
 
   @Override

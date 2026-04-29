@@ -36,6 +36,7 @@ public class DefaultNode extends AExpressionNode implements ExpressionNode {
 
   private ExpressionNode expression;
   private ExpressionNode defaultExpression;
+  private Type cachedValueType;
 
   @Override
   public DefaultNode copy() {
@@ -52,6 +53,7 @@ public class DefaultNode extends AExpressionNode implements ExpressionNode {
 
   public DefaultNode setExpression(ExpressionNode expression) {
     this.expression = expression;
+    this.cachedValueType = null;
     return this;
   }
 
@@ -61,6 +63,7 @@ public class DefaultNode extends AExpressionNode implements ExpressionNode {
 
   public DefaultNode setDefaultExpression(ExpressionNode defaultExpression) {
     this.defaultExpression = defaultExpression;
+    this.cachedValueType = null;
     return this;
   }
 
@@ -76,8 +79,10 @@ public class DefaultNode extends AExpressionNode implements ExpressionNode {
 
   @Override
   public Type getValueType() {
-    if (expression.getValueType() == defaultExpression.getValueType()) return expression.getValueType();
-    return Types.ANY;
+    if (cachedValueType != null) return cachedValueType;
+    Type et = expression.getValueType();
+    Type dt = defaultExpression.getValueType();
+    return cachedValueType = (et == dt) ? et : Types.ANY;
   }
 
   @Override
