@@ -8,7 +8,7 @@ This document is an interactive step-by-step guide to tweakflow expressions. Its
 
 ## Requirements
 
-Tweakflow requires Java 8 or later. Builds are tested against JDK 8, 11, 13, 15, 17.
+Tweakflow requires Java 8 or later. Builds are tested against JDK 13, 15, 17, 22, 25.
 
 ## Getting tweakflow
 
