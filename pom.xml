@@ -30,19 +30,21 @@
 
     <!--
         Making a release:
-        - ensure pom.xml contains SNAPSHOT version
-        - ensure the snapshot release is successful
-          $ mvn clean deploy
+        - ensure pom.xml contains non-SNAPSHOT release version
         - ensure version number in ./site/config.yaml matches release tag
         - render html docs from markdown
           $ ./site/make_docs
-        - ensure there are no references to previous versions
-          $ grep -r '1\.4\.2' * # should come up empty
+          on windows:
+            java -jar .\target\tweakflow-<version>.jar doc -t std/doc/markdown_transformer -oe md -o site/content/modules std std/spec
+            Remove-Item -Recurse -Force docs
+            cd site
+            ..\build\hugo\hugo.exe -d ..\docs
+        - ensure there are no references to previous versions in readme.md
         - commit doc render
-        - ensure pom.xml contains release version
         - commit pom
         - deploy release version
           $ mvn clean deploy -P release
+          publish release manually on https://central.sonatype.com/publishing/deployments
         - tag release version
         - ensure pom.xml contains next SNAPSHOT version
         - commit
@@ -52,13 +54,13 @@
         - upload jar as github release
 
         Details on release process to sonatype:
-        https://central.sonatype.org/pages/apache-maven.html
+        https://central.sonatype.org/
 
     -->
 
     <groupId>com.twineworks</groupId>
     <artifactId>tweakflow</artifactId>
-    <version>1.4.5-SNAPSHOT</version>
+    <version>1.4.5</version>
 
     <organization>
         <name>Twineworks GmbH</name>
@@ -104,13 +106,6 @@
             <url>https://oss.sonatype.org/content/repositories/releases</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <profiles>
 
@@ -385,27 +380,13 @@
 
             <!-- stage to nexus -->
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.10.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
                 </configuration>
-                <dependencies>
-                    <!--
-                      TODO:
-                        Remove after OSSRH-66257, NEXUS-26993 are fixed,
-                        possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
-                    -->
-                    <dependency>
-                        <groupId>com.thoughtworks.xstream</groupId>
-                        <artifactId>xstream</artifactId>
-                        <version>1.4.15</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
         </plugins>
