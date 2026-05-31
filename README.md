@@ -1,26 +1,25 @@
 # Tweakflow - safe embeddable scripting for the JVM
 
-[![Java 8+](https://img.shields.io/badge/java-8--17-4c7e9f.svg)](http://java.oracle.com)
+[![Java 8+](https://img.shields.io/badge/java-8--25-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-MIT-4c7e9f.svg)](https://raw.githubusercontent.com/twineworks/tweakflow/master/LICENSE.txt)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twineworks/tweakflow/badge.svg)](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow")
+[![Sonatype Central](https://maven-badges.sml.io/sonatype-central/com.twineworks/tweakflow/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.twineworks/tweakfow/)
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/v1u88koademagp2c/branch/master?svg=true)](https://ci.appveyor.com/project/slawo-ch/tweakflow/branch/master)
-[![Join the chat at https://gitter.im/twineworks/tweakflow](https://badges.gitter.im/twineworks/tweakflow.svg)](https://gitter.im/twineworks/tweakflow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Applications can use tweakflow to expose runtime information to an expression-based scripting runtime, allowing users to safely interact with the provided data and collect scripted results.
 
 Tweakflow keeps the application in control of the data exchange. Users cannot arbitrarily call into application internals.
 
 ## Requirements
-Java 8 or later is required. Builds are tested against JDK 8, 11, 13, 15 and 17.
+Java 8 or later is required. Builds are tested against JDK 11, 13, 15, 17, 22, and 25.
 
 ## Getting the jar
-Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](http://search.maven.org/#search|gav|1|g:"com.twineworks"%20AND%20a:"tweakflow").
+Get the latest release jar from [github](https://github.com/twineworks/tweakflow/releases/latest), or from [maven central](https://central.sonatype.com/artifact/com.twineworks/tweakflow/versions").
 
 ## Getting started
 
 Start the REPL using:
 ```bash
-$ java -jar tweakflow-1.4.4.jar repl
+$ java -jar tweakflow-1.4.5.jar repl
 ```
 
 Start typing expressions for the REPL to evaluate:
